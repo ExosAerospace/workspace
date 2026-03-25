@@ -28,14 +28,16 @@ _Last updated: 2026-03-25_
 **Value:** TBD (potential sole-source flight demo contract)
 **Stakeholder:** Exos NASA Technical POC on SAA (identify name internally)
 **Urgency:** Act within 14 days
-**Status:** 🔴 Not started
+**Status:** 🟡 Call brief ready — awaiting Jon to identify NASA SAA POC and schedule call
 
 **Next Actions:**
-- [ ] Call NASA SAA technical counterpart — ask: (a) Is RDRE program listed in TechPort with Exos named as industry partner? (b) What funded milestone triggers a flight demo contract?
+- [ ] Jon identifies NASA SAA technical counterpart name/contact
+- [ ] Schedule call using brief at `drafts/saa-poc-call-brief.md`
 - [ ] Have counsel assess SBIR Phase III sole-source eligibility under SAA lineage
-- [ ] Confirm TechPort listing (can be done on same call — see Priority 5)
+- [ ] Confirm TechPort listing (on same call — see Priority 5)
 
-**Source:** Internal SAA documentation
+**MSFC RDRE Lead:** Thomas Teasley (combustion devices engineer, MSFC)
+**Source:** Internal SAA documentation | drafts/saa-poc-call-brief.md
 
 ---
 
@@ -43,17 +45,22 @@ _Last updated: 2026-03-25_
 **Organization:** NASA Marshall Space Flight Center — INRODES Program
 **Type:** Flight Demonstration Partnership
 **Value:** TBD — Phase 2+ flight demo contract
-**Stakeholder:** Tessa Martinez (tessa.m.martinez@nasa.gov) — MSFC entry point
-**Urgency:** Act within 14 days — AME hardware delivery June 2025; flight demo phase follows
-**Status:** 🔴 Not started
+**Stakeholder:** Thomas Teasley (MSFC RDRE lead) / Ramon Osorio (ramon.j.osorio@nasa.gov, 256-544-0034)
+**Urgency:** Act within 14 days — AME hardware delivery ~June 2025; flight demo phase follows
+**Status:** 🟡 Draft email ready — recommend routing via SAA POC for warm intro first
 
 **Next Actions:**
-- [ ] Draft intro email to MSFC INRODES program
-- [ ] Lead with NASA SAA relationship
-- [ ] Position BLK3 (135kg / 100km) as flight demo platform for INRODES hardware
-- [ ] Send email
+- [ ] Ideally: SAA POC makes warm intro to Teasley (from Priority 2 call)
+- [ ] If no SAA POC available: send cold outreach directly to ramon.j.osorio@nasa.gov, CC tessa.m.martinez@nasa.gov
+- [ ] Draft ready at `drafts/msfc-inrodes-outreach.md`
 
-**Source:** https://govtribe.com/opportunity/federal-contract-opportunity/inrodes-rotating-detonation-rocket-engine-rdre-80nssc25897850q
+**Key Intel:**
+- INRODES Phase 1 hardware: fabricated by AME (~$248K), delivery ~June 2025
+- NASA RDRE tested Dec 2023: 251 seconds, 5,800 lbs thrust
+- Program managed under Game Changing Development Program (STMD)
+- Prior partners: In Space LLC, Purdue University, Venus Aerospace, Glenn Research Center
+
+**Source:** https://govtribe.com/opportunity/federal-contract-opportunity/inrodes-rotating-detonation-rocket-engine-rdre-80nssc25897850q | drafts/msfc-inrodes-outreach.md
 
 ---
 
@@ -61,17 +68,18 @@ _Last updated: 2026-03-25_
 **Organization:** DoD — RDRE Market Survey (Solicitation 2449PS50)
 **Type:** Capability Visibility / Follow-on RFP Watch
 **Value:** TBD
-**Stakeholder:** DoD issuing office (RFI closed — POC TBD)
+**Stakeholder:** DoD issuing office (RFI closed — POC TBD, research ongoing)
 **Urgency:** Ongoing — monitor for follow-on RFP/BAA
-**Status:** 🔴 Not started
+**Status:** 🟡 Materials ready — execution pending
 
 **Next Actions:**
-- [ ] Update SAM.gov registration to explicitly include RDRE capability
-- [ ] Draft one-page RDRE capability statement (lead with NASA SAA + BLK3 flight demo potential)
-- [ ] Identify DoD RFI POC and send unsolicited capability introduction
+- [ ] Jon / BD team updates SAM.gov registration — instructions at `drafts/sam-gov-rdre-update.md`
+- [ ] Confirm CAGE Code and UEI are current in SAM.gov
+- [ ] RDRE capability statement ready at `drafts/rdre-capability-statement.md` — add email address, CAGE Code, UEI before use
+- [ ] Identify DoD RFI issuing office POC for unsolicited outreach
 - [ ] Monitor SAM.gov for follow-on RFP/BAA
 
-**Source:** https://sam.gov/opp/d059e1d103fe453a839fd2c4402b6703/view
+**Source:** https://sam.gov/opp/d059e1d103fe453a839fd2c4402b6703/view | drafts/rdre-capability-statement.md | drafts/sam-gov-rdre-update.md
 
 ---
 
@@ -81,12 +89,14 @@ _Last updated: 2026-03-25_
 **Value:** Non-monetary — visibility to NASA program managers agency-wide
 **Stakeholder:** Exos NASA SAA technical counterpart
 **Urgency:** Confirm within 14 days
-**Status:** 🔴 Not started
+**Status:** 🟡 Blocked on SAA POC call (Priority 2) — handle on same call
 
 **Next Actions:**
 - [ ] During SAA POC call (Priority 2), confirm RDRE listed in TechPort with Exos named
-- [ ] If not listed, request NASA counterpart add it
-- [ ] Submit TechPort "Suggest a Technology" form as backup
+- [ ] If not listed → request NASA counterpart add it
+- [ ] Backup: submit "Suggest a Technology" form at techport.nasa.gov/help/technologySuggestions
+
+**Note:** NASA 2026 SBIR moving to BAA format — release TBD. Monitor prosams.nasa.gov for propulsion/RDRE subtopics when released.
 
 **Source:** https://techport.nasa.gov/help/technologySuggestions
 
