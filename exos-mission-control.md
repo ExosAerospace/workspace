@@ -9,13 +9,13 @@ _Last updated: 2026-03-25_
 **Value:** Up to $45M (multi-year IDIQ)
 **Stakeholder:** Angela Stinchfield (angela.t.stinchfield@nasa.gov) / Melissa Newell (melissa.newell@nasa.gov) / Program Mgr: Greg Peters
 **Urgency:** Act within 7 days — solicitation is evergreen/open now
-**Status:** 🟡 In Progress — email drafted, awaiting Jon's title + contact info
+**Status:** 🟢 Email Sent — 2026-03-25
+
+**CC'd:** nasa-flightopportunities@mail.nasa.gov, Lizi Quinn, Neil Milburn
 
 **Next Actions:**
-- [ ] Jon provides title + direct contact info
-- [ ] Add SAA reference line to email
-- [ ] Send outreach email to Angela Stinchfield + Melissa Newell
-- [ ] Follow up if no response within 2 weeks
+- [ ] Follow up if no response by 2026-04-08 (2 weeks)
+- [ ] If response received — schedule call, prep briefing on BLK3 capabilities and campaign structure
 
 **Draft email:** Ready (see conversation 2026-03-25)
 **Source:** https://sam.gov/opp/a665d191eef14ab7966484b9d59584d6/view
