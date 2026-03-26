@@ -23,21 +23,45 @@ _Last updated: 2026-03-25_
 ---
 
 ## 🚨 HIGH CONVICTION — PRIORITY 2
-**Organization:** NASA / Exos Aerospace — Space Act Agreement (RDRE)
-**Type:** SAA-to-Contract Conversion / Flight Demo Milestone
-**Value:** TBD (potential sole-source flight demo contract)
-**Stakeholder:** Exos NASA Technical POC on SAA (identify name internally)
-**Urgency:** Act within 14 days
-**Status:** 🟡 Call brief ready — awaiting Jon to identify NASA SAA POC and schedule call
+**Organization:** NASA MSFC / Exos Aerospace — SAA + RDRE Development
+**Type:** SAA Activation / Flight Demo Contract / HVRR Alternative Engine Path
+**Value:** TBD (funded RDRE development + flight demo contract)
+**Stakeholder:** Thomas Teasley — thomas.teasley@nasa.gov (MSFC RDRE lead, confirmed)
+**Urgency:** THIS WEEK — HVRR GFE risk creates immediate pressure
+**Status:** 🟡 Outreach email drafted — send AFTER USAF GFE letter filed
+
+**Key Intel:**
+- SAA (NASA LaRC, SAA1-25305) covers tuned damper on SARGE — the RDRE data is the technical content shared under SAA
+- Teasley is the MSFC RDRE program lead — his AAS paper is the data Exos is using
+- TDM project: 10,000 lbf turbopump-integrated RDRE system — BLK3 is the natural flight demo vehicle
+- NASA's technical data shared under SAA = Exos has design foundation that no other small company has
 
 **Next Actions:**
-- [ ] Jon identifies NASA SAA technical counterpart name/contact
-- [ ] Schedule call using brief at `drafts/saa-poc-call-brief.md`
-- [ ] Have counsel assess SBIR Phase III sole-source eligibility under SAA lineage
-- [ ] Confirm TechPort listing (on same call — see Priority 5)
+- [ ] File USAF GFE risk letter first (Priority 2a — see below)
+- [ ] Send Teasley email — draft at `drafts/teasley-nasa-outreach.md`
+- [ ] On call: confirm TechPort listing, SAA mod scope, BLK3 as TDM flight demo platform
+- [ ] Have counsel assess SBIR Phase III sole-source eligibility
 
-**MSFC RDRE Lead:** Thomas Teasley (combustion devices engineer, MSFC)
-**Source:** Internal SAA documentation | drafts/saa-poc-call-brief.md
+**Source:** NASA SAA1-25305 | Teasley AAS 2025 paper | drafts/teasley-nasa-outreach.md | drafts/saa-poc-call-brief.md
+
+---
+
+## 🚨 HIGH CONVICTION — PRIORITY 2a (URGENT — DO TODAY)
+**Organization:** USAF — HVRR Contract / GFE RDRE Delivery Risk
+**Type:** Formal GFE Risk Notification / Contract Protection
+**Value:** Protects existing contract + may unlock funded alternative engine development
+**Stakeholder:** USAF Contracting Officer on HVRR contract (Jon to confirm name)
+**Urgency:** TODAY — file before any further delay to establish excusable delay record
+**Status:** 🟡 Letter drafted — needs CO name, contract number, milestone date
+
+**Next Actions:**
+- [ ] Jon fills in: CO name, contract number, office/address, critical milestone date
+- [ ] Legal review (brief — 30 min should be sufficient)
+- [ ] Send via email with read receipt + certified mail if contract requires
+- [ ] Request 15-day response window for GFE status + authorization for alternative engine
+
+**Draft:** `drafts/usaf-gfe-risk-letter.md`
+**Source:** HVRR contract (internal) | FAR 52.245-1
 
 ---
 
