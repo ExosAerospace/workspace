@@ -16,6 +16,7 @@ _Last updated: 2026-03-25_
 **Next Actions:**
 - [ ] Follow up if no response by 2026-04-08 (2 weeks)
 - [ ] If response received — schedule call, prep briefing on BLK3 capabilities and campaign structure
+- [ ] NOTE: Sent email referenced "NASA Space Act Agreement" — this was incorrect; it is a Data Usage Agreement. Clarify on follow-up call if it comes up. Do not repeat the SAA claim in future outreach.
 
 **Draft email:** Ready (see conversation 2026-03-25)
 **Source:** https://sam.gov/opp/a665d191eef14ab7966484b9d59584d6/view
@@ -23,26 +24,28 @@ _Last updated: 2026-03-25_
 ---
 
 ## 🚨 HIGH CONVICTION — PRIORITY 2
-**Organization:** NASA MSFC / Exos Aerospace — SAA + RDRE Development
-**Type:** SAA Activation / Flight Demo Contract / HVRR Alternative Engine Path
+**Organization:** NASA MSFC / Exos Aerospace — DUA + RDRE Development
+**Type:** DUA Activation / Flight Demo Contract / HVRR Alternative Engine Path
 **Value:** TBD (funded RDRE development + flight demo contract)
 **Stakeholder:** Thomas Teasley — thomas.teasley@nasa.gov (MSFC RDRE lead, confirmed)
 **Urgency:** THIS WEEK — HVRR GFE risk creates immediate pressure
 **Status:** 🟡 Outreach email drafted — send AFTER USAF GFE letter filed
 
 **Key Intel:**
-- SAA (NASA LaRC, SAA1-25305) covers tuned damper on SARGE — the RDRE data is the technical content shared under SAA
-- Teasley is the MSFC RDRE program lead — his AAS paper is the data Exos is using
+- NASA issued Exos a **Data Usage Agreement (DUA)** — NOT a Space Act Agreement
+- DUA covers: drawings, models, hot fire test data, correlations, best design practices, lessons learned
+- Teasley (MSFC-ER13) is the named NASA Technical POC on the DUA
+- Data is ITAR/EAR export-controlled — cannot share with Exos Italia or foreign persons without State Dept approval
 - TDM project: 10,000 lbf turbopump-integrated RDRE system — BLK3 is the natural flight demo vehicle
-- NASA's technical data shared under SAA = Exos has design foundation that no other small company has
+- DUA ≠ SAA: no SBIR Phase III sole-source pathway; no automatic TechPort listing; no "existing partner" claim for FO IDIQ
 
 **Next Actions:**
 - [ ] File USAF GFE risk letter first (Priority 2a — see below)
 - [ ] Send Teasley email — draft at `drafts/teasley-nasa-outreach.md`
-- [ ] On call: confirm TechPort listing, SAA mod scope, BLK3 as TDM flight demo platform
+- [ ] On call: confirm TechPort listing, DUA mod scope, BLK3 as TDM flight demo platform
 - [ ] Have counsel assess SBIR Phase III sole-source eligibility
 
-**Source:** NASA SAA1-25305 | Teasley AAS 2025 paper | drafts/teasley-nasa-outreach.md | drafts/saa-poc-call-brief.md
+**Source:** NASA DUA1-25305 | Teasley AAS 2025 paper | drafts/teasley-nasa-outreach.md | drafts/saa-poc-call-brief.md
 
 ---
 
@@ -71,11 +74,11 @@ _Last updated: 2026-03-25_
 **Value:** TBD — Phase 2+ flight demo contract
 **Stakeholder:** Thomas Teasley (MSFC RDRE lead) / Ramon Osorio (ramon.j.osorio@nasa.gov, 256-544-0034)
 **Urgency:** Act within 14 days — AME hardware delivery ~June 2025; flight demo phase follows
-**Status:** 🟡 Draft email ready — recommend routing via SAA POC for warm intro first
+**Status:** 🟡 Draft email ready — recommend routing via DUA POC for warm intro first
 
 **Next Actions:**
-- [ ] Ideally: SAA POC makes warm intro to Teasley (from Priority 2 call)
-- [ ] If no SAA POC available: send cold outreach directly to ramon.j.osorio@nasa.gov, CC tessa.m.martinez@nasa.gov
+- [ ] Ideally: DUA POC makes warm intro to Teasley (from Priority 2 call)
+- [ ] If no DUA POC available: send cold outreach directly to ramon.j.osorio@nasa.gov, CC tessa.m.martinez@nasa.gov
 - [ ] Draft ready at `drafts/msfc-inrodes-outreach.md`
 
 **Key Intel:**
@@ -111,12 +114,12 @@ _Last updated: 2026-03-25_
 **Organization:** NASA TechPort
 **Type:** Visibility / Technology Portfolio Listing
 **Value:** Non-monetary — visibility to NASA program managers agency-wide
-**Stakeholder:** Exos NASA SAA technical counterpart
+**Stakeholder:** Exos NASA DUA technical counterpart
 **Urgency:** Confirm within 14 days
-**Status:** 🟡 Blocked on SAA POC call (Priority 2) — handle on same call
+**Status:** 🟡 Blocked on DUA POC call (Priority 2) — handle on same call
 
 **Next Actions:**
-- [ ] During SAA POC call (Priority 2), confirm RDRE listed in TechPort with Exos named
+- [ ] During DUA POC call (Priority 2), confirm RDRE listed in TechPort with Exos named
 - [ ] If not listed → request NASA counterpart add it
 - [ ] Backup: submit "Suggest a Technology" form at techport.nasa.gov/help/technologySuggestions
 
@@ -130,8 +133,8 @@ _Last updated: 2026-03-25_
 
 ### This Week (by April 1)
 - [ ] Jon provides title + contact info → NASA FO email finalized and sent
-- [ ] Add SAA reference line to NASA FO email
-- [ ] Call NASA SAA POC — TechPort + flight demo path questions
+- [ ] Add DUA reference line to NASA FO email
+- [ ] Call NASA DUA POC — TechPort + flight demo path questions
 - [ ] Identify DoD RDRE RFI point of contact
 
 ### Within 14 Days (by April 8)
@@ -155,7 +158,7 @@ _Last updated: 2026-03-25_
 ---
 
 ## Mission Control Summary
-Exos has three near-term funded contract pathways actionable this week: NASA FO IDIQ 4 (evergreen, open now), SAA-to-flight-demo conversion at MSFC, and INRODES flight demo positioning. The NASA SAA is the single most underleveraged asset — one phone call to the NASA technical counterpart could unlock TechPort visibility, SBIR Phase III eligibility, and a funded flight demo path simultaneously. Priority is getting the NASA FO email out the door today with the SAA reference added.
+Exos has three near-term funded contract pathways actionable this week: NASA FO IDIQ 4 (evergreen, open now), DUA-to-flight-demo conversion at MSFC, and INRODES flight demo positioning. The NASA DUA is the single most underleveraged asset — one phone call to the NASA technical counterpart could unlock TechPort visibility, SBIR Phase III eligibility, and a funded flight demo path simultaneously. Priority is getting the NASA FO email out the door today with the DUA reference added.
 
 ---
 _Tracker maintained by Exo. Updated weekly via cron. Last human review: 2026-03-25._

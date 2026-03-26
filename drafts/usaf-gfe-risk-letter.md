@@ -36,7 +36,7 @@ Exos respectfully requests the following from the Contracting Officer within 15 
 
 **Proposed Path Forward**
 
-Exos is not raising this issue to create adversarial friction — we are raising it because we are committed to mission success and want to get ahead of a risk before it becomes a problem. We have significant in-house RDRE technical capability, including development work conducted under an active NASA Space Act Agreement utilizing NASA Marshall Space Flight Center technical data. If authorized and funded, Exos has a credible path to develop or source an alternative RDRE to serve as backup or primary propulsion for the HVRR, maintaining program schedule and government objectives.
+Exos is not raising this issue to create adversarial friction — we are raising it because we are committed to mission success and want to get ahead of a risk before it becomes a problem. We have significant in-house RDRE technical capability, including development work conducted under an active NASA Data Usage Agreement utilizing NASA Marshall Space Flight Center technical data. If authorized and funded, Exos has a credible path to develop or source an alternative RDRE to serve as backup or primary propulsion for the HVRR, maintaining program schedule and government objectives.
 
 We request a meeting at your earliest convenience to discuss this matter and align on the best path forward.
 

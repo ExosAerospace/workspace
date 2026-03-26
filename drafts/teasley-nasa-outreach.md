@@ -5,13 +5,13 @@ _Created: 2026-03-25_
 ---
 
 **To:** thomas.teasley@nasa.gov
-**Subject:** Exos Aerospace — RDRE Development Under NASA SAA / HVRR Program Alignment
+**Subject:** Exos Aerospace — RDRE Development Under NASA DUA / HVRR Program Alignment
 
 ---
 
 Thomas,
 
-I'm John Quinn, Cofounder and CEO of Exos Aerospace Systems & Technologies. We've been working under a NASA Space Act Agreement utilizing RDRE technical data from Marshall Space Flight Center — and your recent AAS paper on NASA's RDRE development roadmap has been directly informative to our work.
+I'm John Quinn, Cofounder and CEO of Exos Aerospace Systems & Technologies. We've been working under a NASA Data Usage Agreement utilizing RDRE technical data from Marshall Space Flight Center — and your recent AAS paper on NASA's RDRE development roadmap has been directly informative to our work.
 
 I'm reaching out because I believe there's a meaningful opportunity to tighten the connection between what Exos is building and where the NASA RDRE program is heading, and I'd like to explore that with you directly.
 
@@ -20,18 +20,18 @@ I'm reaching out because I believe there's a meaningful opportunity to tighten t
 - We hold an active FAA launch license (§431, transitioning to Part 450) on our **BLK3** reusable suborbital launch vehicle — 135 kg to 100 km altitude
 - We are one of three U.S.-licensed reusable suborbital RLV operators
 - We have an active **USAF contract to build a High Velocity Research Rocket (HVRR) test vehicle** intended to fly a small RDRE
-- We are developing our own RDRE using NASA SAA technical data as the design foundation
+- We are developing our own RDRE using NASA technical data received under the Data Usage Agreement you issued, as our design foundation
 - Our pathfinder commercial flight is planned for Q1–Q2 2027
 
 **Why I'm reaching out now:**
 
-We have an active GFE RDRE risk on the HVRR program — the government-furnished engine delivery timeline is uncertain, and we're exploring options to develop an alternative RDRE using the NASA technical baseline data we've received under the SAA. We want to ensure we're doing this in full coordination with NASA and in a way that benefits both programs.
+We have an active GFE RDRE risk on the HVRR program — the government-furnished engine delivery timeline is uncertain, and we're exploring options to develop an alternative RDRE using the NASA technical baseline data from the DUA. We want to ensure we're doing this in full coordination with NASA and in a way that benefits both programs.
 
 I have three specific questions I'd welcome your input on:
 
 1. **TechPort** — Is Exos's RDRE development program currently listed in NASA TechPort as an industry partner? If not, how do we get it added?
 
-2. **SAA scope** — Is there scope within the current SAA (or a modification to it) to provide additional NASA technical support for our RDRE development, particularly as we work toward an HVRR flight demonstration?
+2. **DUA scope** — Is there scope within the current DUA (or a modification to it) to provide additional NASA technical support for our RDRE development, particularly as we work toward an HVRR flight demonstration?
 
 3. **Flight demo alignment** — As the INRODES TDM project progresses toward a turbopump-integrated 10,000 lbf system, is there a role for Exos's BLK3 as the flight demonstration platform? We'd welcome a conversation about how our iterative flight cadence (multiple flights per quarter) could serve NASA's flight demo objectives.
 

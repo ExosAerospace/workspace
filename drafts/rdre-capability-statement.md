@@ -17,16 +17,16 @@ John Quinn, CEO | +1-972-740-8355
 
 Exos Aerospace is one of **three U.S.-licensed reusable suborbital launch vehicle (RLV) companies**. We develop, operate, and fly the **BLK3** — a reusable, partially recoverable suborbital launch vehicle with demonstrated flight heritage through the **NASA REDDI program** on our SARGE platform.
 
-We hold an active **FAA launch license (§431)** and are transitioning to **Part 450**. We also hold an active **NASA Space Act Agreement for RDRE technology development**, establishing a formal collaborative relationship with NASA on rotating detonation propulsion.
+We hold an active **FAA launch license (§431)** and are transitioning to **Part 450**. We also hold an active **NASA Data Usage Agreement for RDRE technology development**, establishing a formal collaborative relationship with NASA on rotating detonation propulsion.
 
 ---
 
 ### RDRE Program
 
-Exos has an active **internal RDRE development program** aligned with NASA's RDRE technology roadmap. Our work is conducted under the existing NASA Space Act Agreement, positioning Exos as a natural flight demonstration partner as the technology advances toward higher TRL.
+Exos has an active **internal RDRE development program** aligned with NASA's RDRE technology roadmap. Our work is conducted under the existing NASA Data Usage Agreement, positioning Exos as a natural flight demonstration partner as the technology advances toward higher TRL.
 
 **Key differentiators:**
-- One of the few commercial entities with a NASA SAA specifically covering RDRE technology
+- One of the few commercial entities with a NASA DUA specifically covering RDRE technology
 - Development program aligned with NASA MSFC's INRODES effort
 - Existing flight heritage and licensed launch vehicle ready for payload integration
 
@@ -49,7 +49,7 @@ Exos has an active **internal RDRE development program** aligned with NASA's RDR
 
 ### Why Exos for RDRE Flight Demo
 
-1. **Existing NASA relationship** — SAA removes contracting friction; SBIR Phase III sole-source pathway available
+1. **Existing NASA relationship** — DUA removes contracting friction; SBIR Phase III sole-source pathway available
 2. **Licensed and ready** — FAA-licensed platform with no range access barriers
 3. **Right vehicle, right scale** — 135 kg payload matches RDRE development hardware mass class
 4. **Iterative cadence** — more flights per year than any comparable suborbital provider
@@ -59,7 +59,7 @@ Exos has an active **internal RDRE development program** aligned with NASA's RDR
 
 ### Relevant Contracts & Agreements
 
-- NASA Space Act Agreement — RDRE Technology (active)
+- NASA Data Usage Agreement — RDRE Technology (active)
 - NASA REDDI Program — SARGE flight heritage (completed)
 - FAA Launch License §431 (active) — Part 450 transition in progress
 

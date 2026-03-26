@@ -1,5 +1,5 @@
-# NASA SAA POC Call Brief
-_Prep for call with Exos's NASA technical counterpart on the RDRE Space Act Agreement_
+# NASA DUA POC Call Brief
+_Prep for call with Exos's NASA technical counterpart on the RDRE Data Usage Agreement_
 _Created: 2026-03-25_
 
 ---
@@ -33,13 +33,13 @@ One call, two outcomes:
 
 ### On Flight Demo Path:
 1. As INRODES hardware matures, what's the anticipated path to a flight demonstration?
-2. Is there a funded milestone in the current SAA or program plan for a suborbital flight test?
+2. Is there a funded milestone in the current DUA or program plan for a suborbital flight test?
 3. Would BLK3 (135 kg / 100 km) be the right vehicle class for INRODES flight demo hardware?
-4. What contract vehicle would NASA use to fund a flight demo — task order under existing SAA, new contract, SBIR Phase III, or something else?
+4. What contract vehicle would NASA use to fund a flight demo — task order under existing DUA, new contract, SBIR Phase III, or something else?
 5. Who else at MSFC or STMD should we be talking to about positioning BLK3 for this?
 
 ### On SBIR Phase III:
-1. Does the RDRE work under the SAA create a SBIR Phase III sole-source pathway for Exos?
+1. Does the RDRE work under the DUA create a SBIR Phase III sole-source pathway for Exos?
 2. Has any of the underlying RDRE technology been funded through NASA SBIR/STTR?
 
 ---
@@ -51,7 +51,7 @@ One call, two outcomes:
 - Only 3 U.S.-licensed reusable suborbital RLV operators
 - Pathfinder commercial flight: Q1–Q2 2027
 - Prior NASA relationship: SARGE / REDDI program
-- Active SAA establishes Exos as natural flight demo partner — contracting should be straightforward
+- Active DUA establishes Exos as natural flight demo partner — contracting should be straightforward
 
 ---
 
