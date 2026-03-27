@@ -1,0 +1,131 @@
+=== Nightly Security Run: Fri Mar 27 16:50:51 CDT 2026 ===
+[1] Checking macOS security updates...
+/Users/exomac/.openclaw/workspace/scripts/nightly-security.sh: line 16: softwareupdate: command not found
+[!] Security updates available
+[2] Updating Homebrew packages...
+Outdated packages: gh
+mise
+pnpm
+usage
+uv
+==> Upgrading 5 outdated packages:
+mise 2026.3.9 -> 2026.3.17
+gh 2.88.1 -> 2.89.0
+pnpm 10.32.1 -> 10.33.0
+usage 3.0.0 -> 3.2.0
+uv 0.10.12 -> 0.11.2
+==> Fetching downloads for: usage, mise, gh, pnpm and uv
+==> Upgrading usage
+  3.0.0 -> 3.2.0 
+==> Pouring usage--3.2.0.arm64_tahoe.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/usage/3.2.0: 13 files, 8.5MB
+==> Running `brew cleanup usage`...
+Disable this behaviour by setting `HOMEBREW_NO_INSTALL_CLEANUP=1`.
+Hide these hints with `HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
+Removing: /opt/homebrew/Cellar/usage/3.0.0... (13 files, 8.5MB)
+Removing: /Users/exomac/Library/Caches/Homebrew/usage_bottle_manifest--3.0.0... (7.4KB)
+Removing: /Users/exomac/Library/Caches/Homebrew/usage--3.0.0... (2.9MB)
+==> Upgrading mise
+  2026.3.9 -> 2026.3.17 
+==> Pouring mise--2026.3.17.arm64_tahoe.bottle.tar.gz
+==> Caveats
+If you are using fish shell, mise will be activated for you automatically.
+==> Summary
+🍺  /opt/homebrew/Cellar/mise/2026.3.17: 15 files, 85.9MB
+==> Running `brew cleanup mise`...
+Removing: /opt/homebrew/Cellar/mise/2026.3.9... (15 files, 85.5MB)
+Removing: /Users/exomac/Library/Caches/Homebrew/mise_bottle_manifest--2026.3.9... (9.4KB)
+Removing: /Users/exomac/Library/Caches/Homebrew/mise--2026.3.9... (32MB)
+==> Upgrading gh
+  2.88.1 -> 2.89.0 
+==> Pouring gh--2.89.0.arm64_tahoe.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/gh/2.89.0: 223 files, 37.9MB
+==> Running `brew cleanup gh`...
+Removing: /opt/homebrew/Cellar/gh/2.88.1... (223 files, 36.7MB)
+Removing: /Users/exomac/Library/Caches/Homebrew/gh_bottle_manifest--2.88.1... (7.3KB)
+Removing: /Users/exomac/Library/Caches/Homebrew/gh--2.88.1... (12.7MB)
+==> Upgrading pnpm
+  10.32.1 -> 10.33.0 
+==> Pouring pnpm--10.33.0.arm64_tahoe.bottle.tar.gz
+==> Caveats
+pnpm requires a Node installation to function. You can install one with:
+  brew install node
+==> Summary
+🍺  /opt/homebrew/Cellar/pnpm/10.33.0: 1,086 files, 17.9MB
+==> Running `brew cleanup pnpm`...
+Removing: /opt/homebrew/Cellar/pnpm/10.32.1... (1,086 files, 17.9MB)
+Removing: /Users/exomac/Library/Caches/Homebrew/pnpm_bottle_manifest--10.32.1... (7.4KB)
+Removing: /Users/exomac/Library/Caches/Homebrew/pnpm--10.32.1... (4.1MB)
+==> Upgrading uv
+  0.10.12 -> 0.11.2 
+==> Pouring uv--0.11.2.arm64_tahoe.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/uv/0.11.2: 17 files, 47.9MB
+==> Running `brew cleanup uv`...
+Removing: /opt/homebrew/Cellar/uv/0.10.12... (17 files, 45.6MB)
+Removing: /Users/exomac/Library/Caches/Homebrew/uv_bottle_manifest--0.10.12... (8KB)
+Removing: /Users/exomac/Library/Caches/Homebrew/uv--0.10.12... (19.2MB)
+==> Caveats
+zsh completions have been installed to:
+  /opt/homebrew/share/zsh/site-functions
+==> mise
+If you are using fish shell, mise will be activated for you automatically.
+==> pnpm
+pnpm requires a Node installation to function. You can install one with:
+  brew install node
+[3] Running OpenClaw security audit...
+/Users/exomac/.openclaw/workspace/scripts/nightly-security.sh: line 41: /usr/local/bin/openclaw: No such file or directory
+OpenClaw security audit
+Summary: 0 critical · 3 warn · 1 info
+Run deeper: openclaw security audit --deep
+
+WARN
+gateway.trusted_proxies_missing Reverse proxy headers are not trusted
+  gateway.bind is loopback and gateway.trustedProxies is empty. If you expose the Control UI through a reverse proxy, configure trusted proxies so local-client checks cannot be spoofed.
+  Fix: Set gateway.trustedProxies to your proxy IPs or keep the Control UI local-only.
+gateway.nodes.deny_commands_ineffective Some gateway.nodes.denyCommands entries are ineffective
+  gateway.nodes.denyCommands uses exact node command-name matching only (for example `system.run`), not shell-text filtering inside a command payload.
+- Unknown command names (not in defaults/allowCommands): camera.snap (did you mean: camera.list), camera.clip (did you mean: camera.list), screen.record, contacts.add, calendar.add, reminders.add (did you mean: reminders.list), sms.send (did you mean: sms.search)
+  Fix: Use exact command names (for example: canvas.present, canvas.hide, canvas.navigate, canvas.eval, canvas.snapshot, canvas.a2ui.push, canvas.a2ui.pushJSONL, canvas.a2ui.reset). If you need broader restrictions, remove risky command IDs from allowCommands/default workflows and tighten tools.exec policy.
+security.trust_model.multi_user_heuristic Potential multi-user setup detected (personal-assistant model warning)
+  Heuristic signals indicate this gateway may be reachable by multiple users:
+- channels.telegram.groupPolicy="allowlist" with configured group targets
+Runtime/process tools are exposed without full sandboxing in at least one context.
+Potential high-impact tool exposure contexts:
+- agents.defaults (sandbox=off; runtime=[exec, process]; fs=[read, write, edit, apply_patch]; fs.workspaceOnly=false)
+OpenClaw's default security model is personal-assistant (one trusted operator boundary), not hostile multi-tenant isolation on one shared gateway.
+  Fix: If users may be mutually untrusted, split trust boundaries (separate gateways + credentials, ideally separate OS users/hosts). If you intentionally run shared-user access, set agents.defaults.sandbox.mode="all", keep tools.fs.workspaceOnly=true, deny runtime/fs/web tools unless required, and keep personal/private identities + credentials off that runtime.
+
+INFO
+summary.attack_surface Attack surface summary
+  groups: open=0, allowlist=1
+tools.elevated: enabled
+hooks.webhooks: disabled
+hooks.internal: disabled
+browser control: enabled
+trust model: personal assistant (one trusted operator boundary), not hostile multi-tenant on one shared gateway
+[4] Checking OpenClaw version...
+OpenClaw update status
+
+┌──────────┬───────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Item     │ Value                                                                                                     │
+├──────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Install  │ pnpm                                                                                                      │
+│ Channel  │ stable (default)                                                                                          │
+│ Update   │ available · pnpm · npm update 2026.3.24                                                                   │
+└──────────┴───────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Update available (npm 2026.3.24). Run: openclaw update
+[5] Hardening credential file permissions...
+[✓] .msmtprc permissions: 600
+[✓] Workspace sensitive folders locked to owner-only
+[6] Cleaning old session files...
+Session files found: 5
+[✓] Session files within normal range (5)
+[7] Firewall status check...
+Firewall is enabled. (State = 1)
+[✓] Firewall active
+[8] Checking open ports...
+External-facing ports detected:
+/Users/exomac/.openclaw/workspace/scripts/nightly-security.sh: line 95: lsof: command not found
+[✓] Old logs cleaned (>30 days)
+=== Run complete: Fri Mar 27 16:51:31 CDT 2026 ===

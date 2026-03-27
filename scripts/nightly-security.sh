@@ -1,0 +1,115 @@
+#!/bin/zsh
+# nightly-security.sh
+# Runs at 3:15 AM daily via OpenClaw cron
+# Security hardening routine for ExoMac
+
+LOG_DIR="/Users/exomac/.openclaw/workspace/logs"
+LOG_FILE="$LOG_DIR/security-$(date +%Y-%m-%d).log"
+ALERT=""
+
+mkdir -p "$LOG_DIR"
+
+echo "=== Nightly Security Run: $(date) ===" >> "$LOG_FILE"
+
+# 1. macOS Software Updates (security patches only, non-interactive)
+echo "[1] Checking macOS security updates..." >> "$LOG_FILE"
+UPDATE_CHECK=$(/usr/sbin/softwareupdate -l 2>&1)
+echo "$UPDATE_CHECK" >> "$LOG_FILE"
+if echo "$UPDATE_CHECK" | grep -qi "recommended\|security"; then
+    echo "[!] Security updates available" >> "$LOG_FILE"
+    # Install recommended security updates only (no major OS upgrades)
+    /usr/sbin/softwareupdate --install --recommended 2>&1 >> "$LOG_FILE"
+    ALERT="${ALERT}⚠️ macOS security patches were installed.\n"
+else
+    echo "[✓] macOS up to date" >> "$LOG_FILE"
+fi
+
+# 2. Homebrew security updates
+echo "[2] Updating Homebrew packages..." >> "$LOG_FILE"
+/opt/homebrew/bin/brew update 2>&1 >> "$LOG_FILE"
+BREW_OUTDATED=$(/opt/homebrew/bin/brew outdated 2>&1)
+if [ -n "$BREW_OUTDATED" ]; then
+    echo "Outdated packages: $BREW_OUTDATED" >> "$LOG_FILE"
+    /opt/homebrew/bin/brew upgrade 2>&1 >> "$LOG_FILE"
+    ALERT="${ALERT}⚠️ Homebrew packages upgraded: $(echo $BREW_OUTDATED | tr '\n' ', ')\n"
+else
+    echo "[✓] Homebrew packages current" >> "$LOG_FILE"
+fi
+
+# 3. OpenClaw security audit
+echo "[3] Running OpenClaw security audit..." >> "$LOG_FILE"
+AUDIT=$(/usr/local/bin/openclaw security audit 2>&1 || /Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw security audit 2>&1)
+echo "$AUDIT" >> "$LOG_FILE"
+if echo "$AUDIT" | grep -qi "warning\|critical\|fail\|error"; then
+    ALERT="${ALERT}⚠️ OpenClaw security audit flagged issues — check logs.\n"
+fi
+
+# 4. OpenClaw update check
+echo "[4] Checking OpenClaw version..." >> "$LOG_FILE"
+UPDATE_STATUS=$(openclaw update status 2>&1)
+echo "$UPDATE_STATUS" >> "$LOG_FILE"
+if echo "$UPDATE_STATUS" | grep -qi "update available\|new version"; then
+    ALERT="${ALERT}📦 OpenClaw update available — run: openclaw update\n"
+fi
+
+# 5. Credential file permissions hardening
+echo "[5] Hardening credential file permissions..." >> "$LOG_FILE"
+# msmtp config must be 600
+if [ -f /Users/exomac/.msmtprc ]; then
+    chmod 600 /Users/exomac/.msmtprc
+    echo "[✓] .msmtprc permissions: 600" >> "$LOG_FILE"
+fi
+# OpenClaw workspace — ensure no world-readable sensitive files
+chmod -R o-rwx /Users/exomac/.openclaw/workspace/drafts 2>/dev/null
+chmod -R o-rwx /Users/exomac/.openclaw/workspace/references 2>/dev/null
+echo "[✓] Workspace sensitive folders locked to owner-only" >> "$LOG_FILE"
+
+# 6. Clean old OpenClaw session files (Alex Finn's documented tip)
+echo "[6] Cleaning old session files..." >> "$LOG_FILE"
+SESSION_DIR="/Users/exomac/.openclaw/agents/main/sessions"
+if [ -d "$SESSION_DIR" ]; then
+    SESSION_COUNT=$(ls "$SESSION_DIR"/*.jsonl 2>/dev/null | wc -l | tr -d ' ')
+    echo "Session files found: $SESSION_COUNT" >> "$LOG_FILE"
+    if [ "$SESSION_COUNT" -gt 100 ]; then
+        # Keep 20 most recent, delete the rest
+        ls -t "$SESSION_DIR"/*.jsonl 2>/dev/null | tail -n +21 | xargs rm -f
+        echo "[✓] Cleaned old session files (kept 20 most recent)" >> "$LOG_FILE"
+        ALERT="${ALERT}🧹 Cleaned $((SESSION_COUNT - 20)) old session files.\n"
+    else
+        echo "[✓] Session files within normal range ($SESSION_COUNT)" >> "$LOG_FILE"
+    fi
+fi
+
+# 7. Check macOS firewall status
+echo "[7] Firewall status check..." >> "$LOG_FILE"
+FIREWALL=$(/usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate 2>&1)
+echo "$FIREWALL" >> "$LOG_FILE"
+if echo "$FIREWALL" | grep -qi "disabled"; then
+    ALERT="${ALERT}🚨 macOS firewall is DISABLED — recommend enabling.\n"
+else
+    echo "[✓] Firewall active" >> "$LOG_FILE"
+fi
+
+# 8. Check for unexpected open ports
+echo "[8] Checking open ports..." >> "$LOG_FILE"
+PORTS=$(lsof -nP -iTCP -sTCP:LISTEN 2>&1 | grep -v "127.0.0.1\|::1")
+if [ -n "$PORTS" ]; then
+    echo "External-facing ports detected:" >> "$LOG_FILE"
+    echo "$PORTS" >> "$LOG_FILE"
+    ALERT="${ALERT}🔍 External-facing open ports detected — review logs.\n"
+else
+    echo "[✓] No unexpected external ports" >> "$LOG_FILE"
+fi
+
+# 9. Log rotation — keep only 30 days of logs
+find "$LOG_DIR" -name "security-*.log" -mtime +30 -delete 2>/dev/null
+echo "[✓] Old logs cleaned (>30 days)" >> "$LOG_FILE"
+
+echo "=== Run complete: $(date) ===" >> "$LOG_FILE"
+
+# Send alert email if anything needs attention
+if [ -n "$ALERT" ]; then
+    echo -e "From: jquinnexo@pm.me\nTo: jquinnexo@pm.me\nSubject: 🔒 Nightly Security Alert — ExoMac $(date +%Y-%m-%d)\n\nThe following items require attention:\n\n${ALERT}\nFull log: $LOG_FILE" | /opt/homebrew/bin/msmtp jquinnexo@pm.me
+fi
+
+exit 0
