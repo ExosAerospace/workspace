@@ -49,22 +49,29 @@ _Last updated: 2026-03-25_
 
 ---
 
-## 🚨 HIGH CONVICTION — PRIORITY 2a (URGENT — DO TODAY)
-**Organization:** USAF — HVRR Contract / GFE RDRE Delivery Risk
-**Type:** Formal GFE Risk Notification / Contract Protection
-**Value:** Protects existing contract + may unlock funded alternative engine development
-**Stakeholder:** USAF Contracting Officer on HVRR contract (Jon to confirm name)
-**Urgency:** TODAY — file before any further delay to establish excusable delay record
-**Status:** 🟡 Letter drafted — needs CO name, contract number, milestone date
+## 🚨 HIGH CONVICTION — PRIORITY 2a
+**Organization:** USAF AFTC PZR, Edwards AFB — Contract FA930025C6022
+**Type:** OTA Prototype Proposal (SEC/AFWERX) — RDRE Alternative Development
+**Value:** New funded contract for Exos RDRE development + de-risks HVRR program
+**Stakeholder:** Kiera Joyner, CO (kiera.joyner@us.af.mil / 661-527-1992) | Cody Gallagher, CS (cody.gallagher.1@us.af.mil)
+**Urgency:** This week — proactive solution before GFE situation worsens
+**Status:** 🟡 Letter drafted — ready to send
+
+**Key Intel:**
+- Contract FA930025C6022, effective 9/2/2025, AFTC PZR Edwards AFB
+- USAF already disclosed GFE delays — adversarial notification letter is wrong approach
+- SEC/AFWERX OTA is right vehicle given AFTC/Edwards context
+- NASA DUA is the technical credibility anchor for the OTA proposal
+- Letter proposes parallel OTA instrument — does NOT modify FA930025C6022
 
 **Next Actions:**
-- [ ] Jon fills in: CO name, contract number, office/address, critical milestone date
-- [ ] Legal review (brief — 30 min should be sufficient)
-- [ ] Send via email with read receipt + certified mail if contract requires
-- [ ] Request 15-day response window for GFE status + authorization for alternative engine
+- [ ] Legal review of OTA solution letter (brief)
+- [ ] Send to kiera.joyner@us.af.mil, CC cody.gallagher.1@us.af.mil
+- [ ] Request meeting to discuss SEC/AFWERX path
+- [ ] Archive original GFE risk notification draft — superseded
 
-**Draft:** `drafts/usaf-gfe-risk-letter.md`
-**Source:** HVRR contract (internal) | FAR 52.245-1
+**Draft:** `drafts/usaf-ota-solution-letter.md`
+**Source:** Contract FA930025C6022 | SEC/AFWERX OTA vehicle
 
 ---
 
