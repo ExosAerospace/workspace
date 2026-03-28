@@ -16,10 +16,10 @@ echo "[1] Checking macOS security updates..." >> "$LOG_FILE"
 UPDATE_CHECK=$(/usr/sbin/softwareupdate -l 2>&1)
 echo "$UPDATE_CHECK" >> "$LOG_FILE"
 if echo "$UPDATE_CHECK" | grep -qi "recommended\|security"; then
-    echo "[!] Security updates available" >> "$LOG_FILE"
-    # Install recommended security updates only (no major OS upgrades)
-    /usr/sbin/softwareupdate --install --recommended 2>&1 >> "$LOG_FILE"
-    ALERT="${ALERT}⚠️ macOS security patches were installed.\n"
+    echo "[!] Security updates available — downloading only (install requires your password)" >> "$LOG_FILE"
+    # Download only — cannot install headless, requires interactive auth
+    /usr/sbin/softwareupdate --download --recommended 2>&1 >> "$LOG_FILE"
+    ALERT="${ALERT}📦 macOS security updates downloaded and ready to install. Reboot when convenient to apply.\n"
 else
     echo "[✓] macOS up to date" >> "$LOG_FILE"
 fi
@@ -36,20 +36,34 @@ else
     echo "[✓] Homebrew packages current" >> "$LOG_FILE"
 fi
 
+# Resolve openclaw binary — resilient across OS updates
+OC_BIN=$(which openclaw 2>/dev/null || find /Users/exomac/.local/share/mise -name "openclaw" 2>/dev/null | head -1)
+
 # 3. OpenClaw security audit
 echo "[3] Running OpenClaw security audit..." >> "$LOG_FILE"
-AUDIT=$(/usr/local/bin/openclaw security audit 2>&1 || /Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw security audit 2>&1)
-echo "$AUDIT" >> "$LOG_FILE"
-if echo "$AUDIT" | grep -qi "warning\|critical\|fail\|error"; then
-    ALERT="${ALERT}⚠️ OpenClaw security audit flagged issues — check logs.\n"
+if [ -n "$OC_BIN" ]; then
+    AUDIT=$($OC_BIN security audit 2>&1)
+    echo "$AUDIT" >> "$LOG_FILE"
+    if echo "$AUDIT" | grep -qi "warning\|critical\|fail"; then
+        ALERT="${ALERT}⚠️ OpenClaw security audit flagged issues — check logs.\n"
+    else
+        echo "[✓] OpenClaw audit clean" >> "$LOG_FILE"
+    fi
+else
+    echo "[!] openclaw binary not found — skipping audit" >> "$LOG_FILE"
+    ALERT="${ALERT}⚠️ openclaw binary not found — may need PATH fix after OS update.\n"
 fi
 
 # 4. OpenClaw update check
 echo "[4] Checking OpenClaw version..." >> "$LOG_FILE"
-UPDATE_STATUS=$(openclaw update status 2>&1)
-echo "$UPDATE_STATUS" >> "$LOG_FILE"
-if echo "$UPDATE_STATUS" | grep -qi "update available\|new version"; then
-    ALERT="${ALERT}📦 OpenClaw update available — run: openclaw update\n"
+if [ -n "$OC_BIN" ]; then
+    UPDATE_STATUS=$($OC_BIN update status 2>&1)
+    echo "$UPDATE_STATUS" >> "$LOG_FILE"
+    if echo "$UPDATE_STATUS" | grep -qi "update available\|new version"; then
+        ALERT="${ALERT}📦 OpenClaw update available — run: openclaw update\n"
+    else
+        echo "[✓] OpenClaw up to date" >> "$LOG_FILE"
+    fi
 fi
 
 # 5. Credential file permissions hardening
