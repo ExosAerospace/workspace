@@ -210,3 +210,30 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
+
+## Lessons Learned Log
+
+This section captures lessons learned from real work — mistakes, discoveries, and better approaches. Updated as we go.
+
+### Format
+Each entry: Date | What happened | What to do differently
+
+---
+
+### 2026-03-25 to 2026-03-30 (First Week)
+
+**Exo lessons:**
+- SAA vs DUA — always verify the exact legal instrument before claiming "NASA partner." A Data Usage Agreement is not a Space Act Agreement — different contracting pathways, different implications.
+- PPTX video embedding — scripted video embedding in PowerPoint is unreliable across versions. For embedded video, manual Insert → Video in PowerPoint is the only reliable path. Provide the MP4 and instructions instead.
+- USB-RS485 troubleshooting — all-zero bytes = likely A+/B- polarity reversed OR wrong port (BAT COM ≠ RS485C). Always confirm port label and polarity before assuming driver/software issue.
+- Home Assistant Add-ons = "Apps" in HA 2026.x — naming changed, don't look for "Add-ons" in Settings.
+- JK BMS address 0 (all DIP OFF) = broadcast master mode, disables RS485 polling responses on some firmware. Use addresses 1-15 for queryable devices.
+- ProtonMail Bridge required for SMTP — msmtp alone isn't enough; Bridge must be running for outbound email to work.
+- AFWERX SBIR authorization expired October 2025 — verify program status before recommending SBIR paths.
+
+**Jon lessons (for Exo to remember about how Jon works):**
+- Jon moves fast and iterates — he sends partial info and refines as he goes. Don't wait for complete specs before starting.
+- Jon prefers concise, direct responses — no walls of text, no filler.
+- Jon expects Exo to be resourceful — try things before asking.
+- Jon will correct course clearly when Exo is wrong — take the correction and update without defensiveness.
+- Jon works across aerospace BD, home automation, IT infrastructure simultaneously — context switches are frequent and intentional.

@@ -1,0 +1,78 @@
+=== Nightly Security Run: Sun Mar 29 03:20:37 CDT 2026 ===
+[1] Checking macOS security updates...
+No new software available.
+Software Update Tool
+
+Finding available software
+[✓] macOS up to date
+[2] Updating Homebrew packages...
+Outdated packages: libpng
+==> Upgrading 1 outdated package:
+libpng 1.6.55 -> 1.6.56
+==> Fetching downloads for: libpng
+==> Upgrading libpng
+  1.6.55 -> 1.6.56 
+==> Pouring libpng--1.6.56.arm64_tahoe.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/libpng/1.6.56: 28 files, 1.4MB
+==> Running `brew cleanup libpng`...
+Disable this behaviour by setting `HOMEBREW_NO_INSTALL_CLEANUP=1`.
+Hide these hints with `HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
+Removing: /opt/homebrew/Cellar/libpng/1.6.55... (28 files, 1.4MB)
+Removing: /Users/exomac/Library/Caches/Homebrew/libpng_bottle_manifest--1.6.55... (8.6KB)
+Removing: /Users/exomac/Library/Caches/Homebrew/libpng--1.6.55... (459.4KB)
+[3] Running OpenClaw security audit...
+OpenClaw security audit
+Summary: 0 critical · 3 warn · 1 info
+Run deeper: openclaw security audit --deep
+
+WARN
+gateway.trusted_proxies_missing Reverse proxy headers are not trusted
+  gateway.bind is loopback and gateway.trustedProxies is empty. If you expose the Control UI through a reverse proxy, configure trusted proxies so local-client checks cannot be spoofed.
+  Fix: Set gateway.trustedProxies to your proxy IPs or keep the Control UI local-only.
+gateway.nodes.deny_commands_ineffective Some gateway.nodes.denyCommands entries are ineffective
+  gateway.nodes.denyCommands uses exact node command-name matching only (for example `system.run`), not shell-text filtering inside a command payload.
+- Unknown command names (not in defaults/allowCommands): camera.snap (did you mean: camera.list), camera.clip (did you mean: camera.list), screen.record, contacts.add, calendar.add, reminders.add (did you mean: reminders.list), sms.send (did you mean: sms.search)
+  Fix: Use exact command names (for example: canvas.present, canvas.hide, canvas.navigate, canvas.eval, canvas.snapshot, canvas.a2ui.push, canvas.a2ui.pushJSONL, canvas.a2ui.reset). If you need broader restrictions, remove risky command IDs from allowCommands/default workflows and tighten tools.exec policy.
+security.trust_model.multi_user_heuristic Potential multi-user setup detected (personal-assistant model warning)
+  Heuristic signals indicate this gateway may be reachable by multiple users:
+- channels.telegram.groupPolicy="allowlist" with configured group targets
+Runtime/process tools are exposed without full sandboxing in at least one context.
+Potential high-impact tool exposure contexts:
+- agents.defaults (sandbox=off; runtime=[exec, process]; fs=[read, write, edit, apply_patch]; fs.workspaceOnly=false)
+OpenClaw's default security model is personal-assistant (one trusted operator boundary), not hostile multi-tenant isolation on one shared gateway.
+  Fix: If users may be mutually untrusted, split trust boundaries (separate gateways + credentials, ideally separate OS users/hosts). If you intentionally run shared-user access, set agents.defaults.sandbox.mode="all", keep tools.fs.workspaceOnly=true, deny runtime/fs/web tools unless required, and keep personal/private identities + credentials off that runtime.
+
+INFO
+summary.attack_surface Attack surface summary
+  groups: open=0, allowlist=1
+tools.elevated: enabled
+hooks.webhooks: disabled
+hooks.internal: disabled
+browser control: enabled
+trust model: personal assistant (one trusted operator boundary), not hostile multi-tenant on one shared gateway
+[4] Checking OpenClaw version...
+OpenClaw update status
+
+┌──────────┬───────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Item     │ Value                                                                                                     │
+├──────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Install  │ pnpm                                                                                                      │
+│ Channel  │ stable (default)                                                                                          │
+│ Update   │ available · pnpm · npm update 2026.3.28                                                                   │
+└──────────┴───────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Update available (npm 2026.3.28). Run: openclaw update
+[5] Hardening credential file permissions...
+[✓] .msmtprc permissions: 600
+[✓] Workspace sensitive folders locked to owner-only
+[6] Cleaning old session files...
+Session files found: 7
+[✓] Session files within normal range (7)
+[7] Firewall status check...
+Firewall is enabled. (State = 1)
+[✓] Firewall active
+[8] Checking open ports...
+External-facing ports detected:
+/Users/exomac/.openclaw/workspace/scripts/nightly-security.sh: line 109: lsof: command not found
+[✓] Old logs cleaned (>30 days)
+=== Run complete: Sun Mar 29 03:20:51 CDT 2026 ===
