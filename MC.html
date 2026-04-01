@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Control</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, sans-serif; background: #0a0f1e; color: #e0e6f0; }
+.top { background: #0a1628; padding: 16px 20px; border-bottom: 2px solid #0066cc; display: flex; align-items: center; justify-content: space-between; }
+.top h1 { font-size: 16px; font-weight: 700; letter-spacing: 2px; color: #fff; }
+.logo { color: #ff6b00; font-weight: 900; font-size: 18px; letter-spacing: 2px; }
+.container { max-width: 700px; margin: 0 auto; padding: 16px; }
+.section { margin-bottom: 20px; }
+.section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; margin-bottom: 8px; display: inline-block; }
+.lb { background: rgba(255,50,50,0.15); color: #ff6666; }
+.lr { background: rgba(255,180,0,0.15); color: #ffcc44; }
+.lp { background: rgba(0,120,255,0.15); color: #66aaff; }
+.task { background: #0d1a2e; border: 1px solid #1a2a40; border-radius: 8px; padding: 12px 14px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.task:hover { border-color: #0066cc; }
+.task-left { flex: 1; min-width: 0; }
+.task-title { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.task-meta { font-size: 11px; color: #556; margin-top: 2px; }
+.owner-exo { color: #4499ff; }
+.owner-jon { color: #ff9955; }
+.done-btn { background: transparent; border: 1px solid #1a3a1a; color: #44cc77; font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 5px; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+.done-btn:hover { background: rgba(0,200,80,0.2); border-color: #44cc77; }
+.done-btn:active { transform: scale(0.96); }
+.blocked-tag { font-size: 10px; color: #ff6666; background: rgba(255,50,50,0.1); padding: 3px 8px; border-radius: 3px; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="top">
+  <div><div class="logo">EXOS</div><h1>MISSION CONTROL</h1></div>
+  <div style="font-size:11px;color:#445" id="updated"></div>
+</div>
+<div class="container" id="board"></div>
+
+<script>
+const API = '/api/tasks';
+
+const BLOCKED = ['Series A Direction', 'HVRR OTA Letter', 'Teasley Outreach', 'INRODES Flight', 'Exobot Core'];
+const OWNERS = {
+  'Series A': 'Jon', 'HVRR': 'Exo', 'Teasley': 'Exo', 'INRODES': 'Exo', 'Exobot': 'Jon',
+  'NASA FO Follow': 'Exo', 'SAM.gov': 'Jon', "Matt's Contact": 'Jon',
+  'ProtonMail': 'Exo', 'Route Cron': 'Exo', 'ISC': 'Jon', 'Basen': 'Jon+Exo', 'EG4': 'Jon'
+};
+
+async function load() {
+  const res = await fetch(API);
+  const tasks = await res.json();
+  
+  const queued = tasks.filter(t => t.state === 'Queued');
+  const inprog = tasks.filter(t => t.state === 'In Progress');
+  
+  const blocked = queued.filter(t => BLOCKED.some(b => t.title.includes(b.split(' ')[0])));
+  const ready = queued.filter(t => !BLOCKED.some(b => t.title.includes(b.split(' ')[0])));
+
+  document.getElementById('updated').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+  
+  let html = '';
+  
+  if (inprog.length) {
+    html += `<div class="section"><div class="section-label lp">🔵 In Progress (${inprog.length})</div>`;
+    inprog.forEach(t => html += taskHtml(t, false));
+    html += '</div>';
+  }
+  
+  if (ready.length) {
+    html += `<div class="section"><div class="section-label lr">🟡 Ready (${ready.length})</div>`;
+    ready.forEach(t => html += taskHtml(t, false));
+    html += '</div>';
+  }
+
+  if (blocked.length) {
+    html += `<div class="section"><div class="section-label lb">🔴 Blocked (${blocked.length})</div>`;
+    blocked.forEach(t => html += taskHtml(t, true));
+    html += '</div>';
+  }
+
+  document.getElementById('board').innerHTML = html;
+}
+
+function ownerOf(title) {
+  for (const [k,v] of Object.entries(OWNERS)) if (title.includes(k)) return v;
+  return '—';
+}
+
+function taskHtml(t, isBlocked) {
+  const owner = ownerOf(t.title);
+  const ownerClass = owner === 'Exo' ? 'owner-exo' : 'owner-jon';
+  const btn = isBlocked 
+    ? `<span class="blocked-tag">Blocked</span>`
+    : `<button class="done-btn" onclick="markDone(${t.id})">✓ Done</button>`;
+  return `<div class="task" id="t${t.id}">
+    <div class="task-left">
+      <div class="task-title">${t.title}</div>
+      <div class="task-meta"><span class="${ownerClass}">${owner}</span></div>
+    </div>
+    ${btn}
+  </div>`;
+}
+
+async function markDone(id) {
+  const el = document.getElementById('t' + id);
+  el.style.opacity = '0.4';
+  await fetch(`${API}/${id}`, {
+    method: 'PATCH',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({state:'Done'})
+  });
+  el.remove();
+  // refresh count
+  load();
+}
+
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos Aerospace — Mission Control</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:   #0a1628;
+    --navy2:  #0d1f3c;
+    --navy3:  #112248;
+    --blue:   #0066cc;
+    --blue2:  #0080ff;
+    --orange: #ff6b00;
+    --orange2:#ff8c33;
+    --text:   #e8edf5;
+    --text2:  #a0aec0;
+    --border: rgba(255,255,255,0.08);
+    --card:   #0f1e38;
+    --blocked-accent: #ff4444;
+    --progress-accent: #0080ff;
+    --done-accent:    #22c55e;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0a1628 0%, #0d2050 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    min-height: 64px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-logo {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--blue) 0%, var(--orange) 100%);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 14px;
+    color: #fff;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+
+  .brand-text h1 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+
+  .brand-text p {
+    font-size: 11px;
+    color: var(--text2);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .refresh-badge {
+    font-size: 11px;
+    color: var(--text2);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 10px;
+    white-space: nowrap;
+  }
+
+  .refresh-badge.pulsing {
+    color: var(--done-accent);
+    border-color: rgba(34,197,94,0.3);
+  }
+
+  /* ── ADD TASK BAR ── */
+  .add-bar {
+    background: var(--navy2);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .add-bar input {
+    flex: 1;
+    min-width: 200px;
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 9px 14px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .add-bar input::placeholder { color: var(--text2); }
+  .add-bar input:focus { border-color: var(--blue); }
+
+  .add-bar select {
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 9px 10px;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .btn {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .btn:hover { background: var(--blue2); }
+  .btn:active { transform: scale(0.97); }
+  .btn.secondary { background: rgba(255,255,255,0.07); }
+  .btn.secondary:hover { background: rgba(255,255,255,0.12); }
+
+  /* ── BOARD ── */
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 20px 24px;
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .board { grid-template-columns: 1fr; }
+    .add-bar { padding: 10px 16px; }
+    header { padding: 0 16px; }
+    .board { padding: 16px; }
+  }
+
+  /* ── COLUMN ── */
+  .column {
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    min-height: 120px;
+  }
+
+  .col-header {
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .col-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .col-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    flex: 1;
+  }
+
+  .col-count {
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+  }
+
+  [data-col="blocked"] .col-dot { background: var(--blocked-accent); }
+  [data-col="blocked"] .col-title { color: #ff7070; }
+  [data-col="progress"] .col-dot { background: var(--progress-accent); }
+  [data-col="progress"] .col-title { color: #60a5fa; }
+  [data-col="done"] .col-dot { background: var(--done-accent); }
+  [data-col="done"] .col-title { color: #4ade80; }
+
+  /* ── DROP ZONE ── */
+  .col-body {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 60px;
+    transition: background 0.2s;
+  }
+
+  .col-body.drag-over {
+    background: rgba(0,102,204,0.08);
+  }
+
+  .empty-col {
+    text-align: center;
+    color: var(--text2);
+    font-size: 12px;
+    padding: 20px;
+    opacity: 0.5;
+  }
+
+  /* ── TASK CARD ── */
+  .task-card {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: grab;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    position: relative;
+    user-select: none;
+  }
+
+  .task-card:hover {
+    border-color: rgba(0,102,204,0.4);
+    box-shadow: 0 2px 12px rgba(0,102,204,0.15);
+  }
+
+  .task-card.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+    transform: scale(0.97);
+  }
+
+  .task-card.done-card {
+    opacity: 0.7;
+  }
+
+  .task-card.done-card .task-title {
+    text-decoration: line-through;
+    color: var(--text2);
+  }
+
+  .task-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .task-title {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text);
+  }
+
+  /* ── OWNER BADGE ── */
+  .owner-badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  .owner-exo  { background: rgba(0,102,204,0.25); color: #60a5fa; border: 1px solid rgba(0,102,204,0.4); }
+  .owner-jon  { background: rgba(255,107,0,0.2);  color: #fb923c; border: 1px solid rgba(255,107,0,0.4); }
+  .owner-both { background: rgba(139,92,246,0.2); color: #c084fc; border: 1px solid rgba(139,92,246,0.4); }
+  .owner-other{ background: rgba(255,255,255,0.05); color: var(--text2); border: 1px solid var(--border); }
+
+  /* ── CARD FOOTER ── */
+  .task-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .due-date {
+    font-size: 11px;
+    color: var(--text2);
+    background: rgba(255,255,255,0.04);
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+
+  .due-date.overdue { color: var(--blocked-accent); }
+
+  .assign-toggle {
+    margin-left: auto;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text2);
+    font-size: 10px;
+    padding: 3px 7px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .assign-toggle:hover {
+    border-color: var(--orange);
+    color: var(--orange2);
+  }
+
+  /* ── MOVE BUTTONS ── */
+  .move-btns {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .move-btn {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text2);
+    font-size: 11px;
+    padding: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .move-btn:hover { background: rgba(0,102,204,0.15); color: #60a5fa; border-color: rgba(0,102,204,0.3); }
+  .move-btn.done-btn:hover { background: rgba(34,197,94,0.12); color: #4ade80; border-color: rgba(34,197,94,0.3); }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 13px;
+    color: var(--text);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    transform: translateY(60px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    max-width: 300px;
+  }
+
+  #toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* ── SPINNER ── */
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── ERROR STATE ── */
+  .error-banner {
+    background: rgba(255,68,68,0.1);
+    border: 1px solid rgba(255,68,68,0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #ff8080;
+    margin: 16px 24px 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">EX</div>
+    <div class="brand-text">
+      <h1>Exos Aerospace</h1>
+      <p>Mission Control</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <span id="refreshBadge" class="refresh-badge">Loading…</span>
+    <button class="btn secondary" onclick="loadTasks(true)">↻ Refresh</button>
+  </div>
+</header>
+
+<div class="add-bar">
+  <input id="newTitle" type="text" placeholder="New task title… (press Enter to add)" maxlength="120"
+    onkeydown="if(event.key==='Enter') addTask()">
+  <select id="newOwner">
+    <option value="Exo">Exo</option>
+    <option value="Jon">Jon</option>
+    <option value="Jon+Exo">Both</option>
+  </select>
+  <select id="newState">
+    <option value="Blocked">Blocked</option>
+    <option value="In Progress">In Progress</option>
+    <option value="Done">Done</option>
+  </select>
+  <button class="btn" onclick="addTask()">+ Add Task</button>
+</div>
+
+<div id="errorBanner" class="error-banner" style="display:none"></div>
+
+<div class="board">
+  <div class="column" data-col="blocked">
+    <div class="col-header">
+      <div class="col-dot"></div>
+      <div class="col-title">Blocked</div>
+      <span class="col-count" id="count-blocked">0</span>
+    </div>
+    <div class="col-body" id="col-blocked" ondragover="dragOver(event,'Blocked')" ondrop="drop(event,'Blocked')" ondragleave="dragLeave(event)"></div>
+  </div>
+
+  <div class="column" data-col="progress">
+    <div class="col-header">
+      <div class="col-dot"></div>
+      <div class="col-title">In Progress</div>
+      <span class="col-count" id="count-progress">0</span>
+    </div>
+    <div class="col-body" id="col-progress" ondragover="dragOver(event,'In Progress')" ondrop="drop(event,'In Progress')" ondragleave="dragLeave(event)"></div>
+  </div>
+
+  <div class="column" data-col="done">
+    <div class="col-header">
+      <div class="col-dot"></div>
+      <div class="col-title">Done</div>
+      <span class="col-count" id="count-done">0</span>
+    </div>
+    <div class="col-body" id="col-done" ondragover="dragOver(event,'Done')" ondrop="drop(event,'Done')" ondragleave="dragLeave(event)"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+let tasks = [];
+let dragTaskId = null;
+let autoRefreshTimer = null;
+const REFRESH_INTERVAL = 30000;
+
+const DEFAULT_TASKS = [
+  { title: "Series A Direction",                    owner: "Jon",     state: "Blocked"     },
+  { title: "HVRR OTA Letter to Matt",               owner: "Exo",     state: "Blocked"     },
+  { title: "Teasley NASA MSFC Outreach",            owner: "Exo",     state: "Blocked"     },
+  { title: "INRODES Flight Demo Outreach",          owner: "Exo",     state: "Blocked"     },
+  { title: "Add @Exosaerobot to Telegram Group",    owner: "Jon",     state: "Blocked"     },
+  { title: "Basen Battery RS485 Fix",               owner: "Jon+Exo", state: "In Progress" },
+  { title: "EG4 HDMI Breakout Board",               owner: "Jon",     state: "In Progress" },
+  { title: "NASA FO Email Sent",                    owner: "Exo",     state: "Done"        },
+  { title: "ExoMac Security Setup",                 owner: "Exo",     state: "Done"        },
+  { title: "ProtonMail Configured",                 owner: "Exo",     state: "Done"        },
+  { title: "Qwen3-32B Installed",                   owner: "Exo",     state: "Done"        },
+  { title: "HA Solar Live",                         owner: "Jon",     state: "Done"        },
+  { title: "ISC Presentation Delivered",            owner: "Jon",     state: "Done"        },
+];
+
+// ── API HELPERS ────────────────────────────────────────────────────────────
+async function apiFetch(path, opts = {}) {
+  const res = await fetch(path, {
+    headers: { 'Content-Type': 'application/json' },
+    ...opts,
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+// ── STATE NORMALIZATION ────────────────────────────────────────────────────
+// Map API states to our 3-column model
+function normalizeState(s) {
+  if (!s) return 'Blocked';
+  const lower = s.toLowerCase();
+  if (lower === 'done') return 'Done';
+  if (lower === 'in progress') return 'In Progress';
+  // Blocked, Queued, anything else → Blocked
+  return 'Blocked';
+}
+
+function colIdForState(state) {
+  if (state === 'Done') return 'col-done';
+  if (state === 'In Progress') return 'col-progress';
+  return 'col-blocked';
+}
+
+// ── LOAD TASKS ─────────────────────────────────────────────────────────────
+async function loadTasks(showFeedback = false) {
+  if (showFeedback) setRefreshBadge('Refreshing…', false);
+  try {
+    const data = await apiFetch('/api/tasks');
+    tasks = data.map(t => ({ ...t, state: normalizeState(t.state) }));
+
+    // If API returns essentially empty (no real tasks), seed defaults
+    if (tasks.length === 0) {
+      await seedDefaults();
+      return;
+    }
+
+    render();
+    hideError();
+    const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    setRefreshBadge(`Updated ${now}`, true);
+  } catch (e) {
+    showError('Could not load tasks: ' + e.message);
+    setRefreshBadge('Error — retrying', false);
+  }
+  scheduleRefresh();
+}
+
+async function seedDefaults() {
+  toast('Seeding default tasks…');
+  for (const t of DEFAULT_TASKS) {
+    try { await apiFetch('/api/tasks', { method: 'POST', body: JSON.stringify(t) }); }
+    catch(e) { console.warn('seed failed for', t.title, e); }
+  }
+  await loadTasks();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function render() {
+  const cols = {
+    'Blocked':     document.getElementById('col-blocked'),
+    'In Progress': document.getElementById('col-progress'),
+    'Done':        document.getElementById('col-done'),
+  };
+  const counts = { 'Blocked': 0, 'In Progress': 0, 'Done': 0 };
+
+  // Clear
+  Object.values(cols).forEach(c => { c.innerHTML = ''; });
+
+  // Sort: In Progress first, then Blocked, then Done (within each col, by id desc)
+  const sorted = [...tasks].sort((a, b) => b.id - a.id);
+
+  sorted.forEach(task => {
+    const col = cols[task.state] || cols['Blocked'];
+    col.appendChild(buildCard(task));
+    counts[task.state] = (counts[task.state] || 0) + 1;
+  });
+
+  // Empty states
+  Object.entries(cols).forEach(([state, col]) => {
+    if (col.children.length === 0) {
+      col.innerHTML = '<div class="empty-col">No tasks here</div>';
+    }
+  });
+
+  // Update counts
+  document.getElementById('count-blocked').textContent  = counts['Blocked']     || 0;
+  document.getElementById('count-progress').textContent = counts['In Progress'] || 0;
+  document.getElementById('count-done').textContent     = counts['Done']        || 0;
+}
+
+function ownerClass(owner) {
+  if (!owner) return 'owner-other';
+  const l = owner.toLowerCase();
+  if (l.includes('+') || l === 'both') return 'owner-both';
+  if (l === 'exo' || l === 'exomac') return 'owner-exo';
+  if (l === 'jon') return 'owner-jon';
+  return 'owner-other';
+}
+
+function ownerLabel(owner) {
+  if (!owner) return '?';
+  const l = owner.toLowerCase();
+  if (l.includes('+') || l === 'both') return 'BOTH';
+  if (l === 'exo' || l === 'exomac') return 'EXO';
+  if (l === 'jon') return 'JON';
+  return owner.toUpperCase().slice(0, 4);
+}
+
+function buildCard(task) {
+  const div = document.createElement('div');
+  div.className = 'task-card' + (task.state === 'Done' ? ' done-card' : '');
+  div.draggable = true;
+  div.dataset.id = task.id;
+
+  div.addEventListener('dragstart', () => {
+    dragTaskId = task.id;
+    setTimeout(() => div.classList.add('dragging'), 0);
+  });
+  div.addEventListener('dragend', () => {
+    div.classList.remove('dragging');
+    dragTaskId = null;
+    document.querySelectorAll('.col-body').forEach(c => c.classList.remove('drag-over'));
+  });
+
+  // Due date
+  let dueDateHtml = '';
+  if (task.due_date) {
+    const d = new Date(task.due_date);
+    const overdue = d < new Date() && task.state !== 'Done';
+    dueDateHtml = `<span class="due-date ${overdue ? 'overdue' : ''}">📅 ${d.toLocaleDateString('en-US', {month:'short', day:'numeric'})}</span>`;
+  }
+
+  // Move buttons (context-sensitive)
+  let moveBtns = '';
+  if (task.state === 'Blocked') {
+    moveBtns = `
+      <button class="move-btn" onclick="moveTask(${task.id},'In Progress')">→ In Progress</button>
+      <button class="move-btn done-btn" onclick="moveTask(${task.id},'Done')">✓ Done</button>`;
+  } else if (task.state === 'In Progress') {
+    moveBtns = `
+      <button class="move-btn" onclick="moveTask(${task.id},'Blocked')">← Block</button>
+      <button class="move-btn done-btn" onclick="moveTask(${task.id},'Done')">✓ Done</button>`;
+  } else {
+    moveBtns = `
+      <button class="move-btn" onclick="moveTask(${task.id},'In Progress')">↩ Reopen</button>`;
+  }
+
+  // Assign toggle: show "Assign to Jon" if currently Exo, and vice versa
+  let toggleTarget, toggleLabel;
+  const l = (task.owner || '').toLowerCase();
+  if (l === 'jon') { toggleTarget = 'Exo'; toggleLabel = 'Assign → Exo'; }
+  else if (l === 'exo' || l === 'exomac') { toggleTarget = 'Jon'; toggleLabel = 'Assign → Jon'; }
+  else { toggleTarget = 'Jon'; toggleLabel = 'Assign → Jon'; }
+
+  div.innerHTML = `
+    <div class="task-top">
+      <div class="task-title">${escHtml(task.title)}</div>
+      <span class="owner-badge ${ownerClass(task.owner)}">${ownerLabel(task.owner)}</span>
+    </div>
+    <div class="task-footer">
+      ${dueDateHtml}
+      <button class="assign-toggle" onclick="assignTask(${task.id},'${toggleTarget}')">${escHtml(toggleLabel)}</button>
+    </div>
+    <div class="move-btns">${moveBtns}</div>
+  `;
+
+  return div;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── ACTIONS ────────────────────────────────────────────────────────────────
+async function moveTask(id, newState) {
+  const task = tasks.find(t => t.id === id);
+  if (!task || task.state === newState) return;
+  const oldState = task.state;
+  // Optimistic update
+  task.state = newState;
+  render();
+  try {
+    await apiFetch('/api/tasks', {
+      method: 'PATCH',
+      body: JSON.stringify({ id, state: newState })
+    });
+    toast(`Moved to ${newState}`);
+  } catch(e) {
+    task.state = oldState;
+    render();
+    toast('Failed to move task');
+  }
+}
+
+async function assignTask(id, newOwner) {
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+  const oldOwner = task.owner;
+  task.owner = newOwner;
+  render();
+  try {
+    await apiFetch('/api/tasks', {
+      method: 'PATCH',
+      body: JSON.stringify({ id, owner: newOwner })
+    });
+    toast(`Assigned to ${newOwner}`);
+  } catch(e) {
+    task.owner = oldOwner;
+    render();
+    toast('Failed to assign task');
+  }
+}
+
+async function addTask() {
+  const titleEl = document.getElementById('newTitle');
+  const ownerEl = document.getElementById('newOwner');
+  const stateEl = document.getElementById('newState');
+  const title = titleEl.value.trim();
+  if (!title) { titleEl.focus(); return; }
+
+  const owner = ownerEl.value;
+  const state = stateEl.value;
+
+  titleEl.disabled = true;
+  try {
+    const newTask = await apiFetch('/api/tasks', {
+      method: 'POST',
+      body: JSON.stringify({ title, owner, state })
+    });
+    newTask.state = normalizeState(newTask.state);
+    tasks.unshift(newTask);
+    render();
+    titleEl.value = '';
+    toast('Task added ✓');
+  } catch(e) {
+    toast('Failed to add task: ' + e.message);
+  } finally {
+    titleEl.disabled = false;
+    titleEl.focus();
+  }
+}
+
+// ── DRAG & DROP ────────────────────────────────────────────────────────────
+function dragOver(e, state) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+
+function dragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function drop(e, state) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (dragTaskId !== null) {
+    moveTask(dragTaskId, state);
+  }
+}
+
+// ── UI HELPERS ─────────────────────────────────────────────────────────────
+function setRefreshBadge(text, good) {
+  const el = document.getElementById('refreshBadge');
+  el.textContent = text;
+  el.className = 'refresh-badge' + (good ? ' pulsing' : '');
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorBanner');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function hideError() {
+  document.getElementById('errorBanner').style.display = 'none';
+}
+
+function scheduleRefresh() {
+  clearTimeout(autoRefreshTimer);
+  autoRefreshTimer = setTimeout(() => loadTasks(false), REFRESH_INTERVAL);
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+loadTasks(true);
+</script>
+</body>
+</html>
