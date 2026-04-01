@@ -1,147 +1,159 @@
-# Exos Aerospace — Mission Control Task Tracker
+# Exos Aerospace — Mission Control
 _Last updated: 2026-04-01_
+_Owner: Exo | Review: Daily 4:30 AM + Monday 7 AM_
 
 ---
 
-## 🚨 HIGH CONVICTION — PRIORITY 1
-**Organization:** NASA Armstrong Flight Research Center — Flight Opportunities Program
-**Type:** IDIQ Provider Contract (FO IDIQ 4 — 80AFRC23R0001)
-**Value:** Up to $45M (multi-year IDIQ)
-**Stakeholder:** Angela Stinchfield (angela.t.stinchfield@nasa.gov) / Melissa Newell (melissa.newell@nasa.gov) / Program Mgr: Greg Peters
-**Urgency:** Follow-up due 2026-04-08 (2 weeks from send)
-**Status:** 🟢 Email Sent 2026-03-25 — awaiting response
+## HOW THIS WORKS
 
-**CC'd:** nasa-flightopportunities@mail.nasa.gov, Lizi Quinn, Neil Milburn
+Each task has:
+- **Owner:** `[EXO]` = Exo executes | `[JON]` = Jon executes | `[ASSIGN:name]` = delegated
+- **Status:** 🔴 Blocked | 🟡 Ready | 🔵 In Progress | ✅ Done | ⏸ On Hold
+- **Due date** and **trigger** (what unlocks the next step)
 
-**Next Actions:**
-- [ ] **April 8** — Follow up if no response
-- [ ] If response received: schedule call, prep BLK3 capability briefing
-- [ ] NOTE: Sent email incorrectly referenced "Space Act Agreement" — it is a DUA. Clarify if raised on call.
-
-**Source:** https://sam.gov/opp/a665d191eef14ab7966484b9d59584d6/view
+To add a task: tell Exo and it gets added immediately.
+To execute a task: tell Exo "do [task name]" and it runs.
 
 ---
 
-## 🚨 HIGH CONVICTION — PRIORITY 2
-**Organization:** NASA MSFC — Teasley RDRE / DUA Activation
-**Type:** DUA → Funded Flight Demo Contract
-**Value:** TBD
-**Stakeholder:** Thomas Teasley — thomas.teasley@nasa.gov (MSFC-ER13)
-**Urgency:** ON HOLD — blocked on funding (Series A or OTA must close first)
-**Status:** 🔴 On hold — funding dependency
+## 🔴 BLOCKED — Waiting on Input
 
-**Key Intel:**
-- Exos holds a NASA Data Usage Agreement (DUA) — NOT a Space Act Agreement
-- DUA covers: RDRE drawings, models, hot fire test data, design practices, lessons learned (ITAR/EAR controlled)
-- Teasley is named NASA POC — he is engaged and aware of Exos
-- Cannot proceed with commercial RDRE build without Series A or OTA funding
+### B-001 | Series A Direction
+**Owner:** [JON]
+**Due:** ASAP — unlocks B-002, B-003, B-004
+**Blocked on:** Jon's direction (promised 2026-03-31 AM)
+**Details:** $10M raise — acquire Scorpius ROFR, expand RDRE, build BLK3
+**When unblocked:** Exo begins investor sourcing immediately
 
-**Next Actions:**
-- [ ] Series A close OR OTA funding → triggers Teasley engagement
-- [ ] Draft outreach ready at `drafts/teasley-nasa-outreach.md`
+### B-002 | HVRR OTA Letter to Matt
+**Owner:** [EXO] once unblocked
+**Due:** TBD
+**Blocked on:** (1) Matt's full name + contact, (2) Series A direction
+**Details:** USAF FA930025C6022 — GFE RDRE delivery at risk. OTA path via SpEC/NSTXL. Neil Milburn coordinating with Matt.
+**Draft ready:** `drafts/usaf-ota-solution-letter-v2.md` (needs correct addressee)
 
----
+### B-003 | Teasley Outreach (NASA MSFC RDRE)
+**Owner:** [EXO] once unblocked
+**Due:** TBD
+**Blocked on:** Funding (Series A or OTA must close first)
+**Details:** DUA active, Teasley engaged. Cannot proceed without commercial build funding.
+**Draft ready:** `drafts/teasley-nasa-outreach.md`
 
-## 🚨 HIGH CONVICTION — PRIORITY 2a
-**Organization:** USAF AFTC — HVRR Contract FA930025C6022
-**Type:** OTA Prototype — RDRE Alternative Development
-**Value:** TBD
-**Stakeholder:** Matt (primary USAF contact) + Neil Milburn (working with Matt)
-**Urgency:** ON HOLD — waiting on Series A direction + Matt's contact details
-**Status:** 🔴 On hold
+### B-004 | INRODES Flight Demo Outreach
+**Owner:** [EXO] once unblocked
+**Blocked on:** Same as B-003 — funding first
+**Details:** Route via Teasley warm intro after B-003 is sent
 
-**Key Intel:**
-- Kiera Joyner (CO) is NOT the right contact — Matt is
-- Neil Milburn is coordinating with Matt
-- GFE RDRE delivery at risk — USAF disclosed delays
-- OTA path: SpEC/NSTXL or AFWERX — Kiera's office to advise preferred vehicle
-- Draft letter ready at `drafts/usaf-ota-solution-letter-v2.md` (needs update for Matt)
-
-**Next Actions:**
-- [ ] Jon to provide Matt's full name + contact
-- [ ] Series A direction (this AM per Jon 2026-03-31) → unlocks OTA pursuit
-- [ ] Neil Milburn to coordinate with Matt
+### B-005 | Exobot Core Telegram Group
+**Owner:** [JON]
+**Blocked on:** Jon adds @Exosaerobot as member to Exobot Core group
+**Action:** Open group → Add Members → search @Exosaerobot → Add
 
 ---
 
-## MEDIUM CONVICTION — PRIORITY 3
-**Organization:** NASA MSFC — INRODES Program
-**Type:** Flight Demonstration Partnership
-**Value:** TBD
-**Stakeholder:** Thomas Teasley / Ramon Osorio (ramon.j.osorio@nasa.gov)
-**Urgency:** ON HOLD — same funding dependency as Priority 2
-**Status:** 🔴 On hold
+## 🟡 READY — Can Be Done Now
 
-**Draft:** `drafts/msfc-inrodes-outreach.md` (route via Teasley warm intro)
+### R-001 | NASA FO Follow-Up Email
+**Owner:** [EXO]
+**Due:** 2026-04-08
+**Details:** Follow up with Angela Stinchfield + Melissa Newell if no response to 2026-03-25 outreach
+**Action:** Exo drafts and sends on April 8 if no response received
 
----
+### R-002 | SAM.gov RDRE Capability Update
+**Owner:** [JON]
+**Due:** This week
+**Details:** Log into SAM.gov, update Exos capability narrative with RDRE language
+**Instructions:** `drafts/sam-gov-rdre-update.md`
 
-## MEDIUM CONVICTION — PRIORITY 4
-**Organization:** DoD — RDRE Capability Visibility
-**Type:** SAM.gov registration + follow-on RFP watch
-**Urgency:** Ongoing
-**Status:** 🟡 Pending SAM.gov update
+### R-003 | Matt Contact Info
+**Owner:** [JON]
+**Due:** ASAP — unlocks B-002
+**Action:** Send Exo Matt's full name and email/phone
 
-**Next Actions:**
-- [ ] Update SAM.gov registration with RDRE capability language (`drafts/sam-gov-rdre-update.md`)
-- [ ] Monitor for DoD RDRE follow-on RFP/BAA (prior RFI 2449PS50 closed)
-- [ ] RDRE capability statement ready: `drafts/rdre-capability-statement.md`
+### R-004 | Proton Bridge Auto-Start
+**Owner:** [EXO]
+**Due:** Today
+**Details:** Configure Proton Mail Bridge to launch at login so email works after reboots
 
----
-
-## 🔑 CRITICAL PATH — SERIES A ($10M)
-
-**Status:** 🔴 Direction pending — Jon to advise
-
-**Use of proceeds:**
-1. Acquire remaining 82% of Scorpius (exercise ROFR at 2021 basis)
-2. Expand RDRE development
-3. Build another BLK3 PSRLV
-
-**Why this unlocks everything:**
-- Teasley/RDRE engagement (Priority 2)
-- HVRR OTA pursuit (Priority 2a)
-- INRODES flight demo (Priority 3)
-- Scorpius ROFR arbitrage (TRL 9 + lunar heritage at 2021 valuation)
-
-**Investor profile:** Aerospace platform investors, dual-use tech, family office
-**Next Actions:**
-- [ ] Jon to provide Series A direction
-- [ ] Exo to begin investor sourcing once direction confirmed
+### R-005 | Qwen3 OpenClaw Integration
+**Owner:** [EXO]
+**Due:** Today
+**Details:** Configure OpenClaw to route non-research cron jobs to local Qwen3-32B to reduce Anthropic costs
 
 ---
 
-## 📋 ACTIVE CRON SCHEDULE
+## 🔵 IN PROGRESS
+
+### P-001 | ISC ARCA ETV Presentation
+**Owner:** [JON]
+**Status:** Jon editing final version with embedded video
+**Details:** Branded FINAL2 + supermod_vtvl.mp4 delivered to ProtonMail. Jon inserting video manually in PowerPoint.
+
+### P-002 | Basen Battery RS485 Connection
+**Owner:** [JON + EXO]
+**Status:** Wired correctly, JK BMS addon installed, protocol mismatch being resolved
+**Next:** Try dbus-serialbattery addon OR firmware update on batteries
+**Blocker:** JK BMS firmware V1.0.0 — may need RS485 address/baud confirmation
+
+### P-003 | EG4 Inverter Modbus
+**Owner:** [JON]
+**Status:** Waiting on HDMI breakout board for RS485C port connection
+**Next:** Order HDMI male breakout board (~$8 Amazon) → wire Pin 1 (A+) and Pin 4 (B-)
+
+---
+
+## ✅ COMPLETED
+
+### C-001 | NASA FO Outreach Email — Sent 2026-03-25
+Angela Stinchfield + Melissa Newell. CC: Lizi Quinn, Neil Milburn.
+Solicitation 80AFRC23R0001 — evergreen, open now.
+NOTE: Email incorrectly referenced SAA — clarify on call if raised.
+
+### C-002 | ExoMac Security Setup
+Nightly security script running 3:15 AM. Homebrew updates, OpenClaw audit, session cleanup, firewall check.
+
+### C-003 | ProtonMail + msmtp Email Configured
+jquinnexo@pm.me outbound working. Bridge on port 1025.
+
+### C-004 | Qwen3-32B Local Model Installed
+20GB model running via Ollama on ExoMac. Zero cost, fully local.
+
+### C-005 | Home Assistant Solar Live
+Enphase Envoy integrated. 30 microinverters reporting. Daily 7 AM solar report active.
+
+### C-006 | HA Updated to 2026.3.4
+
+### C-007 | ISC Branded Presentation Delivered
+FINAL2 + video MP4 sent to ProtonMail for manual edit.
+
+---
+
+## 📋 CRON SCHEDULE
 
 | Time | Task | Status |
 |---|---|---|
-| 3:15 AM daily | Nightly security hardening | ✅ Running |
-| 4:30 AM daily | File maintenance & lessons learned | ✅ Running |
-| 6:30 AM daily | Aerospace opportunity scan | ✅ Running |
-| 7:00 AM daily | Solar report (HA/Enphase) | ✅ Running |
-| 8:00 PM daily | End-of-day status update | ✅ Running |
-| Monday 7 AM | Mission Control weekly review | ✅ Running |
-| Wednesday 8 AM | CRM dashboard refresh | ✅ Running |
+| 3:15 AM | Nightly security | ✅ |
+| 4:30 AM | File maintenance + lessons learned | ✅ |
+| 6:30 AM | Aerospace opportunity scan | ✅ |
+| 7:00 AM | Solar report | ✅ |
+| 8:00 PM | End-of-day status | ✅ |
+| Mon 7 AM | Mission Control weekly review | ✅ |
+| Wed 8 AM | CRM dashboard refresh | ✅ |
 
 ---
 
-## 🏠 HOME AUTOMATION STATUS
+## 📌 KEY CONTACTS
 
-**Enphase Solar:** ✅ Live — 30 microinverters reporting, daily report active
-**EG4 Inverters:** ⚠️ RS485 connection not yet established — HDMI breakout board needed (~$8 Amazon)
-**Basen Batteries (3x 15.4kWh):** ⚠️ RS485C wired, JK BMS addon installed, protocol mismatch — firmware V1.0.0 may need update or different integration
-**Home Assistant:** ✅ 2026.3.4 running on HA Green (192.168.143.166)
-
----
-
-## 🖥️ EXOMAC INFRASTRUCTURE
-
-**Hardware:** M4 Pro Mac mini, 48GB RAM, macOS Tahoe 26.4
-**OpenClaw:** 2026.3.28 — current
-**Local LLM:** Qwen3-32B installed via Ollama (20GB, zero cost)
-**Email:** ProtonMail Bridge + msmtp configured (jquinnexo@pm.me)
-**Telegram:** @Exosaerobot — Exobot Core group setup pending bot member add
+| Name | Role | Contact |
+|---|---|---|
+| Angela Stinchfield | NASA FO Contracting | angela.t.stinchfield@nasa.gov |
+| Melissa Newell | NASA FO Contract Specialist | melissa.newell@nasa.gov |
+| Thomas Teasley | NASA MSFC RDRE Lead | thomas.teasley@nasa.gov |
+| Ramon Osorio | NASA MSFC Media/Comms | ramon.j.osorio@nasa.gov |
+| Kiera Joyner | USAF AFTC CO (FA930025C6022) | kiera.joyner@us.af.mil |
+| Cody Gallagher | USAF AFTC CS | cody.gallagher.1@us.af.mil |
+| Neil Milburn | Exos (HVRR coordination) | — |
+| Matt | USAF primary contact (HVRR) | TBD — Jon to provide |
 
 ---
-
-_Updated by Exo. Next review: Monday 7 AM (automated)._
+_To add a task, tell Exo. To execute a task, say "Exo, do [task ID or name]."_
