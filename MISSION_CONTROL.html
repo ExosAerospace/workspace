@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos Mission Control</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0f1e; color: #e0e6f0; min-height: 100vh; }
+  .header { background: linear-gradient(135deg, #0a1628 0%, #0d2040 100%); padding: 20px 30px; border-bottom: 2px solid #0066cc; display: flex; align-items: center; justify-content: space-between; }
+  .header h1 { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 2px; }
+  .header .sub { font-size: 12px; color: #88aacc; margin-top: 4px; }
+  .logo { color: #ff6b00; font-size: 28px; font-weight: 900; letter-spacing: 3px; }
+  .updated { font-size: 11px; color: #556; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+  .section-title { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin: 24px 0 12px; padding: 6px 12px; border-radius: 4px; }
+  .section-blocked { background: rgba(255,50,50,0.15); color: #ff6666; border-left: 3px solid #ff3333; }
+  .section-ready { background: rgba(255,180,0,0.15); color: #ffcc44; border-left: 3px solid #ffaa00; }
+  .section-progress { background: rgba(0,120,255,0.15); color: #66aaff; border-left: 3px solid #0066ff; }
+  .section-done { background: rgba(0,200,100,0.1); color: #44cc77; border-left: 3px solid #00aa44; }
+  .task { background: #0d1a2e; border: 1px solid #1a2a40; border-radius: 8px; padding: 16px; margin-bottom: 10px; transition: border-color 0.2s; }
+  .task:hover { border-color: #0066cc; }
+  .task-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .task-id { font-size: 11px; font-weight: 700; color: #0066cc; background: rgba(0,102,204,0.15); padding: 2px 8px; border-radius: 3px; font-family: monospace; }
+  .task-title { font-size: 15px; font-weight: 600; color: #e0e6f0; }
+  .badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 3px; margin-left: auto; }
+  .badge-exo { background: rgba(0,102,204,0.3); color: #66aaff; }
+  .badge-jon { background: rgba(255,107,0,0.3); color: #ff9955; }
+  .badge-assign { background: rgba(150,0,200,0.3); color: #cc77ff; }
+  .task-meta { font-size: 12px; color: #668899; margin-bottom: 6px; }
+  .task-detail { font-size: 13px; color: #99aabb; line-height: 1.5; }
+  .task-action { font-size: 12px; color: #0099cc; margin-top: 8px; padding: 6px 10px; background: rgba(0,150,200,0.1); border-radius: 4px; border-left: 2px solid #0099cc; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat { background: #0d1a2e; border: 1px solid #1a2a40; border-radius: 8px; padding: 16px; text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 700; }
+  .stat-label { font-size: 11px; color: #668; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  .stat-blocked .stat-num { color: #ff4444; }
+  .stat-ready .stat-num { color: #ffaa00; }
+  .stat-progress .stat-num { color: #4499ff; }
+  .stat-done .stat-num { color: #44cc77; }
+  .cron-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .cron-table th { text-align: left; font-size: 11px; color: #668; padding: 8px 12px; border-bottom: 1px solid #1a2a40; text-transform: uppercase; }
+  .cron-table td { padding: 8px 12px; font-size: 13px; border-bottom: 1px solid #0d1525; }
+  .ok { color: #44cc77; }
+  .contacts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .contact { background: #0d1a2e; border: 1px solid #1a2a40; border-radius: 6px; padding: 12px; }
+  .contact-name { font-size: 13px; font-weight: 600; color: #e0e6f0; }
+  .contact-role { font-size: 11px; color: #668; margin: 2px 0; }
+  .contact-email { font-size: 12px; color: #0099cc; }
+  @media (max-width: 600px) { .stats { grid-template-columns: repeat(2,1fr); } .contacts-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <div class="logo">EXOS</div>
+    <h1>MISSION CONTROL</h1>
+    <div class="sub">Exos Aerospace Systems & Technologies</div>
+  </div>
+  <div class="updated">Last updated: 2026-04-01 11:25 CT</div>
+</div>
+
+<div class="container">
+
+<div class="stats">
+  <div class="stat stat-blocked"><div class="stat-num">5</div><div class="stat-label">🔴 Blocked</div></div>
+  <div class="stat stat-ready"><div class="stat-num">5</div><div class="stat-label">🟡 Ready</div></div>
+  <div class="stat stat-progress"><div class="stat-num">3</div><div class="stat-label">🔵 In Progress</div></div>
+  <div class="stat stat-done"><div class="stat-num">7</div><div class="stat-label">✅ Done</div></div>
+</div>
+
+<div class="section-title section-blocked">🔴 Blocked — Waiting on Input</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">B-001</span><span class="task-title">Series A Direction — $10M Raise</span><span class="badge badge-jon">[JON]</span></div>
+  <div class="task-meta">Due: ASAP | Unlocks: B-002, B-003, B-004 + investor sourcing</div>
+  <div class="task-detail">Acquire Scorpius ROFR (82% at 2021 basis), expand RDRE, build BLK3. This is the critical path unlock for all RDRE/funding-dependent items.</div>
+  <div class="task-action">➜ Jon to provide direction — promised 2026-03-31</div>
+</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">B-002</span><span class="task-title">HVRR OTA Letter to Matt</span><span class="badge badge-exo">[EXO]</span></div>
+  <div class="task-meta">Due: TBD | Contract: FA930025C6022 | Blocked on: Matt's contact + B-001</div>
+  <div class="task-detail">GFE RDRE delivery at risk. OTA path via SpEC/NSTXL. Neil Milburn coordinating with Matt. Draft ready at drafts/usaf-ota-solution-letter-v2.md — needs correct addressee.</div>
+  <div class="task-action">➜ Jon to provide Matt's full name + contact details</div>
+</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">B-003</span><span class="task-title">Teasley Outreach — NASA MSFC RDRE</span><span class="badge badge-exo">[EXO]</span></div>
+  <div class="task-meta">Due: TBD | Blocked on: Funding (Series A or OTA must close first)</div>
+  <div class="task-detail">DUA active. Teasley engaged. Cannot proceed with commercial RDRE build without funding. Draft ready at drafts/teasley-nasa-outreach.md.</div>
+  <div class="task-action">➜ Unlock via B-001 (Series A) or B-002 (OTA)</div>
+</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">B-004</span><span class="task-title">INRODES Flight Demo Outreach</span><span class="badge badge-exo">[EXO]</span></div>
+  <div class="task-meta">Due: TBD | Blocked on: B-003 (route via Teasley warm intro)</div>
+  <div class="task-detail">Route through Teasley after B-003 is sent. Ramon Osorio as backup contact.</div>
+  <div class="task-action">➜ Unlock after B-003 is sent</div>
+</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">B-005</span><span class="task-title">Exobot Core Telegram Group</span><span class="badge badge-jon">[JON]</span></div>
+  <div class="task-meta">Due: ASAP</div>
+  <div class="task-detail">Add @Exosaerobot as member to Exobot Core group so Exo can operate in topics.</div>
+  <div class="task-action">➜ Open group → Add Members → search @Exosaerobot → Add</div>
+</div>
+
+<div class="section-title section-ready">🟡 Ready — Can Execute Now</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">R-001</span><span class="task-title">NASA FO Follow-Up Email</span><span class="badge badge-exo">[EXO]</span></div>
+  <div class="task-meta">Due: 2026-04-08 | Auto-executes if no response received</div>
+  <div class="task-detail">Follow up with Angela Stinchfield + Melissa Newell on 2026-03-25 outreach re: FO IDIQ 4.</div>
+  <div class="task-action">➜ Exo monitors and sends on April 8 if no response</div>
+</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">R-002</span><span class="task-title">SAM.gov RDRE Capability Update</span><span class="badge badge-jon">[JON]</span></div>
+  <div class="task-meta">Due: This week</div>
+  <div class="task-detail">Log into SAM.gov, update Exos capability narrative with RDRE language. Instructions at drafts/sam-gov-rdre-update.md.</div>
+</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">R-003</span><span class="task-title">Matt's Contact Info</span><span class="badge badge-jon">[JON]</span></div>
+  <div class="task-meta">Due: ASAP | Unlocks: B-002</div>
+  <div class="task-action">➜ Send Exo Matt's full name and email/phone</div>
+</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">R-004</span><span class="task-title">ProtonMail Bridge Auto-Start</span><span class="badge badge-exo">[EXO]</span></div>
+  <div class="task-meta">Due: Today</div>
+  <div class="task-detail">Configure Proton Mail Bridge to launch at login so outbound email works after reboots.</div>
+  <div class="task-action">➜ Say "Exo, do R-004" to execute</div>
+</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">R-005</span><span class="task-title">Qwen3 Cost Optimization</span><span class="badge badge-exo">[EXO]</span></div>
+  <div class="task-meta">Due: Today | Est. savings: 60-70% Anthropic cost</div>
+  <div class="task-detail">Route non-research cron jobs to local Qwen3-32B instead of Claude to reduce ~$15-20/day Anthropic spend.</div>
+  <div class="task-action">➜ Say "Exo, do R-005" to execute</div>
+</div>
+
+<div class="section-title section-progress">🔵 In Progress</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">P-001</span><span class="task-title">ISC ARCA ETV Presentation</span><span class="badge badge-jon">[JON]</span></div>
+  <div class="task-meta">Meeting: 2026-03-30 6PM CT (completed)</div>
+  <div class="task-detail">FINAL2 branded + supermod_vtvl.mp4 delivered. Jon inserting video manually in PowerPoint. Teams audio sharing configured and working.</div>
+</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">P-002</span><span class="task-title">Basen Battery RS485 Connection</span><span class="badge badge-jon">[JON + EXO]</span></div>
+  <div class="task-meta">Hardware: 3x 15.4kWh JK BMS, firmware V1.0.0</div>
+  <div class="task-detail">Wired correctly to RS485C. JK BMS addon installed. Protocol mismatch — firmware V1.0.0 may need update. Next: try dbus-serialbattery or firmware update.</div>
+</div>
+
+<div class="task">
+  <div class="task-header"><span class="task-id">P-003</span><span class="task-title">EG4 Inverter Modbus</span><span class="badge badge-jon">[JON]</span></div>
+  <div class="task-meta">Waiting on hardware</div>
+  <div class="task-detail">RS485C port requires HDMI breakout board. Order HDMI male breakout (~$8 Amazon) → wire Pin 1 (A+) and Pin 4 (B-) to USB-RS485 adapter.</div>
+</div>
+
+<div class="section-title section-done">✅ Completed</div>
+
+<div class="task"><div class="task-header"><span class="task-id">C-001</span><span class="task-title">NASA FO Outreach Sent</span><span class="badge badge-exo">[EXO]</span></div><div class="task-meta">Completed: 2026-03-25</div><div class="task-detail">Email sent to Angela Stinchfield + Melissa Newell. CC: Lizi Quinn, Neil Milburn. Solicitation 80AFRC23R0001.</div></div>
+
+<div class="task"><div class="task-header"><span class="task-id">C-002</span><span class="task-title">ExoMac Security Hardening</span></div><div class="task-meta">Completed: 2026-03-27</div><div class="task-detail">Nightly 3:15 AM script: Homebrew updates, OpenClaw audit, session cleanup, firewall check, log rotation.</div></div>
+
+<div class="task"><div class="task-header"><span class="task-id">C-003</span><span class="task-title">ProtonMail + msmtp Configured</span></div><div class="task-meta">Completed: 2026-03-27</div><div class="task-detail">jquinnexo@pm.me outbound working via Bridge on port 1025.</div></div>
+
+<div class="task"><div class="task-header"><span class="task-id">C-004</span><span class="task-title">Qwen3-32B Local Model</span></div><div class="task-meta">Completed: 2026-03-30</div><div class="task-detail">20GB model running via Ollama. Zero cost, fully local, ITAR-safe.</div></div>
+
+<div class="task"><div class="task-header"><span class="task-id">C-005</span><span class="task-title">Home Assistant Solar Live</span></div><div class="task-meta">Completed: 2026-03-28</div><div class="task-detail">Enphase Envoy integrated. 30 microinverters reporting. Daily 7 AM solar report active.</div></div>
+
+<div class="task"><div class="task-header"><span class="task-id">C-006</span><span class="task-title">HA Updated to 2026.3.4</span></div><div class="task-meta">Completed: 2026-03-28</div></div>
+
+<div class="task"><div class="task-header"><span class="task-id">C-007</span><span class="task-title">ISC Presentation Delivered</span></div><div class="task-meta">Completed: 2026-03-30</div><div class="task-detail">FINAL2 branded + video delivered. Meeting held 6 PM CT.</div></div>
+
+<div class="section-title" style="background:rgba(0,102,204,0.1);color:#66aaff;border-left:3px solid #0066cc;">📋 Cron Schedule</div>
+<table class="cron-table">
+<tr><th>Time</th><th>Task</th><th>Status</th></tr>
+<tr><td>3:15 AM</td><td>Nightly Security</td><td class="ok">✅</td></tr>
+<tr><td>4:30 AM</td><td>File Maintenance + Lessons Learned</td><td class="ok">✅</td></tr>
+<tr><td>6:30 AM</td><td>Aerospace Opportunity Scan</td><td class="ok">✅</td></tr>
+<tr><td>7:00 AM</td><td>Solar Report</td><td class="ok">✅</td></tr>
+<tr><td>8:00 PM</td><td>End-of-Day Status</td><td class="ok">✅</td></tr>
+<tr><td>Mon 7 AM</td><td>Mission Control Weekly Review</td><td class="ok">✅</td></tr>
+<tr><td>Wed 8 AM</td><td>CRM Dashboard Refresh</td><td class="ok">✅</td></tr>
+</table>
+
+<div class="section-title" style="background:rgba(100,100,100,0.1);color:#aabbcc;border-left:3px solid #445;margin-top:20px;">📌 Key Contacts</div>
+<div class="contacts-grid">
+<div class="contact"><div class="contact-name">Angela Stinchfield</div><div class="contact-role">NASA FO Contracting Officer</div><div class="contact-email">angela.t.stinchfield@nasa.gov</div></div>
+<div class="contact"><div class="contact-name">Thomas Teasley</div><div class="contact-role">NASA MSFC RDRE Lead</div><div class="contact-email">thomas.teasley@nasa.gov</div></div>
+<div class="contact"><div class="contact-name">Kiera Joyner</div><div class="contact-role">USAF AFTC CO (FA930025C6022)</div><div class="contact-email">kiera.joyner@us.af.mil</div></div>
+<div class="contact"><div class="contact-name">Matt (TBD)</div><div class="contact-role">USAF Primary Contact (HVRR)</div><div class="contact-email">Contact TBD — Jon to provide</div></div>
+<div class="contact"><div class="contact-name">Neil Milburn</div><div class="contact-role">Exos (HVRR coordination)</div><div class="contact-email">—</div></div>
+<div class="contact"><div class="contact-name">Ramon Osorio</div><div class="contact-role">NASA MSFC Media/Comms</div><div class="contact-email">ramon.j.osorio@nasa.gov</div></div>
+</div>
+
+</div>
+</body>
+</html>
