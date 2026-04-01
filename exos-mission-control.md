@@ -1,5 +1,5 @@
 # Exos Aerospace — Mission Control Task Tracker
-_Last updated: 2026-03-25_
+_Last updated: 2026-04-01_
 
 ---
 
@@ -8,164 +8,140 @@ _Last updated: 2026-03-25_
 **Type:** IDIQ Provider Contract (FO IDIQ 4 — 80AFRC23R0001)
 **Value:** Up to $45M (multi-year IDIQ)
 **Stakeholder:** Angela Stinchfield (angela.t.stinchfield@nasa.gov) / Melissa Newell (melissa.newell@nasa.gov) / Program Mgr: Greg Peters
-**Urgency:** Act within 7 days — solicitation is evergreen/open now
-**Status:** 🟢 Email Sent — 2026-03-25
+**Urgency:** Follow-up due 2026-04-08 (2 weeks from send)
+**Status:** 🟢 Email Sent 2026-03-25 — awaiting response
 
 **CC'd:** nasa-flightopportunities@mail.nasa.gov, Lizi Quinn, Neil Milburn
 
 **Next Actions:**
-- [ ] Follow up if no response by 2026-04-08 (2 weeks)
-- [ ] If response received — schedule call, prep briefing on BLK3 capabilities and campaign structure
-- [ ] NOTE: Sent email referenced "NASA Space Act Agreement" — this was incorrect; it is a Data Usage Agreement. Clarify on follow-up call if it comes up. Do not repeat the SAA claim in future outreach.
+- [ ] **April 8** — Follow up if no response
+- [ ] If response received: schedule call, prep BLK3 capability briefing
+- [ ] NOTE: Sent email incorrectly referenced "Space Act Agreement" — it is a DUA. Clarify if raised on call.
 
-**Draft email:** Ready (see conversation 2026-03-25)
 **Source:** https://sam.gov/opp/a665d191eef14ab7966484b9d59584d6/view
 
 ---
 
 ## 🚨 HIGH CONVICTION — PRIORITY 2
-**Organization:** NASA MSFC / Exos Aerospace — DUA + RDRE Development
-**Type:** DUA Activation / Flight Demo Contract / HVRR Alternative Engine Path
-**Value:** TBD (funded RDRE development + flight demo contract)
-**Stakeholder:** Thomas Teasley — thomas.teasley@nasa.gov (MSFC RDRE lead, confirmed)
-**Urgency:** THIS WEEK — HVRR GFE risk creates immediate pressure
-**Status:** 🟡 Outreach email drafted — send AFTER USAF GFE letter filed
+**Organization:** NASA MSFC — Teasley RDRE / DUA Activation
+**Type:** DUA → Funded Flight Demo Contract
+**Value:** TBD
+**Stakeholder:** Thomas Teasley — thomas.teasley@nasa.gov (MSFC-ER13)
+**Urgency:** ON HOLD — blocked on funding (Series A or OTA must close first)
+**Status:** 🔴 On hold — funding dependency
 
 **Key Intel:**
-- NASA issued Exos a **Data Usage Agreement (DUA)** — NOT a Space Act Agreement
-- DUA covers: drawings, models, hot fire test data, correlations, best design practices, lessons learned
-- Teasley (MSFC-ER13) is the named NASA Technical POC on the DUA
-- Data is ITAR/EAR export-controlled — cannot share with Exos Italia or foreign persons without State Dept approval
-- TDM project: 10,000 lbf turbopump-integrated RDRE system — BLK3 is the natural flight demo vehicle
-- DUA ≠ SAA: no SBIR Phase III sole-source pathway; no automatic TechPort listing; no "existing partner" claim for FO IDIQ
+- Exos holds a NASA Data Usage Agreement (DUA) — NOT a Space Act Agreement
+- DUA covers: RDRE drawings, models, hot fire test data, design practices, lessons learned (ITAR/EAR controlled)
+- Teasley is named NASA POC — he is engaged and aware of Exos
+- Cannot proceed with commercial RDRE build without Series A or OTA funding
 
 **Next Actions:**
-- [ ] File USAF GFE risk letter first (Priority 2a — see below)
-- [ ] Send Teasley email — draft at `drafts/teasley-nasa-outreach.md`
-- [ ] On call: confirm TechPort listing, DUA mod scope, BLK3 as TDM flight demo platform
-- [ ] Have counsel assess SBIR Phase III sole-source eligibility
-
-**Source:** NASA DUA1-25305 | Teasley AAS 2025 paper | drafts/teasley-nasa-outreach.md | drafts/saa-poc-call-brief.md
+- [ ] Series A close OR OTA funding → triggers Teasley engagement
+- [ ] Draft outreach ready at `drafts/teasley-nasa-outreach.md`
 
 ---
 
 ## 🚨 HIGH CONVICTION — PRIORITY 2a
-**Organization:** USAF AFTC PZR, Edwards AFB — Contract FA930025C6022
-**Type:** OTA Prototype Proposal (SEC/AFWERX) — RDRE Alternative Development
-**Value:** New funded contract for Exos RDRE development + de-risks HVRR program
-**Stakeholder:** Kiera Joyner, CO (kiera.joyner@us.af.mil / 661-527-1992) | Cody Gallagher, CS (cody.gallagher.1@us.af.mil)
-**Urgency:** This week — proactive solution before GFE situation worsens
-**Status:** 🟡 Letter drafted — ready to send
+**Organization:** USAF AFTC — HVRR Contract FA930025C6022
+**Type:** OTA Prototype — RDRE Alternative Development
+**Value:** TBD
+**Stakeholder:** Matt (primary USAF contact) + Neil Milburn (working with Matt)
+**Urgency:** ON HOLD — waiting on Series A direction + Matt's contact details
+**Status:** 🔴 On hold
 
 **Key Intel:**
-- Contract FA930025C6022, effective 9/2/2025, AFTC PZR Edwards AFB
-- USAF already disclosed GFE delays — adversarial notification letter is wrong approach
-- SEC/AFWERX OTA is right vehicle given AFTC/Edwards context
-- NASA DUA is the technical credibility anchor for the OTA proposal
-- Letter proposes parallel OTA instrument — does NOT modify FA930025C6022
+- Kiera Joyner (CO) is NOT the right contact — Matt is
+- Neil Milburn is coordinating with Matt
+- GFE RDRE delivery at risk — USAF disclosed delays
+- OTA path: SpEC/NSTXL or AFWERX — Kiera's office to advise preferred vehicle
+- Draft letter ready at `drafts/usaf-ota-solution-letter-v2.md` (needs update for Matt)
 
 **Next Actions:**
-- [ ] Legal review of OTA solution letter (brief)
-- [ ] Send to kiera.joyner@us.af.mil, CC cody.gallagher.1@us.af.mil
-- [ ] Request meeting to discuss SEC/AFWERX path
-- [ ] Archive original GFE risk notification draft — superseded
-
-**Draft:** `drafts/usaf-ota-solution-letter.md`
-**Source:** Contract FA930025C6022 | SEC/AFWERX OTA vehicle
+- [ ] Jon to provide Matt's full name + contact
+- [ ] Series A direction (this AM per Jon 2026-03-31) → unlocks OTA pursuit
+- [ ] Neil Milburn to coordinate with Matt
 
 ---
 
-## 🚨 HIGH CONVICTION — PRIORITY 3
-**Organization:** NASA Marshall Space Flight Center — INRODES Program
+## MEDIUM CONVICTION — PRIORITY 3
+**Organization:** NASA MSFC — INRODES Program
 **Type:** Flight Demonstration Partnership
-**Value:** TBD — Phase 2+ flight demo contract
-**Stakeholder:** Thomas Teasley (MSFC RDRE lead) / Ramon Osorio (ramon.j.osorio@nasa.gov, 256-544-0034)
-**Urgency:** Act within 14 days — AME hardware delivery ~June 2025; flight demo phase follows
-**Status:** 🟡 Draft email ready — recommend routing via DUA POC for warm intro first
+**Value:** TBD
+**Stakeholder:** Thomas Teasley / Ramon Osorio (ramon.j.osorio@nasa.gov)
+**Urgency:** ON HOLD — same funding dependency as Priority 2
+**Status:** 🔴 On hold
 
-**Next Actions:**
-- [ ] Ideally: DUA POC makes warm intro to Teasley (from Priority 2 call)
-- [ ] If no DUA POC available: send cold outreach directly to ramon.j.osorio@nasa.gov, CC tessa.m.martinez@nasa.gov
-- [ ] Draft ready at `drafts/msfc-inrodes-outreach.md`
-
-**Key Intel:**
-- INRODES Phase 1 hardware: fabricated by AME (~$248K), delivery ~June 2025
-- NASA RDRE tested Dec 2023: 251 seconds, 5,800 lbs thrust
-- Program managed under Game Changing Development Program (STMD)
-- Prior partners: In Space LLC, Purdue University, Venus Aerospace, Glenn Research Center
-
-**Source:** https://govtribe.com/opportunity/federal-contract-opportunity/inrodes-rotating-detonation-rocket-engine-rdre-80nssc25897850q | drafts/msfc-inrodes-outreach.md
+**Draft:** `drafts/msfc-inrodes-outreach.md` (route via Teasley warm intro)
 
 ---
 
 ## MEDIUM CONVICTION — PRIORITY 4
-**Organization:** DoD — RDRE Market Survey (Solicitation 2449PS50)
-**Type:** Capability Visibility / Follow-on RFP Watch
-**Value:** TBD
-**Stakeholder:** DoD issuing office (RFI closed — POC TBD, research ongoing)
-**Urgency:** Ongoing — monitor for follow-on RFP/BAA
-**Status:** 🟡 Materials ready — execution pending
+**Organization:** DoD — RDRE Capability Visibility
+**Type:** SAM.gov registration + follow-on RFP watch
+**Urgency:** Ongoing
+**Status:** 🟡 Pending SAM.gov update
 
 **Next Actions:**
-- [ ] Jon / BD team updates SAM.gov registration — instructions at `drafts/sam-gov-rdre-update.md`
-- [ ] Confirm CAGE Code and UEI are current in SAM.gov
-- [ ] RDRE capability statement ready at `drafts/rdre-capability-statement.md` — add email address, CAGE Code, UEI before use
-- [ ] Identify DoD RFI issuing office POC for unsolicited outreach
-- [ ] Monitor SAM.gov for follow-on RFP/BAA
-
-**Source:** https://sam.gov/opp/d059e1d103fe453a839fd2c4402b6703/view | drafts/rdre-capability-statement.md | drafts/sam-gov-rdre-update.md
+- [ ] Update SAM.gov registration with RDRE capability language (`drafts/sam-gov-rdre-update.md`)
+- [ ] Monitor for DoD RDRE follow-on RFP/BAA (prior RFI 2449PS50 closed)
+- [ ] RDRE capability statement ready: `drafts/rdre-capability-statement.md`
 
 ---
 
-## MEDIUM CONVICTION — PRIORITY 5
-**Organization:** NASA TechPort
-**Type:** Visibility / Technology Portfolio Listing
-**Value:** Non-monetary — visibility to NASA program managers agency-wide
-**Stakeholder:** Exos NASA DUA technical counterpart
-**Urgency:** Confirm within 14 days
-**Status:** 🟡 Blocked on DUA POC call (Priority 2) — handle on same call
+## 🔑 CRITICAL PATH — SERIES A ($10M)
 
+**Status:** 🔴 Direction pending — Jon to advise
+
+**Use of proceeds:**
+1. Acquire remaining 82% of Scorpius (exercise ROFR at 2021 basis)
+2. Expand RDRE development
+3. Build another BLK3 PSRLV
+
+**Why this unlocks everything:**
+- Teasley/RDRE engagement (Priority 2)
+- HVRR OTA pursuit (Priority 2a)
+- INRODES flight demo (Priority 3)
+- Scorpius ROFR arbitrage (TRL 9 + lunar heritage at 2021 valuation)
+
+**Investor profile:** Aerospace platform investors, dual-use tech, family office
 **Next Actions:**
-- [ ] During DUA POC call (Priority 2), confirm RDRE listed in TechPort with Exos named
-- [ ] If not listed → request NASA counterpart add it
-- [ ] Backup: submit "Suggest a Technology" form at techport.nasa.gov/help/technologySuggestions
-
-**Note:** NASA 2026 SBIR moving to BAA format — release TBD. Monitor prosams.nasa.gov for propulsion/RDRE subtopics when released.
-
-**Source:** https://techport.nasa.gov/help/technologySuggestions
+- [ ] Jon to provide Series A direction
+- [ ] Exo to begin investor sourcing once direction confirmed
 
 ---
 
-## 📋 EXECUTION TIMELINE
+## 📋 ACTIVE CRON SCHEDULE
 
-### This Week (by April 1)
-- [ ] Jon provides title + contact info → NASA FO email finalized and sent
-- [ ] Add DUA reference line to NASA FO email
-- [ ] Call NASA DUA POC — TechPort + flight demo path questions
-- [ ] Identify DoD RDRE RFI point of contact
-
-### Within 14 Days (by April 8)
-- [ ] Send MSFC INRODES intro email
-- [ ] Counsel reviews SBIR Phase III eligibility
-- [ ] Update SAM.gov registration with RDRE capability language
-- [ ] Confirm TechPort listing status
-
-### Within 30 Days (by April 25)
-- [ ] Draft RDRE one-page capability statement
-- [ ] Submit DoD capability introduction
-- [ ] Follow up on NASA FO email if no response
-- [ ] Identify next NASA SBIR cycle RDRE-relevant subtopics
-
-### Ongoing
-- [ ] Monitor SAM.gov for DoD RDRE follow-on RFP/BAA
-- [ ] Monitor MSFC NRAs for propulsion flight demo opportunities
-- [ ] Daily 6:30 AM aerospace scan (automated — live ✅)
-- [ ] 4-hour status updates (automated — live ✅)
+| Time | Task | Status |
+|---|---|---|
+| 3:15 AM daily | Nightly security hardening | ✅ Running |
+| 4:30 AM daily | File maintenance & lessons learned | ✅ Running |
+| 6:30 AM daily | Aerospace opportunity scan | ✅ Running |
+| 7:00 AM daily | Solar report (HA/Enphase) | ✅ Running |
+| 8:00 PM daily | End-of-day status update | ✅ Running |
+| Monday 7 AM | Mission Control weekly review | ✅ Running |
+| Wednesday 8 AM | CRM dashboard refresh | ✅ Running |
 
 ---
 
-## Mission Control Summary
-Exos has three near-term funded contract pathways actionable this week: NASA FO IDIQ 4 (evergreen, open now), DUA-to-flight-demo conversion at MSFC, and INRODES flight demo positioning. The NASA DUA is the single most underleveraged asset — one phone call to the NASA technical counterpart could unlock TechPort visibility, SBIR Phase III eligibility, and a funded flight demo path simultaneously. Priority is getting the NASA FO email out the door today with the DUA reference added.
+## 🏠 HOME AUTOMATION STATUS
+
+**Enphase Solar:** ✅ Live — 30 microinverters reporting, daily report active
+**EG4 Inverters:** ⚠️ RS485 connection not yet established — HDMI breakout board needed (~$8 Amazon)
+**Basen Batteries (3x 15.4kWh):** ⚠️ RS485C wired, JK BMS addon installed, protocol mismatch — firmware V1.0.0 may need update or different integration
+**Home Assistant:** ✅ 2026.3.4 running on HA Green (192.168.143.166)
 
 ---
-_Tracker maintained by Exo. Updated weekly via cron. Last human review: 2026-03-25._
+
+## 🖥️ EXOMAC INFRASTRUCTURE
+
+**Hardware:** M4 Pro Mac mini, 48GB RAM, macOS Tahoe 26.4
+**OpenClaw:** 2026.3.28 — current
+**Local LLM:** Qwen3-32B installed via Ollama (20GB, zero cost)
+**Email:** ProtonMail Bridge + msmtp configured (jquinnexo@pm.me)
+**Telegram:** @Exosaerobot — Exobot Core group setup pending bot member add
+
+---
+
+_Updated by Exo. Next review: Monday 7 AM (automated)._

@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXOS Aerospace — Series A CRM Dashboard</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; font-size: 14px; }
+  .header { background: linear-gradient(135deg, #161b22, #1c2431); border-bottom: 1px solid #30363d; padding: 20px 32px; }
+  .header h1 { font-size: 22px; font-weight: 700; color: #f0f6fc; }
+  .header .sub { color: #8b949e; margin-top: 4px; font-size: 13px; }
+  .header .badges { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .pill { background: #21262d; border: 1px solid #30363d; border-radius: 20px; padding: 4px 12px; font-size: 12px; color: #c9d1d9; }
+  .pill.green { border-color: #238636; color: #3fb950; }
+  .pill.blue { border-color: #1f6feb; color: #58a6ff; }
+  .pill.orange { border-color: #9e6a03; color: #e3b341; }
+  .pill.red { border-color: #da3633; color: #f85149; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; padding: 24px 32px 8px; }
+  .stat { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
+  .stat .num { font-size: 32px; font-weight: 700; color: #f0f6fc; }
+  .stat .label { color: #8b949e; font-size: 12px; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat.highlight { border-color: #1f6feb; }
+  .stat.warn { border-color: #9e6a03; }
+  .stat.danger { border-color: #da3633; }
+  .section { padding: 16px 32px; }
+  .section h2 { font-size: 14px; font-weight: 600; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; border-bottom: 1px solid #21262d; padding-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; color: #8b949e; font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 10px; border-bottom: 1px solid #21262d; }
+  td { padding: 9px 10px; border-bottom: 1px solid #161b22; vertical-align: top; font-size: 13px; }
+  tr:hover td { background: #161b22; }
+  .badge { display: inline-block; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+  .badge.red { background: #3d0e0e; color: #f85149; }
+  .badge.orange { background: #2d1b00; color: #e3b341; }
+  .badge.yellow { background: #2d2200; color: #e3b341; }
+  .badge.green { background: #0d2a14; color: #3fb950; }
+  .stage-ts { background: #0d2a14; color: #3fb950; border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600; }
+  .stage-eng { background: #1f2a3d; color: #58a6ff; border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600; }
+  .stage-mh { background: #272015; color: #e3b341; border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600; }
+  .stage-mr { background: #1d1f2e; color: #a5b4fc; border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600; }
+  .stage-fu { background: #21262d; color: #8b949e; border-radius: 4px; padding: 2px 7px; font-size: 11px; }
+  .stage-c { background: #21262d; color: #8b949e; border-radius: 4px; padding: 2px 7px; font-size: 11px; }
+  .tier1 { color: #f85149; font-weight: 600; font-size: 11px; }
+  .tier2 { color: #e3b341; font-weight: 600; font-size: 11px; }
+  .company { font-weight: 600; color: #f0f6fc; }
+  .contact { color: #8b949e; font-size: 12px; }
+  .flag-warn { color: #e3b341; font-size: 11px; }
+  .flag-danger { color: #f85149; font-size: 11px; font-weight: 600; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 8px 32px 16px; }
+  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
+  .panel h3 { font-size: 13px; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .pipeline-bar { margin-bottom: 10px; }
+  .pipeline-bar .bar-label { display: flex; justify-content: space-between; margin-bottom: 3px; font-size: 12px; }
+  .bar-track { background: #21262d; border-radius: 4px; height: 8px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .notes-cell { max-width: 280px; color: #8b949e; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .timestamp { color: #8b949e; font-size: 12px; }
+  .action-cell { color: #58a6ff; font-size: 12px; }
+  .cerberus-flag { background: #2d1b00; border: 1px solid #9e6a03; border-radius: 6px; padding: 10px 14px; margin: 0 32px 12px; font-size: 12px; color: #e3b341; }
+  .cerberus-flag strong { color: #f0f6fc; }
+  @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } .grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚡ EXOS Aerospace — Series A CRM Dashboard</h1>
+  <div class="sub">$10M Series A · Target: $50M follow-on via STRATFI/TACFI/OTA · Updated: March 31, 2026</div>
+  <div class="badges">
+    <span class="pill green">✓ Profitable since Dec 2025</span>
+    <span class="pill blue">FAA License Renewed Mar 13, 2026</span>
+    <span class="pill orange">DoD RDRE Contract Active</span>
+    <span class="pill">Scorpius ROFR @ 2021 Basis</span>
+    <span class="pill">1,164 Contacts · 486 Firms</span>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="stat danger"><div class="num">14</div><div class="label">Term Sheet / Proposal</div></div>
+  <div class="stat highlight"><div class="num">19</div><div class="label">Engaged</div></div>
+  <div class="stat highlight"><div class="num">13</div><div class="label">Meetings Active</div></div>
+  <div class="stat warn"><div class="num">819</div><div class="label">Follow Up Queue</div></div>
+  <div class="stat"><div class="num">221</div><div class="label">Contacted</div></div>
+  <div class="stat"><div class="num">70</div><div class="label">Research</div></div>
+  <div class="stat"><div class="num">39</div><div class="label">Tier 1 Firms</div></div>
+  <div class="stat"><div class="num">349</div><div class="label">Overdue Tier 1/2</div></div>
+</div>
+
+<div class="cerberus-flag">
+  ⚠️ <strong>CERBERUS FLAG:</strong> Cerberus Capital Management owns Stratolaunch (hypersonic test platform). Never lead with flight test framing. Always use Scorpius ROFR / cryo technology angle with Cerberus contacts.
+</div>
+
+<div class="two-col">
+  <div class="panel">
+    <h3>Pipeline by Stage</h3>
+    <div class="pipeline-bar">
+      <div class="bar-label"><span>Term Sheet / Proposal</span><span>14</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:1%;background:#3fb950"></div></div>
+    </div>
+    <div class="pipeline-bar">
+      <div class="bar-label"><span>Engaged</span><span>19</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:1%;background:#58a6ff"></div></div>
+    </div>
+    <div class="pipeline-bar">
+      <div class="bar-label"><span>Meeting Held</span><span>7</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:0%;background:#e3b341"></div></div>
+    </div>
+    <div class="pipeline-bar">
+      <div class="bar-label"><span>Meeting Requested</span><span>6</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:0%;background:#a5b4fc"></div></div>
+    </div>
+    <div class="pipeline-bar">
+      <div class="bar-label"><span>Follow Up</span><span>819</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:70%;background:#484f58"></div></div>
+    </div>
+    <div class="pipeline-bar">
+      <div class="bar-label"><span>Contacted</span><span>221</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:18%;background:#30363d"></div></div>
+    </div>
+    <div class="pipeline-bar">
+      <div class="bar-label"><span>Research</span><span>70</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:6%;background:#21262d"></div></div>
+    </div>
+    <div class="pipeline-bar">
+      <div class="bar-label"><span>Passed</span><span>8</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:0%;background:#da3633"></div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>Category Breakdown (Firms)</h3>
+    <div class="pipeline-bar">
+      <div class="bar-label"><span>Financial Investor</span><span>425 (87%)</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:87%;background:#58a6ff"></div></div>
+    </div>
+    <div class="pipeline-bar">
+      <div class="bar-label"><span>Other / Review</span><span>36 (7%)</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:7%;background:#484f58"></div></div>
+    </div>
+    <div class="pipeline-bar">
+      <div class="bar-label"><span>Strategic / Corporate</span><span>18 (3%)</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:3%;background:#3fb950"></div></div>
+    </div>
+    <div class="pipeline-bar">
+      <div class="bar-label"><span>Intermediary / Banker</span><span>7 (1%)</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:1%;background:#e3b341"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>🔥 Hot Pipeline — Active Engagement (Term Sheet · Engaged · Meetings)</h2>
+  <table>
+    <thead><tr>
+      <th>Stage</th><th>Company</th><th>Contact</th><th>Last Touch</th><th>Warm Intro</th><th>Notes</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="stage-ts">Term Sheet / Proposal</span></td>
+        <td><span class="company">Sunbelt Dallas Metro</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Bill Nicholson</span></td>
+        <td><span class="badge yellow">29d ago</span><br><span class="timestamp">Mar 02, 2026</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">Sunbelt inquired about including a retainer amount in the Engagement Letter.
+
+Jo…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-ts">Term Sheet / Proposal</span></td>
+        <td><span class="company">AxisCades</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Suresh Babu Suryadevara</span></td>
+        <td><span class="badge orange">57d ago</span><br><span class="timestamp">Feb 02, 2026</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">Missed call toady at 08:30 - Follow-up framework shared outlining a phased, ITAR…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-ts">Term Sheet / Proposal</span></td>
+        <td><span class="company">DelMorgan & Co</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">RJ Mollen</span></td>
+        <td><span class="badge orange">75d ago</span><br><span class="timestamp">Jan 15, 2026</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">Talked and rejected offer- RJ proposed two alternative advisory paths outside th…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-ts">Term Sheet / Proposal</span></td>
+        <td><span class="company">Pickwick Capital</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Crescent Varrone</span></td>
+        <td><span class="badge orange">81d ago</span><br><span class="timestamp">Jan 09, 2026</span></td>
+        <td><span class="contact">varronec@pickwickcapital.com</span></td>
+        <td class="notes-cell">Active discussions underway. Pickwick has expressed interest; no term sheet yet.…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-ts">Term Sheet / Proposal</span></td>
+        <td><span class="company">Cerberus Capital Management</span> <span class="flag-danger">⚠️CERBERUS</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Dan Quayle; Frank Bruno; Kent (Cerberus </span></td>
+        <td><span class="badge orange">89d ago</span><br><span class="timestamp">Jan 01, 2026</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">01/14/2026 | Introductory conversation held; John sent story deck, finance-focus…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-ts">Term Sheet / Proposal</span></td>
+        <td><span class="company">InvestFortuna</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Sean Bromley</span></td>
+        <td><span class="badge orange">89d ago</span><br><span class="timestamp">Jan 01, 2026</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">The .4 term sheet, as drafted, is not registrable, not exchange-compliant, and n…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-ts">Term Sheet / Proposal</span></td>
+        <td><span class="company">Craft Capital</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Brandon Golenda</span></td>
+        <td><span class="badge red">92d ago</span><br><span class="timestamp">Dec 29, 2025</span></td>
+        <td><span class="contact">referred by Dereck</span></td>
+        <td class="notes-cell">Advisory offer contingent on $30K fee. We chose not to proceed; parked. | $30K I…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-ts">Term Sheet / Proposal</span></td>
+        <td><span class="company">US Capital</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Ashley Curless; Mitch; Steve Wilburn; Ch</span></td>
+        <td><span class="badge red">126d ago</span><br><span class="timestamp">Nov 25, 2025</span></td>
+        <td><span class="contact">referred by Dereck</span></td>
+        <td class="notes-cell">Terms shared; fee-heavy engagement model. $120K + 8%  $920K | 01/15/2026 | Submi…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-ts">Term Sheet / Proposal</span></td>
+        <td><span class="company">Bancroft Capital (Bancroft4Vets)</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Jason Diamond</span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">Introduced via Kipton Cariaga. Terms/presentation shared. Defense- and veteran-f…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-ts">Term Sheet / Proposal</span></td>
+        <td><span class="company">Cloris Capital Group LLC</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Tahmina Khan</span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact">referred by Dereck</span></td>
+        <td class="notes-cell">Completed discussions with both ETL and IronGate. No follow-up correspondence re…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">Digital Asset Management</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Juan Lorenzana</span></td>
+        <td><span class="badge orange">53d ago</span><br><span class="timestamp">Feb 06, 2026</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">$30K refundable.  Fund  with hedge of Gold metals real estate etc.</td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">Tristate Capital</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Sulaiman Sulaimani</span></td>
+        <td><span class="badge orange">58d ago</span><br><span class="timestamp">Feb 01, 2026</span></td>
+        <td><span class="contact">referred by Dereck</span></td>
+        <td class="notes-cell">https://www.irongatevc.com/ 
+Contracted with Sulaiman Sulaimani
+​John Quinn​
+​Ne…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">CrossRoads Capital</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Rchard Phillips; Andrew J. Buchholtz and</span></td>
+        <td><span class="badge orange">74d ago</span><br><span class="timestamp">Jan 16, 2026</span></td>
+        <td><span class="contact">Richard Phillips</span></td>
+        <td class="notes-cell">have new 18,000 sf facility just North of Denver Co.  $3-4M to scale | Sent you …</td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">Odeon Capital</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Eric Gomberg</span></td>
+        <td><span class="badge orange">84d ago</span><br><span class="timestamp">Jan 06, 2026</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">MNDA + data room sent Dec 17. No response prior to year-end. Follow-up email sen…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">Ricci Global Partners</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Riccardo Ricci</span></td>
+        <td><span class="badge orange">84d ago</span><br><span class="timestamp">Jan 06, 2026</span></td>
+        <td><span class="contact">referred by Tom Wright</span></td>
+        <td class="notes-cell">MNDA executed and data room shared. Ricci requested finance working session and …</td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">CounterFlow Solutions</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Dan Garretson</span></td>
+        <td><span class="badge orange">88d ago</span><br><span class="timestamp">Jan 02, 2026</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">Proposed short sprint to reframe EXOS + Scorpius narrative. Decision pending. | …</td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">Concord Ventures</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Salim Dada</span></td>
+        <td><span class="badge red">154d ago</span><br><span class="timestamp">Oct 28, 2025</span></td>
+        <td><span class="contact">Salim Dada, Safia Dada</span></td>
+        <td class="notes-cell">Revised agreement sent; no follow-up since; inactive. | offer for $2500/month fo…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">Black in Play</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact"></span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell"></td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">Blue under contract engagement</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact"></span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell"></td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">DC Finance</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Morris</span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell"></td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">Green- costs</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact"></span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell"></td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">Ivy Asset Management</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Chris Roberts "Christopher Virginia Robe</span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell"></td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">Red dropped</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact"></span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell"></td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">Screen with Visual Conmpliance</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact"></span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell"></td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">The Unity Group</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Alex Durie via Tahmina K</span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell"></td>
+      </tr>
+      <tr>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="company">Viking Mergers & Acquisitions</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">A. Rehwinkel</span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">Initial engagement underway; reviewing materials in data room.</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mh">Meeting Held</span></td>
+        <td><span class="company">IPO Club</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Edoardo Zarghetta; Jordan Yip</span></td>
+        <td><span class="badge orange">82d ago</span><br><span class="timestamp">Jan 08, 2026</span></td>
+        <td><span class="contact">linkedin.com/in/edozar | linkedin.c</span></td>
+        <td class="notes-cell">meeting held on 1/13 - pitch deck sent for brother</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mh">Meeting Held</span></td>
+        <td><span class="company">Prospect Capital</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Sulaiman Sulaimani</span></td>
+        <td><span class="badge orange">82d ago</span><br><span class="timestamp">Jan 08, 2026</span></td>
+        <td><span class="contact">sulaiman@prospectcapital.com</span></td>
+        <td class="notes-cell">Introductory meeting held Jan 8. Prospect Capital operates through two distinct …</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mh">Meeting Held</span></td>
+        <td><span class="company">Noblis Ventures</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Bill Collier; Matt Monaco; Matt Salter</span></td>
+        <td><span class="badge red">140d ago</span><br><span class="timestamp">Nov 11, 2025</span></td>
+        <td><span class="contact">https://www.linkedin.com/in/william</span></td>
+        <td class="notes-cell">12/5 follow up sent | meeting held and follow up emails sent. most recent follow…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mh">Meeting Held</span></td>
+        <td><span class="company">Cerebro Capital</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Steven Agathoklis</span></td>
+        <td><span class="badge red">161d ago</span><br><span class="timestamp">Oct 21, 2025</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">NDA signed; full financials provided. No response since; inactive. | meeting hel…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mh">Meeting Held</span></td>
+        <td><span class="company">REI</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact"></span></td>
+        <td><span class="badge red">195d ago</span><br><span class="timestamp">Sep 17, 2025</span></td>
+        <td><span class="contact">Nick Book</span></td>
+        <td class="notes-cell">Choctaw nation investor group interested in Space investments. Requesting site t…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mh">Meeting Held</span></td>
+        <td><span class="company">Palm Drive Capital</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Carter Dessommes</span></td>
+        <td><span class="badge red">253d ago</span><br><span class="timestamp">Jul 21, 2025</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">meeting held</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mh">Meeting Held</span></td>
+        <td><span class="company">Rockfleet Financial</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">John Swift; Catherine Corrigan</span></td>
+        <td><span class="badge red">281d ago</span><br><span class="timestamp">Jun 23, 2025</span></td>
+        <td><span class="contact">linkedin.com/in/jr-swift | https://</span></td>
+        <td class="notes-cell">meeting held on 7/2 & NDA in process- Followed up 7-11</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mr">Meeting Requested</span></td>
+        <td><span class="company">One Bow River</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Stowe Faircloth; Kevin O'Neil; Steven Jo</span></td>
+        <td><span class="badge red">190d ago</span><br><span class="timestamp">Sep 22, 2025</span></td>
+        <td><span class="contact">https://www.linkedin.com/in/shane-s</span></td>
+        <td class="notes-cell">08/12/2025 | Stowe Faircloth <Stowe.faircloth@onebowriver.com>replied requesting…</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mr">Meeting Requested</span></td>
+        <td><span class="company">TEL Venture Capital</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Sergey Fedotov</span></td>
+        <td><span class="badge red">200d ago</span><br><span class="timestamp">Sep 12, 2025</span></td>
+        <td><span class="contact">https://www.linkedin.com/in/sergey-</span></td>
+        <td class="notes-cell">9/24 - meeting set for 10/2</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mr">Meeting Requested</span></td>
+        <td><span class="company">referred by andy@abucholtz.com</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Richard Phillips</span></td>
+        <td><span class="badge red">209d ago</span><br><span class="timestamp">Sep 03, 2025</span></td>
+        <td><span class="contact">phillips@crossroadscapitaldc.com</span></td>
+        <td class="notes-cell">meeting set 9/8/ NDA 9/12 | Suggested www.ctd.materials.com as a better fit and …</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mr">Meeting Requested</span></td>
+        <td><span class="company">Gravitics</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Scott Macklin; Bill Tandy; Colin Doughan</span></td>
+        <td><span class="badge red">368d ago</span><br><span class="timestamp">Mar 28, 2025</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">meeting set for 4/3</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mr">Meeting Requested</span></td>
+        <td><span class="company">Collective Equity</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Mike Royston</span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">meeting on 6/25 / follow up meeting in the works / ziyi@collectiveequity.com</td>
+      </tr>
+      <tr>
+        <td><span class="stage-mr">Meeting Requested</span></td>
+        <td><span class="company">Investor Ready Capital</span><br><span class="tier1">Tier 1</span></td>
+        <td><span class="contact">Samuel Levitz</span></td>
+        <td><span class="badge red">No date</span><br><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+        <td class="notes-cell">meeting held on 6/24 / follow up meeting on 6/27- Question replied to and follow…</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>🔴 Overdue — Tier 1/2 Active Contacts (>14 days, no touch)</h2>
+  <table>
+    <thead><tr>
+      <th>Urgency</th><th>Company</th><th>Stage</th><th>Tier</th><th>Last Touch</th><th>Key Contacts</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Bancroft Capital (Bancroft4Vets)</span></td>
+        <td><span class="stage-ts">Term Sheet / Proposal</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Jason Diamond</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Cloris Capital Group LLC</span></td>
+        <td><span class="stage-ts">Term Sheet / Proposal</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Tahmina Khan</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Black in Play</span></td>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Blue under contract engagement</span></td>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">DC Finance</span></td>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Morris</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Green- costs</span></td>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Ivy Asset Management</span></td>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Chris Roberts "Christopher Virginia Roberts"</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Red dropped</span></td>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Screen with Visual Conmpliance</span></td>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact"></span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">The Unity Group</span></td>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Alex Durie via Tahmina K</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Viking Mergers & Acquisitions</span></td>
+        <td><span class="stage-eng">Engaged</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">A. Rehwinkel</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Collective Equity</span></td>
+        <td><span class="stage-mr">Meeting Requested</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Mike Royston</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Investor Ready Capital</span></td>
+        <td><span class="stage-mr">Meeting Requested</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Samuel Levitz</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">ACMI Group</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Kishen Raghunath</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Higher Orbits</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Michelle Lucas</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">M Capital Group</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Christian Mouchbahani</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">RF Lafferty & Co</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Zachary Blumenthal</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Thunder Rock Capital</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Varun Ajjarapu</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">999d ago</span></td>
+        <td><span class="company">Vickers Venture</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">—</span></td>
+        <td><span class="contact">Jeffery Chi</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">368d ago</span></td>
+        <td><span class="company">Gravitics</span></td>
+        <td><span class="stage-mr">Meeting Requested</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">Mar 28, 2025</span></td>
+        <td><span class="contact">Scott Macklin; Bill Tandy; Colin Doughan; Jiral Sh</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">298d ago</span></td>
+        <td><span class="company">Khosla Ventures</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">Jun 06, 2025</span></td>
+        <td><span class="contact">Alice Brooks; Jon Chu; Kanu Gulati; Rajesh Swamina</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">291d ago</span></td>
+        <td><span class="company">Castle Placement</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">Jun 13, 2025</span></td>
+        <td><span class="contact">Diana Ruddy</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">291d ago</span></td>
+        <td><span class="company">Moneta VC</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">Jun 13, 2025</span></td>
+        <td><span class="contact">Aasim Hasan; Ashu Bhalla; Brent Kelton; Lokesh Sik</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">281d ago</span></td>
+        <td><span class="company">Rockfleet Financial</span></td>
+        <td><span class="stage-mh">Meeting Held</span></td>
+        <td><span class="tier1">Tier 1</span></td>
+        <td><span class="timestamp">Jun 23, 2025</span></td>
+        <td><span class="contact">John Swift; Catherine Corrigan</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">277d ago</span></td>
+        <td><span class="company">Arcis Group</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">Jun 27, 2025</span></td>
+        <td><span class="contact">Andrew Healey; Arnaud Isnard; David Coudray; Henri</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">277d ago</span></td>
+        <td><span class="company">Asymmetric Capital Partners</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">Jun 27, 2025</span></td>
+        <td><span class="contact">Michele Spitzer; Nancy Chou; Rob Biederman; Sam Cl</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">277d ago</span></td>
+        <td><span class="company">Blitzscaling Ventures</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">Jun 27, 2025</span></td>
+        <td><span class="contact">Chris Yeh; Jeff Abbott; Jeremiah Owyang; Scott Joh</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">277d ago</span></td>
+        <td><span class="company">Cross Ocean Ventures</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">Jun 27, 2025</span></td>
+        <td><span class="contact">Alex Altomare; Milan Saes; Serhat Pala; Zeynep Ilg</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">277d ago</span></td>
+        <td><span class="company">Dcode Capital</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">Jun 27, 2025</span></td>
+        <td><span class="contact">Meagan Metzger; Meg Vorland; Rebecca Gevalt; the t</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge red">277d ago</span></td>
+        <td><span class="company">Differential VC</span></td>
+        <td><span class="stage-fu">Follow Up</span></td>
+        <td><span class="tier2">Tier 2</span></td>
+        <td><span class="timestamp">Jun 27, 2025</span></td>
+        <td><span class="contact">David Magerman; Jeremy Kirsch; Nick Adams</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>⭐ New Priority Targets (Not Yet in CRM)</h2>
+  <table>
+    <thead><tr><th>Score</th><th>Firm</th><th>Why</th><th>Warm Path</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge green">82</span></td><td><span class="company">Shield Capital</span></td><td>Nat'l security dual-use VC, Series A avg $29.9M, CQ Brown Jr advisory board</td><td>Raj Shah direct</td><td><span class="stage-mr">Draft Ready</span></td></tr>
+      <tr><td><span class="badge green">82</span></td><td><span class="company">Lockheed Martin Ventures</span></td><td>Prime CVC, STRATFI/OTA expert, direct defense customer of EXOS wet-lease</td><td>Toby Albright (DA Davidson)</td><td><span class="stage-fu">Pending Intro</span></td></tr>
+      <tr><td><span class="badge green">80</span></td><td><span class="company">RTX Ventures</span></td><td>Backed Ursa Major (propulsion). RDRE angle is direct thesis fit.</td><td>Toby Albright (DA Davidson)</td><td><span class="stage-fu">Pending Intro</span></td></tr>
+      <tr><td><span class="badge green">78</span></td><td><span class="company">Decisive Point Ventures</span></td><td>Pure dual-use/defense transition VC. STRATFI/TACFI/OTA native.</td><td>In CRM — 190d cold</td><td><span class="stage-fu">Draft Ready</span></td></tr>
+      <tr><td><span class="badge yellow">75</span></td><td><span class="company">MarlinSpike</span></td><td>Defense fund, Toby Albright referral</td><td>Toby Albright (DA Davidson)</td><td><span class="stage-fu">Pending Intro</span></td></tr>
+      <tr><td><span class="badge yellow">74</span></td><td><span class="company">Embedded Ventures</span></td><td>Jordan Noone (ex-Relativity). Deep propulsion + dual-use DNA.</td><td>In CRM (Lizi contacts)</td><td><span class="stage-mr">Draft Ready</span></td></tr>
+      <tr><td><span class="badge yellow">74</span></td><td><span class="company">Hale Capital</span></td><td>Toby Albright referral, dual-use/hard tech</td><td>Toby Albright (DA Davidson)</td><td><span class="stage-fu">Pending Intro</span></td></tr>
+      <tr><td><span class="badge yellow">72</span></td><td><span class="company">Generational Partners</span></td><td>Toby Albright referral</td><td>Toby Albright (DA Davidson)</td><td><span class="stage-fu">Pending Intro</span></td></tr>
+      <tr><td><span class="badge yellow">68</span></td><td><span class="company">One Bow River</span></td><td>Meeting held, warm. Profitability news is re-engage catalyst.</td><td>Stowe Faircloth (direct)</td><td><span class="stage-mr">Draft Ready</span></td></tr>
+      <tr><td><span class="badge orange">65</span></td><td><span class="company">Elliott Investment Management</span></td><td>Co-investor in Stratolaunch. Scorpius cryo angle only. ⚠️ Conflict-aware.</td><td>Cerberus intro path</td><td><span class="stage-c">Research</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>✅ Top 3 Actions This Week</h2>
+  <table>
+    <thead><tr><th>#</th><th>Action</th><th>Why</th><th>Owner</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="badge green">1</span></td>
+        <td class="action-cell">Email Toby Albright — request warm intros to LMV, RTX Ventures, MarlinSpike, Hale Capital, Generational Partners (all 5 simultaneously)</td>
+        <td>Highest-probability new conversations. Toby explicitly recommended all five. One email unlocks 5 new meetings.</td>
+        <td>Jon</td>
+      </tr>
+      <tr>
+        <td><span class="badge orange">2</span></td>
+        <td class="action-cell">Re-engage One Bow River (Stowe Faircloth) + Decisive Point — both 190+ days cold</td>
+        <td>Warm relationships. Profitability + FAA renewal + DoD contract = new data. Drafts ready.</td>
+        <td>Jon / Exo</td>
+      </tr>
+      <tr>
+        <td><span class="badge yellow">3</span></td>
+        <td class="action-cell">Archive fee-first intermediaries from Tier 1 active pipeline</td>
+        <td>US Capital ($120K+8%), Craft ($30K fixed), InvestFortuna (problematic terms), Odeon (ghosting), DelMorgan (rejected) — all consuming bandwidth without deploying capital.</td>
+        <td>Jon</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="padding: 12px 32px 32px; color: #484f58; font-size: 11px;">
+  Built from Exos_Fundraise_CRM.xlsx · 486 firms · 1,164 contacts · Generated {today.strftime('%Y-%m-%d %H:%M')} CT
+</div>
+
+</body>
+</html>
