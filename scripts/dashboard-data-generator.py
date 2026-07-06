@@ -809,31 +809,40 @@ def main():
     print(f'\n[{NOW_DISPLAY}] Exos Dashboard Data Generator')
     print('=' * 50)
 
-    # 1. Tasks
-    # Legacy exos-mission-control.md retired 2026-07-04 (the live board is now Supabase).
-    # If the markdown is gone/empty, preserve the existing tasks.json as the frozen
-    # decision-ranking enrichment table (it already carries the MC-style ids + value/
-    # deadline). Only regenerate while the markdown still exists.
-    print('\n[1/3] Parsing Mission Control...')
-    mc_content = read_file(MC_MD) if os.path.exists(MC_MD) else ''
-    if mc_content.strip():
-        tasks = parse_mission_control(mc_content)
-        tasks_out = {
-            'generated_at': NOW_ISO,
-            'generated_display': NOW_DISPLAY,
-            'source': 'exos-mission-control.md',
-            'count': len(tasks),
-            'tasks': tasks,
-        }
-        write_json('tasks.json', tasks_out)
-        print(f'  Tasks parsed: {len(tasks)}')
-        by_state = {}
-        for t in tasks:
-            by_state[t['state']] = by_state.get(t['state'], 0) + 1
-        for state, cnt in sorted(by_state.items()):
-            print(f'    {state}: {cnt}')
-    else:
-        print('  [tasks] MC markdown retired — preserving frozen tasks.json (Supabase is the live board)')
+    # 1. Tasks — decision-ranking enrichment table, now sourced LIVE from Supabase.
+    # The legacy MC board items were migrated into Supabase 2026-07-06 (source=mc-board-legacy,
+    # tagged mc:<id>), retiring exos-mission-control.md. This table now self-updates: edit a
+    # legacy row in Supabase and the change flows here on the next run.
+    print('\n[1/3] Loading MC enrichment tasks from Supabase...')
+    import urllib.request as _ur
+    _SB = 'https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/'
+    _KEY = 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp'
+    mc_tasks = None
+    try:
+        _req = _ur.Request(
+            _SB + 'tasks?select=title,description,state,due_date,owner,tags&source=eq.mc-board-legacy&limit=2000',
+            headers={'apikey': _KEY, 'Authorization': 'Bearer ' + _KEY})
+        mc_tasks = []
+        for r in json.load(_ur.urlopen(_req, timeout=30)):
+            mcid = next((str(t).split('mc:', 1)[1] for t in (r.get('tags') or []) if str(t).startswith('mc:')), None)
+            if not mcid:
+                continue
+            mc_tasks.append({'id': mcid, 'title': r.get('title'), 'state': r.get('state'),
+                             'due': r.get('due_date'), 'owner': r.get('owner'),
+                             'description': r.get('description')})
+    except Exception as _e:
+        print('  [tasks] Supabase fetch failed — keeping existing tasks.json:', _e)
+        mc_tasks = None
+    if mc_tasks is not None:
+        write_json('tasks.json', {'generated_at': NOW_ISO, 'generated_display': NOW_DISPLAY,
+                                  'source': 'Supabase (mc-board-legacy)', 'count': len(mc_tasks),
+                                  'tasks': mc_tasks})
+        print(f'  MC enrichment tasks from Supabase: {len(mc_tasks)}')
+        # Drift self-check: the enrichment set should hold ~100 legacy items. A sharp drop
+        # means rows were deleted/retagged in Supabase — surface it, don't shrink silently.
+        if len(mc_tasks) < 90:
+            print(f'  ⚠️ [drift] MC enrichment dropped to {len(mc_tasks)} (expected ~100) — '
+                  f'check Supabase source=mc-board-legacy rows')
 
     # 2. Opportunities
     print('\n[2/3] Parsing Opportunities Tracker...')

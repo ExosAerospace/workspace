@@ -1,0 +1,808 @@
+{
+  "generated_at": "2026-07-06T21:56:31.360745+00:00",
+  "generated_display": "2026-07-06 16:56",
+  "source": "Supabase (mc-board-legacy)",
+  "count": 100,
+  "tasks": [
+    {
+      "id": "BD-022",
+      "title": "SSLC ROFR - Optimal Timing & Structure (OPUS ESCALATION 2026-06-09; REFRESHED 2026-06-12; FORCING FUNCTION 2026-06-14; CONSOLIDATED 2026-06-15)",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] + [EXO]\n**Status:** 🔵 STRATEGY DELIVERED (Opus, June 9) - REFRESH June 12: counsel brief + dual-scenario deck model ready (Decision D-057) - **2026-06-14 OPUS FORCING FUNCTION: pre-drafted 90-sec email to David Mitchell + hedged-frame deck update (Decision D-080)**\n**Priority:** HIGH - NewCap (Danny Piper) engagement strongly suggests Scorpius is in a sale process; ROFR could trig"
+    },
+    {
+      "id": "FUND-028",
+      "title": "-029 | Series A Pitch Architecture - WHP Primary, 137 Ventures Re-Classified (OPUS ESCALATION 2026-06-09)",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] + [EXO]\n**Status:** 🔵 ARCHITECTURE DELIVERED (Opus, June 9) - Decision posted D-036 | **⚡ WHP DRAFT REWRITTEN June 14** - DC framing stripped, repositioned as remote intro email; send deadline June 17 while SpaceX IPO momentum holds. Draft at `drafts/WHP-Sholtis-Coffee-Request-DC.md` (title is stale; content is updated for remote outreach). Series A amount corrected to $25M. Warm "
+    },
+    {
+      "id": "B-001",
+      "title": "Series A Direction",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** ✅ RESOLVED (Jon confirmed 2026-05-06)\n**Details:** ~~Whitefield International engaged as broker for Euronext Dublin listing. Series A now structured as $12M public listing.~~ **⚠️ STRATEGIC CHANGE (June 8):** Jon confirmed in #rd-team: **Dublin/Euronext listing is DROPPED** - \"Wakefield does not perform so we will drop the Dublin listing however Whitefield could still "
+    },
+    {
+      "id": "B-002",
+      "title": "HVRR OTA Letter to Matt",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** ✅ SENT (Jon confirmed 2026-05-06: \"Sent and mil...\")\n**Details:** USAF FA930025C6022 - GFE RDRE delivery at risk. OTA path via SpEC/NSTXL.\n**Next:** Track response from Matt / military POC"
+    },
+    {
+      "id": "B-003",
+      "title": "Teasley Outreach (NASA MSFC RDRE)",
+      "state": "Blocked",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO] once unblocked\n**Due:** TBD\n**Blocked on:** Funding (Series A or OTA must close first)\n**Details:** DUA active, Teasley engaged. Cannot proceed without commercial build funding.\n**Draft ready:** `drafts/teasley-nasa-outreach.md`"
+    },
+    {
+      "id": "B-004",
+      "title": "INRODES Flight Demo Outreach",
+      "state": "Blocked",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO] once unblocked\n**Blocked on:** Same as B-003 - funding first\n**Details:** Route via Teasley warm intro after B-003 is sent"
+    },
+    {
+      "id": "B-005",
+      "title": "Discord Exobot Setup [COMPLETED]",
+      "state": "Blocked",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** Complete - Exobot connected to Discord server 1501635980094996631\n**Details:** Telegram deprecated. All delivery now via Discord DM."
+    },
+    {
+      "id": "B-006",
+      "title": "Garda (Irish Police) Outreach - Dubai Fraud",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** ✅ COMPLETED (Sent 2026-04-06)\n**Details:** Introduced Exos as US victim, asked about Interpol Red Notice. Rob Cass approved and Jon sent to joseph.m.wyse@garda.ie.\n**Update 2026-04-29:** Rob Cass emailed German prosecutor (Josefina Dünnes, StA Koblenz, Case 2080 Js 15443/24). Evidence presented to Irish police, DPP file created, sent to UAE authorities Dec 2024. New ev"
+    },
+    {
+      "id": "P3-001",
+      "title": "RDRE BLK4 Full Development Funding",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] + [EXO]\n**Status:** 🟡 Active search - all scanners updated to prioritize Phase III targets\n**Value:** No ceiling - could fund full RDRE BLK4 activity\n**Strategy:** Identify DoD/NASA/Space Force program offices with budget authority and mission alignment. Approach contracting officers directly with Phase III justification package referencing FA9300-25-C-6022.\n**Target agencies:** A"
+    },
+    {
+      "id": "P3-002",
+      "title": "NASA MSFC RDRE Flight Demo (via Teasley/INRODES)",
+      "state": "Blocked",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO] - blocked on funding (B-003)\n**Status:** 🔴 Blocked - but could be reframed as Phase III target\n**Value:** TBD - INRODES program has multi-year budget\n**Details:** Existing NASA MSFC DUA + Teasley relationship. RDRE flight demo aligns directly with Phase II scope. NASA can issue Phase III awards to DoD SBIR holders.\n**Next action:** Once funding unblocked, approach MSFC contracting"
+    },
+    {
+      "id": "P3-003",
+      "title": "~~STRATFI~~ ABANDONED → TACFI Only ✅ CHAMPION SECURED",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** 🔥 TACFI champion confirmed - STRATFI abandoned | ⚠️ TSC = SOLE match source | **🚨 TACFI NOO CLOSES JUNE 29 - ingest form due by June 25 (9 DAYS) — JUNE 18 = LAST SAFE CONFIRMATION DATE**\n**2026-06-14 overnight:** Harvazinski status-check email drafted at `drafts/Harvazinski-TACFI-Status-Check-P3003.md`. Jon to send week of June 16. TSC Direct Award ($2M, HP-003) = SOLE"
+    },
+    {
+      "id": "P3-004",
+      "title": "TACFI - RDRE BLK3 Integration Flight Test (PY26.1)",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] (AFRL champion request) + [EXO] (support materials)\n**Status:** 🔵 IN PROGRESS - Outreach drafts delivered 2026-05-21\n**Value:** $750K-$3M SBIR funds + 1:1 private match = $1.5M-$6M total program\n**Timeline:** ~3-6 months from submission to award\n**Deadline:** PY26.1 rolling submissions open through May 29, 2026\n**Strategy:** TACFI first (lower bar, faster), then STRATFI ($60M) onc"
+    },
+    {
+      "id": "REG-002",
+      "title": "EO 14335 + NASA/Commerce 180-Day Deadline - June 16, 2026",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] monitor\n**Status:** 🔵 MONITORED - 180-day deadline (June 16) confirmed. Research completed overnight June 14-15. Decision D-085 posted.\n**June 14-15 overnight research:** EO 14335 \"Enabling Competition in the Commercial Space Industry\" (Aug 13, 2025) - NASA and Commerce must reform acquisition by June 16. Expected outputs: (1) streamlined NASA commercial acquisition pathways; (2) "
+    },
+    {
+      "id": "REG-003",
+      "title": "Competitive Landscape Update - Exos = SOLE Actively Flying Reusable Suborbital (June 14)",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] monitor | [JON] messaging\n**Status:** 🟡 KEY POSITIONING FACT - Per June 14 Competitive Intelligence Brief:\n- **Blue Origin New Glenn:** Exploded on pad May 28, 2026 (largest rocket explosion since Soviet N1 in 1969). LC-36 potentially out until 2028.\n- **Blue Origin New Shepard:** Separately grounded 2+ years to redirect resources to lunar.\n- **Result: Exos BLK3 is now the ONLY ac"
+    },
+    {
+      "id": "REG-001",
+      "title": "FAA Launch User Fee Compliance - ⚠️ ACTION BEFORE NEXT FLIGHT (NEW June 9)",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] + [EXO]\n**Status:** 🚨 ACTION REQUIRED - FAA Launch & Reentry User Fees formally activated (51 U.S.C. § 50924; Fed. Reg. 2026-07789, Apr. 22, 2026). Rate: **$0.25/lb of payload, capped at $30,000/mission**. Escalates annually through 2033. Every PSRLV experimental permit flight now carries this fee.\n**Required actions:**\n1. [JON] Verify payload mass for all scheduled flights; updat"
+    },
+    {
+      "id": "P3-005",
+      "title": "STRATFI - RDRE Reusable Launch Platform ($60M Target)",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] + [EXO]\n**Status:** 🟡 PLANNING - Contingent on TACFI champion + strategic partner\n**Value:** Up to $60M total ($15M SBIR + $15M gov match + $30M strategic partner)\n**Timeline:** 6-12 months from submission to award\n**Strategy:** Pursue after TACFI establishes AFWERX relationship. Need strategic partner LOI for $30M private match.\n**Comps:** Impulse Space ($60M), ABL Space ($60M), "
+    },
+    {
+      "id": "R-001",
+      "title": "NASA FO Follow-Up Email",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO]\n**Status:** ✅ CLOSED (on-ramp not open) | **⚠️ NEW (June 14 grant scanner):** Separate question - is Exos already ON Flight Opportunities IDIQ 4 (FO IDIQ 4)? If so, task orders $100K-$2M per flight slot are available with zero competition. If not, Phase III sole-source via FA9300-25-C-6022 may allow Exos to submit on-ramp proposal to NASA Armstrong without open competition.\n**Deta"
+    },
+    {
+      "id": "R-002",
+      "title": "SAM.gov RDRE Capability Update",
+      "state": "To Do",
+      "due": null,
+      "owner": "Exo",
+      "description": ""
+    },
+    {
+      "id": "R-016",
+      "title": "Intuitive Machines Warm-Path + 3 VC Outreach Drafts - Pending Jon Decisions",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON]\n**Status:** 🟡 READY - 4 decisions needed from Jon\n**Created:** 2026-06-14 (from #rd-team activity)\n**Drafts ready:**\n1. **IM intro-request note** - Steve Altemus (CEO) or Tim Crain (CTO) or both? Frames Scorpius tank supply-chain relationship as basis for warm intros to a16z AD, Founders Fund, Lux. Also: Kam Ghaffarian (co-founder/investor) as direct approach.\n2. **Decisive Point "
+    },
+    {
+      "id": "R-013",
+      "title": "SBA E2G Manufacturing Grant - North Texas Workforce Partner (⚠️ DUE JUNE 14 - 4 DAYS)",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Due:** June 14, 2026 (SBA pool closes June 15) ← TODAY\n**Status:** 🚨 DEADLINE TODAY - Decision D-070 posted (overnight June 13-14)\n**🎯 TOP CALL:** **Paris Junior College Greenville Center** - (903) 785-7661. Call TODAY (June 14) AM. Ask for workforce training director. 5-minute call. Exo preps 1-page employer statement on your GO.\n**Call prep:** `drafts/PJC-E2G-Call-Prep-R013.md"
+    },
+    {
+      "id": "R-014",
+      "title": "NASA Lunar Surface Technology RFI - Scorpius Type 5 Response (⚠️ This Week)",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] submit / [EXO] draft\n**Due:** This week\n**Status:** 🟡 DRAFT COMPLETE (June 9, overnight resolver) - Jon to review and submit\n**SAM.gov:** opp/ce77639b7e6448f596c612640066ae2a\n**Details:** NASA Lunar Surface Technology RFI - Scorpius Type 5 cryo tanks flew on Intuitive Machines Odysseus (IM-1) and Athena (IM-2). This is the single strongest positioning play with NASA right now. A r"
+    },
+    {
+      "id": "R-015",
+      "title": "AFRL REGAL Program - Proactive Outreach",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Due:** This month\n**Status:** 🟡 READY\n**Details:** From June 8 competitive intelligence report. Reference FA9300-25-C-6022 and position Exos as a suborbital REGAL demonstration platform - faster, cheaper, and reusable for payload survivability testing ahead of orbital missions. REGAL first awards (Rocket Lab/Neutron) targeted 2026 missions; follow-on competitions likely.\n**Next:"
+    },
+    {
+      "id": "R-003",
+      "title": "Matt Contact Info",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Due:** ASAP - unlocks B-002\n**Action:** Send Exo Matt's full name and email/phone"
+    },
+    {
+      "id": "R-004",
+      "title": "Proton Bridge Auto-Start",
+      "state": "To Do",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO]\n**Due:** Today\n**Details:** Configure Proton Mail Bridge to launch at login so email works after reboots"
+    },
+    {
+      "id": "R-005",
+      "title": "Qwen3 OpenClaw Integration",
+      "state": "To Do",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO]\n**Due:** Today\n**Details:** Configure OpenClaw to route non-research cron jobs to local Qwen3-32B to reduce Anthropic costs"
+    },
+    {
+      "id": "R-006",
+      "title": "Send Payload User's Guide to NASA",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Due:** This week\n**Details:** Send the Payload User's Guide to the NASA team you spoke to on 2026-04-06."
+    },
+    {
+      "id": "R-007",
+      "title": "Review CRM Contact Data for Investor Pipeline",
+      "state": "To Do",
+      "due": null,
+      "owner": "Lizi Quinn",
+      "description": "**Owner:** [ASSIGN:Lizi Quinn]\n**Due:** 2026-04-23\n**Details:** Review the top 20 Tier 1 investor contacts in the CRM (accessible at http://100.85.167.117:8080/crm.html) and flag any outdated contact info, missing emails, or stale deal stages. Update notes where needed."
+    },
+    {
+      "id": "R-008",
+      "title": "Compile Warm Intro Targets from LinkedIn",
+      "state": "To Do",
+      "due": null,
+      "owner": "Lizi Quinn",
+      "description": "**Owner:** [ASSIGN:Lizi Quinn]\n**Due:** 2026-04-25\n**Details:** From the CRM investor list, identify 5 contacts where we have a potential warm intro path via LinkedIn. Add notes to each contact's CRM record with the intro path."
+    },
+    {
+      "id": "R-009",
+      "title": "SSLC Board Meeting - QuickBooks Access & Financial Analysis",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Priority:** HIGH\n**Status:** ✅ COMPLETED - QuickBooks Access Granted, Financials Under Analysis\n**Details:** Jon sent formal board meeting request to full SSLC board on 2026-05-01: Jim Wertz, Robert Conger, Alice Wertz, Markus Rufer, Richard Van Allen. CC: Steve Simon, Danny Piper. Jon forwarded again 2026-05-06.\n**QuickBooks access granted** (resolved 2026-05-11). Board meeting"
+    },
+    {
+      "id": "R-010",
+      "title": "Teamwork Tasks - Live Dashboard",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO]\n**Status:** ✅ Active\n**Details:** All 88 Teamwork tasks across 6 projects are now live at [Teamwork Dashboard](http://100.85.167.117:8080/teamwork.html). Auto-syncs every 5 minutes. Views: by project, by person, overdue, high priority."
+    },
+    {
+      "id": "R-018",
+      "title": "GTL - Follow Up on RDRE Deal Next Steps (NEW June 17)",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON]\n**Status:** 🟡 NEW - Jon flagged need to follow up with GTL on next steps (2026-06-17)\n**Context:** Exos-GTL relationship is still at deal-structure / negotiation stage. Exos has **NOT** negotiated to own the GTL machined-RDRE path or the turbopump - do not represent either as an owned Exos asset externally until a deal closes (caught in the Kirk Konert / AE Industrial draft, 6/17)"
+    },
+    {
+      "id": "R-017",
+      "title": "Update Decisions Matrix - DAILY RECURRING",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO]\n**Status:** 🔵 Active - Recurring daily\n**Details:** Review and update the Decisions Matrix (decisions.html / data/decisions.json) every day. Sweep all open Mission Control items for pending yes/no approvals, surface new decisions needing Jon's input, mark resolved decisions, and keep the matrix current so Jon has a single consolidated approval queue. Decisions inbox: http://192.16"
+    },
+    {
+      "id": "T-033",
+      "title": "FUND-VF | Veteran Fund (Mike Sherbakov) - Series A re-engagement",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] sent / [EXO] tracks\n**Status:** 🔵 IN PROGRESS - re-engagement email SENT by Jon 2026-07-01\n**Contact:** Mike Sherbakov <mike@veteran.fund> | introducer: Kipton Cariaga / MDB Capital\n**Context:** Veteran Fund application completed 6/16. Jon sent a ~2-week re-engagement email 7/1 leading with the approved AI-forward one-liner (one-of-three FAA-licensed reusable; AI-integrated; de-ri"
+    },
+    {
+      "id": "P-001",
+      "title": "US Embassy Abu Dhabi Outreach - Dubai Fraud",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO]\n**Due:** OVERDUE (2026-04-24 follow-up missed)\n**June 10 overnight:** Third-attempt escalation email drafted. Two paths: (A) Email AbuDhabiACS@state.gov with German case # reference; (B) Call OCS hotline 1-888-407-4747. Also added US Commercial Service Dubai as parallel track (odc.dubai@trade.gov).\n**Draft:** `drafts/Dubai-Embassy-Escalation-P001.md` ✅ READY\n**Details:** Original "
+    },
+    {
+      "id": "P-002",
+      "title": "Lockheed Martin ToI - NASA AERO.4.S26B Advanced Propulsion Flight Testing",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO]\n**Status:** ⚠️ DEADLINE PASSED (May 21 5:00 PM ET) - Confirm submission status with Jon\n**Details:** LM ToI for collaboration on NASA AERO.4.S26B. Award: up to $225K Phase I / 6 months (Fiber Optic Bragg Grating SHM). PI: Phil Eaton.\n**Contacts:** Joseph Epstein, Nicole Saro, Raquel Galvan, John Fontana (all LM). Neil Milburn + Lizi Quinn (Exos).\n**Progress (2026-05-19):** Quad ch"
+    },
+    {
+      "id": "P-003",
+      "title": "CEA Group - Meeting + Strategy",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** 🔵 CEA preparing strategy\n**Details:** Brayton Johnson (Eqvista) introduced Rick Michaels (CEA Group). Jon sent intro presentation May 6. Rick confirmed team will attend, Ed Horowitz (Senior Advisor for Space) is key. Jon pitching: FAA-licensed reusable rocket, Scorpius arbitrage, Dublin Euronext listing around SpaceX IPO.\n**CEA:** Tampa FL / Center Valley PA / London U"
+    },
+    {
+      "id": "P-004",
+      "title": "Dynovas - MNDA + Type 5 Tank Partnership",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] drafted / [JON] review+send\n**Status:** 🟡 MNDA DRAFT COMPLETE (June 8 overnight) - Jon to review and send to Ken Mercer\n**Due:** ASAP\n**Details:** Jon tasking (May 6): Execute MNDA with Ken Mercer of Dynovas. Share TYPE 5 tank technology details. Evaluate resin system partnership pre/post Scorpius acquisition. Hal Hickman (hal.hickman@dynovas.com) is initial contact. Note: Dynovas"
+    },
+    {
+      "id": "P-005",
+      "title": "Montana University Student Integration (Q1 2027 Payload)",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] drafted / [JON] approve + forward\n**Status:** 🟡 DRAFT COMPLETE (June 8 overnight) - Jon to approve + forward to Edgar/Sean | **Decision posted to inbox (D-028)**\n**Due:** 2026-06-04 (OVERDUE); plan now ready for execution\n**Details:** Jon told Montana contact: payload booked Q1 2027, wants university students engaging NOW to support flight effort.\n**2026-06-08 overnight resolver:*"
+    },
+    {
+      "id": "P-006",
+      "title": "Kent / Cerberus - Pitch Materials Follow-Up + Call Week of June 16",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** 🔵 CALL BOOKED - Kent replied June 8: \"I've booked some time for us to talk.\" Call likely week of June 16.\n**⚠️ CRITICAL (UPDATED 6/26):** Do NOT copy **Dan Quayle (dquayle@cerberus.com)** on any Cerberus correspondence — hard exclude (Jon directive 6/26). **Frank Bruno (fbruno@cerberus.com) is the fallback contact** alongside Kent. Primary channel remains direct with K"
+    },
+    {
+      "id": "P-007",
+      "title": "Jivajet Evaluation - Suborbital Flight Test Alignment",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] evaluated / [JON] qualify\n**Status:** ✅ EVALUATED (June 8 overnight)\n**Details:** JivaJet Inc. is a **plasma propulsion** startup (cold atmospheric plasma) co-founded by Dr. Vikas Soni (CSO, vikas.soni@jivajet.com) and Dr. Anmol Taploo. CEO: Shashank Kaul. GWU engineering spinout. Technology: Earth-to-Mars plasma propulsion. No confirmed external funding rounds found.\n**Assessment"
+    },
+    {
+      "id": "P-008",
+      "title": "IM Test Campaign - SSLC Sub Opportunity",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** 🔵 Cost estimate received\n**Details:** Philip Eaton sent cost estimate May 5 for IM test campaign as SSLC sub - testing + capital costs based on ~800 liters LN2 per tank, 1 6-pack helium. Engineering services opportunity.\n**Next:** Jon review Philip's estimate, decide on pursuing"
+    },
+    {
+      "id": "P-042",
+      "title": "CUI/ITAR Deep Scrub - Office Documents (NEW June 16, 2026)",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO]\n**Status:** 🔵 IN PROGRESS — Jon directed \"continue deep scrub\" June 16 at 10:22 PM UTC\n**Added:** 2026-06-16 (from #exomac-system)\n**Background:** Pre-DGX-sync scrub triggered by upcoming data room sync. Initial text-file pass found 2 real CUI candidates (NASA RDRE technical files) + confirmed all CAD/keyword-match files were false positives (facility drawings, business docs). Bot"
+    },
+    {
+      "id": "P-039",
+      "title": "Recursive Self-Improvement System - BUILT June 14, 2026",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO]\n**Status:** ✅ LIVE - Jon approved June 14 (#exomac-system). Two cron jobs active:\n1. **Nightly Meta-Evaluator** (`5 AM daily`, Sonnet 4.6) - Reviews all agent prior-day output; scores on traction rubric (3=actionable → -1=harmful/wrong); catches duplication + fact violations (BLK3 overstatements, RDRE claims); writes specific implementable fixes. Read-only - no self-modification.\n"
+    },
+    {
+      "id": "P-040",
+      "title": "DGX Spark Primary Node Setup",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] + [JON] physical setup\n**Status:** 🔵 IN PROGRESS — DGX SPARK DELIVERED ✅ June 16 (~9:30 PM CT) | Phase 0 PENDING LAN IP\n**2026-06-15 (overnight resolver — sonnet):** Runbook confirmed at `DGX_SPARK_PRIMARY_RUNBOOK.md` — complete and ready. **Decision D-093 posted** — Jon does Phase 0 (~15 min) when box lands: boot, create user `exos`, enable SSH, install Cloudflare tunnel with Ato"
+    },
+    {
+      "id": "P-041",
+      "title": "Scorpius Affiliate Social Content Channel",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] setup / [JON] decision\n**Status:** 🟡 AWAITING JON DECISION — **Decision D-095 posted (June 15 overnight)** — Option A vs B choice needed\n**Added:** 2026-06-15 (from #social-content)\n**Details:** Jon asked for a dedicated Discord channel (or separate server) that Scorpius affiliates can access, filtered to Scorpius/cryo/lunar-relevant content only (not full Exos BD/investor content"
+    },
+    {
+      "id": "P-036",
+      "title": "Fractional CFO Function - Activated June 13, 2026",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO]\n**Status:** 🔵 ACTIVE - Jon directed June 13. Monday AM report template drafted overnight June 13-14.\n**2026-06-14 overnight:** Monday AM Cash & Runway report template created at `drafts/CFO-Monday-Cash-Report-Template-P036.md`. Template covers: cash on hand, AR aging, AP outstanding, burn rate, months of runway, upcoming payments, contract milestones. First manual report included "
+    },
+    {
+      "id": "P-037",
+      "title": "EDGAR Reg CF Annual Report - COMPLIANCE RISK + CURE PATH DEFINED",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON] + David Mitchell (CFO)\n**Status:** 🚨 COMPLIANCE RISK - Decisions D-073 + D-075 + **D-078 (Opus cure path, June 14)** posted\n**CIK:** 0001774765\n**2026-06-14 overnight research:** EDGAR filing type CONFIRMED as Form C-AR (Regulation CF crowdfunding annual report), NOT Form 1-K (Reg A). Filing history: last C-AR filed 2025-05-08 for FY2024. New Reg CF offering (file 020-34968, Form "
+    },
+    {
+      "id": "P-009",
+      "title": "Lizi Quinn - Tailscale CRM Access",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** ✅ COMPLETED (2026-05-12)\n**Details:** Lizi has successfully set up Tailscale and can now access Mission Control and CRM.\n**Next:** None - resolved. Note: Tailscale being replaced by Cloudflare Zero Trust (see P-029)."
+    },
+    {
+      "id": "P-029",
+      "title": "Cloudflare Zero Trust Migration + ExoMac System (ExoMac / Network)",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] + [EXO] support\n**Status:** ✅ SYSTEM STABILIZED (2026-05-31) - Secrets migrated, gateway restarted, Ollama persistent\n**Details:** Replacing Tailscale with Cloudflare Zero Trust for remote access. Atomus managing cybersecurity. Migration impacts: CRM access at 100.85.167.117, Mission Control dashboard, any Tailscale-dependent remote connections (Lizi, Neil, etc.).\n**2026-05-31 sys"
+    },
+    {
+      "id": "P-010",
+      "title": "Richard Joyce - GNC & Flight Software Contractors",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** 🔵 Meeting scheduled\n**Details:** LinkedIn follow-up. 30 space resources engineers, temp/temp-perm. Teams meeting ID: 992 263 565 237.\n**Next:** Attend meeting, evaluate contractor options"
+    },
+    {
+      "id": "P-011",
+      "title": "PoliTO - Collaboration Renewed",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO]\n**Status:** ✅ Partnership active\n**Details:** Roberta Fusaro (roberta.fusaro@polito.it) confirmed May 5: PoliTOrbital officially renewed. Exos support letter highly regarded in proposal. Active collaboration with Exos Aerospace Italia."
+    },
+    {
+      "id": "P-012",
+      "title": "Eqvista 409A Valuation 2026 - Active Pushback",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** 🔵 V9 SENT TO EQVISTA (2026-05-31) - Follow-up finding letter prepared and ready to send\n**Details:** Eqvista proposing methodology shift (EV/EBITDA) for April 30, 2026 409A - would dramatically cut valuation below their own May 2025 $166M equity value report. Jon disputed: company achieved profitability and doubled revenue.\n**Pushback letter (v9):** `drafts/Eqvista_409"
+    },
+    {
+      "id": "P-013",
+      "title": "Sands Capital Introduction",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** 🟡 Track outcome\n**Details:** Jon accepted Apr 22 2:30pm intro call with Christy Steele via Sulaiman.\n**Next:** Jon - what was the outcome of this call?"
+    },
+    {
+      "id": "P-014",
+      "title": "SpEC HEAT3 + EM&C AI/ML Opportunities",
+      "state": "To Do",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO]\n**Status:** 🟡 Final RPP Released - Re-evaluate\n**Details:** SpEC/NSTXL forwarded May 5: EM&C AI/ML opportunity events + HEAT3 dRPP Q&A released. Jon forwarded Final RPP Bidder's Library (26-02) 2026-05-19 - signals Jon is still tracking this. Previously assessed as marginal fit (USSF test/training infrastructure, SYD 81, Peterson SFB). Final RPP may reveal Exos-fit project areas.\n"
+    },
+    {
+      "id": "P-018",
+      "title": "Tiger Link Advisors - Euronext Dublin Due Diligence (FUND-013)",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** 🔵 Due diligence - materials delivered\n**Details:** Leti McManus (Tiger Link Advisors) + Mark Reardon (Andean Capital) conducting viability assessment for Euronext Dublin listing. Met with Jon, Ian Bond (Whitefield), Mike Harling. Jon replied 2026-05-12 with: investor deck PDF, Scorpius Executive Overview PDF, financial model (Excel), Exos + Scorpius data rooms (Peony.i"
+    },
+    {
+      "id": "P-019",
+      "title": "Montana Trip + DC Meetings (Billings Chamber DC Fly-In June 9-11)",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** ✅ DC TRIP COMPLETE - Jon returned from DC Saturday June 13. **Billings Chamber DC Fly-In June 9-11 was fully executed.**\n**Confirmed meeting schedule (updated June 10 EOD):**\n- ✅ **Tuesday June 9:** Arrived / dinner\n- ✅ **Wednesday June 10:** DC meetings COMPLETED per EOD status report:\n  - ✅ FAA Spaceports - Stacey Zee (9:30 AM) - HELD\n  - ✅ Sen. Daines (11:00 AM) - H"
+    },
+    {
+      "id": "P-015A",
+      "title": "AFRL EPIC Consortium RFI (RFI-RFZF-B001)",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] submit / [EXO] drafted\n**Status:** ✅ SUBMITTED 2026-05-11 14:46 CDT\n**Due:** 2026-05-12 11:00 AM EDT\n**Details:** AFRL Enterprise Prototype Initiative Consortium (EPIC) - Sources Sought for enterprise-level OTP consortium. Exos positioned as Project-Level Performer (nontraditional defense contractor / small business). 10-page response with company history, Armadillo heritage, BLK3"
+    },
+    {
+      "id": "P-047",
+      "title": "S2MARTS MEAT 1.0 - Project TALX May 19",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO]\n**Status:** ✅ EVENT COMPLETE (2026-05-19 2:00 PM ET)\n**Details:** Government team briefing on MEAT 1.0 opportunity. NSWC Crane / S2MARTS OTA. Virtual event completed.\n**Next:** Evaluate Exos fit; assess teaming angle (software/systems integration focus - marginal fit without a software partner)"
+    },
+    {
+      "id": "P-016",
+      "title": "Senegal Space Week 2026 (May 19-22)",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Andrew Overman",
+      "description": "**Owner:** [ASSIGN:Andrew Overman]\n**Status:** 🔵 BD package prepared\n**Details:** Jon tasked: Full BD package for international BD representative. Package prepared and sent (SSW BD package + capability alignment brief). Travel agenda: Dallas to Dakar May 17-23.\n**Next:** Confirm Andrew has all materials, pre-meeting prep"
+    },
+    {
+      "id": "P-017",
+      "title": "NASA Heat Shield Flight Testing Webinar - May 6",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO]\n**Status:** ✅ Event passed\n**Details:** NASA Flight Opportunities Community of Practice webinar: \"Heat Shield Flight Testing and Space Industry Growth.\" May 6 1-2pm ET. Relevance: Goodman Technologies TPS eval (OPP) + Exos flight test platform positioning."
+    },
+    {
+      "id": "P-020",
+      "title": "BLK3 Payload Sales Campaign - 135kg Manifest (Q1 2027)",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [ASSIGN:Lizi Quinn] | Support: [JON] + Phil Eaton as needed\n**Status:** 🔵 IN PROGRESS - Campaign active until 135kg BOOKED\n**NEW June 10 - SwRI outreach (C.J. Nolen + Alan Stern):** Jon directed research on **C.J. Nolen** (Senior Research Engineer, SwRI, San Antonio TX - RDE, launch vehicles, sCO2, lunar fission surface power, DAQ/instrumentation) and **Alan Stern** (SwRI Associate VP S"
+    },
+    {
+      "id": "BD-030",
+      "title": "SwRI (C.J. Nolen + Alan Stern) — BLK3 Flight 2 payload outreach",
+      "state": "Queued",
+      "due": null,
+      "owner": "Lizi Quinn",
+      "description": "**Owner:** [ASSIGN:Lizi Quinn] (send + follow-up) | Warm door: Jon (knows Stern from Broomfield suborbital conf)\n**Status:** ⏸ ON HOLD - gated by D-105 (price anchor). Draft prepared, not yet sent.\n**POC:** C.J. Nolen (Sr. Research Engineer, SwRI — RDE/sCO2/DAQ); Alan Stern (SwRI Assoc. VP Space Sector; NSRC chair)\n**Email thread:** Drafted (both) — awaiting Jon send/forward. Subject: \"Suborbital "
+    },
+    {
+      "id": "BD-031",
+      "title": "Space Port Australia (Dr. Gabrielle Caswell) — BLK3 Flight 2 outreach",
+      "state": "Queued",
+      "due": null,
+      "owner": "Lizi Quinn",
+      "description": "**Owner:** [ASSIGN:Lizi Quinn] (send + follow-up) | Warm door: [ASSIGN:Aaron Schwartzbart] (NSRC community)\n**Status:** ⏸ ON HOLD - gated by D-105 (price anchor). Draft D ready since 2026-06-22.\n**POC:** Dr. Gabrielle Caswell, Founder/Director — gcaswell@spaceportaustralia.com.au / +61 (2) 455 321 174\n**Email thread:** Drafted (Draft D) — READY to send. Subject: \"Suborbital flight access for Space"
+    },
+    {
+      "id": "BD-032",
+      "title": "Innovation First (Tony Norman) — BLK3 Flight 2 + RMPC robotics partner",
+      "state": "Queued",
+      "due": null,
+      "owner": "Lizi Quinn",
+      "description": "**Owner:** [ASSIGN:Lizi Quinn] (send + follow-up) | Support: Jon\n**Status:** ⏸ ON HOLD - gated by D-105 (price anchor). Drafted.\n**POC:** Tony Norman (Innovation First, Greenville TX — robotics)\n**Email thread:** Drafted — awaiting send. Subject: \"RMPC robotics + BLK3 payload — Greenville partnership\"\n**Why fit:** RMPC robotics partner + local Greenville proximity; doubles as TechLeap RMPC robotic"
+    },
+    {
+      "id": "BD-033",
+      "title": "SpaceTango (Twyman Clements) — broker/aggregator (HIGH LEVERAGE)",
+      "state": "Queued",
+      "due": null,
+      "owner": "Lizi Quinn",
+      "description": "**Owner:** [ASSIGN:Lizi Quinn] (send + follow-up) | Support: Jon\n**Status:** ⏸ ON HOLD - gated by D-105 (price anchor). Draft F (revised) ready.\n**POC:** Twyman Clements, CEO/Co-founder — tclements@spacetango.com / (833) 428-2646 / Lexington KY\n**Email thread:** Drafted (Draft F, revised) — READY. Subject: \"BLK3 suborbital — your customers' R&D precursor before ISS and lunar\"\n**Why fit:** One brok"
+    },
+    {
+      "id": "BD-034",
+      "title": "Purdue / Zucrow Labs (Prof. Timothée Pourpoint) — BLK3 Flight 2 outreach",
+      "state": "Queued",
+      "due": null,
+      "owner": "Lizi Quinn",
+      "description": "**Owner:** [ASSIGN:Lizi Quinn] (send + follow-up) | Warm door: [ASSIGN:Aaron Schwartzbart] (⭐ Purdue aero contacts)\n**Status:** ⏸ ON HOLD - gated by D-105 (price anchor). Draft A ready.\n**POC:** Prof. Timothée Pourpoint (APECS Lab director, AAE) — tpourpoi@purdue.edu (best-guess)\n**Email thread:** Drafted (Draft A) — awaiting send. Subject: \"Suborbital flight opportunity for APECS propulsion resea"
+    },
+    {
+      "id": "BD-035",
+      "title": "AFRL / SpaceWERX — component TRL flight-test (gov, multi-flight)",
+      "state": "Queued",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON] + [ASSIGN:Aaron Schwartzbart] (⭐⭐ highest-value warm-intro door) | Support: [ASSIGN:Lizi Quinn]\n**Status:** ⏸ ON HOLD - gated by D-106 (Aaron/AFRL warm intro). Draft E ready.\n**POC entry:** SpaceWERX Vector (STRATFI/TACFI + SBIR Phase III); AFRL.PA.Inquiry@us.af.mil; Col. Beckman (Kirtland)\n**Email thread:** Drafted (Draft E) — holding for Aaron warm intro. Subject: \"Reusable subo"
+    },
+    {
+      "id": "BD-036",
+      "title": "Texas A&M / AE (Dr. Waruna Kulatilaka) — BLK3 Flight 2 outreach",
+      "state": "Queued",
+      "due": null,
+      "owner": "Lizi Quinn",
+      "description": "**Owner:** [ASSIGN:Lizi Quinn] (send + follow-up) | Warm door: Jon (TX aerospace network)\n**Status:** ⏸ ON HOLD - gated by D-105 (price anchor). Draft C ready.\n**POC:** Dr. Waruna Kulatilaka (Reacting Flows & Propulsion Lab, TAMU AE) — wkulatilaka@tamu.edu (best-guess)\n**Email thread:** Drafted (Draft C) — awaiting send. Subject: \"Flight qualification opportunity for TAMU propulsion diagnostics — "
+    },
+    {
+      "id": "BD-037",
+      "title": "Redwire Space (Andrew Rush) — in-space mfg/materials suborbital precursor",
+      "state": "To Do",
+      "due": null,
+      "owner": "Lizi Quinn",
+      "description": "**Owner:** [ASSIGN:Lizi Quinn] (outreach) | Support: Jon (conference warm intro)\n**Status:** 🟡 RESEARCHING - no draft yet\n**POC:** Andrew Rush, President/CEO; BD via Jonathan Cirtain (EVP/Chief Scientist) — arush@redwirespace.com (best-guess)\n**Email thread:** Not yet drafted.\n**Why fit:** In-space manufacturing processes need short-duration microgravity characterization before ISS; recover-and-in"
+    },
+    {
+      "id": "P-022",
+      "title": "ASGSR 2026 Conference - Payload Sales + Presentation",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON] (abstract) + [ASSIGN:Lizi Quinn] (booth decision + outreach)\n**Status:** 🔵 IN PROGRESS - ✅ Abstract SUBMITTED (Jon confirmed 2026-05-31). ✅ Exec Director email sent (2026-05-30, see below). Remaining: booth decision + PI outreach (Lizi).\n**Due:** ✅ Abstract deadline May 31, 2026 - MET\n**ASGSR Executive Director email (2026-05-30):** Sent directly to executive_director@asgsr.org re"
+    },
+    {
+      "id": "P-028",
+      "title": "AEDC Velocity Alliance - RDRE Flight Test Whitepaper",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] (review/submit) + [EXO] (drafted)\n**Status:** ✅ SUBMITTED (2026-05-31) - Jon confirmed sent to Greggory Jones / AFTC/PZIA. Full 7-page letterhead whitepaper submitted before June 1 COB.\n**Files:** `Exos_AEDC_Velocity_Alliance_Whitepaper.pdf` + `.docx` | Cover email: `drafts/aedc-velocity-cover-email.md`\n**Submit to:** greggory.jones.4@us.af.mil (primary), cc brooke.vandeman@us.af."
+    },
+    {
+      "id": "P-021",
+      "title": "Project KARMEN - SBIR Phase III / D2P2 / DIU ($1.25M+)",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] + [EXO]\n**Status:** 🔵 IN PROGRESS - Proposals drafted; DIU front door path added 2026-05-28\n**Due:** D2P2 submission window: Aug 27 - Sep 24, 2025 (DAF Release 11). Phase III sole-source: submit anytime. DIU: rolling open solicitation.\n**Value:** $1.25M base (two BLK3 flights + RDRE transition plan); expandable to $3M\n**DIU Front Door Path (added 2026-05-28):** Jon asked about res"
+    },
+    {
+      "id": "P-024",
+      "title": "TACFI $2M + TSC $2M - Dual Funding Strategy",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** 🔥 TACFI CHAMPION SECURED - STRATFI formally abandoned; LoS received from Matt Harvazinski (USAF), 2026-05-28\n**Strategy:** ~~STRATFI~~ FORMALLY ABANDONED (Jon confirmed 2026-05-28). TACFI only. $2M USAF (TACFI) + $2M Texas Space Commission = $4M total.\n**TACFI ($2M USAF):**\n- ✅ Phase II customer signed Letter of Support for TACFI\n- ✅ **TACFI Letter of Support received "
+    },
+    {
+      "id": "P-025",
+      "title": "BD-018: ONR Code 351 - Naval Composite SHM ($500K-$3M/yr)",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] (draft) + [JON] (review/submit)\n**Status:** ✅ SUBMITTED (Jon, 2026-06-29) — ONR Code 351 white paper sent. Monitor for ONR response/PM follow-up.\n**Due:** June 30, 2026 (white paper) — SUBMITTED 6/29\n**Value:** $500K-$3M per year | Phase III eligible\n**Details:** Office of Naval Research Code 351 (Sea Warfare & Weapons) - embedded structural health monitoring for naval/marine comp"
+    },
+    {
+      "id": "P-026",
+      "title": "BD-019: AFRL/RXC - Composite Structures ($500K-$2M)",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] (draft) + [JON] (review/submit)\n**Status:** 🔵 IN PROGRESS — **DRAFT COMPLETE — SUBMISSION UNCONFIRMED AS OF June 15 11 PM CT**\n**2026-06-15 (overnight resolver — sonnet):** ✅ FA8650-18-S-5010 is an OPEN/ROLLING BAA — no hard June 15 cutoff. Submit within 48 hrs. **Decision D-090 posted** — confirm if already submitted or plan to submit by June 17. POC: AFRL.RXC.OpenBAA@us.af.mil. "
+    },
+    {
+      "id": "P-034",
+      "title": "BLK3 In-Space Cryo Transfer Demo - TACFI PY26.2 (June 5 Launch)",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] + [EXO]\n**Status:** 🟠 PIVOTED (2026-06-30, Jon) - **TACFI PY26.2 NOT submitted** (USAF could not support the timeline; TSC matching funds not yet approved). USAF is **interested in the NEXT TACFI round** - re-target. **Carstetter Customer Memorandum never went out.** The **SpaceWERX In-Domain Orbital Logistics Challenge ($20M)** is now the live near-term vehicle (subs opened June "
+    },
+    {
+      "id": "P-035",
+      "title": "NASA FOSS Licensing Play (AFRC DRC-TOPS-37)",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] (research + outreach draft) + [JON] (send)\n**Status:** 🟡 OUTREACH DRAFT COMPLETE (June 8 overnight) - Jon to review and send\n**Due:** ASAP - evaluation license inquiry\n**Value:** CryoFOSS patent (US 9,074,921) directly applicable to cryo COPV tanks and in-space fuel transfer demo. If tied to active NASA SBIR → evaluation license may be FREE (vs. $2,500/yr standard).\n**Context:** N"
+    },
+    {
+      "id": "P-027",
+      "title": "BD-020: DARPA TTO ⛔ DEAD-DROPPED (Jon 6/19) / DSO ✅ SUBMITTED",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] (draft) + [JON] (review/submit)\n**Status:** ⛔ **BD-020 / DARPA TTO DROPPED (Jon, 2026-06-19) — DEAD, no further work.** ✅ DARPA DSO portion submitted June 2, 2026 (ID HR001125S0013-Office-Wide-BAA-ES-452) — historical/complete. Forward path now lives only in OPP-032 (STO responsive-launch RFI) + a future TTO OW BAA cycle (file ES on time). 🔴 **DARPA TTO (HR001125S0011) — CLOSED TO"
+    },
+    {
+      "id": "P-023",
+      "title": "Trade Vector - BLK3 Bridge Investment ($500K)",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] + [JON]\n**Status:** 🟡 One-pager sent to Jon - awaiting direction\n**Details:** Trade Vector one-pager prepared (2026-05-19): BLK3 bridge investment, $500K ask. Two versions sent - v1 and v2 with corrected market positioning. Jon to review and decide on outreach path.\n**Next:** Jon review one-pager; confirm Trade Vector contact and outreach strategy"
+    },
+    {
+      "id": "P-043",
+      "title": "FAA Reusable Launch Vehicle License Monitor",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO] - Automated daily scan\n**Status:** ✅ Active - Running daily via Competitive Intelligence cron (10 AM)\n**Details:** Daily scan for any new FAA reusable launch vehicle license grants. Exos is currently one of only 3 companies (with SpaceX and Blue Origin) holding FAA RLV authorization. If a 4th company gets licensed, all Exos marketing materials must be updated. Baseline reference: "
+    },
+    {
+      "id": "P-032",
+      "title": "GTL (Gloyer Taylor Labs) - SpaceWERX D2P2 Liquid Methane Tank Test",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] (GTL outreach + government sponsor) + [EXO] (proposal + Customer Memorandum)\n**Status:** 🟡 READY - Customer Memorandum formatted as proper DoD-style memo (Times New Roman 12pt, MEMORANDUM FOR / FROM / SUBJECT block, 6 numbered paragraphs, signature block) and emailed to Jon (June 4, 2026). Jon confirmed: **Exos primes on all GTL work** (June 3).\n**Due:** SpaceWERX D2P2 window targ"
+    },
+    {
+      "id": "P-030",
+      "title": "CLPS2 Clarifying Question - June 5 Window",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] (submit) + [EXO] (drafted)\n**Status:** ⚠️ LIKELY SUBMITTED - Q&A text fully prepared and provided to Jon for immediate submission June 5. Jon asked how to submit, received complete send-ready email text (To: jsc-clps2@mail.nasa.gov, Subject: CLPS 2.0 (80JSC026R0015) - Industry Question Submission), confirmed \"yes\" to proceed. Submission status to be confirmed with Jon. EOD status "
+    },
+    {
+      "id": "P-031",
+      "title": "Scorpius Cryo Subsystem Pipeline - Beyond IM",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO] (research done) + [JON] (outreach execution)\n**Status:** 🟡 RANKED LIST DELIVERED - 10 targets identified; next moves defined\n**Context:** Jon confirmed 2026-06-02: \"We already have IM tank orders.\" Research memo emailed to Jon (jquinn@exosaero.com).\n**Tier 1 targets:** (1) Impulse Space - Helios LOX/methane kick stage, prime commercial Type 5 fit; (2) Eta Space - NASA LOXSAT cryo "
+    },
+    {
+      "id": "P-044",
+      "title": "Space Industry Series A Investor Tracking",
+      "state": "In Progress",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO]\n**Status:** 🔵 Standing task - ongoing\n**Details:** Whenever a space industry company reports closing a Series A, research the investors who funded it. Add investors to CRM as priority contacts. Rationale: these investors have confirmed space sector appetite and recent deployment capital - highest probability targets for Exos listing placement.\n**Process:** Investor/capital markets"
+    },
+    {
+      "id": "R-011",
+      "title": "FAA Launch User Fee - 2026 Audit Required",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON]\n**Status:** 🟡 ACTION REQUIRED - NEW (identified 2026-05-31 via Policy & Regulatory Watch)\n**Priority:** HIGH - fees are owed retroactively for all 2026 launches already conducted\n**Source:** FAA Federal Register 2026-07789 (51 U.S.C. 50924, \"One Big Beautiful Bill\" signed July 4, 2025)\n**Details:** FAA launch/reentry user fees now active in 2026. Rate: **$0.25/lb of payload weight"
+    },
+    {
+      "id": "R-012",
+      "title": "FAA Part 450 / Authorization Status Confirmation",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** 🟡 LOW URGENCY - confirm with FAA AST before next launch cycle\n**Source:** Policy & Regulatory Watch, 2026-05-30\n**Details:** All commercial launch/reentry licensing now exclusively under 14 CFR Part 450, replacing legacy Part 431 (RLV) and others. If Exos's existing authorization predates full Part 450 consolidation, confirm with FAA AST whether conversion/reissuance i"
+    },
+    {
+      "id": "C-009",
+      "title": "Elizabeth (Lizi) Quinn - Offer Letter ✅ ACCEPTED / STARTED",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon",
+      "description": "**Owner:** [JON]\n**Status:** ✅ DONE - Offer accepted; Lizi started full-time on salary May 31, 2026 (Jon confirmed 2026-06-06)\n**Details:** Full-time BD position, $65,520 annual salary, effective May 31, 2026. On Exos primary letterhead. Saved: `drafts/Elizabeth_Offer_Letter_Letterhead_2026-05-31.docx`.\n**Next:** None - closed. (Optional: re-send via DocuSign as a system test if Jon still wants it"
+    },
+    {
+      "id": "P-045",
+      "title": "Lady Rocket / Copernic Space - Founding Applicant Feature Portfolio (Completed June 5)",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [EXO]\n**Status:** ✅ COMPLETED - All materials emailed to Jon June 5\n**Details:** Three-tier Founding Applicant Feature Portfolio built on Exos letterhead, co-branded with Copernic Space:\n- **Tier I: The Reusable SignatureTM** - etched titanium plate flies every BLK3 mission and returns, accumulating flight heritage. The moat - only reusability enables this.\n- **Tier II: The Flown Artifa"
+    },
+    {
+      "id": "P-046",
+      "title": "RDRE/GTL Strategic Decisions - Locked June 5",
+      "state": "Done",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON] + [EXO]\n**Status:** ✅ STRATEGY LOCKED - Key decisions confirmed in #series-a June 5\n**Details:**\n1. **GTL machined RDRE = long-term commercial product path** - owns IP (not licensed), defensible moat, asset on balance sheet. Jon confirmed: \"Build a plan for the GTL machined RDRE as the long-term commercial product.\"\n2. **Exos always leads/primes on Type 5 tanks and cryo transfer**"
+    },
+    {
+      "id": "P-038",
+      "title": "CertBuddyAI - Part 450 Pre-Application + Definitive Agreement (NEW June 6)",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON]\n**Status:** 🟡 LOI + REFERRAL SAFE EXECUTED - Jon confirmed June 6 in #rd-team\n**Details:** Exos has executed two agreements with CertBuddyAI (Kannan Govindasamy, kannan@certbuddy.net):\n- **LOI** (non-binding, March 6, 2026) - Covers Part 450 + Part 420 + payload review (FAA/FCC/NOAA/DoD) pre-application support. Platform already co-deployed on a $1.9M DoD contract (700+ pg DFARS)."
+    },
+    {
+      "id": "P-033",
+      "title": "Space Tech Expo USA Follow-Up (June 2-4, Anaheim) - NEW",
+      "state": "To Do",
+      "due": null,
+      "owner": "Jon+Exo",
+      "description": "**Owner:** [JON]\n**Status:** 🟡 EXPO COMPLETE - Follow-up phase begins now (9 PM June 4)\n**Context (confirmed June 4 via #series-a):** Exos, Scorpius, and PrincetonCryo exhibited together at Space Tech Expo USA (June 2-4, Anaheim) with coordinated PR push via EIN Presswire. Key news from expo: **Scorpius + Vaya Space announced strategic partnership** - Vaya's largest-ever Class V linerless cryogeni"
+    },
+    {
+      "id": "C-010",
+      "title": "DocuSign - PDF Signing Support Added (2026-06-02)",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "**Owner:** [EXO]\n**Status:** ✅ COMPLETED (2026-06-02 ~11 PM CT)\n**Details:** Jon requested DocuSign tool be updated to support PDF documents in addition to .docx. Implementation complete: PDF import via pdf.js (page-by-page rasterization), same signing/counterparty pipeline, Exos letterhead auto-disabled for PDFs (already carries its own header/footer). Hard-refresh `/docusign.html` to pick up the"
+    },
+    {
+      "id": "C-001",
+      "title": "NASA FO Outreach Email - Sent 2026-03-25",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "Angela Stinchfield + Melissa Newell. CC: Lizi Quinn, Neil Milburn.\nSolicitation 80AFRC23R0001 - evergreen, open now.\nNOTE: Email incorrectly referenced SAA - clarify on call if raised."
+    },
+    {
+      "id": "C-002",
+      "title": "ExoMac Security Setup",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "Nightly security script running 3:15 AM. Homebrew updates, OpenClaw audit, session cleanup, firewall check."
+    },
+    {
+      "id": "C-003",
+      "title": "ProtonMail + msmtp Email Configured",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "jquinnexo@pm.me outbound working. Bridge on port 1025."
+    },
+    {
+      "id": "C-004",
+      "title": "Qwen3-32B Local Model Installed",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "20GB model running via Ollama on ExoMac. Zero cost, fully local."
+    },
+    {
+      "id": "C-005",
+      "title": "Home Assistant Solar Live",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "Enphase Envoy integrated. 30 microinverters reporting. Daily 7 AM solar report active."
+    },
+    {
+      "id": "C-006",
+      "title": "HA Updated to 2026.3.4",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": ""
+    },
+    {
+      "id": "C-007",
+      "title": "ISC Branded Presentation Delivered",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "FINAL2 + video MP4 sent to ProtonMail for manual edit."
+    },
+    {
+      "id": "C-008",
+      "title": "ISC ARCA ETV Presentation Completed",
+      "state": "Done",
+      "due": null,
+      "owner": "Exo",
+      "description": "Final version with embedded video completed by Jon.\n\n---"
+    }
+  ]
+}

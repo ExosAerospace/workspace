@@ -1093,6 +1093,9 @@ const server = http.createServer((req, res) => {
             filtered = [];
           }
         }
+        // Legacy MC board items (migrated into Supabase for decision-enrichment only)
+        // are kept out of the active team board. They remain first-class, editable rows.
+        if (Array.isArray(filtered)) filtered = filtered.filter(t => t.source !== 'mc-board-legacy');
         res.writeHead(status >= 400 ? status : 200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(filtered));
       }).catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
