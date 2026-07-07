@@ -802,6 +802,68 @@ def parse_crm(content):
 
 
 # ══════════════════════════════════════════════
+# CRM MIRROR
+# ══════════════════════════════════════════════
+
+def mirror_opportunities_to_supabase(opportunities):
+    """One-way mirror: refresh opportunities into the Supabase `deals` table
+    (source=mc-opportunity-mirror) so they show in the unified CRM alongside
+    companies/contacts. The .md stays the source of truth; this never writes back.
+    Full refresh each run (delete-by-source then insert). Reversible: delete deals
+    where source=mc-opportunity-mirror. amount/close_date are left null on purpose —
+    the opportunity value/due are narrative text, not clean figures."""
+    import urllib.request as _ur, urllib.error as _ue
+    try:
+        key = json.load(open(os.path.expanduser('~/.openclaw/secrets.json'))).get('supabase_service_role_key', '')
+    except Exception:
+        key = ''
+    if not key or key.startswith('PASTE') or key.startswith('sb_publishable'):
+        print('  [mirror] no Supabase service key — skipping CRM deals mirror')
+        return
+    base = 'https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/'
+    def req(path, method='GET', body=None, extra=None):
+        h = {'apikey': key, 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json'}
+        if extra:
+            h.update(extra)
+        r = _ur.Request(base + path, data=(json.dumps(body).encode() if body is not None else None),
+                        headers=h, method=method)
+        with _ur.urlopen(r, timeout=60) as resp:
+            return resp.status, resp.read().decode()
+    def prio(p):
+        try:
+            p = int(p)
+        except Exception:
+            return None
+        return 'High' if p >= 70 else ('Medium' if p >= 40 else 'Low')
+    rows = []
+    for o in opportunities:
+        notes = []
+        if o.get('value'):       notes.append('Value: ' + str(o['value']))
+        if o.get('due'):         notes.append('Due: ' + str(o['due']))
+        if o.get('next_action'): notes.append('Next: ' + str(o['next_action']))
+        if o.get('description'): notes.append(str(o['description']))
+        rows.append({
+            'name': (o.get('title') or o.get('id') or 'Untitled')[:300],
+            'stage': (o.get('status') or 'DRAFT')[:60],
+            'priority': prio(o.get('priority')),
+            'source': 'mc-opportunity-mirror',
+            'tags': [t for t in ['opp:' + str(o.get('id', '')), o.get('category'), o.get('type')] if t],
+            'notes': ('\n'.join(notes))[:4000],
+        })
+    try:
+        req('deals?source=eq.mc-opportunity-mirror', method='DELETE', extra={'Prefer': 'return=minimal'})
+        n = 0
+        for i in range(0, len(rows), 100):
+            req('deals', method='POST', body=rows[i:i + 100], extra={'Prefer': 'return=minimal'})
+            n += len(rows[i:i + 100])
+        print(f'  [mirror] opportunities mirrored to CRM deals: {n}')
+    except _ue.HTTPError as e:
+        print('  [mirror] failed:', e.code, e.read().decode()[:200])
+    except Exception as e:
+        print('  [mirror] failed:', e)
+
+
+# ══════════════════════════════════════════════
 # MAIN
 # ══════════════════════════════════════════════
 
@@ -867,6 +929,7 @@ def main():
     }
     write_json('opportunities.json', opps_out)
     print(f'  Opportunities parsed: {len(opportunities)}')
+    mirror_opportunities_to_supabase(opportunities)
     by_cat = {}
     for o in opportunities:
         by_cat[o['category']] = by_cat.get(o['category'], 0) + 1
