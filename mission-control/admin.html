@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXOS Mission Control — Admin</title>
+<style>
+:root {
+  --bg: #0a1628; --surface: #0f1e38; --surface2: #162a4a; --border: rgba(255,255,255,0.08);
+  --text: #e8edf5; --text2: #a0aec0; --accent: #0080ff; --accent2: #0066cc;
+  --green: #22c55e; --yellow: #eab308; --red: #ff4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+header { background: linear-gradient(135deg, #0a1628 0%, #0d2050 100%); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand h1 { font-size: 20px; font-weight: 700; }
+.brand h1 span { color: var(--accent); }
+.brand .badge { background: var(--red); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+.header-actions { display: flex; gap: 10px; align-items: center; }
+.header-actions a { color: var(--text2); text-decoration: none; font-size: 13px; }
+.header-actions a:hover { color: var(--text); }
+
+.btn { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 13px; font-weight: 500; }
+.btn:hover { background: var(--border); }
+.btn-primary { background: var(--accent); border-color: var(--accent2); }
+.btn-primary:hover { background: var(--accent2); }
+.btn-danger { background: var(--red); border-color: #cc3333; }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 24px; }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 24px; }
+.card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.card-header h2 { font-size: 16px; }
+.card-body { padding: 20px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 12px; color: var(--text2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+tr:hover td { background: var(--surface2); }
+
+.role-badge { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.role-admin { background: rgba(255,68,68,0.15); color: var(--red); }
+.role-manager { background: rgba(0,128,255,0.15); color: var(--accent); }
+.role-member { background: rgba(34,197,94,0.15); color: var(--green); }
+.role-early_adopter { background: rgba(255,107,0,0.15); color: #fb923c; }
+
+.status-active { color: var(--green); }
+.status-inactive { color: var(--red); }
+
+/* Modal */
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; }
+.modal-bg.open { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; width: 90%; max-width: 440px; }
+.modal h3 { margin-bottom: 20px; font-size: 18px; }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.form-group input, .form-group select { width: 100%; padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; outline: none; }
+.form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+.form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+.user-info { font-size: 13px; color: var(--text2); }
+.user-info strong { color: var(--text); }
+
+.perm-grid { display: grid; grid-template-columns: auto 1fr 1fr 1fr 1fr; gap: 0; font-size: 13px; }
+.perm-grid .ph { font-size: 11px; text-transform: uppercase; color: var(--text2); padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.perm-grid .pc { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.perm-grid .pl { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1><span>EXOS</span> Admin</h1>
+    <span class="badge">ADMIN ONLY</span>
+  </div>
+  <div class="header-actions">
+    <a href="/">Mission Control</a>
+    <a href="/crm.html">CRM</a>
+    <span class="user-info" id="currentUser"></span>
+    <button class="btn btn-sm" onclick="logout()">Sign Out</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Role Permissions Reference -->
+  <div class="card">
+    <div class="card-header"><h2>Role Permissions</h2></div>
+    <div class="card-body">
+      <div class="perm-grid">
+        <div class="ph">Feature</div>
+        <div class="ph">Admin</div>
+        <div class="ph">Manager</div>
+        <div class="ph">Member</div>
+        <div class="ph">Early Adopter</div>
+
+        <div class="pc pl">Tasks</div>
+        <div class="pc">All tasks (R/W)</div>
+        <div class="pc">All tasks (R/W)</div>
+        <div class="pc">Own tasks only (R/W)</div>
+        <div class="pc">Project tasks only (R/W, no delete)</div>
+
+        <div class="pc pl">CRM / Contacts</div>
+        <div class="pc">Full access</div>
+        <div class="pc">Full access</div>
+        <div class="pc">Read only</div>
+        <div class="pc">Hidden</div>
+
+        <div class="pc pl">Companies</div>
+        <div class="pc">Full access</div>
+        <div class="pc">Full access</div>
+        <div class="pc">Read only</div>
+        <div class="pc">Hidden</div>
+
+        <div class="pc pl">Deals & Pipeline</div>
+        <div class="pc">Full access</div>
+        <div class="pc">Full access</div>
+        <div class="pc">Hidden</div>
+        <div class="pc">Hidden</div>
+
+        <div class="pc pl">Activities</div>
+        <div class="pc">All</div>
+        <div class="pc">All</div>
+        <div class="pc">Own only</div>
+        <div class="pc">Project only</div>
+
+        <div class="pc pl">DocuSign</div>
+        <div class="pc">Full access</div>
+        <div class="pc">Full access</div>
+        <div class="pc">Hidden</div>
+        <div class="pc">Hidden</div>
+
+        <div class="pc pl">Admin Panel</div>
+        <div class="pc">Full access</div>
+        <div class="pc">Hidden</div>
+        <div class="pc">Hidden</div>
+        <div class="pc">Hidden</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Users</h2>
+      <button class="btn btn-primary" onclick="openAddModal()">+ Add User</button>
+    </div>
+    <div class="card-body" style="padding:0">
+      <table>
+        <thead>
+          <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="userTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Add/Edit User Modal -->
+<div class="modal-bg" id="userModal">
+  <div class="modal">
+    <h3 id="modalTitle">Add User</h3>
+    <input type="hidden" id="editId">
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="userName" placeholder="Jane Smith">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="userEmail" placeholder="jane@exosaerospace.com">
+    </div>
+    <div class="form-group">
+      <label>Password <span id="pwHint" style="font-size:11px;color:var(--text2);text-transform:none;letter-spacing:0"></span></label>
+      <input type="password" id="userPassword" placeholder="Set password">
+    </div>
+    <div class="form-group">
+      <label>Role</label>
+      <select id="userRole" onchange="toggleProjectField()">
+        <option value="member">Member — own tasks, read-only CRM, no deals</option>
+        <option value="manager">Manager — all tasks, full CRM, deals</option>
+        <option value="admin">Admin — everything + user management</option>
+        <option value="early_adopter">Early Adopter — project tasks only, no CRM/deals/admin</option>
+      </select>
+    </div>
+    <div class="form-group" id="projectGroup" style="display:none">
+      <label>Assigned Project</label>
+      <input type="text" id="userProject" placeholder="e.g. Montana Spaceport, HVRR-RDRE">
+    </div>
+    <div class="form-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveUser()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const api = (url, opts = {}) => fetch(url, { ...opts, headers: { 'Content-Type': 'application/json', ...opts.headers } });
+
+async function checkAccess() {
+  const r = await fetch('/api/me');
+  if (!r.ok) { window.location = '/login?next=/admin.html'; return; }
+  const me = await r.json();
+  if (me.role !== 'admin') { alert('Admin access required'); window.location = '/'; return; }
+  document.getElementById('currentUser').innerHTML = `<strong>${me.name}</strong> (${me.role})`;
+  loadUsers();
+}
+
+async function loadUsers() {
+  const r = await api('/api/admin/users');
+  if (!r.ok) return;
+  const users = await r.json();
+  const tb = document.getElementById('userTable');
+  tb.innerHTML = users.map(u => `
+    <tr>
+      <td><strong>${esc(u.name)}</strong></td>
+      <td>${esc(u.email)}</td>
+      <td><span class="role-badge role-${u.role}">${u.role}</span></td>
+      <td><span class="${u.active ? 'status-active' : 'status-inactive'}">${u.active ? 'Active' : 'Disabled'}</span></td>
+      <td>
+        <button class="btn btn-sm" onclick="openEditModal(${u.id},'${esc(u.name)}','${esc(u.email)}','${u.role}',${u.active})">Edit</button>
+        <button class="btn btn-sm" onclick="resetPw(${u.id},'${esc(u.email)}')">Reset PW</button>
+        ${u.active
+          ? `<button class="btn btn-sm" onclick="toggleUser(${u.id},false)">Disable</button>`
+          : `<button class="btn btn-sm" onclick="toggleUser(${u.id},true)">Enable</button>`}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+function openAddModal() {
+  document.getElementById('modalTitle').textContent = 'Add User';
+  document.getElementById('editId').value = '';
+  document.getElementById('userName').value = '';
+  document.getElementById('userEmail').value = '';
+  document.getElementById('userPassword').value = '';
+  document.getElementById('userRole').value = 'member';
+  document.getElementById('userProject').value = '';
+  document.getElementById('pwHint').textContent = '(required)';
+  toggleProjectField();
+  document.getElementById('userModal').classList.add('open');
+}
+
+function openEditModal(id, name, email, role, active) {
+  document.getElementById('modalTitle').textContent = 'Edit User';
+  document.getElementById('editId').value = id;
+  document.getElementById('userName').value = name;
+  document.getElementById('userEmail').value = email;
+  document.getElementById('userPassword').value = '';
+  document.getElementById('userRole').value = role;
+  document.getElementById('userProject').value = '';
+  document.getElementById('pwHint').textContent = '(leave blank to keep current)';
+  toggleProjectField();
+  document.getElementById('userModal').classList.add('open');
+}
+
+function toggleProjectField() {
+  const role = document.getElementById('userRole').value;
+  document.getElementById('projectGroup').style.display = (role === 'early_adopter') ? '' : 'none';
+}
+
+function closeModal() {
+  document.getElementById('userModal').classList.remove('open');
+}
+
+async function saveUser() {
+  const id = document.getElementById('editId').value;
+  const name = document.getElementById('userName').value.trim();
+  const email = document.getElementById('userEmail').value.trim();
+  const password = document.getElementById('userPassword').value;
+  const role = document.getElementById('userRole').value;
+  const project = document.getElementById('userProject').value.trim();
+
+  if (!name || !email) { alert('Name and email are required'); return; }
+  if (role === 'early_adopter' && !project) { alert('Early adopter accounts require an assigned project'); return; }
+
+  if (id) {
+    // Edit
+    const body = { id: Number(id), name, email, role };
+    if (password) body.password = password;
+    if (role === 'early_adopter') body.project = project;
+    const r = await api('/api/admin/users', { method: 'PATCH', body: JSON.stringify(body) });
+    if (!r.ok) { const e = await r.json(); alert(e.error); return; }
+  } else {
+    // Add
+    if (!password) { alert('Password is required for new users'); return; }
+    const body = { name, email, password, role };
+    if (role === 'early_adopter') body.project = project;
+    const r = await api('/api/admin/users', { method: 'POST', body: JSON.stringify(body) });
+    if (!r.ok) { const e = await r.json(); alert(e.error); return; }
+  }
+  closeModal();
+  loadUsers();
+}
+
+async function toggleUser(id, active) {
+  await api('/api/admin/users', { method: 'PATCH', body: JSON.stringify({ id, active }) });
+  loadUsers();
+}
+
+const DEFAULT_TEMP_PW = 'ExosMC#2026';
+async function resetPw(id, email) {
+  const custom = prompt(
+    `Reset password for ${email}.\n\nLeave as-is for the default temp, or type a different temporary password:`,
+    DEFAULT_TEMP_PW);
+  if (custom === null) return;               // cancelled
+  const pw = custom.trim() || DEFAULT_TEMP_PW;
+  const r = await api('/api/admin/users', { method: 'PATCH', body: JSON.stringify({ id, password: pw }) });
+  if (r.ok) {
+    alert(`Password for ${email} reset to:\n\n${pw}\n\nShare it with them. They log in with it, then click "Set Password" to choose their own.`);
+  } else {
+    alert(`Reset failed (HTTP ${r.status}). Try again.`);
+  }
+  loadUsers();
+}
+
+async function logout() {
+  await fetch('/api/logout', { method: 'POST' });
+  window.location = '/login';
+}
+
+// Close modal on backdrop click
+document.getElementById('userModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+
+checkAccess();
+</script>
+</body>
+</html>
