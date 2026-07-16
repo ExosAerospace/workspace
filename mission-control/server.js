@@ -1077,9 +1077,14 @@ const server = http.createServer((req, res) => {
     supabaseRequest('GET', 'tasks?order=priority.desc.nullslast,due_date.asc.nullslast&limit=5000')
       .then(({ status, data }) => {
         let filtered = data;
-        // Members only see tasks they own or are assigned to
+        // Members see tasks ASSIGNED to them (by email — the source of truth), plus legacy
+        // name-owned tasks, plus shared/group tasks (owner 'Team' or tagged 'group').
         if (session && session.role === 'member' && Array.isArray(data)) {
-          filtered = data.filter(t => t.owner === session.name || t.owner === session.email);
+          const me = (session.email || '').toLowerCase(), myname = session.name;
+          filtered = data.filter(t =>
+            (t.assigned_email || '').toLowerCase() === me
+            || t.owner === myname || t.owner === session.email
+            || t.owner === 'Team' || (Array.isArray(t.tags) && t.tags.includes('group')));
         }
         // Early adopters only see tasks in their assigned project (stored in user's project field)
         if (session && session.role === 'early_adopter' && Array.isArray(data)) {
