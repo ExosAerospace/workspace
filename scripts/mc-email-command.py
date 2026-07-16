@@ -16,7 +16,7 @@ AUTH: allowlisted sender AND (domain DMARC/DKIM = pass  OR  passphrase on line 1
 and NOT an explicit DMARC/DKIM fail. Failed-auth trigger emails raise a Discord spoof
 alert and do NOT run. Idempotent via a message-id state file.
 """
-import imaplib, email, json, os, re, sys, subprocess, tempfile
+import imaplib, email, json, os, re, sys, subprocess, tempfile, html as _html
 from email.utils import getaddresses, parsedate_to_datetime
 from datetime import datetime, timedelta, timezone
 
@@ -106,21 +106,31 @@ def imap_conn():
     return m
 
 
+def _strip_html(h):
+    h = re.sub(r'(?is)<(script|style).*?</\1>', ' ', h)
+    h = re.sub(r'(?s)<[^>]+>', ' ', h)
+    return re.sub(r'[ \t]+', ' ', _html.unescape(h))
+
+
 def body_text(msg, cap=9000):
-    parts = []
+    """Prefer text/plain; fall back to stripped HTML (Outlook sends HTML-only)."""
+    plain, htmls = [], []
     if msg.is_multipart():
         for p in msg.walk():
-            if p.get_content_type() == "text/plain":
-                try:
-                    parts.append(p.get_payload(decode=True).decode(errors="replace"))
-                except Exception:
-                    pass
+            ct = p.get_content_type()
+            if ct == "text/plain":
+                try: plain.append(p.get_payload(decode=True).decode(errors="replace"))
+                except Exception: pass
+            elif ct == "text/html":
+                try: htmls.append(p.get_payload(decode=True).decode(errors="replace"))
+                except Exception: pass
     else:
-        try:
-            parts.append(msg.get_payload(decode=True).decode(errors="replace"))
-        except Exception:
-            pass
-    return ("\n".join(parts))[:cap]
+        try: plain.append(msg.get_payload(decode=True).decode(errors="replace"))
+        except Exception: pass
+    text = "\n".join(plain).strip()
+    if not text and htmls:
+        text = _strip_html("\n".join(htmls)).strip()
+    return text[:cap]
 
 
 def sender_authenticated(msg, sender_domain):
