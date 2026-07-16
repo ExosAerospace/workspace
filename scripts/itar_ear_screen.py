@@ -16,10 +16,11 @@ which is safe. Import and use:
         quarantine_and_alert(message_id, sender, subject, hits, source="tracker")
         # ...skip processing this email...
 """
-import json, os, re, subprocess, time
+import json, os, re, subprocess, time, hashlib
 
 WS = "/Users/exomac/.openclaw/workspace"
 QLOG = os.path.join(WS, "logs", "itar-ear-quarantine.jsonl")
+DECISIONS_FILE = os.path.join(WS, "mission-control", "data", "decisions.json")
 OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
 JON_DISCORD = "1501632195163590739"
 
@@ -100,8 +101,42 @@ def _alert(text):
         pass
 
 
+def _create_hold_decision(message_id, sender, subject, hits):
+    """Drop the hold into the ROUTER'S OWN Decisions matrix so they must adjudicate it."""
+    try:
+        arr = json.load(open(DECISIONS_FILE))
+    except Exception:
+        arr = []
+    dedupe = "xctl-" + (message_id or subject or "")
+    if any(d.get("dedupeKey") == dedupe for d in arr):
+        return
+    now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    who = sender or "jquinn@exosaero.com"
+    arr.append({
+        "id": "XCTL-" + hashlib.sha1(dedupe.encode()).hexdigest()[:6].upper(),
+        "created": now, "updated": now,
+        "source": "Export-control screen",
+        "title": "Export-control HOLD — " + (subject or "(no subject)")[:80],
+        "question": ("An email you routed to Mission Control was HELD as potential export-controlled "
+                     "content (flagged: " + ", ".join(hits) + "). Was it correctly held?"),
+        "context": ("Nothing was captured or acted on. If it is controlled, it stays in SharePoint. "
+                    "If this was a false positive, re-send a cleared version or ask an admin to "
+                    "release it — controlled content is never auto-released."),
+        "proposedAction": "Confirm whether the hold was correct.",
+        "type": "yesno",
+        "options": ["Yes — correctly held (keep it in SharePoint)", "No — false positive"],
+        "priority": "high", "dedupeKey": dedupe,
+        "status": "open", "answer": None, "note": "", "answeredAt": None,
+        "assignedTo": who, "approver": who,
+    })
+    tmp = DECISIONS_FILE + ".tmp"
+    json.dump(arr, open(tmp, "w"), indent=2)
+    os.replace(tmp, DECISIONS_FILE)
+
+
 def quarantine_and_alert(message_id, sender, subject, hits, source):
-    """Log the held email and alert Jon once (deduped by message-id). Returns True if newly held."""
+    """Hold the email: log it, put an adjudication Decision in the sender's matrix, alert Jon.
+    Deduped by message-id. Returns True if newly held."""
     if _already(message_id):
         return False
     os.makedirs(os.path.dirname(QLOG), exist_ok=True)
@@ -110,9 +145,13 @@ def quarantine_and_alert(message_id, sender, subject, hits, source):
            "held_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
     with open(QLOG, "a") as f:
         f.write(json.dumps(rec) + "\n")
-    _alert("🛑 EXPORT-CONTROL HOLD — an email routed to the Mission Control intake was "
-           "NOT captured or acted on because it tripped export-control indicators. Review it "
-           "and keep controlled content in SharePoint, not Mission Control.\n"
+    try:
+        _create_hold_decision(message_id, sender, subject, hits)
+    except Exception:
+        pass
+    _alert("🛑 EXPORT-CONTROL HOLD — an email routed to the Mission Control intake was NOT "
+           "captured or acted on (tripped export-control indicators). The sender now has a "
+           "Decision in their matrix to confirm whether the hold is valid.\n"
            f"From: {sender}\nSubject: {subject}\nFlagged: {', '.join(hits)}")
     return True
 
