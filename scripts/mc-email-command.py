@@ -26,7 +26,7 @@ STATE    = os.path.join(WS, "logs", "mc-email-command-state.json")
 LOG      = os.path.join(WS, "logs", "mc-email-command.log")
 IMAP_HOST, IMAP_PORT = "127.0.0.1", 1143
 EMAIL_USER = "jquinnexo@pm.me"
-ALLOWED_SENDERS = {"jquinn@exosaero.com"}
+USERS_FILE = "/Users/exomac/.openclaw/workspace/mission-control/users.json"
 TRIGGER_ADDR = {"jquinnexo+do@pm.me", "exosmc+do@proton.me"}
 JON_DISCORD = "1501632195163590739"
 OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
@@ -34,17 +34,22 @@ MAX_PER_RUN = 3
 EXOBOT_RE = re.compile(r'@\s*exobot\b', re.I)
 
 ENVELOPE = (
-    "[EMAIL-COMMAND from Jon — authenticated{note}]\n\n"
-    "Jon sent the material below by email (a forward and/or an @Exobot instruction). "
-    "Carry out his intent under all standing rules.\n"
+    "[EMAIL-COMMAND from {sender_name} <{sender_email}> — authenticated{note}]\n\n"
+    "This Exos team member sent the material below by email (a forward and/or an @Exobot "
+    "instruction). Carry out their intent under all standing rules.\n"
     "PERMISSION ENVELOPE:\n"
-    "- Execute directly ONLY safe, internal, reversible actions (create/update Mission "
-    "Control tasks, research, draft documents, reports, reminders, organizing files, analysis).\n"
-    "- DO NOT auto-send or auto-execute anything external or sensitive: external emails, "
-    "gov/.mil/.gov outreach, securities/investor communications, deletions, financial "
-    "actions, or infra/config changes. Draft those and route to Jon for explicit approval "
-    "(Decisions inbox / Discord) — never send or execute them on your own.\n"
-    "- When done, confirm to Jon on Discord what you did, or what is waiting on his approval.\n\n"
+    "- Execute directly ONLY safe, internal, reversible actions (create/update Mission Control "
+    "tasks, research, draft documents, reports, reminders, organizing files, analysis). When you "
+    "create or update a task for this person, assign it to them (assigned_email={sender_email}).\n"
+    "- Any document you create or revise for a task: attach it with scripts/mc-attach.py so the "
+    "task carries the latest version.\n"
+    "- DO NOT auto-send or auto-execute anything external or sensitive (external emails, "
+    "gov/.mil/.gov outreach, securities/investor communications, deletions, financial actions, "
+    "infra/config changes). Instead, DRAFT it and add a Decision to {first_name}'s OWN Decisions "
+    "matrix for THEIR review and approval — assign that Decision to {sender_email}, NOT to Jon. "
+    "(Standing-rule exceptions: securities/investor items go to the designated securities approver; "
+    "government/.mil items route to Jon.)\n"
+    "- When done, confirm on Discord what you did, or what is now awaiting {first_name}'s approval.\n\n"
     "EMAIL CONTENT / INSTRUCTION:\n{body}\n"
 )
 
@@ -55,6 +60,19 @@ def load_json(path, default):
             return json.load(f)
     except Exception:
         return default
+
+
+def load_users_map():
+    """(allowed sender emails, email->name). Any active Mission Control user can direct @Exobot."""
+    u = load_json(USERS_FILE, [])
+    users = u if isinstance(u, list) else (u.get("users", []) if isinstance(u, dict) else [])
+    allowed, names = set(), {}
+    for x in users:
+        em = (x.get("email") or "").lower()
+        if em and x.get("active", True):
+            allowed.add(em); names[em] = x.get("name") or em
+    allowed.add("jquinn@exosaero.com")
+    return allowed, names
 
 
 def log(msg):
@@ -136,6 +154,7 @@ def is_trigger(msg, subject, body):
 def main():
     secrets = load_json(SECRETS, {})
     passphrase = (secrets.get("mc_command_passphrase") or "").strip()
+    allowed, names = load_users_map()
 
     state = load_json(STATE, {})
     seen = set(state.get("seen", []))
@@ -171,8 +190,8 @@ def main():
 
         # ---- authenticate: allowlisted sender AND (DMARC/DKIM pass OR passphrase), and not an explicit fail
         reasons = []
-        if sender not in ALLOWED_SENDERS:
-            reasons.append(f"sender {sender or '?'} not allowlisted")
+        if sender not in allowed:
+            reasons.append(f"sender {sender or '?'} is not a Mission Control user")
         if domain_auth == "fail":
             reasons.append("sender domain failed DMARC/DKIM (spoofed)")
         if domain_auth != "pass" and not passphrase_ok:
@@ -205,7 +224,10 @@ def main():
             continue
 
         note = " (DMARC-verified)" if domain_auth == "pass" else " (passphrase)"
-        prompt = ENVELOPE.format(note=note, body=instruction)
+        sender_name = names.get(sender, sender)
+        first_name = sender_name.split()[0] if sender_name else sender
+        prompt = ENVELOPE.format(note=note, body=instruction, sender_name=sender_name,
+                                 sender_email=sender, first_name=first_name)
         log(f"[accept] mid={mid} subj={subject!r} auth={domain_auth} instr={instruction[:120]!r}")
         discord(f"📧 Authenticated email-command received{note} — handing to the agent now.\n"
                 f"Subject: {subject}\nInstruction: {instruction[:280]}")
