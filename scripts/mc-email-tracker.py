@@ -205,21 +205,32 @@ def fetch_index(m, folder, since_str, direction):
     return out
 
 
+def _strip_html(h):
+    import html as _h
+    h = re.sub(r'(?is)<(script|style).*?</\1>', ' ', h)
+    h = re.sub(r'(?s)<[^>]+>', ' ', h)
+    return re.sub(r'\s+', ' ', _h.unescape(h))
+
+
 def body_text(msg, cap=6000):
-    parts = []
+    """Prefer text/plain; fall back to stripped HTML (Outlook sends HTML-only)."""
+    plain, htmls = [], []
     if msg.is_multipart():
         for p in msg.walk():
-            if p.get_content_type() == "text/plain":
-                try:
-                    parts.append(p.get_payload(decode=True).decode(errors="replace"))
-                except Exception:
-                    pass
+            ct = p.get_content_type()
+            if ct == "text/plain":
+                try: plain.append(p.get_payload(decode=True).decode(errors="replace"))
+                except Exception: pass
+            elif ct == "text/html":
+                try: htmls.append(p.get_payload(decode=True).decode(errors="replace"))
+                except Exception: pass
     else:
-        try:
-            parts.append(msg.get_payload(decode=True).decode(errors="replace"))
-        except Exception:
-            pass
-    return (" ".join(parts))[:cap]
+        try: plain.append(msg.get_payload(decode=True).decode(errors="replace"))
+        except Exception: pass
+    text = " ".join(plain).strip()
+    if not text and htmls:
+        text = _strip_html(" ".join(htmls)).strip()
+    return text[:cap]
 
 
 def main():
