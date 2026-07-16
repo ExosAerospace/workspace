@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting Started — Mission Control</title>
+<style>
+  :root{--navy:#0a1628;--card:#0f1e38;--text:#e8edf5;--muted:#8aa0bd;--accent:#0080ff;
+    --green:#22c55e;--red:#ff4444;--yellow:#eab308;--line:#1c3052;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--navy);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.55}
+  header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;
+    align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  h1{font-size:21px;margin:0}
+  .sub{color:var(--muted);font-size:13px;margin-top:4px}
+  a.home{color:var(--muted);font-size:13px;text-decoration:none}
+  .wrap{max-width:820px;margin:0 auto;padding:24px 24px 90px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:0 0 18px;border-left:4px solid var(--accent)}
+  h2{font-size:16px;margin:0 0 10px}
+  ol,ul{margin:8px 0 0;padding-left:22px}
+  li{margin:6px 0}
+  code{background:#0a1830;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:.92em}
+  .tip{background:#0a1830;border:1px dashed var(--line);border-radius:8px;padding:10px 12px;color:#bcd0ee;font-size:14px;margin-top:10px}
+  .big{font-size:15px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🚀 Getting Started with Mission Control</h1>
+  <div class="sub">What it is, and how to use it. Read once and you are set.</div></div>
+  <a class="home" href="/">← Mission Control</a>
+</header>
+<div class="wrap">
+
+  <div class="card">
+    <h2>What Mission Control is</h2>
+    <p class="big">Think of it as one shared online board for everything we are working on: who is doing what, what is due, what is waiting on a decision, and where the documents live. Instead of work scattered across email, Teamwork, and people's heads, it all lives in one place everyone can see. You open it in a web browser. It is replacing Teamwork.</p>
+  </div>
+
+  <div class="card" style="border-left-color:var(--red)">
+    <h2 style="color:var(--red)">⚠️ Compliance — no CUI or ITAR data</h2>
+    <p class="big">At this time, do <b>not</b> attach documents to Mission Control, and do <b>not</b> BCC emails into it, that contain <b>CUI</b> (Controlled Unclassified Information) or <b>ITAR-controlled</b> data. That content lives only in its designated SharePoint folder. When in doubt, leave it out and keep it in SharePoint.</p>
+  </div>
+
+  <div class="card">
+    <h2>Step 1 — Connect with Cloudflare WARP (required for everyone, one-time)</h2>
+    <ol>
+      <li>Download the <b>Cloudflare WARP</b> app (Windows; on Mac get the macOS version from the same page).</li>
+      <li>Open it, click the <b>gear icon</b> (bottom right), then <b>Preferences</b>, then <b>Account</b>.</li>
+      <li>Click <b>"Login with Cloudflare Zero Trust."</b></li>
+      <li>Team name: <code>exosaero</code></li>
+      <li>Log in with your <b>Microsoft (work) credentials</b>.</li>
+      <li>It should say "Zero Trust" and "Connected."</li>
+    </ol>
+    <div class="tip">Mission Control runs on a secured machine that is <b>not on the Exos office network</b>, so Cloudflare WARP is the <b>only</b> way to reach it — you need it whether you are in the office or remote. Cloudflare problems → Atomus at <a href="mailto:success@atomuscyber.com">success@atomuscyber.com</a>.</div>
+  </div>
+
+  <div class="card">
+    <h2>Step 2 — Log in</h2>
+    <ol>
+      <li>Open <code>http://192.168.143.216:8080</code> in your browser.</li>
+      <li><b>Email</b> = your work email. <b>Password</b> = your temporary password (from your invite).</li>
+      <li>Set your own password on the <b>🔑 Set Password</b> page (link in the top menu). It stays private to you — no one else sets or sees it.</li>
+    </ol>
+    <div class="tip"><b>Bookmark it:</b> add <code>http://192.168.143.216:8080</code> to your browser favorites / bookmarks bar so you can reopen Mission Control in one click. It only loads while Cloudflare WARP is connected.</div>
+  </div>
+
+  <div class="card">
+    <h2>Step 3 — How to use it (the basics)</h2>
+    <ul>
+      <li><b>Your board:</b> tasks are arranged in columns by status, for example To Do, In Progress, Done. The ones assigned to you are yours to move along.</li>
+      <li><b>Open a task:</b> click any task to see its full details — description, due date, and notes.</li>
+      <li><b>Update a task:</b> drag it from one column to the next as you make progress (or use the quick-move buttons), and add a note in the detail panel. That is how you "report status" — no separate update needed.</li>
+      <li><b>Add a task:</b> use the <b>"+ Add"</b> bar at the top.</li>
+      <li><b>Decisions tab:</b> anything that needs your review or sign-off shows up here. Answer it and the work moves forward.</li>
+      <li><b>Documents:</b> attach a file directly to a task, so it lives with the work instead of buried in email.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left-color:var(--green)">
+    <h2>Step 4 — The time-saver: let your email update your tasks for you</h2>
+    <p class="big">You do not have to log things by hand. On your normal work emails, just add <code>exosmc@proton.me</code> as a <b>BCC</b>. Mission Control reads who you are and what the email is about and automatically files it under the right task. No task numbers, no codes, nothing to look up — just add that one BCC and your everyday email becomes the running record.</p>
+  </div>
+
+  <div class="card" style="border-left-color:var(--accent)">
+    <h2>Ask Exobot to do it — just <code>@Exobot</code></h2>
+    <p class="big">Need something done? Type <code>@Exobot</code> and then, in plain English, the task. That is the entire trigger — everything you write after <code>@Exobot</code> is the instruction it carries out. No commands, no codes, no format.</p>
+    <ul>
+      <li><b>Examples:</b> <code>@Exobot</code> add a task to follow up with Marlett on Friday · <code>@Exobot</code> pull the latest on the AEDC solicitation and summarize it · <code>@Exobot</code> draft a reply to this email for my review.</li>
+      <li>It works the same way in <b>chat</b> and in <b>email</b> (put <code>@Exobot</code> plus your instruction at the top of a forwarded email).</li>
+      <li><b>The guardrail:</b> Exobot does safe, internal work directly — creating and updating tasks, research, drafts, summaries, reminders. Anything external or sensitive — sending emails, government or contract submissions, financial or legal actions — it prepares and routes to Jon for approval first. It never sends those on its own.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left-color:var(--green)">
+    <h2>Step 5 — NEW: turn a call into updates automatically (Transcripts)</h2>
+    <p class="big">Finished a call and have a transcript or notes? Feed it in and Mission Control does the write-up for you. <b>Email the transcript with <code>[TRANSCRIPT]</code> in the subject line</b> (attach the Word/text file, or paste it in the body). It will:</p>
+    <ul>
+      <li>read who was on the call and <b>add them to Contacts</b>,</li>
+      <li>pull out the <b>key points, decisions, and action items</b>,</li>
+      <li>file it under the right <b>relationship</b> and propose an updated status and next step.</li>
+    </ul>
+    <p>You get a short summary back and <b>confirm before anything changes the record</b> — so a mis-heard line never silently rewrites a deal. The transcript itself is archived for reference.</p>
+    <div class="tip">⚠️ Same compliance rule: do <b>not</b> submit transcripts of <b>CUI or ITAR</b> conversations (e.g., government technical calls). Keep those in SharePoint.</div>
+  </div>
+
+  <div class="card">
+    <h2>Relationship Dossiers — every relationship at a glance</h2>
+    <p class="big">The <b>🤝 Dossiers</b> tab gives one card per key relationship (investors, partners, advisors, agencies): the contacts, the live deals, signed agreements/NDAs, the last time you talked, the current status, and the next step — all in one place. Last-touch and agreement status update themselves from email and the document archive.</p>
+  </div>
+
+  <div class="card">
+    <h2>Contacts — built automatically from your email</h2>
+    <p class="big">The <b>👥 Contacts</b> tab captures <b>everyone you correspond with</b>, pulled automatically from email — name, company, last contact, and how many times you have exchanged messages. A flag shows whether they are already in the investor CRM, so nobody slips through the cracks. Use the <b>"untracked only"</b> toggle to see who is new. It grows on its own as you make contacts; nothing to enter by hand.</p>
+  </div>
+
+  <div class="card">
+    <h2>Your daily habit</h2>
+    <p class="big">Open Mission Control, glance at your tasks, move anything that progressed, check the Decisions tab, and BCC <code>exosmc@proton.me</code> on client emails. That is it.</p>
+    <div class="tip">Stuck on anything in Mission Control? Contact <a href="mailto:jquinn@exosaero.com">jquinn@exosaero.com</a>.</div>
+  </div>
+
+</div>
+</body>
+</html>
