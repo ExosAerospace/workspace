@@ -486,10 +486,12 @@
     <a href="opportunities.html" style="color:var(--orange2);text-decoration:none;font-size:0.85rem;margin-right:4px;">Opportunities</a>
     <a href="research.html" style="color:var(--purple,#a855f7);text-decoration:none;font-size:0.85rem;margin-right:4px;">🔬 Research</a>
     <a href="crm.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">CRM</a>
+    <a href="dossier.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;">Dossiers</a>
     <a href="docusign.html" style="color:var(--orange2);text-decoration:none;font-size:0.85rem;margin-right:4px;">DocuSign</a>
     <a href="decisions.html" id="decisionsLink" style="color:var(--green,#22c55e);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🗳️ Decisions <span id="decisionsBadge" style="display:none;background:#ff4444;color:#fff;border-radius:10px;padding:0 6px;font-size:0.7rem;"></span></a>
     <script>fetch('/api/decisions?status=open',{credentials:'same-origin'}).then(r=>r.ok?r.json():[]).then(d=>{if(d&&d.length){var b=document.getElementById('decisionsBadge');b.textContent=d.length;b.style.display='inline-block';}}).catch(()=>{});</script>
     <a href="ctd-dd.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🔎 CTD DD</a>
+    <a href="#" onclick="fetch('/api/logout',{method:'POST'}).then(()=>location.href='/login');return false;" style="color:var(--red,#ff4444);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">Sign Out</a>
     <span id="refreshBadge" class="refresh-badge">Loading...</span>
     <button class="btn secondary" onclick="loadTasks(true)">Refresh</button>
   </div>
