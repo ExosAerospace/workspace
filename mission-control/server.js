@@ -2128,10 +2128,14 @@ const server = http.createServer((req, res) => {
     const taskId = urlObj.searchParams.get('task_id');
     const projectId = urlObj.searchParams.get('project_id');
     const decisionId = urlObj.searchParams.get('decision_id');
+    const history = urlObj.searchParams.get('history');
     let meta = loadUploadsMeta();
     if (taskId) meta = meta.filter(m => String(m.task_id) === String(taskId));
     else if (projectId) meta = meta.filter(m => String(m.project_id) === String(projectId));
     else if (decisionId) meta = meta.filter(m => String(m.decision_id) === String(decisionId));
+    // Default: only the current version of each document; archived prior versions are
+    // hidden unless ?history=1. Legacy records (no `current` field) count as current.
+    if (!history) meta = meta.filter(m => m.current !== false);
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(meta));
     return;
