@@ -37,6 +37,7 @@
   <div class="card">
     <h2>What Mission Control is</h2>
     <p class="big">Think of it as one shared online board for everything we are working on: who is doing what, what is due, what is waiting on a decision, and where the documents live. Instead of work scattered across email, Teamwork, and people's heads, it all lives in one place everyone can see. You open it in a web browser. It is replacing Teamwork.</p>
+    <p class="big"><b>The big idea — you do not maintain it by hand.</b> You keep working in email exactly as you do now. By forwarding or BCC'ing the right messages to <b>one address</b> (<code>exosmc@proton.me</code>), your everyday communication <b>becomes</b> the work management: Mission Control turns it into tasks, contacts, decisions, and status updates for you. No separate system to keep up, no data entry.</p>
   </div>
 
   <div class="card" style="border-left-color:var(--red)">
@@ -80,8 +81,14 @@
   </div>
 
   <div class="card" style="border-left-color:var(--green)">
-    <h2>Step 4 — The time-saver: let your email update your tasks for you</h2>
-    <p class="big">You do not have to log things by hand. On your normal work emails, just add <code>exosmc@proton.me</code> as a <b>BCC</b>. Mission Control reads who you are and what the email is about and automatically files it under the right task. No task numbers, no codes, nothing to look up — just add that one BCC and your everyday email becomes the running record.</p>
+    <h2>Step 4 — The engine: your email does the work management for you</h2>
+    <p class="big">This is the heart of it. You do not log tasks or keep a system up to date by hand — <b>your email is the input.</b> On your normal work emails, add <code>exosmc@proton.me</code>. Mission Control reads who you are and what the message is about and does the filing for you — no task numbers, no codes, nothing to look up.</p>
+    <p class="big">One address, two ways to use it:</p>
+    <ul>
+      <li><b>BCC or forward it, with no instruction → it captures.</b> The email is filed under the matching task, the people on it are added to Contacts, and the record is updated. Your everyday correspondence becomes the running log automatically.</li>
+      <li><b>Forward it with <code>@Exobot</code> plus a plain-English instruction at the top → it acts.</b> It creates or updates <i>your</i> task, drafts a reply, pulls research (see the next card).</li>
+    </ul>
+    <div class="tip">🔒 <b>Compliance is in your hands.</b> Only send messages you have confirmed are free of <b>CUI</b> and <b>ITAR</b>. Nothing enters Mission Control unless <i>you</i> send it to <code>exosmc@proton.me</code> — it does not read your mailbox, so you decide exactly what is captured. When in doubt, keep it in SharePoint and do not forward it.</div>
   </div>
 
   <div class="card" style="border-left-color:var(--accent)">
@@ -89,7 +96,7 @@
     <p class="big">Need something done? Type <code>@Exobot</code> and then, in plain English, the task. That is the entire trigger — everything you write after <code>@Exobot</code> is the instruction it carries out. No commands, no codes, no format.</p>
     <ul>
       <li><b>Examples:</b> <code>@Exobot</code> add a task to follow up with Marlett on Friday · <code>@Exobot</code> pull the latest on the AEDC solicitation and summarize it · <code>@Exobot</code> draft a reply to this email for my review.</li>
-      <li>It works the same way in <b>chat</b> and in <b>email</b> (put <code>@Exobot</code> plus your instruction at the top of a forwarded email).</li>
+      <li>It works the same way in <b>chat</b> and in <b>email</b> — in email, forward the message to <code>exosmc@proton.me</code> with <code>@Exobot</code> plus your instruction at the top (same address as Step 4).</li>
       <li><b>The guardrail:</b> Exobot does safe, internal work directly — creating and updating tasks, research, drafts, summaries, reminders — and any task or document it makes for you is assigned and attached to <b>you</b>. Anything external or sensitive — sending emails, government or contract submissions, financial or legal actions — it prepares and adds to <b>your own Decisions matrix</b> in Mission Control for <b>your</b> review and approval. It never sends those on its own, and approvals for your work come to you, not to anyone else.</li>
     </ul>
   </div>
@@ -108,17 +115,22 @@
 
   <div class="card">
     <h2>Relationship Dossiers — every relationship at a glance</h2>
-    <p class="big">The <b>🤝 Dossiers</b> tab gives one card per key relationship (investors, partners, advisors, agencies): the contacts, the live deals, signed agreements/NDAs, the last time you talked, the current status, and the next step — all in one place. Last-touch and agreement status update themselves from email and the document archive.</p>
+    <p class="big">The <b>🤝 Dossiers</b> tab gives one card per key relationship (investors, partners, advisors, agencies): the contacts, the live deals, signed agreements/NDAs, the last time you talked, the current status, and the next step — all in one place. Last-touch and agreement status update themselves from the email you route to <code>exosmc@proton.me</code> and the document archive.</p>
   </div>
 
   <div class="card">
     <h2>Contacts — built automatically from your email</h2>
-    <p class="big">The <b>👥 Contacts</b> tab captures <b>everyone you correspond with</b>, pulled automatically from email — name, company, last contact, and how many times you have exchanged messages. A flag shows whether they are already in the investor CRM, so nobody slips through the cracks. Use the <b>"untracked only"</b> toggle to see who is new. It grows on its own as you make contacts; nothing to enter by hand.</p>
+    <p class="big">The <b>👥 Contacts</b> tab captures everyone you correspond with — but only from <b>the emails you BCC or forward to <code>exosmc@proton.me</code></b> (Step 4). It pulls name, company, last contact, and how many times you have exchanged messages. A flag shows whether they are already in the investor CRM, so nobody slips through the cracks. Use the <b>"untracked only"</b> toggle to see who is new. It grows on its own from your routed email — nothing to enter by hand — and it never reads your mailbox, only what you send to that address.</p>
   </div>
 
   <div class="card">
     <h2>Your daily habit</h2>
-    <p class="big">Open Mission Control, glance at your tasks, move anything that progressed, check the Decisions tab, and BCC <code>exosmc@proton.me</code> on client emails. That is it.</p>
+    <p class="big">Two things, and Mission Control does the rest:</p>
+    <ul>
+      <li><b>As you work:</b> on the emails you have confirmed are free of CUI and ITAR, add <code>exosmc@proton.me</code> (BCC to capture, or forward with <code>@Exobot</code> to task it). That keeps your tasks, contacts, and record current with <b>zero data entry</b> — the system is fed by the work you are already doing.</li>
+      <li><b>Once a day:</b> open the board, click <b>My Tasks</b>, move anything that progressed, and check your <b>Decisions</b> tab for anything waiting on your approval.</li>
+    </ul>
+    <p class="big">That is it — there is no separate work-management system to keep up. Your email is the system.</p>
     <div class="tip">Stuck on anything in Mission Control? Contact <a href="mailto:jquinn@exosaero.com">jquinn@exosaero.com</a>.</div>
   </div>
 
