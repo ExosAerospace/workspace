@@ -22,6 +22,8 @@
     --blocked-accent: #ff4444;
     --progress-accent: #0080ff;
     --done-accent:    #22c55e;
+    --yellow: #eab308;
+    --purple: #a855f7;
   }
 
   body {
@@ -44,174 +46,124 @@
     min-height: 64px;
   }
 
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+  .brand { display: flex; align-items: center; gap: 12px; }
 
   .brand-logo {
-    width: 36px;
-    height: 36px;
+    width: 36px; height: 36px;
     background: linear-gradient(135deg, var(--blue) 0%, var(--orange) 100%);
     border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 14px;
-    color: #fff;
-    letter-spacing: -1px;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 14px; color: #fff; letter-spacing: -1px; flex-shrink: 0;
   }
 
-  .brand-text h1 {
-    font-size: 17px;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: 0.5px;
-  }
+  .brand-text h1 { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+  .brand-text p { font-size: 11px; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; }
 
-  .brand-text p {
-    font-size: 11px;
-    color: var(--text2);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
+  .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
   .refresh-badge {
-    font-size: 11px;
-    color: var(--text2);
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 4px 10px;
-    white-space: nowrap;
+    font-size: 11px; color: var(--text2);
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 10px; white-space: nowrap;
   }
-
-  .refresh-badge.pulsing {
-    color: var(--done-accent);
-    border-color: rgba(34,197,94,0.3);
-  }
-
-  /* ── ADD TASK BAR ── */
-  .add-bar {
-    background: var(--navy2);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 24px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .add-bar input {
-    flex: 1;
-    min-width: 200px;
-    background: var(--navy3);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    padding: 9px 14px;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .add-bar input::placeholder { color: var(--text2); }
-  .add-bar input:focus { border-color: var(--blue); }
-
-  .add-bar select {
-    background: var(--navy3);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    padding: 9px 10px;
-    font-size: 13px;
-    outline: none;
-    cursor: pointer;
-  }
+  .refresh-badge.pulsing { color: var(--done-accent); border-color: rgba(34,197,94,0.3); }
 
   .btn {
-    background: var(--blue);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 9px 18px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    white-space: nowrap;
+    background: var(--blue); color: #fff; border: none; border-radius: 8px;
+    padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: background 0.2s, transform 0.1s; white-space: nowrap;
   }
-
   .btn:hover { background: var(--blue2); }
   .btn:active { transform: scale(0.97); }
   .btn.secondary { background: rgba(255,255,255,0.07); }
   .btn.secondary:hover { background: rgba(255,255,255,0.12); }
+  .btn.orange { background: var(--orange); }
+  .btn.orange:hover { background: var(--orange2); }
+  .btn.danger { background: var(--blocked-accent); }
+  .btn.danger:hover { background: #ff6666; }
+  .btn.small { padding: 5px 10px; font-size: 11px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: flex; gap: 12px; padding: 12px 24px;
+    background: var(--navy2); border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: var(--navy3); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 16px; text-align: center; min-width: 100px; flex: 1;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .stat-card:hover { border-color: var(--blue); background: rgba(0,102,204,0.1); }
+  .stat-card.active { border-color: var(--blue); background: rgba(0,102,204,0.15); box-shadow: 0 0 12px rgba(0,102,204,0.2); }
+  .stat-num { font-size: 1.5rem; font-weight: 700; }
+  .stat-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    background: var(--navy2); border-bottom: 1px solid var(--border);
+    padding: 10px 24px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  }
+
+  .toolbar input[type="text"] {
+    flex: 1; min-width: 180px;
+    background: var(--navy3); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); padding: 8px 14px; font-size: 13px; outline: none;
+  }
+  .toolbar input[type="text"]::placeholder { color: var(--text2); }
+  .toolbar input[type="text"]:focus { border-color: var(--blue); }
+
+  .filter-group { display: flex; gap: 0; }
+  .filter-btn {
+    background: var(--navy3); color: var(--text2); border: 1px solid var(--border);
+    padding: 7px 14px; font-size: 12px; cursor: pointer; transition: all 0.15s;
+  }
+  .filter-btn:first-child { border-radius: 6px 0 0 6px; }
+  .filter-btn:last-child { border-radius: 0 6px 6px 0; }
+  .filter-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .filter-btn:hover:not(.active) { background: rgba(255,255,255,0.08); }
+
+  .toolbar select {
+    background: var(--navy3); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); padding: 8px 10px; font-size: 12px; cursor: pointer; outline: none;
+  }
+
+  /* ── ADD TASK BAR ── */
+  .add-bar {
+    background: var(--navy2); border-bottom: 1px solid var(--border);
+    padding: 10px 24px; display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .add-bar input { flex: 1; min-width: 200px; background: var(--navy3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 9px 14px; font-size: 14px; outline: none; }
+  .add-bar input::placeholder { color: var(--text2); }
+  .add-bar input:focus { border-color: var(--blue); }
+  .add-bar select { background: var(--navy3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 9px 10px; font-size: 13px; outline: none; cursor: pointer; }
 
   /* ── BOARD ── */
   .board {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    padding: 20px 24px;
-    align-items: start;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; padding: 20px 24px; align-items: start;
   }
 
   @media (max-width: 768px) {
     .board { grid-template-columns: 1fr; }
-    .add-bar { padding: 10px 16px; }
+    .toolbar, .add-bar, .stats-bar { padding: 10px 16px; }
     header { padding: 0 16px; }
     .board { padding: 16px; }
   }
 
   /* ── COLUMN ── */
   .column {
-    background: var(--card);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    overflow: hidden;
-    min-height: 120px;
+    background: var(--card); border-radius: 12px;
+    border: 1px solid var(--border); overflow: hidden; min-height: 120px;
   }
-
   .col-header {
-    padding: 14px 16px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid var(--border);
+    padding: 14px 16px 12px; display: flex; align-items: center;
+    gap: 8px; border-bottom: 1px solid var(--border);
   }
-
-  .col-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .col-title {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    flex: 1;
-  }
-
-  .col-count {
-    background: rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 2px 8px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text2);
-  }
+  .col-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .col-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; flex: 1; }
+  .col-count { background: rgba(255,255,255,0.08); border-radius: 12px; padding: 2px 8px; font-size: 12px; font-weight: 600; color: var(--text2); }
 
   [data-col="blocked"] .col-dot { background: var(--blocked-accent); }
   [data-col="blocked"] .col-title { color: #ff7070; }
@@ -222,195 +174,296 @@
 
   /* ── DROP ZONE ── */
   .col-body {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-height: 60px;
-    transition: background 0.2s;
+    padding: 10px; display: flex; flex-direction: column; gap: 8px;
+    min-height: 60px; transition: background 0.2s;
   }
+  .col-body.drag-over { background: rgba(0,102,204,0.08); }
 
-  .col-body.drag-over {
-    background: rgba(0,102,204,0.08);
-  }
-
-  .empty-col {
-    text-align: center;
-    color: var(--text2);
-    font-size: 12px;
-    padding: 20px;
-    opacity: 0.5;
-  }
+  .empty-col { text-align: center; color: var(--text2); font-size: 12px; padding: 20px; opacity: 0.5; }
 
   /* ── TASK CARD ── */
   .task-card {
-    background: var(--navy2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px;
-    cursor: grab;
-    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
-    position: relative;
-    user-select: none;
+    background: var(--navy2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px; cursor: grab; transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    position: relative; user-select: none;
   }
+  .task-card:hover { border-color: rgba(0,102,204,0.4); box-shadow: 0 2px 12px rgba(0,102,204,0.15); }
+  .task-card.dragging { opacity: 0.5; cursor: grabbing; transform: scale(0.97); }
+  .task-card.done-card { opacity: 0.7; }
+  .task-card.done-card .task-title { text-decoration: line-through; color: var(--text2); }
 
-  .task-card:hover {
-    border-color: rgba(0,102,204,0.4);
-    box-shadow: 0 2px 12px rgba(0,102,204,0.15);
-  }
+  .task-top { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+  .task-title { flex: 1; font-size: 13px; font-weight: 500; line-height: 1.4; color: var(--text); cursor: pointer; }
+  .task-title:hover { color: var(--blue2); }
+  .task-id { font-size: 10px; color: var(--text2); font-weight: 600; }
 
-  .task-card.dragging {
-    opacity: 0.5;
-    cursor: grabbing;
-    transform: scale(0.97);
+  .task-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; align-items: center; }
+  .task-category {
+    font-size: 10px; background: rgba(168,85,247,0.15); color: var(--purple);
+    padding: 2px 7px; border-radius: 4px; white-space: nowrap;
   }
-
-  .task-card.done-card {
-    opacity: 0.7;
+  .task-source {
+    font-size: 9px; background: rgba(6,182,212,0.15); color: #06b6d4;
+    padding: 1px 6px; border-radius: 4px;
   }
-
-  .task-card.done-card .task-title {
-    text-decoration: line-through;
-    color: var(--text2);
-  }
-
-  .task-top {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-
-  .task-title {
-    flex: 1;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.4;
-    color: var(--text);
-  }
+  .task-priority-high { font-size: 10px; color: var(--blocked-accent); font-weight: 600; }
+  .task-priority-med { font-size: 10px; color: var(--yellow); }
 
   /* ── OWNER BADGE ── */
   .owner-badge {
-    flex-shrink: 0;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 10px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-top: 1px;
+    flex-shrink: 0; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 10px; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 1px;
   }
-
   .owner-exo  { background: rgba(0,102,204,0.25); color: #60a5fa; border: 1px solid rgba(0,102,204,0.4); }
   .owner-jon  { background: rgba(255,107,0,0.2);  color: #fb923c; border: 1px solid rgba(255,107,0,0.4); }
   .owner-both { background: rgba(139,92,246,0.2); color: #c084fc; border: 1px solid rgba(139,92,246,0.4); }
   .owner-other{ background: rgba(255,255,255,0.05); color: var(--text2); border: 1px solid var(--border); }
 
   /* ── CARD FOOTER ── */
-  .task-footer {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  .due-date {
-    font-size: 11px;
-    color: var(--text2);
-    background: rgba(255,255,255,0.04);
-    border-radius: 4px;
-    padding: 2px 6px;
-  }
-
+  .task-footer { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .due-date { font-size: 11px; color: var(--text2); background: rgba(255,255,255,0.04); border-radius: 4px; padding: 2px 6px; }
   .due-date.overdue { color: var(--blocked-accent); }
+  .due-date.due-soon { color: var(--orange); }
+  /* Neon block: funding submittal due within 5 days */
+  .task-card.funding-due {
+    border: 1.5px solid #39ff14;
+    box-shadow: 0 0 8px #39ff14, 0 0 18px rgba(57,255,20,0.55), inset 0 0 7px rgba(57,255,20,0.12);
+    animation: fundingPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes fundingPulse {
+    0%,100% { box-shadow: 0 0 6px #39ff14, 0 0 14px rgba(57,255,20,0.45), inset 0 0 6px rgba(57,255,20,0.10); }
+    50%     { box-shadow: 0 0 13px #39ff14, 0 0 28px rgba(57,255,20,0.85), inset 0 0 10px rgba(57,255,20,0.20); }
+  }
+  .task-card.funding-due .due-date { color:#0a0f1a; background:#39ff14; font-weight:700; }
+  .funding-flag {
+    font-size:10px; font-weight:800; letter-spacing:0.4px; color:#0a0f1a;
+    background:#39ff14; border-radius:4px; padding:2px 6px; text-transform:uppercase;
+    box-shadow:0 0 8px rgba(57,255,20,0.7);
+  }
 
   .assign-toggle {
-    margin-left: auto;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text2);
-    font-size: 10px;
-    padding: 3px 7px;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
+    margin-left: auto; background: transparent; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text2); font-size: 10px; padding: 3px 7px;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
   }
+  .assign-toggle:hover { border-color: var(--orange); color: var(--orange2); }
 
-  .assign-toggle:hover {
-    border-color: var(--orange);
-    color: var(--orange2);
+  .assign-select {
+    margin-left: auto; background: var(--navy3); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text2); font-size: 10px; padding: 2px 5px;
+    cursor: pointer; transition: border-color 0.2s, color 0.2s; max-width: 90px;
   }
+  .assign-select:hover { border-color: var(--orange); color: var(--orange2); }
+
+  /* Palette classes for arbitrary team member badges */
+  .owner-c0 { background: rgba(6,182,212,0.2);   color: #22d3ee; border: 1px solid rgba(6,182,212,0.4); }
+  .owner-c1 { background: rgba(34,197,94,0.15);  color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+  .owner-c2 { background: rgba(236,72,153,0.15); color: #f472b6; border: 1px solid rgba(236,72,153,0.3); }
+  .owner-c3 { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
 
   /* ── MOVE BUTTONS ── */
-  .move-btns {
-    display: flex;
-    gap: 4px;
-    margin-top: 8px;
-  }
-
+  .move-btns { display: flex; gap: 4px; margin-top: 8px; }
   .move-btn {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text2);
-    font-size: 11px;
-    padding: 4px;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: center;
+    flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text2); font-size: 11px; padding: 4px;
+    cursor: pointer; transition: all 0.15s; text-align: center;
   }
-
   .move-btn:hover { background: rgba(0,102,204,0.15); color: #60a5fa; border-color: rgba(0,102,204,0.3); }
   .move-btn.done-btn:hover { background: rgba(34,197,94,0.12); color: #4ade80; border-color: rgba(34,197,94,0.3); }
+  .move-btn.del-btn:hover { background: rgba(255,68,68,0.12); color: #ff7070; border-color: rgba(255,68,68,0.3); }
+
+  /* ── DETAIL PANEL ── */
+  .panel-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 998;
+  }
+  .panel-overlay.open { display: block; }
+
+  .detail-panel {
+    position: fixed; top: 0; right: -680px; width: 660px; max-width: 95vw;
+    height: 100vh; background: var(--navy2); border-left: 1px solid var(--border);
+    z-index: 999; display: flex; flex-direction: column;
+    transition: right 0.3s ease; box-shadow: -4px 0 24px rgba(0,0,0,0.4);
+  }
+  .detail-panel.open { right: 0; }
+
+  .panel-header {
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+  }
+  .panel-close {
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text2); font-size: 18px; width: 32px; height: 32px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .panel-close:hover { border-color: var(--blocked-accent); color: var(--blocked-accent); }
+  .panel-title-area { flex: 1; }
+  .panel-task-id { font-size: 11px; color: var(--text2); }
+  .panel-task-title { font-size: 16px; font-weight: 600; color: var(--text); margin-top: 2px; }
+
+  .panel-state-badge {
+    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .state-blocked { background: rgba(255,68,68,0.15); color: #ff7070; }
+  .state-progress { background: rgba(0,128,255,0.15); color: #60a5fa; }
+  .state-done { background: rgba(34,197,94,0.15); color: #4ade80; }
+
+  /* Tabs */
+  .panel-tabs {
+    display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    padding: 0 20px;
+  }
+  .panel-tab {
+    padding: 10px 16px; font-size: 13px; color: var(--text2); cursor: pointer;
+    border-bottom: 2px solid transparent; transition: all 0.15s;
+    background: none; border-top: none; border-left: none; border-right: none;
+  }
+  .panel-tab:hover { color: var(--text); }
+  .panel-tab.active { color: var(--blue2); border-bottom-color: var(--blue2); }
+
+  /* Tab content area */
+  .panel-body { flex: 1; overflow-y: auto; padding: 0; }
+  .tab-content { display: none; padding: 20px; }
+  .tab-content.active { display: block; }
+
+  /* Overview tab */
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .detail-field label { display: block; font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .detail-field .val { font-size: 14px; color: var(--text); }
+  .detail-field .val.empty { color: var(--text2); font-style: italic; }
+
+  .detail-desc-block {
+    background: var(--navy3); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px; margin-bottom: 16px; white-space: pre-wrap; font-size: 13px;
+    line-height: 1.6; color: var(--text); min-height: 60px;
+  }
+  .detail-desc-block.empty { color: var(--text2); font-style: italic; }
+
+  /* Timeline / Updates tab */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .timeline-entry {
+    position: relative; padding: 14px 16px 14px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .timeline-entry:last-child { border-bottom: none; }
+  .timeline-dot {
+    position: absolute; left: 10px; top: 20px;
+    width: 10px; height: 10px; border-radius: 50%; background: var(--blue);
+  }
+  .timeline-entry.change .timeline-dot { background: var(--orange); }
+  .timeline-entry.system .timeline-dot { background: var(--text2); }
+  .timeline-line {
+    position: absolute; left: 14px; top: 32px; bottom: 0;
+    width: 2px; background: var(--border);
+  }
+  .timeline-entry:last-child .timeline-line { display: none; }
+  .timeline-time { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+  .timeline-body { font-size: 13px; color: var(--text); line-height: 1.5; white-space: pre-wrap; }
+  .timeline-empty { text-align: center; color: var(--text2); padding: 40px 20px; font-size: 13px; }
+
+  /* Add update */
+  .add-update {
+    border-top: 1px solid var(--border); padding: 14px 20px;
+    display: flex; gap: 8px; flex-shrink: 0;
+  }
+  .add-update textarea {
+    flex: 1; background: var(--navy3); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); padding: 10px; font-size: 13px; outline: none; font-family: inherit;
+    resize: none; min-height: 44px; max-height: 120px;
+  }
+  .add-update textarea:focus { border-color: var(--blue); }
+
+  /* Edit tab */
+  .edit-form { padding: 0; }
+  .edit-form label { display: block; font-size: 11px; color: var(--text2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .edit-form input, .edit-form textarea, .edit-form select {
+    width: 100%; background: var(--navy3); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text); padding: 10px 12px; font-size: 14px;
+    outline: none; margin-bottom: 14px; font-family: inherit;
+  }
+  .edit-form input:focus, .edit-form textarea:focus, .edit-form select:focus { border-color: var(--blue); }
+  .edit-form textarea { min-height: 100px; resize: vertical; }
+  .edit-row { display: flex; gap: 12px; }
+  .edit-row > div { flex: 1; }
+  .edit-actions { display: flex; gap: 10px; margin-top: 8px; justify-content: flex-end; }
+
+  /* ── DOCUMENTS TAB ── */
+  .docs-upload-zone {
+    border: 2px dashed var(--border); border-radius: 10px; padding: 24px;
+    text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 16px;
+    background: rgba(255,255,255,0.02);
+  }
+  .docs-upload-zone:hover, .docs-upload-zone.drag-active {
+    border-color: var(--blue); background: rgba(0,102,204,0.06);
+  }
+  .docs-upload-zone .upload-icon { font-size: 28px; margin-bottom: 6px; opacity: 0.5; }
+  .docs-upload-zone .upload-text { font-size: 13px; color: var(--text2); }
+  .docs-upload-zone .upload-text strong { color: var(--blue2); }
+  .docs-upload-zone .upload-hint { font-size: 11px; color: var(--text2); margin-top: 4px; opacity: 0.6; }
+  .docs-upload-progress { display: none; margin-bottom: 12px; }
+  .docs-upload-progress .progress-bar {
+    height: 4px; background: var(--navy3); border-radius: 4px; overflow: hidden;
+  }
+  .docs-upload-progress .progress-fill {
+    height: 100%; background: var(--blue); border-radius: 4px; transition: width 0.3s;
+  }
+  .docs-upload-progress .progress-text { font-size: 11px; color: var(--text2); margin-top: 4px; }
+
+  .doc-list { display: flex; flex-direction: column; gap: 6px; }
+  .doc-item {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    background: var(--navy3); border: 1px solid var(--border); border-radius: 8px;
+    transition: border-color 0.2s;
+  }
+  .doc-item:hover { border-color: rgba(0,102,204,0.3); }
+  .doc-icon {
+    width: 36px; height: 36px; border-radius: 6px; display: flex;
+    align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+    flex-shrink: 0; text-transform: uppercase;
+  }
+  .doc-icon.pdf { background: rgba(255,68,68,0.15); color: #ff6b6b; }
+  .doc-icon.doc { background: rgba(0,102,204,0.15); color: #60a5fa; }
+  .doc-icon.xls { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .doc-icon.ppt { background: rgba(255,107,0,0.15); color: #fb923c; }
+  .doc-icon.img { background: rgba(168,85,247,0.15); color: #c084fc; }
+  .doc-icon.other { background: rgba(255,255,255,0.06); color: var(--text2); }
+  .doc-info { flex: 1; min-width: 0; }
+  .doc-name { font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .doc-meta { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .doc-actions { display: flex; gap: 4px; flex-shrink: 0; }
+  .doc-actions button {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 5px; color: var(--text2); font-size: 11px; padding: 4px 8px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .doc-actions button:hover { border-color: var(--blue); color: var(--blue2); }
+  .doc-actions button.del:hover { border-color: var(--blocked-accent); color: #ff7070; }
+  .docs-empty { text-align: center; color: var(--text2); padding: 30px 20px; font-size: 13px; }
 
   /* ── TOAST ── */
   #toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--navy3);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 18px;
-    font-size: 13px;
-    color: var(--text);
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--navy3); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 18px; font-size: 13px; color: var(--text);
     box-shadow: 0 4px 24px rgba(0,0,0,0.4);
-    transform: translateY(60px);
-    opacity: 0;
-    transition: all 0.3s ease;
-    z-index: 1000;
-    max-width: 300px;
+    transform: translateY(60px); opacity: 0; transition: all 0.3s ease;
+    z-index: 1000; max-width: 360px;
   }
+  #toast.show { transform: translateY(0); opacity: 1; }
 
-  #toast.show {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  /* ── SPINNER ── */
-  .spinner {
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.15);
-    border-top-color: var(--blue);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: inline-block;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── ERROR STATE ── */
+  /* ── ERROR ── */
   .error-banner {
-    background: rgba(255,68,68,0.1);
-    border: 1px solid rgba(255,68,68,0.3);
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 13px;
-    color: #ff8080;
-    margin: 16px 24px 0;
+    background: rgba(255,68,68,0.1); border: 1px solid rgba(255,68,68,0.3);
+    border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #ff8080; margin: 16px 24px 0;
   }
+
+  .spinner {
+    width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.15);
+    border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -424,13 +477,40 @@
     </div>
   </div>
   <div class="header-right">
-    <span id="refreshBadge" class="refresh-badge">Loading…</span>
-    <button class="btn secondary" onclick="loadTasks(true)">↻ Refresh</button>
+    <button class="btn orange small" id="syncTwBtn" onclick="syncTeamwork()">Sync Teamwork</button>
+    <a href="help.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🚀 Getting Started</a>
+    <a href="set-password.html" style="color:var(--muted,#8aa0bd);text-decoration:none;font-size:0.85rem;margin-right:4px;">🔑 Set Password</a>
+    <a href="program.html" style="color:var(--purple,#a855f7);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🛰️ Program</a>
+    <a href="opportunities.html" style="color:var(--orange2);text-decoration:none;font-size:0.85rem;margin-right:4px;">Opportunities</a>
+    <a href="research.html" style="color:var(--purple,#a855f7);text-decoration:none;font-size:0.85rem;margin-right:4px;">🔬 Research</a>
+    <a href="crm.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">CRM</a>
+    <a href="docusign.html" style="color:var(--orange2);text-decoration:none;font-size:0.85rem;margin-right:4px;">DocuSign</a>
+    <a href="decisions.html" id="decisionsLink" style="color:var(--green,#22c55e);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🗳️ Decisions <span id="decisionsBadge" style="display:none;background:#ff4444;color:#fff;border-radius:10px;padding:0 6px;font-size:0.7rem;"></span></a>
+    <script>fetch('/api/decisions?status=open',{credentials:'same-origin'}).then(r=>r.ok?r.json():[]).then(d=>{if(d&&d.length){var b=document.getElementById('decisionsBadge');b.textContent=d.length;b.style.display='inline-block';}}).catch(()=>{});</script>
+    <a href="ctd-dd.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🔎 CTD DD</a>
+    <span id="refreshBadge" class="refresh-badge">Loading...</span>
+    <button class="btn secondary" onclick="loadTasks(true)">Refresh</button>
   </div>
 </header>
 
+<div class="stats-bar" id="statsBar"></div>
+
+<div class="toolbar">
+  <input type="text" id="searchBox" placeholder="Search tasks..." oninput="render()">
+  <div class="filter-group">
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All</button>
+    <button class="filter-btn" data-filter="mine" onclick="setFilter('mine')">My Tasks</button>
+    <button class="filter-btn" data-filter="group" onclick="setFilter('group')">Group</button>
+    <button class="filter-btn" data-filter="exo" onclick="setFilter('exo')">Exo</button>
+    <button class="filter-btn" data-filter="overdue" onclick="setFilter('overdue')">Overdue</button>
+  </div>
+  <select id="categoryFilter" onchange="render()">
+    <option value="">All Projects</option>
+  </select>
+</div>
+
 <div class="add-bar">
-  <input id="newTitle" type="text" placeholder="New task title… (press Enter to add)" maxlength="120"
+  <input id="newTitle" type="text" placeholder="New task title... (press Enter)" maxlength="200"
     onkeydown="if(event.key==='Enter') addTask()">
   <select id="newOwner">
     <option value="Exo">Exo</option>
@@ -442,7 +522,7 @@
     <option value="In Progress">In Progress</option>
     <option value="Done">Done</option>
   </select>
-  <button class="btn" onclick="addTask()">+ Add Task</button>
+  <button class="btn" onclick="addTask()">+ Add</button>
 </div>
 
 <div id="errorBanner" class="error-banner" style="display:none"></div>
@@ -476,49 +556,185 @@
   </div>
 </div>
 
+<!-- Panel Overlay -->
+<div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+
+<!-- Task Detail Panel (slides in from right) -->
+<div class="detail-panel" id="detailPanel">
+  <div class="panel-header">
+    <button class="panel-close" onclick="closePanel()">&times;</button>
+    <div class="panel-title-area">
+      <div class="panel-task-id" id="panelTaskId">#0</div>
+      <div class="panel-task-title" id="panelTaskTitle">Task Title</div>
+    </div>
+    <span class="panel-state-badge" id="panelStateBadge">Blocked</span>
+    <span class="owner-badge" id="panelOwnerBadge">JON</span>
+  </div>
+
+  <div class="panel-tabs">
+    <button class="panel-tab active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+    <button class="panel-tab" data-tab="updates" onclick="switchTab('updates')">Updates</button>
+    <button class="panel-tab" data-tab="documents" onclick="switchTab('documents')">Documents</button>
+    <button class="panel-tab" data-tab="edit" onclick="switchTab('edit')">Edit</button>
+  </div>
+
+  <div class="panel-body">
+    <!-- OVERVIEW TAB -->
+    <div class="tab-content active" id="tab-overview">
+      <div class="detail-grid" id="detailGrid"></div>
+      <label style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;display:block;">Description</label>
+      <div class="detail-desc-block" id="detailDesc">No description</div>
+    </div>
+
+    <!-- UPDATES TAB (scrollable timeline) -->
+    <div class="tab-content" id="tab-updates">
+      <div class="timeline" id="timelineList">
+        <div class="timeline-empty">Loading updates...</div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS TAB -->
+    <div class="tab-content" id="tab-documents">
+      <div class="docs-upload-zone" id="uploadZone"
+           ondragover="event.preventDefault();this.classList.add('drag-active')"
+           ondragleave="this.classList.remove('drag-active')"
+           ondrop="handleFileDrop(event)"
+           onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">+</div>
+        <div class="upload-text">Drop files here or <strong>click to browse</strong></div>
+        <div class="upload-hint">PDF, DOCX, XLSX, PPTX, PNG, JPG, CSV, ZIP — max 25 MB</div>
+      </div>
+      <input type="file" id="fileInput" style="display:none"
+             accept=".pdf,.docx,.xlsx,.pptx,.doc,.xls,.ppt,.png,.jpg,.jpeg,.gif,.svg,.csv,.txt,.zip,.md"
+             onchange="handleFileSelect(this.files)" multiple>
+      <div class="docs-upload-progress" id="uploadProgress">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="progress-text" id="progressText">Uploading...</div>
+      </div>
+      <div class="doc-list" id="docList">
+        <div class="docs-empty">Loading documents...</div>
+      </div>
+    </div>
+
+    <!-- EDIT TAB -->
+    <div class="tab-content" id="tab-edit">
+      <div class="edit-form">
+        <input type="hidden" id="editId">
+        <label>Title</label>
+        <input type="text" id="editTitle" maxlength="200">
+        <label>Description</label>
+        <textarea id="editDesc"></textarea>
+        <div class="edit-row">
+          <div>
+            <label>Owner</label>
+            <select id="editOwner">
+              <option value="Jon">Jon</option>
+              <option value="Exo">Exo</option>
+              <option value="Jon+Exo">Both</option>
+            </select>
+          </div>
+          <div>
+            <label>State</label>
+            <select id="editState">
+              <option value="Blocked">Blocked</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Done">Done</option>
+            </select>
+          </div>
+        </div>
+        <div class="edit-row">
+          <div>
+            <label>Due Date</label>
+            <input type="date" id="editDue">
+          </div>
+          <div>
+            <label>Priority (0-100)</label>
+            <input type="number" id="editPriority" min="0" max="100">
+          </div>
+        </div>
+        <div class="edit-row">
+          <div>
+            <label>Category / Project</label>
+            <input type="text" id="editCategory">
+          </div>
+          <div>
+            <label>Source</label>
+            <input type="text" id="editSource" readonly style="opacity:0.5">
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button class="btn danger small" onclick="deleteTaskFromPanel()">Delete</button>
+          <button class="btn" onclick="saveEdit()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add update bar (always visible at bottom) -->
+  <div class="add-update">
+    <textarea id="newUpdateText" placeholder="Add an update or note..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();postUpdate()}"></textarea>
+    <button class="btn small" onclick="postUpdate()">Post</button>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
-// ── STATE ──────────────────────────────────────────────────────────────────
+// ── STATE ──
 let tasks = [];
 let dragTaskId = null;
 let autoRefreshTimer = null;
+let currentFilter = 'all';
+let currentUserRole = 'admin';
+let currentUser = null;
 const REFRESH_INTERVAL = 30000;
 
-const DEFAULT_TASKS = [
-  { title: "Series A Direction",                    owner: "Jon",     state: "Blocked"     },
-  { title: "HVRR OTA Letter to Matt",               owner: "Exo",     state: "Blocked"     },
-  { title: "Teasley NASA MSFC Outreach",            owner: "Exo",     state: "Blocked"     },
-  { title: "INRODES Flight Demo Outreach",          owner: "Exo",     state: "Blocked"     },
-  { title: "Add @Exosaerobot to Telegram Group",    owner: "Jon",     state: "Blocked"     },
-  { title: "Basen Battery RS485 Fix",               owner: "Jon+Exo", state: "In Progress" },
-  { title: "EG4 HDMI Breakout Board",               owner: "Jon",     state: "In Progress" },
-  { title: "NASA FO Email Sent",                    owner: "Exo",     state: "Done"        },
-  { title: "ExoMac Security Setup",                 owner: "Exo",     state: "Done"        },
-  { title: "ProtonMail Configured",                 owner: "Exo",     state: "Done"        },
-  { title: "Qwen3-32B Installed",                   owner: "Exo",     state: "Done"        },
-  { title: "HA Solar Live",                         owner: "Jon",     state: "Done"        },
-  { title: "ISC Presentation Delivered",            owner: "Jon",     state: "Done"        },
-];
+// ── ROLE-AWARE UI ──
+async function initUserRole() {
+  try {
+    const me = await apiFetch('/api/me');
+    if (me && me.role) {
+      currentUser = me;
+      currentUserRole = me.role;
+      if (me.role === 'early_adopter') {
+        // Hide internal nav links
+        document.getElementById('syncTwBtn').style.display = 'none';
+        document.querySelectorAll('.header-right a').forEach(a => {
+          if (['opportunities.html','crm.html','docusign.html'].some(p => a.href.includes(p))) {
+            a.style.display = 'none';
+          }
+        });
+        // Add welcome link and user badge
+        const badge = document.createElement('span');
+        badge.style.cssText = 'font-size:11px;color:#fb923c;background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.3);border-radius:6px;padding:3px 8px;margin-right:4px;';
+        badge.textContent = 'EARLY ADOPTER';
+        document.querySelector('.header-right').prepend(badge);
+        const welcomeLink = document.createElement('a');
+        welcomeLink.href = '/welcome';
+        welcomeLink.style.cssText = 'color:#60a5fa;text-decoration:none;font-size:0.85rem;margin-right:4px;';
+        welcomeLink.textContent = 'Welcome Guide';
+        document.querySelector('.header-right').prepend(welcomeLink);
+      }
+    }
+  } catch(e) { /* ignore — will redirect to login if 401 */ }
+}
+initUserRole();
 
-// ── API HELPERS ────────────────────────────────────────────────────────────
+// ── API ──
 async function apiFetch(path, opts = {}) {
-  const res = await fetch(path, {
-    headers: { 'Content-Type': 'application/json' },
-    ...opts,
-  });
+  const res = await fetch(path, { headers: { 'Content-Type': 'application/json' }, ...opts });
+  if (res.status === 401) { window.location = '/login'; return; }
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
 
-// ── STATE NORMALIZATION ────────────────────────────────────────────────────
-// Map API states to our 3-column model
+// ── STATE NORMALIZATION ──
 function normalizeState(s) {
   if (!s) return 'Blocked';
   const lower = s.toLowerCase();
   if (lower === 'done') return 'Done';
   if (lower === 'in progress') return 'In Progress';
-  // Blocked, Queued, anything else → Blocked
+  if (lower === 'to do') return 'Blocked';
   return 'Blocked';
 }
 
@@ -528,40 +744,140 @@ function colIdForState(state) {
   return 'col-blocked';
 }
 
-// ── LOAD TASKS ─────────────────────────────────────────────────────────────
+// ── LOAD ──
 async function loadTasks(showFeedback = false) {
-  if (showFeedback) setRefreshBadge('Refreshing…', false);
+  if (showFeedback) setRefreshBadge('Refreshing...', false);
   try {
-    const data = await apiFetch('/api/tasks');
-    tasks = data.map(t => ({ ...t, state: normalizeState(t.state) }));
-
-    // If API returns essentially empty (no real tasks), seed defaults
-    if (tasks.length === 0) {
-      await seedDefaults();
+    // Try live API first; fall back to generated JSON file
+    let data;
+    try {
+      data = await apiFetch('/api/tasks');
+    } catch (apiErr) {
+      // Fallback: load from markdown-generated JSON
+      const resp = await fetch('data/tasks.json?_=' + Date.now());
+      if (!resp.ok) throw new Error('data/tasks.json not found — run dashboard-data-generator.py');
+      const jsonData = await resp.json();
+      // Normalize from generator format to API format
+      data = (jsonData.tasks || []).map((t, idx) => ({
+        id: t.id || idx,
+        title: t.title || '',
+        state: t.state === 'Ready' ? 'Blocked' : t.state,  // map Ready → Blocked col
+        owner: t.owner || 'Exo',
+        due_date: t.due_date || null,
+        priority: t.priority || 0,
+        category: t.category || '',
+        description: t.description || '',
+        source: t.source || 'md',
+      }));
+      setRefreshBadge(`MD sync (${jsonData.generated_display || 'cached'})`, true);
+      tasks = data.map(t => ({ ...t, state: normalizeState(t.state) }));
+      render();
+      renderStats();
+      updateCategoryFilter();
+      hideError();
+      scheduleRefresh();
       return;
     }
-
+    tasks = data.map(t => ({ ...t, state: normalizeState(t.state) }));
     render();
+    renderStats();
+    updateCategoryFilter();
     hideError();
     const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     setRefreshBadge(`Updated ${now}`, true);
   } catch (e) {
     showError('Could not load tasks: ' + e.message);
-    setRefreshBadge('Error — retrying', false);
+    setRefreshBadge('Error', false);
   }
   scheduleRefresh();
 }
 
-async function seedDefaults() {
-  toast('Seeding default tasks…');
-  for (const t of DEFAULT_TASKS) {
-    try { await apiFetch('/api/tasks', { method: 'POST', body: JSON.stringify(t) }); }
-    catch(e) { console.warn('seed failed for', t.title, e); }
-  }
-  await loadTasks();
+// ── STATS ──
+function renderStats() {
+  const total = tasks.length;
+  const blocked = tasks.filter(t => t.state === 'Blocked').length;
+  const progress = tasks.filter(t => t.state === 'In Progress').length;
+  const done = tasks.filter(t => t.state === 'Done').length;
+  const now = new Date();
+  const overdue = tasks.filter(t => t.due_date && new Date(t.due_date) < now && t.state !== 'Done').length;
+  const twCount = tasks.filter(t => (t.source || '').startsWith('teamwork')).length;
+
+  const ac = (f) => currentFilter === f ? ' active' : '';
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat-card${ac('all')}" onclick="setFilter('all')"><div class="stat-num">${total}</div><div class="stat-label">Total</div></div>
+    <div class="stat-card${ac('blocked')}" onclick="setFilter('blocked')"><div class="stat-num" style="color:var(--blocked-accent)">${blocked}</div><div class="stat-label">Blocked</div></div>
+    <div class="stat-card${ac('in_progress')}" onclick="setFilter('in_progress')"><div class="stat-num" style="color:var(--progress-accent)">${progress}</div><div class="stat-label">In Progress</div></div>
+    <div class="stat-card${ac('done')}" onclick="setFilter('done')"><div class="stat-num" style="color:var(--done-accent)">${done}</div><div class="stat-label">Done</div></div>
+    <div class="stat-card${ac('overdue')}" onclick="setFilter('overdue')"><div class="stat-num" style="color:${overdue > 0 ? 'var(--blocked-accent)' : 'var(--text2)'}">${overdue}</div><div class="stat-label">Overdue</div></div>
+    ${twCount > 0 ? `<div class="stat-card${ac('teamwork')}" onclick="setFilter('teamwork')"><div class="stat-num" style="color:#06b6d4">${twCount}</div><div class="stat-label">From Teamwork</div></div>` : ''}
+  `;
 }
 
-// ── RENDER ─────────────────────────────────────────────────────────────────
+// ── CATEGORY FILTER ──
+function updateCategoryFilter() {
+  const sel = document.getElementById('categoryFilter');
+  const cats = [...new Set(tasks.map(t => t.category).filter(Boolean))].sort();
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All Projects</option>' +
+    cats.map(c => `<option value="${escHtml(c)}"${c === current ? ' selected' : ''}>${escHtml(c)}</option>`).join('');
+}
+
+// ── FILTER ──
+function getFilteredTasks() {
+  let filtered = [...tasks];
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  if (q) filtered = filtered.filter(t =>
+    (t.title || '').toLowerCase().includes(q) ||
+    (t.description || '').toLowerCase().includes(q) ||
+    (t.owner || '').toLowerCase().includes(q) ||
+    (t.category || '').toLowerCase().includes(q)
+  );
+  if (currentFilter === 'mine') filtered = filtered.filter(t => {
+    if (!currentUser) return false;
+    const me = (currentUser.email || '').toLowerCase();
+    if (me && (t.assigned_email || '').toLowerCase() === me) return true;   // source of truth
+    const o = (t.owner || '').toLowerCase();
+    const n = (currentUser.name || '').toLowerCase();
+    const firstName = n.split(/\s+/)[0];
+    return o === n || o.split(/\s+/)[0] === firstName ||
+           (firstName === 'john' && (o === 'jon' || o.includes('john')));
+  });
+  else if (currentFilter === 'group') filtered = filtered.filter(t =>
+    (t.owner || '').toLowerCase() === 'team' ||
+    (Array.isArray(t.tags) && t.tags.map(x => String(x).toLowerCase()).includes('group')));
+  else if (currentFilter === 'exo') filtered = filtered.filter(t => {
+    const o = (t.owner || '').toLowerCase();
+    return o === 'exo' || o === 'exomac';
+  });
+  else if (currentFilter === 'blocked') filtered = filtered.filter(t => t.state === 'Blocked');
+  else if (currentFilter === 'in_progress') filtered = filtered.filter(t => t.state === 'In Progress');
+  else if (currentFilter === 'done') filtered = filtered.filter(t => t.state === 'Done');
+  else if (currentFilter === 'overdue') filtered = filtered.filter(t =>
+    t.due_date && new Date(t.due_date) < new Date() && t.state !== 'Done'
+  );
+  else if (currentFilter === 'teamwork') filtered = filtered.filter(t => (t.source || '').startsWith('teamwork'));
+  const cat = document.getElementById('categoryFilter').value;
+  if (cat) filtered = filtered.filter(t => t.category === cat);
+  return filtered;
+}
+
+function setFilter(f) {
+  // Toggle: clicking same filter again resets to 'all'
+  if (currentFilter === f && f !== 'all') f = 'all';
+  currentFilter = f;
+  // Update filter buttons
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.filter === f);
+  });
+  // If a stat card or non-button filter is active, clear button highlights
+  if (!['all','jon','exo','overdue'].includes(f)) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  }
+  render();
+  renderStats();
+}
+
+// ── RENDER ──
 function render() {
   const cols = {
     'Blocked':     document.getElementById('col-blocked'),
@@ -569,12 +885,10 @@ function render() {
     'Done':        document.getElementById('col-done'),
   };
   const counts = { 'Blocked': 0, 'In Progress': 0, 'Done': 0 };
-
-  // Clear
   Object.values(cols).forEach(c => { c.innerHTML = ''; });
 
-  // Sort: In Progress first, then Blocked, then Done (within each col, by id desc)
-  const sorted = [...tasks].sort((a, b) => b.id - a.id);
+  const filtered = getFilteredTasks();
+  const sorted = [...filtered].sort((a, b) => (b.priority || 0) - (a.priority || 0) || (b.id || 0) - (a.id || 0));
 
   sorted.forEach(task => {
     const col = cols[task.state] || cols['Blocked'];
@@ -582,17 +896,13 @@ function render() {
     counts[task.state] = (counts[task.state] || 0) + 1;
   });
 
-  // Empty states
   Object.entries(cols).forEach(([state, col]) => {
-    if (col.children.length === 0) {
-      col.innerHTML = '<div class="empty-col">No tasks here</div>';
-    }
+    if (col.children.length === 0) col.innerHTML = '<div class="empty-col">No tasks here</div>';
   });
 
-  // Update counts
-  document.getElementById('count-blocked').textContent  = counts['Blocked']     || 0;
+  document.getElementById('count-blocked').textContent  = counts['Blocked'] || 0;
   document.getElementById('count-progress').textContent = counts['In Progress'] || 0;
-  document.getElementById('count-done').textContent     = counts['Done']        || 0;
+  document.getElementById('count-done').textContent     = counts['Done'] || 0;
 }
 
 function ownerClass(owner) {
@@ -600,8 +910,10 @@ function ownerClass(owner) {
   const l = owner.toLowerCase();
   if (l.includes('+') || l === 'both') return 'owner-both';
   if (l === 'exo' || l === 'exomac') return 'owner-exo';
-  if (l === 'jon') return 'owner-jon';
-  return 'owner-other';
+  if (l === 'jon' || l.startsWith('john ')) return 'owner-jon';
+  // Assign a stable palette color by hashing the name
+  const idx = Math.abs([...owner].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 0)) % 4;
+  return `owner-c${idx}`;
 }
 
 function ownerLabel(owner) {
@@ -610,7 +922,29 @@ function ownerLabel(owner) {
   if (l.includes('+') || l === 'both') return 'BOTH';
   if (l === 'exo' || l === 'exomac') return 'EXO';
   if (l === 'jon') return 'JON';
-  return owner.toUpperCase().slice(0, 4);
+  // For full names (e.g. "Lizi Quinn"), display first name up to 6 chars
+  return owner.split(/\s+/)[0].toUpperCase().slice(0, 6);
+}
+
+// Build <option> list for owner selects on cards and in add/edit bars
+function buildOwnerOptions(selected) {
+  const fixed = [{ value: 'Exo', label: 'Exo' }, { value: 'Jon+Exo', label: 'Both' }];
+  const team = (TEAM_MEMBERS || []).map(m => ({ value: m.name, label: m.name.split(/\s+/)[0] }));
+  const all = [...team, ...fixed];
+  const seen = new Set();
+  return all
+    .filter(o => { if (seen.has(o.value)) return false; seen.add(o.value); return true; })
+    .map(o => `<option value="${escHtml(o.value)}"${o.value === selected ? ' selected' : ''}>${escHtml(o.label)}</option>`)
+    .join('');
+}
+
+// Funding submittal detector — used to neon-highlight items due within 5 days
+const FUNDING_RE = /\b(SBIR|STTR|TACFI|STRATFI|D2P2|BAA|RFI|RFP|NOFA|white\s?paper|proposal|solicitation|submission|submit|on-?ramp|phase\s?(?:ii|iii|2|3)|grant|award|ingest|ONR|DARPA|NASA|SpaceWERX|AFRL|AFWERX|OSP-?4|SEARF|direct\s?award|funding|RDRE)\b/i;
+const REGULATORY_RE = /\b(SEC|EDGAR|annual report|10-?K|franchise tax|tax filing|compliance|EO\s?\d)\b/i;
+function isFundingSubmittal(task) {
+  const hay = `${task.title || ''} ${task.category || ''} ${task.description || ''} ${task.id || ''}`;
+  if (REGULATORY_RE.test(hay)) return false;
+  return FUNDING_RE.test(hay);
 }
 
 function buildCard(task) {
@@ -631,42 +965,57 @@ function buildCard(task) {
 
   // Due date
   let dueDateHtml = '';
+  let fundingDue = false;
   if (task.due_date) {
     const d = new Date(task.due_date);
-    const overdue = d < new Date() && task.state !== 'Done';
-    dueDateHtml = `<span class="due-date ${overdue ? 'overdue' : ''}">📅 ${d.toLocaleDateString('en-US', {month:'short', day:'numeric'})}</span>`;
+    const now = new Date();
+    const diff = (d - now) / 86400000;
+    const cls = (d < now && task.state !== 'Done') ? 'overdue' : (diff <= 7 && task.state !== 'Done') ? 'due-soon' : '';
+    dueDateHtml = `<span class="due-date ${cls}">${d.toLocaleDateString('en-US', {month:'short', day:'numeric'})}</span>`;
+    // Neon block: a funding submittal due within the next 5 days (incl. today)
+    if (task.state !== 'Done' && diff <= 5 && diff > -1 && isFundingSubmittal(task)) fundingDue = true;
   }
+  if (fundingDue) div.classList.add('funding-due');
+  const fundingFlagHtml = fundingDue ? '<span class="funding-flag">⚡ Funding ≤5d</span>' : '';
 
-  // Move buttons (context-sensitive)
+  // Priority indicator
+  let priHtml = '';
+  if (task.priority >= 80) priHtml = '<span class="task-priority-high">HIGH</span>';
+  else if (task.priority >= 50 && task.priority < 80) priHtml = '';
+
+  // Category / project
+  let catHtml = '';
+  if (task.category) catHtml = `<span class="task-category">${escHtml(task.category)}</span>`;
+
+  // Source badge
+  let srcHtml = '';
+  if ((task.source || '').startsWith('teamwork')) srcHtml = '<span class="task-source">TW</span>';
+
+  // Move buttons
   let moveBtns = '';
   if (task.state === 'Blocked') {
     moveBtns = `
-      <button class="move-btn" onclick="moveTask(${task.id},'In Progress')">→ In Progress</button>
-      <button class="move-btn done-btn" onclick="moveTask(${task.id},'Done')">✓ Done</button>`;
+      <button class="move-btn" onclick="event.stopPropagation();moveTask('${task.id}','In Progress')">In Progress</button>
+      <button class="move-btn done-btn" onclick="event.stopPropagation();moveTask('${task.id}','Done')">Done</button>`;
   } else if (task.state === 'In Progress') {
     moveBtns = `
-      <button class="move-btn" onclick="moveTask(${task.id},'Blocked')">← Block</button>
-      <button class="move-btn done-btn" onclick="moveTask(${task.id},'Done')">✓ Done</button>`;
+      <button class="move-btn" onclick="event.stopPropagation();moveTask('${task.id}','Blocked')">Block</button>
+      <button class="move-btn done-btn" onclick="event.stopPropagation();moveTask('${task.id}','Done')">Done</button>`;
   } else {
     moveBtns = `
-      <button class="move-btn" onclick="moveTask(${task.id},'In Progress')">↩ Reopen</button>`;
+      <button class="move-btn" onclick="event.stopPropagation();moveTask('${task.id}','In Progress')">Reopen</button>`;
   }
 
-  // Assign toggle: show "Assign to Jon" if currently Exo, and vice versa
-  let toggleTarget, toggleLabel;
-  const l = (task.owner || '').toLowerCase();
-  if (l === 'jon') { toggleTarget = 'Exo'; toggleLabel = 'Assign → Exo'; }
-  else if (l === 'exo' || l === 'exomac') { toggleTarget = 'Jon'; toggleLabel = 'Assign → Jon'; }
-  else { toggleTarget = 'Jon'; toggleLabel = 'Assign → Jon'; }
+  const assignSelect = `<select class="assign-select" onclick="event.stopPropagation()" onchange="event.stopPropagation();assignTask('${task.id}',this.value)">${buildOwnerOptions(task.owner)}</select>`;
 
   div.innerHTML = `
     <div class="task-top">
-      <div class="task-title">${escHtml(task.title)}</div>
+      <div class="task-title" onclick="openEdit('${task.id}')">${escHtml(task.title)}</div>
       <span class="owner-badge ${ownerClass(task.owner)}">${ownerLabel(task.owner)}</span>
     </div>
-    <div class="task-footer">
-      ${dueDateHtml}
-      <button class="assign-toggle" onclick="assignTask(${task.id},'${toggleTarget}')">${escHtml(toggleLabel)}</button>
+    <div class="task-meta">
+      ${fundingFlagHtml}${catHtml}${srcHtml}${priHtml}${dueDateHtml}
+      ${assignSelect}
     </div>
     <div class="move-btns">${moveBtns}</div>
   `;
@@ -678,19 +1027,233 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── ACTIONS ────────────────────────────────────────────────────────────────
+// ── DETAIL PANEL ──
+let currentPanelTaskId = null;
+
+function openEdit(id) {
+  const task = tasks.find(t => t.id == id);
+  if (!task) return;
+  currentPanelTaskId = id;
+
+  // Header
+  document.getElementById('panelTaskId').textContent = `#${task.id}`;
+  document.getElementById('panelTaskTitle').textContent = task.title || 'Untitled';
+
+  const badgeEl = document.getElementById('panelStateBadge');
+  badgeEl.textContent = task.state;
+  badgeEl.className = 'panel-state-badge ' + (
+    task.state === 'Blocked' ? 'state-blocked' :
+    task.state === 'In Progress' ? 'state-progress' : 'state-done'
+  );
+
+  const ownerEl = document.getElementById('panelOwnerBadge');
+  ownerEl.textContent = ownerLabel(task.owner);
+  ownerEl.className = 'owner-badge ' + ownerClass(task.owner);
+
+  // Overview tab
+  renderOverview(task);
+
+  // Edit tab fields
+  document.getElementById('editId').value = task.id;
+  document.getElementById('editTitle').value = task.title || '';
+  document.getElementById('editDesc').value = task.description || '';
+  document.getElementById('editOwner').value = task.owner || 'Jon';
+  document.getElementById('editState').value = task.state || 'Blocked';
+  document.getElementById('editDue').value = task.due_date ? task.due_date.slice(0, 10) : '';
+  document.getElementById('editPriority').value = task.priority || 0;
+  document.getElementById('editCategory').value = task.category || '';
+  document.getElementById('editSource').value = task.source || 'manual';
+
+  // Hide delete button for early adopters
+  const deleteBtn = document.querySelector('.edit-actions .btn.danger');
+  if (deleteBtn) deleteBtn.style.display = (currentUserRole === 'early_adopter') ? 'none' : '';
+
+  // Show panel
+  document.getElementById('panelOverlay').classList.add('open');
+  document.getElementById('detailPanel').classList.add('open');
+
+  // Default to overview tab
+  switchTab('overview');
+
+  // Load timeline and documents
+  loadTimeline(id);
+  loadDocuments(id);
+}
+
+function renderOverview(task) {
+  const grid = document.getElementById('detailGrid');
+  const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) : '<span class="empty">Not set</span>';
+  const priLabel = (p) => {
+    if (!p && p !== 0) return '<span class="empty">Not set</span>';
+    if (p >= 80) return `<span style="color:var(--blocked-accent);font-weight:600">${p} (High)</span>`;
+    if (p >= 50) return `<span style="color:var(--yellow)">${p} (Medium)</span>`;
+    return `<span>${p} (Low)</span>`;
+  };
+
+  grid.innerHTML = `
+    <div class="detail-field"><label>Owner</label><div class="val"><span class="owner-badge ${ownerClass(task.owner)}" style="font-size:12px;padding:3px 10px">${ownerLabel(task.owner)}</span></div></div>
+    <div class="detail-field"><label>State</label><div class="val">${task.state}</div></div>
+    <div class="detail-field"><label>Due Date</label><div class="val">${fmtDate(task.due_date)}</div></div>
+    <div class="detail-field"><label>Priority</label><div class="val">${priLabel(task.priority)}</div></div>
+    <div class="detail-field"><label>Category / Project</label><div class="val">${task.category ? escHtml(task.category) : '<span class="empty">None</span>'}</div></div>
+    <div class="detail-field"><label>Source</label><div class="val">${task.source ? escHtml(task.source) : 'manual'}</div></div>
+    <div class="detail-field"><label>Created</label><div class="val">${task.created_at ? new Date(task.created_at).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '?'}</div></div>
+    <div class="detail-field"><label>Last Updated</label><div class="val">${task.updated_at ? new Date(task.updated_at).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '?'}</div></div>
+  `;
+
+  const descEl = document.getElementById('detailDesc');
+  if (task.description && task.description.trim()) {
+    descEl.textContent = task.description;
+    descEl.classList.remove('empty');
+  } else {
+    descEl.textContent = 'No description yet. Switch to Edit tab to add one.';
+    descEl.classList.add('empty');
+  }
+}
+
+// ── TIMELINE ──
+async function loadTimeline(taskId) {
+  const el = document.getElementById('timelineList');
+  el.innerHTML = '<div class="timeline-empty"><div class="spinner"></div> Loading updates...</div>';
+  try {
+    const updates = await apiFetch(`/api/tasks/updates?task_id=${taskId}`);
+    if (!updates || updates.length === 0) {
+      el.innerHTML = '<div class="timeline-empty">No updates yet. Post a note below to start tracking context.</div>';
+      return;
+    }
+    // Render newest first so you can scroll through history top-to-bottom
+    const sorted = [...updates].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    el.innerHTML = sorted.map((c) => {
+      const isChange = c.type === 'task_update' || (c.body || '').startsWith('[Update]');
+      const isEmail = (c.body || '').startsWith('Email from');
+      const cls = isChange ? 'change' : isEmail ? 'system' : '';
+      const time = new Date(c.created_at).toLocaleString('en-US', {
+        month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit'
+      });
+      // Format body: strip [Update] prefix for change entries and format nicely
+      let bodyText = c.body || '';
+      if (isChange && bodyText.startsWith('[Update] ')) {
+        bodyText = bodyText.replace('[Update] ', '').replace(/ \| /g, '\n');
+      }
+      return `<div class="timeline-entry ${cls}">
+        <div class="timeline-dot"></div>
+        <div class="timeline-line"></div>
+        <div class="timeline-time">${time}${c.owner ? ' &middot; ' + escHtml(c.owner) : ''}</div>
+        <div class="timeline-body">${escHtml(bodyText)}</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = `<div class="timeline-empty">Failed to load: ${escHtml(e.message)}</div>`;
+  }
+}
+
+async function postUpdate() {
+  const el = document.getElementById('newUpdateText');
+  const body = el.value.trim();
+  if (!body || !currentPanelTaskId) return;
+  el.disabled = true;
+  try {
+    await apiFetch('/api/tasks/updates', {
+      method: 'POST',
+      body: JSON.stringify({ task_id: currentPanelTaskId, body, owner: 'Jon' })
+    });
+    el.value = '';
+    toast('Update posted');
+    loadTimeline(currentPanelTaskId);
+    switchTab('updates');
+  } catch(e) {
+    toast('Failed to post: ' + e.message);
+  } finally {
+    el.disabled = false;
+    el.focus();
+  }
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  document.querySelectorAll('.panel-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === `tab-${tab}`));
+}
+
+function closePanel() {
+  document.getElementById('panelOverlay').classList.remove('open');
+  document.getElementById('detailPanel').classList.remove('open');
+  currentPanelTaskId = null;
+}
+
+async function saveEdit() {
+  const id = document.getElementById('editId').value;
+  const fields = {
+    id,
+    title: document.getElementById('editTitle').value.trim(),
+    description: document.getElementById('editDesc').value.trim(),
+    owner: document.getElementById('editOwner').value,
+    state: document.getElementById('editState').value,
+    due_date: document.getElementById('editDue').value || null,
+    priority: parseInt(document.getElementById('editPriority').value) || 0,
+    category: document.getElementById('editCategory').value.trim() || null,
+  };
+
+  try {
+    await apiFetch('/api/tasks', { method: 'PATCH', body: JSON.stringify(fields) });
+    const task = tasks.find(t => t.id == id);
+    if (task) Object.assign(task, { ...fields, state: normalizeState(fields.state) });
+    render();
+    renderStats();
+    // Refresh panel header and overview with updated data
+    const updated = tasks.find(t => t.id == id);
+    if (updated) {
+      document.getElementById('panelTaskTitle').textContent = updated.title;
+      const badgeEl = document.getElementById('panelStateBadge');
+      badgeEl.textContent = updated.state;
+      badgeEl.className = 'panel-state-badge ' + (
+        updated.state === 'Blocked' ? 'state-blocked' :
+        updated.state === 'In Progress' ? 'state-progress' : 'state-done'
+      );
+      const ownerEl = document.getElementById('panelOwnerBadge');
+      ownerEl.textContent = ownerLabel(updated.owner);
+      ownerEl.className = 'owner-badge ' + ownerClass(updated.owner);
+      renderOverview(updated);
+    }
+    // Reload timeline to show the auto-logged change
+    loadTimeline(id);
+    switchTab('overview');
+    toast('Task updated');
+  } catch(e) {
+    toast('Failed to save: ' + e.message);
+  }
+}
+
+async function deleteTaskFromPanel() {
+  const id = document.getElementById('editId').value;
+  if (!confirm('Delete this task?')) return;
+  try {
+    await apiFetch('/api/tasks/delete', { method: 'POST', body: JSON.stringify({ id }) });
+    tasks = tasks.filter(t => t.id != id);
+    render();
+    renderStats();
+    closePanel();
+    toast('Task deleted');
+  } catch(e) {
+    toast('Failed to delete: ' + e.message);
+  }
+}
+
+// ESC to close panel
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closePanel();
+});
+
+// ── ACTIONS ──
 async function moveTask(id, newState) {
-  const task = tasks.find(t => t.id === id);
+  const task = tasks.find(t => t.id == id);
   if (!task || task.state === newState) return;
   const oldState = task.state;
-  // Optimistic update
   task.state = newState;
   render();
   try {
-    await apiFetch('/api/tasks', {
-      method: 'PATCH',
-      body: JSON.stringify({ id, state: newState })
-    });
+    await apiFetch('/api/tasks', { method: 'PATCH', body: JSON.stringify({ id, state: newState }) });
+    renderStats();
     toast(`Moved to ${newState}`);
   } catch(e) {
     task.state = oldState;
@@ -699,73 +1262,102 @@ async function moveTask(id, newState) {
   }
 }
 
+// ── TEAM OWNER DROPDOWNS (populated from login accounts via /api/team) ──
+let TEAM_MEMBERS = [];
+async function populateOwnerDropdowns() {
+  try {
+    const r = await fetch('/api/team', { credentials: 'same-origin' });
+    if (r.ok) TEAM_MEMBERS = await r.json();
+  } catch (e) {}
+  if (!Array.isArray(TEAM_MEMBERS)) TEAM_MEMBERS = [];
+
+  // Always include all team members + Exo + Both
+  const fixed = [{ name: 'Exo', label: 'Exo (AI)' }, { name: 'Jon+Exo', label: 'Jon + Exo (Both)' }];
+  const teamOpts = TEAM_MEMBERS.map(m => ({ name: m.name, label: m.name }));
+  const allOpts = [...teamOpts, ...fixed];
+  const seen = new Set();
+  const dedupedOpts = allOpts.filter(o => { if (seen.has(o.name)) return false; seen.add(o.name); return true; });
+  const opts = dedupedOpts.map(o => `<option value="${escHtml(o.name)}">${escHtml(o.label)}</option>`).join('');
+
+  ['newOwner', 'editOwner'].forEach(idv => {
+    const sel = document.getElementById(idv);
+    if (!sel) return;
+    const cur = sel.value;
+    sel.innerHTML = opts;
+    if (cur && dedupedOpts.some(o => o.name === cur)) sel.value = cur;
+  });
+}
+populateOwnerDropdowns();
+
 async function assignTask(id, newOwner) {
-  const task = tasks.find(t => t.id === id);
+  const task = tasks.find(t => t.id == id);
   if (!task) return;
   const oldOwner = task.owner;
   task.owner = newOwner;
   render();
   try {
-    await apiFetch('/api/tasks', {
-      method: 'PATCH',
-      body: JSON.stringify({ id, owner: newOwner })
-    });
+    await apiFetch('/api/tasks', { method: 'PATCH', body: JSON.stringify({ id, owner: newOwner }) });
     toast(`Assigned to ${newOwner}`);
   } catch(e) {
     task.owner = oldOwner;
     render();
-    toast('Failed to assign task');
+    toast('Failed to assign');
   }
 }
 
 async function addTask() {
   const titleEl = document.getElementById('newTitle');
-  const ownerEl = document.getElementById('newOwner');
-  const stateEl = document.getElementById('newState');
   const title = titleEl.value.trim();
   if (!title) { titleEl.focus(); return; }
-
-  const owner = ownerEl.value;
-  const state = stateEl.value;
+  const owner = document.getElementById('newOwner').value;
+  const state = document.getElementById('newState').value;
 
   titleEl.disabled = true;
   try {
     const newTask = await apiFetch('/api/tasks', {
-      method: 'POST',
-      body: JSON.stringify({ title, owner, state })
+      method: 'POST', body: JSON.stringify({ title, owner, state })
     });
     newTask.state = normalizeState(newTask.state);
     tasks.unshift(newTask);
     render();
+    renderStats();
     titleEl.value = '';
-    toast('Task added ✓');
+    toast('Task added');
   } catch(e) {
-    toast('Failed to add task: ' + e.message);
+    toast('Failed: ' + e.message);
   } finally {
     titleEl.disabled = false;
     titleEl.focus();
   }
 }
 
-// ── DRAG & DROP ────────────────────────────────────────────────────────────
-function dragOver(e, state) {
-  e.preventDefault();
-  e.currentTarget.classList.add('drag-over');
-}
-
-function dragLeave(e) {
-  e.currentTarget.classList.remove('drag-over');
-}
-
-function drop(e, state) {
-  e.preventDefault();
-  e.currentTarget.classList.remove('drag-over');
-  if (dragTaskId !== null) {
-    moveTask(dragTaskId, state);
+// ── TEAMWORK SYNC ──
+async function syncTeamwork() {
+  const btn = document.getElementById('syncTwBtn');
+  btn.disabled = true;
+  btn.textContent = 'Syncing...';
+  try {
+    const result = await apiFetch('/api/teamwork/sync', { method: 'POST' });
+    toast(result.message || 'Teamwork synced');
+    await loadTasks(false);
+  } catch(e) {
+    toast('Sync failed: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Sync Teamwork';
   }
 }
 
-// ── UI HELPERS ─────────────────────────────────────────────────────────────
+// ── DRAG & DROP ──
+function dragOver(e, state) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function drop(e, state) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (dragTaskId !== null) moveTask(dragTaskId, state);
+}
+
+// ── UI HELPERS ──
 function setRefreshBadge(text, good) {
   const el = document.getElementById('refreshBadge');
   el.textContent = text;
@@ -777,7 +1369,7 @@ function toast(msg) {
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(el._timer);
-  el._timer = setTimeout(() => el.classList.remove('show'), 2800);
+  el._timer = setTimeout(() => el.classList.remove('show'), 3000);
 }
 
 function showError(msg) {
@@ -795,7 +1387,160 @@ function scheduleRefresh() {
   autoRefreshTimer = setTimeout(() => loadTasks(false), REFRESH_INTERVAL);
 }
 
-// ── INIT ───────────────────────────────────────────────────────────────────
+// ── DOCUMENT UPLOADS ──
+
+function docIconClass(ext) {
+  ext = (ext || '').toLowerCase();
+  if (ext === '.pdf') return 'pdf';
+  if (['.doc','.docx','.txt','.md'].includes(ext)) return 'doc';
+  if (['.xls','.xlsx','.csv'].includes(ext)) return 'xls';
+  if (['.ppt','.pptx'].includes(ext)) return 'ppt';
+  if (['.png','.jpg','.jpeg','.gif','.svg'].includes(ext)) return 'img';
+  return 'other';
+}
+
+function docIconLabel(ext) {
+  ext = (ext || '').toLowerCase().replace('.', '');
+  return ext.toUpperCase().slice(0, 4);
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+async function loadDocuments(taskId) {
+  const el = document.getElementById('docList');
+  el.innerHTML = '<div class="docs-empty">Loading documents...</div>';
+  try {
+    const res = await fetch(`/api/uploads?task_id=${taskId}`);
+    if (res.status === 401) { window.location = '/login'; return; }
+    const docs = await res.json();
+    if (!docs || docs.length === 0) {
+      el.innerHTML = '<div class="docs-empty">No documents attached yet. Upload files above.</div>';
+      // Update tab badge
+      updateDocBadge(0);
+      return;
+    }
+    updateDocBadge(docs.length);
+    el.innerHTML = docs.sort((a,b) => new Date(b.uploaded_at) - new Date(a.uploaded_at)).map(doc => {
+      const iconCls = docIconClass(doc.extension);
+      const time = new Date(doc.uploaded_at).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'});
+      return `<div class="doc-item">
+        <div class="doc-icon ${iconCls}">${docIconLabel(doc.extension)}</div>
+        <div class="doc-info">
+          <div class="doc-name" title="${escHtml(doc.filename)}">${escHtml(doc.filename)}</div>
+          <div class="doc-meta">${formatFileSize(doc.size)} &middot; ${time} &middot; ${escHtml(doc.uploaded_by || '?')}</div>
+        </div>
+        <div class="doc-actions">
+          <button onclick="window.open('/uploads/${encodeURIComponent(doc.stored_name)}','_blank')">Open</button>
+          <a href="/uploads/${encodeURIComponent(doc.stored_name)}" download="${escHtml(doc.filename)}" style="text-decoration:none">
+            <button type="button">Download</button>
+          </a>
+          <button class="del" onclick="deleteDocument('${doc.id}')">Delete</button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = `<div class="docs-empty">Failed to load documents: ${escHtml(e.message)}</div>`;
+  }
+}
+
+function updateDocBadge(count) {
+  const tab = document.querySelector('.panel-tab[data-tab="documents"]');
+  if (tab) {
+    tab.textContent = count > 0 ? `Documents (${count})` : 'Documents';
+  }
+}
+
+function handleFileDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-active');
+  if (e.dataTransfer.files.length > 0) {
+    handleFileSelect(e.dataTransfer.files);
+  }
+}
+
+async function handleFileSelect(files) {
+  if (!files || files.length === 0 || !currentPanelTaskId) return;
+
+  const progressEl = document.getElementById('uploadProgress');
+  const fillEl = document.getElementById('progressFill');
+  const textEl = document.getElementById('progressText');
+  progressEl.style.display = 'block';
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    textEl.textContent = `Uploading ${file.name} (${i + 1}/${files.length})...`;
+    fillEl.style.width = '10%';
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('task_id', currentPanelTaskId);
+
+    try {
+      const xhr = new XMLHttpRequest();
+      await new Promise((resolve, reject) => {
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            fillEl.style.width = Math.round((e.loaded / e.total) * 90 + 10) + '%';
+          }
+        };
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            try { reject(new Error(JSON.parse(xhr.responseText).error || `HTTP ${xhr.status}`)); }
+            catch { reject(new Error(`HTTP ${xhr.status}`)); }
+          }
+        };
+        xhr.onerror = () => reject(new Error('Upload failed'));
+        xhr.open('POST', '/api/uploads');
+        xhr.send(formData);
+      });
+      fillEl.style.width = '100%';
+      textEl.textContent = `Uploaded ${file.name}`;
+      toast(`Uploaded: ${file.name}`);
+    } catch(e) {
+      toast(`Failed to upload ${file.name}: ${e.message}`);
+    }
+  }
+
+  // Reset file input
+  document.getElementById('fileInput').value = '';
+
+  // Refresh document list
+  setTimeout(() => {
+    progressEl.style.display = 'none';
+    fillEl.style.width = '0%';
+    loadDocuments(currentPanelTaskId);
+    // Refresh timeline to show upload activity
+    loadTimeline(currentPanelTaskId);
+  }, 500);
+}
+
+async function deleteDocument(docId) {
+  if (!confirm('Delete this document?')) return;
+  try {
+    const res = await fetch('/api/uploads/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: docId })
+    });
+    if (res.status === 401) { window.location = '/login'; return; }
+    if (!res.ok) throw new Error('Delete failed');
+    toast('Document deleted');
+    if (currentPanelTaskId) {
+      loadDocuments(currentPanelTaskId);
+      loadTimeline(currentPanelTaskId);
+    }
+  } catch(e) {
+    toast('Failed to delete: ' + e.message);
+  }
+}
+
+// ── INIT ──
 loadTasks(true);
 </script>
 </body>
