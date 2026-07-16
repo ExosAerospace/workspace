@@ -224,6 +224,8 @@
   .due-date { font-size: 11px; color: var(--text2); background: rgba(255,255,255,0.04); border-radius: 4px; padding: 2px 6px; }
   .due-date.overdue { color: var(--blocked-accent); }
   .due-date.due-soon { color: var(--orange); }
+  /* Green highlight: ANY task due within the next 5 days (including today) */
+  .task-card.due-5d { border-color: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,0.20); }
   /* Neon block: funding submittal due within 5 days */
   .task-card.funding-due {
     border: 1.5px solid #39ff14;
@@ -974,6 +976,8 @@ function buildCard(task) {
     dueDateHtml = `<span class="due-date ${cls}">${d.toLocaleDateString('en-US', {month:'short', day:'numeric'})}</span>`;
     // Neon block: a funding submittal due within the next 5 days (incl. today)
     if (task.state !== 'Done' && diff <= 5 && diff > -1 && isFundingSubmittal(task)) fundingDue = true;
+    // Green border for ANY task due within the next 5 days (funding items get the louder neon below)
+    if (task.state !== 'Done' && diff <= 5 && diff > -1) div.classList.add('due-5d');
   }
   if (fundingDue) div.classList.add('funding-due');
   const fundingFlagHtml = fundingDue ? '<span class="funding-flag">⚡ Funding ≤5d</span>' : '';
