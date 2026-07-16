@@ -20,6 +20,8 @@ Usage: python3 mc-email-tracker.py [--since-days N]   (default 2; backfill uses 
 import imaplib, email, json, os, re, sys, argparse, urllib.request
 from email.utils import getaddresses, parsedate_to_datetime
 from datetime import datetime, timedelta, timezone
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import itar_ear_screen as ee
 
 WS        = "/Users/exomac/.openclaw/workspace"
 DATA      = os.path.join(WS, "mission-control", "data")
@@ -311,6 +313,13 @@ def main():
             date_iso = ""
         counterparts = {a for a in (frm + to + cc) if a and a not in SELF_ADDRS and a.split("@")[-1] not in INTERNAL_DOMAINS}
         blob = subject + "\n" + body_text(msg)
+
+        # Backup export-control screen: HOLD (never capture/attach) anything tripping
+        # ITAR/EAR/CUI indicators — keep controlled content out of Mission Control.
+        ee_hits = ee.screen(blob + "\n" + " ".join(ee.attachment_names(msg)))
+        if ee_hits:
+            ee.quarantine_and_alert(mid, (frm[0] if frm else ""), subject, ee_hits, "tracker")
+            continue
 
         # Deterministic, sender-independent routing: BCC exosmc+<TASKID>@pm.me puts the
         # task id in the delivery address itself. BCC lands in Delivered-To/X-Original-To

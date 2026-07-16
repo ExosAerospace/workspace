@@ -18,6 +18,8 @@ alert and do NOT run. Idempotent via a message-id state file.
 """
 import imaplib, email, json, os, re, sys, subprocess, tempfile, html as _html
 from email.utils import getaddresses, parsedate_to_datetime
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import itar_ear_screen as ee
 from datetime import datetime, timedelta, timezone
 
 WS       = "/Users/exomac/.openclaw/workspace"
@@ -194,6 +196,15 @@ def main():
         frm = [a.lower() for _n, a in getaddresses([msg.get("From", "")])]
         sender = frm[0] if frm else ""
         sender_domain = sender.split("@")[-1] if "@" in sender else ""
+
+        # Backup export-control screen: HOLD (never run) anything tripping ITAR/EAR/CUI indicators.
+        ee_hits = ee.screen(subject + "\n" + body + "\n" + " ".join(ee.attachment_names(msg)))
+        if ee_hits:
+            ee.quarantine_and_alert(mid, sender, subject, ee_hits, "command")
+            log(f"[held:export-control] mid={mid} subj={subject!r} hits={ee_hits}")
+            processed += 1
+            continue
+
         first_line = next((ln.strip() for ln in body.splitlines() if ln.strip()), "")
         domain_auth = sender_authenticated(msg, sender_domain)
         passphrase_ok = bool(passphrase) and (first_line == passphrase)
