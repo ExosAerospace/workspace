@@ -104,6 +104,17 @@ def _alert(text):
 _ID_RE = re.compile(r'\b((?:HP|BD|FUND|OPP|PROG|P3|P|B|D|REG)-\d{1,5})\b')
 
 
+def _ct(iso_utc):
+    """Format a UTC ISO timestamp as Central time, labeled — for human-facing display."""
+    from datetime import datetime, timezone
+    try:
+        from zoneinfo import ZoneInfo
+        dt = datetime.strptime((iso_utc or "")[:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
+        return dt.astimezone(ZoneInfo("America/Chicago")).strftime("%Y-%m-%d %H:%M") + " CT"
+    except Exception:
+        return (iso_utc or "")[:16].replace("T", " ") + " UTC"
+
+
 def _create_hold_decision(message_id, sender, subject, hits, body=""):
     """Drop the hold into the ROUTER'S OWN Decisions matrix so they must adjudicate it.
     Records exactly WHICH email (sender/subject) and links any task/opportunity it references."""
@@ -127,7 +138,7 @@ def _create_hold_decision(message_id, sender, subject, hits, body=""):
         "question": ("An email you routed to Mission Control was HELD as potential export-controlled "
                      "content (flagged: " + ", ".join(hits) + "). Was it correctly held?"),
         "context": ("HELD EMAIL — From: " + (sender or "unknown") + " · Subject: " + (subject or "(none)")
-                    + " · held " + now[:16].replace("T", " ") + ".\n"
+                    + " · held " + _ct(now) + ".\n"
                     + ("Appears related to " + related + ". " if related else "")
                     + "The email itself was NOT brought into Mission Control — it stays in the intake "
                     "inbox (and in SharePoint if that is where it belongs). Review it in your email to "
