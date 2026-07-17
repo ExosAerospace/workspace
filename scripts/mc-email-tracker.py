@@ -318,7 +318,7 @@ def main():
         # ITAR/EAR/CUI indicators — keep controlled content out of Mission Control.
         ee_hits = ee.screen(blob + "\n" + " ".join(ee.attachment_names(msg)))
         if ee_hits:
-            ee.quarantine_and_alert(mid, (frm[0] if frm else ""), subject, ee_hits, "tracker")
+            ee.quarantine_and_alert(mid, (frm[0] if frm else ""), subject, ee_hits, "tracker", blob)
             continue
 
         # Deterministic, sender-independent routing: BCC exosmc+<TASKID>@pm.me puts the

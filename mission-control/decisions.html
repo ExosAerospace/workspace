@@ -146,7 +146,7 @@ function card(d){
   if(d.status==='answered'){
     return `<div class="card answered ${pr}">
       <div class="row1"><div><p class="title">${esc(d.title)}</p>
-      <div class="meta">${d.id}${d.relatedItem?' · '+esc(d.relatedItem):''} · ${esc(d.source||'')}</div></div></div>
+      <div class="meta">${d.id}${d.relatedItem?' · <a href="opportunities.html?focus='+encodeURIComponent(d.relatedItem)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(d.relatedItem)+'</a>':''} · ${esc(d.source||'')}</div></div></div>
       <div class="q">${esc(d.question)}</div>
       <div class="answered-box">✅ ${esc(d.answer||'(noted)')}${d.note?' — '+esc(d.note):''}<div class="meta">answered ${esc((d.answeredAt||'').slice(0,16).replace('T',' '))} by ${esc(d.answeredBy||'Jon')}</div></div>
       ${attachHtml(d)}${emailHtml(d)}
@@ -155,7 +155,7 @@ function card(d){
   const opts=(d.options&&d.options.length?d.options:['Yes','No']);
   return `<div class="card ${pr}">
     <div class="row1"><div><p class="title">${esc(d.title)}<span class="pill ${pr}">${pr}</span></p>
-    <div class="meta">${d.id}${d.relatedItem?' · '+esc(d.relatedItem):''} · ${esc(d.source||'')}</div></div></div>
+    <div class="meta">${d.id}${d.relatedItem?' · <a href="opportunities.html?focus='+encodeURIComponent(d.relatedItem)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(d.relatedItem)+'</a>':''} · ${esc(d.source||'')}</div></div></div>
     <div class="q"><b>${esc(d.question)}</b></div>
     ${d.context?`<div class="ctx">${esc(d.context)}</div>`:''}
     ${d.proposedAction?`<div class="prop">▸ ${esc(d.proposedAction)}</div>`:''}

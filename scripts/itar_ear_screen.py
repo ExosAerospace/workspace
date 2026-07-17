@@ -101,8 +101,12 @@ def _alert(text):
         pass
 
 
-def _create_hold_decision(message_id, sender, subject, hits):
-    """Drop the hold into the ROUTER'S OWN Decisions matrix so they must adjudicate it."""
+_ID_RE = re.compile(r'\b((?:HP|BD|FUND|OPP|PROG|P3|P|B|D|REG)-\d{1,5})\b')
+
+
+def _create_hold_decision(message_id, sender, subject, hits, body=""):
+    """Drop the hold into the ROUTER'S OWN Decisions matrix so they must adjudicate it.
+    Records exactly WHICH email (sender/subject) and links any task/opportunity it references."""
     try:
         arr = json.load(open(DECISIONS_FILE))
     except Exception:
@@ -112,16 +116,23 @@ def _create_hold_decision(message_id, sender, subject, hits):
         return
     now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     who = sender or "jquinn@exosaero.com"
+    m = _ID_RE.search((subject or "") + " " + (body or ""))
+    related = m.group(1) if m else ""
     arr.append({
         "id": "XCTL-" + hashlib.sha1(dedupe.encode()).hexdigest()[:6].upper(),
         "created": now, "updated": now,
         "source": "Export-control screen",
+        "relatedItem": related,
         "title": "Export-control HOLD — " + (subject or "(no subject)")[:80],
         "question": ("An email you routed to Mission Control was HELD as potential export-controlled "
                      "content (flagged: " + ", ".join(hits) + "). Was it correctly held?"),
-        "context": ("Nothing was captured or acted on. If it is controlled, it stays in SharePoint. "
-                    "If this was a false positive, re-send a cleared version or ask an admin to "
-                    "release it — controlled content is never auto-released."),
+        "context": ("HELD EMAIL — From: " + (sender or "unknown") + " · Subject: " + (subject or "(none)")
+                    + " · held " + now[:16].replace("T", " ") + ".\n"
+                    + ("Appears related to " + related + ". " if related else "")
+                    + "The email itself was NOT brought into Mission Control — it stays in the intake "
+                    "inbox (and in SharePoint if that is where it belongs). Review it in your email to "
+                    "decide. If it is controlled it stays put; if it is a false positive, re-send a "
+                    "cleared version or ask an admin to release it — controlled content is never auto-released."),
         "proposedAction": "Confirm whether the hold was correct.",
         "type": "yesno",
         "options": ["Yes — correctly held (keep it in SharePoint)", "No — false positive"],
@@ -134,7 +145,7 @@ def _create_hold_decision(message_id, sender, subject, hits):
     os.replace(tmp, DECISIONS_FILE)
 
 
-def quarantine_and_alert(message_id, sender, subject, hits, source):
+def quarantine_and_alert(message_id, sender, subject, hits, source, body=""):
     """Hold the email: log it, put an adjudication Decision in the sender's matrix, alert Jon.
     Deduped by message-id. Returns True if newly held."""
     if _already(message_id):
@@ -146,7 +157,7 @@ def quarantine_and_alert(message_id, sender, subject, hits, source):
     with open(QLOG, "a") as f:
         f.write(json.dumps(rec) + "\n")
     try:
-        _create_hold_decision(message_id, sender, subject, hits)
+        _create_hold_decision(message_id, sender, subject, hits, body)
     except Exception:
         pass
     _alert("🛑 EXPORT-CONTROL HOLD — an email routed to the Mission Control intake was NOT "
