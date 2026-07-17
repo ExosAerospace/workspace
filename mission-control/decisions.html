@@ -81,7 +81,8 @@
     <h1>🗳️ Decisions — Needs You</h1>
     <div class="sub">Everything Exo is waiting on you for, in one place. Answer, then hit submit.</div>
   </div>
-  <div style="display:flex;gap:14px;align-items:center">
+  <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+    <input id="decSearch" type="text" placeholder="🔍 Search decisions (task, title, keyword…)" oninput="searchQuery=this.value;render()" style="background:#0a1830;border:1px solid #2a3f63;border-radius:8px;color:#e8edf5;padding:7px 12px;font-size:13px;outline:none;min-width:230px">
     <div class="tabs">
       <button class="tab active" data-tab="open" onclick="setTab('open')">Open</button>
       <button class="tab" data-tab="answered" onclick="setTab('answered')">Answered</button>
@@ -103,7 +104,7 @@
   </div>
 </div>
 <script>
-let tab='open', data=[], picks={}; // picks[id]={answer,note}
+let tab='open', data=[], picks={}, searchQuery=''; // picks[id]={answer,note}
 function attachHtml(d){
   const list=(d.attachments||[]).map(a=>`<a href="${a.url}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--accent);text-decoration:none;background:#0a1830;border:1px solid var(--line);border-radius:7px;padding:5px 9px;margin:4px 6px 0 0">📎 ${esc(a.filename)}</a>`).join('');
   return list?`<div style="margin-top:10px">${list}</div>`:'';
@@ -129,9 +130,13 @@ async function load(){
 function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 function render(){
   const el=document.getElementById('list');
-  if(!data.length){el.innerHTML='<div class="empty">'+(tab==='open'?'🎉 Nothing waiting on you. Inbox zero.':'No answered items yet.')+'</div>';document.getElementById('bar').style.display='none';return;}
+  const q=(searchQuery||'').trim().toLowerCase();
+  let rows=data;
+  if(q) rows=rows.filter(d=>[d.title,d.question,d.context,d.relatedItem,d.id,d.source,d.proposedAction]
+    .some(x=>String(x||'').toLowerCase().includes(q)));
+  if(!rows.length){el.innerHTML='<div class="empty">'+(q?('No decisions match "'+esc(searchQuery)+'".'):(tab==='open'?'🎉 Nothing waiting on you. Inbox zero.':'No answered items yet.'))+'</div>';document.getElementById('bar').style.display='none';return;}
   const prio={high:0,med:1,low:2};
-  const sorted=[...data].sort((a,b)=>((prio[a.priority]??1)-(prio[b.priority]??1))||(new Date(b.created||0)-new Date(a.created||0)));
+  const sorted=[...rows].sort((a,b)=>((prio[a.priority]??1)-(prio[b.priority]??1))||(new Date(b.created||0)-new Date(a.created||0)));
   el.innerHTML=sorted.map(d=>card(d)).join('');
   document.getElementById('bar').style.display = tab==='open'?'block':'none';
   updateCount();
