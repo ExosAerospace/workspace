@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos — AI Mission Desk (Program)</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--blue:#0066cc;--blue2:#0080ff;
+    --orange:#ff6b00;--orange2:#ff8c33;--text:#e8edf5;--text2:#a0aec0;
+    --border:rgba(255,255,255,0.08);--card:#0f1e38;--green:#22c55e;--yellow:#eab308;--purple:#a855f7;--red:#ff4444;
+  }
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);min-height:100vh;line-height:1.5}
+  header{background:linear-gradient(135deg,#0a1628 0%,#0d2050 100%);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;min-height:64px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-logo{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--orange));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+  .brand-text h1{font-size:1.05rem;line-height:1.1}
+  .brand-text p{font-size:0.78rem;color:var(--text2)}
+  .header-right a{color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-left:14px}
+  .header-right a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 24px 64px}
+  .hero{background:linear-gradient(135deg,var(--navy3),var(--navy2));border:1px solid var(--border);border-radius:14px;padding:26px 28px;margin-bottom:26px}
+  .hero h2{font-size:1.7rem;margin-bottom:6px}
+  .hero .tag{display:inline-block;background:rgba(0,128,255,.15);color:var(--blue2);border:1px solid rgba(0,128,255,.3);border-radius:20px;padding:3px 12px;font-size:.72rem;font-weight:600;letter-spacing:.04em;margin-bottom:12px}
+  .hero p{color:var(--text2);max-width:760px}
+  .hero p strong{color:var(--text)}
+  .status-bar{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px}
+  .status-pill{background:var(--navy);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:.82rem}
+  .status-pill b{color:var(--orange2);display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+  h3.section{font-size:1.15rem;margin:34px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+  /* pipeline */
+  .pipe{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px}
+  .stage{min-width:150px;flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative}
+  .stage h4{font-size:.92rem;margin-bottom:6px}
+  .stage .who{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;border-radius:6px;padding:2px 7px;display:inline-block;margin-bottom:8px}
+  .who.ai{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+  .who.human{background:rgba(255,140,51,.15);color:var(--orange2);border:1px solid rgba(255,140,51,.3)}
+  .who.hybrid{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid rgba(168,85,247,.3)}
+  .stage p{font-size:.78rem;color:var(--text2)}
+  .stage .n{position:absolute;top:10px;right:12px;font-size:.7rem;color:var(--text2)}
+  /* cards grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .card.day30{border-top:3px solid var(--green)}
+  .card.day60{border-top:3px solid var(--yellow)}
+  .card.day90{border-top:3px solid var(--blue2)}
+  .card h4{font-size:1rem;margin-bottom:4px}
+  .card .due{font-size:.72rem;color:var(--text2);margin-bottom:10px}
+  .card ul{list-style:none;font-size:.84rem}
+  .card ul li{padding:5px 0 5px 20px;position:relative;color:var(--text2)}
+  .card ul li::before{content:"▸";position:absolute;left:2px;color:var(--blue2)}
+  /* table */
+  table{width:100%;border-collapse:collapse;font-size:.85rem;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--border)}
+  th{background:var(--navy2);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text2)}
+  tr:last-child td{border-bottom:none}
+  td .owner{color:var(--orange2);font-weight:600}
+  .metric-row{display:flex;gap:16px;flex-wrap:wrap}
+  .metric{flex:1;min-width:180px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .metric .big{font-size:1.5rem;font-weight:800;color:var(--blue2)}
+  .metric .lbl{font-size:.78rem;color:var(--text2);margin-top:4px}
+  .legend{font-size:.74rem;color:var(--text2);margin:10px 0 0}
+  .legend span{margin-right:14px}
+  .note{font-size:.78rem;color:var(--text2);margin-top:10px;font-style:italic}
+  footer{text-align:center;color:var(--text2);font-size:.74rem;padding:30px 0 10px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-logo">EX</div>
+    <div class="brand-text"><h1>Exos Aerospace</h1><p>Mission Control · Program</p></div>
+  </div>
+  <div class="header-right">
+    <a href="/index.html">← Board</a>
+    <a href="opportunities.html">Opportunities</a>
+    <a href="crm.html">CRM</a>
+    <a href="decisions.html">🗳️ Decisions</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <span class="tag">PROGRAM · 90-DAY BUILD</span>
+    <h2>🛰️ AI Mission Desk</h2>
+    <p>An agent-run pipeline that takes a payload / flight customer from <strong>inbound lead → signed contract</strong> with no human in the loop until the close. It targets Exos's most human-bottlenecked dimension — the customer-facing <strong>scope→quote→contract</strong> flow — and runs it on the AI stack we already operate. Goal: cut time-from-inbound-to-quote from <strong>days to minutes</strong> and run <strong>10× the BD volume</strong> with the same team.</p>
+    <div class="status-bar">
+      <div class="status-pill"><b>Phase</b>Day 0 → 30 · Capture live</div>
+      <div class="status-pill"><b>Sponsor</b>John Quinn</div>
+      <div class="status-pill"><b>Program lead</b>[ASSIGN]</div>
+      <div class="status-pill"><b>Started</b>2026-06-26</div>
+      <div class="status-pill"><b>Day 30 due</b>2026-07-26</div>
+      <div class="status-pill"><b>Day 60 due</b>2026-08-25</div>
+      <div class="status-pill"><b>Day 90 due</b>2026-09-25</div>
+    </div>
+  </div>
+
+  <h3 class="section">🔧 The Pipeline</h3>
+  <div class="pipe">
+    <div class="stage"><span class="n">01</span><span class="who ai">AI</span><h4>Capture</h4><p>Every inbound (email, web, referral) auto-logged + enriched in the CRM.</p></div>
+    <div class="stage"><span class="n">02</span><span class="who ai">AI</span><h4>Qualify &amp; Score</h4><p>Fit + accreditation + mission-type scored automatically; routed by priority.</p></div>
+    <div class="stage"><span class="n">03</span><span class="who hybrid">HYBRID</span><h4>Scope</h4><p>Flight configurator turns payload mass / volume / orbit into a standard mission plan.</p></div>
+    <div class="stage"><span class="n">04</span><span class="who ai">AI</span><h4>Quote</h4><p>Auto-priced from the configurator + rate card; draft quote generated.</p></div>
+    <div class="stage"><span class="n">05</span><span class="who ai">AI</span><h4>Contract &amp; Reg</h4><p>Drafts the agreement + FAA / exemption package from the scope.</p></div>
+    <div class="stage"><span class="n">06</span><span class="who human">HUMAN</span><h4>Approve &amp; Close</h4><p>Lands in the Decisions matrix — you approve, sign, and own the relationship.</p></div>
+    <div class="stage"><span class="n">07</span><span class="who hybrid">HYBRID</span><h4>Handoff to Fly</h4><p>Signed mission pushed to Ops + payload integration queue.</p></div>
+  </div>
+  <p class="legend"><span><b style="color:var(--green)">AI</b> = fully automated</span><span><b style="color:var(--purple)">HYBRID</b> = AI drafts, human confirms</span><span><b style="color:var(--orange2)">HUMAN</b> = human-owned</span></p>
+
+  <p id="lastup" style="color:var(--text2);font-size:.75rem;margin:4px 0 14px">Loading live status…</p>
+
+  <h3 class="section">🗓️ 90-Day Roadmap</h3>
+  <div class="grid" id="roadmap"></div>
+
+  <h3 class="section">⚡ Live Stack &amp; Drivers</h3>
+  <div class="grid" id="stack"></div>
+
+  <h3 class="section">👥 Team &amp; Ownership</h3>
+  <table><thead><tr><th>Workstream</th><th>Owner</th><th>Status</th></tr></thead><tbody id="team"></tbody></table>
+  <p class="note">Live board — generated by program_state.py from the Decisions store + driver run-state; refreshes every processor cycle (06:15 + 18:15).</p>
+
+  <h3 class="section">📈 Success Metrics</h3>
+  <div class="metric-row">
+    <div class="metric"><div class="big">Days → Min</div><div class="lbl">Inbound-to-quote time</div></div>
+    <div class="metric"><div class="big">10×</div><div class="lbl">BD volume, same headcount</div></div>
+    <div class="metric"><div class="big">1</div><div class="lbl">End-to-end close by Day 90</div></div>
+    <div class="metric"><div class="big">0</div><div class="lbl">Human touches before close (target)</div></div>
+  </div>
+
+  <footer>Exos Aerospace · AI Mission Desk Program · scaffolded by Exo · share this page with the assigned team (Mission Control login required)</footer>
+</div>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id);
+  const MS = {Complete:'var(--green)','In Progress':'var(--yellow)','On Hold':'var(--text2)'};
+  const chip = s => ({done:['✅','var(--green)'],live:['✅','var(--green)'],unblocked:['✅','var(--green)'],
+    in_progress:['🔨','var(--yellow)'],scheduled:['🟢','var(--green)'],
+    blocked:['⛔','var(--text2)'],todo:['⏸','var(--text2)']}[s]||['•','var(--text2)']);
+  const esc = s => (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  try {
+    const p = await (await fetch('data/program.json?_='+Date.now())).json();
+    $('lastup').textContent = 'Live · generated ' + (p.generated?new Date(p.generated).toLocaleString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})+' CT':'') +
+      ' · ' + p.pipeline.opportunities + ' opportunities · ' + p.pipeline.decisions_open + ' open decisions';
+    $('roadmap').innerHTML = p.milestones.map(m => `
+      <div class="card">
+        <h4>${esc(m.name)}</h4>
+        <div class="due">Due ${esc(m.due)} · ${esc(m.id)} · <span style="color:${MS[m.status]||'var(--text2)'}">${esc(m.status)}</span></div>
+        <ul>${m.deliverables.map(d=>{const c=chip(d.status);return `<li><span style="color:${c[1]}">${c[0]}</span> ${esc(d.name)}${d.note?` <span style="color:var(--text2);font-size:.8em">— ${esc(d.note)}</span>`:''}</li>`;}).join('')}</ul>
+      </div>`).join('');
+    const gateCard = g => `<div class="card" style="border-left:3px solid ${g.status==='answered'?'var(--green)':'var(--yellow)'}"><h4>${g.status==='answered'?'✅':'🕓'} ${esc(g.id)}</h4><p style="font-size:.84rem;color:var(--text2)">${esc(g.title||'')}${g.answer?` <em>→ ${esc(g.answer)}</em>`:' <em>(open)</em>'}</p></div>`;
+    const drvCard = d => `<div class="card" style="border-left:3px solid ${d.status==='live'?'var(--green)':'var(--yellow)'}"><h4>${d.status==='live'?'✅':'🟡'} ${esc(d.name)}</h4><p style="font-size:.84rem;color:var(--text2)">${esc(d.schedule)}${d.last_run?` · last run ${esc(new Date(d.last_run).toLocaleString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})+' CT')}`:''}</p></div>`;
+    $('stack').innerHTML = p.drivers.map(drvCard).join('') + p.gates.map(gateCard).join('');
+    const rows = [];
+    p.milestones.forEach(m => m.deliverables.forEach(d => {const c=chip(d.status);
+      rows.push(`<tr><td>${esc(d.name)}</td><td class="owner">${esc(d.owner||'Exo')}</td><td style="color:${c[1]}">${c[0]} ${esc(d.status)}${d.note?` — ${esc(d.note)}`:''}</td></tr>`);}));
+    $('team').innerHTML = rows.join('');
+  } catch(e) { $('lastup').textContent = 'Could not load live program data (' + e + ').'; }
+})();
+</script>
+</body>
+</html>

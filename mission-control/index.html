@@ -787,7 +787,7 @@ async function loadTasks(showFeedback = false) {
     renderStats();
     updateCategoryFilter();
     hideError();
-    const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    const now = new Date().toLocaleTimeString('en-US', { timeZone:'America/Chicago', hour: '2-digit', minute: '2-digit' });
     setRefreshBadge(`Updated ${now}`, true);
   } catch (e) {
     showError('Could not load tasks: ' + e.message);
@@ -1103,8 +1103,8 @@ function renderOverview(task) {
     <div class="detail-field"><label>Priority</label><div class="val">${priLabel(task.priority)}</div></div>
     <div class="detail-field"><label>Category / Project</label><div class="val">${task.category ? escHtml(task.category) : '<span class="empty">None</span>'}</div></div>
     <div class="detail-field"><label>Source</label><div class="val">${task.source ? escHtml(task.source) : 'manual'}</div></div>
-    <div class="detail-field"><label>Created</label><div class="val">${task.created_at ? new Date(task.created_at).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '?'}</div></div>
-    <div class="detail-field"><label>Last Updated</label><div class="val">${task.updated_at ? new Date(task.updated_at).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '?'}</div></div>
+    <div class="detail-field"><label>Created</label><div class="val">${task.created_at ? new Date(task.created_at).toLocaleString('en-US', {timeZone:'America/Chicago',month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '?'}</div></div>
+    <div class="detail-field"><label>Last Updated</label><div class="val">${task.updated_at ? new Date(task.updated_at).toLocaleString('en-US', {timeZone:'America/Chicago',month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '?'}</div></div>
   `;
 
   const descEl = document.getElementById('detailDesc');
@@ -1134,7 +1134,7 @@ async function loadTimeline(taskId) {
       const isEmail = (c.body || '').startsWith('Email from');
       const cls = isChange ? 'change' : isEmail ? 'system' : '';
       const time = new Date(c.created_at).toLocaleString('en-US', {
-        month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit'
+        timeZone:'America/Chicago', month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit'
       });
       // Format body: strip [Update] prefix for change entries and format nicely
       let bodyText = c.body || '';

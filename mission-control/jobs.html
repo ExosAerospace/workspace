@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jobs & Tasks — Mission Control</title>
+<style>
+  :root{--navy:#0a1628;--card:#0f1e38;--text:#e8edf5;--muted:#8aa0bd;--accent:#0080ff;
+    --green:#22c55e;--red:#ff4444;--yellow:#eab308;--line:#1c3052;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--navy);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+  header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  h1{font-size:20px;margin:0}
+  .sub{color:var(--muted);font-size:13px;margin-top:4px}
+  a.home{color:var(--muted);font-size:13px;text-decoration:none}
+  .wrap{max-width:1000px;margin:0 auto;padding:20px 24px 80px}
+  h2{font-size:15px;margin:24px 0 10px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:6px;border:1px solid var(--line)}
+  .ok{color:var(--green);border-color:var(--green)}
+  .err{color:#fff;background:var(--red);border-color:var(--red)}
+  .run{color:#04210f;background:var(--green);border-color:var(--green)}
+  .mono{font-variant-numeric:tabular-nums;color:var(--muted)}
+  .tail{color:var(--muted);font-size:11px;white-space:pre-wrap;max-width:420px;overflow:hidden}
+  .empty{color:var(--muted);padding:30px 0;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🛠️ Jobs &amp; Tasks</h1><div class="sub">Live launchd job health + recorded task runs. Failures in red.</div></div>
+  <a class="home" href="/">← Mission Control</a>
+</header>
+<div class="wrap">
+  <h2>⚙️ Scheduled Jobs (launchd)</h2>
+  <table><thead><tr><th>Job</th><th>State</th><th>Last exit</th></tr></thead><tbody id="jobs"><tr><td class="empty" colspan="3">Loading…</td></tr></tbody></table>
+
+  <h2>📋 Recent Task Runs</h2>
+  <table><thead><tr><th>When</th><th>Task</th><th>Source</th><th>Status</th><th>Dur</th><th>Output / error</th></tr></thead><tbody id="events"><tr><td class="empty" colspan="6">Loading…</td></tr></tbody></table>
+</div>
+<script>
+const esc=s=>(s||'').toString().replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const when=s=>{if(!s)return '';try{return new Date(s).toLocaleString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})+' CT';}catch(e){return String(s).slice(0,16).replace('T',' ');}};
+async function load(){
+  let d={events:[],jobs:[]};
+  try{const r=await fetch('/api/task-ledger',{credentials:'same-origin'}); if(r.ok) d=await r.json();}catch(e){}
+  const jb=document.getElementById('jobs');
+  jb.innerHTML = d.jobs.length ? d.jobs.map(j=>{
+    const st = j.running ? '<span class="pill run">running</span>' : (j.status==='ok'?'<span class="pill ok">idle/ok</span>':'<span class="pill err">FAILED</span>');
+    return `<tr><td>${esc(j.label)}</td><td>${st}</td><td class="mono">${esc(j.last_exit)}</td></tr>`;
+  }).join('') : '<tr><td class="empty" colspan="3">No com.exos.* jobs found</td></tr>';
+  const ev=document.getElementById('events');
+  ev.innerHTML = d.events.length ? d.events.map(e=>{
+    const cls = e.status==='ok'?'ok':(e.status==='error'?'err':'');
+    const stat = `<span class="pill ${cls}">${esc(e.status)}${e.exit_code!=null?' ('+e.exit_code+')':''}</span>`;
+    const body = esc(e.output_tail||e.note||'');
+    return `<tr><td class="mono">${esc(when(e.finished||e.ts))}</td><td>${esc(e.name)}</td><td class="mono">${esc(e.source||'')}</td><td>${stat}</td><td class="mono">${e.duration_s!=null?e.duration_s+'s':''}</td><td class="tail">${body}</td></tr>`;
+  }).join('') : '<tr><td class="empty" colspan="6">No task runs recorded yet</td></tr>';
+}
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>

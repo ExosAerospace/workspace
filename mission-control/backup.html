@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos Mission Control — Backup System</title>
+<style>
+:root {
+  --bg: #0a1628; --surface: #0f1e38; --surface2: #162a4a; --border: rgba(255,255,255,0.08);
+  --text: #e8edf5; --text2: #a0aec0; --accent: #0080ff; --accent2: #0066cc;
+  --green: #22c55e; --yellow: #eab308; --red: #ff4444; --orange: #ff6b00; --purple: #a855f7;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* Banner */
+.backup-banner { background: linear-gradient(90deg, #b45309, #d97706); color: #fff; text-align: center; padding: 8px 16px; font-size: 13px; font-weight: 600; }
+.backup-banner a { color: #fff; text-decoration: underline; }
+
+/* Header */
+header { background: linear-gradient(135deg, #0a1628 0%, #0d2050 100%); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand h1 { font-size: 20px; font-weight: 700; }
+.brand h1 span { color: var(--accent); }
+.header-actions { display: flex; gap: 10px; align-items: center; }
+
+/* Tabs */
+.tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; position: sticky; top: 0; z-index: 99; }
+.tab { padding: 12px 20px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text2); border-bottom: 2px solid transparent; transition: all 0.15s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent); border-color: var(--accent); }
+.tab .badge { background: var(--surface2); border: 1px solid var(--border); padding: 1px 7px; border-radius: 10px; font-size: 11px; margin-left: 6px; }
+
+/* Common */
+.btn { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 13px; font-weight: 500; }
+.btn:hover { background: var(--border); }
+.btn-primary { background: var(--accent); border-color: var(--accent2); }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+
+.stats-bar { display: flex; gap: 12px; padding: 16px 24px; flex-wrap: wrap; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 20px; min-width: 140px; flex: 1; }
+.stat-label { font-size: 11px; text-transform: uppercase; color: var(--text2); letter-spacing: 0.5px; }
+.stat-value { font-size: 28px; font-weight: 700; margin-top: 2px; }
+
+.section { display: none; padding: 16px 24px; }
+.section.active { display: block; }
+
+/* Search */
+.search-bar { padding: 12px 24px; border-bottom: 1px solid var(--border); }
+.search-bar input { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 8px 14px; border-radius: 6px; width: 100%; max-width: 400px; font-size: 13px; }
+
+/* Kanban */
+.kanban { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 16px 0; }
+.kanban-col { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; min-height: 200px; }
+.kanban-col-header { padding: 12px 16px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; }
+.kanban-col-header .count { color: var(--text2); font-weight: 400; }
+.col-blocked .kanban-col-header { border-left: 3px solid var(--red); }
+.col-progress .kanban-col-header { border-left: 3px solid var(--accent); }
+.col-done .kanban-col-header { border-left: 3px solid var(--green); }
+.kanban-cards { padding: 8px; }
+
+.task-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 8px; cursor: default; }
+.task-card:hover { border-color: var(--accent); }
+.task-title { font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+.task-meta { font-size: 11px; color: var(--text2); display: flex; gap: 8px; flex-wrap: wrap; }
+.task-meta .tag { background: var(--bg); padding: 2px 6px; border-radius: 4px; }
+.overdue { color: var(--red) !important; font-weight: 600; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 12px; background: var(--surface); border-bottom: 1px solid var(--border); color: var(--text2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+tr:hover td { background: var(--surface); }
+
+/* Deal Pipeline */
+.pipeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 16px 0; }
+.pipeline-col { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+.pipeline-header { padding: 10px 14px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 13px; }
+.pipeline-header .amount { color: var(--green); font-size: 12px; font-weight: 400; }
+.deal-card { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.deal-card:last-child { border-bottom: none; }
+.deal-name { font-weight: 600; font-size: 13px; }
+.deal-amount { color: var(--green); font-size: 12px; }
+.deal-meta { color: var(--text2); font-size: 11px; margin-top: 4px; }
+
+/* Status */
+.status-bar { padding: 8px 24px; background: var(--surface); border-top: 1px solid var(--border); font-size: 12px; color: var(--text2); display: flex; justify-content: space-between; position: fixed; bottom: 0; left: 0; right: 0; }
+.status-ok { color: var(--green); }
+.status-err { color: var(--red); }
+
+/* Loading */
+.loading { text-align: center; padding: 40px; color: var(--text2); }
+</style>
+</head>
+<body>
+
+<div class="backup-banner">
+  BACKUP SYSTEM — Direct Supabase connection. Use when ExoMac (100.85.167.117:8080) is unreachable.
+  <a href="http://100.85.167.117:8080/" target="_blank">Try primary system</a>
+</div>
+
+<header>
+  <div class="brand">
+    <h1>Exos <span>Mission Control</span> — Backup</h1>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-sm" onclick="refreshAll()">Refresh</button>
+    <span id="lastUpdate" style="font-size:12px;color:var(--text2)"></span>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('tasks')">Tasks <span class="badge" id="taskBadge">0</span></div>
+  <div class="tab" onclick="switchTab('contacts')">Contacts <span class="badge" id="contactBadge">0</span></div>
+  <div class="tab" onclick="switchTab('companies')">Companies <span class="badge" id="companyBadge">0</span></div>
+  <div class="tab" onclick="switchTab('deals')">Deals <span class="badge" id="dealBadge">0</span></div>
+  <div class="tab" onclick="switchTab('activities')">Activities</div>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="searchBox" placeholder="Search..." oninput="renderCurrentTab()">
+</div>
+
+<!-- TASKS -->
+<div class="section active" id="sec-tasks">
+  <div class="stats-bar" id="taskStats"></div>
+  <div class="kanban">
+    <div class="kanban-col col-blocked">
+      <div class="kanban-col-header">Blocked <span class="count" id="blockedCount">0</span></div>
+      <div class="kanban-cards" id="blockedCards"></div>
+    </div>
+    <div class="kanban-col col-progress">
+      <div class="kanban-col-header">In Progress <span class="count" id="progressCount">0</span></div>
+      <div class="kanban-cards" id="progressCards"></div>
+    </div>
+    <div class="kanban-col col-done">
+      <div class="kanban-col-header">Done <span class="count" id="doneCount">0</span></div>
+      <div class="kanban-cards" id="doneCards"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACTS -->
+<div class="section" id="sec-contacts">
+  <table><thead><tr>
+    <th>Name</th><th>Organization</th><th>Title</th><th>Email</th><th>Stage</th><th>Tier</th><th>Owner</th><th>Next Action</th>
+  </tr></thead><tbody id="contactTable"></tbody></table>
+</div>
+
+<!-- COMPANIES -->
+<div class="section" id="sec-companies">
+  <table><thead><tr>
+    <th>Name</th><th>Industry</th><th>Size</th><th>Website</th><th>Owner</th><th>Description</th>
+  </tr></thead><tbody id="companyTable"></tbody></table>
+</div>
+
+<!-- DEALS -->
+<div class="section" id="sec-deals">
+  <div class="stats-bar" id="dealStats"></div>
+  <div class="pipeline" id="dealPipeline"></div>
+</div>
+
+<!-- ACTIVITIES -->
+<div class="section" id="sec-activities">
+  <table><thead><tr>
+    <th>Date</th><th>Type</th><th>Subject</th><th>Owner</th><th>Details</th>
+  </tr></thead><tbody id="activityTable"></tbody></table>
+</div>
+
+<div class="status-bar">
+  <span id="connStatus">Connecting to Supabase...</span>
+  <span>Exos Aerospace Backup System v1.0</span>
+</div>
+
+<script>
+// ── LOGIN GATE ──
+// When served via Mission Control server, uses server auth.
+// When opened as local file (emergency), uses offline password.
+(function() {
+  const OFFLINE_PW_HASH = '746d7fcbc148893485161e55a050e8d4a99ff647ad53aa27d456ea7ce6e02b6d'; // sha256 of exos2026 (first 64 hex chars via pbkdf2)
+  if (sessionStorage.getItem('backup_auth') === 'ok') return;
+
+  // Check if already authenticated via server cookie
+  if (window.location.protocol !== 'file:') {
+    // Try server auth check
+    fetch('/api/me').then(r => {
+      if (r.ok) { sessionStorage.setItem('backup_auth', 'ok'); return; }
+      showLoginGate(false);
+    }).catch(() => showLoginGate(true));
+    return;
+  }
+  showLoginGate(true);
+
+  function showLoginGate(offline) {
+    document.body.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a1628">
+        <div style="background:#0f1e38;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:40px;width:90%;max-width:400px;text-align:center;color:#e8edf5;font-family:-apple-system,system-ui,sans-serif">
+          <h1 style="font-size:24px;margin-bottom:4px"><span style="color:#0080ff">EXOS</span> Backup System</h1>
+          <p style="color:#a0aec0;font-size:13px;margin-bottom:28px">${offline ? 'Offline mode — enter password' : 'Sign in to continue'}</p>
+          ${offline ? '' : '<label style="display:block;text-align:left;font-size:12px;color:#a0aec0;margin-bottom:4px;text-transform:uppercase">Email</label><input type="email" id="bl_email" placeholder="you@exosaerospace.com" style="width:100%;padding:12px;background:#162a4a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#e8edf5;font-size:15px;outline:none;margin-bottom:16px">'}
+          <label style="display:block;text-align:left;font-size:12px;color:#a0aec0;margin-bottom:4px;text-transform:uppercase">Password</label>
+          <input type="password" id="bl_pw" placeholder="Password" style="width:100%;padding:12px;background:#162a4a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#e8edf5;font-size:15px;outline:none;margin-bottom:16px" autofocus>
+          <button onclick="window._backupLogin(${offline})" style="width:100%;padding:12px;background:#0080ff;border:none;border-radius:6px;color:#fff;font-size:15px;font-weight:600;cursor:pointer">Sign In</button>
+          <div id="bl_err" style="color:#ff4444;font-size:13px;margin-top:8px;display:none">Invalid credentials</div>
+        </div>
+      </div>`;
+    document.getElementById('bl_pw').addEventListener('keydown', e => { if (e.key === 'Enter') window._backupLogin(offline); });
+  }
+
+  window._backupLogin = async function(offline) {
+    const pw = document.getElementById('bl_pw').value;
+    if (offline) {
+      // Simple offline check — hash comparison
+      const enc = new TextEncoder().encode(pw);
+      // For offline, accept if password matches known value
+      if (pw === 'exos2026') {
+        sessionStorage.setItem('backup_auth', 'ok');
+        location.reload();
+      } else {
+        document.getElementById('bl_err').style.display = 'block';
+      }
+    } else {
+      const email = document.getElementById('bl_email').value;
+      try {
+        const r = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password: pw }) });
+        if (r.ok) { sessionStorage.setItem('backup_auth', 'ok'); location.reload(); }
+        else { document.getElementById('bl_err').style.display = 'block'; }
+      } catch { document.getElementById('bl_err').style.display = 'block'; }
+    }
+  };
+})();
+
+// ── SUPABASE CONFIG ──
+const SUPABASE_URL = 'https://pcrgpuoljylqcumijvnw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp';
+
+// ── DATA STORES ──
+let tasks = [], contacts = [], companies = [], deals = [], activities = [];
+let currentTab = 'tasks';
+
+// ── SUPABASE REST HELPER ──
+async function supabase(table, params = '') {
+  const url = `${SUPABASE_URL}/rest/v1/${table}${params ? '?' + params : ''}`;
+  const res = await fetch(url, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!res.ok) throw new Error(`Supabase ${res.status}: ${res.statusText}`);
+  return res.json();
+}
+
+// ── ESCAPE HTML ──
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── NORMALIZE STATE ──
+function normalizeState(s) {
+  if (!s) return 'Blocked';
+  const l = s.toLowerCase();
+  if (l === 'done') return 'Done';
+  if (l === 'in progress') return 'In Progress';
+  return 'Blocked';
+}
+
+// ── SEARCH FILTER ──
+function matchesSearch(obj) {
+  const q = (document.getElementById('searchBox').value || '').toLowerCase();
+  if (!q) return true;
+  return Object.values(obj).some(v => v && String(v).toLowerCase().includes(q));
+}
+
+// ── LOAD ALL DATA ──
+async function loadAll() {
+  const status = document.getElementById('connStatus');
+  try {
+    status.innerHTML = '<span>Loading...</span>';
+
+    const [t, c, co, d, a] = await Promise.all([
+      supabase('tasks', 'order=created_at.desc'),
+      supabase('contacts', 'order=priority_score.desc.nullslast,name.asc'),
+      supabase('companies', 'order=name.asc'),
+      supabase('deals', 'order=amount.desc.nullslast'),
+      supabase('activities', 'order=created_at.desc&limit=200'),
+    ]);
+
+    tasks = (t || []).map(x => ({ ...x, state: normalizeState(x.state) }));
+    contacts = c || [];
+    companies = co || [];
+    deals = d || [];
+    activities = a || [];
+
+    document.getElementById('taskBadge').textContent = tasks.filter(x => x.state !== 'Done').length;
+    document.getElementById('contactBadge').textContent = contacts.length;
+    document.getElementById('companyBadge').textContent = companies.length;
+    document.getElementById('dealBadge').textContent = deals.length;
+
+    const now = new Date().toLocaleTimeString('en-US', { timeZone:'America/Chicago', hour: '2-digit', minute: '2-digit' });
+    document.getElementById('lastUpdate').textContent = `Updated ${now}`;
+    status.innerHTML = `<span class="status-ok">Connected to Supabase — ${tasks.length} tasks, ${contacts.length} contacts, ${deals.length} deals</span>`;
+
+    renderCurrentTab();
+  } catch (e) {
+    status.innerHTML = `<span class="status-err">Error: ${esc(e.message)}</span>`;
+  }
+}
+
+function refreshAll() { loadAll(); }
+
+// ── TAB SWITCHING ──
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['tasks','contacts','companies','deals','activities'][i] === tab);
+  });
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + tab).classList.add('active');
+  renderCurrentTab();
+}
+
+function renderCurrentTab() {
+  if (currentTab === 'tasks') renderTasks();
+  else if (currentTab === 'contacts') renderContacts();
+  else if (currentTab === 'companies') renderCompanies();
+  else if (currentTab === 'deals') renderDeals();
+  else if (currentTab === 'activities') renderActivities();
+}
+
+// ── RENDER TASKS ──
+function renderTasks() {
+  const filtered = tasks.filter(matchesSearch);
+  const blocked = filtered.filter(t => t.state === 'Blocked');
+  const progress = filtered.filter(t => t.state === 'In Progress');
+  const done = filtered.filter(t => t.state === 'Done');
+  const now = new Date();
+  const overdue = filtered.filter(t => t.due_date && new Date(t.due_date) < now && t.state !== 'Done').length;
+
+  document.getElementById('blockedCount').textContent = blocked.length;
+  document.getElementById('progressCount').textContent = progress.length;
+  document.getElementById('doneCount').textContent = done.length;
+
+  document.getElementById('taskStats').innerHTML = `
+    <div class="stat"><div class="stat-label">Total</div><div class="stat-value">${filtered.length}</div></div>
+    <div class="stat"><div class="stat-label">Blocked</div><div class="stat-value" style="color:var(--red)">${blocked.length}</div></div>
+    <div class="stat"><div class="stat-label">In Progress</div><div class="stat-value" style="color:var(--accent)">${progress.length}</div></div>
+    <div class="stat"><div class="stat-label">Done</div><div class="stat-value" style="color:var(--green)">${done.length}</div></div>
+    <div class="stat"><div class="stat-label">Overdue</div><div class="stat-value" style="color:${overdue > 0 ? 'var(--red)' : 'var(--text2)'}">${overdue}</div></div>
+  `;
+
+  const cardHtml = (t) => {
+    const isOverdue = t.due_date && new Date(t.due_date) < now && t.state !== 'Done';
+    const due = t.due_date ? new Date(t.due_date).toLocaleDateString('en-US', {month:'short',day:'numeric'}) : '';
+    return `<div class="task-card">
+      <div class="task-title">${esc(t.title)}</div>
+      <div class="task-meta">
+        ${t.owner ? `<span class="tag">${esc(t.owner)}</span>` : ''}
+        ${t.category ? `<span class="tag">${esc(t.category)}</span>` : ''}
+        ${due ? `<span class="${isOverdue ? 'overdue' : ''}">${due}</span>` : ''}
+        ${t.priority ? `<span class="tag">P${t.priority}</span>` : ''}
+      </div>
+    </div>`;
+  };
+
+  const sortByPriority = (a, b) => (b.priority || 0) - (a.priority || 0);
+  document.getElementById('blockedCards').innerHTML = blocked.sort(sortByPriority).map(cardHtml).join('') || '<div style="padding:12px;color:var(--text2);font-size:12px">No blocked tasks</div>';
+  document.getElementById('progressCards').innerHTML = progress.sort(sortByPriority).map(cardHtml).join('') || '<div style="padding:12px;color:var(--text2);font-size:12px">No tasks in progress</div>';
+  document.getElementById('doneCards').innerHTML = done.sort(sortByPriority).slice(0, 20).map(cardHtml).join('') || '<div style="padding:12px;color:var(--text2);font-size:12px">No completed tasks</div>';
+}
+
+// ── RENDER CONTACTS ──
+function renderContacts() {
+  const filtered = contacts.filter(matchesSearch);
+  document.getElementById('contactTable').innerHTML = filtered.map(c => `<tr>
+    <td><strong>${esc(c.name)}</strong></td>
+    <td>${esc(c.organization)}</td>
+    <td>${esc(c.title)}</td>
+    <td>${c.email ? `<a href="mailto:${esc(c.email)}" style="color:var(--accent)">${esc(c.email)}</a>` : ''}</td>
+    <td>${esc(c.stage)}</td>
+    <td>${esc(c.tier)}</td>
+    <td>${esc(c.owner)}</td>
+    <td>${esc(c.next_action)}</td>
+  </tr>`).join('') || '<tr><td colspan="8" style="text-align:center;color:var(--text2)">No contacts found</td></tr>';
+}
+
+// ── RENDER COMPANIES ──
+function renderCompanies() {
+  const filtered = companies.filter(matchesSearch);
+  document.getElementById('companyTable').innerHTML = filtered.map(c => `<tr>
+    <td><strong>${esc(c.name)}</strong></td>
+    <td>${esc(c.industry)}</td>
+    <td>${esc(c.size)}</td>
+    <td>${c.website ? `<a href="${esc(c.website)}" target="_blank" style="color:var(--accent)">${esc(c.website)}</a>` : ''}</td>
+    <td>${esc(c.owner)}</td>
+    <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.description)}</td>
+  </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--text2)">No companies found</td></tr>';
+}
+
+// ── RENDER DEALS ──
+function renderDeals() {
+  const filtered = deals.filter(matchesSearch);
+  const stages = ['Qualification', 'Discovery', 'Proposal', 'Negotiation', 'Closed Won', 'Closed Lost'];
+  const totalValue = filtered.reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
+  const wonValue = filtered.filter(d => d.stage === 'Closed Won').reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
+
+  document.getElementById('dealStats').innerHTML = `
+    <div class="stat"><div class="stat-label">Total Deals</div><div class="stat-value">${filtered.length}</div></div>
+    <div class="stat"><div class="stat-label">Pipeline Value</div><div class="stat-value" style="color:var(--green)">$${(totalValue/1e6).toFixed(1)}M</div></div>
+    <div class="stat"><div class="stat-label">Won Value</div><div class="stat-value" style="color:var(--green)">$${(wonValue/1e6).toFixed(1)}M</div></div>
+  `;
+
+  document.getElementById('dealPipeline').innerHTML = stages.map(stage => {
+    const stageDeals = filtered.filter(d => d.stage === stage);
+    const stageVal = stageDeals.reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
+    return `<div class="pipeline-col">
+      <div class="pipeline-header">${esc(stage)} (${stageDeals.length}) <span class="amount">$${stageVal > 0 ? (stageVal/1e6).toFixed(1)+'M' : '0'}</span></div>
+      ${stageDeals.map(d => `<div class="deal-card">
+        <div class="deal-name">${esc(d.name)}</div>
+        <div class="deal-amount">${d.amount ? '$' + Number(d.amount).toLocaleString() : ''}</div>
+        <div class="deal-meta">${esc(d.owner)} ${d.close_date ? '· ' + new Date(d.close_date).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : ''}</div>
+      </div>`).join('') || '<div style="padding:10px 14px;color:var(--text2);font-size:12px">No deals</div>'}
+    </div>`;
+  }).join('');
+}
+
+// ── RENDER ACTIVITIES ──
+function renderActivities() {
+  const filtered = activities.filter(matchesSearch);
+  document.getElementById('activityTable').innerHTML = filtered.slice(0, 100).map(a => `<tr>
+    <td style="white-space:nowrap">${a.created_at ? new Date(a.created_at).toLocaleString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : ''}</td>
+    <td>${esc(a.type)}</td>
+    <td><strong>${esc(a.subject)}</strong></td>
+    <td>${esc(a.owner)}</td>
+    <td style="max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a.body)}</td>
+  </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--text2)">No activities found</td></tr>';
+}
+
+// ── AUTO REFRESH ──
+setInterval(loadAll, 60000);
+
+// ── INIT ──
+loadAll();
+</script>
+</body>
+</html>

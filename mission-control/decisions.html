@@ -148,7 +148,7 @@ function card(d){
       <div class="row1"><div><p class="title">${esc(d.title)}</p>
       <div class="meta">${d.id}${d.relatedItem?' · <a href="opportunities.html?focus='+encodeURIComponent(d.relatedItem)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(d.relatedItem)+'</a>':''} · ${esc(d.source||'')}</div></div></div>
       <div class="q">${esc(d.question)}</div>
-      <div class="answered-box">✅ ${esc(d.answer||'(noted)')}${d.note?' — '+esc(d.note):''}<div class="meta">answered ${esc((d.answeredAt||'').slice(0,16).replace('T',' '))} by ${esc(d.answeredBy||'Jon')}</div></div>
+      <div class="answered-box">✅ ${esc(d.answer||'(noted)')}${d.note?' — '+esc(d.note):''}<div class="meta">answered ${d.answeredAt?esc(new Date(d.answeredAt).toLocaleString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})+' CT'):''} by ${esc(d.answeredBy||'Jon')}</div></div>
       ${attachHtml(d)}${emailHtml(d)}
     </div>`;
   }

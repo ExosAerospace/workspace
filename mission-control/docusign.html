@@ -1,0 +1,2377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos Aerospace — DocuSign</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&family=Satisfy&family=Pacifico&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:   #0a1628;
+    --navy2:  #0d1f3c;
+    --navy3:  #112248;
+    --blue:   #0066cc;
+    --blue2:  #0080ff;
+    --orange: #ff6b00;
+    --orange2:#ff8c33;
+    --text:   #e8edf5;
+    --text2:  #a0aec0;
+    --border: rgba(255,255,255,0.08);
+    --card:   #0f1e38;
+    --green:  #22c55e;
+    --red:    #ff4444;
+    --yellow: #eab308;
+    --purple: #a855f7;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0a1628 0%, #0d2050 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    min-height: 64px;
+  }
+
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-logo {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--orange), #ff8c33);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px; color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .brand-text h1 { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+  .brand-text p { font-size: 0.75rem; color: var(--text2); }
+
+  .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .header-right a { color: var(--blue2); text-decoration: none; font-size: 0.85rem; }
+  .header-right a:hover { text-decoration: underline; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn.primary { background: var(--blue); color: #fff; }
+  .btn.primary:hover { background: var(--blue2); }
+  .btn.orange { background: var(--orange); color: #fff; }
+  .btn.orange:hover { background: var(--orange2); }
+  .btn.secondary { background: rgba(255,255,255,0.06); color: var(--text2); border: 1px solid var(--border); }
+  .btn.secondary:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+  .btn.danger { background: var(--red); color: #fff; }
+  .btn.danger:hover { background: #ff6666; }
+  .btn.green { background: var(--green); color: #fff; }
+  .btn.green:hover { background: #33d673; }
+  .btn.small { padding: 5px 10px; font-size: 0.78rem; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--navy2);
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-card .value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-card .label { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-card.blue .value { color: var(--blue2); }
+  .stat-card.orange .value { color: var(--orange); }
+  .stat-card.green .value { color: var(--green); }
+  .stat-card.purple .value { color: var(--purple); }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .toolbar input, .toolbar select {
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    outline: none;
+  }
+  .toolbar input:focus, .toolbar select:focus {
+    border-color: var(--blue);
+  }
+  .toolbar input { flex: 1; min-width: 180px; }
+
+  /* ── DOCUMENT LIST ── */
+  .doc-list {
+    padding: 20px 24px;
+    display: grid;
+    gap: 12px;
+  }
+  .doc-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .doc-card:hover { border-color: var(--blue); background: rgba(0,102,204,0.05); }
+  .doc-card .doc-info h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+  .doc-card .doc-info .meta { font-size: 0.78rem; color: var(--text2); display: flex; gap: 16px; flex-wrap: wrap; }
+  .doc-card .doc-actions { display: flex; gap: 8px; align-items: center; }
+
+  .status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .status-badge.draft { background: rgba(160,174,192,0.15); color: var(--text2); }
+  .status-badge.pending { background: rgba(234,179,8,0.15); color: var(--yellow); }
+  .status-badge.signed { background: rgba(34,197,94,0.15); color: var(--green); }
+  .status-badge.expired { background: rgba(255,68,68,0.15); color: var(--red); }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text2);
+  }
+  .empty-state h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--text); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .modal-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: var(--navy2);
+    z-index: 1;
+    border-radius: 12px 12px 0 0;
+  }
+  .modal-header h2 { font-size: 1.05rem; }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text2);
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal-body { padding: 24px; }
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    position: sticky;
+    bottom: 0;
+    background: var(--navy2);
+    border-radius: 0 0 12px 12px;
+  }
+
+  /* ── FORMS ── */
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text2);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-weight: 600;
+  }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--blue);
+  }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+  /* ── EDITOR ── */
+  .doc-editor {
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-height: 300px;
+    padding: 20px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--text);
+    overflow-y: auto;
+    max-height: 400px;
+    white-space: pre-wrap;
+    outline: none;
+  }
+  .editor-toolbar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .editor-toolbar button {
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .editor-toolbar button:hover { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+  /* ── SIGNERS ── */
+  .signer-list { display: grid; gap: 8px; margin-top: 8px; }
+  .signer-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 8px;
+    align-items: center;
+  }
+  .signer-row input, .signer-row select {
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    outline: none;
+  }
+  .signer-row input:focus { border-color: var(--blue); }
+  .remove-signer {
+    background: none;
+    border: none;
+    color: var(--red);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+  }
+  @media (max-width: 600px) {
+    .signer-row { grid-template-columns: 1fr; }
+  }
+
+  /* ── SIGNATURE PAD ── */
+  .sig-pad-container {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+  .sig-pad-container canvas {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    cursor: crosshair;
+    touch-action: none;
+    max-width: 100%;
+  }
+  .sig-pad-actions { margin-top: 10px; display: flex; gap: 8px; justify-content: center; }
+
+  /* ── SIGNATURE METHOD TABS ── */
+  .sig-method-tabs {
+    display: flex; gap: 0; margin-bottom: 12px; border-radius: 6px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .sig-method-tab {
+    flex: 1; padding: 8px 12px; text-align: center; cursor: pointer;
+    font-size: 0.82rem; font-weight: 600; color: var(--text2);
+    background: var(--navy); border: none; transition: all 0.2s;
+  }
+  .sig-method-tab:not(:last-child) { border-right: 1px solid var(--border); }
+  .sig-method-tab.active { background: var(--blue); color: #fff; }
+  .sig-method-tab:hover:not(.active) { background: var(--navy3); }
+
+  /* ── TYPED SIGNATURE ── */
+  .typed-sig-container {
+    border: 2px dashed var(--border); border-radius: 8px; padding: 16px; text-align: center;
+  }
+  .typed-sig-preview {
+    background: #fff; border: 1px solid var(--border); border-radius: 6px;
+    padding: 20px 16px; margin: 10px 0; min-height: 90px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .typed-sig-preview span {
+    color: #1a1a2e; font-size: 32px; line-height: 1.2;
+  }
+  .sig-font-options {
+    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px;
+  }
+  .sig-font-btn {
+    padding: 6px 14px; border: 1px solid var(--border); border-radius: 4px;
+    background: var(--navy); color: var(--text2); cursor: pointer; font-size: 0.78rem;
+    transition: all 0.2s;
+  }
+  .sig-font-btn.active { border-color: var(--blue); background: var(--navy3); color: #fff; }
+  .sig-font-btn:hover:not(.active) { border-color: var(--text2); }
+  .sig-legal-notice {
+    margin-top: 12px; font-size: 0.72rem; color: var(--text2); line-height: 1.4;
+    text-align: left; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 4px;
+  }
+
+  /* ── SIGNER STATUS ── */
+  .signer-status-list { display: grid; gap: 8px; }
+  .signer-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+  }
+  .signer-status-row .info { display: flex; flex-direction: column; gap: 2px; }
+  .signer-status-row .info .name { font-weight: 600; font-size: 0.9rem; }
+  .signer-status-row .info .email { font-size: 0.78rem; color: var(--text2); }
+  .signer-status-row .info .role { font-size: 0.72rem; color: var(--blue2); text-transform: uppercase; }
+
+  .sig-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+  }
+  .sig-indicator.signed { color: var(--green); }
+  .sig-indicator.pending { color: var(--yellow); }
+  .sig-indicator .sig-preview {
+    width: 80px;
+    height: 30px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: #fff;
+  }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab {
+    padding: 10px 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text2);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--blue2); border-bottom-color: var(--blue2); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── TEMPLATE GRID ── */
+  .template-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .template-card {
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .template-card:hover { border-color: var(--blue); background: rgba(0,102,204,0.05); }
+  .template-card .icon { font-size: 2rem; margin-bottom: 10px; }
+  .template-card h4 { font-size: 0.88rem; margin-bottom: 4px; }
+  .template-card p { font-size: 0.75rem; color: var(--text2); }
+
+  /* ── SEND FORM ── */
+  .send-section { margin-top: 16px; }
+  .send-section h4 { font-size: 0.88rem; margin-bottom: 12px; color: var(--text2); }
+
+  /* ── UPLOAD DROP ZONE ── */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 16px;
+  }
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--blue);
+    background: rgba(0,102,204,0.05);
+  }
+  .upload-zone .icon { font-size: 2rem; margin-bottom: 8px; }
+  .upload-zone p { font-size: 0.85rem; color: var(--text2); margin-bottom: 4px; }
+  .upload-zone .hint { font-size: 0.72rem; color: var(--text2); opacity: 0.7; }
+  .upload-zone input[type="file"] { display: none; }
+  .upload-zone .file-name {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  .letterhead-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .letterhead-check:hover { border-color: var(--blue); }
+  .letterhead-check input[type="checkbox"] {
+    width: 18px; height: 18px; accent-color: var(--orange);
+    cursor: pointer;
+  }
+  .letterhead-check label {
+    font-size: 0.85rem; font-weight: 600; color: var(--text);
+    cursor: pointer; flex: 1;
+  }
+  .letterhead-check .sub { font-size: 0.72rem; color: var(--text2); font-weight: 400; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+  /* ── VIEW DOC ── */
+  .view-doc-content {
+    background: #fff;
+    color: #1a1a2e;
+    border-radius: 8px;
+    padding: 40px;
+    min-height: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+  .view-signatures {
+    margin-top: 16px;
+    display: grid;
+    gap: 12px;
+  }
+  .view-sig-block {
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .view-sig-block img {
+    height: 40px;
+    border-radius: 4px;
+    background: #fff;
+    padding: 4px;
+  }
+  .view-sig-block .sig-details { font-size: 0.82rem; }
+  .view-sig-block .sig-details .sig-name { font-weight: 600; }
+  .view-sig-block .sig-details .sig-date { color: var(--text2); font-size: 0.75rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">EX</div>
+    <div class="brand-text">
+      <h1>Exos Aerospace</h1>
+      <p>DocuSign</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <a href="index.html">Mission Control</a>
+    <a href="opportunities.html">Opportunities</a>
+    <a href="crm.html">CRM</a>
+  </div>
+</header>
+
+<div class="stats-bar" id="statsBar"></div>
+
+<div class="toolbar">
+  <input type="text" id="searchBox" placeholder="Search documents..." oninput="renderDocList()">
+  <select id="filterStatus" onchange="renderDocList()">
+    <option value="">All Statuses</option>
+    <option value="draft">Draft</option>
+    <option value="pending">Pending Signature</option>
+    <option value="signed">Signed</option>
+    <option value="expired">Expired</option>
+  </select>
+  <button class="btn orange" onclick="openCreateModal()">+ New Document</button>
+</div>
+
+<div class="doc-list" id="docList"></div>
+
+<!-- ═══════════════════════ CREATE / EDIT MODAL ═══════════════════════ -->
+<div class="modal-overlay" id="createModal">
+  <div class="modal" style="max-width:900px;">
+    <div class="modal-header">
+      <h2 id="createModalTitle">New Document</h2>
+      <button class="modal-close" onclick="closeModal('createModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs" id="createTabs">
+        <button class="tab active" onclick="switchCreateTab('details')">Details</button>
+        <button class="tab" onclick="switchCreateTab('content')">Content</button>
+        <button class="tab" onclick="switchCreateTab('signers')">Signers</button>
+        <button class="tab" onclick="switchCreateTab('send')">Send</button>
+      </div>
+
+      <!-- Details Tab -->
+      <div class="tab-content active" id="tab-details">
+        <!-- Upload Document -->
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('docFileInput').click();"
+             ondragover="event.preventDefault();this.classList.add('dragover');"
+             ondragleave="this.classList.remove('dragover');"
+             ondrop="event.preventDefault();this.classList.remove('dragover');handleFileDrop(event);">
+          <div class="icon">&#128228;</div>
+          <p>Upload a document (.docx or .pdf)</p>
+          <div class="hint">Click to browse or drag &amp; drop &mdash; PDFs are imported page-by-page for signing</div>
+          <input type="file" id="docFileInput" accept=".docx,.pdf" onchange="handleFileSelect(event)">
+          <div class="file-name" id="uploadFileName"></div>
+        </div>
+
+        <!-- Letterhead Option -->
+        <div class="letterhead-check" onclick="document.getElementById('applyLetterhead').click();">
+          <input type="checkbox" id="applyLetterhead" checked onclick="event.stopPropagation();">
+          <label onclick="event.stopPropagation();">
+            Apply Exos Letterhead
+            <div class="sub">Adds Exos Aerospace header (logo, address) and footer to the document</div>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>Template</label>
+          <select id="docTemplate" onchange="applyTemplate()">
+            <option value="">Blank Document</option>
+            <option value="mnda">Mutual Non-Disclosure Agreement (MNDA)</option>
+            <option value="advisory">Advisory Engagement Letter</option>
+            <option value="consulting">Consulting Agreement</option>
+            <option value="tech_license">Technology License Agreement</option>
+            <option value="loi">Letter of Intent (LOI)</option>
+            <option value="subcontract">Subcontract Agreement</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Document Title</label>
+          <input type="text" id="docTitle" placeholder="e.g., MNDA - Acme Corp">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Party A (Exos)</label>
+            <input type="text" id="docPartyA" value="Exos Aerospace Systems & Technologies, Inc.">
+          </div>
+          <div class="form-group">
+            <label>Party B</label>
+            <input type="text" id="docPartyB" placeholder="e.g., Acme Corporation">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Effective Date</label>
+            <input type="date" id="docEffDate">
+          </div>
+          <div class="form-group">
+            <label>Expiration Date</label>
+            <input type="date" id="docExpDate">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notes / Terms Summary</label>
+          <textarea id="docNotes" rows="3" placeholder="Key terms, special provisions..."></textarea>
+        </div>
+      </div>
+
+      <!-- Content Tab -->
+      <div class="tab-content" id="tab-content">
+        <div class="editor-toolbar">
+          <button onclick="editorCmd('bold')" title="Bold"><b>B</b></button>
+          <button onclick="editorCmd('italic')" title="Italic"><i>I</i></button>
+          <button onclick="editorCmd('underline')" title="Underline"><u>U</u></button>
+          <button onclick="editorCmd('insertUnorderedList')" title="Bullet List">List</button>
+          <button onclick="editorCmd('insertOrderedList')" title="Numbered List">1.2.3</button>
+          <button onclick="insertSigPlaceholder()" title="Insert Signature Block">+ Sig Block</button>
+        </div>
+        <div class="doc-editor" id="docEditor" contenteditable="true"></div>
+      </div>
+
+      <!-- Signers Tab -->
+      <div class="tab-content" id="tab-signers">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <label style="font-size:0.82rem;color:var(--text2);font-weight:600;">SIGNERS</label>
+          <button class="btn small secondary" onclick="addSignerRow()">+ Add Signer</button>
+        </div>
+        <div class="signer-list" id="signerList"></div>
+      </div>
+
+      <!-- Send Tab -->
+      <div class="tab-content" id="tab-send">
+        <div class="send-section">
+          <h4>Send for Signature</h4>
+          <div class="form-group">
+            <label>From</label>
+            <input type="text" value="John Quinn <jquinn@exosaero.com>" disabled style="opacity:0.7;cursor:not-allowed;">
+          </div>
+          <div class="form-group">
+            <label>Message to Recipients</label>
+            <textarea id="sendMessage" rows="4" placeholder="Please review and sign the attached document..."></textarea>
+          </div>
+          <div id="sendRecipientList"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" onclick="closeModal('createModal')">Cancel</button>
+      <button class="btn primary" id="saveDraftBtn" onclick="saveDocument('draft')">Save Draft</button>
+      <button class="btn orange" id="sendForSigBtn" onclick="saveAndSend()">Send for Signature</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ VIEW / SIGN MODAL ═══════════════════════ -->
+<div class="modal-overlay" id="viewModal">
+  <div class="modal" style="max-width:900px;">
+    <div class="modal-header">
+      <h2 id="viewModalTitle">Document</h2>
+      <button class="modal-close" onclick="closeModal('viewModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs" id="viewTabs">
+        <button class="tab active" onclick="switchViewTab('viewContent')">Document</button>
+        <button class="tab" onclick="switchViewTab('viewStatus')">Signature Status</button>
+        <button class="tab" onclick="switchViewTab('viewSign')">Sign</button>
+      </div>
+
+      <div class="tab-content active" id="vtab-viewContent">
+        <div style="margin-bottom:12px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+          <span class="status-badge" id="viewStatusBadge"></span>
+          <span style="font-size:0.78rem;color:var(--text2);" id="viewMeta"></span>
+        </div>
+        <div class="view-doc-content" id="viewDocContent"></div>
+      </div>
+
+      <div class="tab-content" id="vtab-viewStatus">
+        <h4 style="font-size:0.88rem;margin-bottom:16px;color:var(--text2);">SIGNATURE TRACKING</h4>
+        <div class="signer-status-list" id="viewSignerStatus"></div>
+      </div>
+
+      <div class="tab-content" id="vtab-viewSign">
+        <div class="form-group">
+          <label>Select Your Identity</label>
+          <select id="signAsSelect" onchange="onSignAsChange()">
+            <option value="">-- Select Signer --</option>
+          </select>
+        </div>
+        <div id="sigPadArea" style="display:none;">
+          <!-- Signature Method Tabs -->
+          <div class="sig-method-tabs">
+            <button class="sig-method-tab active" onclick="switchSigMethod('type')" id="sigTabType">Type</button>
+            <button class="sig-method-tab" onclick="switchSigMethod('draw')" id="sigTabDraw">Draw</button>
+          </div>
+
+          <!-- Typed Signature -->
+          <div id="sigTypedArea">
+            <div class="typed-sig-container">
+              <label style="display:block;margin-bottom:8px;font-size:0.82rem;color:var(--text2);">Your Signature</label>
+              <div class="typed-sig-preview" id="typedSigPreview">
+                <span id="typedSigText" style="font-family:'Great Vibes',cursive;"></span>
+              </div>
+              <div class="sig-font-options">
+                <button class="sig-font-btn active" data-font="Great Vibes" onclick="selectSigFont(this)">
+                  <span style="font-family:'Great Vibes',cursive;font-size:16px;">Script</span>
+                </button>
+                <button class="sig-font-btn" data-font="Dancing Script" onclick="selectSigFont(this)">
+                  <span style="font-family:'Dancing Script',cursive;font-size:16px;">Formal</span>
+                </button>
+                <button class="sig-font-btn" data-font="Satisfy" onclick="selectSigFont(this)">
+                  <span style="font-family:'Satisfy',cursive;font-size:16px;">Classic</span>
+                </button>
+                <button class="sig-font-btn" data-font="Pacifico" onclick="selectSigFont(this)">
+                  <span style="font-family:'Pacifico',cursive;font-size:16px;">Bold</span>
+                </button>
+              </div>
+              <div class="sig-pad-actions">
+                <button class="btn small green" onclick="applySignature()">Apply Signature</button>
+              </div>
+              <div class="sig-legal-notice">
+                By clicking "Apply Signature," you agree that your typed signature constitutes a legally binding electronic signature under the U.S. Electronic Signatures in Global and National Commerce Act (E-SIGN Act, 15 U.S.C. §7001 et seq.) and the Uniform Electronic Transactions Act (UETA). Your signature, name, IP address, and timestamp will be recorded.
+              </div>
+            </div>
+          </div>
+
+          <!-- Drawn Signature -->
+          <div id="sigDrawArea" style="display:none;">
+            <div class="sig-pad-container">
+              <label style="display:block;margin-bottom:8px;font-size:0.82rem;color:var(--text2);">Draw Your Signature Below</label>
+              <canvas id="sigCanvas" width="500" height="150"></canvas>
+              <div class="sig-pad-actions">
+                <button class="btn small secondary" onclick="clearSigPad()">Clear</button>
+                <button class="btn small green" onclick="applySignature()">Apply Signature</button>
+              </div>
+              <div class="sig-legal-notice">
+                By clicking "Apply Signature," you agree that your drawn signature constitutes a legally binding electronic signature under the U.S. E-SIGN Act (15 U.S.C. §7001 et seq.) and UETA. Your signature image, name, IP address, and timestamp will be recorded.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" onclick="closeModal('viewModal')">Close</button>
+      <button class="btn green" id="sendDocBtn" onclick="sendExistingDoc()" style="margin-right:auto;">Send for Signature</button>
+      <button class="btn primary" id="editDocBtn" onclick="editDocument()">Edit</button>
+      <button class="btn danger" id="deleteDocBtn" onclick="deleteDocument()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TEMPLATE CHOOSER MODAL ═══════════════════════ -->
+<div class="modal-overlay" id="templateModal">
+  <div class="modal" style="max-width:720px;">
+    <div class="modal-header">
+      <h2>Choose a Template</h2>
+      <button class="modal-close" onclick="closeModal('templateModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="template-grid">
+        <div class="template-card" onclick="selectTemplate('')">
+          <div class="icon">&#128196;</div>
+          <h4>Blank Document</h4>
+          <p>Start from scratch</p>
+        </div>
+        <div class="template-card" onclick="selectTemplate('mnda')">
+          <div class="icon">&#128274;</div>
+          <h4>MNDA</h4>
+          <p>Mutual Non-Disclosure Agreement</p>
+        </div>
+        <div class="template-card" onclick="selectTemplate('advisory')">
+          <div class="icon">&#128188;</div>
+          <h4>Advisory Letter</h4>
+          <p>Advisory Engagement Letter</p>
+        </div>
+        <div class="template-card" onclick="selectTemplate('consulting')">
+          <div class="icon">&#128214;</div>
+          <h4>Consulting Agreement</h4>
+          <p>Professional services contract</p>
+        </div>
+        <div class="template-card" onclick="selectTemplate('tech_license')">
+          <div class="icon">&#9881;</div>
+          <h4>Tech License</h4>
+          <p>Technology License Agreement</p>
+        </div>
+        <div class="template-card" onclick="selectTemplate('loi')">
+          <div class="icon">&#9993;</div>
+          <h4>Letter of Intent</h4>
+          <p>Non-binding LOI</p>
+        </div>
+        <div class="template-card" onclick="selectTemplate('subcontract')">
+          <div class="icon">&#128295;</div>
+          <h4>Subcontract</h4>
+          <p>Subcontract Agreement</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════
+//  DATA LAYER
+// ════════════════════════════════════════════════════════════════════
+const STORAGE_PREFIX = 'exos_docusign_';
+const TEMPLATES = {
+  mnda: {
+    title: 'Mutual Non-Disclosure Agreement',
+    content: `MUTUAL NON-DISCLOSURE AGREEMENT
+
+This Mutual Non-Disclosure Agreement ("Agreement") is entered into as of [EFFECTIVE DATE] (the "Effective Date") by and between:
+
+Party A: [PARTY A], a Delaware corporation with its principal place of business at 1130 Greenville Ave, Suite 300, Greenville, TX 75402 ("Disclosing Party" or "Receiving Party"), and
+
+Party B: [PARTY B] ("Disclosing Party" or "Receiving Party").
+
+WHEREAS, the Parties wish to explore a potential business relationship (the "Purpose") and, in connection with the Purpose, each Party may disclose to the other certain confidential and proprietary information.
+
+NOW, THEREFORE, in consideration of the mutual covenants and agreements set forth herein, the Parties agree as follows:
+
+1. DEFINITION OF CONFIDENTIAL INFORMATION
+"Confidential Information" means any and all non-public, proprietary, or confidential information disclosed by either Party to the other, whether orally, in writing, electronically, or by inspection, including but not limited to: trade secrets, technical data, know-how, inventions, processes, designs, drawings, engineering, hardware configurations, software, marketing plans, business strategies, customer lists, financial information, and any information marked or identified as "confidential" or "proprietary."
+
+2. OBLIGATIONS OF RECEIVING PARTY
+The Receiving Party shall: (a) hold the Confidential Information in strict confidence; (b) not disclose Confidential Information to any third party without prior written consent; (c) use the Confidential Information solely for the Purpose; (d) protect Confidential Information using at least the same degree of care it uses to protect its own confidential information, but in no event less than reasonable care.
+
+3. EXCLUSIONS
+Confidential Information does not include information that: (a) is or becomes publicly available through no fault of the Receiving Party; (b) was known to the Receiving Party prior to disclosure; (c) is independently developed by the Receiving Party without use of the Confidential Information; (d) is rightfully received from a third party without restriction.
+
+4. TERM
+This Agreement shall remain in effect for a period of two (2) years from the Effective Date. The obligations of confidentiality shall survive termination for a period of three (3) years.
+
+5. RETURN OF MATERIALS
+Upon termination or request, the Receiving Party shall promptly return or destroy all Confidential Information and certify such destruction in writing.
+
+6. NO LICENSE
+Nothing in this Agreement grants any license or right to any intellectual property of either Party.
+
+7. GOVERNING LAW
+This Agreement shall be governed by the laws of the State of Texas, without regard to conflict of laws principles.
+
+8. ENTIRE AGREEMENT
+This Agreement constitutes the entire agreement between the Parties with respect to the subject matter hereof and supersedes all prior agreements and understandings.
+
+IN WITNESS WHEREOF, the Parties have executed this Agreement as of the Effective Date.
+
+
+[SIGNATURE BLOCK - PARTY A]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________
+
+
+[SIGNATURE BLOCK - PARTY B]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________`
+  },
+
+  advisory: {
+    title: 'Advisory Engagement Letter',
+    content: `ADVISORY ENGAGEMENT LETTER
+
+Date: [EFFECTIVE DATE]
+
+To: [PARTY B]
+
+Re: Advisory Engagement
+
+Dear [PARTY B],
+
+This letter (the "Agreement") confirms our mutual agreement regarding your engagement as an Advisor to [PARTY A] (the "Company").
+
+1. ADVISORY SERVICES
+You agree to serve as an Advisor to the Company and provide strategic advice and guidance in the following areas:
+  - Business development and strategic partnerships
+  - Industry introductions and relationship facilitation
+  - Technical or market guidance as reasonably requested
+
+2. TERM
+This engagement shall commence on [EFFECTIVE DATE] and continue for a period of twelve (12) months, unless terminated earlier by either party with thirty (30) days written notice.
+
+3. COMPENSATION
+In consideration of your Advisory services, the Company shall grant you:
+  - Equity: [EQUITY AMOUNT] shares of common stock, vesting monthly over 12 months
+  - Cash: [CASH AMOUNT] per month (if applicable)
+
+4. TIME COMMITMENT
+You agree to make yourself reasonably available for approximately [HOURS] hours per month of advisory services, including calls, meetings, and email correspondence.
+
+5. CONFIDENTIALITY
+You agree to maintain the confidentiality of all proprietary and confidential information of the Company disclosed during this engagement.
+
+6. INDEPENDENT CONTRACTOR
+You are engaged as an independent contractor. Nothing herein creates an employment, agency, or partnership relationship.
+
+7. GOVERNING LAW
+This Agreement shall be governed by the laws of the State of Texas.
+
+Please sign below to indicate your acceptance of these terms.
+
+Sincerely,
+
+[PARTY A]
+
+
+ACCEPTED AND AGREED:
+
+[SIGNATURE BLOCK - PARTY A]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________
+
+
+[SIGNATURE BLOCK - PARTY B]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________`
+  },
+
+  consulting: {
+    title: 'Consulting Agreement',
+    content: `CONSULTING AGREEMENT
+
+This Consulting Agreement (the "Agreement") is entered into as of [EFFECTIVE DATE] by and between:
+
+[PARTY A], a Delaware corporation ("Company"), and
+[PARTY B] ("Consultant").
+
+1. SERVICES
+Consultant agrees to perform the following consulting services for the Company (the "Services"):
+  - [Description of services to be provided]
+  - Deliverables: [List specific deliverables]
+  - Timeline: [Project milestones and deadlines]
+
+2. COMPENSATION
+Company agrees to pay Consultant:
+  - Rate: $[AMOUNT] per [hour/day/project]
+  - Payment terms: Net 30 days from receipt of invoice
+  - Expenses: Reasonable pre-approved expenses will be reimbursed
+
+3. TERM AND TERMINATION
+This Agreement shall commence on [EFFECTIVE DATE] and continue until [END DATE], unless terminated earlier. Either party may terminate with thirty (30) days written notice.
+
+4. INTELLECTUAL PROPERTY
+All work product, inventions, and deliverables created by Consultant in the course of performing the Services shall be the sole and exclusive property of the Company ("Work Product"). Consultant hereby assigns all rights, title, and interest in the Work Product to the Company.
+
+5. CONFIDENTIALITY
+Consultant agrees to maintain strict confidentiality regarding all proprietary information of the Company.
+
+6. NON-SOLICITATION
+During the term and for twelve (12) months thereafter, Consultant shall not solicit any employees or contractors of the Company.
+
+7. INDEPENDENT CONTRACTOR
+Consultant is an independent contractor and not an employee. Consultant is responsible for all taxes and insurance.
+
+8. LIMITATION OF LIABILITY
+Neither party shall be liable for indirect, incidental, or consequential damages.
+
+9. GOVERNING LAW
+This Agreement shall be governed by the laws of the State of Texas.
+
+IN WITNESS WHEREOF, the Parties have executed this Agreement.
+
+
+[SIGNATURE BLOCK - PARTY A]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________
+
+
+[SIGNATURE BLOCK - PARTY B]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________`
+  },
+
+  tech_license: {
+    title: 'Technology License Agreement',
+    content: `TECHNOLOGY LICENSE AGREEMENT
+
+This Technology License Agreement (the "Agreement") is entered into as of [EFFECTIVE DATE] by and between:
+
+LICENSOR: [PARTY A], a Delaware corporation ("Licensor"), and
+LICENSEE: [PARTY B] ("Licensee").
+
+RECITALS
+WHEREAS, Licensor owns certain proprietary technology, intellectual property, and know-how; and
+WHEREAS, Licensee desires to obtain a license to use such technology on the terms set forth herein.
+
+1. DEFINITIONS
+1.1 "Licensed Technology" means [description of technology, patents, trade secrets, software, or know-how being licensed].
+1.2 "Licensed Products" means products or services incorporating the Licensed Technology.
+1.3 "Territory" means [geographic scope of the license].
+
+2. GRANT OF LICENSE
+Licensor hereby grants to Licensee a [non-exclusive/exclusive], [non-transferable/transferable] license to use the Licensed Technology solely for the purpose of [purpose] within the Territory.
+
+3. COMPENSATION
+3.1 Upfront Fee: Licensee shall pay Licensor $[AMOUNT] upon execution.
+3.2 Royalties: Licensee shall pay [PERCENTAGE]% of net revenue from Licensed Products, payable quarterly.
+3.3 Minimum Annual Royalty: $[AMOUNT] per year.
+
+4. TERM
+This Agreement shall remain in effect for [TERM LENGTH] years from the Effective Date, with options to renew upon mutual agreement.
+
+5. INTELLECTUAL PROPERTY
+5.1 Licensor retains all ownership rights in the Licensed Technology.
+5.2 Improvements made by Licensee shall be [owned by Licensor / jointly owned / owned by Licensee with grant-back license].
+
+6. REPRESENTATIONS AND WARRANTIES
+Licensor represents that it has the right to grant this license and that the Licensed Technology does not, to its knowledge, infringe any third-party rights.
+
+7. LIMITATION OF LIABILITY
+IN NO EVENT SHALL EITHER PARTY BE LIABLE FOR INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES.
+
+8. ITAR/EAR COMPLIANCE
+Both Parties acknowledge that certain Licensed Technology may be subject to U.S. International Traffic in Arms Regulations (ITAR) or Export Administration Regulations (EAR). Licensee agrees to comply with all applicable export control laws.
+
+9. GOVERNING LAW
+This Agreement shall be governed by the laws of the State of Texas.
+
+IN WITNESS WHEREOF, the Parties have executed this Agreement.
+
+
+[SIGNATURE BLOCK - LICENSOR]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________
+
+
+[SIGNATURE BLOCK - LICENSEE]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________`
+  },
+
+  loi: {
+    title: 'Letter of Intent',
+    content: `LETTER OF INTENT
+
+Date: [EFFECTIVE DATE]
+
+To: [PARTY B]
+From: [PARTY A]
+
+Re: Letter of Intent for [SUBJECT]
+
+Dear [PARTY B],
+
+This Letter of Intent ("LOI") sets forth the principal terms upon which [PARTY A] (the "Company") and [PARTY B] (the "Counterparty") intend to negotiate and enter into a definitive agreement regarding [description of proposed transaction or partnership].
+
+1. PROPOSED TRANSACTION
+The Parties contemplate [describe the proposed transaction, partnership, acquisition, investment, or other arrangement].
+
+2. KEY TERMS
+  - Transaction Structure: [describe]
+  - Consideration: [describe pricing, equity, or other consideration]
+  - Timeline: The Parties intend to execute a definitive agreement by [TARGET DATE]
+  - Conditions: [list any key conditions precedent]
+
+3. DUE DILIGENCE
+Each Party shall provide the other reasonable access to information and personnel necessary to complete due diligence within [TIMEFRAME] of the date hereof.
+
+4. EXCLUSIVITY
+[Optional: For a period of [DAYS] days from the date hereof, Counterparty agrees not to solicit, negotiate, or enter into any competing transaction.]
+
+5. CONFIDENTIALITY
+The terms of this LOI and all information exchanged in connection herewith shall be treated as confidential.
+
+6. NON-BINDING
+Except for Sections 5 (Confidentiality) and 6 (Non-Binding), this LOI is not intended to be legally binding and does not create any obligation to consummate the proposed transaction.
+
+7. GOVERNING LAW
+This LOI shall be governed by the laws of the State of Texas.
+
+We look forward to working together toward a mutually beneficial outcome.
+
+Sincerely,
+
+[PARTY A]
+
+
+ACKNOWLEDGED AND AGREED:
+
+[SIGNATURE BLOCK - PARTY A]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________
+
+
+[SIGNATURE BLOCK - PARTY B]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________`
+  },
+
+  subcontract: {
+    title: 'Subcontract Agreement',
+    content: `SUBCONTRACT AGREEMENT
+
+This Subcontract Agreement (the "Agreement") is entered into as of [EFFECTIVE DATE] by and between:
+
+PRIME CONTRACTOR: [PARTY A], a Delaware corporation ("Prime"), and
+SUBCONTRACTOR: [PARTY B] ("Subcontractor").
+
+RECITALS
+WHEREAS, Prime has entered into a contract with [Government Agency / Customer] (the "Prime Contract") for [description]; and
+WHEREAS, Prime desires to subcontract certain work to Subcontractor under the terms herein.
+
+1. SCOPE OF WORK
+Subcontractor shall perform the following work in support of the Prime Contract:
+  - [Description of subcontract work]
+  - Statement of Work (SOW): [Reference attached SOW or describe]
+  - Period of Performance: [START DATE] through [END DATE]
+
+2. COMPENSATION
+  - Contract Type: [Firm Fixed Price / Cost Plus Fixed Fee / Time & Materials]
+  - Total Value: $[AMOUNT]
+  - Payment Terms: Net 30 days from acceptance of deliverables
+  - Invoicing: Monthly, with supporting documentation
+
+3. DELIVERABLES
+Subcontractor shall deliver:
+  - [List deliverables with acceptance criteria]
+  - Data rights as specified in DFARS 252.227-7013/7014 (if applicable)
+
+4. GOVERNMENT FLOWDOWN CLAUSES
+The following FAR/DFARS clauses are incorporated by reference and flow down to Subcontractor:
+  - FAR 52.203-13 (Contractor Code of Business Ethics)
+  - FAR 52.219-8 (Utilization of Small Business Concerns)
+  - FAR 52.222-26 (Equal Opportunity)
+  - FAR 52.227-14 (Rights in Data)
+  - DFARS 252.204-7012 (Safeguarding Covered Defense Information)
+  - DFARS 252.225-7001 (Buy American)
+  - [Additional clauses as applicable]
+
+5. ITAR/EAR COMPLIANCE
+Subcontractor acknowledges that work under this Agreement may involve ITAR-controlled technical data. Subcontractor shall comply with all applicable export control regulations and shall not disclose ITAR-controlled information to foreign persons without prior authorization.
+
+6. SECURITY
+Subcontractor shall maintain security clearances and protocols as required by the Prime Contract.
+
+7. INTELLECTUAL PROPERTY
+Unless otherwise specified, all intellectual property developed under this Agreement shall be owned by Prime, subject to the terms of the Prime Contract.
+
+8. TERMINATION
+Prime may terminate this Agreement for convenience or cause, consistent with the terms of the Prime Contract.
+
+9. GOVERNING LAW
+This Agreement shall be governed by the laws of the State of Texas.
+
+IN WITNESS WHEREOF, the Parties have executed this Agreement.
+
+
+[SIGNATURE BLOCK - PRIME CONTRACTOR]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________
+
+
+[SIGNATURE BLOCK - SUBCONTRACTOR]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________`
+  }
+};
+
+// ════════════════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════════════════
+let documents = [];
+let currentDocId = null;
+let editingDocId = null;
+let sigPadDrawing = false;
+let sigPadCtx = null;
+let sigPadLastX = 0, sigPadLastY = 0;
+
+function loadDocuments() {
+  const raw = localStorage.getItem(STORAGE_PREFIX + 'documents');
+  documents = raw ? JSON.parse(raw) : [];
+}
+
+function saveDocuments() {
+  localStorage.setItem(STORAGE_PREFIX + 'documents', JSON.stringify(documents));
+}
+
+function genId() {
+  return 'doc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  STATS
+// ════════════════════════════════════════════════════════════════════
+function renderStats() {
+  const total = documents.length;
+  const drafts = documents.filter(d => d.status === 'draft').length;
+  const pending = documents.filter(d => d.status === 'pending').length;
+  const signed = documents.filter(d => d.status === 'signed').length;
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat-card blue"><div class="value">${total}</div><div class="label">Total Documents</div></div>
+    <div class="stat-card orange"><div class="value">${pending}</div><div class="label">Pending Signature</div></div>
+    <div class="stat-card green"><div class="value">${signed}</div><div class="label">Signed</div></div>
+    <div class="stat-card purple"><div class="value">${drafts}</div><div class="label">Drafts</div></div>
+  `;
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  DOCUMENT LIST
+// ════════════════════════════════════════════════════════════════════
+function renderDocList() {
+  const search = document.getElementById('searchBox').value.toLowerCase();
+  const filter = document.getElementById('filterStatus').value;
+  let filtered = documents.filter(d => {
+    if (filter && d.status !== filter) return false;
+    if (search && !d.title.toLowerCase().includes(search) && !(d.partyB || '').toLowerCase().includes(search)) return false;
+    return true;
+  });
+  filtered.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+  const container = document.getElementById('docList');
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-state">
+      <h3>${documents.length === 0 ? 'No Documents Yet' : 'No Matching Documents'}</h3>
+      <p>${documents.length === 0 ? 'Create your first document to get started.' : 'Try adjusting your search or filter.'}</p>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(doc => {
+    const sigCount = (doc.signers || []).length;
+    const signedCount = (doc.signers || []).filter(s => s.signedAt).length;
+    const dateStr = new Date(doc.updatedAt).toLocaleDateString('en-US', { timeZone:'America/Chicago', month: 'short', day: 'numeric', year: 'numeric' });
+    return `<div class="doc-card" onclick="viewDocument('${doc.id}')">
+      <div class="doc-info">
+        <h3>${esc(doc.title || 'Untitled Document')}</h3>
+        <div class="meta">
+          <span>${esc(doc.partyB || 'No counterparty')}</span>
+          <span>${dateStr}</span>
+          ${sigCount > 0 ? `<span>${signedCount}/${sigCount} signed</span>` : ''}
+          ${doc.sentAt ? `<span>Sent ${new Date(doc.sentAt).toLocaleDateString()} via jquinn@exosaero.com</span>` : ''}
+        </div>
+      </div>
+      <div class="doc-actions">
+        <span class="status-badge ${doc.status}">${statusLabel(doc.status)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function statusLabel(s) {
+  return { draft: 'Draft', pending: 'Pending', signed: 'Signed', expired: 'Expired' }[s] || s;
+}
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  CREATE / EDIT
+// ════════════════════════════════════════════════════════════════════
+function openCreateModal() {
+  editingDocId = null;
+  document.getElementById('createModalTitle').textContent = 'New Document';
+  document.getElementById('docTemplate').value = '';
+  document.getElementById('docTitle').value = '';
+  document.getElementById('docPartyA').value = 'Exos Aerospace Systems & Technologies, Inc.';
+  document.getElementById('docPartyB').value = '';
+  document.getElementById('docEffDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('docExpDate').value = '';
+  document.getElementById('docNotes').value = '';
+  document.getElementById('docEditor').innerHTML = '';
+  document.getElementById('sendMessage').value = 'Please review and sign the attached document at your earliest convenience.';
+  document.getElementById('uploadFileName').textContent = '';
+  document.getElementById('docFileInput').value = '';
+  document.getElementById('applyLetterhead').checked = true;
+  clearSignerRows();
+  addSignerRow('John Quinn', 'jquinn@exosaero.com', 'CEO, Exos Aerospace');
+  addSignerRow('', '', '');
+  switchCreateTab('details');
+  openModal('createModal');
+}
+
+function editDocument() {
+  const doc = documents.find(d => d.id === currentDocId);
+  if (!doc) return;
+  closeModal('viewModal');
+  editingDocId = doc.id;
+  document.getElementById('createModalTitle').textContent = 'Edit Document';
+  document.getElementById('docTemplate').value = doc.templateKey || '';
+  document.getElementById('docTitle').value = doc.title || '';
+  document.getElementById('docPartyA').value = doc.partyA || '';
+  document.getElementById('docPartyB').value = doc.partyB || '';
+  document.getElementById('docEffDate').value = doc.effectiveDate || '';
+  document.getElementById('docExpDate').value = doc.expirationDate || '';
+  document.getElementById('docNotes').value = doc.notes || '';
+  document.getElementById('docEditor').innerHTML = doc.content || '';
+  document.getElementById('sendMessage').value = doc.sendMessage || 'Please review and sign the attached document at your earliest convenience.';
+  clearSignerRows();
+  (doc.signers || []).forEach(s => addSignerRow(s.name, s.email, s.role));
+  if ((doc.signers || []).length === 0) addSignerRow('', '', '');
+  switchCreateTab('details');
+  openModal('createModal');
+}
+
+function applyTemplate() {
+  const key = document.getElementById('docTemplate').value;
+  if (!key || !TEMPLATES[key]) {
+    document.getElementById('docEditor').innerText = '';
+    return;
+  }
+  const tmpl = TEMPLATES[key];
+  if (!document.getElementById('docTitle').value) {
+    document.getElementById('docTitle').value = tmpl.title;
+  }
+  let content = tmpl.content;
+  const partyA = document.getElementById('docPartyA').value || '[PARTY A]';
+  const partyB = document.getElementById('docPartyB').value || '[PARTY B]';
+  const effDate = document.getElementById('docEffDate').value;
+  content = content.replace(/\[PARTY A\]/g, partyA);
+  content = content.replace(/\[PARTY B\]/g, partyB);
+  if (effDate) {
+    const formatted = new Date(effDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    content = content.replace(/\[EFFECTIVE DATE\]/g, formatted);
+  }
+  document.getElementById('docEditor').innerText = content;
+}
+
+function selectTemplate(key) {
+  closeModal('templateModal');
+  openCreateModal();
+  if (key) {
+    document.getElementById('docTemplate').value = key;
+    applyTemplate();
+  }
+}
+
+function saveDocument(status) {
+  const signerRows = document.querySelectorAll('#signerList .signer-row');
+  const signers = [];
+  signerRows.forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const name = inputs[0]?.value?.trim();
+    const email = inputs[1]?.value?.trim();
+    const role = inputs[2]?.value?.trim();
+    if (name || email) {
+      // Preserve existing signature data if editing
+      let existing = null;
+      if (editingDocId) {
+        const oldDoc = documents.find(d => d.id === editingDocId);
+        if (oldDoc) {
+          existing = (oldDoc.signers || []).find(s => s.email === email);
+        }
+      }
+      signers.push({
+        id: existing?.id || 's_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        name: name,
+        email: email,
+        role: role,
+        signatureData: existing?.signatureData || null,
+        signedAt: existing?.signedAt || null
+      });
+    }
+  });
+
+  const now = new Date().toISOString();
+  if (editingDocId) {
+    const idx = documents.findIndex(d => d.id === editingDocId);
+    if (idx >= 0) {
+      documents[idx] = {
+        ...documents[idx],
+        title: document.getElementById('docTitle').value.trim() || 'Untitled Document',
+        templateKey: document.getElementById('docTemplate').value,
+        partyA: document.getElementById('docPartyA').value.trim(),
+        partyB: document.getElementById('docPartyB').value.trim(),
+        effectiveDate: document.getElementById('docEffDate').value,
+        expirationDate: document.getElementById('docExpDate').value,
+        notes: document.getElementById('docNotes').value.trim(),
+        content: document.getElementById('docEditor').innerHTML,
+        signers: signers,
+        sendMessage: document.getElementById('sendMessage').value.trim(),
+        status: status || documents[idx].status,
+        updatedAt: now
+      };
+    }
+  } else {
+    const doc = {
+      id: genId(),
+      title: document.getElementById('docTitle').value.trim() || 'Untitled Document',
+      templateKey: document.getElementById('docTemplate').value,
+      partyA: document.getElementById('docPartyA').value.trim(),
+      partyB: document.getElementById('docPartyB').value.trim(),
+      effectiveDate: document.getElementById('docEffDate').value,
+      expirationDate: document.getElementById('docExpDate').value,
+      notes: document.getElementById('docNotes').value.trim(),
+      content: document.getElementById('docEditor').innerHTML,
+      signers: signers,
+      sendMessage: document.getElementById('sendMessage').value.trim(),
+      status: status || 'draft',
+      createdAt: now,
+      updatedAt: now,
+      sentAt: null
+    };
+    documents.push(doc);
+    editingDocId = doc.id;
+  }
+
+  saveDocuments();
+  renderStats();
+  renderDocList();
+  closeModal('createModal');
+}
+
+async function saveAndSend() {
+  const signerRows = document.querySelectorAll('#signerList .signer-row');
+  let hasRecipient = false;
+  const recipients = [];
+  signerRows.forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const name = inputs[0]?.value?.trim();
+    const email = inputs[1]?.value?.trim();
+    if (email) {
+      hasRecipient = true;
+      recipients.push({ name: name || 'Signer', email });
+    }
+  });
+  if (!hasRecipient) {
+    alert('Please add at least one signer with an email address.');
+    switchCreateTab('signers');
+    return;
+  }
+
+  // Confirm before sending
+  const recipientList = recipients.map(r => `  • ${r.name} <${r.email}>`).join('\n');
+  if (!confirm(`Send this document for signature?\n\nFrom: John Quinn <jquinn@exosaero.com>\nTo:\n${recipientList}\n\nThis will email the document directly to the recipients.`)) {
+    return;
+  }
+
+  // Save first then update status
+  saveDocument('pending');
+
+  const doc = documents.find(d => d.id === editingDocId);
+  if (!doc) return;
+
+  // Send via server API
+  const sendBtn = document.querySelector('#tab-send .btn.green, #tab-send .btn.primary');
+  if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = 'Sending...'; }
+
+  try {
+    const resp = await fetch('/api/docusign/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        recipients: recipients,
+        subject: `Exos Aerospace — ${doc.title || 'Document'} for Signature`,
+        message: doc.sendMessage || 'Please review and sign the attached document.',
+        documentTitle: doc.title,
+        documentHtml: doc.content
+      })
+    });
+
+    const result = await resp.json();
+
+    if (result.success) {
+      doc.sentAt = new Date().toISOString();
+      doc.status = 'pending';
+      doc.sendLog = doc.sendLog || [];
+      doc.sendLog.push({
+        sentAt: doc.sentAt,
+        from: 'jquinn@exosaero.com',
+        to: recipients.map(r => r.email),
+        messageId: result.messageId
+      });
+      saveDocuments();
+      renderStats();
+      renderDocList();
+      alert(`Document sent successfully!\n\nFrom: John Quinn <jquinn@exosaero.com>\nTo: ${recipients.map(r => r.email).join(', ')}`);
+    } else {
+      alert('Failed to send: ' + (result.error || 'Unknown error'));
+    }
+  } catch(e) {
+    alert('Email delivery error: ' + e.message + '\n\nDocument saved as pending. You can retry from the Send tab.');
+  }
+
+  if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Save & Send'; }
+}
+
+function deleteDocument() {
+  if (!currentDocId) return;
+  const doc = documents.find(d => d.id === currentDocId);
+  if (!confirm(`Delete "${doc?.title || 'this document'}"? This cannot be undone.`)) return;
+  documents = documents.filter(d => d.id !== currentDocId);
+  saveDocuments();
+  renderStats();
+  renderDocList();
+  closeModal('viewModal');
+}
+
+async function sendExistingDoc() {
+  if (!currentDocId) return;
+  const doc = documents.find(d => d.id === currentDocId);
+  if (!doc) return;
+
+  // Send a secure signing link to EVERY signer with an email (including Exos signers)
+  const signers = (doc.signers || []).filter(s => s.email);
+  if (!signers.length) {
+    alert('No signers with email addresses found. Add signers first — or upload a document with a standard signature block and they auto-fill.');
+    return;
+  }
+
+  const recipientList = signers.map(r => `  • ${r.name} <${r.email}>`).join('\n');
+  const defaultMsg = doc.sendMessage || `Please review and sign ${doc.title || 'this document'}.`;
+
+  const customMsg = prompt(
+    `Send "${doc.title}" for E-SIGNATURE?\n\nEach signer below gets their own secure signing link:\n${recipientList}\n\nEdit the message:`,
+    defaultMsg
+  );
+  if (customMsg === null) return; // cancelled
+
+  const sendBtn = document.getElementById('sendDocBtn');
+  if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = 'Sending links...'; }
+
+  try {
+    const resp = await fetch('/api/esign/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: doc.title,
+        html: doc.content,
+        message: customMsg,
+        subject: `Signature requested: ${doc.title || 'Document'}`,
+        signers: signers.map(s => ({ name: s.name, email: s.email, role: s.role }))
+      })
+    });
+
+    const result = await resp.json();
+
+    if (result.success) {
+      doc.sentAt = new Date().toISOString();
+      doc.envelopeId = result.id;
+      if (doc.status === 'draft') doc.status = 'pending';
+      doc.sendLog = doc.sendLog || [];
+      doc.sendLog.push({
+        sentAt: doc.sentAt,
+        from: 'jquinn@exosaero.com',
+        to: signers.map(s => s.email),
+        envelopeId: result.id
+      });
+      saveDocuments();
+      renderStats();
+      renderDocList();
+      viewDocument(currentDocId);
+      alert(`Signing links sent ✓\n\nEach signer got a secure link to review and sign:\n${(result.links||[]).map(l => '  • ' + l.email).join('\n')}\n\nYou'll receive a fully executed copy by email once everyone has signed.`);
+    } else {
+      alert('Failed to send: ' + (result.error || 'Unknown error'));
+    }
+  } catch(e) {
+    alert('Send error: ' + e.message);
+  }
+
+  if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Send for Signature'; }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  SIGNERS
+// ════════════════════════════════════════════════════════════════════
+function clearSignerRows() {
+  document.getElementById('signerList').innerHTML = '';
+}
+
+function addSignerRow(name, email, role) {
+  const list = document.getElementById('signerList');
+  const row = document.createElement('div');
+  row.className = 'signer-row';
+  row.innerHTML = `
+    <input type="text" placeholder="Full Name" value="${esc(name || '')}">
+    <input type="email" placeholder="Email" value="${esc(email || '')}">
+    <input type="text" placeholder="Role / Title" value="${esc(role || '')}">
+    <button class="remove-signer" onclick="this.parentElement.remove()" title="Remove">&times;</button>
+  `;
+  list.appendChild(row);
+}
+
+// Auto-extract signers (and party names) from an uploaded document's signature block.
+// Pairs For:/Name:/Title:/Email: fields by index, so it works for both single-column
+// and two-column (side-by-side) signature blocks.
+function autofillSignersFromContent(html) {
+  try {
+    const text = (html || '')
+      .replace(/<\s*br\s*\/?>/gi, '\n')
+      .replace(/<\/(p|div|tr|td|th|li|h[1-6])>/gi, '\n')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&nbsp;/gi, ' ').replace(/&amp;/gi, '&').replace(/&[a-z]+;/gi, ' ');
+    const lines = text.split('\n').map(l => l.replace(/\s+/g, ' ').trim()).filter(Boolean);
+    const emailRe = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/;
+    const fors = [], names = [], titles = [], emails = [];
+    for (const line of lines) {
+      let m;
+      if ((m = line.match(/^For:\s*(.+)$/i))) fors.push(m[1].trim());
+      else if ((m = line.match(/^Name:\s*(.+)$/i)) && !/_/.test(m[1])) names.push(m[1].trim());
+      else if ((m = line.match(/^Title:\s*(.+)$/i)) && !/_/.test(m[1])) titles.push(m[1].trim());
+      else if ((m = line.match(/^Email:\s*(.+)$/i))) { const e = (m[1].match(emailRe) || [])[0]; if (e) emails.push(e); }
+    }
+    const signers = [];
+    const n = Math.max(names.length, emails.length);
+    for (let i = 0; i < n; i++) {
+      const nm = names[i] || '', em = emails[i] || '';
+      if (nm && em) signers.push({ name: nm, email: em, role: [titles[i] || '', fors[i] || ''].filter(Boolean).join(', ') });
+    }
+    if (signers.length) {
+      clearSignerRows();
+      signers.forEach(s => addSignerRow(s.name, s.email, s.role));
+    }
+    const pa = document.getElementById('docPartyA');
+    const pb = document.getElementById('docPartyB');
+    if (pa && !pa.value.trim() && fors[0]) pa.value = fors[0];
+    if (pb && !pb.value.trim() && fors[1]) pb.value = fors[1];
+  } catch (e) {
+    console.warn('Signer autofill failed:', e);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  VIEW DOCUMENT
+// ════════════════════════════════════════════════════════════════════
+function viewDocument(id) {
+  const doc = documents.find(d => d.id === id);
+  if (!doc) return;
+  currentDocId = id;
+
+  document.getElementById('viewModalTitle').textContent = doc.title || 'Untitled Document';
+
+  // Status badge
+  const badge = document.getElementById('viewStatusBadge');
+  badge.className = 'status-badge ' + doc.status;
+  badge.textContent = statusLabel(doc.status);
+
+  // Meta
+  const metaParts = [];
+  if (doc.partyA) metaParts.push(doc.partyA);
+  if (doc.partyB) metaParts.push(doc.partyB);
+  if (doc.effectiveDate) metaParts.push('Effective: ' + doc.effectiveDate);
+  if (doc.sentAt) metaParts.push('Sent from: jquinn@exosaero.com');
+  document.getElementById('viewMeta').textContent = metaParts.join(' | ');
+
+  // Content
+  document.getElementById('viewDocContent').innerHTML = doc.content || '<em>No content</em>';
+
+  // Signer status
+  renderSignerStatus(doc);
+
+  // Sign-as select
+  const select = document.getElementById('signAsSelect');
+  select.innerHTML = '<option value="">-- Select Signer --</option>';
+  (doc.signers || []).forEach(s => {
+    if (!s.signedAt) {
+      select.innerHTML += `<option value="${s.id}">${esc(s.name || s.email)} (${esc(s.role || 'Signer')})</option>`;
+    }
+  });
+
+  document.getElementById('sigPadArea').style.display = 'none';
+
+  // Show/hide edit and sign tabs based on status
+  const signTab = document.querySelector('#viewTabs .tab:nth-child(3)');
+  if (doc.status === 'signed' || doc.status === 'expired') {
+    signTab.style.display = 'none';
+  } else {
+    signTab.style.display = '';
+  }
+
+  switchViewTab('viewContent');
+  openModal('viewModal');
+}
+
+function renderSignerStatus(doc) {
+  const container = document.getElementById('viewSignerStatus');
+  if (!doc.signers || doc.signers.length === 0) {
+    container.innerHTML = '<p style="color:var(--text2);font-size:0.85rem;">No signers assigned.</p>';
+    return;
+  }
+  container.innerHTML = doc.signers.map(s => {
+    const isSigned = !!s.signedAt;
+    const sigDateStr = s.signedAt ? new Date(s.signedAt).toLocaleString('en-US',{timeZone:'America/Chicago'}) : '';
+    return `<div class="signer-status-row">
+      <div class="info">
+        <span class="name">${esc(s.name || 'Unknown')}</span>
+        <span class="email">${esc(s.email || '')}</span>
+        <span class="role">${esc(s.role || 'Signer')}</span>
+      </div>
+      <div class="sig-indicator ${isSigned ? 'signed' : 'pending'}">
+        ${isSigned
+          ? `<span>Signed ${sigDateStr}</span>${s.signatureMethod ? `<span style="font-size:0.7rem;opacity:0.6;margin-left:4px;">(${s.signatureMethod})</span>` : ''}${s.signatureData ? `<img class="sig-preview" src="${s.signatureData}" alt="signature">` : ''}`
+          : '<span>Pending</span>'
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  SIGNATURE PAD
+// ════════════════════════════════════════════════════════════════════
+let currentSigMethod = 'type';
+let currentSigFont = 'Great Vibes';
+
+function switchSigMethod(method) {
+  currentSigMethod = method;
+  document.getElementById('sigTabType').classList.toggle('active', method === 'type');
+  document.getElementById('sigTabDraw').classList.toggle('active', method === 'draw');
+  document.getElementById('sigTypedArea').style.display = method === 'type' ? 'block' : 'none';
+  document.getElementById('sigDrawArea').style.display = method === 'draw' ? 'block' : 'none';
+  if (method === 'draw') initSigPad();
+}
+
+function selectSigFont(btn) {
+  document.querySelectorAll('.sig-font-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSigFont = btn.dataset.font;
+  const textEl = document.getElementById('typedSigText');
+  textEl.style.fontFamily = `'${currentSigFont}', cursive`;
+}
+
+function updateTypedSigPreview() {
+  const signerId = document.getElementById('signAsSelect').value;
+  const doc = documents.find(d => d.id === currentDocId);
+  if (!doc || !signerId) return;
+  const signer = doc.signers.find(s => s.id === signerId);
+  if (!signer) return;
+  const textEl = document.getElementById('typedSigText');
+  textEl.textContent = signer.name;
+  textEl.style.fontFamily = `'${currentSigFont}', cursive`;
+}
+
+function renderTypedSigToCanvas(name, font) {
+  const c = document.createElement('canvas');
+  c.width = 500; c.height = 150;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, 500, 150);
+  // Guide line
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(20, 120); ctx.lineTo(480, 120); ctx.stroke();
+  ctx.setLineDash([]);
+  // Signature text
+  ctx.fillStyle = '#1a1a2e';
+  ctx.font = `32px '${font}', cursive`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(name, 250, 75);
+  return c.toDataURL('image/png');
+}
+
+function onSignAsChange() {
+  const val = document.getElementById('signAsSelect').value;
+  const area = document.getElementById('sigPadArea');
+  if (val) {
+    area.style.display = 'block';
+    updateTypedSigPreview();
+    if (currentSigMethod === 'draw') initSigPad();
+  } else {
+    area.style.display = 'none';
+  }
+}
+
+function initSigPad() {
+  const canvas = document.getElementById('sigCanvas');
+  sigPadCtx = canvas.getContext('2d');
+
+  // Set canvas dimensions based on container
+  const container = canvas.parentElement;
+  const maxW = Math.min(500, container.clientWidth - 30);
+  canvas.width = maxW;
+  canvas.height = 150;
+
+  sigPadCtx.fillStyle = '#ffffff';
+  sigPadCtx.fillRect(0, 0, canvas.width, canvas.height);
+  sigPadCtx.strokeStyle = '#1a1a2e';
+  sigPadCtx.lineWidth = 2;
+  sigPadCtx.lineCap = 'round';
+  sigPadCtx.lineJoin = 'round';
+
+  // Draw guide line
+  sigPadCtx.save();
+  sigPadCtx.strokeStyle = '#ddd';
+  sigPadCtx.lineWidth = 1;
+  sigPadCtx.setLineDash([4, 4]);
+  sigPadCtx.beginPath();
+  sigPadCtx.moveTo(20, 120);
+  sigPadCtx.lineTo(canvas.width - 20, 120);
+  sigPadCtx.stroke();
+  sigPadCtx.restore();
+  sigPadCtx.strokeStyle = '#1a1a2e';
+  sigPadCtx.lineWidth = 2;
+
+  // Remove old listeners
+  canvas.onpointerdown = null;
+  canvas.onpointermove = null;
+  canvas.onpointerup = null;
+  canvas.onpointerleave = null;
+
+  canvas.onpointerdown = (e) => {
+    sigPadDrawing = true;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    sigPadLastX = (e.clientX - rect.left) * scaleX;
+    sigPadLastY = (e.clientY - rect.top) * scaleY;
+    canvas.setPointerCapture(e.pointerId);
+  };
+
+  canvas.onpointermove = (e) => {
+    if (!sigPadDrawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+    sigPadCtx.beginPath();
+    sigPadCtx.moveTo(sigPadLastX, sigPadLastY);
+    sigPadCtx.lineTo(x, y);
+    sigPadCtx.stroke();
+    sigPadLastX = x;
+    sigPadLastY = y;
+  };
+
+  canvas.onpointerup = () => { sigPadDrawing = false; };
+  canvas.onpointerleave = () => { sigPadDrawing = false; };
+}
+
+function clearSigPad() {
+  initSigPad();
+}
+
+function applySignature() {
+  const signerId = document.getElementById('signAsSelect').value;
+  if (!signerId) return;
+
+  const doc = documents.find(d => d.id === currentDocId);
+  if (!doc) return;
+  const signer = doc.signers.find(s => s.id === signerId);
+  if (!signer) return;
+
+  let sigData;
+
+  if (currentSigMethod === 'type') {
+    // Generate typed signature as canvas image
+    sigData = renderTypedSigToCanvas(signer.name, currentSigFont);
+  } else {
+    // Drawn signature from canvas
+    const canvas = document.getElementById('sigCanvas');
+    sigData = canvas.toDataURL('image/png');
+
+    // Check if canvas has any drawing (compare against blank)
+    const blankCanvas = document.createElement('canvas');
+    blankCanvas.width = canvas.width;
+    blankCanvas.height = canvas.height;
+    const bCtx = blankCanvas.getContext('2d');
+    bCtx.fillStyle = '#ffffff';
+    bCtx.fillRect(0, 0, blankCanvas.width, blankCanvas.height);
+    bCtx.strokeStyle = '#ddd';
+    bCtx.lineWidth = 1;
+    bCtx.setLineDash([4, 4]);
+    bCtx.beginPath();
+    bCtx.moveTo(20, 120);
+    bCtx.lineTo(blankCanvas.width - 20, 120);
+    bCtx.stroke();
+  }
+
+  const now = new Date().toISOString();
+
+  // Record signature with legal metadata
+  signer.signatureData = sigData;
+  signer.signedAt = now;
+  signer.signatureMethod = currentSigMethod === 'type' ? 'typed' : 'drawn';
+  signer.signatureFont = currentSigMethod === 'type' ? currentSigFont : null;
+  signer.signatureMeta = {
+    method: currentSigMethod === 'type' ? 'Typed electronic signature' : 'Drawn electronic signature',
+    font: currentSigMethod === 'type' ? currentSigFont : 'freehand',
+    timestamp: now,
+    userAgent: navigator.userAgent,
+    legalBasis: 'E-SIGN Act (15 U.S.C. §7001), UETA',
+    consent: 'Signer clicked "Apply Signature" confirming intent to sign electronically'
+  };
+
+  doc.updatedAt = now;
+
+  // Check if all signed
+  const allSigned = doc.signers.every(s => s.signedAt);
+  if (allSigned) {
+    doc.status = 'signed';
+  }
+
+  saveDocuments();
+  renderStats();
+  renderDocList();
+  viewDocument(currentDocId);
+  switchViewTab('viewStatus');
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  DOCUMENT UPLOAD
+// ════════════════════════════════════════════════════════════════════
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if (file) processUploadedFile(file);
+}
+
+function handleFileDrop(e) {
+  const file = e.dataTransfer.files[0];
+  if (file) processUploadedFile(file);
+}
+
+async function processUploadedFile(file) {
+  const fname = file.name.toLowerCase();
+  const isDocx = fname.endsWith('.docx');
+  const isPdf = fname.endsWith('.pdf');
+  if (!isDocx && !isPdf) {
+    alert('Only .docx and .pdf files are supported.');
+    return;
+  }
+
+  document.getElementById('uploadFileName').textContent = '⏳ Processing ' + file.name + '...';
+
+  try {
+    let html;
+
+    if (isPdf) {
+      // Render each PDF page to an image so it flows through the
+      // existing view → sign → track → send pipeline.
+      html = await renderPdfToHtml(file);
+      // PDFs already carry their own letterhead — don't double it up.
+      const lh = document.getElementById('applyLetterhead');
+      if (lh) lh.checked = false;
+    } else {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.convertToHtml({ arrayBuffer });
+      html = result.value;
+      if (result.messages && result.messages.length > 0) {
+        console.log('Mammoth conversion messages:', result.messages);
+      }
+    }
+
+    if (!html || html.trim().length < 10) {
+      alert('Could not extract content from this file. It may be empty or use unsupported formatting.');
+      document.getElementById('uploadFileName').textContent = '';
+      return;
+    }
+
+    // Load into editor
+    document.getElementById('docEditor').innerHTML = html;
+
+    // Auto-extract signers & party names from the document's signature block
+    autofillSignersFromContent(html);
+
+    // Auto-fill title from filename if empty
+    const titleInput = document.getElementById('docTitle');
+    if (!titleInput.value.trim()) {
+      titleInput.value = file.name.replace(/\.(docx|pdf)$/i, '').replace(/[_-]/g, ' ');
+    }
+
+    document.getElementById('uploadFileName').textContent = '✓ ' + file.name + ' loaded';
+
+    // Auto-switch to Content tab so they can see it
+    switchCreateTab('content');
+  } catch (err) {
+    console.error('File parse error:', err);
+    alert('Error reading file: ' + err.message);
+    document.getElementById('uploadFileName').textContent = '';
+  }
+}
+
+// Render a PDF into page images (data URLs) wrapped in HTML, so an uploaded
+// PDF can be viewed and signed exactly like any other document.
+async function renderPdfToHtml(file) {
+  if (typeof pdfjsLib === 'undefined') {
+    throw new Error('PDF engine failed to load. Check your connection and retry.');
+  }
+  // Point pdf.js at its worker (idempotent).
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  const data = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data }).promise;
+  const scale = 1.6; // balance of crispness vs. localStorage size
+  let pagesHtml = '';
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale });
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+    pagesHtml += `<div class="pdf-page" style="margin:0 auto 16px;max-width:720px;">` +
+      `<img src="${dataUrl}" alt="Page ${i}" style="width:100%;height:auto;display:block;border:1px solid #ddd;border-radius:4px;"></div>`;
+  }
+
+  return `<div class="pdf-rendered" data-pdf="1" data-pages="${pdf.numPages}">${pagesHtml}</div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  LETTERHEAD
+// ════════════════════════════════════════════════════════════════════
+const EXOS_LETTERHEAD_HEADER = `
+<div style="text-align:center;margin-bottom:24px;" class="exos-lh-header">
+  <img src="/brand-assets/exos-letterhead-header.png" alt="Exos Aerospace" style="width:100%;max-width:680px;height:auto;display:block;margin:0 auto;">
+</div>`;
+
+const EXOS_LETTERHEAD_FOOTER = `
+<div style="margin-top:32px;text-align:center;" class="exos-lh-footer">
+  <img src="/brand-assets/exos-letterhead-footer.png" alt="Exos Aerospace" style="width:100%;max-width:680px;height:auto;display:block;margin:0 auto;">
+</div>`;
+
+function wrapWithLetterhead(html) {
+  return EXOS_LETTERHEAD_HEADER + html + EXOS_LETTERHEAD_FOOTER;
+}
+
+function stripLetterhead(html) {
+  // Remove any previously applied letterhead before re-applying.
+  // Use DOM parsing so we reliably strip our header/footer wrappers by class.
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  tmp.querySelectorAll('.exos-lh-header, .exos-lh-footer').forEach(el => el.remove());
+  return tmp.innerHTML.trim();
+}
+
+// Override saveDocument to inject letterhead if checked
+const _origSaveDocument = saveDocument;
+saveDocument = function(status) {
+  const applyLH = document.getElementById('applyLetterhead').checked;
+  if (applyLH) {
+    const editor = document.getElementById('docEditor');
+    let content = editor.innerHTML;
+    // Strip any existing letterhead first to avoid doubling
+    content = stripLetterhead(content);
+    editor.innerHTML = wrapWithLetterhead(content);
+  }
+  _origSaveDocument(status);
+};
+
+// ════════════════════════════════════════════════════════════════════
+//  EDITOR COMMANDS
+// ════════════════════════════════════════════════════════════════════
+function editorCmd(cmd) {
+  document.execCommand(cmd, false, null);
+  document.getElementById('docEditor').focus();
+}
+
+function insertSigPlaceholder() {
+  document.execCommand('insertHTML', false,
+    '\n\n[SIGNATURE BLOCK]\nName: ___________________________\nTitle: ___________________________\nDate: ___________________________\n'
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  MODAL HELPERS
+// ════════════════════════════════════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  // Check if any modal is still open
+  if (!document.querySelector('.modal-overlay.active')) {
+    document.body.style.overflow = '';
+  }
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', (e) => {
+    if (e.target === el) {
+      el.classList.remove('active');
+      if (!document.querySelector('.modal-overlay.active')) {
+        document.body.style.overflow = '';
+      }
+    }
+  });
+});
+
+// ════════════════════════════════════════════════════════════════════
+//  TAB SWITCHING
+// ════════════════════════════════════════════════════════════════════
+function switchCreateTab(name) {
+  document.querySelectorAll('#createTabs .tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#createModal .tab-content').forEach(t => t.classList.remove('active'));
+  const tabs = document.querySelectorAll('#createTabs .tab');
+  const idx = ['details', 'content', 'signers', 'send'].indexOf(name);
+  if (idx >= 0) tabs[idx]?.classList.add('active');
+  document.getElementById('tab-' + name)?.classList.add('active');
+
+  // Render send recipient list
+  if (name === 'send') renderSendRecipients();
+}
+
+function switchViewTab(name) {
+  document.querySelectorAll('#viewTabs .tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#viewModal .tab-content').forEach(t => t.classList.remove('active'));
+  const tabs = document.querySelectorAll('#viewTabs .tab');
+  const idx = ['viewContent', 'viewStatus', 'viewSign'].indexOf(name);
+  if (idx >= 0) tabs[idx]?.classList.add('active');
+  document.getElementById('vtab-' + name)?.classList.add('active');
+
+  if (name === 'viewSign') {
+    setTimeout(() => initSigPad(), 50);
+  }
+}
+
+function renderSendRecipients() {
+  const signerRows = document.querySelectorAll('#signerList .signer-row');
+  const list = document.getElementById('sendRecipientList');
+  let html = '<h4 style="font-size:0.82rem;color:var(--text2);margin-top:16px;margin-bottom:8px;">RECIPIENTS</h4>';
+  let count = 0;
+  signerRows.forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const name = inputs[0]?.value?.trim();
+    const email = inputs[1]?.value?.trim();
+    const role = inputs[2]?.value?.trim();
+    if (name || email) {
+      count++;
+      html += `<div style="background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:6px;font-size:0.85rem;">
+        <strong>${esc(name || 'Unnamed')}</strong> &lt;${esc(email || 'no email')}&gt; <span style="color:var(--text2);font-size:0.75rem;">${esc(role || '')}</span>
+      </div>`;
+    }
+  });
+  if (count === 0) {
+    html += '<p style="color:var(--text2);font-size:0.82rem;">No signers added yet. Go to the Signers tab to add recipients.</p>';
+  }
+  list.innerHTML = html;
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  EXPIRATION CHECK
+// ════════════════════════════════════════════════════════════════════
+function checkExpirations() {
+  const today = new Date().toISOString().split('T')[0];
+  let changed = false;
+  documents.forEach(d => {
+    if (d.expirationDate && d.expirationDate < today && d.status !== 'signed' && d.status !== 'expired') {
+      d.status = 'expired';
+      changed = true;
+    }
+  });
+  if (changed) saveDocuments();
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════════
+loadDocuments();
+checkExpirations();
+renderStats();
+renderDocList();
+
+// Set default date
+document.getElementById('docEffDate').value = new Date().toISOString().split('T')[0];
+
+// ════════════════════════════════════════════════════════════════════
+//  SEED: MDB Capital MNDA Test Document
+// ════════════════════════════════════════════════════════════════════
+(function seedMdbMnda() {
+  const SEED_ID = 'mdb-capital-mnda-001';
+  // Force update: remove old version and re-seed with Rev 5
+  documents = documents.filter(d => d.id !== SEED_ID);
+
+  const today = new Date().toISOString().split('T')[0];
+  const expDate = new Date(Date.now() + 730 * 86400000).toISOString().split('T')[0];
+  const now = new Date().toISOString();
+
+  const mndaContent = `<h2 style="text-align:center;">MUTUAL NON-DISCLOSURE AGREEMENT</h2>
+<p>&nbsp;</p>
+<p>This Mutual Non-Disclosure Agreement ("<b>Agreement</b>") is entered into on ______________________ (the "<b>Effective Date</b>") by</p>
+<p><b>Exos Aerospace Systems &amp; Technologies, Inc.</b> ("<b>EXOS</b>") of 299 FM 1903, Greenville, TX 75402, and</p>
+<p><b>MDB Capital Holdings, LLC (Nasdaq: MDBH)</b> ("<b>MDB</b>") of 2425 Olympic Blvd, Suite 4000W, Santa Monica, CA 90404</p>
+<p>("Party" when used in the singular, and "Parties" when used to collectively refer to both parties herein).</p>
+<p>&nbsp;</p>
+<h3>RECITALS</h3>
+<p>WHEREAS the Parties are exploring a potential business relationship involving investment banking advisory services, capital markets transactions, and strategic advisory in connection with EXOS's capital formation and related corporate development activities, and in furtherance of this goal, each Party needs and desires to disclose COMPANY CONFIDENTIAL Information with the other Party in order to facilitate business discussions and negotiations (the "Purpose"); and</p>
+<p>WHEREAS, under this Agreement, the party receiving COMPANY CONFIDENTIAL Information shall be referred to as the "Receiving Party," and the party disclosing such COMPANY CONFIDENTIAL Information shall be referred to as the "Disclosing Party."</p>
+<p>&nbsp;</p>
+<h3>AGREEMENT</h3>
+<p>NOW THEREFORE, for good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the Parties agree as follows.</p>
+<p>&nbsp;</p>
+<h3>1. COMPANY CONFIDENTIAL INFORMATION.</h3>
+<p>As used in this Agreement, "COMPANY CONFIDENTIAL Information" shall mean all information, regardless of the form in which it is communicated or maintained (whether oral, written, electronic or visual), which is disclosed to the Receiving Party, its employees, Subcontractors or Subcontractor employees, and including, without limitation, all records, reports, analyses, notes, memoranda, documentation, data, specifications, diagrams, statistics, systems or software, manuals, business plans, operational information or practices, processes (whether or not patented, patentable or reduced to practice), customer lists, contractual arrangements with, and information about, the Disclosing Party's suppliers, distributors, and customers, financial information (including revenue figures, projections, valuation models, cap tables, and investor terms), or other information that is based on, contains or reflects any such COMPANY CONFIDENTIAL Information. All information received by or disclosed to the Receiving Party, its employees, Subcontractors or Subcontractor employees from, by, or through the Disclosing Party shall be considered COMPANY CONFIDENTIAL Information, unless it is specifically designated as non-proprietary and nonconfidential or as otherwise set forth herein.</p>
+<p>Company Confidential Information disclosed shall be clearly marked or labeled as Confidential or Proprietary or some other similar designation and if disclosed orally or visually, shall be identified as such at the time of disclosure and a summary in writing provided within 30 days.</p>
+<p>&nbsp;</p>
+<h3>2. NON-DISCLOSURE AND USE OF COMPANY CONFIDENTIAL INFORMATION.</h3>
+<p>A Receiving Party shall retain in confidence any COMPANY CONFIDENTIAL Information received from the Disclosing Party. Except with the prior written consent of the Disclosing Party, the Receiving Party will not (i) disclose such COMPANY CONFIDENTIAL Information to any other person or (ii) use such COMPANY CONFIDENTIAL Information for any purpose other than the Purpose. The Receiving Party shall use the same degree of care as it uses to protect its own confidential information of a similar nature, but no less than reasonable care, to prevent the unauthorized use, dissemination or publication of the COMPANY CONFIDENTIAL Information.</p>
+<p>&nbsp;</p>
+<h3>3. LIMITED USE AND ACCESS.</h3>
+<p>The Receiving Party further agrees to limit the use of and access to the Disclosing Party's COMPANY CONFIDENTIAL Information to the Receiving Party's employees and business partners who need to know such COMPANY CONFIDENTIAL Information for said purposes, provided that such persons are made aware of this Agreement and either (i) agree to observe the terms of this Agreement or (ii) are bound by obligations of confidentiality to the Receiving Party of at least as high a standard as those imposed on the Receiving Party under this Agreement. The Receiving Party will obtain the Disclosing Party's approval prior to disclosing the Disclosing Party's COMPANY CONFIDENTIAL Information to Business Partners.</p>
+<p>&nbsp;</p>
+<h3>4. NON-COMPANY CONFIDENTIAL INFORMATION.</h3>
+<p>The Disclosing Party agrees that the foregoing obligations shall not apply with respect to information that (i) was in the possession of the Receiving Party or known by it prior to receipt from the Disclosing Party, or (ii) was rightfully disclosed to the Receiving Party by another person without restriction, or (iii) was independently developed by the Receiving Party without access to such COMPANY CONFIDENTIAL Information, or (iv) is or becomes part of common knowledge or part of the public domain, becomes publicly known through no fault of the recipient, can be determined through independent research or obtained from a third party, or (v) is required to be disclosed pursuant to any statutory or regulatory authority or court order, provided the Receiving Party has given the Disclosing Party prompt notice of such requirement and the opportunity to contest it.</p>
+<p>&nbsp;</p>
+<h3>5. NO OTHER BUSINESS RELATIONSHIP.</h3>
+<p>This Agreement does not represent or imply any agreement or commitment to enter into any further business relationship. This Agreement does not create any agency or partnership relationship between the parties or authorize a party to use the other party's name or trademarks. This Agreement does not preclude either party from independently pursuing any activities similar to or in competition with the Purpose contemplated herein. Neither party will be liable to the other for any of the costs associated with the other's efforts in connection with this Agreement.</p>
+<p>&nbsp;</p>
+<h3>6. TERM AND DURATION.</h3>
+<p>This Agreement shall remain in effect for a period of two (2) years from the Effective Date unless otherwise terminated by either Party giving thirty (30) days' written notice to the other Party. The confidentiality obligations set forth herein shall survive termination or expiration of this Agreement for a period of three (3) years.</p>
+<p>&nbsp;</p>
+<h3>7. RETURN OF COMPANY CONFIDENTIAL INFORMATION.</h3>
+<p>Upon the completion or termination of any discussions between the parties, and upon written request, the Receiving Party shall within seven (7) days at its choosing either (i) promptly return to the Disclosing Party all COMPANY CONFIDENTIAL Information disclosed in tangible form and copies thereof or (ii) promptly destroy such COMPANY CONFIDENTIAL Information (including all copies thereof) and certify such destruction to the Disclosing Party.</p>
+<p>&nbsp;</p>
+<h3>8. NO WARRANTY.</h3>
+<p>No warranty or representation is made by either party hereto that any information transmitted by it hereunder is true and correct, patentable or copyrightable, or that any such information involves concepts or embodiments that are free of infringement of other rights.</p>
+<p>&nbsp;</p>
+<h3>9. LEGAL PROCESS.</h3>
+<p>If the Receiving Party becomes subject to a demand for discovery or disclosure of the COMPANY CONFIDENTIAL Information of the other party under legal process, such Receiving Party shall give to the Disclosing Party prompt notice of the demand (where legally permissible) and shall cooperate with the Disclosing Party in seeking reasonable arrangements to protect the confidential and proprietary nature of the COMPANY CONFIDENTIAL Information.</p>
+<p>&nbsp;</p>
+<h3>10. EQUITABLE RELIEF.</h3>
+<p>The Receiving Party acknowledges and agrees that due to the unique nature of the Disclosing Party's COMPANY CONFIDENTIAL Information, there can be no adequate remedy at law for any breach of its obligation hereunder, that any such breach may allow the Receiving Party or third parties to unfairly compete with the Disclosing Party resulting in irreparable harm to the Disclosing Party, and therefore, that upon any such breach or any threat thereof, the Disclosing Party shall be entitled to seek appropriate equitable relief in addition to whatever remedies it might have at law. The Receiving Party will notify the Disclosing Party in writing immediately upon the occurrence of any such unauthorized release or other breach.</p>
+<p>In the event that any of the provisions of this Agreement shall be held by a court or other tribunal of competent jurisdiction to be unenforceable, the remaining portions hereof shall remain in full force and effect.</p>
+<p>&nbsp;</p>
+<h3>11. INTELLECTUAL PROPERTY.</h3>
+<p>Neither party acquires any intellectual property rights under this Agreement or any disclosure hereunder, except the limited right to use such COMPANY CONFIDENTIAL Information in accordance with this Agreement.</p>
+<p>&nbsp;</p>
+<h3>12. NO PUBLIC ANNOUNCEMENT.</h3>
+<p>With the exception of third parties who are specifically listed in this Agreement, neither Party will, without prior approval of the other Party, make any public announcement of or otherwise disclose the existence or the terms of this Agreement.</p>
+<p>&nbsp;</p>
+<h3>13. SECURITIES LAW COMPLIANCE.</h3>
+<p>MDB acknowledges that the COMPANY CONFIDENTIAL Information may include material non-public information ("<b>MNPI</b>") as defined under federal securities laws. MDB agrees that it shall not, and shall cause its representatives not to, trade in any securities of EXOS or any affiliated entity on the basis of MNPI received under this Agreement, in compliance with all applicable securities laws and regulations including, without limitation, the Securities Exchange Act of 1934, as amended, and the rules and regulations promulgated thereunder.</p>
+<p>&nbsp;</p>
+<h3>14. EXPORT CONTROL NOTICE.</h3>
+<p>EXOS is engaged in activities subject to the International Traffic in Arms Regulations ("ITAR") and the Export Administration Regulations ("EAR"). No controlled technical data, as defined under ITAR (22 CFR 120-130) or EAR (15 CFR 730-774), shall be disclosed under this Agreement. Information shared shall be limited to business, financial, and strategic information that does not constitute controlled technical data.</p>
+<p>&nbsp;</p>
+<h3>15. DISPUTE RESOLUTION AND GOVERNING LAW.</h3>
+<p>15.1. The validity, construction, and enforceability of this Agreement shall be governed by the laws of Texas as if performed wholly within that jurisdiction and without giving effect to its conflict of laws principles.</p>
+<p>15.2. If a dispute arises under this Agreement, the Parties agree that they will first attempt to resolve this dispute via non-binding mediation within thirty (30) days of one Party giving written notice to the other Party. The venue for any mediation shall be Dallas, Texas.</p>
+<p>15.3. If the Parties are unable to resolve their dispute via mediation, then the dispute may be submitted to the American Arbitration Association and shall be finally settled under its Commercial Arbitration Rules. The number of arbitrators shall be one. The venue for any such arbitration shall be Dallas, Texas.</p>
+<p>15.4. In the event that litigation does arise, the Parties agree that the venue shall be the U.S. District Court for the Northern District of Texas (federal claims) or Dallas County, Texas (state claims). The Parties hereby knowingly, voluntarily, and intentionally waive any right to a trial by jury.</p>
+<p>15.5. The prevailing Party will be entitled to recover all costs and expenses, including reasonable attorneys' fees and costs, costs of investigation, and all expert witness fees, court costs, and related expenses.</p>
+<p>&nbsp;</p>
+<h3>16. SUCCESSORS AND ASSIGNS.</h3>
+<p>This Agreement will be binding upon the successors and/or assigns of the parties.</p>
+<p>&nbsp;</p>
+<h3>17. NO WARRANTIES.</h3>
+<p>NO WARRANTIES OF ANY KIND (INCLUDING IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE) ARE GIVEN WITH RESPECT TO THE CONFIDENTIAL INFORMATION DISCLOSED OR USED UNDER THIS AGREEMENT, AND NEITHER PARTY SHALL BE LIABLE TO THE OTHER FOR DAMAGES ARISING OUT OF OR CAUSED BY DEFECTS OR DEFICIENCIES IN THE CONFIDENTIAL INFORMATION OF EITHER PARTY, WHETHER DIRECT, INCIDENTAL, CONSEQUENTIAL OR OTHERWISE.</p>
+<p>&nbsp;</p>
+<h3>18. SEVERABILITY.</h3>
+<p>In the event that any provision of this Agreement is prohibited by any law governing its construction, performance or enforcement, such provision shall be ineffective to the extent of such prohibition without invalidating thereby any of the remaining provisions of the Agreement.</p>
+<p>&nbsp;</p>
+<h3>19. MISCELLANEOUS PROVISIONS.</h3>
+<p>This Agreement supersedes all prior discussions and writings and constitutes the entire agreement between the Parties with respect to the subject matter hereof. No waiver or modification of this Agreement will be binding upon either party unless made in writing and signed by a duly authorized representative of such party, and no failure or delay in enforcing any right will be deemed a waiver. This Agreement may be signed in counterparts, each of which shall be deemed an original, but which together shall constitute one and the same instrument.</p>
+<p>&nbsp;</p>
+<p style="text-align:center;"><b>IN WITNESS WHEREOF, the Parties have signed this Agreement as of the Effective Date.</b></p>
+<p>&nbsp;</p>
+<p>Signature: ________________________________</p>
+<p>Name: John Quinn</p>
+<p>Title: Chief Executive Officer</p>
+<p>Company: Exos Aerospace Systems &amp; Technologies, Inc.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;299 FM 1903, Greenville, TX 75402</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Signature: ________________________________</p>
+<p>Name: Christopher Marlett</p>
+<p>Title: Chief Executive Officer</p>
+<p>Company: MDB Capital Holdings, LLC (Nasdaq: MDBH)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2425 Olympic Blvd, Suite 4000W, Santa Monica, CA 90404</p>`;
+
+  const doc = {
+    id: SEED_ID,
+    title: 'MNDA — Exos Aerospace / MDB Capital Holdings (Rev 5)',
+    templateKey: 'mnda',
+    partyA: 'Exos Aerospace Systems & Technologies, Inc.',
+    partyB: 'MDB Capital Holdings, LLC (Nasdaq: MDBH)',
+    effectiveDate: today,
+    expirationDate: expDate,
+    notes: 'FINALIZED from Rev 5 template. Texas company (not Delaware). 299 FM 1903 address confirmed. Includes MNPI/Securities clause (Sec 13) for Nasdaq counterparty. ITAR notice (Sec 14). Mediation → arbitration → litigation cascade. Dallas TX venue. Jury waiver. Series A investment banking advisory relationship. MDB meeting held May 27, 2026. Contacts: Ivonne Bordas (Head of Analysis), Christopher Marlett (CEO), Anthony DiGiandomenico, George Brandon.',
+    content: mndaContent,
+    signers: [
+      { id: 'signer-jq', name: 'John Quinn', email: 'jquinn@exosaero.com', role: 'CEO — Exos Aerospace', signedAt: null, signatureData: null },
+      { id: 'signer-cm', name: 'Christopher Marlett', email: 'cmarlett@mdb.com', role: 'CEO — MDB Capital Holdings', signedAt: null, signatureData: null }
+    ],
+    sendMessage: 'Chris — Per our discussion on May 27, attached is the Mutual NDA between Exos Aerospace and MDB Capital. Please review, sign, and return at your earliest convenience so we can share detailed financials and deal terms. Looking forward to working together. — John Quinn',
+    status: 'draft',
+    createdAt: now,
+    updatedAt: now,
+    sentAt: null
+  };
+
+  documents.push(doc);
+  saveDocuments();
+  renderStats();
+  renderDocList();
+})();
+
+// Keyboard shortcut: Escape to close modals
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => {
+      m.classList.remove('active');
+    });
+    document.body.style.overflow = '';
+  }
+});
+</script>
+</body>
+</html>
