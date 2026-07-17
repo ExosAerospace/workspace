@@ -1,0 +1,140 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relationship Dossiers — Exos Mission Control</title>
+<style>
+:root{--bg:#0a1428;--card:#0f1e38;--navy3:#13243f;--border:#1e3354;--text:#e8eef7;--text2:#8aa0bf;
+--blue:#0066cc;--green:#3ad29f;--orange:#ff9d4d;--orange2:#ffb877;--red:#ff6b6b;--cyan:#46c8ff;--neon:#39ff14;}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+header{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--border);background:#0c1830;position:sticky;top:0;z-index:5}
+.brand-logo{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#0066cc,#46c8ff);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+.brand-title{font-weight:700}.brand-sub{font-size:11px;color:var(--text2)}
+nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+nav a{color:var(--text2);text-decoration:none;font-size:12px;border:1px solid var(--border);border-radius:6px;padding:6px 11px}
+nav a:hover{color:var(--text);border-color:var(--blue)}
+nav a.active{color:#fff;background:rgba(0,102,204,.18);border-color:var(--blue)}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 22px}
+.updated{font-size:11px;color:var(--text2);margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:4px}
+.card-name{font-size:16px;font-weight:700}
+.headline{font-size:12px;color:var(--text2);margin:0 0 12px}
+.pill{font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.pill.green{background:rgba(58,210,159,.16);color:var(--green);border:1px solid rgba(58,210,159,.4)}
+.pill.orange{background:rgba(255,157,77,.16);color:var(--orange);border:1px solid rgba(255,157,77,.4)}
+.pill.red{background:rgba(255,107,107,.16);color:var(--red);border:1px solid rgba(255,107,107,.4)}
+.sec{margin-top:11px}
+.sec h4{margin:0 0 5px;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--cyan)}
+.sec ul{margin:0;padding-left:16px}.sec li{margin:0 0 3px;font-size:12.5px;line-height:1.45}
+.kv{font-size:12.5px;line-height:1.5}
+.next{background:rgba(0,102,204,.10);border-left:3px solid var(--blue);padding:7px 10px;border-radius:0 6px 6px 0;font-size:12.5px}
+.flag{color:var(--orange2);font-size:11.5px}
+.excl{color:var(--red);font-weight:600}
+.card.failed{border-color:var(--red);box-shadow:0 0 0 1px rgba(255,107,107,.3)}
+.dd-banner{background:rgba(255,107,107,.15);color:var(--red);border:1px solid rgba(255,107,107,.4);border-radius:8px;padding:7px 10px;font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;margin-bottom:10px}
+.card-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{background:var(--navy3);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer}
+.btn:hover{border-color:var(--blue)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.danger{color:var(--red);border-color:rgba(255,107,107,.4)}
+.edit-form{display:flex;flex-direction:column;gap:8px}
+.edit-form label{font-size:11px;color:var(--text2);display:flex;flex-direction:column;gap:3px}
+.edit-form input,.edit-form textarea,.edit-form select{background:var(--navy3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:7px 9px;font-size:12.5px;font-family:inherit}
+</style></head><body>
+<header>
+  <div class="brand-logo">EX</div>
+  <div><div class="brand-title">Relationship Dossiers</div><div class="brand-sub">At-a-glance intelligence per key relationship</div></div>
+  <nav>
+    <a href="index.html">Mission Control</a>
+    <a href="dossier.html" class="active">Dossiers</a>
+    <a href="contacts.html">Contacts</a>
+    <a href="opportunities.html">Opportunities</a>
+    <a href="crm.html">CRM</a>
+    <a href="research.html">Research</a>
+  </nav>
+</header>
+<div class="wrap">
+  <input id="search" placeholder="Search relationships, contacts, deals…" autocomplete="off"
+    style="width:100%;max-width:420px;margin-bottom:12px;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--navy3);color:var(--text);font-size:13px">
+  <div class="updated" id="updated">Loading…</div>
+  <div class="grid" id="grid"></div>
+</div>
+<script>
+function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function liList(arr){return '<ul>'+(arr||[]).map(x=>{
+  let cls = /HARD EXCLUDE|never copy|❌/.test(x)?' class="excl"':'';
+  return '<li'+cls+'>'+esc(x)+'</li>';
+}).join('')+'</ul>';}
+let ALL=[];
+function byId(id){return ALL.find(x=>x.id===id);}
+function cardHtml(x){const failed=x.dd_status==='failed';return `
+    <div class="card${failed?' failed':''}" id="card-${x.id}">
+      ${failed?`<div class="dd-banner">❌ Failed Due Diligence${x.dd_status_by?' · flagged by '+esc(x.dd_status_by):''}</div>`:''}
+      <div class="card-top">
+        <div class="card-name">${esc(x.name)}</div>
+        <span class="pill ${x.stage_color||'orange'}">${esc(x.stage)}</span>
+      </div>
+      <p class="headline">${esc(x.headline)}</p>
+      <div class="sec"><h4>Contacts</h4>${liList(x.contacts)}</div>
+      <div class="sec"><h4>Deals</h4>${liList(x.deals)}</div>
+      ${(x.agreements&&x.agreements.length)?`<div class="sec"><h4>Agreements</h4>${liList(x.agreements)}</div>`:''}
+      <div class="sec"><h4>Last touch</h4><div class="kv">${esc(x.last_touch)}</div></div>
+      <div class="sec"><h4>Status</h4><div class="kv">${esc(x.status)}</div></div>
+      <div class="sec"><h4>Next step</h4><div class="next">${esc(x.next_step)}</div></div>
+      ${(x.flags&&x.flags.length)?`<div class="sec"><h4>Flags</h4>${(x.flags).map(f=>'<div class="flag">⚠ '+esc(f)+'</div>').join('')}</div>`:''}
+      <div class="card-actions">
+        <button class="btn" onclick="startEdit('${x.id}')">✏️ Edit</button>
+        ${failed
+          ? `<button class="btn" onclick="toggleDD('${x.id}',false)">Clear DD flag</button>`
+          : `<button class="btn danger" onclick="toggleDD('${x.id}',true)">❌ Mark Failed DD</button>`}
+      </div>
+    </div>`;}
+function editHtml(x){
+  const ta=(label,key,arr)=>`<label>${label}<textarea data-k="${key}" rows="3">${esc((arr||[]).join('\n'))}</textarea></label>`;
+  const inp=(label,key,val)=>`<label>${label}<input data-k="${key}" value="${esc(val||'')}"></label>`;
+  return `<div class="card editing" id="card-${x.id}"><div class="edit-form">
+    ${inp('Name','name',x.name)}
+    ${inp('Stage','stage',x.stage)}
+    <label>Stage color<select data-k="stage_color">${['green','orange','red'].map(c=>`<option ${x.stage_color===c?'selected':''}>${c}</option>`).join('')}</select></label>
+    ${inp('Headline','headline',x.headline)}
+    ${ta('Contacts (one per line)','contacts',x.contacts)}
+    ${ta('Deals (one per line)','deals',x.deals)}
+    ${ta('Agreements (one per line)','agreements',x.agreements)}
+    ${inp('Last touch','last_touch',x.last_touch)}
+    <label>Status<textarea data-k="status" rows="2">${esc(x.status||'')}</textarea></label>
+    <label>Next step<textarea data-k="next_step" rows="2">${esc(x.next_step||'')}</textarea></label>
+    ${ta('Flags (one per line)','flags',x.flags)}
+    <div class="card-actions">
+      <button class="btn primary" onclick="saveEdit('${x.id}')">💾 Save</button>
+      <button class="btn" onclick="render(ALL)">Cancel</button>
+    </div></div></div>`;
+}
+function startEdit(id){const x=byId(id);if(!x)return;const c=document.getElementById('card-'+id);if(c)c.outerHTML=editHtml(x);}
+async function saveEdit(id){
+  const card=document.getElementById('card-'+id);const body={id};
+  card.querySelectorAll('[data-k]').forEach(el=>{const k=el.dataset.k;
+    body[k]=['contacts','deals','agreements','flags'].includes(k)?el.value.split('\n').map(s=>s.trim()).filter(Boolean):el.value;});
+  const r=await fetch('/api/dossiers',{method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(body)});
+  if(r.ok){await reload();}else{alert('Save failed ('+r.status+'). You may not have edit permission.');}
+}
+async function toggleDD(id,toFailed){
+  if(toFailed && !confirm('Mark this relationship as FAILED Due Diligence?'))return;
+  const r=await fetch('/api/dossiers',{method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({id,dd_status:toFailed?'failed':''})});
+  if(r.ok){await reload();}else{alert('Update failed ('+r.status+').');}
+}
+function render(list){document.getElementById('grid').innerHTML=list.map(cardHtml).join('')||'<div class="updated">No matches.</div>';}
+async function reload(){
+  const d=await (await fetch('data/dossiers.json?_='+Date.now())).json();
+  ALL=d.dossiers;
+  document.getElementById('updated').textContent='Updated '+(d.generated_display||'')+' · '+ALL.length+' relationships';
+  render(ALL);
+}
+reload().then(()=>{
+  document.getElementById('search').addEventListener('input',e=>{
+    const q=e.target.value.toLowerCase().trim();
+    render(q?ALL.filter(x=>JSON.stringify(x).toLowerCase().includes(q)):ALL);
+  });
+}).catch(e=>{document.getElementById('updated').textContent='Failed to load dossiers.json: '+e;});
+</script>
+</body></html>

@@ -15,6 +15,9 @@ const ALLOWED_EXTENSIONS = ['.pdf','.docx','.xlsx','.pptx','.doc','.xls','.ppt',
 
 // ── DECISIONS INBOX: consolidated "Needs Jon" approval queue ──
 const DECISIONS_FILE = path.join(__dirname, 'data', 'decisions.json');
+const DOSSIERS_FILE = path.join(__dirname, 'data', 'dossiers.json');
+function loadDossiersFile() { try { return JSON.parse(fs.readFileSync(DOSSIERS_FILE, 'utf-8')); } catch { return { dossiers: [] }; } }
+function saveDossiersFile(o) { fs.writeFileSync(DOSSIERS_FILE, JSON.stringify(o, null, 2)); }
 const DTOKEN_FILE = path.join(__dirname, 'data', '.decisions-token');
 function loadDecisions() { try { return JSON.parse(fs.readFileSync(DECISIONS_FILE, 'utf-8')); } catch { return []; } }
 function saveDecisions(arr) { fs.mkdirSync(path.dirname(DECISIONS_FILE), { recursive: true }); fs.writeFileSync(DECISIONS_FILE, JSON.stringify(arr, null, 2)); }
@@ -2447,6 +2450,35 @@ const server = http.createServer((req, res) => {
       out.jobs_generated = snap.generated || null;
     } catch (e) {}
     res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(out)); return;
+  }
+
+  // ── DOSSIERS: edit a relationship dossier / mark Failed Due Diligence ──
+  if (req.url === '/api/dossiers' && req.method === 'PATCH') {
+    const sess = getSession(req);
+    if (!sess) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    if (sess.role === 'early_adopter') { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not permitted' })); return; }
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const p = JSON.parse(body);
+        const store = loadDossiersFile();
+        const arr = store.dossiers || (store.dossiers = []);
+        const idx = arr.findIndex(x => x.id === p.id);
+        if (idx === -1) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Dossier not found' })); return; }
+        const editable = ['name', 'headline', 'stage', 'stage_color', 'status', 'next_step', 'last_touch', 'contacts', 'deals', 'agreements', 'flags'];
+        for (const k of editable) if (k in p) arr[idx][k] = p[k];
+        if ('dd_status' in p) {
+          const failed = p.dd_status === 'failed';
+          arr[idx].dd_status = failed ? 'failed' : '';
+          arr[idx].dd_status_by = failed ? (sess.name || sess.email) : '';
+          arr[idx].dd_status_at = failed ? new Date().toISOString() : '';
+        }
+        arr[idx].updated_at = new Date().toISOString();
+        arr[idx].updated_by = sess.name || sess.email;
+        saveDossiersFile(store);
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(arr[idx]));
+      } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+    });
+    return;
   }
 
   if (req.method === 'GET') {
