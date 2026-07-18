@@ -6,6 +6,12 @@ Watches the Proton Bridge INBOX + Sent folders and attaches relevant emails to
 the matching Mission Control task / decision / opportunity. Trigger convention:
 MC users CC jquinnexo@pm.me on their mail (lands in Proton); Jon sends from pm.me.
 
+Tasks are indexed from the LIVE Supabase board (integer ids), not the stale legacy
+tasks.json. When an email strong-matches a board task, its DOCUMENT attachments are
+pulled onto that task via mc-attach.py (versioned) so reviewers can open the deliverable
+from the task card. Export-controlled mail is screened out (itar_ear_screen) before any
+capture, so controlled attachments never land in Mission Control.
+
 Read-only on email. Never sends. Only APPENDS to local stores. Idempotent.
 
 Safe-write rules:
@@ -17,7 +23,7 @@ Safe-write rules:
 
 Usage: python3 mc-email-tracker.py [--since-days N]   (default 2; backfill uses 14)
 """
-import imaplib, email, json, os, re, sys, argparse, urllib.request
+import imaplib, email, json, os, re, sys, argparse, urllib.request, subprocess, tempfile
 from email.utils import getaddresses, parsedate_to_datetime
 from datetime import datetime, timedelta, timezone
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -34,6 +40,10 @@ SELF_ADDRS = {"jquinnexo@pm.me", "jquinn@exosaero.com", "exosmc@proton.me", "exo
 # matching uses EXTERNAL counterparts only. Internal mail still attaches via an
 # explicit MC/decision id in the subject/body.
 INTERNAL_DOMAINS = {"exosaero.com", "pm.me"}
+SUPA_URL = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
+MC_ATTACH = os.path.join(WS, "scripts", "mc-attach.py")
+# Only real deliverable documents get pulled onto a task — not inline images / signatures.
+DOC_EXTS = (".pdf", ".docx", ".doc", ".pptx", ".ppt", ".xlsx", ".xls")
 
 IMAP_HOST, IMAP_PORT = "127.0.0.1", 1143
 EMAIL_USER = "jquinnexo@pm.me"
@@ -86,16 +96,77 @@ def is_send_decision(d):
     return t.startswith("send:") or q.startswith("send this") or q.startswith("send the")
 
 
+def supa_tasks():
+    """Live board tasks (integer ids). Falls back to legacy tasks.json if Supabase is down,
+    so the watcher never dies on a network blip."""
+    try:
+        k = json.load(open(SECRETS))["supabase_service_role_key"]
+        req = urllib.request.Request(
+            SUPA_URL + "tasks?select=id,title,description,owner,state,source&limit=5000",
+            headers={"apikey": k, "Authorization": "Bearer " + k})
+        rows = json.loads(urllib.request.urlopen(req, timeout=30).read())
+        return [r for r in rows if r.get("source") != "mc-board-legacy"]
+    except Exception as e:
+        print(f"supa_tasks fallback to tasks.json ({e})")
+        return arr(load_json(os.path.join(DATA, "tasks.json"), []), "tasks")
+
+
+def save_task_attachments(msg, task_id, sender):
+    """Pull document attachments off this email onto the matched task via mc-attach.py
+    (reuses its versioning/supersede so re-sent docs archive the prior version). Controlled
+    content is already screened out upstream. The per-message state guard means each email
+    is processed once, so this never double-attaches from re-scanning. Returns count saved."""
+    try:
+        parts = list(msg.walk())
+    except Exception:
+        return 0
+    saved = 0
+    for p in parts:
+        fn = p.get_filename()
+        if not fn or not fn.lower().endswith(DOC_EXTS):
+            continue
+        try:
+            data = p.get_payload(decode=True)
+        except Exception:
+            data = None
+        if not data:
+            continue
+        safe = re.sub(r"[^A-Za-z0-9._-]", "_", os.path.basename(fn)) or "attachment"
+        tmpd = tempfile.mkdtemp()
+        tmpf = os.path.join(tmpd, safe)
+        try:
+            with open(tmpf, "wb") as f:
+                f.write(data)
+            r = subprocess.run(
+                ["python3", MC_ATTACH, "--task", str(task_id), "--file", tmpf,
+                 "--by", "email-tracker", "--title", os.path.basename(fn)],
+                capture_output=True, text=True, cwd=WS, timeout=60)
+            if r.returncode == 0:
+                saved += 1
+            else:
+                print(f"  attach-fail task {task_id} <- {fn}: {(r.stderr or r.stdout)[:80]}")
+        except Exception as e:
+            print(f"  attach-error task {task_id} <- {fn}: {e}")
+        finally:
+            try:
+                os.remove(tmpf); os.rmdir(tmpd)
+            except Exception:
+                pass
+    return saved
+
+
 def build_index():
-    """Return list of {id, type, emails:set, tokens:set} for all MC items."""
+    """Return list of {id, type, emails:set, tokens:set} for all MC items.
+    Tasks come from the LIVE Supabase board (integer ids), not the stale legacy tasks.json."""
     idx = []
-    tasks = arr(load_json(os.path.join(DATA, "tasks.json"), []), "tasks")
+    tasks = supa_tasks()
     opps  = arr(load_json(os.path.join(DATA, "opportunities.json"), []), "opportunities")
     decs  = arr(load_json(DEC_FILE, []), "decisions")
     def add(it, typ, *fields):
         iid = it.get("id")
         if not iid:
             return
+        iid = str(iid)
         text = " ".join(str(it.get(f, "") or "") for f in fields)
         emails = set(a.lower() for a in ADDR_RE.findall(text))
         emails = {a for a in emails if a.split("@")[-1] not in INTERNAL_DOMAINS}
@@ -246,7 +317,12 @@ def main():
 
     idx = build_index()
     known_ids = {it["id"] for it in idx}
-    id_pat = re.compile(r"\b(" + "|".join(re.escape(i) for i in sorted(known_ids, key=len, reverse=True)) + r")\b") if known_ids else None
+    supa_task_ids = {it["id"] for it in idx if it["type"] == "task"}
+    # Inline-id matching only on PREFIX-NUM style ids (HP-004, FUND-012, OPP-032). Bare
+    # integer Supabase task ids are deliberately excluded — matching "122" inside an email
+    # body would false-attach. Integer tasks match via address / token / LLM instead.
+    inline_ids = {i for i in known_ids if re.match(r"^[A-Za-z]{1,6}-\w", i)}
+    id_pat = re.compile(r"\b(" + "|".join(re.escape(i) for i in sorted(inline_ids, key=len, reverse=True)) + r")\b") if inline_ids else None
 
     state = set(load_json(STATE, []))
     activity = load_json(ACT_FILE, [])
@@ -262,6 +338,7 @@ def main():
 
     scanned = 0
     new_high = {}   # item_id -> count
+    saved_docs = 0  # email attachments pulled onto tasks
     auto_resolved = []   # decision ids flipped open -> answered by a detected send
     users = load_users()
     llm_calls = 0
@@ -428,6 +505,9 @@ def main():
 
         for iid in strong:
             new_high[iid] = new_high.get(iid, 0) + 1
+            # Pull any document attachments onto the matched board task (integer ids only).
+            if iid in supa_task_ids:
+                saved_docs += save_task_attachments(msg, iid, rec["from"])
             d = dec_by_id.get(iid)
             if d is not None:
                 ea = d.setdefault("email_activity", [])
@@ -463,7 +543,8 @@ def main():
     flush()
 
     print(f"scanned {scanned} new messages | auto-attached: {sum(new_high.values())} across {len(new_high)} items "
-          f"| suggested(review): {suggested_ct} | light calls: {llm_calls} | 35b escalations: {heavy_calls}")
+          f"| docs saved to tasks: {saved_docs} | suggested(review): {suggested_ct} "
+          f"| light calls: {llm_calls} | 35b escalations: {heavy_calls}")
     for iid, n in sorted(new_high.items(), key=lambda x: -x[1]):
         print(f"  {iid} <- {n} email(s)")
     if auto_resolved:
