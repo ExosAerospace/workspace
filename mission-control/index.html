@@ -206,6 +206,9 @@
     font-size: 9px; background: rgba(6,182,212,0.15); color: #06b6d4;
     padding: 1px 6px; border-radius: 4px;
   }
+  .ms-chip { font-size: 10px; font-weight: 700; color: #0a1628; background: #f5a623; border-radius: 4px; padding: 1px 6px; margin-right: 2px; }
+  .ms-chip.ms-blocked { background: #6b7280; color: #fff; }
+  .filter-btn#scoreToggle.active { background: #f5a623; color: #0a1628; border-color: #f5a623; }
   .task-priority-high { font-size: 10px; color: var(--blocked-accent); font-weight: 600; }
   .task-priority-med { font-size: 10px; color: var(--yellow); }
 
@@ -507,6 +510,7 @@
     <button class="filter-btn" data-filter="group" onclick="setFilter('group')">Group</button>
     <button class="filter-btn" data-filter="exo" onclick="setFilter('exo')">Exo</button>
     <button class="filter-btn" data-filter="overdue" onclick="setFilter('overdue')">Overdue</button>
+    <button class="filter-btn" id="scoreToggle" onclick="toggleScoreSort()" title="Shadow preview: rank by Mission Score (CEO decision architecture)">★ Mission Score</button>
   </div>
   <select id="categoryFilter" onchange="render()">
     <option value="">All Projects</option>
@@ -686,6 +690,21 @@
 <script>
 // ── STATE ──
 let tasks = [];
+let sortByScore = false;      // shadow: default board order unchanged until toggled
+let MSCORES = {};             // task_id -> {score,pillar,blocked} from data/mission-scores.json
+async function loadMissionScores() {
+  try {
+    const r = await fetch('data/mission-scores.json?_=' + Date.now());
+    if (r.ok) { const j = await r.json(); MSCORES = j.scores || {}; }
+  } catch (e) { /* shadow file optional */ }
+}
+function msOf(t) { const m = MSCORES[String(t.id)]; return (m && typeof m.score === 'number') ? m.score : 0; }
+function toggleScoreSort() {
+  sortByScore = !sortByScore;
+  const b = document.getElementById('scoreToggle');
+  if (b) b.classList.toggle('active', sortByScore);
+  render();
+}
 let dragTaskId = null;
 let autoRefreshTimer = null;
 let currentFilter = 'all';
@@ -752,6 +771,7 @@ function colIdForState(state) {
 async function loadTasks(showFeedback = false) {
   if (showFeedback) setRefreshBadge('Refreshing...', false);
   try {
+    await loadMissionScores();   // shadow scores joined at render time
     // Try live API first; fall back to generated JSON file
     let data;
     try {
@@ -892,7 +912,9 @@ function render() {
   Object.values(cols).forEach(c => { c.innerHTML = ''; });
 
   const filtered = getFilteredTasks();
-  const sorted = [...filtered].sort((a, b) => (b.priority || 0) - (a.priority || 0) || (b.id || 0) - (a.id || 0));
+  const sorted = [...filtered].sort((a, b) => sortByScore
+    ? (msOf(b) - msOf(a)) || (b.id || 0) - (a.id || 0)
+    : (b.priority || 0) - (a.priority || 0) || (b.id || 0) - (a.id || 0));
 
   sorted.forEach(task => {
     const col = cols[task.state] || cols['Blocked'];
@@ -1014,13 +1036,19 @@ function buildCard(task) {
 
   const assignSelect = `<select class="assign-select" onclick="event.stopPropagation()" onchange="event.stopPropagation();assignTask('${task.id}',this.value)">${buildOwnerOptions(task.owner)}</select>`;
 
+  // Mission Score (shadow) — joined from data/mission-scores.json, non-authoritative
+  const ms = MSCORES[String(task.id)];
+  const msHtml = (ms && typeof ms.score === 'number')
+    ? `<span class="ms-chip${ms.blocked ? ' ms-blocked' : ''}" title="Mission Score (shadow) — ${escHtml(ms.pillar || '')}${ms.blocked ? ' · BLOCKED, needs a decision' : ''}">★ ${ms.score}${ms.blocked ? ' 🔒' : ''}</span>`
+    : '';
+
   div.innerHTML = `
     <div class="task-top">
       <div class="task-title" onclick="openEdit('${task.id}')">${escHtml(task.title)}</div>
       <span class="owner-badge ${ownerClass(task.owner)}">${ownerLabel(task.owner)}</span>
     </div>
     <div class="task-meta">
-      ${fundingFlagHtml}${catHtml}${srcHtml}${priHtml}${dueDateHtml}
+      ${msHtml}${fundingFlagHtml}${catHtml}${srcHtml}${priHtml}${dueDateHtml}
       ${assignSelect}
     </div>
     <div class="move-btns">${moveBtns}</div>
