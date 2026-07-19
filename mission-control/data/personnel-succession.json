@@ -1,0 +1,45 @@
+{
+  "generated": "2026-07-19",
+  "note": "Succession + role-automation state set by Jon 2026-07-19. Feeds auto-assignment + weekly RSI so work is not over-routed to departing staff and incoming staff are planned for. Human-maintained; not survey-derived (that is capability-matrix.json).",
+  "personnel": {
+    "nmilburn@exosaero.com": {
+      "name": "Neil Milburn",
+      "status": "winding_down",
+      "retire_target": "2027-Q1 to early Q2 (on Part 450 launch license completion)",
+      "transition_to": "lquinn@exosaero.com",
+      "note": "Do not route new long-horizon work; transition admin/financial responsibilities to Lizi."
+    },
+    "snorsworthy@exosaero.com": {
+      "name": "Steve Norsworthy",
+      "status": "retiring",
+      "retire_target": "2026-09 to 2026-10",
+      "transition_to": "victor",
+      "note": "Victor assumes ALL Steve N responsibilities + supports Mike Talley."
+    },
+    "victor": {
+      "name": "Victor (last name TBD)",
+      "email": "TBD@exosaero.com",
+      "status": "incoming",
+      "start_date": "2026-08-09",
+      "backfills": "snorsworthy@exosaero.com",
+      "supports": "mtalley@exosaero.com",
+      "note": "Run Onboarding_New_Employee_SOP.md (Lizi owns, task #1196). Need full name + email before start."
+    },
+    "lquinn@exosaero.com": {
+      "name": "Lizi Quinn",
+      "status": "expanding",
+      "absorbing_from": "nmilburn@exosaero.com",
+      "note": "Absorbing Neil's admin+financial load. Automate her admin/financial workflows + add FP&A capability (Datarails-equivalent: budgeting, consolidation, forecasting, variance, reporting)."
+    },
+    "kballard@exosaero.com": {
+      "name": "Kyle Ballard",
+      "status": "overloaded_cfo",
+      "note": "CFO role to be progressively obsoleted via ExO3 financial automation (CFO_FUNCTION.md). Kyle -> validator/Fiduciary Wedge, then phased out. Honest absorption, human sign-off retained."
+    },
+    "mtalley@exosaero.com": {
+      "name": "Mike Talley",
+      "status": "active",
+      "note": "To be supported by Victor from 2026-08-09."
+    }
+  }
+}
