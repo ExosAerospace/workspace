@@ -391,9 +391,9 @@ def main():
         counterparts = {a for a in (frm + to + cc) if a and a not in SELF_ADDRS and a.split("@")[-1] not in INTERNAL_DOMAINS}
         blob = subject + "\n" + body_text(msg)
 
-        # Backup export-control screen: HOLD (never capture/attach) anything tripping
-        # ITAR/EAR/CUI indicators — keep controlled content out of Mission Control.
-        ee_hits = ee.screen(blob + "\n" + " ".join(ee.attachment_names(msg)))
+        # Backup export-control screen: HOLD (never capture/attach) anything tripping ITAR/EAR/CUI
+        # markers, controlled CAD/engineering artifacts, technical data beyond the cleared guide, or LLM.
+        ee_hits = ee.deep_hits(blob + "\n" + " ".join(ee.attachment_names(msg)))
         if ee_hits:
             ee.quarantine_and_alert(mid, (frm[0] if frm else ""), subject, ee_hits, "tracker", blob)
             continue

@@ -1118,11 +1118,10 @@ const server = http.createServer((req, res) => {
       supabaseRequest('POST', 'tasks', task)
         .then(({ status, data }) => {
           const created = Array.isArray(data) ? data[0] : data;
-          // Notify the assigned owner by email (non-blocking)
-          if (created && created.owner) {
-            sendTaskAssignmentEmail(created, (session && session.name) || 'Mission Control')
-              .catch(e => console.error('[TaskAssign] create email error:', e.message));
-          }
+          // Assignment emails are now handled UNIVERSALLY by scripts/assignment-notifier.py
+          // (covers app + auto-capture + agents + direct DB writes). Inline send disabled
+          // here to avoid double-emailing app-path assignments. 2026-07-19.
+          // if (created && created.owner) sendTaskAssignmentEmail(created, ...)
           res.writeHead(status >= 400 ? status : 201, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify(created));
         }).catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
@@ -1168,12 +1167,9 @@ const server = http.createServer((req, res) => {
           supabaseRequest('POST', 'activities', activity).catch(() => {});
         }
 
-        // Notify the newly-assigned owner by email when ownership changes (non-blocking)
-        if (fields.owner && fields.owner !== oldTask.owner) {
-          const assignedTask = { ...oldTask, ...fields };
-          sendTaskAssignmentEmail(assignedTask, (session && session.name) || 'Mission Control')
-            .catch(e => console.error('[TaskAssign] reassign email error:', e.message));
-        }
+        // Reassignment emails now handled UNIVERSALLY by scripts/assignment-notifier.py
+        // (app + auto-capture + agents + direct DB). Inline send disabled to avoid
+        // double-emailing. 2026-07-19.
 
         res.writeHead(result.status >= 400 ? result.status : 200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(Array.isArray(result.data) ? result.data[0] : result.data));

@@ -296,8 +296,9 @@ def main():
         sender = frm[0] if frm else ""
         sender_domain = sender.split("@")[-1] if "@" in sender else ""
 
-        # Backup export-control screen: HOLD (never run) anything tripping ITAR/EAR/CUI indicators.
-        ee_hits = ee.screen(subject + "\n" + body + "\n" + " ".join(ee.attachment_names(msg)))
+        # Backup export-control screen: HOLD (never run) anything tripping ITAR/EAR/CUI markers,
+        # controlled CAD/engineering artifacts, technical data beyond the cleared guide, or the LLM layer.
+        ee_hits = ee.deep_hits(subject + "\n" + body + "\n" + " ".join(ee.attachment_names(msg)))
         if ee_hits:
             ee.quarantine_and_alert(mid, sender, subject, ee_hits, "command", body)
             log(f"[held:export-control] mid={mid} subj={subject!r} hits={ee_hits}")

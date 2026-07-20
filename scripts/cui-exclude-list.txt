@@ -1,0 +1,71 @@
+# CUI/ITAR sync-exclusion list — deep scrub 2026-06-17
+# rsync --exclude-from patterns (basename globs, match anywhere in tree).
+# These families contain ITAR USML Cat IV technical data (RDRE engine
+# performance, BLK4 trajectory, structural loads, NASA GFE-derived figures)
+# and MUST NOT replicate to the non-CUI Mac backup or DGX Spark.
+# Authoritative copies belong in the Atomus GCC High boundary.
+# See compliance/deep-scrub-report.md and compliance/controlled-files.json.
+DARPA_DSO*
+*HR001125S0013*
+SPRINT-BAA-RDRE*
+STRATFI-PY26-1-Exos-RDRE*
+NASA-SBIR-AERO4S26B-Technical-Proposal*
+NASA-SBIR-AERO4S26B-Full-Proposal*
+AERO4S26B-Technical-Proposal-ProSAMS*
+KARMEN-D2P2-Technical-Volume*
+KARMEN-Phase-III-Sole-Source-Justification*
+GTL_RDRE_Info_Request*
+Exos_GTL_RDRE_Deal_Structure*
+TACFI_RDRE_Technical_Summary*
+Exos_RDRE_Capability_Statement*
+
+# --- Controlled ARTIFACTS by file type (added 2026-07-19) ---
+# CAD / native-engineering / analysis / EDA / GNC-model files are controlled by TYPE —
+# the artifact carries geometry/performance/source beyond the cleared Payload User's Guide.
+# NEVER replicate off-box. Kept in sync with itar_ear_screen.py CAD_EXTS + deep_scrub2.py.
+*.sldprt
+*.sldasm
+*.slddrw
+*.step
+*.stp
+*.iges
+*.igs
+*.x_t
+*.x_b
+*.xmt_txt
+*.catpart
+*.catproduct
+*.cgr
+*.ipt
+*.iam
+*.idw
+*.prt
+*.asm
+*.drw
+*.dwg
+*.dxf
+*.stl
+*.3mf
+*.sat
+*.jt
+*.3dm
+*.inp
+*.odb
+*.cae
+*.nas
+*.bdf
+*.cas
+*.msh
+*.cgns
+*.nc
+*.gcode
+*.cnc
+*.tap
+*.sim
+*.fem
+*.brd
+*.sch
+*.kicad_pcb
+*.gbr
+*.slx
+*.mdl
