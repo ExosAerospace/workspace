@@ -28,7 +28,9 @@ DRY = "--dry-run" in sys.argv
 
 MARKERS = re.compile(r'READY TO SEND|SUBMIT-READY|DRAFT|whitepaper|white paper|letter|'
                      r'proposal|memo|one[\s-]?page|dossier|agenda|deck|package|FORWARD|'
-                     r'RFI|response|capability statement', re.I)
+                     r'RFI|response|capability statement|\bNDA\b|\bMNDA\b|template|'
+                     r'policy|policies|procedure|agreement|\bSOP\b|checklist|brief|'
+                     r'statement|plan|report|summary|guide|playbook', re.I)
 STOP = set("the a an of to for re fw and or in on at with from draft final v1 v2 v3 v4 v5 v6 "
            "ready send submit review response letter memo package full version latest exos "
            "aerospace update".split())
