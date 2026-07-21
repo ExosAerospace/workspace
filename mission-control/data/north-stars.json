@@ -1,0 +1,25 @@
+{
+  "note": "Strategic decision layer set by Jon 2026-07-21. Every task is scored on how well it ladders to its OWNER's North Star. Work that is off the owner's North Star is deprioritized on their board — this is what turns 'go after everything' into 'here is what matters for your role.'",
+  "owner_map": {
+    "jquinn@exosaero.com": "series_a",
+    "nmilburn@exosaero.com": "part_450"
+  },
+  "default": "revenue",
+  "north_stars": {
+    "series_a": {
+      "label": "Series A ($25M raise)",
+      "who": "CEO / Jon Quinn",
+      "keywords": ["series a", "investor", "raise", "capital", "term sheet", "data room", "valuation", "409a", "rofr", "scorpius", "family office", "mdb", "subscription", "safe", "cap table", "dilution", "fund-", "fundraise", "pitch deck", "warm intro", "close the round", "lp ", "commitment", "ic ", "iconia", "m&a", "acquisition"]
+    },
+    "revenue": {
+      "label": "Revenue (near-term cash)",
+      "who": "Everyone else (default)",
+      "keywords": ["revenue", "payload", "contract", "award", "sbir", "sttr", "tacfi", "phase iii", "phase 3", "sole source", "wet lease", "invoice", "sale", "customer", "purchase order", "idiq", "delivery order", "quote", "booking", "launch service", "osp-4", "nite-star", "entx", "on-ramp", "onramp", "paying", "grant", "searf", "bd-", "opp-", "manifest", "slot"]
+    },
+    "part_450": {
+      "label": "Part 450 launch license",
+      "who": "Neil Milburn",
+      "keywords": ["part 450", "part450", "part-450", "launch license", "faa ast", "certbuddy", "license application", "pre-application", "reentry", "431", "part 420", "licensing"]
+    }
+  }
+}

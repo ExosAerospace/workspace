@@ -36,23 +36,37 @@ SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
 
 WEIGHTS = {"strategic": 30, "value": 25, "urgency": 25, "signal": 15, "aging": 10}
 
-# Mission pillars in priority order (anchored on the standing strategy: capital-to-flight is
-# the binding constraint; then the Scorpius ROFR arbitrage; then funded gov capture).
-PILLARS = [
-    ("Capital Bridge / flight", 30, re.compile(
-        r'capital bridge|flight 2|flight two|payload oversell|reg\s?d|rule 504|409a|airframe|'
-        r'block ?3|blk3|blk4|launch (?:license|campaign|site)|nasa idiq|first commercial flight', re.I)),
-    ("Series A / Scorpius ROFR", 26, re.compile(
-        r'series a|rofr|scorpius|\bctd\b|composite technology|investor|capital raise|term sheet|'
-        r'data room|due diligence|family office|winder', re.I)),
-    ("Funded gov capture", 22, re.compile(
-        r'tacfi|stratfi|phase iii|phase 3|sbir|sttr|\bafrl\b|\bdarpa\b|\bonr\b|noaa|\bnih\b|nasa|'
-        r'msfc|solicitation|proposal|\brfi\b|\brfp\b|white ?paper|sam\.gov|submittal|searf', re.I)),
-    ("BD / partnerships", 16, re.compile(
-        r'partnership|\bmou\b|\bloi\b|\bnda\b|outreach|spaceport|japan|hospo|montana|university|'
-        r'wet lease|payload (?:sales|customer)|conference|panel', re.I)),
-]
-DEFAULT_PILLAR = ("Ops / internal", 9, None)
+# Strategic decision layer (Jon 2026-07-21): each task is scored on how well it ladders to its
+# OWNER's North Star — CEO/Jon → Series A, everyone else → Revenue, Neil → Part 450.
+_NS_PATH = os.path.join(WS, "mission-control", "data", "north-stars.json")
+NS = json.load(open(_NS_PATH)) if os.path.exists(_NS_PATH) else {"owner_map": {}, "default": "revenue", "north_stars": {}}
+
+
+def owner_north_star(email, owner):
+    e = (email or "").lower()
+    m = NS.get("owner_map", {})
+    if e in m:
+        return m[e]
+    o = (owner or "").lower()
+    if "milburn" in o:
+        return "part_450"
+    if e == "jquinn@exosaero.com" or o in ("jon", "john quinn", "jquinn"):
+        return "series_a"
+    return NS.get("default", "revenue")
+
+
+def classify_north_star(text):
+    """Which North Star does this task actually ladder to (by content)? Returns
+    (ns_key, strategic_pts 0-30, label). 'unaligned' = ladders to none (kill/defer candidate)."""
+    low = (text or "").lower()
+    best_ns, best_hits = "unaligned", 0
+    for ns, cfg in NS.get("north_stars", {}).items():
+        hits = sum(1 for k in cfg.get("keywords", []) if k in low)
+        if hits > best_hits:
+            best_ns, best_hits = ns, hits
+    pts = 30 if best_hits >= 2 else (18 if best_hits == 1 else 5)
+    label = NS.get("north_stars", {}).get(best_ns, {}).get("label", "Unaligned (no North Star)")
+    return best_ns, pts, label
 
 DOLLAR = re.compile(r'\$\s?([\d,]+(?:\.\d+)?)\s?([kKmMbB]|million|billion|thousand)?')
 
@@ -183,7 +197,8 @@ def main():
         if str(t.get("state", "")).lower() in ("done", "complete", "completed"):
             continue
         text = (t.get("title") or "") + " " + (t.get("description") or "")
-        pillar, strategic = pillar_of(text)
+        ns, strategic, pillar = classify_north_star(text)
+        role_ns = owner_north_star(t.get("assigned_email"), t.get("owner"))
         val = value_score(parse_dollars(text))
         days = days_until(t.get("due_date"))
         urg = urgency_score(days, text)
@@ -196,6 +211,8 @@ def main():
         final = round(min(100, raw) * factor)
         scores[str(t["id"])] = {
             "score": final, "pillar": pillar, "blocked": bool(blk),
+            "north_star": ns, "role_ns": role_ns, "owner": t.get("assigned_email") or t.get("owner"),
+            "title": (t.get("title") or "")[:70],
             "blocked_by": blk, "days_to_due": days,
             "breakdown": {"strategic": strategic, "value": val, "urgency": urg,
                           "signal": sig, "aging": age, "label_floor": round(label_floor, 1),
