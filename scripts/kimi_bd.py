@@ -76,8 +76,8 @@ def screen_or_block(text, label):
 def ask(prompt, data="", label="bd", system=None, temperature=1, max_tokens=4000, timeout=180):
     """Ask Kimi K3 about NON-SENSITIVE material. Screens the full payload first; blocks on any
     export-control hit (raises ExportControlBlocked). Returns the model's text on success."""
-    payload_text = (prompt or "") + "\n" + (data or "")
-    screen_or_block(payload_text, label)          # <-- hard gate; controlled content never egresses
+    payload_text = (system or "") + "\n" + (prompt or "") + "\n" + (data or "")
+    screen_or_block(payload_text, label)          # <-- hard gate; EVERYTHING that egresses is screened
 
     key = _secret("moonshot_api_key", "kimi_api_key")
     base = _secret("moonshot_base_url", default="https://api.moonshot.ai/v1")
