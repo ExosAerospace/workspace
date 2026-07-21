@@ -125,6 +125,21 @@ def main():
     L = []
     L.append(f"# Weekly CEO Prioritization Review — {stamp}\n")
     L.append("_Recursive Self-Improvement (LEARN layer). Mission Score is in SHADOW; this audit tunes it before it goes live._\n")
+    # North-Star strategic mix (from mission-scores.json)
+    try:
+        _sc = json.load(open(SCORES)).get("scores", {})
+        from collections import Counter as _C
+        _mix = _C(v.get("north_star") for v in _sc.values())
+        _tot = sum(_mix.values()) or 1
+        _lab = {"series_a": "Series A", "revenue": "Revenue", "part_450": "Part 450", "unaligned": "Ladders to NOTHING"}
+        L.append("## 0. Strategic mix (North Star alignment)")
+        for _ns in ["series_a", "revenue", "part_450", "unaligned"]:
+            L.append(f"- {_lab.get(_ns,_ns)}: {_mix.get(_ns,0)} ({round(100*_mix.get(_ns,0)/_tot)}%)")
+        if _mix.get("unaligned", 0) / _tot > 0.15:
+            L.append(f"- ⚠️ {_mix.get('unaligned',0)} tasks ladder to no North Star — kill/defer candidates.")
+        L.append("")
+    except Exception:
+        pass
     L.append(f"## 1. Prioritization accuracy\n- Top-20 by Mission Score with activity in the last 7 days: **{len(moved)}/{len(top20)} ({accuracy}%)**")
     L.append(f"- Tasks closed this week: **{len(closed_week)}**")
     if accuracy < 50:
