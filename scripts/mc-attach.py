@@ -54,10 +54,25 @@ def main():
     fname = os.path.basename(a.file)
     ext = os.path.splitext(fname)[1].lower()
     doc_key = a.doc_key or slug(fname)
+    # Standing rule: task attachments are Word, never raw .md/.txt — convert before storing.
+    src = a.file
+    if ext in (".md", ".txt"):
+        try:
+            import tempfile, importlib.util
+            _sp = importlib.util.spec_from_file_location("md_to_docx",
+                os.path.join(os.path.dirname(os.path.abspath(__file__)), "md_to_docx.py"))
+            _mdx = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(_mdx)
+            src = _mdx.convert(a.file, os.path.join(tempfile.mkdtemp(), os.path.splitext(fname)[0] + ".docx"))
+            fname = os.path.basename(src); ext = ".docx"
+        except Exception as e:
+            print("md->docx failed, storing original:", str(e)[:70]); src = a.file
+    title = a.title or fname
+    if title.lower().endswith((".md", ".txt")):
+        title = os.path.splitext(title)[0] + ".docx"
     ts = int(time.time() * 1000)
     stored = f"{ts}_{re.sub(r'[^A-Za-z0-9._-]', '_', fname)}"
-    shutil.copy2(a.file, os.path.join(UPLOADS, stored))
-    size = os.path.getsize(a.file)
+    shutil.copy2(src, os.path.join(UPLOADS, stored))
+    size = os.path.getsize(src)
 
     meta = load_meta()
     # supersede the current version of this doc on this task
@@ -71,7 +86,7 @@ def main():
 
     rec = {
         "id": hashlib.sha1(f"{stored}{ts}".encode()).hexdigest()[:16],
-        "filename": a.title or fname,
+        "filename": title,
         "stored_name": stored,
         "size": size,
         "extension": ext,
