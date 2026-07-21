@@ -94,7 +94,7 @@ def main():
                          'where to concentrate BD effort and what to let go"}\n\n'
                          + json.dumps([{"id": r.get("id"), "title": r.get("title"), "fit": r.get("fit"),
                                         "verdict": r.get("verdict"), "deadline": r.get("deadline")} for r in topN]),
-                         label="opp-triage-synth", system=system, max_tokens=1200, timeout=200)
+                         label="opp-triage-synth", system=system, max_tokens=4000, timeout=300)
         mm = re.search(r"\{.*\}", st, re.S)
         synth = json.loads(mm.group(0)) if mm else {}
     except Exception:
@@ -128,6 +128,26 @@ def main():
         star = "⭐" if r.get("id") in tp else ""
         L.append(f"- {star}**{r.get('fit')}** [{r.get('verdict')}] {r.get('id')} — {r.get('title')} · _{r.get('why')}_ · due {r.get('deadline') or 'n/a'}")
     open(rp, "w").write("\n".join(L))
+    json.dump(data, open(rp.replace(".md", ".json"), "w"), indent=2)
+
+    # push a summary to the Mission Control research feed (research.html)
+    try:
+        tp = [f"{byid[i].get('fit')} · {i} — {byid[i].get('title')}" for i in data.get("top_pursue_now", []) if i in byid]
+        payload = {"id": f"k3-opp-triage-{TODAY}", "title": f"K3 Whole-Board Opportunity Triage — {TODAY}",
+                   "date": TODAY, "category": "BD Triage", "source": "Kimi K3 deep-triage",
+                   "item_count": len(ranked), "highlights": [f"**{t}**" for t in tp[:10]],
+                   "body": "\n".join(L)[:8000]}
+        try:
+            tok = open(os.path.join(WS, "mission-control", "data", ".decisions-token")).read().strip()
+        except Exception:
+            tok = ""
+        req = urllib.request.Request("http://127.0.0.1:8080/api/research/ingest",
+                                     data=json.dumps(payload).encode(),
+                                     headers={"Content-Type": "application/json", "x-exo-token": tok}, method="POST")
+        urllib.request.urlopen(req, timeout=10)
+        print("delivered to MC research feed")
+    except Exception as e:
+        print("MC feed delivery skipped:", str(e)[:80])
 
     # concise stdout for relay
     print("\n=== PORTFOLIO READ ===\n" + data.get("portfolio_read", ""))
