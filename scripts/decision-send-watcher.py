@@ -111,6 +111,17 @@ def recipient(it):
 
 def send(it, draft):
     to = recipient(it)
+    # Standing rule: deliver Word, never a raw .md/.txt — convert before attaching.
+    att = draft
+    if draft and draft.lower().endswith((".md", ".txt")):
+        try:
+            import tempfile, importlib.util
+            spec = importlib.util.spec_from_file_location("md_to_docx", os.path.join(WS, "scripts", "md_to_docx.py"))
+            mdx = importlib.util.module_from_spec(spec); spec.loader.exec_module(mdx)
+            dst = os.path.join(tempfile.mkdtemp(), os.path.splitext(os.path.basename(draft))[0] + ".docx")
+            att = mdx.convert(draft, dst)
+        except Exception as e:
+            print("md->docx failed, sending original:", str(e)[:80]); att = draft
     m=EmailMessage(); m["From"]=FROM; m["To"]=to
     title=it.get("title","(decision)")
     m["Subject"]=f"[Ready to send — from you] {title}"
@@ -118,12 +129,12 @@ def send(it, draft):
          f"Related: {it.get('relatedItem','')}\n\n"
          f"This is the ready message. SEND IT FROM YOUR OWN EMAIL to the intended recipient. "
          f"It was delivered here to you, and was NOT sent to the outside party by the system.\n\n"
-         f"{('Attached: '+os.path.basename(draft)+'  (verify it matches before you send)') if draft else 'NOTE: I could not confidently locate a draft file for this — decision context only. Point me at the file if needed.'}\n\n"
+         f"{('Attached: '+os.path.basename(att)+'  (verify it matches before you send)') if draft else 'NOTE: I could not confidently locate a draft file for this — decision context only. Point me at the file if needed.'}\n\n"
          f"Context: {it.get('context','')[:800]}\n\n(auto-delivered by decision-send-watcher to YOUR inbox only, never external.)")
     m.set_content(ctx)
     if draft:
-        ct,_=mimetypes.guess_type(draft); ct=ct or "application/octet-stream"; mt,st=ct.split("/",1)
-        with open(draft,"rb") as f: m.add_attachment(f.read(),maintype=mt,subtype=st,filename=os.path.basename(draft))
+        ct,_=mimetypes.guess_type(att); ct=ct or "application/octet-stream"; mt,st=ct.split("/",1)
+        with open(att,"rb") as f: m.add_attachment(f.read(),maintype=mt,subtype=st,filename=os.path.basename(att))
     p=subprocess.run(["msmtp","-a","protonmail",to],input=bytes(m),capture_output=True,timeout=60)
     return p.returncode==0, (p.stderr.decode()[:200] if p.returncode else "")
 
