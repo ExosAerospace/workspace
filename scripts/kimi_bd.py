@@ -73,7 +73,7 @@ def screen_or_block(text, label):
     return text
 
 
-def ask(prompt, data="", label="bd", system=None, temperature=0.3, max_tokens=4000, timeout=180):
+def ask(prompt, data="", label="bd", system=None, temperature=1, max_tokens=4000, timeout=180):
     """Ask Kimi K3 about NON-SENSITIVE material. Screens the full payload first; blocks on any
     export-control hit (raises ExportControlBlocked). Returns the model's text on success."""
     payload_text = (prompt or "") + "\n" + (data or "")
@@ -88,7 +88,8 @@ def ask(prompt, data="", label="bd", system=None, temperature=0.3, max_tokens=40
         raise RuntimeError("Gate passed but no API key. Add `moonshot_api_key` to ~/.openclaw/secrets.json "
                            "(get one at platform.kimi.ai) to activate the Kimi K3 BD tier.")
 
-    body = {"model": MODEL, "temperature": temperature, "max_tokens": max_tokens,
+    body = {"model": MODEL, "temperature": (1 if MODEL.startswith("kimi-k3") else temperature),
+            "max_tokens": max_tokens,
             "messages": ([{"role": "system", "content": system}] if system else [])
             + [{"role": "user", "content": (prompt + ("\n\n" + data if data else ""))}]}
     req = urllib.request.Request(base.rstrip("/") + "/chat/completions",
