@@ -9,12 +9,12 @@
     "series_a": {
       "label": "Series A ($25M raise)",
       "who": "CEO / Jon Quinn",
-      "keywords": ["series a", "investor", "raise", "capital", "term sheet", "data room", "valuation", "409a", "rofr", "scorpius", "family office", "mdb", "subscription", "safe", "cap table", "dilution", "fund-", "fundraise", "pitch deck", "warm intro", "close the round", "lp ", "commitment", "ic ", "iconia", "m&a", "acquisition"]
+      "keywords": ["series a", "investor", "raise", "capital", "term sheet", "data room", "valuation", "409a", "rofr", "scorpius", "family office", "mdb", "subscription", "safe", "cap table", "dilution", "fund-", "fundraise", "pitch deck", "warm intro", "close the round", "lp ", "commitment", "ic ", "iconia", "m&a", "acquisition", "financials", "due diligence", "dossier", "capital introduction", "ppm", "subscription agreement", "ae industrial", "generational partners", "check size", "allocation", "family capital", "venture", "equity package", "504", "reg d", "osc loan", "office of strategic capital"]
     },
     "revenue": {
       "label": "Revenue (near-term cash)",
       "who": "Everyone else (default)",
-      "keywords": ["revenue", "payload", "contract", "award", "sbir", "sttr", "tacfi", "phase iii", "phase 3", "sole source", "wet lease", "invoice", "sale", "customer", "purchase order", "idiq", "delivery order", "quote", "booking", "launch service", "osp-4", "nite-star", "entx", "on-ramp", "onramp", "paying", "grant", "searf", "bd-", "opp-", "manifest", "slot"]
+      "keywords": ["revenue", "payload", "contract", "award", "sbir", "sttr", "tacfi", "phase iii", "phase 3", "sole source", "wet lease", "invoice", "sale", "customer", "purchase order", "idiq", "delivery order", "quote", "booking", "launch service", "osp-4", "nite-star", "entx", "on-ramp", "onramp", "paying", "grant", "searf", "bd-", "opp-", "manifest", "slot", "pressurant", "valve", "avionics", "flight computer", "airframe", "nozzle", "propellant", "thrust", "recovery system", "two-stage", "dual valve", "helium", "methane", "cryo tank", "hot-fire", "hotfire", "test stand", "materials report", "clin", "fins", "spacewerx", "afwerx", "afrl", "darpa", "ssc", "space force", "air force", "army", "navy", "capability statement", "teaming", "vendor registration", "white paper", "solicitation", "rfq", "rfp", "rfi", "flight test", "recovery", "mco", "engine test", "build "]
     },
     "part_450": {
       "label": "Part 450 launch license",
