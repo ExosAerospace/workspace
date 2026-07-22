@@ -1,0 +1,14 @@
+{
+  "note": "Standing loop-in for outbound BD/investor/partnership outreach. Set by Jon 2026-07-22.",
+  "loop_in_cc": [
+    "info@exosaero.com",
+    "lquinn@exosaero.com"
+  ],
+  "cc_rationale": {
+    "info@exosaero.com": "Public inquiry channel, auto-forwarded to the Proton intake so Exo captures replies. NON-SENSITIVE outreach only (no ITAR/EAR/CUI). Export-control screen backstops.",
+    "lquinn@exosaero.com": "Lizi Quinn, copied so she is aware of outreach and outcomes as she absorbs the expanded ops role."
+  },
+  "reply_all_ask": "Please reply all so our coordination team stays looped in and can support next steps quickly.",
+  "outcome_tracking": "scripts/outreach-reply-tracker.py — reads external replies via the info@ loop, classifies positive/negative/needs-follow-up, updates the CRM contact, and DMs Jon on Discord. launchd com.exos.outreach-reply-tracker (every 20 min).",
+  "compliance": "info@ is public/non-sensitive. Never CC info@ on outreach containing controlled technical data. Sensitive/M365 mail stays human-gated; nothing here connects to M365 directly."
+}
