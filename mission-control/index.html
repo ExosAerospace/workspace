@@ -710,6 +710,7 @@ let autoRefreshTimer = null;
 let currentFilter = 'all';
 let currentUserRole = 'admin';
 let currentUser = null;
+let panelOpen = false;   // true while a task detail/edit panel is open — pause auto-refresh so edits/notes aren't wiped
 const REFRESH_INTERVAL = 30000;
 
 // ── ROLE-AWARE UI ──
@@ -769,6 +770,9 @@ function colIdForState(state) {
 
 // ── LOAD ──
 async function loadTasks(showFeedback = false) {
+  // Never wipe the board on the 30s auto-refresh while the user is reading/editing a task
+  // (this is what blanked Phil's list and lost in-progress notes). Manual Refresh still works.
+  if (panelOpen && !showFeedback) { scheduleRefresh(); return; }
   if (showFeedback) setRefreshBadge('Refreshing...', false);
   try {
     await loadMissionScores();   // shadow scores joined at render time
@@ -801,6 +805,10 @@ async function loadTasks(showFeedback = false) {
       hideError();
       scheduleRefresh();
       return;
+    }
+    if ((!data || data.length === 0) && Array.isArray(tasks) && tasks.length > 0) {
+      // Transient empty/failed API response — keep the last good board instead of blanking it.
+      setRefreshBadge('Kept last view', true); scheduleRefresh(); return;
     }
     tasks = data.map(t => ({ ...t, state: normalizeState(t.state) }));
     render();
@@ -1065,6 +1073,7 @@ function escHtml(s) {
 let currentPanelTaskId = null;
 
 function openEdit(id) {
+  panelOpen = true;
   const task = tasks.find(t => t.id == id);
   if (!task) return;
   currentPanelTaskId = id;
@@ -1210,6 +1219,7 @@ function switchTab(tab) {
 }
 
 function closePanel() {
+  panelOpen = false;
   document.getElementById('panelOverlay').classList.remove('open');
   document.getElementById('detailPanel').classList.remove('open');
   currentPanelTaskId = null;
