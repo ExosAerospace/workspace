@@ -34,7 +34,8 @@ NOREPLY = re.compile(
     r'@(m|email|e|mail|news|mktg|marketing|updates?|reply|notify|mailer|em)\.|'   # marketing subdomains
     r'(mailchimp|sendgrid|substack|calendly|amazonses|sparkpost|mailgun|stripe|intuit|quickbooks|'
     r'docusign|discord|github\.com|slack\.com|zoom\.us|atlassian|paypal|dropbox|linkedin|facebookmail|'
-    r'apple\.com|accounts\.google|googlemail|adobe|hubspot|salesforce)', re.I)
+    r'apple\.com|accounts\.google|googlemail|adobe|hubspot|salesforce|'
+    r'list-?serv|listsrv|majordomo|mailman|nasaprs|@lists?[.\-]|-request@|-bounces?@|constantcontact)', re.I)
 
 
 def _k():
