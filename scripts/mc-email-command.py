@@ -16,7 +16,7 @@ AUTH: allowlisted sender AND (domain DMARC/DKIM = pass  OR  passphrase on line 1
 and NOT an explicit DMARC/DKIM fail. Failed-auth trigger emails raise a Discord spoof
 alert and do NOT run. Idempotent via a message-id state file.
 """
-import imaplib, email, json, os, re, sys, subprocess, tempfile, fcntl, hashlib, html as _html
+import imaplib, email, json, os, re, sys, subprocess, tempfile, fcntl, hashlib, html as _html, mimetypes
 from email.utils import getaddresses, parsedate_to_datetime
 from email.message import EmailMessage
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -31,10 +31,14 @@ IMAP_HOST, IMAP_PORT = "127.0.0.1", 1143
 EMAIL_USER = "jquinnexo@pm.me"
 USERS_FILE = "/Users/exomac/.openclaw/workspace/mission-control/users.json"
 TRIGGER_ADDR = {"jquinnexo+do@pm.me", "exosmc+do@proton.me"}
+# Jon's go-forward task-assignment inbox: a deliberate send (To:/Delivered-To) to exosmc
+# is itself a task command, even without an "@exobot" keyword. Cc/Bcc to exosmc stays
+# passive (submissions archive / email tracker) so copying it on a thread doesn't fire a run.
+TASK_TO_ADDR = {"exosmc@pm.me", "exosmc@proton.me", "jquinnexo+do@pm.me", "exosmc+do@proton.me"}
 JON_DISCORD = "1501632195163590739"
 OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
 MAX_PER_RUN = int(os.environ.get("MCC_MAX_PER_RUN", "3"))
-EXOBOT_RE = re.compile(r'@\s*exobot\b', re.I)
+EXOBOT_RE = re.compile(r'@\s*ex(?:obot|obto|bot|oboto|obott)\b', re.I)  # tolerate common typos (exobto/exbot)
 
 ENVELOPE = (
     "[EMAIL-COMMAND from {sender_name} <{sender_email}> — authenticated{note}]\n\n"
@@ -70,15 +74,18 @@ def load_json(path, default):
 SEEN_CAP = 3000  # keep the most-RECENT N handled message-ids
 
 
-def save_state(seen_list):
+def save_state(seen_list, fails=None):
     """Persist seen message-ids in RECENCY order (insertion order), capped to the most
     recent SEEN_CAP. Never sort message-ids: they have no chronological order, so sorting
-    then truncating perpetually evicts a fixed alphabetical band and reprocesses it."""
+    then truncating perpetually evicts a fixed alphabetical band and reprocesses it.
+    `fails` maps mid -> attempt count for directives whose agent hand-off failed, so a
+    transient failure re-queues (bounded) instead of being marked seen-and-lost."""
     keep = seen_list[-SEEN_CAP:]
+    fails = fails or {}
     os.makedirs(os.path.dirname(STATE), exist_ok=True)
     tmp = STATE + ".tmp"
     with open(tmp, "w") as f:
-        json.dump({"seen": keep}, f, indent=2)
+        json.dump({"seen": keep, "fails": fails}, f, indent=2)
     os.replace(tmp, STATE)
 
 
@@ -140,22 +147,79 @@ def md_to_text(s):
     return txt.strip()
 
 
-def email_requester(to_addr, orig_subject, instruction, reply_text):
+# Document/artifact paths the agent produced, so replies carry the file in hand (not just a
+# Mission Control task reference). Restricted to known workspace output folders + doc extensions.
+_ATTACH_RE = re.compile(
+    r'((?:drafts|mission-control/uploads|assets|reports|submissions-archive|out|exports)'
+    r'/[\w./-]+?\.(?:docx|pdf|xlsx|xls|pptx|csv|txt|md|png|jpe?g))', re.I)
+
+def _as_word(ap):
+    """Jon/team work from Word, never .md/.txt. Convert a raw markdown/text artifact to a
+    clean .docx and return that path; on any failure fall back to the original."""
+    if not ap.lower().endswith((".md", ".txt")):
+        return ap
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("md_to_docx", os.path.join(WS, "scripts", "md_to_docx.py"))
+        mdx = importlib.util.module_from_spec(spec); spec.loader.exec_module(mdx)
+        dst = os.path.splitext(ap)[0] + ".docx"
+        out = mdx.convert(ap, dst)
+        # Only accept a real .docx; never let a raw .md/.txt through.
+        return out if out and out.lower().endswith(".docx") and os.path.isfile(out) else None
+    except Exception as e:
+        log(f"[email-reply] md->docx failed for {ap}: {e} (dropping, no raw .md attached)")
+        return None
+
+
+def collect_reply_attachments(*texts, cap=5, max_bytes=20 * 1024 * 1024):
+    """Pull real, existing artifact files referenced in the agent's reply/instruction so the
+    outbound email includes the actual document. Bounded by count and total size.
+    Any .md/.txt artifact is converted to Word before attaching (standing: deliver .docx)."""
+    out, total = [], 0
+    for t in texts:
+        for rel in _ATTACH_RE.findall(t or ""):
+            ap = os.path.normpath(os.path.join(WS, rel.strip()))
+            if not ap.startswith(WS) or not os.path.isfile(ap) or ap in out:
+                continue
+            ap = _as_word(ap)
+            if not ap or not os.path.isfile(ap) or ap in out:
+                continue
+            sz = os.path.getsize(ap)
+            if sz == 0 or sz > max_bytes or total + sz > max_bytes:
+                continue
+            out.append(ap); total += sz
+            if len(out) >= cap:
+                return out
+    return out
+
+
+def email_requester(to_addr, orig_subject, instruction, reply_text, attachments=None):
     """Reply by email to the authenticated requester who sent the @Exobot command, so they
     get closure (done, or decisions awaiting them) without watching Discord. Internal only:
-    to_addr is always an allowlisted Mission Control user."""
+    to_addr is always an allowlisted Mission Control user. Any document the agent produced is
+    attached to THIS email so the recipient gets the file in hand, not just a task pointer."""
     subj = re.sub(r'^\s*((re|fwd?|fw)\s*:\s*)+', '', orig_subject or '', flags=re.I).strip() or "your request"
     instr1 = " ".join((instruction or "").split())[:220]
     m = EmailMessage()
     m["From"] = "Exo (Exos AI Assistant) <jquinnexo@pm.me>"
     m["To"] = to_addr
     m["Subject"] = f"Re: {subj}, Exo update"
+    note = ("\nDocument attached to this email.\n" if attachments else "")
     m.set_content(
         f"You directed Exo by email:\n  \"{md_to_text(instr1)}\"\n\n"
-        f"{md_to_text(reply_text)}\n\n"
+        f"{md_to_text(reply_text)}\n{note}\n"
         f"- Exo (automated). Anything external or sensitive is drafted and held for your approval, "
         f"not sent. Forward another @Exobot instruction to continue.\n"
     )
+    for ap in (attachments or []):
+        try:
+            with open(ap, "rb") as f:
+                data = f.read()
+            ctype = mimetypes.guess_type(ap)[0] or "application/octet-stream"
+            maintype, subtype = ctype.split("/", 1)
+            m.add_attachment(data, maintype=maintype, subtype=subtype, filename=os.path.basename(ap))
+        except Exception as e:
+            log(f"[email-reply] attach failed {ap}: {e}")
     try:
         p = subprocess.run(["/opt/homebrew/bin/msmtp", "-a", "protonmail", to_addr],
                            input=m.as_bytes(), capture_output=True, timeout=60, env=sub_env())
@@ -171,7 +235,7 @@ def email_requester(to_addr, orig_subject, instruction, reply_text):
 
 def sub_env():
     env = dict(os.environ)
-    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.14.0/bin:"
+    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.15.0/bin:"
                    "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
     return env
 
@@ -246,7 +310,16 @@ def is_trigger(msg, subject, body):
             for _n, a in getaddresses([v]):
                 if a:
                     recips.add(a.lower())
-    return bool(recips & TRIGGER_ADDR)
+    if recips & TRIGGER_ADDR:
+        return True
+    # A deliberate send TO the task inbox (not merely Cc/Bcc) is a command on its own.
+    to_recips = set()
+    for hk in ("To", "Delivered-To", "X-Original-To", "Envelope-To"):
+        for v in msg.get_all(hk, []):
+            for _n, a in getaddresses([v]):
+                if a:
+                    to_recips.add(a.lower())
+    return bool(to_recips & TASK_TO_ADDR)
 
 
 def main():
@@ -267,6 +340,8 @@ def main():
     state = load_json(STATE, {})
     seen_list = list(dict.fromkeys(state.get("seen", [])))  # preserve order, drop dupes
     seen = set(seen_list)
+    fails = dict(state.get("fails", {}))  # mid -> failed agent-run attempts (bounded retry)
+    MAX_TRIES = 3
     since = (datetime.now(timezone.utc) - timedelta(days=3)).strftime("%d-%b-%Y")
 
     m = imap_conn()
@@ -288,9 +363,9 @@ def main():
         body = body_text(msg)
         if not is_trigger(msg, subject, body):
             continue
-        seen.add(mid)  # a trigger email is handled exactly once, pass or fail
+        seen.add(mid)  # pre-commit so a concurrent run can't re-grab it mid-flight
         seen_list.append(mid)
-        save_state(seen_list)  # commit BEFORE the long agent run so an overlap can't re-grab it
+        save_state(seen_list, fails)  # commit BEFORE the long agent run so an overlap can't re-grab it
 
         frm = [a.lower() for _n, a in getaddresses([msg.get("From", "")])]
         sender = frm[0] if frm else ""
@@ -369,14 +444,33 @@ def main():
                 ok = False
             if not ok:
                 err = (r.stderr or r.stdout or "").strip()[-400:]
-                log(f"[agent] FAILED mid={mid} rc={r.returncode}: {err}")
-                discord(f"⚠️ Email-command accepted but the agent hand-off FAILED.\n"
-                        f"Subject: {subject}\n{err[:300]}")
+                tries = fails.get(mid, 0) + 1
+                if tries < MAX_TRIES:
+                    # re-queue: un-commit from seen so a later run retries instead of losing it
+                    fails[mid] = tries
+                    if mid in seen:
+                        seen.discard(mid)
+                        try: seen_list.remove(mid)
+                        except ValueError: pass
+                    save_state(seen_list, fails)
+                    log(f"[agent] FAILED mid={mid} rc={r.returncode} (try {tries}/{MAX_TRIES}, re-queued): {err}")
+                    discord(f"⚠️ Email-command hand-off failed (try {tries}/{MAX_TRIES}, will retry).\n"
+                            f"Subject: {subject}\n{err[:300]}")
+                else:
+                    fails.pop(mid, None)
+                    save_state(seen_list, fails)  # give up after MAX_TRIES; stays seen
+                    log(f"[agent] FAILED mid={mid} rc={r.returncode} (gave up after {MAX_TRIES}): {err}")
+                    discord(f"⛔ Email-command failed {MAX_TRIES}× — giving up (needs a look).\n"
+                            f"Subject: {subject}\n{err[:300]}")
             else:
+                fails.pop(mid, None)
                 sender_name = names.get(sender, sender)
-                discord(f"✅ Email-command done for {sender_name} — {subject}\n\n{reply[:1500]}")
-                email_requester(sender, subject, instruction, reply)
-                log(f"[agent] done rc=0 mid={mid}; discord+emailed {sender}")
+                atts = collect_reply_attachments(reply, instruction)
+                discord(f"✅ Email-command done for {sender_name} — {subject}\n\n{reply[:1500]}"
+                        + (f"\n\n📎 attached: {', '.join(os.path.basename(a) for a in atts)}" if atts else ""))
+                email_requester(sender, subject, instruction, reply, attachments=atts)
+                log(f"[agent] done rc=0 mid={mid}; discord+emailed {sender}"
+                    + (f"; attached {len(atts)} file(s)" if atts else ""))
         except Exception as e:
             log(f"[agent] run failed: {e}")
             discord(f"⚠️ Email-command received but the agent run errored: {e}")
@@ -391,7 +485,7 @@ def main():
         m.logout()
     except Exception:
         pass
-    save_state(seen_list)
+    save_state(seen_list, fails)
     log(f"run complete: {processed} trigger email(s) handled")
 
 

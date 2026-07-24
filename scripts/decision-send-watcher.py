@@ -121,7 +121,12 @@ def send(it, draft):
             dst = os.path.join(tempfile.mkdtemp(), os.path.splitext(os.path.basename(draft))[0] + ".docx")
             att = mdx.convert(draft, dst)
         except Exception as e:
-            print("md->docx failed, sending original:", str(e)[:80]); att = draft
+            # NEVER fall back to a raw .md/.txt — Jon works from Word only. Drop the attachment
+            # instead and let the note point him at the source path.
+            print("md->docx failed, dropping attachment (no raw .md):", str(e)[:80]); att = None
+    # Belt-and-suspenders: if anything still points at a raw markdown/text file, do not attach it.
+    if att and att.lower().endswith((".md", ".txt")):
+        att = None
     m=EmailMessage(); m["From"]=FROM; m["To"]=to
     title=it.get("title","(decision)")
     m["Subject"]=f"[Ready to send — from you] {title}"
@@ -129,10 +134,10 @@ def send(it, draft):
          f"Related: {it.get('relatedItem','')}\n\n"
          f"This is the ready message. SEND IT FROM YOUR OWN EMAIL to the intended recipient. "
          f"It was delivered here to you, and was NOT sent to the outside party by the system.\n\n"
-         f"{('Attached: '+os.path.basename(att)+'  (verify it matches before you send)') if draft else 'NOTE: I could not confidently locate a draft file for this — decision context only. Point me at the file if needed.'}\n\n"
+         f"{('Attached: '+os.path.basename(att)+'  (verify it matches before you send)') if att else ('NOTE: draft could not be delivered as Word (conversion issue). Source: '+os.path.basename(draft)+' — reply and I will resend as .docx.') if draft else 'NOTE: I could not confidently locate a draft file for this — decision context only. Point me at the file if needed.'}\n\n"
          f"Context: {it.get('context','')[:800]}\n\n(auto-delivered by decision-send-watcher to YOUR inbox only, never external.)")
     m.set_content(ctx)
-    if draft:
+    if att:
         ct,_=mimetypes.guess_type(att); ct=ct or "application/octet-stream"; mt,st=ct.split("/",1)
         with open(att,"rb") as f: m.add_attachment(f.read(),maintype=mt,subtype=st,filename=os.path.basename(att))
     p=subprocess.run(["msmtp","-a","protonmail",to],input=bytes(m),capture_output=True,timeout=60)
