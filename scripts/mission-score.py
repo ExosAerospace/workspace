@@ -23,6 +23,11 @@ Dimensions (weights):
 
 Run: python3 scripts/mission-score.py   (scheduled via launchd com.exos.mission-score)
 """
+
+# --- supabase retry/backoff shim (auto-added) ---
+import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
+import supabase_util as _sbu; _sbu.install()
+# --- end shim ---
 import json, os, re, math, time, urllib.request
 from datetime import datetime, timezone, date
 

@@ -16,6 +16,11 @@ Produces each week:
 Output: a dated report in reports/, a "Weekly CEO Prioritization Review" Decision for Jon,
 and a Discord summary. Read-only on tasks; only appends a report + one Decision + an alert.
 """
+
+# --- supabase retry/backoff shim (auto-added) ---
+import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
+import supabase_util as _sbu; _sbu.install()
+# --- end shim ---
 import json, os, re, subprocess, time, hashlib, urllib.request
 from datetime import datetime, timezone, date, timedelta
 

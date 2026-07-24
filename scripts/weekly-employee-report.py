@@ -10,6 +10,11 @@ Run: python3 scripts/weekly-employee-report.py            → emails each employ
      python3 scripts/weekly-employee-report.py --preview  → emails ALL reports to Jon for review
 Scheduled Mondays via launchd com.exos.weekly-employee-report.
 """
+
+# --- supabase retry/backoff shim (auto-added) ---
+import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
+import supabase_util as _sbu; _sbu.install()
+# --- end shim ---
 import json, os, sys, subprocess, urllib.request
 from datetime import date
 from email.message import EmailMessage

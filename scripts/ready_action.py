@@ -1,0 +1,150 @@
+#!/usr/bin/env python3
+"""
+ready_action.py — the delivery primitive for Jon-gated actions.
+
+Standing rule (feedback_send_or_mc_task_or_dead): a draft in a file is DEAD. When an
+action is ready and gated on Jon, it must (a) land in his inbox as a ready-to-send, and
+(b) open a Mission Control task. Never cite a file path.
+
+deliver(...) does both, idempotently (keyed by `key` + content hash), so calling it every
+cron cycle does not spam Jon or duplicate tasks. Import it, or run as CLI.
+"""
+
+# --- supabase retry/backoff shim (auto-added) ---
+import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
+import supabase_util as _sbu; _sbu.install()
+# --- end shim ---
+import os, sys, json, ssl, hashlib, smtplib, urllib.request, urllib.parse
+from datetime import datetime
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+WS = os.path.expanduser("~/.openclaw/workspace")
+SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
+STATE = os.path.join(WS, "logs", "ready-actions-dispatched.json")
+LOG = os.path.join(WS, "logs", "ready-action.log")
+
+# Email (Proton bridge, same as the other senders)
+SMTP_HOST, SMTP_PORT = "127.0.0.1", 1025
+SMTP_USER, SMTP_PASS = "jquinnexo@pm.me", "SPqYBivj98-jyF3RujLKxA"
+JON = "jquinn@exosaero.com"
+
+# Supabase MC board
+SB_URL = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
+def _sb_key():
+    return json.load(open(SECRETS))["supabase_service_role_key"]
+
+
+def _log(msg):
+    os.makedirs(os.path.dirname(LOG), exist_ok=True)
+    with open(LOG, "a") as f:
+        f.write(f"{datetime.now():%Y-%m-%d %H:%M:%S}  {msg}\n")
+
+
+def _load_state():
+    try: return json.load(open(STATE))
+    except Exception: return {}
+
+def _save_state(st):
+    os.makedirs(os.path.dirname(STATE), exist_ok=True)
+    json.dump(st, open(STATE, "w"), indent=2)
+
+
+def _sb(method, path, payload=None):
+    key = _sb_key()
+    h = {"apikey": key, "Authorization": "Bearer " + key,
+         "Content-Type": "application/json", "Prefer": "return=representation"}
+    data = json.dumps(payload).encode() if payload is not None else None
+    req = urllib.request.Request(SB_URL + path, data=data, headers=h, method=method)
+    with urllib.request.urlopen(req, timeout=25, context=ssl.create_default_context()) as r:
+        body = r.read().decode()
+        return json.loads(body) if body else []
+
+
+def create_task(title, description, category="BD", priority=70, owner="Jon", source="capture-agent"):
+    """Create an MC task, deduped by exact title. Returns task id or None."""
+    try:
+        q = f"tasks?title=eq.{urllib.parse.quote(title)}&select=id&limit=1"
+        existing = _sb("GET", q)
+        if isinstance(existing, list) and existing:
+            return existing[0].get("id")
+    except Exception as e:
+        _log(f"task dedup check failed: {e}")
+    task = {"title": title, "description": description, "state": "To Do",
+            "category": category, "priority": priority, "owner": owner, "source": source}
+    try:
+        res = _sb("POST", "tasks", task)
+        tid = res[0].get("id") if isinstance(res, list) and res else None
+        _log(f"MC task created: {title} -> {tid}")
+        return tid
+    except Exception as e:
+        _log(f"MC task create FAILED ({title}): {e}")
+        return None
+
+
+def email_ready(subject, body, to=JON):
+    msg = MIMEMultipart()
+    msg["From"] = f"Exo <{SMTP_USER}>"; msg["Reply-To"] = JON
+    msg["To"] = to; msg["Subject"] = subject
+    msg.attach(MIMEText(body, "plain"))
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as s:
+        s.ehlo(); s.starttls(); s.ehlo(); s.login(SMTP_USER, SMTP_PASS)
+        s.sendmail(SMTP_USER, [to], msg.as_string())
+    _log(f"emailed ready-to-send: {subject}")
+
+
+def deliver(key, subject, body, to_line="", cc_line="", task_title=None,
+            category="BD", priority=75, do_email=True, do_mc=True):
+    """Idempotent: emails Jon the ready-to-send + opens an MC task. Re-running with the
+    same key+content is a no-op. Changed content re-delivers. Returns a result dict."""
+    st = _load_state()
+    h = hashlib.sha256((subject + "\n" + body + "\n" + to_line).encode()).hexdigest()[:16]
+    prev = st.get(key)
+    if prev and prev.get("hash") == h:
+        return {"key": key, "skipped": True, "task_id": prev.get("task_id")}
+
+    # Compose the inbox email: recipients header block + the ready-to-send body
+    hdr = ""
+    if to_line: hdr += f"TO: {to_line}\n"
+    if cc_line: hdr += f"CC: {cc_line}\n"
+    hdr += f"SUBJECT: {subject}\n"
+    inbox_subject = f"[READY TO SEND] {task_title or subject}"
+    inbox_body = ("Ready-to-send below. Copy/forward from Outlook (gov contacts send from you).\n\n"
+                  + hdr + "\n" + body)
+
+    emailed = False
+    if do_email:
+        try:
+            email_ready(inbox_subject, inbox_body); emailed = True
+        except Exception as e:
+            _log(f"email FAILED ({key}): {e}")
+
+    task_id = prev.get("task_id") if prev else None
+    if do_mc and not task_id:
+        desc = (f"Ready-to-send delivered to Jon's inbox {datetime.now():%Y-%m-%d %H:%M}.\n\n"
+                + hdr + "\n" + body[:1500])
+        task_id = create_task(task_title or subject, desc, category=category, priority=priority)
+
+    st[key] = {"hash": h, "task_id": task_id, "emailed_at": f"{datetime.now():%Y-%m-%d %H:%M}"}
+    _save_state(st)
+    return {"key": key, "skipped": False, "emailed": emailed, "task_id": task_id}
+
+
+if __name__ == "__main__":
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--key", required=True)
+    ap.add_argument("--subject", required=True)
+    ap.add_argument("--body-file", required=True)
+    ap.add_argument("--to", default="")
+    ap.add_argument("--cc", default="")
+    ap.add_argument("--task-title", default=None)
+    ap.add_argument("--category", default="BD")
+    ap.add_argument("--priority", type=int, default=75)
+    ap.add_argument("--no-email", action="store_true")
+    ap.add_argument("--no-mc", action="store_true")
+    a = ap.parse_args()
+    body = open(a.body_file, encoding="utf-8").read()
+    out = deliver(a.key, a.subject, body, a.to, a.cc, a.task_title, a.category,
+                  a.priority, do_email=not a.no_email, do_mc=not a.no_mc)
+    print(json.dumps(out, indent=2))

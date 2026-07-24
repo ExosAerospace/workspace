@@ -23,6 +23,11 @@ Safe-write rules:
 
 Usage: python3 mc-email-tracker.py [--since-days N]   (default 2; backfill uses 14)
 """
+
+# --- supabase retry/backoff shim (auto-added) ---
+import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
+import supabase_util as _sbu; _sbu.install()
+# --- end shim ---
 import imaplib, email, json, os, re, sys, argparse, urllib.request, subprocess, tempfile
 from email.utils import getaddresses, parsedate_to_datetime
 from datetime import datetime, timedelta, timezone

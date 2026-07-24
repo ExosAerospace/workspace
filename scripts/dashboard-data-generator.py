@@ -13,6 +13,11 @@ Output directory: /Users/exomac/.openclaw/workspace/mission-control/data/
 Runs as part of the Wednesday 8 AM CRM refresh cron.
 """
 
+# --- supabase retry/backoff shim (auto-added) ---
+import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
+import supabase_util as _sbu; _sbu.install()
+# --- end shim ---
+
 # --- governance: correlation logging (auto-inserted; safe/soft) ---
 try:
     import sys as _gsys, os as _gos, atexit as _gatexit

@@ -17,6 +17,11 @@ and was never saved as a file). Idempotent: only touches tasks with no attachmen
 Run: python3 scripts/mc-doc-reconcile.py [--dry-run]
 Scheduled daily via launchd com.exos.mc-doc-reconcile.
 """
+
+# --- supabase retry/backoff shim (auto-added) ---
+import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
+import supabase_util as _sbu; _sbu.install()
+# --- end shim ---
 import json, os, re, subprocess, sys, time, urllib.request
 
 WS = "/Users/exomac/.openclaw/workspace"

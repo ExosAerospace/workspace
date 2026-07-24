@@ -10,6 +10,11 @@ before any capture. Idempotent via a processed-message-id state file.
 
 Runs every 20 min via launchd com.exos.lead-auto-capture.
 """
+
+# --- supabase retry/backoff shim (auto-added) ---
+import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
+import supabase_util as _sbu; _sbu.install()
+# --- end shim ---
 import imaplib, email, json, os, re, sys, time, urllib.request
 from email.header import decode_header
 from email.utils import getaddresses, parsedate_to_datetime

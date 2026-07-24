@@ -15,6 +15,11 @@ com.exos.outreach-reply-tracker. Complements lead-auto-capture (which handles br
 
 Compliance: info@ is the public/non-sensitive channel only. Nothing here touches M365 directly.
 """
+
+# --- supabase retry/backoff shim (auto-added) ---
+import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
+import supabase_util as _sbu; _sbu.install()
+# --- end shim ---
 import imaplib, email, json, os, re, sys, time, shutil, subprocess, urllib.request, urllib.parse
 from email.header import decode_header
 from email.utils import getaddresses, parsedate_to_datetime

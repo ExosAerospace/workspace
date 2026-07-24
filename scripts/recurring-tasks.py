@@ -11,6 +11,11 @@ so crane-truck / generator / battery / radio runs never fall through as dead one
 Idempotent: only creates a next instance when the family has NO active (To Do / In Progress)
 task. Runs daily via launchd com.exos.recurring-tasks.
 """
+
+# --- supabase retry/backoff shim (auto-added) ---
+import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
+import supabase_util as _sbu; _sbu.install()
+# --- end shim ---
 import json, os, re, calendar, urllib.request, time
 from datetime import date
 

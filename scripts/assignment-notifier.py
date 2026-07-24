@@ -16,6 +16,11 @@ WITHOUT emailing (no inbox blast), then emails only on assignment CHANGES after.
 Jon (jquinn@exosaero.com) is excluded by default — he monitors the board directly
 and the auto-capture assigns him many tasks. Remove from EXCLUDE to notify him too.
 """
+
+# --- supabase retry/backoff shim (auto-added) ---
+import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
+import supabase_util as _sbu; _sbu.install()
+# --- end shim ---
 import json, os, re, time, subprocess, urllib.request
 
 WS = "/Users/exomac/.openclaw/workspace"
@@ -25,7 +30,7 @@ H = {"apikey": KEY, "Authorization": "Bearer " + KEY}
 USERS = os.path.join(WS, "mission-control", "users.json")
 STATE = os.path.join(WS, "logs", "assignment-notify-state.json")
 LOG = os.path.join(WS, "logs", "assignment-notify.log")
-MCURL = "http://192.168.1.216:8080"
+MCURL = "http://192.168.143.216:8080"
 
 EXCLUDE = {"jquinn@exosaero.com"}          # monitored directly; avoid inbox flooding
 SKIP_OWNERS = {"", "system", "exo", "exomac", "both", "unassigned", "none", "team"}
