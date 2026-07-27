@@ -1,0 +1,164 @@
+{
+  "_comment": "Agent-class governance registry + Permission Envelopes (AGENT_SPEC_SCHEMA). One entry per autonomous agent class in the Exos fleet: Autonomy Tier, write-scope, defined rollback path, Trusted-Evals thresholds, and the decision_boundary that says what each class may EXECUTE autonomously (reversible / two-way door) vs MUST ESCALATE to Jon (one-way door). The decision_boundary is the founder-congestion fix: it is only safe because logs+rollback+evals now exist as a backstop. THRESHOLDS + ENVELOPES ARE DEFAULTS PENDING JON'S CONFIRMATION.",
+  "_thresholds": {
+    "override_rate_ceiling": "max share of this class's surfaced proposals that Jon may reject/modify before the class is flagged AMBER/RED (Quiet Drift signal)",
+    "min_runs_for_eval": "don't score a class until it has at least this many decided proposals (avoids reading noise)"
+  },
+  "_decision_boundary": {
+    "execute": "reversible, in-scope, low-blast-radius actions the class may take WITHOUT routing to Jon (logged + rollback-able)",
+    "escalate": "one-way doors: external comms, financial/legal commitment, capability claims, eligibility/deadline changes, anything irreversible -> Decisions inbox"
+  },
+  "_global_constraints": [
+    "Never send external comms (email/post/filing/outreach) without human approval (MTP Constraint #2).",
+    "Never make/imply capability or traction claims beyond documented fact (MTP Constraint #3).",
+    "Never transmit ITAR/CUI/export-controlled data outside the compliant boundary (MTP Constraint #1).",
+    "Never commit funds / sign / bind contracts / alter cap table without CEO approval (MTP Constraint #4).",
+    "Never hard-delete; soft-delete window + approval on irreversible ops (MTP Constraint #5)."
+  ],
+  "classes": [
+    {
+      "id": "resolver",
+      "purpose": "Overnight: work open Mission Control items; surface consequential calls to the Decisions inbox.",
+      "autonomy_tier": "Recommend-Options",
+      "write_scope": ["mission-control/data/decisions.json", "mission-control/data/tasks.json"],
+      "rollback_path": "Decision discard (status->open) or ERP governance/rollback.js for any mc.db write.",
+      "memory_boundary": "Reads MC items + memory; stateless per run; persists only proposed decisions and task status.",
+      "decision_boundary": {
+        "execute": ["Update MC item status/owner/priority/tags on reversible items", "Reschedule/snooze tasks", "Dedupe and merge duplicate items", "Draft (not send) follow-ups and stage them"],
+        "escalate": ["Any external send", "New financial/contractual commitment", "Capability claims", "Closing/abandoning a high-priority deal or opportunity"]
+      },
+      "escalation_owner": "Jon (Decisions inbox)",
+      "override_rate_ceiling": 0.40,
+      "min_runs_for_eval": 8,
+      "delegation_enabled": true
+    },
+    {
+      "id": "opportunity-engine",
+      "purpose": "Scan solicitations; surface scored BD opportunities.",
+      "autonomy_tier": "Recommend-with-Context",
+      "write_scope": ["mission-control/data/opportunities.json"],
+      "rollback_path": "Append-only; revert = remove entries by correlation_id.",
+      "memory_boundary": "Reads solicitation sources; stateless per run; persists scored opportunity records.",
+      "decision_boundary": {
+        "execute": ["File/tag/score new opportunities", "Auto-archive clear non-fits below relevance floor", "Dedupe against existing pipeline"],
+        "escalate": ["Pursue/no-pursue on opportunities above the relevance floor", "Anything requiring outreach, teaming, or a bid decision"]
+      },
+      "escalation_owner": "Jon (Decisions inbox)",
+      "override_rate_ceiling": 0.45,
+      "min_runs_for_eval": 8,
+      "delegation_enabled": true
+    },
+    {
+      "id": "research",
+      "purpose": "Grant / investor / competitive / policy / tech-IP scanning to the research feed.",
+      "autonomy_tier": "Recommend-with-Context",
+      "write_scope": ["mission-control/data/research.json", "mission-control/data/research-ingest.json"],
+      "rollback_path": "Append-only; revert = remove entries by correlation_id.",
+      "memory_boundary": "Reads web/feeds; stateless per run; persists tagged research items.",
+      "decision_boundary": {
+        "execute": ["Ingest/tag/dedupe research items", "Auto-discard low-relevance below floor", "Cluster related findings"],
+        "escalate": ["Items flagged actionable (grant to pursue, investor/partner to contact)", "Anything implying outreach or a commitment"]
+      },
+      "escalation_owner": "Jon (Decisions inbox)",
+      "override_rate_ceiling": 0.50,
+      "min_runs_for_eval": 8,
+      "delegation_enabled": false
+    },
+    {
+      "id": "email-router",
+      "purpose": "Route inbound mail to project channels. NEVER auto-sends external mail (Constraint #2).",
+      "autonomy_tier": "Execute-within-bounds",
+      "write_scope": ["logs/inbox-processed.json"],
+      "rollback_path": "Idempotent routing; re-run reclassifies. No external side effects.",
+      "memory_boundary": "Reads inbox via Proton Bridge IMAP; persists processed-message index only.",
+      "decision_boundary": {
+        "execute": ["Classify and route inbound to project channels", "Mark processed", "Extract attachments to submissions-archive"],
+        "escalate": ["Unclassifiable mail", "Messages matching sensitive patterns (legal, investor, ITAR) -> flag, do not auto-route silently"]
+      },
+      "escalation_owner": "Jon",
+      "override_rate_ceiling": 0.20,
+      "min_runs_for_eval": 20,
+      "delegation_enabled": false
+    },
+    {
+      "id": "crm",
+      "purpose": "CRM follow-up reminders and pipeline reports.",
+      "autonomy_tier": "Recommend-Options",
+      "write_scope": ["notifications"],
+      "rollback_path": "Notification only; no state mutation to revert.",
+      "memory_boundary": "Reads CRM (Supabase/mc.db); stateless per run.",
+      "decision_boundary": {
+        "execute": ["Generate internal reminders and pipeline reports", "Flag stale deals"],
+        "escalate": ["Any external contact with a CRM party (always human-sent)"]
+      },
+      "escalation_owner": "Jon",
+      "override_rate_ceiling": 0.40,
+      "min_runs_for_eval": 10,
+      "delegation_enabled": false
+    },
+    {
+      "id": "sam-watch",
+      "purpose": "Watch SAM.gov solicitation amendments; alert on changes.",
+      "autonomy_tier": "Recommend-with-Context",
+      "write_scope": ["alerts"],
+      "rollback_path": "Alert only; no state mutation to revert.",
+      "memory_boundary": "Reads SAM.gov API; persists last-seen amendment hashes.",
+      "decision_boundary": {
+        "execute": ["Detect and log amendments", "Alert on any change"],
+        "escalate": ["Amendments that change eligibility, scope, or deadline -> decision needed (don't just log)"]
+      },
+      "escalation_owner": "Jon (Decisions inbox)",
+      "override_rate_ceiling": 0.30,
+      "min_runs_for_eval": 10,
+      "delegation_enabled": false
+    },
+    {
+      "id": "dashboard-data",
+      "purpose": "Regenerate dashboard JSON/HTML (research/opportunities/CRM) for Mission Control.",
+      "autonomy_tier": "Execute-within-bounds",
+      "write_scope": ["mission-control/data/*.json (derived)", "dashboard HTML"],
+      "rollback_path": "Idempotent regeneration from source; revert = re-run.",
+      "memory_boundary": "Reads source data; stateless; writes derived artifacts only.",
+      "decision_boundary": {
+        "execute": ["Regenerate all derived dashboard artifacts from source of truth"],
+        "escalate": ["Never writes to source of truth; if source and derived disagree, source wins"]
+      },
+      "escalation_owner": "Jon",
+      "override_rate_ceiling": 0.10,
+      "min_runs_for_eval": 20,
+      "delegation_enabled": false
+    },
+    {
+      "id": "erp-dal",
+      "purpose": "Writes to the systems of record (mc.db).",
+      "autonomy_tier": "Execute-within-bounds",
+      "write_scope": ["erp-foundation/mc.db"],
+      "rollback_path": "governance/rollback.js --id <auditId> | --run <correlationId> (replays before_json).",
+      "memory_boundary": "Transactional; every mutation audited with before/after + correlation_id.",
+      "decision_boundary": {
+        "execute": ["Audited upsert/update of deal, task, and registered entities within schema"],
+        "escalate": ["Schema/DDL changes", "Bulk deletes", "Any mutation flagged irreversible -> approval + soft-delete window"]
+      },
+      "escalation_owner": "Jon",
+      "override_rate_ceiling": 0.10,
+      "min_runs_for_eval": 20,
+      "delegation_enabled": false
+    },
+    {
+      "id": "payload-sales",
+      "purpose": "Enrich BLK3 payload-sale prospects and bridge them into priced MC Opportunities; draft (never send) tailored outreach. Fills SPACEavailable(TM) Flight 2 (Mar 2027). Deterministic core owns the critical path + channel summary; a weak local model is demoted to best-effort drafting only.",
+      "autonomy_tier": "Recommend-with-Context",
+      "write_scope": ["tasks/blk3-payload-sales-pipeline.md", "opportunities-tracker.md", "drafts/payload-outreach-drafts.md", "mission-control/data/opportunities.json (derived via payload_pipeline_to_opps.py bridge)"],
+      "rollback_path": "Pipeline/drafts are git-versioned markdown; the opportunities bridge is idempotent between AUTO markers -> revert = re-run or git checkout <file>. No external side effects (outreach is human-sent).",
+      "memory_boundary": "Reads pipeline + campaign + web; stateless per run; persists enriched prospect rows, staged drafts, and bridged opportunity records.",
+      "decision_boundary": {
+        "execute": ["Enrich prospects (POC/email/active programs/funding) in the pipeline", "Bridge qualified prospects into priced MC opportunities (idempotent)", "Draft and stage tailored outreach in the drafts file", "Post the deterministic daily status summary to #blk3-payload"],
+        "escalate": ["Any external send/outreach to a prospect (always Jon-sent)", "Any price quoted externally (Jon sets the number)", "Capability/traction claims beyond documented fact", "Closing/abandoning a high-value prospect"]
+      },
+      "escalation_owner": "Jon (Decisions inbox)",
+      "override_rate_ceiling": 0.45,
+      "min_runs_for_eval": 8,
+      "delegation_enabled": true
+    }
+  ]
+}
