@@ -490,6 +490,7 @@
     <a href="research.html" style="color:var(--purple,#a855f7);text-decoration:none;font-size:0.85rem;margin-right:4px;">🔬 Research</a>
     <a href="crm.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">CRM</a>
     <a href="dossier.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;">Dossiers</a>
+    <a href="fleet.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🤖 Fleet</a>
     <a href="docusign.html" style="color:var(--orange2);text-decoration:none;font-size:0.85rem;margin-right:4px;">DocuSign</a>
     <a href="decisions.html" id="decisionsLink" style="color:var(--green,#22c55e);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🗳️ Decisions <span id="decisionsBadge" style="display:none;background:#ff4444;color:#fff;border-radius:10px;padding:0 6px;font-size:0.7rem;"></span></a>
     <script>fetch('/api/decisions?status=open',{credentials:'same-origin'}).then(r=>r.ok?r.json():[]).then(d=>{if(d&&d.length){var b=document.getElementById('decisionsBadge');b.textContent=d.length;b.style.display='inline-block';}}).catch(()=>{});</script>
@@ -504,11 +505,14 @@
 
 <div class="toolbar">
   <input type="text" id="searchBox" placeholder="Search tasks..." oninput="render()">
+  <input type="number" id="jumpBox" placeholder="Go to #" title="Type a task number and press Enter to jump to it" style="max-width:110px" onkeydown="if(event.key==='Enter'){event.preventDefault();jumpToTask();}">
   <div class="filter-group">
     <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All</button>
     <button class="filter-btn" data-filter="mine" onclick="setFilter('mine')">My Tasks</button>
     <button class="filter-btn" data-filter="group" onclick="setFilter('group')">Group</button>
     <button class="filter-btn" data-filter="exo" onclick="setFilter('exo')">Exo</button>
+    <button class="filter-btn" data-filter="project" onclick="setFilter('project')">Projects</button>
+    <button class="filter-btn" data-filter="task" onclick="setFilter('task')">Tasks</button>
     <button class="filter-btn" data-filter="overdue" onclick="setFilter('overdue')">Overdue</button>
     <button class="filter-btn" id="scoreToggle" onclick="toggleScoreSort()" title="Shadow preview: rank by Mission Score (CEO decision architecture)">★ Mission Score</button>
   </div>
@@ -669,6 +673,16 @@
             <label>Source</label>
             <input type="text" id="editSource" readonly style="opacity:0.5">
           </div>
+        </div>
+        <div class="edit-row">
+          <div>
+            <label>Type</label>
+            <select id="editType">
+              <option value="task">Task (discrete, closeable)</option>
+              <option value="project">Project (ongoing container)</option>
+            </select>
+          </div>
+          <div></div>
         </div>
         <div class="edit-actions">
           <button class="btn danger small" onclick="deleteTaskFromPanel()">Delete</button>
@@ -867,7 +881,11 @@ function getFilteredTasks() {
   if (currentFilter === 'mine') filtered = filtered.filter(t => {
     if (!currentUser) return false;
     const me = (currentUser.email || '').toLowerCase();
-    if (me && (t.assigned_email || '').toLowerCase() === me) return true;   // source of truth
+    const ae = (t.assigned_email || '').toLowerCase();
+    // assigned_email is the SOLE source of truth: if a task has one, match ONLY on it
+    // (prevents a task assigned to someone else leaking in via a stale owner name)
+    if (ae) return !!me && ae === me;
+    // legacy tasks with NO assigned_email: fall back to owner-name match
     const o = (t.owner || '').toLowerCase();
     const n = (currentUser.name || '').toLowerCase();
     const firstName = n.split(/\s+/)[0];
@@ -881,6 +899,10 @@ function getFilteredTasks() {
     const o = (t.owner || '').toLowerCase();
     return o === 'exo' || o === 'exomac';
   });
+  else if (currentFilter === 'project') filtered = filtered.filter(t =>
+    Array.isArray(t.tags) && t.tags.map(x => String(x).toLowerCase()).includes('project'));
+  else if (currentFilter === 'task') filtered = filtered.filter(t =>
+    !(Array.isArray(t.tags) && t.tags.map(x => String(x).toLowerCase()).includes('project')));
   else if (currentFilter === 'blocked') filtered = filtered.filter(t => t.state === 'Blocked');
   else if (currentFilter === 'in_progress') filtered = filtered.filter(t => t.state === 'In Progress');
   else if (currentFilter === 'done') filtered = filtered.filter(t => t.state === 'Done');
@@ -1023,6 +1045,12 @@ function buildCard(task) {
   let catHtml = '';
   if (task.category) catHtml = `<span class="task-category">${escHtml(task.category)}</span>`;
 
+  // Type: Project vs Task (encoded in tags; 'project' tag marks a Project container)
+  const isProject = Array.isArray(task.tags) && task.tags.map(x => String(x).toLowerCase()).includes('project');
+  const projectHtml = isProject
+    ? '<span style="font-size:9px;font-weight:700;letter-spacing:.5px;color:#c084fc;background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.4);border-radius:4px;padding:2px 6px;">PROJECT</span>'
+    : '';
+
   // Source badge
   let srcHtml = '';
   if ((task.source || '').startsWith('teamwork')) srcHtml = '<span class="task-source">TW</span>';
@@ -1056,7 +1084,7 @@ function buildCard(task) {
       <span class="owner-badge ${ownerClass(task.owner)}">${ownerLabel(task.owner)}</span>
     </div>
     <div class="task-meta">
-      ${msHtml}${fundingFlagHtml}${catHtml}${srcHtml}${priHtml}${dueDateHtml}
+      ${projectHtml}${msHtml}${fundingFlagHtml}${catHtml}${srcHtml}${priHtml}${dueDateHtml}
       ${assignSelect}
     </div>
     <div class="move-btns">${moveBtns}</div>
@@ -1067,6 +1095,20 @@ function buildCard(task) {
 
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── GO TO TASK # — jump straight to a task by its number ──
+function jumpToTask() {
+  const el = document.getElementById('jumpBox');
+  const id = (el.value || '').trim().replace(/^#/, '');
+  if (!id) return;
+  const task = tasks.find(t => String(t.id) === String(id));
+  if (task) {
+    el.value = '';
+    openEdit(id);
+  } else {
+    toast(`Task #${id} not found on the board`);
+  }
 }
 
 // ── DETAIL PANEL ──
@@ -1106,6 +1148,8 @@ function openEdit(id) {
   document.getElementById('editPriority').value = task.priority || 0;
   document.getElementById('editCategory').value = task.category || '';
   document.getElementById('editSource').value = task.source || 'manual';
+  const isProj = Array.isArray(task.tags) && task.tags.map(x => String(x).toLowerCase()).includes('project');
+  document.getElementById('editType').value = isProj ? 'project' : 'task';
 
   // Hide delete button for early adopters
   const deleteBtn = document.querySelector('.edit-actions .btn.danger');
@@ -1237,6 +1281,11 @@ async function saveEdit() {
     priority: parseInt(document.getElementById('editPriority').value) || 0,
     category: document.getElementById('editCategory').value.trim() || null,
   };
+  // Type: toggle the 'project' tag while preserving any other tags
+  const curTask = tasks.find(t => t.id == id);
+  let tags = (curTask && Array.isArray(curTask.tags)) ? curTask.tags.filter(x => String(x).toLowerCase() !== 'project') : [];
+  if (document.getElementById('editType').value === 'project') tags.push('project');
+  fields.tags = tags;
 
   try {
     await apiFetch('/api/tasks', { method: 'PATCH', body: JSON.stringify(fields) });
@@ -1315,8 +1364,9 @@ async function populateOwnerDropdowns() {
   } catch (e) {}
   if (!Array.isArray(TEAM_MEMBERS)) TEAM_MEMBERS = [];
 
-  // Always include all team members + Exo + Both
-  const fixed = [{ name: 'Exo', label: 'Exo (AI)' }, { name: 'Jon+Exo', label: 'Jon + Exo (Both)' }];
+  // Always include all team members + Exo + Both + role queues (auto-assigned by capability matrix)
+  const fixed = [{ name: 'Exo', label: 'Exo (AI)' }, { name: 'Jon+Exo', label: 'Jon + Exo (Both)' },
+    { name: 'R&D Team', label: 'R&D Team (auto-assign →)' }];
   const teamOpts = TEAM_MEMBERS.map(m => ({ name: m.name, label: m.name }));
   const allOpts = [...teamOpts, ...fixed];
   const seen = new Set();

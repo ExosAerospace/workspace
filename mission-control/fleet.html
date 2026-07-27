@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fleet — Mission Control</title>
+<style>
+  :root{--navy:#0a1628;--card:#0f1e38;--text:#e8edf5;--muted:#8aa0bd;
+    --accent:#0080ff;--green:#22c55e;--red:#ff4444;--yellow:#eab308;--line:#1c3052;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--navy);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:20px 24px 60px}
+  h1{font-size:22px;margin:0 0 2px} .sub{color:var(--muted);font-size:13px;margin-bottom:18px}
+  a.back{color:var(--accent);text-decoration:none;font-size:13px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:12px;padding:14px 16px}
+  .kpi .n{font-size:26px;font-weight:700} .kpi .l{color:var(--muted);font-size:12px;margin-top:2px}
+  .kpi.warn{border-left-color:var(--yellow)} .kpi.bad{border-left-color:var(--red)}
+  .kpi.good{border-left-color:var(--green)}
+  h2{font-size:15px;margin:24px 0 10px;color:#cfe0f8}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;overflow:hidden;font-size:13px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+  tr:last-child td{border-bottom:none}
+  .flag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+  .GREEN{background:rgba(34,197,94,.15);color:var(--green)}
+  .AMBER{background:rgba(234,179,8,.15);color:var(--yellow)}
+  .RED{background:rgba(255,68,68,.15);color:var(--red)}
+  .pill{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid var(--line);color:var(--muted)}
+  .on{color:var(--green);border-color:rgba(34,197,94,.4)} .off{color:var(--muted)}
+  .ok{color:var(--green)} .err{color:var(--red)} .muted{color:var(--muted)}
+  .purpose{color:var(--muted);max-width:340px}
+  button{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:8px;
+    padding:6px 12px;cursor:pointer;font-size:12px}
+  button:hover{border-color:var(--accent)}
+</style>
+</head>
+<body>
+  <a class="back" href="/index.html">← Mission Control</a>
+  <h1>🤖 Agent Fleet</h1>
+  <div class="sub" id="sub">Loading…</div>
+  <div class="kpis" id="kpis"></div>
+  <h2>Governance classes <span class="muted" style="font-weight:400">— autonomy, delegation, Quiet-Drift eval</span></h2>
+  <div id="classes"></div>
+  <h2>Awaiting you <span class="muted" style="font-weight:400">— open Decisions by source</span></h2>
+  <div id="decisions"></div>
+  <h2>Scheduled jobs <span class="muted" style="font-weight:400">— last run / next run</span></h2>
+  <div id="crons"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmtMoney = n => n>=1e6 ? '$'+(n/1e6).toFixed(1)+'M' : '$'+Math.round(n).toLocaleString();
+const rel = ms => {
+  if(!ms) return '—';
+  const s=(Date.now()-ms)/1000, a=Math.abs(s), suf=s>=0?'ago':'from now';
+  const u = a<3600?[Math.round(a/60),'m']:a<86400?[Math.round(a/3600),'h']:[Math.round(a/86400),'d'];
+  return u[0]+u[1]+' '+suf;
+};
+const esc = s => (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+fetch('/data/fleet.json?t='+Date.now()).then(r=>r.json()).then(d=>{
+  const k=d.kpis;
+  $('sub').innerHTML = 'Generated '+new Date(d.generated).toLocaleString()+
+    ' · <button onclick="location.reload()">↻ Refresh</button>';
+  const kpi=(n,l,cls='')=>`<div class="kpi ${cls}"><div class="n">${n}</div><div class="l">${l}</div></div>`;
+  $('kpis').innerHTML =
+    kpi(`${k.agents_green}<span style="font-size:14px;color:var(--muted)"> / ${k.classes_total}</span>`,'Agents healthy (GREEN)', k.agents_red? 'bad':k.agents_amber?'warn':'good')+
+    kpi(k.open_decisions,'Open decisions (awaiting you)', k.open_decisions>50?'warn':'')+
+    kpi(fmtMoney(k.pipeline_value),`Pipeline (parsed, ${k.pipeline_priced} priced / ${k.opps_live} live)`)+
+    kpi(k.payload_buyers,'BLK3 payload buyers')+
+    kpi(k.drafts_staged,'Outreach drafts staged')+
+    kpi(`${k.crons_total}`,`Scheduled jobs${k.crons_error?` · ${k.crons_error} error`:''}${k.crons_disabled?` · ${k.crons_disabled} off`:''}`, k.crons_error?'bad':'good');
+
+  $('classes').innerHTML = `<table><tr><th>Class</th><th>Autonomy</th><th>Delegation</th>
+    <th>Eval</th><th>Override / ceiling</th><th>Decided</th><th>Last event</th></tr>`+
+    d.classes.map(c=>`<tr>
+      <td><b>${esc(c.id)}</b><div class="purpose">${esc((c.purpose||'').slice(0,120))}</div></td>
+      <td>${esc(c.autonomy_tier)}</td>
+      <td><span class="pill ${c.delegation_enabled?'on':'off'}">${c.delegation_enabled?'ON':'off'}</span></td>
+      <td><span class="flag ${c.flag}">${c.flag}</span></td>
+      <td>${c.override_rate!=null?Math.round(c.override_rate*100)+'%':'—'} <span class="muted">/ ${c.ceiling!=null?Math.round(c.ceiling*100)+'%':'—'}</span></td>
+      <td>${c.decided??'—'}</td>
+      <td class="muted">${c.last_event?rel(Date.parse(c.last_event)):'—'}</td>
+    </tr>`).join('')+`</table>`;
+
+  $('decisions').innerHTML = `<table><tr><th>Source</th><th>Open</th></tr>`+
+    (d.decisions.by_source.length?d.decisions.by_source.map(s=>`<tr><td>${esc(s.source)}</td><td>${s.open}</td></tr>`).join('')
+      :`<tr><td class="muted" colspan="2">Nothing awaiting you.</td></tr>`)+`</table>`;
+
+  $('crons').innerHTML = `<table><tr><th>Job</th><th>Status</th><th>Last run</th><th>Next run</th><th>Model</th></tr>`+
+    d.crons.map(c=>`<tr>
+      <td>${esc(c.name)} ${c.enabled?'':'<span class="pill off">disabled</span>'}</td>
+      <td class="${c.last_status==='error'?'err':c.last_status==='ok'?'ok':'muted'}">${esc(c.last_status||'—')}</td>
+      <td class="muted">${rel(c.last_run_ms)}</td>
+      <td class="muted">${rel(c.next_run_ms)}</td>
+      <td class="muted">${esc((c.model||'—').replace('anthropic/','').replace('ollama/',''))}</td>
+    </tr>`).join('')+`</table>`;
+}).catch(e=>{$('sub').innerHTML='<span class="err">Failed to load fleet.json: '+esc(e.message)+'</span>';});
+</script>
+</body>
+</html>
