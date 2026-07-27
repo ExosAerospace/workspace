@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-27T16:32:54.049652-05:00",
+  "generated": "2026-07-27T18:49:56.734498-05:00",
   "kpis": {
     "agents_green": 11,
     "agents_amber": 0,
@@ -8,13 +8,13 @@
     "crons_total": 27,
     "crons_error": 0,
     "crons_disabled": 0,
-    "open_decisions": 102,
+    "open_decisions": 109,
     "pipeline_value": 54326310.99,
     "pipeline_priced": 103,
     "opps_live": 199,
     "payload_buyers": 44,
     "drafts_staged": 2,
-    "agents_logged": 11
+    "agents_logged": 17
   },
   "classes": [
     {
@@ -23,10 +23,10 @@
       "autonomy_tier": "Recommend-Options",
       "delegation_enabled": true,
       "flag": "GREEN",
-      "override_rate": 0.087,
+      "override_rate": 0.224,
       "ceiling": 0.4,
-      "decided": 23,
-      "note": "override rate 9% within ceiling 40%",
+      "decided": 85,
+      "note": "override rate 22% within ceiling 40%",
       "last_event": null
     },
     {
@@ -39,7 +39,7 @@
       "ceiling": 0.45,
       "decided": 121,
       "note": "override rate 6% within ceiling 45%",
-      "last_event": "2026-07-27T06:52:38-0500"
+      "last_event": "2026-07-27T18:49:17-0500"
     },
     {
       "id": "research",
@@ -63,7 +63,7 @@
       "ceiling": 0.2,
       "decided": 0,
       "note": "insufficient data (0/20 decided)",
-      "last_event": "2026-07-27T15:00:03-0500"
+      "last_event": "2026-07-27T17:57:23-0500"
     },
     {
       "id": "crm",
@@ -99,7 +99,7 @@
       "ceiling": 0.1,
       "decided": 0,
       "note": "insufficient data (0/20 decided)",
-      "last_event": "2026-07-27T14:18:51-0500"
+      "last_event": "2026-07-27T17:45:08-0500"
     },
     {
       "id": "erp-dal",
@@ -133,8 +133,8 @@
       "flag": "GREEN",
       "override_rate": 0.0,
       "ceiling": 0.45,
-      "decided": 0,
-      "note": "insufficient data (0/8 decided)",
+      "decided": 5,
+      "note": "insufficient data (5/8 decided)",
       "last_event": "2026-07-27T06:04:51-0500"
     },
     {
@@ -143,10 +143,10 @@
       "autonomy_tier": "",
       "delegation_enabled": false,
       "flag": "GREEN",
-      "override_rate": 0.247,
+      "override_rate": 0.243,
       "ceiling": 0.4,
-      "decided": 219,
-      "note": "override rate 25% within ceiling 40%",
+      "decided": 152,
+      "note": "override rate 24% within ceiling 40%",
       "last_event": null
     }
   ],
@@ -369,11 +369,11 @@
     }
   ],
   "decisions": {
-    "open": 102,
+    "open": 109,
     "by_source": [
       {
         "source": "Opportunity Engine",
-        "open": 74
+        "open": 78
       },
       {
         "source": "De-Risk Orbital Engine",
@@ -392,15 +392,15 @@
         "open": 2
       },
       {
+        "source": "Exo (email-command from Lizi)",
+        "open": 2
+      },
+      {
         "source": "NIH Agent",
         "open": 1
       },
       {
         "source": "Overnight Resolver",
-        "open": 1
-      },
-      {
-        "source": "Weekly RSI",
         "open": 1
       }
     ]
