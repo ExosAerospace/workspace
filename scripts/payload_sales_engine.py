@@ -244,6 +244,57 @@ def draft_prospects(records, limit):
     return written
 
 
+DECISIONS_API = "http://localhost:8080/api/decisions/ingest"
+DTOKEN_FILE = os.path.join(WORKSPACE, "mission-control/data/.decisions-token")
+
+
+def _decisions_token():
+    try:
+        return open(DTOKEN_FILE, encoding="utf-8").read().strip()
+    except Exception:
+        return ""
+
+
+def file_drafts_decision(records):
+    """Compliant surfacing: staged outreach drafts can't be auto-sent (Permission
+    Envelope), and drafts die in files. So when drafts are staged, ensure ONE
+    idempotent Decision rides the Human Review Queue asking Jon to review + send.
+    Idempotent via a stable dedupeKey, so daily runs update rather than spam."""
+    n = count_drafts()
+    if n <= 0:
+        return False
+    names = re.findall(r"^## (.+?) —", open(DRAFTS, encoding="utf-8").read(), re.M)
+    who = ", ".join(names[:4]) + ("…" if len(names) > 4 else "")
+    payload = json.dumps({
+        "source": "BLK3 Payload Sales Engine",
+        "relatedItem": "payload-drafts-ready",
+        "agentClass": "payload-sales",
+        "title": f"{n} BLK3 payload outreach draft(s) ready to review + send",
+        "question": f"{n} tailored SPACEavailable outreach drafts are staged ({who}). "
+                    "Send them to your inbox, ready for you to review and send?",
+        "proposedAction": "On Yes, I email the staged drafts to jquinn@exosaero.com "
+                          "for your review + send. External outreach is never auto-sent.",
+        "type": "yesno",
+        "options": ["Yes", "No"],
+        "priority": "normal",
+        "assignedTo": "jquinn@exosaero.com",
+        "dedupeKey": "payload-drafts-ready",
+    }).encode()
+    try:
+        req = urllib.request.Request(
+            DECISIONS_API, data=payload,
+            headers={"Content-Type": "application/json",
+                     "X-Exo-Token": _decisions_token()})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            ok = r.status in (200, 201)
+        glog("decision", status="info" if ok else "error",
+             detail=f"drafts-ready n={n}")
+        return ok
+    except Exception as e:
+        glog("decision", status="error", detail=str(e)[:120])
+        return False
+
+
 def post_discord(text):
     try:
         subprocess.run(
@@ -276,12 +327,14 @@ def main():
     drafted = 0
     if args.draft_only:
         drafted = draft_prospects(records, args.limit)
-        glog("end", status="info", detail=f"draft-only: {drafted} new")
-        print(f"draft-only: {drafted} new draft(s) -> {DRAFTS}")
+        filed = file_drafts_decision(records)
+        glog("end", status="info", detail=f"draft-only: {drafted} new, decision={filed}")
+        print(f"draft-only: {drafted} new draft(s) -> {DRAFTS} · decision filed={filed}")
         return 0
     if not args.dry_run and not args.no_draft:
         try:
             drafted = draft_prospects(records, args.limit)
+            file_drafts_decision(records)
         except Exception as e:
             glog("draft", status="error", detail=str(e)[:120])
 

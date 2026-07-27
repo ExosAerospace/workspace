@@ -62,7 +62,7 @@
       "escalation_owner": "Jon (Decisions inbox)",
       "override_rate_ceiling": 0.50,
       "min_runs_for_eval": 8,
-      "delegation_enabled": false
+      "delegation_enabled": true
     },
     {
       "id": "email-router",
@@ -78,7 +78,7 @@
       "escalation_owner": "Jon",
       "override_rate_ceiling": 0.20,
       "min_runs_for_eval": 20,
-      "delegation_enabled": false
+      "delegation_enabled": true
     },
     {
       "id": "crm",
@@ -94,7 +94,7 @@
       "escalation_owner": "Jon",
       "override_rate_ceiling": 0.40,
       "min_runs_for_eval": 10,
-      "delegation_enabled": false
+      "delegation_enabled": true
     },
     {
       "id": "sam-watch",
@@ -110,7 +110,7 @@
       "escalation_owner": "Jon (Decisions inbox)",
       "override_rate_ceiling": 0.30,
       "min_runs_for_eval": 10,
-      "delegation_enabled": false
+      "delegation_enabled": true
     },
     {
       "id": "dashboard-data",
@@ -126,7 +126,7 @@
       "escalation_owner": "Jon",
       "override_rate_ceiling": 0.10,
       "min_runs_for_eval": 20,
-      "delegation_enabled": false
+      "delegation_enabled": true
     },
     {
       "id": "erp-dal",
