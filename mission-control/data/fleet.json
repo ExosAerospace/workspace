@@ -1,19 +1,20 @@
 {
-  "generated": "2026-07-27T15:53:23.389379-05:00",
+  "generated": "2026-07-27T16:32:54.049652-05:00",
   "kpis": {
-    "agents_green": 10,
+    "agents_green": 11,
     "agents_amber": 0,
     "agents_red": 0,
-    "classes_total": 10,
+    "classes_total": 11,
     "crons_total": 27,
-    "crons_error": 1,
+    "crons_error": 0,
     "crons_disabled": 0,
-    "open_decisions": 132,
+    "open_decisions": 102,
     "pipeline_value": 54326310.99,
     "pipeline_priced": 103,
     "opps_live": 199,
     "payload_buyers": 44,
-    "drafts_staged": 2
+    "drafts_staged": 2,
+    "agents_logged": 11
   },
   "classes": [
     {
@@ -34,10 +35,10 @@
       "autonomy_tier": "Recommend-with-Context",
       "delegation_enabled": true,
       "flag": "GREEN",
-      "override_rate": 0.069,
+      "override_rate": 0.058,
       "ceiling": 0.45,
-      "decided": 101,
-      "note": "override rate 7% within ceiling 45%",
+      "decided": 121,
+      "note": "override rate 6% within ceiling 45%",
       "last_event": "2026-07-27T06:52:38-0500"
     },
     {
@@ -120,9 +121,21 @@
       "flag": "GREEN",
       "override_rate": 0.0,
       "ceiling": 0.45,
+      "decided": 1,
+      "note": "insufficient data (1/8 decided)",
+      "last_event": "2026-07-27T14:49:35-0500"
+    },
+    {
+      "id": "derisk-orbital",
+      "purpose": "De-Risk Orbital demand engine: source + enrich + price orbital-program targets across 3 pools, stage into Opportunities for the Opportunity Processor to draft outreach. Draft-only; every send gated to Decisions; ITAR-HOLD files an export-review Decision BEFORE any outreach.",
+      "autonomy_tier": "Recommend-with-Context",
+      "delegation_enabled": true,
+      "flag": "GREEN",
+      "override_rate": 0.0,
+      "ceiling": 0.45,
       "decided": 0,
       "note": "insufficient data (0/8 decided)",
-      "last_event": "2026-07-27T14:49:35-0500"
+      "last_event": "2026-07-27T06:04:51-0500"
     },
     {
       "id": "_system",
@@ -130,9 +143,9 @@
       "autonomy_tier": "",
       "delegation_enabled": false,
       "flag": "GREEN",
-      "override_rate": 0.251,
+      "override_rate": 0.247,
       "ceiling": 0.4,
-      "decided": 211,
+      "decided": 219,
       "note": "override rate 25% within ceiling 40%",
       "last_event": null
     }
@@ -293,8 +306,8 @@
     {
       "name": "Research Team: Policy & Regulatory Watch",
       "enabled": true,
-      "last_run_ms": 1784912400030,
-      "last_status": "error",
+      "last_run_ms": 1785186771964,
+      "last_status": "ok",
       "next_run_ms": 1785517200000,
       "model": "ollama/qwen3.6:35b-a3b"
     },
@@ -356,26 +369,22 @@
     }
   ],
   "decisions": {
-    "open": 132,
+    "open": 102,
     "by_source": [
       {
         "source": "Opportunity Engine",
-        "open": 94
-      },
-      {
-        "source": "Exo",
-        "open": 11
+        "open": 74
       },
       {
         "source": "De-Risk Orbital Engine",
-        "open": 11
+        "open": 10
+      },
+      {
+        "source": "Exo",
+        "open": 9
       },
       {
         "source": "Decisions Daily Update",
-        "open": 5
-      },
-      {
-        "source": "Weekly RSI",
         "open": 2
       },
       {
@@ -388,6 +397,10 @@
       },
       {
         "source": "Overnight Resolver",
+        "open": 1
+      },
+      {
+        "source": "Weekly RSI",
         "open": 1
       }
     ]

@@ -159,6 +159,22 @@
       "override_rate_ceiling": 0.45,
       "min_runs_for_eval": 8,
       "delegation_enabled": true
+    },
+    {
+      "id": "derisk-orbital",
+      "purpose": "De-Risk Orbital demand engine: source + enrich + price orbital-program targets across 3 pools, stage into Opportunities for the Opportunity Processor to draft outreach. Draft-only; every send gated to Decisions; ITAR-HOLD files an export-review Decision BEFORE any outreach.",
+      "autonomy_tier": "Recommend-with-Context",
+      "write_scope": ["opportunities-tracker.md (DERISK-ORBITAL-AUTO section)", "mission-control/data/opportunities.json (derived)"],
+      "rollback_path": "Idempotent AUTO-marker section (git-versioned markdown) -> revert = re-run or git checkout. No external side effects (outreach is human-sent).",
+      "memory_boundary": "Reads target pools + web + rate card; stateless per run; persists staged/priced opportunity rows.",
+      "decision_boundary": {
+        "execute": ["Source/enrich/price targets across the 3 pools", "Stage priced opportunities (idempotent)", "Set ITAR-HOLD status on export-sensitive targets"],
+        "escalate": ["Any external outreach/send (always Jon-sent via Opportunity Processor)", "Export-review Decision on any ITAR-HOLD target BEFORE outreach", "Any price quoted externally", "Capability/traction claims beyond documented fact"]
+      },
+      "escalation_owner": "Jon (Decisions inbox)",
+      "override_rate_ceiling": 0.45,
+      "min_runs_for_eval": 8,
+      "delegation_enabled": true
     }
   ]
 }

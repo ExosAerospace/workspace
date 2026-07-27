@@ -71,7 +71,8 @@ fetch('/data/fleet.json?t='+Date.now()).then(r=>r.json()).then(d=>{
     kpi(fmtMoney(k.pipeline_value),`Pipeline (parsed, ${k.pipeline_priced} priced / ${k.opps_live} live)`)+
     kpi(k.payload_buyers,'BLK3 payload buyers')+
     kpi(k.drafts_staged,'Outreach drafts staged')+
-    kpi(`${k.crons_total}`,`Scheduled jobs${k.crons_error?` · ${k.crons_error} error`:''}${k.crons_disabled?` · ${k.crons_disabled} off`:''}`, k.crons_error?'bad':'good');
+    kpi(`${k.crons_total}`,`Scheduled jobs${k.crons_error?` · ${k.crons_error} error`:''}${k.crons_disabled?` · ${k.crons_disabled} off`:''}`, k.crons_error?'bad':'good')+
+    (k.agents_logged!=null?kpi(k.agents_logged,'Agents on the correlation-log substrate'):'');
 
   $('classes').innerHTML = `<table><tr><th>Class</th><th>Autonomy</th><th>Delegation</th>
     <th>Eval</th><th>Override / ceiling</th><th>Decided</th><th>Last event</th></tr>`+

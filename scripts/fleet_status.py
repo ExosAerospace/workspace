@@ -67,6 +67,23 @@ def last_events():
     return out
 
 
+def agents_logged():
+    """Distinct agents emitting correlation-ID events = the unified log substrate
+    coverage (govlog-native + task-ledger-wrapped jobs after unification)."""
+    seen = set()
+    try:
+        for line in open(EVENTS, encoding="utf-8"):
+            try:
+                a = json.loads(line).get("agent")
+            except Exception:
+                continue
+            if a:
+                seen.add(a)
+    except Exception:
+        pass
+    return len(seen)
+
+
 def crons():
     try:
         r = subprocess.run([OPENCLAW, "cron", "list", "--json"],
@@ -172,6 +189,7 @@ def build():
         "opps_live": pv["opps_live"],
         "payload_buyers": pv["payload_buyers"],
         "drafts_staged": drafts_staged(),
+        "agents_logged": agents_logged(),
     }
     return {"generated": _now(), "kpis": kpis, "classes": classes,
             "crons": cr, "decisions": dec}

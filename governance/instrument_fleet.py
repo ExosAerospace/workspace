@@ -32,6 +32,7 @@ FLEET = {
     # bridge/end events); listed here for the entry-script->class registry. The
     # injector is idempotent and will skip it (govlog block already present).
     "payload_sales_engine.py": "payload-sales",
+    "derisk_orbital_outreach.py": "derisk-orbital",  # already imports govlog directly
 }
 
 MARK = "# --- governance: correlation logging"
