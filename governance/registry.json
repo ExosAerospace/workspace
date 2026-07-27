@@ -142,7 +142,7 @@
       "escalation_owner": "Jon",
       "override_rate_ceiling": 0.10,
       "min_runs_for_eval": 20,
-      "delegation_enabled": false
+      "delegation_enabled": true
     },
     {
       "id": "payload-sales",
