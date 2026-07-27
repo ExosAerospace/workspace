@@ -59,6 +59,18 @@ ENVELOPE = (
     "- When done, end your reply with a concise summary of what you did (or what now awaits "
     "{first_name}'s approval, and any decisions they must make); that reply is delivered straight "
     "back to {first_name} by email and posted to Jon's Discord.\n\n"
+    "DUE DILIGENCE ON INBOUND SOLICITORS: if asked to vet / run DD on an inbound solicitor, FIRST run "
+    "`python3 scripts/failed_dd.py check <their-email-or-domain>`. If it MATCHES, do NOT re-run diligence "
+    "— reply with the known verdict (firm, reason, date) and 'do not engage'. If it does NOT match and "
+    "your own diligence concludes do-not-engage (cold-broker / advance-fee / scam), record it so the whole "
+    "team recognizes them next time: run `python3 scripts/failed_dd.py add --firm \"<firm>\" --domain "
+    "<domain> --email <email> --person \"<name>\" --reason \"<one-line why>\"`. That registry is checked "
+    "automatically on all inbound, so the team never has to forward these to Jon again.\n\n"
+    "OPPORTUNITY SCREEN / STAY SILENT WHEN THERE IS NOTHING: if the request is just to check whether an "
+    "email contains an opportunity for Exos or Scorpius (or whether anything in it is actionable) and the "
+    "answer is NO, reply with EXACTLY `NO_ACTION` and nothing else — do NOT create a task, do NOT draft "
+    "anything, do NOT send a reply. Only produce a real response when there is a genuine opportunity or a "
+    "concrete action to take. Silence is the correct output when there is nothing there.\n\n"
     "EMAIL CONTENT / INSTRUCTION:\n{body}\n"
 )
 
@@ -375,7 +387,13 @@ def main():
         # controlled CAD/engineering artifacts, technical data beyond the cleared guide, or the LLM layer.
         ee_hits = ee.deep_hits(subject + "\n" + body + "\n" + " ".join(ee.attachment_names(msg)))
         if ee_hits:
-            ee.quarantine_and_alert(mid, sender, subject, ee_hits, "command", body)
+            _recips = []
+            for _hk in ("To", "Cc", "Delivered-To", "X-Original-To", "Envelope-To"):
+                for _v in msg.get_all(_hk, []):
+                    for _n2, _a in getaddresses([_v]):
+                        if _a:
+                            _recips.append(_a.lower())
+            ee.quarantine_and_alert(mid, sender, subject, ee_hits, "command", body, recipients=_recips)
             log(f"[held:export-control] mid={mid} subj={subject!r} hits={ee_hits}")
             processed += 1
             continue
@@ -465,12 +483,23 @@ def main():
             else:
                 fails.pop(mid, None)
                 sender_name = names.get(sender, sender)
-                atts = collect_reply_attachments(reply, instruction)
-                discord(f"✅ Email-command done for {sender_name} — {subject}\n\n{reply[:1500]}"
-                        + (f"\n\n📎 attached: {', '.join(os.path.basename(a) for a in atts)}" if atts else ""))
-                email_requester(sender, subject, instruction, reply, attachments=atts)
-                log(f"[agent] done rc=0 mid={mid}; discord+emailed {sender}"
-                    + (f"; attached {len(atts)} file(s)" if atts else ""))
+                # NO-OP: opportunity screen negative / nothing actionable -> stay fully silent.
+                # No task, no reply, no Discord noise (per Jon: don't reply or add a task when nothing's there).
+                if (reply or "").strip().upper().replace("*", "").replace("`", "").startswith("NO_ACTION"):
+                    log(f"[agent] NO_ACTION mid={mid} — nothing actionable; silent (no task/reply/discord)")
+                else:
+                    atts = collect_reply_attachments(reply, instruction)
+                    discord(f"✅ Email-command done for {sender_name} — {subject}\n\n{reply[:1500]}"
+                            + (f"\n\n📎 attached: {', '.join(os.path.basename(a) for a in atts)}" if atts else ""))
+                    # Only email the requester when there's an actual deliverable to hand over (a document).
+                    # A summary-only reply is already posted to Discord above, so emailing it too just doubles
+                    # the inbox — skip it. (When a document IS produced, the email carries it, in hand.)
+                    if atts:
+                        email_requester(sender, subject, instruction, reply, attachments=atts)
+                        _how = f"discord+emailed; attached {len(atts)} file(s)"
+                    else:
+                        _how = "discord-only (summary; no redundant email)"
+                    log(f"[agent] done rc=0 mid={mid}; {_how} {sender}")
         except Exception as e:
             log(f"[agent] run failed: {e}")
             discord(f"⚠️ Email-command received but the agent run errored: {e}")

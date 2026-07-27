@@ -643,6 +643,7 @@
             <option value="tech_license">Technology License Agreement</option>
             <option value="loi">Letter of Intent (LOI)</option>
             <option value="subcontract">Subcontract Agreement</option>
+            <option value="offer_letter">Employment Offer Letter</option>
           </select>
         </div>
         <div class="form-group">
@@ -862,6 +863,11 @@
           <h4>Subcontract</h4>
           <p>Subcontract Agreement</p>
         </div>
+        <div class="template-card" onclick="selectTemplate('offer_letter')">
+          <div class="icon">&#128188;</div>
+          <h4>Offer Letter</h4>
+          <p>Employment Offer Letter (with I-9)</p>
+        </div>
       </div>
     </div>
   </div>
@@ -873,6 +879,71 @@
 // ════════════════════════════════════════════════════════════════════
 const STORAGE_PREFIX = 'exos_docusign_';
 const TEMPLATES = {
+  offer_letter: {
+    title: 'Employment Offer Letter',
+    content: `[DATE]
+
+Dear [FIRST NAME],
+
+On behalf of EXOS Aerospace Systems & Technologies, Inc., I am pleased to offer you a [FULL-TIME / PART-TIME] position as [JOB TITLE].
+
+Your employment will begin with the payroll period starting [PAYROLL START DATE]. Your official first day of work will be [FIRST DAY OF WORK]. Your annual salary will be [ANNUAL SALARY], paid in accordance with EXOS Aerospace's regular payroll schedule and subject to applicable taxes, withholdings, and deductions.
+
+Please plan to come to the EXOS Aerospace facility on [ONBOARDING DATE], for approximately one hour of onboarding. During this appointment, we will complete any employment paperwork that cannot be handled electronically. Your Form I-9 employment eligibility verification may be completed either in person at onboarding or through an authorized electronic/remote verification process; we will confirm which method applies to you before your start date.
+
+What to bring for your Form I-9 (Employment Eligibility Verification):
+Federal law requires every new employee to establish both identity and authorization to work in the United States. Regardless of which verification method we use, you must be prepared to provide EITHER one document from List A, OR one document from List B together with one document from List C. All documents must be unexpired; if your I-9 is verified in person, they must be originals rather than photocopies.
+
+List A - establishes both identity and work authorization (bring one):
+- U.S. Passport or U.S. Passport Card
+- Permanent Resident Card or Alien Registration Receipt Card (Form I-551)
+- Foreign passport containing a temporary I-551 stamp or I-551 notation on a machine-readable immigrant visa
+- Employment Authorization Document that contains a photograph (Form I-766)
+- For a nonimmigrant authorized to work: foreign passport with Form I-94/I-94A bearing the same name and an endorsement of the individual's nonimmigrant status
+
+List B - establishes identity (bring one, together with a List C document):
+- Driver's license or ID card issued by a U.S. state or outlying possession, containing a photograph or identifying information
+- ID card issued by a federal, state, or local government agency, containing a photograph or identifying information
+- U.S. military card or draft record; military dependent's ID card
+- U.S. Coast Guard Merchant Mariner Card
+- Native American tribal document
+- Voter registration card or school ID card with a photograph
+
+List C - establishes work authorization (bring one, together with a List B document):
+- Social Security account number card (unless marked "not valid for employment")
+- Original or certified copy of a U.S. birth certificate issued by a state, county, municipal authority, or territory
+- Certification of Birth Abroad (Form FS-545) or Consular Report of Birth Abroad (Form FS-240 / DS-1350)
+- Native American tribal document
+- U.S. Citizen ID Card (Form I-197) or Identification Card for Use of Resident Citizen (Form I-179)
+- Employment authorization document issued by the Department of Homeland Security
+
+A full list of acceptable documents appears on the reverse of USCIS Form I-9. If you have any questions about which documents to bring, please contact us before your start date.
+
+[ROLE DESCRIPTION - summarize the position's core responsibilities and note that duties may evolve as company programs and operational needs develop.]
+
+As a full-time employee, you will be eligible for EXOS Aerospace's health coverage reimbursement benefit 21 days after your hire date, subject to the Company's Health Coverage Reimbursement Policy and applicable plan requirements. Under the current policy, EXOS may reimburse up to $850 per month for an approved employee-selected health coverage plan, including eligible employee, spouse, and dependent coverage. Employees enrolled in a qualifying HSA-compatible plan may also be eligible for a company HSA contribution of up to $358 per month, subject to eligibility requirements and applicable contribution limits. Complete policy and enrollment information will be provided separately.
+
+This offer does not alter the at-will nature of your employment with EXOS Aerospace. Either you or the company may terminate the employment relationship at any time, with or without cause or notice, subject to applicable law.
+
+[CLOSING PARAGRAPH - one or two sentences welcoming the employee and noting what they bring to the team.]
+
+Sincerely,
+
+
+[SIGNATURE BLOCK - EXOS AEROSPACE]
+Name: John Quinn
+Title: Chief Executive Officer
+Date: ___________________________
+
+
+Accepted and agreed:
+
+[SIGNATURE BLOCK - EMPLOYEE]
+Name: ___________________________
+Title: [JOB TITLE]
+Date: ___________________________`
+  },
+
   mnda: {
     title: 'Mutual Non-Disclosure Agreement',
     content: `MUTUAL NON-DISCLOSURE AGREEMENT
@@ -1232,6 +1303,94 @@ Date: ___________________________
 Name: ___________________________
 Title: ___________________________
 Date: ___________________________`
+  },
+
+  itar_data_transfer: {
+    title: 'ITAR-Controlled Technical Data Transfer Control Agreement (TDTCA)',
+    content: `ITAR-CONTROLLED TECHNICAL DATA TRANSFER CONTROL AGREEMENT
+
+This Technical Data Transfer Control Agreement ("Agreement") is entered into as of [EFFECTIVE DATE] (the "Effective Date") by and between:
+
+Exos: EXOS Aerospace Systems & Technologies, Inc., a Delaware corporation with its principal place of business at 299 FM 1903, Greenville, TX 75402 ("Exos" or the "Disclosing Party"), and
+
+Recipient: [RECIPIENT LEGAL NAME], [RECIPIENT ENTITY TYPE / JURISDICTION], with its principal place of business at [RECIPIENT ADDRESS] ("Recipient").
+
+PURPOSE OF SUPPORT WORK: [SCOPE OF SUPPORT WORK — e.g., FAA Part 450 launch-license compliance support for the Exos BLK3 vehicle].
+
+RECITALS
+Exos designs and operates launch vehicles and holds technical data that is or may be controlled under the International Traffic in Arms Regulations (ITAR, 22 C.F.R. Parts 120-130) and/or the Export Administration Regulations (EAR, 15 C.F.R. Parts 730-774). In order to perform the support work above, Recipient has requested access to certain Exos technical data identified in Exhibit A (the "Controlled Drawings"). This Agreement governs the conditions under which Exos may release, and Recipient may receive and handle, that controlled technical data. NO CONTROLLED DRAWINGS ARE RELEASED UNTIL THIS AGREEMENT IS FULLY EXECUTED AND THE EXOS EMPOWERED OFFICIAL RELEASE AUTHORIZATION IN SECTION 12 IS SIGNED.
+
+1. DEFINITIONS
+"Technical Data" and "Defense Article" have the meanings in 22 C.F.R. Part 120. "Controlled Drawings" means the specific drawings, models, and technical data listed in Exhibit A. "U.S. Person" and "Foreign Person" have the meanings in 22 C.F.R. 120.62-120.63. "Export," "Reexport," and "Retransfer" have the meanings in the ITAR/EAR. "Empowered Official" has the meaning in 22 C.F.R. 120.67.
+
+2. EXPORT-CONTROL STATUS AND AUTHORIZATION BASIS
+2.1 Recipient's status: [ ] U.S. Person   [ ] Foreign Person (country: [COUNTRY]).
+2.2 Authorization basis for this transfer: [AUTHORIZATION BASIS — e.g., U.S.-person-to-U.S.-person (no license required); DDTC license no. [___]; license exemption [___]; Technical Assistance Agreement no. [___]; AUKUS/22 C.F.R. 126.7 authorized transfer]. Exos will not release any Controlled Drawing until the authorization basis is confirmed in writing by the Exos Empowered Official.
+2.3 Recipient acknowledges the Controlled Drawings are export-controlled U.S. technical data and agrees to handle them in accordance with the ITAR/EAR and this Agreement.
+
+3. PERMITTED USE
+Recipient shall use the Controlled Drawings solely for the Purpose of Support Work stated above, and for no other purpose.
+
+4. NO RETRANSFER / NO REEXPORT
+Recipient shall not disclose, transfer, export, reexport, or provide access to the Controlled Drawings, in whole or in part, to any Foreign Person, third party, affiliate, subcontractor, or foreign jurisdiction, WITHOUT the prior written authorization of Exos and, where required, the prior authorization of the U.S. Department of State (DDTC) or Department of Commerce (BIS).
+
+5. PERSONNEL AND ACCESS CONTROL
+5.1 Access to the Controlled Drawings shall be limited to those Recipient personnel who have a need to know for the Purpose and who are authorized under Section 2.
+5.2 Recipient represents that each individual granted access is identified, and their U.S.-Person / Foreign-Person status disclosed, to Exos on request.
+5.3 Recipient represents that neither Recipient nor any individual with access is a denied, debarred, or restricted party under the BIS Entity List, OFAC SDN List, or DDTC Debarred List.
+
+6. SAFEGUARDING AND MARKING
+6.1 Recipient shall store and process the Controlled Drawings only within an access-controlled environment meeting the safeguarding standard specified by Exos (e.g., a CMMC-aligned / GCC High boundary), and shall not place them in any cloud, email, or storage service outside that authorized boundary.
+6.2 Recipient shall preserve all export-control and proprietary markings and shall not remove or alter them.
+
+7. DUE DILIGENCE AND DOSSIER
+Recipient acknowledges that Exos has conducted export-control due diligence on Recipient, summarized in Exhibit B (Due Diligence & Dossier Summary). Recipient represents that the information it provided for that due diligence is accurate and complete, and agrees to promptly notify Exos of any change to its ownership, control, personnel, or party-screening status during the term.
+
+8. RECORDS, AUDIT, RETURN, AND DESTRUCTION
+Recipient shall maintain records of all persons who accessed the Controlled Drawings. Upon completion of the Purpose, termination, or Exos request, Recipient shall return or securely destroy all Controlled Drawings and certify such destruction in writing within ten (10) business days.
+
+9. NOTICE OF UNAUTHORIZED ACCESS OR EXPORT
+Recipient shall notify Exos in writing within twenty-four (24) hours of any actual or suspected loss, unauthorized access, disclosure, or export of the Controlled Drawings.
+
+10. TERM AND SURVIVAL
+This Agreement is effective on the Effective Date and continues until the Purpose is completed or the Agreement is terminated. The export-control obligations survive termination and continue for so long as the Controlled Drawings remain controlled under the ITAR/EAR.
+
+11. GENERAL
+This Agreement is governed by the laws of the State of Texas and by applicable U.S. federal export-control law, which controls in the event of any conflict. This Agreement is the entire agreement on its subject matter. This Agreement does not grant any license or right to any Exos intellectual property except the limited use expressly stated.
+
+12. EXOS EMPOWERED OFFICIAL — RELEASE AUTHORIZATION (INTERNAL GATE)
+The following Exos Empowered Official certifies that: (a) due diligence and the dossier (Exhibit B) are complete and reviewed; (b) the authorization basis in Section 2 is confirmed and, where a license/agreement is required, it is in place; (c) the Controlled Drawing manifest (Exhibit A) is accurate; and authorizes release of the Controlled Drawings to Recipient.
+
+Empowered Official Name: John Quinn
+Title: Cofounder & CEO
+Authorization basis confirmed: ___________________________
+Signature: ___________________________   Date: ______________
+
+IN WITNESS WHEREOF, the Parties have executed this Agreement as of the Effective Date.
+
+
+[SIGNATURE BLOCK - EXOS]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________
+
+
+[SIGNATURE BLOCK - RECIPIENT]
+Name: ___________________________
+Title: ___________________________
+Date: ___________________________
+
+
+EXHIBIT A — CONTROLLED DRAWING MANIFEST
+(List every drawing/model/data item released. No item outside this manifest is authorized.)
+No. | Drawing / File Name | Rev | Description | Export Classification (USML Cat / ECCN) | Authorization Basis
+1   | [___] | [___] | [___] | [___] | [___]
+2   | [___] | [___] | [___] | [___] | [___]
+
+
+EXHIBIT B — DUE DILIGENCE & DOSSIER SUMMARY
+(Attach or summarize the completed DD memo and dossier: legal entity, ownership/FOCI, principals and nationalities, denied-party screening result, viability, and DD verdict Low/Medium/High with reviewer name and date.)
+[DD / DOSSIER SUMMARY — see attached dossier for Recipient]`
   }
 };
 
@@ -1503,7 +1662,7 @@ async function saveAndSend() {
 
   // Confirm before sending
   const recipientList = recipients.map(r => `  • ${r.name} <${r.email}>`).join('\n');
-  if (!confirm(`Send this document for signature?\n\nFrom: John Quinn <jquinn@exosaero.com>\nTo:\n${recipientList}\n\nThis will email the document directly to the recipients.`)) {
+  if (!confirm(`Send this document for E-SIGNATURE?\n\nFrom: John Quinn <jquinn@exosaero.com>\nTo:\n${recipientList}\n\nEach signer gets their own secure link to review and sign in their browser. You'll receive a fully executed copy once everyone has signed.`)) {
     return;
   }
 
@@ -1518,15 +1677,15 @@ async function saveAndSend() {
   if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = 'Sending...'; }
 
   try {
-    const resp = await fetch('/api/docusign/send', {
+    const resp = await fetch('/api/esign/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        recipients: recipients,
-        subject: `Exos Aerospace — ${doc.title || 'Document'} for Signature`,
+        title: doc.title,
+        html: doc.content,
         message: doc.sendMessage || 'Please review and sign the attached document.',
-        documentTitle: doc.title,
-        documentHtml: doc.content
+        subject: `Signature requested: ${doc.title || 'Document'}`,
+        signers: recipients.map(r => ({ name: r.name, email: r.email }))
       })
     });
 
@@ -1534,18 +1693,19 @@ async function saveAndSend() {
 
     if (result.success) {
       doc.sentAt = new Date().toISOString();
+      doc.envelopeId = result.id;
       doc.status = 'pending';
       doc.sendLog = doc.sendLog || [];
       doc.sendLog.push({
         sentAt: doc.sentAt,
         from: 'jquinn@exosaero.com',
         to: recipients.map(r => r.email),
-        messageId: result.messageId
+        envelopeId: result.id
       });
       saveDocuments();
       renderStats();
       renderDocList();
-      alert(`Document sent successfully!\n\nFrom: John Quinn <jquinn@exosaero.com>\nTo: ${recipients.map(r => r.email).join(', ')}`);
+      alert(`Signing links sent ✓\n\nEach signer got a secure link to review and sign in their browser:\n${recipients.map(r => '  • ' + r.email).join('\n')}\n\nYou'll receive a fully executed copy by email once everyone has signed.`);
     } else {
       alert('Failed to send: ' + (result.error || 'Unknown error'));
     }
@@ -1955,6 +2115,28 @@ function applySignature() {
 
   doc.updatedAt = now;
 
+  // ── Place the signature image + date ON the signer's signature line in the
+  //    document body (DocuSign-style), not just in the certificate. ──
+  try {
+    const dt = new Date(now);
+    const dateStr = (dt.getMonth() + 1) + '/' + dt.getDate() + '/' + String(dt.getFullYear()).slice(-2);
+    const sigImg = '<img src="' + sigData + '" alt="' + (signer.name || 'signature') +
+      '" style="height:42px;vertical-align:bottom;margin:0 4px;">';
+    let content = doc.content || '';
+    // Anchor on the signer's full name so we target THEIR block (each name precedes its own Signature:/Date: lines).
+    const anchor = (signer.name || '').trim();
+    const idx = anchor ? content.indexOf(anchor) : -1;
+    if (idx >= 0) {
+      let head = content.slice(0, idx);
+      let tail = content.slice(idx);
+      // Replace the first blank Signature line after the name with the signature image…
+      tail = tail.replace(/(Signature:\s*)_{3,}/i, (m, p1) => p1 + sigImg);
+      // …and the first blank Date line with the signing date.
+      tail = tail.replace(/(Date:\s*)_{3,}/i, (m, p1) => p1 + dateStr);
+      doc.content = head + tail;
+    }
+  } catch (e) { console.warn('signature line placement skipped:', e); }
+
   // Check if all signed
   const allSigned = doc.signers.every(s => s.signedAt);
   if (allSigned) {
@@ -1965,7 +2147,7 @@ function applySignature() {
   renderStats();
   renderDocList();
   viewDocument(currentDocId);
-  switchViewTab('viewStatus');
+  switchViewTab('viewContent');
 }
 
 // ════════════════════════════════════════════════════════════════════
@@ -2008,6 +2190,12 @@ async function processUploadedFile(file) {
       html = result.value;
       if (result.messages && result.messages.length > 0) {
         console.log('Mammoth conversion messages:', result.messages);
+      }
+      // If the .docx already leads with an embedded image (i.e. it carries its
+      // own Exos letterhead in the body), don't stamp a second one on top.
+      if (/^\s*(<p[^>]*>\s*)?<img[\s>]/i.test(html)) {
+        const lh = document.getElementById('applyLetterhead');
+        if (lh) lh.checked = false;
       }
     }
 
@@ -2103,13 +2291,11 @@ function stripLetterhead(html) {
 const _origSaveDocument = saveDocument;
 saveDocument = function(status) {
   const applyLH = document.getElementById('applyLetterhead').checked;
-  if (applyLH) {
-    const editor = document.getElementById('docEditor');
-    let content = editor.innerHTML;
-    // Strip any existing letterhead first to avoid doubling
-    content = stripLetterhead(content);
-    editor.innerHTML = wrapWithLetterhead(content);
-  }
+  const editor = document.getElementById('docEditor');
+  // Always strip any previously-applied tool letterhead first, so toggling the
+  // option OFF actually removes it (prevents a stuck double letterhead).
+  let content = stripLetterhead(editor.innerHTML);
+  editor.innerHTML = applyLH ? wrapWithLetterhead(content) : content;
   _origSaveDocument(status);
 };
 

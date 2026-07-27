@@ -25,7 +25,13 @@ which is safe. Import and use:
         quarantine_and_alert(message_id, sender, subject, hits, source="tracker")
         # ...skip processing this email...
 """
-import json, os, re, subprocess, time, hashlib, urllib.request
+import json, os, re, subprocess, time, hashlib, urllib.request, sys as _sys
+_sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    from proton_aliases import is_self as _is_self   # @exosaero.com + Jon/ops aliases => internal
+except Exception:
+    def _is_self(a):
+        return (a or "").strip().lower().endswith("@exosaero.com")
 
 WS = "/Users/exomac/.openclaw/workspace"
 QLOG = os.path.join(WS, "logs", "itar-ear-quarantine.jsonl")
@@ -236,7 +242,7 @@ def _already(message_id):
 
 def _alert(text):
     env = dict(os.environ)
-    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.14.0/bin:"
+    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.15.0/bin:"
                    "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
     try:
         subprocess.run([OPENCLAW, "message", "send", "--channel", "discord",
@@ -301,9 +307,28 @@ def _create_hold_decision(message_id, sender, subject, hits, body=""):
     os.replace(tmp, DECISIONS_FILE)
 
 
-def quarantine_and_alert(message_id, sender, subject, hits, source, body=""):
+def all_recipients_internal(recipients):
+    """True only if there is at least one recipient AND every recipient is an internal
+    Exos address (exosaero.com or a Jon/ops alias). Internal US-person-to-US-person
+    exchange is not an export, so such mail is not held. Fail-safe: an empty or
+    unparseable recipient list returns False, so the hold still applies.
+    NOTE: assumes exosaero.com recipients are U.S. persons; a foreign-person employee
+    would be a deemed-export handled by Exos's separate personnel controls, not here."""
+    recips = [r for r in (recipients or []) if r]
+    if not recips:
+        return False
+    return all(_is_self(r) for r in recips)
+
+
+def quarantine_and_alert(message_id, sender, subject, hits, source, body="", recipients=None):
     """Hold the email: log it, put an adjudication Decision in the sender's matrix, alert Jon.
-    Deduped by message-id. Returns True if newly held."""
+    Deduped by message-id. Returns True if newly held.
+    Internal-only transfers are NOT held: when every recipient is an internal Exos
+    address, the hold is skipped (US-person-to-US-person is not an export). Full
+    screening still applies whenever any recipient is external/foreign, or when the
+    recipient list is unknown."""
+    if recipients is not None and all_recipients_internal(recipients):
+        return False
     if _already(message_id):
         return False
     os.makedirs(os.path.dirname(QLOG), exist_ok=True)

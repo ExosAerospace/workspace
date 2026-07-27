@@ -40,7 +40,8 @@ SECRETS   = "/Users/exomac/.openclaw/secrets.json"
 ACT_FILE  = os.path.join(DATA, "email-activity.json")
 DEC_FILE  = os.path.join(DATA, "decisions.json")
 STATE     = os.path.join(WS, "logs", "mc-email-tracker-state.json")
-SELF_ADDRS = {"jquinnexo@pm.me", "jquinn@exosaero.com", "exosmc@proton.me", "exosmc@pm.me"}
+from proton_aliases import SELF_ADDRS as _CANON_SELF
+SELF_ADDRS = set(_CANON_SELF)  # all 4 Proton aliases + work address (source of truth: proton_aliases.py)
 # Internal domains are too broad to match on (every teammate shares them) — address
 # matching uses EXTERNAL counterparts only. Internal mail still attaches via an
 # explicit MC/decision id in the subject/body.
@@ -400,7 +401,7 @@ def main():
         # markers, controlled CAD/engineering artifacts, technical data beyond the cleared guide, or LLM.
         ee_hits = ee.deep_hits(blob + "\n" + " ".join(ee.attachment_names(msg)))
         if ee_hits:
-            ee.quarantine_and_alert(mid, (frm[0] if frm else ""), subject, ee_hits, "tracker", blob)
+            ee.quarantine_and_alert(mid, (frm[0] if frm else ""), subject, ee_hits, "tracker", blob, recipients=to+cc)
             continue
 
         # Deterministic, sender-independent routing: BCC exosmc+<TASKID>@pm.me puts the
