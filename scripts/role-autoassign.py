@@ -16,6 +16,25 @@ Safe: only touches role/queue-owned or opted-in tasks. Idempotent + logged.
 Run: python3 scripts/role-autoassign.py [--dry-run]
 """
 
+# --- governance: correlation logging (auto-inserted; safe/soft) ---
+try:
+    import sys as _gsys, os as _gos, atexit as _gatexit
+    _gsys.path.insert(0, _gos.path.join(_gos.path.dirname(_gos.path.abspath(__file__)), ".."))
+    from governance.govlog import new_run as _gnew_run, event as _gevent
+    _GRUN = _gnew_run("role-autoassign")
+    _gevent(_GRUN, "start", detail=" ".join(_gsys.argv[1:])[:120])
+    _gatexit.register(lambda: _gevent(_GRUN, "end"))
+    _gprev_hook = _gsys.excepthook
+    def _gexc(t, v, tb):
+        try: _gevent(_GRUN, "error", status="error", detail=str(v)[:160])
+        except Exception: pass
+        return _gprev_hook(t, v, tb)
+    _gsys.excepthook = _gexc
+except Exception:
+    pass
+# --- /governance ---
+
+
 # --- supabase retry/backoff shim (auto-added) ---
 import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
 import supabase_util as _sbu; _sbu.install()

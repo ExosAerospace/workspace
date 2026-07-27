@@ -28,11 +28,20 @@ FLEET = {
     "sam-amendment-watch.py": "sam-watch",
     "crm-reminder-lizi.py": "crm",
     "generate-crm-dashboard.py": "dashboard-data",
-    # payload_sales_engine.py already imports govlog directly (its own start/parse/
-    # bridge/end events); listed here for the entry-script->class registry. The
-    # injector is idempotent and will skip it (govlog block already present).
-    "payload_sales_engine.py": "payload-sales",
-    "derisk_orbital_outreach.py": "derisk-orbital",  # already imports govlog directly
+    # NOTE: payload_sales_engine.py is natively instrumented with a different
+    # comment marker, so the injector does NOT recognize it and would double-inject.
+    # It is intentionally NOT listed here. derisk_orbital_outreach.py carries the
+    # injector's marker, so it is correctly skipped as ALREADY WIRED.
+    "derisk_orbital_outreach.py": "derisk-orbital",
+    # Consequential standalone launchd scripts — log-substrate coverage (Searchable
+    # Logs pillar). Tags are govlog agent names, not registered eval classes.
+    "capture-action-dispatch.py": "capture-dispatch",
+    "decision-send-watcher.py": "decision-send",
+    "priority-inbox-watcher.py": "priority-inbox",
+    "outreach-autoclose.py": "outreach-autoclose",
+    "mc-email-command.py": "email-command",
+    "sent-loop-closer.py": "sent-loop-closer",
+    "role-autoassign.py": "role-autoassign",
 }
 
 MARK = "# --- governance: correlation logging"

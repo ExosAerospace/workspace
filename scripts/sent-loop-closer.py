@@ -11,6 +11,25 @@ confirmed send so the agents stop nudging Jon to send something he already sent.
 Safe + idempotent. Read-only against email; append-only against trackers.
 Run standalone or on a schedule (e.g., hourly) ahead of the capture crons.
 """
+
+# --- governance: correlation logging (auto-inserted; safe/soft) ---
+try:
+    import sys as _gsys, os as _gos, atexit as _gatexit
+    _gsys.path.insert(0, _gos.path.join(_gos.path.dirname(_gos.path.abspath(__file__)), ".."))
+    from governance.govlog import new_run as _gnew_run, event as _gevent
+    _GRUN = _gnew_run("sent-loop-closer")
+    _gevent(_GRUN, "start", detail=" ".join(_gsys.argv[1:])[:120])
+    _gatexit.register(lambda: _gevent(_GRUN, "end"))
+    _gprev_hook = _gsys.excepthook
+    def _gexc(t, v, tb):
+        try: _gevent(_GRUN, "error", status="error", detail=str(v)[:160])
+        except Exception: pass
+        return _gprev_hook(t, v, tb)
+    _gsys.excepthook = _gexc
+except Exception:
+    pass
+# --- /governance ---
+
 import imaplib, email, os, re, json, glob, sys, html as _html
 from email.utils import getaddresses, parsedate_to_datetime
 from datetime import datetime, timedelta

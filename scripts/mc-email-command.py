@@ -16,6 +16,25 @@ AUTH: allowlisted sender AND (domain DMARC/DKIM = pass  OR  passphrase on line 1
 and NOT an explicit DMARC/DKIM fail. Failed-auth trigger emails raise a Discord spoof
 alert and do NOT run. Idempotent via a message-id state file.
 """
+
+# --- governance: correlation logging (auto-inserted; safe/soft) ---
+try:
+    import sys as _gsys, os as _gos, atexit as _gatexit
+    _gsys.path.insert(0, _gos.path.join(_gos.path.dirname(_gos.path.abspath(__file__)), ".."))
+    from governance.govlog import new_run as _gnew_run, event as _gevent
+    _GRUN = _gnew_run("email-command")
+    _gevent(_GRUN, "start", detail=" ".join(_gsys.argv[1:])[:120])
+    _gatexit.register(lambda: _gevent(_GRUN, "end"))
+    _gprev_hook = _gsys.excepthook
+    def _gexc(t, v, tb):
+        try: _gevent(_GRUN, "error", status="error", detail=str(v)[:160])
+        except Exception: pass
+        return _gprev_hook(t, v, tb)
+    _gsys.excepthook = _gexc
+except Exception:
+    pass
+# --- /governance ---
+
 import imaplib, email, json, os, re, sys, subprocess, tempfile, fcntl, hashlib, html as _html, mimetypes
 from email.utils import getaddresses, parsedate_to_datetime
 from email.message import EmailMessage
