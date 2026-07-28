@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+ <key>Label</key><string>com.exos.deadline-watch</string>
+ <key>ProcessType</key><string>Background</string>
+ <key>ProgramArguments</key><array>
+  <string>/bin/zsh</string><string>-lc</string>
+  <string>python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Deadline-Watch --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/deadline-watch.py</string>
+ </array>
+ <key>StartCalendarInterval</key><dict><key>Hour</key><integer>6</integer><key>Minute</key><integer>25</integer></dict>
+ <key>StandardErrorPath</key><string>/Users/exomac/.openclaw/logs/deadline-watch.log</string>
+ <key>StandardOutPath</key><string>/Users/exomac/.openclaw/logs/deadline-watch.log</string>
+ <key>WorkingDirectory</key><string>/Users/exomac/.openclaw/workspace</string>
+</dict></plist>
