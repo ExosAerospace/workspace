@@ -20,6 +20,10 @@
  * shape as migrate.js).
  */
 const fs = require('fs');
+// Governance: correlation-id event log (Four Pillars -- Searchable Logs).
+// Soft dependency: never let logging break a data write.
+let govlog = null;
+try { govlog = require('../governance/govlog'); } catch (_) { /* governance optional */ }
 
 function openRaw(file) {
   try {
@@ -56,23 +60,33 @@ function openErp(file, opts = {}) {
   const db = openRaw(file);
   db.run('PRAGMA foreign_keys = ON;');
   const actor = opts.actor || 'system';
+  // Correlation id: one logical agent run threads through every audit row it
+  // writes, and into governance/events.jsonl. Caller passes opts.correlationId
+  // (or opts.run from govlog.newRun); otherwise a per-session id is minted.
+  const run = opts.run
+    || (govlog ? govlog.newRun(opts.agent || 'erp-dal') : { agent: opts.agent || 'erp-dal', run_id: 'erp-' + Date.now().toString(36) });
+  const correlationId = opts.correlationId || run.run_id;
 
   function audit(entity, id, action, before, after) {
     db.run(
-      'INSERT INTO audit_log (actor, ts, entity, entity_id, action, before_json, after_json) VALUES (?,?,?,?,?,?,?)',
+      'INSERT INTO audit_log (actor, ts, entity, entity_id, action, before_json, after_json, correlation_id) VALUES (?,?,?,?,?,?,?,?)',
       actor, new Date().toISOString(), entity, String(id), action,
       before == null ? null : JSON.stringify(before),
-      after == null ? null : JSON.stringify(after)
+      after == null ? null : JSON.stringify(after),
+      correlationId
     );
   }
 
-  /** Run a mutation + its audit row atomically. */
+  /** Run a mutation + its audit row atomically, then emit a correlated event. */
   function writeAudited(entity, id, action, before, after, mutate) {
-    return db.tx(() => { mutate(); audit(entity, id, action, before, after); });
+    const v = db.tx(() => { mutate(); audit(entity, id, action, before, after); });
+    if (govlog) { try { govlog.event(run, action, 'ok', '', { entity, id: String(id), correlation_id: correlationId }); } catch (_) {} }
+    return v;
   }
 
   return {
     driver: db.driver,
+    correlationId,   // the trace id for everything this handle writes
 
     // ---- reads (no audit) ----
     getCompanies({ limit = 50 } = {}) {
@@ -119,6 +133,53 @@ function openErp(file, opts = {}) {
       });
       return after;
     },
+
+    // ---- HR core (Phase 1): People domain, all mutations audited ----
+    // NOTE: PII columns (comp_band, emergency_contact) are intentionally NOT written here —
+    // they stay null until the CUI-scoped Azure Government host is live (plan §5A). Structural
+    // org data (name, title, department, reporting line, status) is non-PII and safe on ExoMac.
+    upsertOrgUnit(o) {
+      if (!o || !o.id) throw new Error('upsertOrgUnit requires id');
+      const id = String(o.id);
+      const before = db.get('SELECT * FROM org_unit WHERE id = ?', id) || null;
+      writeAudited('org_unit', id, before ? 'update' : 'insert', before, o, () => {
+        db.run('INSERT INTO org_unit (id,name,parent_id,raw_json) VALUES (?,?,?,?) ' +
+          'ON CONFLICT(id) DO UPDATE SET name=excluded.name, parent_id=excluded.parent_id, raw_json=excluded.raw_json',
+          id, o.name ?? null, o.parent_id ?? null, JSON.stringify(o));
+      });
+      return db.get('SELECT * FROM org_unit WHERE id = ?', id);
+    },
+    upsertPosition(p) {
+      if (!p || !p.id) throw new Error('upsertPosition requires id');
+      const id = String(p.id);
+      const before = db.get('SELECT * FROM position WHERE id = ?', id) || null;
+      writeAudited('position', id, before ? 'update' : 'insert', before, p, () => {
+        db.run('INSERT INTO position (id,title,org_unit_id,raw_json) VALUES (?,?,?,?) ' +
+          'ON CONFLICT(id) DO UPDATE SET title=excluded.title, org_unit_id=excluded.org_unit_id, raw_json=excluded.raw_json',
+          id, p.title ?? null, p.org_unit_id ?? null, JSON.stringify(p));
+      });
+      return db.get('SELECT * FROM position WHERE id = ?', id);
+    },
+    upsertEmployee(e) {
+      if (!e || !e.id) throw new Error('upsertEmployee requires id');
+      const id = String(e.id);
+      const before = db.get('SELECT * FROM employee WHERE id = ?', id) || null;
+      writeAudited('employee', id, before ? 'update' : 'insert', before, e, () => {
+        db.run('INSERT INTO employee (id,user_id,org_unit_id,position_id,manager_id,full_name,employment_status,start_date,raw_json) ' +
+          'VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET user_id=excluded.user_id, org_unit_id=excluded.org_unit_id, ' +
+          'position_id=excluded.position_id, manager_id=excluded.manager_id, full_name=excluded.full_name, ' +
+          'employment_status=excluded.employment_status, start_date=excluded.start_date, raw_json=excluded.raw_json',
+          id, e.user_id ?? null, e.org_unit_id ?? null, e.position_id ?? null, e.manager_id ?? null,
+          e.full_name ?? null, e.employment_status ?? 'Active', e.start_date ?? null, JSON.stringify(e));
+      });
+      return db.get('SELECT * FROM employee WHERE id = ?', id);
+    },
+    listEmployees() {
+      return db.all('SELECT e.id,e.full_name,e.employment_status,p.title,o.name AS org_unit,e.manager_id ' +
+        'FROM employee e LEFT JOIN position p ON p.id=e.position_id LEFT JOIN org_unit o ON o.id=e.org_unit_id ' +
+        'ORDER BY o.name, e.full_name');
+    },
+    orgUnits() { return db.all('SELECT id,name,parent_id FROM org_unit ORDER BY name'); },
 
     // ---- audit inspection ----
     recentAudit({ limit = 10 } = {}) {

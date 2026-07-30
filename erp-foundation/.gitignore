@@ -6,3 +6,4 @@ mc.db-shm
 # Copies of live MC data (CRM/investor PII) — never commit; repopulate from the
 # live workspace JSON before running migrate.js
 sample-data/
+backups/

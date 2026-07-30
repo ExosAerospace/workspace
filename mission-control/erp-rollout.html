@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos — ERP Rollout (Program)</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--blue:#0066cc;--blue2:#0080ff;--orange:#ff6b00;--orange2:#ff8c33;--text:#e8edf5;--text2:#a0aec0;--border:rgba(255,255,255,0.08);--card:#0f1e38;--green:#22c55e;--yellow:#eab308;--purple:#a855f7;--red:#ff4444}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);min-height:100vh;line-height:1.5}
+  header{background:linear-gradient(135deg,#0a1628 0%,#0d2050 100%);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;min-height:64px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-logo{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--orange));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+  .brand-text h1{font-size:1.05rem;line-height:1.1}
+  .brand-text p{font-size:0.78rem;color:var(--text2)}
+  .header-right a{color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-left:14px}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 24px 64px}
+  .hero{background:linear-gradient(135deg,var(--navy3),var(--navy2));border:1px solid var(--border);border-radius:14px;padding:26px 28px;margin-bottom:26px}
+  .hero h2{font-size:1.7rem;margin-bottom:6px}
+  .hero .tag{display:inline-block;background:rgba(0,128,255,.15);color:var(--blue2);border:1px solid rgba(0,128,255,.3);border-radius:20px;padding:3px 12px;font-size:.72rem;font-weight:600;letter-spacing:.04em;margin-bottom:12px}
+  .hero p{color:var(--text2);max-width:820px}
+  .hero p strong{color:var(--text)}
+  .status-bar{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px}
+  .status-pill{background:var(--navy);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:.82rem}
+  .status-pill b{color:var(--orange2);display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+  h3.section{font-size:1.15rem;margin:34px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .card h4{font-size:1rem;margin-bottom:4px}
+  .card .due{font-size:.72rem;color:var(--text2);margin-bottom:10px}
+  .card ul{list-style:none;font-size:.84rem}
+  .card ul li{padding:5px 0 5px 20px;position:relative;color:var(--text2)}
+  .card ul li::before{content:"▸";position:absolute;left:2px;color:var(--blue2)}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--border)}
+  th{background:var(--navy2);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text2)}
+  tr:last-child td{border-bottom:none}
+  td .owner{color:var(--orange2);font-weight:600}
+  .metric-row{display:flex;gap:16px;flex-wrap:wrap}
+  .metric{flex:1;min-width:160px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .metric .big{font-size:1.5rem;font-weight:800;color:var(--blue2)}
+  .metric .lbl{font-size:.78rem;color:var(--text2);margin-top:4px}
+  .callout{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);border-radius:12px;padding:16px 20px;font-size:.86rem;color:var(--text2)}
+  .callout a{color:var(--blue2)}
+  .note{font-size:.78rem;color:var(--text2);margin-top:10px;font-style:italic}
+  footer{text-align:center;color:var(--text2);font-size:.74rem;padding:30px 0 10px}
+</style></head>
+<body>
+<header>
+  <div class="brand"><div class="brand-logo">EX</div><div class="brand-text"><h1>Exos Aerospace</h1><p>Mission Control · ERP Rollout</p></div></div>
+  <div class="header-right"><a href="/index.html">← Board</a><a href="program.html">AI Mission Desk</a><a href="gov-readiness.html">Gov/DIB Readiness</a><a href="decisions.html">🗳️ Decisions</a></div>
+</header>
+<div class="wrap">
+  <div class="hero">
+    <span class="tag" id="tag"></span>
+    <h2 id="name"></h2>
+    <p id="summary"></p>
+    <div class="status-bar" id="statusbar"></div>
+  </div>
+
+  <h3 class="section">🗺️ Phase Roadmap</h3>
+  <p id="lastup" style="color:var(--text2);font-size:.75rem;margin:0 0 14px"></p>
+  <div class="grid" id="roadmap"></div>
+
+  <h3 class="section">📋 Process &amp; Procedures Register <span style="font-size:.8rem;color:var(--text2);font-weight:400">— Lizi turnover → MC tracking</span></h3>
+  <table><thead><tr><th>Process / Procedure</th><th>Artifact</th><th>Owner</th><th>Status</th></tr></thead><tbody id="procreg"></tbody></table>
+  <p class="note">Lizi turns over Exos processes &amp; procedures; Exo tracks and maintains them in Mission Control. Compliance artifacts feed the Gov/DIB Readiness Register.</p>
+
+  <div class="callout" style="margin-top:20px">🛡️ <b>Government / DIB Readiness</b> — the SCRM, QMS, and Manufacturing Maturation artifacts here answer the federal supplier &amp; manufacturing/quality questions. Live status: <a href="gov-readiness.html">gov-readiness.html</a>. Manufacturing management (MQ-1) is closed by <b>Phase 5B</b>.</div>
+
+  <h3 class="section">👥 Team &amp; Ownership</h3>
+  <table><thead><tr><th>Role</th><th>Owner</th></tr></thead><tbody id="team"></tbody></table>
+
+  <h3 class="section">📈 Program Metrics</h3>
+  <div class="metric-row" id="metrics"></div>
+
+  <footer>Exos Aerospace · ERP Rollout Program · scaffolded by Exo · mirrors the AI Mission Desk program page · Mission Control login required</footer>
+</div>
+<script id="data" type="application/json">
+{
+ "generated": "2026-07-29",
+ "meta": {
+  "name": "Mission Control \u2192 Work-Management ERP",
+  "tag": "PROGRAM \u00b7 ERP ROLLOUT",
+  "summary": "Transform Mission Control into a DCAA-grade, CMMC-ready Work-Management ERP \u2014 HR, timekeeping, contracts/CDRL, procurement, production, and finance \u2014 interfacing (not replacing) BambooHR and closing the government/DIB readiness gaps.",
+  "sponsor": "John Quinn",
+  "program_lead": "[ASSIGN]",
+  "process_turnover": "Lizi \u2192 Exo (COMPLETE \u2014 library live in MC; Lizi advises on revisions)",
+  "started": "2026-07-20",
+  "current_phase": "Phase 0 \u2014 Foundation (branch erp-phase0)"
+ },
+ "milestones": [
+  {
+   "id": "P0",
+   "name": "Phase 0 \u2014 Foundation",
+   "due": "2026-08",
+   "status": "In Progress",
+   "deliverables": [
+    {
+     "name": "SQLite system-of-record + full schema (38 tables)",
+     "status": "done",
+     "owner": "Exo",
+     "note": "erp-foundation/mc.db live; all plan \u00a77 entities modeled"
+    },
+    {
+     "name": "JSON \u2192 SQLite migration (CRM/tasks/opps/decisions)",
+     "status": "done",
+     "owner": "Exo",
+     "note": "1183 companies/contacts/deals + 110 opps + 87 tasks migrated"
+    },
+    {
+     "name": "Immutable audit log on every mutation",
+     "status": "done",
+     "owner": "Exo",
+     "note": "audit_log live (3,900+ rows); DAL writeAudited() chokepoint"
+    },
+    {
+     "name": "RBAC \u2014 roles & clearances",
+     "status": "in_progress",
+     "owner": "Exo",
+     "note": "role + clearance tables seeded; single /api authz middleware pending"
+    },
+    {
+     "name": "Backups (3-2-1, restore-tested)",
+     "status": "done",
+     "owner": "Exo",
+     "note": "backup_erp.js nightly (launchd), VACUUM-INTO snapshot + restore-verify (7 tables reconcile); remote legs (node + GCC High offsite) pending"
+    },
+    {
+     "name": "Availability / failover when ExoMac is down",
+     "status": "in_progress",
+     "owner": "Exo",
+     "note": "MC launchd KeepAlive auto-restart live (crash/reboot covered); Azure Gov warm standby pending"
+    },
+    {
+     "name": "CMMC 2.0 / CUI hosting boundary",
+     "status": "in_progress",
+     "owner": "Atomus",
+     "note": "GCC High confirmed; Azure Gov compute for the CUI-bearing app to be added (blocks HR PII go-live)"
+    }
+   ]
+  },
+  {
+   "id": "P1",
+   "name": "Phase 1 \u2014 BambooHR Interface (read-through)",
+   "due": "2026-09",
+   "status": "In Progress",
+   "note": "Decision 2026-07-30 (Jon): HR is STRICTLY an interface to BambooHR. Bamboo stays the system of record \u2014 no absorption, no cutover. MC displays a read-through mirror only; HR PII stays in Bamboo (out of ExoMac scope).",
+   "deliverables": [
+    {
+     "name": "HR read-through cache schema (org, position, employee)",
+     "status": "done",
+     "owner": "Exo",
+     "note": "employee/org_unit/position live via audited DAL; serves as the Bamboo mirror (placeholder org seeded until the sync runs)"
+    },
+    {
+     "name": "BambooHR interface adapter (directory + org sync)",
+     "status": "blocked",
+     "owner": "Exo",
+     "note": "adapter BUILT (erp-foundation/bamboo_sync.js) \u2014 runs on BAMBOO_SUBDOMAIN + BAMBOO_API_KEY; read-only, never writes back to Bamboo, no PII"
+    },
+    {
+     "name": "HR directory / org-chart views in MC (read-only)",
+     "status": "todo",
+     "owner": "Exo",
+     "note": "renders from the Bamboo mirror; deep-links to Bamboo for authoritative HR actions"
+    }
+   ]
+  },
+  {
+   "id": "P2",
+   "name": "Phase 2 \u2014 Timekeeping (Bamboo/DCAA) \u2192 MC Cost Accounting",
+   "due": "2026-10",
+   "status": "Planned",
+   "note": "Decision 2026-07-30: timekeeping lives in BAMBOO \u2014 projects structured to the DCAA-required format, employees book time under DCAA cost codes, Bamboo object-lock = immutability. Fixed-Price (FFP) is the primary vehicle, which limits the DCAA compliance burden. MC does NOT build timekeeping; it reads Bamboo actuals for cost rollup.",
+   "deliverables": [
+    {
+     "name": "DCAA timekeeping (in Bamboo \u2014 projects + cost codes + object-lock)",
+     "status": "blocked",
+     "owner": "Bamboo",
+     "note": "configured in BambooHR, not built in MC; FFP-primary limits the compliance scope"
+    },
+    {
+     "name": "Read Bamboo project/time actuals into MC (interface)",
+     "status": "todo",
+     "owner": "Exo",
+     "note": "bamboo_sync.js extends to pull projects + time entries when the API key lands"
+    },
+    {
+     "name": "Labor actuals \u2192 project / WBS cost rollup (feeds Phase 4)",
+     "status": "todo",
+     "owner": "Exo"
+    }
+   ]
+  },
+  {
+   "id": "P3",
+   "name": "Phase 3 \u2014 BambooHR Cutover & Decommission",
+   "due": "\u2014",
+   "status": "N/A",
+   "note": "Removed by decision 2026-07-30 \u2014 BambooHR remains the HR system of record permanently; MC interfaces to it, never replaces it.",
+   "deliverables": [
+    {
+     "name": "N/A \u2014 Bamboo stays authoritative (no cutover/decommission)",
+     "status": "blocked",
+     "owner": "\u2014",
+     "note": "superseded by the read-through interface in Phase 1"
+    }
+   ]
+  },
+  {
+   "id": "P4",
+   "name": "Phase 4 \u2014 Contracts & CDRL + Cost Rollup",
+   "due": "2026-12",
+   "status": "Planned",
+   "deliverables": [
+    {
+     "name": "Contracts, WBS, CDRL deliverables",
+     "status": "todo",
+     "owner": "Exo",
+     "note": "highest Exos leverage"
+    },
+    {
+     "name": "Cost-accounting rollup",
+     "status": "todo",
+     "owner": "Exo"
+    }
+   ]
+  },
+  {
+   "id": "P5",
+   "name": "Phase 5 \u2014 Procurement + Asset/Hardware Tracking",
+   "due": "2027-Q1",
+   "status": "Planned",
+   "deliverables": [
+    {
+     "name": "Vendors, POs, receiving (feeds SCRM scorecards)",
+     "status": "todo",
+     "owner": "Exo"
+    },
+    {
+     "name": "Serialized flight-hardware asset register",
+     "status": "todo",
+     "owner": "Exo"
+    }
+   ]
+  },
+  {
+   "id": "P5B",
+   "name": "Phase 5B \u2014 Production Management (Manufacturing)",
+   "due": "2027-Q1",
+   "status": "Planned",
+   "deliverables": [
+    {
+     "name": "Bill of Materials (BOM)",
+     "status": "todo",
+     "owner": "Exo"
+    },
+    {
+     "name": "Work orders / routings + WIP",
+     "status": "todo",
+     "owner": "Exo"
+    },
+    {
+     "name": "Quality records (NCR / CAPA / first-article)",
+     "status": "todo",
+     "owner": "Exo",
+     "note": "QMS transactional home"
+    },
+    {
+     "name": "Closes gov-readiness gap MQ-1 (manufacturing management)",
+     "status": "todo",
+     "owner": "Exo"
+    }
+   ]
+  },
+  {
+   "id": "P6",
+   "name": "Phase 6 \u2014 Finance Integration + Doc Control / ITAR",
+   "due": "2027-Q2",
+   "status": "Planned",
+   "deliverables": [
+    {
+     "name": "QuickBooks integration (budget-vs-actual)",
+     "status": "todo",
+     "owner": "Exo"
+    },
+    {
+     "name": "Controlled document control / ITAR",
+     "status": "todo",
+     "owner": "Exo"
+    }
+   ]
+  }
+ ],
+ "process_register": [
+  {
+   "name": "Supplier Management & SCRM Policy",
+   "artifact": "Exos_Supplier_SCRM_Policy.docx",
+   "owner": "Lizi \u2192 Exo/MC",
+   "status": "in_progress",
+   "note": "Draft delivered; adopt & sign"
+  },
+  {
+   "name": "Quality Management System (QMS) Charter",
+   "artifact": "Exos_QMS_Charter.docx",
+   "owner": "Lizi \u2192 Exo/MC",
+   "status": "in_progress",
+   "note": "AS9100D-aligned; cert is target"
+  },
+  {
+   "name": "Manufacturing Maturation Plan (MRL)",
+   "artifact": "Exos_Manufacturing_Maturation_Plan.docx",
+   "owner": "Lizi \u2192 Exo/MC",
+   "status": "in_progress",
+   "note": "Draft delivered"
+  },
+  {
+   "name": "Government / DIB Readiness Register",
+   "artifact": "gov-readiness.html",
+   "owner": "Exo/MC",
+   "status": "live",
+   "note": "9 items tracked; links ERP data"
+  },
+  {
+   "name": "Exos Process & Procedures Library (Lizi turnover)",
+   "artifact": "process-library.html",
+   "owner": "Lizi \u2192 Exo/MC",
+   "status": "live",
+   "note": "61 files organized into 11 functional areas; 34 register entries; add\u2192approve\u2192record workflow (QMS-001) live. Lizi turnover COMPLETE \u2014 Exo now manages/tracks."
+  }
+ ],
+ "metrics": [
+  {
+   "big": "8",
+   "lbl": "ERP phases (0 \u2192 6, incl. 5B)"
+  },
+  {
+   "big": "9",
+   "lbl": "Gov/DIB readiness items tracked"
+  },
+  {
+   "big": "DCAA",
+   "lbl": "Timekeeping grade (target)"
+  },
+  {
+   "big": "CMMC L2",
+   "lbl": "Compliance target (via Atomus)"
+  }
+ ]
+}
+</script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>(s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const MS={Complete:'var(--green)','In Progress':'var(--yellow)','Planned':'var(--text2)','On Hold':'var(--text2)'};
+const chip=s=>({done:['✅','var(--green)'],live:['✅','var(--green)'],unblocked:['✅','var(--green)'],in_progress:['🔨','var(--yellow)'],scheduled:['🟢','var(--green)'],blocked:['⛔','var(--text2)'],todo:['⏸','var(--text2)']}[s]||['•','var(--text2)']);
+const P=JSON.parse($('data').textContent),m=P.meta;
+$('tag').textContent=m.tag; $('name').textContent='⚙️ '+m.name; $('summary').innerHTML=esc(m.summary);
+$('statusbar').innerHTML=[['Sponsor',m.sponsor],['Program lead',m.program_lead],['Process turnover',m.process_turnover],['Started',m.started],['Current phase',m.current_phase]]
+  .map(([k,v])=>`<div class="status-pill"><b>${k}</b>${esc(v)}</div>`).join('');
+$('lastup').textContent='Live · generated '+m.name+' rollout · '+P.milestones.length+' phases';
+$('roadmap').innerHTML=P.milestones.map(mi=>`<div class="card"><h4>${esc(mi.name)}</h4><div class="due">Target ${esc(mi.due)} · ${esc(mi.id)} · <span style="color:${MS[mi.status]||'var(--text2)'}">${esc(mi.status)}</span></div><ul>${mi.deliverables.map(d=>{const c=chip(d.status);return `<li><span style="color:${c[1]}">${c[0]}</span> ${esc(d.name)}${d.owner?` <span style="color:var(--orange2);font-size:.85em">[${esc(d.owner)}]</span>`:''}${d.note?` <span style="color:var(--text2);font-size:.8em">— ${esc(d.note)}</span>`:''}</li>`;}).join('')}</ul></div>`).join('');
+$('procreg').innerHTML=P.process_register.map(r=>{const c=chip(r.status);return `<tr><td>${esc(r.name)}${r.note?`<div style="color:var(--text2);font-size:.8em">${esc(r.note)}</div>`:''}</td><td style="color:var(--blue2)">${esc(r.artifact)}</td><td class="owner">${esc(r.owner)}</td><td style="color:${c[1]}">${c[0]} ${esc(r.status)}</td></tr>`;}).join('');
+$('team').innerHTML=[['Sponsor',m.sponsor],['Program lead',m.program_lead],['Process &amp; Procedures turnover','Lizi'],['MC management &amp; tracking','Exo'],['CMMC / CUI hosting','Atomus']]
+  .map(([k,v])=>`<tr><td>${k}</td><td class="owner">${esc(v)}</td></tr>`).join('');
+$('metrics').innerHTML=P.metrics.map(x=>`<div class="metric"><div class="big">${esc(x.big)}</div><div class="lbl">${esc(x.lbl)}</div></div>`).join('');
+</script>
+</body></html>
