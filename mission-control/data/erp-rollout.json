@@ -133,18 +133,25 @@
    "id": "P4",
    "name": "Phase 4 \u2014 Contracts & CDRL + Cost Rollup",
    "due": "2026-12",
-   "status": "Planned",
+   "status": "In Progress",
    "deliverables": [
     {
-     "name": "Contracts, WBS, CDRL deliverables",
-     "status": "todo",
+     "name": "Contract \u2192 WBS \u2192 CDRL model (audited)",
+     "status": "done",
      "owner": "Exo",
-     "note": "highest Exos leverage"
+     "note": "confirmed awards modeled: FA9300-25-C-6022 (HVRR-RDRE Ph II / Hermes) + Karmen D2P2; 7 DCAA-aligned WBS + 3 CDRLs. Pursuits (TACFI, NASA Ph III) stay in pipeline until awarded."
     },
     {
-     "name": "Cost-accounting rollup",
+     "name": "Budget-vs-actual cost-accounting rollup",
+     "status": "done",
+     "owner": "Exo",
+     "note": "per-WBS rollup built + proven (joins Bamboo/DCAA labor hours + PO material $ vs WBS budget); populates automatically as time + POs flow"
+    },
+    {
+     "name": "Load funded values, WBS budgets, CDRL due dates",
      "status": "todo",
-     "owner": "Exo"
+     "owner": "Jon",
+     "note": "kept null until verified \u2014 no fabricated financials"
     }
    ]
   },

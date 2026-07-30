@@ -181,6 +181,79 @@ function openErp(file, opts = {}) {
     },
     orgUnits() { return db.all('SELECT id,name,parent_id FROM org_unit ORDER BY name'); },
 
+    // ---- Contracts & CDRL (Phase 4): federal awards → WBS → deliverables, all audited ----
+    upsertContract(c) {
+      if (!c || !c.id) throw new Error('upsertContract requires id');
+      const id = String(c.id);
+      const before = db.get('SELECT * FROM contract WHERE id = ?', id) || null;
+      writeAudited('contract', id, before ? 'update' : 'insert', before, c, () => {
+        db.run('INSERT INTO contract (id,number,title,customer,status,funded_value,start_date,end_date,raw_json) ' +
+          'VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET number=excluded.number, title=excluded.title, ' +
+          'customer=excluded.customer, status=excluded.status, funded_value=excluded.funded_value, ' +
+          'start_date=excluded.start_date, end_date=excluded.end_date, raw_json=excluded.raw_json',
+          id, c.number ?? null, c.title ?? null, c.customer ?? null, c.status ?? null,
+          c.funded_value ?? null, c.start_date ?? null, c.end_date ?? null, JSON.stringify(c));
+      });
+      return db.get('SELECT * FROM contract WHERE id = ?', id);
+    },
+    upsertWbs(w) {
+      if (!w || !w.id) throw new Error('upsertWbs requires id');
+      const id = String(w.id);
+      const before = db.get('SELECT * FROM wbs_element WHERE id = ?', id) || null;
+      writeAudited('wbs_element', id, before ? 'update' : 'insert', before, w, () => {
+        db.run('INSERT INTO wbs_element (id,contract_id,parent_id,code,name,budget,raw_json) VALUES (?,?,?,?,?,?,?) ' +
+          'ON CONFLICT(id) DO UPDATE SET contract_id=excluded.contract_id, parent_id=excluded.parent_id, ' +
+          'code=excluded.code, name=excluded.name, budget=excluded.budget, raw_json=excluded.raw_json',
+          id, w.contract_id ?? null, w.parent_id ?? null, w.code ?? null, w.name ?? null, w.budget ?? null, JSON.stringify(w));
+      });
+      return db.get('SELECT * FROM wbs_element WHERE id = ?', id);
+    },
+    upsertDeliverable(d) {   // CDRL
+      if (!d || !d.id) throw new Error('upsertDeliverable requires id');
+      const id = String(d.id);
+      const before = db.get('SELECT * FROM deliverable WHERE id = ?', id) || null;
+      writeAudited('deliverable', id, before ? 'update' : 'insert', before, d, () => {
+        db.run('INSERT INTO deliverable (id,contract_id,cdrl_number,title,due_date,status,raw_json) VALUES (?,?,?,?,?,?,?) ' +
+          'ON CONFLICT(id) DO UPDATE SET contract_id=excluded.contract_id, cdrl_number=excluded.cdrl_number, ' +
+          'title=excluded.title, due_date=excluded.due_date, status=excluded.status, raw_json=excluded.raw_json',
+          id, d.contract_id ?? null, d.cdrl_number ?? null, d.title ?? null, d.due_date ?? null, d.status ?? null, JSON.stringify(d));
+      });
+      return db.get('SELECT * FROM deliverable WHERE id = ?', id);
+    },
+    upsertContractMilestone(m) {
+      if (!m || !m.id) throw new Error('upsertContractMilestone requires id');
+      const id = String(m.id);
+      const before = db.get('SELECT * FROM contract_milestone WHERE id = ?', id) || null;
+      writeAudited('contract_milestone', id, before ? 'update' : 'insert', before, m, () => {
+        db.run('INSERT INTO contract_milestone (id,contract_id,name,due_date,amount,status,raw_json) VALUES (?,?,?,?,?,?,?) ' +
+          'ON CONFLICT(id) DO UPDATE SET contract_id=excluded.contract_id, name=excluded.name, due_date=excluded.due_date, ' +
+          'amount=excluded.amount, status=excluded.status, raw_json=excluded.raw_json',
+          id, m.contract_id ?? null, m.name ?? null, m.due_date ?? null, m.amount ?? null, m.status ?? null, JSON.stringify(m));
+      });
+      return db.get('SELECT * FROM contract_milestone WHERE id = ?', id);
+    },
+    listContracts() {
+      return db.all('SELECT id,number,title,customer,status,funded_value,start_date,end_date FROM contract ORDER BY start_date DESC');
+    },
+    listCdrls(contractId) {
+      return db.all('SELECT id,cdrl_number,title,due_date,status FROM deliverable WHERE contract_id = ? ORDER BY due_date', String(contractId));
+    },
+    /** Budget-vs-actual cost rollup per WBS: budget (contract), labor HOURS booked (Bamboo/DCAA
+     *  time_entry), and material $ committed (po_line → purchase_order.wbs_id). Labor→$ needs the
+     *  Bamboo labor rate (joined later); hours are shown until then. Returns rows + totals. */
+    contractRollup(contractId) {
+      const rows = db.all(
+        'SELECT w.id, w.code, w.name, w.budget, ' +
+        '(SELECT COALESCE(SUM(t.hours),0) FROM time_entry t WHERE t.wbs_id = w.id) AS labor_hours, ' +
+        '(SELECT COALESCE(SUM(pl.qty*pl.unit_price),0) FROM po_line pl JOIN purchase_order po ON po.id = pl.po_id WHERE po.wbs_id = w.id) AS material_cost ' +
+        'FROM wbs_element w WHERE w.contract_id = ? ORDER BY w.code', String(contractId));
+      const totals = rows.reduce((a, r) => ({
+        budget: a.budget + (r.budget || 0), labor_hours: a.labor_hours + (r.labor_hours || 0),
+        material_cost: a.material_cost + (r.material_cost || 0),
+      }), { budget: 0, labor_hours: 0, material_cost: 0 });
+      return { rows, totals };
+    },
+
     // ---- audit inspection ----
     recentAudit({ limit = 10 } = {}) {
       return db.all('SELECT id,actor,ts,entity,entity_id,action FROM audit_log ORDER BY id DESC LIMIT ?', limit);
