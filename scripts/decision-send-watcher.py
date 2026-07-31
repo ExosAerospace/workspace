@@ -48,6 +48,11 @@ TO   = "jquinn@exosaero.com"          # ALWAYS Jon; never external
 FROM = "jquinnexo@pm.me"
 FILE_RX = re.compile(r"((?:drafts|captures|tasks|submissions-archive)/[\w./\- ]+?\.(?:docx|pdf|md|txt|pptx|xlsx))", re.I)
 SEND_RX = re.compile(r"\b(re-?send|send it|send me|send to me|send the draft|email me|for me to send|send drafted|send response)\b", re.I)
+# Jon 2026-07-31: a decision whose ONLY action is "deliver this draft to your inbox to send" is
+# redundant — delivering to Jon's own inbox is NOT an external send (he still sends it himself), so
+# it should fire IMMEDIATELY on OPEN, not wait for him to approve delivering it to himself.
+DELIVER_TO_JON = re.compile(r"deliver .{0,30}?(your|to your) inbox|for you to send|to your inbox to send|"
+                            r"on\s+yes[, ].{0,40}?deliver|i deliver the draft|ready.{0,15}?for you to send", re.I)
 
 def log(m):
     from datetime import datetime, timezone
@@ -162,9 +167,68 @@ def send(it, draft):
     p=subprocess.run(["msmtp","-a","protonmail",to],input=bytes(m),capture_output=True,timeout=60)
     return p.returncode==0, (p.stderr.decode()[:200] if p.returncode else "")
 
+def is_deliver_to_jon(it):
+    """OPEN decision whose only action is handing Jon the draft to send from his own inbox."""
+    if str(it.get("status","") or "open").lower() != "open":
+        return False
+    blob = " ".join(str(it.get(k,"")) for k in ("proposedAction","question","context"))
+    return bool(DELIVER_TO_JON.search(blob))
+
+
+def close_decision(did, note):
+    """Mark a decision answered/auto-delivered in decisions.json (atomic), so it leaves the box."""
+    raw = load_json(DEC, [])
+    arr = raw if isinstance(raw, list) else raw.get("decisions", [])
+    from datetime import datetime, timezone
+    now = datetime.now(timezone.utc).isoformat()
+    for d in arr:
+        if str(d.get("id")) == str(did):
+            d["status"] = "answered"; d["answer"] = "Auto-delivered to your inbox (you requested it)"
+            d["note"] = (d.get("note") or "") + f" [{note}]"; d["answeredAt"] = now; d["answeredBy"] = "auto-deliver"
+    tmp = DEC + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(arr if isinstance(raw, list) else {**raw, "decisions": arr}, f, indent=2)
+    os.replace(tmp, DEC)
+
+
+def auto_deliver(it, draft):
+    """Email Jon the ready draft (proposedAction body + file if resolvable) — internal only."""
+    m = EmailMessage(); m["From"] = FROM; m["To"] = "jquinn@exosaero.com"
+    title = it.get("title", "(draft)")
+    m["Subject"] = f"[Ready to send — you requested this] {title}"
+    body = (f"You asked for this — here it is, ready to send from your own email (not sent externally by the system).\n\n"
+            f"{it.get('proposedAction','')}\n\n"
+            f"{('Attached: '+os.path.basename(draft)) if draft and not draft.lower().endswith(('.md','.txt')) else ''}\n"
+            f"(auto-delivered — no decision-box approval needed for things you requested.)")
+    m.set_content(body)
+    if draft and not draft.lower().endswith((".md", ".txt")) and os.path.exists(draft):
+        ct, _ = mimetypes.guess_type(draft); ct = ct or "application/octet-stream"; mt, st = ct.split("/", 1)
+        with open(draft, "rb") as f: m.add_attachment(f.read(), maintype=mt, subtype=st, filename=os.path.basename(draft))
+    p = subprocess.run(["msmtp", "-a", "protonmail", "jquinn@exosaero.com"], input=bytes(m), capture_output=True, timeout=60)
+    return p.returncode == 0, (p.stderr.decode()[:200] if p.returncode else "")
+
+
 def main():
     mode = sys.argv[1] if len(sys.argv)>1 else ""
     st = load_json(STATE, {}); done = st.setdefault("processed", {})   # id -> updated
+    # NEW: auto-deliver OPEN "deliver-to-Jon draft" decisions immediately + close them (no approval
+    # hop for things Jon requested). Delivery is internal (his inbox); he still sends externally.
+    for it in [d for d in decisions() if is_deliver_to_jon(d)]:
+        did = str(it.get("id")); key = "autodel-" + did
+        if done.get(key):
+            continue
+        if mode == "--dry-run":
+            print(f"AUTO-DELIVER {did} | {(it.get('title') or '')[:60]}"); continue
+        if mode == "--baseline":
+            done[key] = "1"; continue
+        draft = resolve_draft(it)
+        ok, err = auto_deliver(it, draft)
+        if ok:
+            close_decision(did, "auto-delivered on request; no approval needed")
+            done[key] = "1"
+            log(f"AUTO-DELIVERED to Jon + closed: {did} '{it.get('title')}'")
+        else:
+            log(f"AUTO-DELIVER FAILED {did}: {err}")
     triggerable = [it for it in decisions() if is_send_request(it)]
     for it in triggerable:
         did=str(it.get("id")); upd=str(it.get("updated") or it.get("answeredAt") or "")

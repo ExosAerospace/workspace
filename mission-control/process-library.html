@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos — Process & Procedures Library</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--blue2:#0080ff;--orange2:#ff8c33;--text:#e8edf5;--text2:#a0aec0;--border:rgba(255,255,255,0.08);--card:#0f1e38;--green:#22c55e;--yellow:#eab308;--red:#ff5555;--gold:#e8aa3c;--purple:#a855f7}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);min-height:100vh;line-height:1.5}
+  header{background:linear-gradient(135deg,#0a1628,#0d2050);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;min-height:64px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-logo{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,#0066cc,#ff6b00);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+  .brand-text h1{font-size:1.05rem}.brand-text p{font-size:.78rem;color:var(--text2)}
+  .header-right a{color:var(--blue2);text-decoration:none;font-size:.85rem;margin-left:14px}
+  .wrap{max-width:1160px;margin:0 auto;padding:26px 24px 64px}
+  .hero{background:linear-gradient(135deg,var(--navy3),var(--navy2));border:1px solid var(--border);border-radius:14px;padding:24px 26px;margin-bottom:20px}
+  .hero h2{font-size:1.6rem;margin-bottom:6px}.hero p{color:var(--text2);max-width:880px;font-size:.9rem}
+  .flow{background:rgba(0,128,255,.08);border:1px solid rgba(0,128,255,.35);border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:.88rem}
+  .flow b{color:#cfe4ff}
+  .flow .steps{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+  .flow .step{background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:.82rem}
+  .flow .arw{color:var(--blue2);font-weight:700}
+  .summary{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 8px}
+  .chip{border-radius:18px;padding:5px 13px;font-size:.8rem;font-weight:600;border:1px solid var(--border)}
+  h3.area{font-size:1.12rem;margin:26px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+  h3.area .n{font-size:.72rem;color:var(--text2);font-weight:400}
+  .qa{color:var(--gold)} .qa-badge{background:rgba(232,170,60,.15);color:var(--gold);border:1px solid rgba(232,170,60,.4);border-radius:12px;padding:1px 9px;font-size:.66rem;font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--navy2);font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text2)}
+  tr:last-child td{border-bottom:none}
+  td.doc{font-weight:700;color:#cfe0ff;white-space:nowrap}
+  .b{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.72rem;font-weight:700;white-space:nowrap}
+  .files{color:var(--text2);font-size:.74rem}
+  .flag{color:var(--red);font-size:.72rem;font-weight:700}
+  .foot{color:#5f6f8f;font-size:.72rem;margin-top:26px}
+  footer{text-align:center;color:var(--text2);font-size:.72rem;padding:26px 0 8px}
+</style></head>
+<body>
+<header>
+  <div class="brand"><div class="brand-logo">EX</div><div class="brand-text"><h1>Exos Aerospace</h1><p>Mission Control · Process & Procedures</p></div></div>
+  <div class="header-right"><a href="/index.html">← Board</a><a href="erp-rollout.html">ERP Rollout</a><a href="gov-readiness.html">Gov/DIB Readiness</a><a href="decisions.html">🗳️ Decisions</a></div>
+</header>
+<div class="wrap">
+  <div class="hero">
+    <h2>📚 Process & Procedures Library</h2>
+    <p id="sub"></p>
+  </div>
+  <div class="flow">
+    <b>How anyone adds a process or procedure</b> — submit against the Exos-US Procedure Template; it routes to John Quinn for approval; on approval it's recorded here with a doc number and revision.
+    <div class="steps"><span class="step">1 · Submit (Procedure Template)</span><span class="arw">→</span><span class="step">2 · Routes to Jon (Decisions matrix)</span><span class="arw">→</span><span class="step">3 · Approved → recorded on master list (doc # + rev)</span><span class="arw">→</span><span class="step">4 · Records in NetSuite / Exos Work Mgmt</span></div>
+  </div>
+  <div class="summary" id="summary"></div>
+  <div id="content"></div>
+  <div class="foot" id="foot"></div>
+  <footer>Exos Aerospace · Process & Procedures Library · managed in Mission Control by Exo (Lizi advising) · generated from data/process-register.json</footer>
+</div>
+<script id="data" type="application/json">
+{
+ "meta": {
+  "title": "Exos Process & Procedures \u2014 Master Register",
+  "updated": "2026-07-31",
+  "source": "Lizi turnover \u2192 Exo (MC management); schema per Exos Procedures Master List",
+  "template": "Exos-US Procedure Template",
+  "doc_control": "STATUS on each doc; records in NetSuite + Exos Work Management System (MC/ERP)",
+  "areas": [
+   "Quality & Document Control (AS9100)",
+   "Ground Operations (Greenville)",
+   "Payload",
+   "Procurement",
+   "Human Resources",
+   "Safety / EHS",
+   "HR Compliance & Training",
+   "Security / CUI",
+   "Records & Schedules",
+   "Culture (uncontrolled)",
+   "Reference (external benchmarks)"
+  ]
+ },
+ "register": [
+  {
+   "area": "Quality & Document Control (AS9100)",
+   "area_id": "01-quality-as9100",
+   "procedure": "Procedure Template",
+   "doc_no": "TEMPLATE",
+   "rev": "2019-07-09",
+   "status": "Approved",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "House format for all procedures",
+   "files": [
+    "01-quality-as9100/Exos-US-Procedure_Template.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Quality & Document Control (AS9100)",
+   "area_id": "01-quality-as9100",
+   "procedure": "Procedures Master List",
+   "doc_no": "MASTER",
+   "rev": "\u2014",
+   "status": "Active",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "The controlled index (this register supersedes)",
+   "files": [
+    "01-quality-as9100/Exos_Aerospace_Procedures_Master_List.xlsx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Quality & Document Control (AS9100)",
+   "area_id": "01-quality-as9100",
+   "procedure": "Procedures List",
+   "doc_no": "LIST",
+   "rev": "\u2014",
+   "status": "Active",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "01-quality-as9100/Exos-US-Procedures_list.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Quality & Document Control (AS9100)",
+   "area_id": "01-quality-as9100",
+   "procedure": "Media File Storage & Naming",
+   "doc_no": "GRN-006",
+   "rev": "0",
+   "status": "Ready for Release",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Records/document control",
+   "files": [
+    "01-quality-as9100/EXOS-GRN-006-0_Media_File_Storage_and_Naming_Procedure.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Quality & Document Control (AS9100)",
+   "area_id": "01-quality-as9100",
+   "procedure": "After Action Review \u2014 Procedure Template",
+   "doc_no": "AAR-TMPL",
+   "rev": "1",
+   "status": "Approved",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Corrective-action basis (AS9100 10.2)",
+   "files": [
+    "01-quality-as9100/Exos-US-_After_Action_Review_Procedure_Template_1.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Quality & Document Control (AS9100)",
+   "area_id": "01-quality-as9100",
+   "procedure": "After Action Review \u2014 AAR-001 (record)",
+   "doc_no": "AAR-001",
+   "rev": "2019-06-29",
+   "status": "Record",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Example AAR record",
+   "files": [
+    "01-quality-as9100/Exos-US-AAR-001_After_Action_Review_06-29-2019.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Quality & Document Control (AS9100)",
+   "area_id": "01-quality-as9100",
+   "procedure": "Process & Procedure Control Procedure",
+   "doc_no": "QMS-001",
+   "rev": "0",
+   "status": "Pending Review",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "The add\u2192approve\u2192record workflow itself \u2014 awaiting CEO approval",
+   "files": [
+    "01-quality-as9100/EXOS-US-QMS-001_Process_and_Procedure_Control.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Quality & Document Control (AS9100)",
+   "area_id": "01-quality-as9100",
+   "procedure": "Weekly Meeting",
+   "doc_no": "NA",
+   "rev": "2019-07-09",
+   "status": "Approved",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "In master list; file to collect from Lizi",
+   "files": [],
+   "file_count": 0
+  },
+  {
+   "area": "Ground Operations (Greenville)",
+   "area_id": "02-ground-operations",
+   "procedure": "Crane Operations Procedure",
+   "doc_no": "GRN-001",
+   "rev": "0",
+   "status": "Approved",
+   "intl_release": "Yes",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "02-ground-operations/EXOS-GRN-001-0_Crane_Operations_Procedure.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Ground Operations (Greenville)",
+   "area_id": "02-ground-operations",
+   "procedure": "Tracking Antenna Training Procedure",
+   "doc_no": "GRN-002",
+   "rev": "0",
+   "status": "Approved",
+   "intl_release": "Yes",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "02-ground-operations/EXOS-GRN-002-0_Tracking_Antenna_Training_Procedure.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Ground Operations (Greenville)",
+   "area_id": "02-ground-operations",
+   "procedure": "Pelorus Training Procedure",
+   "doc_no": "GRN-003",
+   "rev": "0",
+   "status": "Approved",
+   "intl_release": "Yes",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "02-ground-operations/EXOS-GRN-003-0_Pelorus_Training_Procedure.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Ground Operations (Greenville)",
+   "area_id": "02-ground-operations",
+   "procedure": "Tracking Antenna Procedure",
+   "doc_no": "GRN-004",
+   "rev": "0",
+   "status": "Approved",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "02-ground-operations/EXOS-GRN-004-0_Tracking_Antenna_Procedure.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Ground Operations (Greenville)",
+   "area_id": "02-ground-operations",
+   "procedure": "Main Parachute Cutter Assembly Procedure",
+   "doc_no": "GRN-007",
+   "rev": "0",
+   "status": "In Process",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "02-ground-operations/EXOS-GRN-007-0_Main_Parachute_Cutter_Assembly_Procedure.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Ground Operations (Greenville)",
+   "area_id": "02-ground-operations",
+   "procedure": "Sled Test Prep",
+   "doc_no": "GRN-SLED",
+   "rev": "draft",
+   "status": "Draft",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "02-ground-operations/Exos-GRN_Sled_Test_prep.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Payload",
+   "area_id": "03-payload",
+   "procedure": "Payload Process Manual v1.1 Rev3",
+   "doc_no": "PAYLOAD-MAN",
+   "rev": "1.1 r3",
+   "status": "Active",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "2020-05-28",
+   "files": [
+    "03-payload/EXOS_Aerospace_Payload_Process_Manual_-_v1.1_-_Rev3-_5-28-20.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Procurement",
+   "area_id": "04-procurement",
+   "procedure": "Purchasing Training Procedure",
+   "doc_no": "GRN-005",
+   "rev": "0",
+   "status": "Needs Update",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Update after new Purchasing procedure established",
+   "files": [
+    "04-procurement/EXOS-GRN-005-0_Purchasing_Training_Procedure.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Procurement",
+   "area_id": "04-procurement",
+   "procedure": "Purchasing Process Procedures Rev 2",
+   "doc_no": "PUR-PROC",
+   "rev": "2 (2022)",
+   "status": "Active",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Current purchasing procedure",
+   "files": [
+    "04-procurement/Purchasing_Process_Procedures_Rev_2-2022.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Procurement",
+   "area_id": "04-procurement",
+   "procedure": "Purchasing Request For Information v1.5",
+   "doc_no": "PUR-RFI",
+   "rev": "1.5",
+   "status": "Active",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "04-procurement/Exos-US-_Purchasing_Request_For_Information_1.5.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Human Resources",
+   "area_id": "05-human-resources",
+   "procedure": "Hiring Process",
+   "doc_no": "HR-HIRE",
+   "rev": "2022-01-03",
+   "status": "Pending Review",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "05-human-resources/Exos-US-Hiring_Process.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Human Resources",
+   "area_id": "05-human-resources",
+   "procedure": "Onboarding Process",
+   "doc_no": "HR-ONBOARD",
+   "rev": "2022-01-03",
+   "status": "Pending Review",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "05-human-resources/Exos-US-Onboarding_Process.doc"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Safety / EHS",
+   "area_id": "06-safety-ehs",
+   "procedure": "Workplace Safety \u2014 Annual Training",
+   "doc_no": "SAFE-ANNUAL",
+   "rev": "2024",
+   "status": "Training (review)",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Module: guide, incident form, ack, quiz, deck",
+   "files": [
+    "06-safety-ehs/Hazard_Identification_Activity_Guide.docx",
+    "06-safety-ehs/Incident_Reporting_Form.docx",
+    "06-safety-ehs/Safety_Employee_Acknowledgment_Form.docx",
+    "06-safety-ehs/Safety_Training_Quiz.pdf",
+    "06-safety-ehs/Workplace_Safety_Training_Presentation.pptx"
+   ],
+   "file_count": 5
+  },
+  {
+   "area": "Safety / EHS",
+   "area_id": "06-safety-ehs",
+   "procedure": "Emergency Action Plan (EAP) Training",
+   "doc_no": "SAFE-EAP",
+   "rev": "2024",
+   "status": "Training",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Module: package, drill sim, role-play, ack, quiz, deck",
+   "files": [
+    "06-safety-ehs/EAP_Employee_Acknowledgment_Form.docx",
+    "06-safety-ehs/EAP_Training_Presentation.pptx",
+    "06-safety-ehs/EAP_Training_Quiz.pdf",
+    "06-safety-ehs/Emergency_Action_Plan_Training_package.docx",
+    "06-safety-ehs/Emergency_Drill_Simulation_Guide.docx",
+    "06-safety-ehs/Role_Playing_Exercise_Guide.docx"
+   ],
+   "file_count": 6
+  },
+  {
+   "area": "Safety / EHS",
+   "area_id": "06-safety-ehs",
+   "procedure": "LOx & Ethanol Handling Training",
+   "doc_no": "SAFE-LOX",
+   "rev": "2024",
+   "status": "Training",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Hazmat/propellant handling",
+   "files": [
+    "06-safety-ehs/Equipment_Operation_Drill_Guide.docx",
+    "06-safety-ehs/LoX_Ethanol_Employee_Acknowledgment_Form.docx",
+    "06-safety-ehs/LoX_Ethanol_Training_Presentation.pptx",
+    "06-safety-ehs/LoX_Ethanol_Training_Quiz.pdf",
+    "06-safety-ehs/LoX_and_Ethanol_Handling_Training_Package.docx",
+    "06-safety-ehs/Safety_Scenario_Simulations_Guide.docx"
+   ],
+   "file_count": 6
+  },
+  {
+   "area": "Safety / EHS",
+   "area_id": "06-safety-ehs",
+   "procedure": "Texas Hazard Communication Act (THCA)",
+   "doc_no": "SAFE-THCA",
+   "rev": "2024",
+   "status": "Training",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "SDS review, chemical ID, HazCom",
+   "files": [
+    "06-safety-ehs/Chemical_Identification_Exercise.docx",
+    "06-safety-ehs/SDS_Review_Guide.docx",
+    "06-safety-ehs/THCA_Employee_Acknowledgment_Form.docx",
+    "06-safety-ehs/THCA_Training_Presentation.pptx",
+    "06-safety-ehs/THCA_Training_Quiz.pdf",
+    "06-safety-ehs/Texas_Hazard_Communication_Act_training_package.docx"
+   ],
+   "file_count": 6
+  },
+  {
+   "area": "HR Compliance & Training",
+   "area_id": "07-hr-compliance-training",
+   "procedure": "Harassment & Discrimination Training",
+   "doc_no": "HRC-HD",
+   "rev": "2024",
+   "status": "Training",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "07-hr-compliance-training/Exos_Employee_Acknowledgment_Form.docx",
+    "07-hr-compliance-training/Exos_Harassment_Discrimination_Training_Presentation.pptx",
+    "07-hr-compliance-training/Exos_Post_Training_Quiz.pdf",
+    "07-hr-compliance-training/Exos_Scenario_Based_Discussion_Guide.docx"
+   ],
+   "file_count": 4
+  },
+  {
+   "area": "HR Compliance & Training",
+   "area_id": "07-hr-compliance-training",
+   "procedure": "Texas Payday Law Training",
+   "doc_no": "HRC-PAYDAY",
+   "rev": "2024",
+   "status": "Needs Update",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Flagged by Jon \u2014 update the 2024 version",
+   "files": [
+    "07-hr-compliance-training/Payday_Employee_Acknowledgment_Form.docx",
+    "07-hr-compliance-training/Texas_Payday_Law_Case_Studies.docx",
+    "07-hr-compliance-training/Texas_Payday_Law_Training_Package.docx",
+    "07-hr-compliance-training/Texas_Payday_Law_Training_Presentation.pptx",
+    "07-hr-compliance-training/Texas_Payday_Law_Training_Quiz.pdf"
+   ],
+   "file_count": 5
+  },
+  {
+   "area": "HR Compliance & Training",
+   "area_id": "07-hr-compliance-training",
+   "procedure": "Annual Employee Training Review",
+   "doc_no": "HRC-REVIEW",
+   "rev": "old",
+   "status": "Rebuild",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Model for a live training-compliance tracker in MC",
+   "files": [
+    "07-hr-compliance-training/Exos_annual_Employee_Training_Review.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Security / CUI",
+   "area_id": "08-security-cui",
+   "procedure": "CUI Policies and Procedures",
+   "doc_no": "SEC-CUI",
+   "rev": "1",
+   "status": "Active",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Ties to CMMC/Atomus program",
+   "files": [
+    "08-security-cui/Exos_CUI_Policies_and_Procedures.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Security / CUI",
+   "area_id": "08-security-cui",
+   "procedure": "CUI NDA \u2014 DFARS/CFR v1",
+   "doc_no": "SEC-CUI-NDA",
+   "rev": "1",
+   "status": "Active",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "08-security-cui/Exos-US-CUI_NDA_-_DFARS-CFR_v1.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Records & Schedules",
+   "area_id": "09-records-schedules",
+   "procedure": "Master Launch Schedule",
+   "doc_no": "SCHED",
+   "rev": "live",
+   "status": "Active",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "",
+   "files": [
+    "09-records-schedules/Exos_Master_Launch_Schedule.xlsx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Culture (uncontrolled)",
+   "area_id": "10-culture",
+   "procedure": "Leroy Jethro Gibbs' Rules (fun)",
+   "doc_no": "FUN",
+   "rev": "\u2014",
+   "status": "Uncontrolled",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Morale/humor \u2014 not a controlled procedure",
+   "files": [
+    "10-culture/Leroy_Jethro_Gibbs_rules.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Reference (external benchmarks)",
+   "area_id": "99-reference",
+   "procedure": "Insider Threat Awareness (CDSE)",
+   "doc_no": "REF-INSIDER",
+   "rev": "2024",
+   "status": "Reference",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Training reference for Security/CUI",
+   "files": [
+    "99-reference/Insider_Threat_Guide.pdf"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Reference (external benchmarks)",
+   "area_id": "99-reference",
+   "procedure": "Procurement benchmarks (Coupa/Ardent/IDC)",
+   "doc_no": "REF-PROC",
+   "rev": "\u2014",
+   "status": "Reference",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Templates for Procurement procedure build",
+   "files": [
+    "99-reference/21-10-Ways-To-Deliver-Smarter-Better-Procurement.pdf",
+    "99-reference/ArdentPartners-Procurement2022-BigTrendsandPredictions.pdf",
+    "99-reference/IDCMarketScape_2021-Procurement-Report.pdf"
+   ],
+   "file_count": 3
+  },
+  {
+   "area": "Reference (external benchmarks)",
+   "area_id": "99-reference",
+   "procedure": "Sample Purchasing manuals (KU/NYU)",
+   "doc_no": "REF-PURMAN",
+   "rev": "\u2014",
+   "status": "Reference",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Exo (Lizi advising)",
+   "remarks": "Templates",
+   "files": [
+    "99-reference/SAMPLE_PurchasingPoliciesProcedures.2015.Edition21.pdf",
+    "99-reference/SAMPLE_Purchasing_Procedures_Manual_-_5-9-2019.pdf"
+   ],
+   "file_count": 2
+  },
+  {
+   "area": "Payload",
+   "area_id": "03-payload",
+   "procedure": "Sales Agent Commission Procedure",
+   "doc_no": "SALES-001",
+   "rev": "1",
+   "status": "Active",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (CEO approves; Lizi/CTO advising)",
+   "remarks": "Base 5% on all payments + 5% on top-25%-of-bay mass revenue only (not whole sale). Attribution -> payment trigger -> payout; visible to CEO/CTO/agent. Ties to Agreement template + Payload Price/Commission Calculator + ERP commission ledger.",
+   "files": [
+    "03-payload/EXOS_Sales_Agent_Commission_Procedure_SALES-001.docx"
+   ],
+   "file_count": 1
+  }
+ ]
+}
+</script>
+<script>
+const D=JSON.parse(document.getElementById('data').textContent), m=D.meta, reg=D.register;
+document.getElementById('sub').innerHTML=`House format: <b style="color:#cfe4ff">${m.template}</b> · Doc control: ${m.doc_control} · Source: ${m.source}`;
+document.getElementById('foot').textContent='Updated '+m.updated+' · '+reg.length+' procedure entries · '+reg.reduce((a,r)=>a+r.file_count,0)+' files catalogued across '+m.areas.length+' functional areas.';
+const SC={Approved:'#22c55e',Active:'#22c55e','Ready for Release':'#22c55e',Record:'#8fa4c8','In Process':'#eab308','Pending Review':'#eab308',Draft:'#a0aec0','Needs Update':'#ff5555',Rebuild:'#ff5555',Training:'#a855f7','Training (review)':'#a855f7',Uncontrolled:'#8fa4c8',Reference:'#8fa4c8'};
+const badge=s=>{const c=SC[s]||'#a0aec0';return `<span class="b" style="background:${c}22;color:${c};border:1px solid ${c}66">${s}</span>`};
+// summary
+const cnt={};reg.forEach(r=>cnt[r.status]=(cnt[r.status]||0)+1);
+document.getElementById('summary').innerHTML=`<span class="chip">${reg.length} procedures</span>`+Object.entries(cnt).sort((a,b)=>b[1]-a[1]).map(([k,v])=>{const c=SC[k]||'#a0aec0';return `<span class="chip" style="color:${c};border-color:${c}66">${v} ${k}</span>`}).join('');
+// group by area (keep register order)
+// Set this to the GCC High document-library URL to make "Open the CUI library" a live link.
+const CUI_URL='';
+const cuiLink = CUI_URL
+  ? `<a href="${CUI_URL}" target="_blank" style="color:#7fd1ff;font-weight:600">Open the CUI document library in GCC High →</a>`
+  : `<span style="color:var(--text2)">GCC High document library — link pending (ask Jon to set the SharePoint URL)</span>`;
+const CUI_HTML=`<div style="border:1px solid #5a3030;background:#241618;border-radius:10px;padding:14px 16px;margin:18px 0 6px">
+  <h3 style="margin:0 0 8px;color:#ff9b9b">🔒 Security / CUI — how we handle it &amp; where to access it</h3>
+  <p style="margin:0 0 8px"><b>CUI and ITAR material is NOT stored in Mission Control.</b> It is created, stored, and shared only inside our accredited boundary:</p>
+  <ul style="margin:0 0 8px;padding-left:18px;line-height:1.5">
+    <li><b>Where the CUI folders live:</b> Microsoft <b>GCC High</b> (Azure Government) — the Exos Gov tenant SharePoint/OneDrive. ${cuiLink}</li>
+    <li><b>How to get access:</b> request through the CMMC / Atomus admin — access is role-based and logged. Mission Control itself sits behind Cloudflare Zero Trust (CMMC-required).</li>
+    <li><b>Program:</b> managed under <b>CMMC 2.0</b> with <b>Atomus</b> (GCC High / Azure Gov); CUI-handling training + sign-off via Atomus.</li>
+    <li><b>Marking:</b> we do <b>not</b> self-designate CUI — the government designates it. Exos trade-secret material is marked <b>"Proprietary — Unclassified,"</b> never CUI.</li>
+  </ul>
+  <p style="margin:0;color:var(--text2);font-size:.85em">The Security/CUI procedures below are catalogued here for reference only — the controlled documents are opened in GCC High, not downloaded from Mission Control.</p>
+</div>`;
+const fileCell=r=>(r.files&&r.files.length)
+  ? r.files.map(f=>`<a class="dl" href="/process-library/${encodeURI(f)}" target="_blank" title="${(f.split('/').pop()||'').replace(/"/g,'')}" style="text-decoration:none;font-size:1.05em;margin-right:3px">📄</a>`).join('')
+  : '<span style="color:var(--text2);font-style:italic;font-size:.85em">no document yet</span>';
+// Make the procedure NAME open its doc when there's exactly one (non-CUI) file — clicking the
+// row name is what users reach for. Multi-file entries keep the per-file icons in the Files column.
+const procName=(r,isCUI)=>(!isCUI && r.files && r.files.length===1)
+  ? `<a href="/process-library/${encodeURI(r.files[0])}" target="_blank" style="color:var(--text);text-decoration:none;border-bottom:1px dotted var(--accent,#7fd1ff)">${r.procedure}</a>`
+  : r.procedure;
+const order=[...new Set(reg.map(r=>r.area_id))];
+let html='';
+for(const aid of order){
+  const rows=reg.filter(r=>r.area_id===aid); const label=rows[0].area;
+  const isCUI=aid==='08-security-cui';
+  const isQA=aid.startsWith('01');
+  if(isCUI) html+=CUI_HTML;
+  html+=`<h3 class="area ${isQA?'qa':''}">${label} <span class="n">(${rows.length})</span>${isQA?' <span class="qa-badge">QA / AS9100 SPECIAL SECTION</span>':''}</h3>`;
+  html+=`<table><thead><tr><th>Doc #</th><th>Procedure</th><th>Rev</th><th>Status</th><th>Intl</th><th>Ack</th><th>Files</th></tr></thead><tbody>`;
+  for(const r of rows){
+    const flag=(r.status==='Needs Update'||r.status==='Rebuild')?` <span class="flag">⚠ ${r.remarks||''}</span>`:(r.remarks?` <span style="color:var(--text2);font-size:.75em">— ${r.remarks}</span>`:'');
+    const files=isCUI?'<span title="Access in GCC High, not Mission Control" style="color:#ff9b9b;font-size:.8em">🔒 GCC High</span>':fileCell(r);
+    html+=`<tr><td class="doc">${r.doc_no}</td><td>${procName(r,isCUI)}${flag}</td><td>${r.rev}</td><td>${badge(r.status)}</td><td>${r.intl_release==='Yes'?'🌐':'—'}</td><td>${r.ack_required?'✍️':'—'}</td><td class="files">${files}</td></tr>`;
+  }
+  html+='</tbody></table>';
+}
+document.getElementById('content').innerHTML=html;
+</script>
+</body></html>

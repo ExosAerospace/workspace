@@ -256,8 +256,9 @@ Return STRICT JSON only, no prose, with this exact shape:
 Routing rules:
 - SEND = an external email is ready to go (owner just approves).
 - TASK = internal work needed first; deliverable.type may be "none".
-- DECISION = needs Jon's go/no-go or a missing input only he has.
+- DECISION = needs Jon's go/no-go or a missing input only he has AND it is consequential (money, a real commitment, a gov/investor/contract call). A routine outreach approval is NOT a DECISION.
 - CLOSE = dead/not worth pursuing; explain why in blockers.
+CONSIDER THE SOURCING — do NOT manufacture speculative "maybe" decisions. NEVER route DECISION to ask whether a warm/known contact or intro path EXISTS, or to "confirm whether" a relationship or connection is available. That is premature relationship-fishing. Only propose a warm-intro step if a SPECIFIC named contact is already confirmed in our CRM/relationships. If a warm path might help but is unconfirmed, route TASK and note it can be supplied at submission time — Jon will provide the intro if and when it is actually needed. Never ask Jon to validate a hypothetical relationship.
 Rules: never overstate traction or claim relationships not confirmed. External docs say "John". Email only ever goes to Jon for approval first."""
 
 def build_prompt(opp):
@@ -455,6 +456,23 @@ def route_to_mc(opp, res, draft_path):
             "priority": "high" if res.get("_tier")=="top" else "med",
             "relatedItem": opp.get("title","")[:120], "source": "Opportunity Engine", "dueDate": due})
     elif route == "DECISION":
+        # Backstop (Jon 2026-07-31): never surface speculative "does a warm/known contact or intro
+        # path EXIST?" asks as decisions — that's premature relationship-fishing. Divert to the
+        # research feed (recoverable); Jon supplies a warm intro at submission time if actually needed.
+        _SPECULATIVE = re.compile(
+            r"confirm whether|whether (?:a |we have |there is |an? )?.{0,40}?(?:warm|known|existing|potential)\b"
+            r".{0,40}?(?:contact|intro|introduction|relationship|connection|path|lead)|"
+            r"\bdo we (?:have|know)\b|is there a (?:warm|known)|can .{0,30}? intro\b|"
+            r"ask jon (?:to confirm|whether)|if (?:we|there) .{0,20}? (?:a )?(?:warm|known) ", re.I)
+        ns = res.get("next_step", "")
+        if _SPECULATIVE.search(ns):
+            mc_post("/api/research/ingest", {
+                "id": f"opp-warmpath-{rel}", "title": f"Possible warm path (parked): {opp.get('title','')[:100]}",
+                "date": TODAY, "category": "BD Intel", "source": "Opportunity Engine",
+                "highlights": [f"Speculative warm-intro step suppressed (no confirmed contact): {ns[:160]}",
+                               "Not a decision — Jon provides a warm intro at submission time only if actually needed."],
+                "body": f"{ns}\n\nParked rather than asked. Sourcing unconfirmed."})
+            return
         _ingest_decision({
             "dedupeKey": f"opp-dec-{rel}",
             "title": f"{opp.get('id')}: {res.get('next_step','')[:80]}",

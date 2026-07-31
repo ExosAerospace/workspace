@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos Aerospace — Opportunities & CRM</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:   #0a1628;
+  --navy2:  #0d1f3c;
+  --navy3:  #112248;
+  --blue:   #0066cc;
+  --blue2:  #0080ff;
+  --orange: #ff6b00;
+  --orange2:#ff8c33;
+  --text:   #e8edf5;
+  --text2:  #a0aec0;
+  --border: rgba(255,255,255,0.08);
+  --card:   #0f1e38;
+  --green:  #22c55e;
+  --yellow: #eab308;
+  --red:    #ff4444;
+  --purple: #a855f7;
+  --cyan:   #06b6d4;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--navy); color: var(--text); min-height: 100vh; }
+
+header {
+  background: linear-gradient(135deg, #0a1628 0%, #0d2050 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; min-height: 64px;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-logo {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--orange) 100%);
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 14px; color: #fff; letter-spacing: -1px; flex-shrink: 0;
+}
+.brand-text h1 { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+.brand-text p { font-size: 11px; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; }
+.header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.nav-link { color: var(--blue2); text-decoration: none; font-size: 13px; }
+.nav-link:hover { color: #fff; }
+.last-updated { font-size: 11px; color: var(--text2); background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; white-space: nowrap; }
+
+/* Stats bar */
+.stats-bar { display: flex; gap: 12px; padding: 14px 24px; background: var(--navy2); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-card { background: var(--navy3); border: 1px solid var(--border); border-radius: 8px; padding: 10px 18px; text-align: center; min-width: 110px; flex: 1; }
+.stat-num { font-size: 1.6rem; font-weight: 700; }
+.stat-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* Tabs */
+.tabs { display: flex; background: var(--navy2); border-bottom: 1px solid var(--border); padding: 0 24px; }
+.tab { padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; background: none; border-top: none; border-left: none; border-right: none; transition: all 0.15s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--blue2); border-bottom-color: var(--blue2); }
+.tab-badge { background: rgba(255,255,255,0.08); border-radius: 10px; padding: 1px 7px; font-size: 11px; margin-left: 4px; }
+
+/* Toolbar */
+.toolbar { background: var(--navy2); border-bottom: 1px solid var(--border); padding: 10px 24px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.toolbar input[type="text"] { flex: 1; min-width: 180px; background: var(--navy3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 8px 14px; font-size: 13px; outline: none; }
+.toolbar input[type="text"]:focus { border-color: var(--blue); }
+.toolbar input[type="text"]::placeholder { color: var(--text2); }
+.toolbar select { background: var(--navy3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 8px 10px; font-size: 12px; cursor: pointer; outline: none; }
+
+/* Content area */
+.content { padding: 20px 24px; }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: var(--navy3); color: var(--text2); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; cursor: pointer; user-select: none; }
+th:hover { color: var(--text); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,102,204,0.05); }
+
+/* Badges */
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.badge-active     { background: rgba(34,197,94,0.15);  color: var(--green);  border: 1px solid rgba(34,197,94,0.3); }
+.badge-draft      { background: rgba(234,179,8,0.15);  color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+.badge-tracking   { background: rgba(6,182,212,0.15);  color: var(--cyan);   border: 1px solid rgba(6,182,212,0.3); }
+.badge-submitted  { background: rgba(168,85,247,0.15); color: var(--purple); border: 1px solid rgba(168,85,247,0.3); }
+.badge-new        { background: rgba(255,255,255,0.07);color: var(--text2);  border: 1px solid var(--border); }
+.badge-closed     { background: rgba(255,255,255,0.04);color: var(--text2);  border: 1px solid var(--border); opacity: 0.6; }
+.badge-dd         { background: rgba(255,107,0,0.15);  color: var(--orange2);border: 1px solid rgba(255,107,0,0.3); }
+.badge-meeting    { background: rgba(0,102,204,0.15);  color: var(--blue2);  border: 1px solid rgba(0,102,204,0.3); }
+.badge-evaluating { background: rgba(234,179,8,0.10);  color: var(--yellow); border: 1px solid rgba(234,179,8,0.2); }
+
+.flag-high { display: inline-block; background: rgba(255,68,68,0.15); color: #ff7070; border: 1px solid rgba(255,68,68,0.3); border-radius: 4px; font-size: 10px; padding: 1px 6px; margin: 1px; white-space: nowrap; }
+.flag-weak { display: inline-block; background: rgba(234,179,8,0.1); color: #a0966c; border: 1px solid rgba(234,179,8,0.2); border-radius: 4px; font-size: 10px; padding: 1px 6px; margin: 1px; }
+.flag-nodp { display: inline-block; background: rgba(255,255,255,0.06); color: var(--text2); border: 1px solid var(--border); border-radius: 4px; font-size: 10px; padding: 1px 6px; margin: 1px; }
+
+.score-bar-wrap { display: flex; align-items: center; gap: 6px; }
+.score-bar { width: 50px; height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 3px; }
+.score-num { font-size: 12px; font-weight: 600; width: 28px; text-align: right; }
+
+.cat-opp  { color: var(--cyan); }
+.cat-fund { color: var(--green); }
+.cat-bd   { color: var(--orange2); }
+
+.alert-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
+.alert-dot.red { background: var(--red); }
+.alert-dot.yellow { background: var(--yellow); }
+
+.empty-state { text-align: center; color: var(--text2); padding: 60px 20px; font-size: 14px; }
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.sort-arrow { margin-left: 4px; opacity: 0.5; font-size: 10px; }
+.sort-arrow.active { opacity: 1; color: var(--blue2); }
+
+@media (max-width: 768px) {
+  header, .toolbar, .content, .stats-bar, .tabs { padding-left: 16px; padding-right: 16px; }
+}
+/* Neon block: funding submittal due within 5 days */
+tr.funding-due-row td {
+  background: rgba(57,255,20,0.08);
+  border-top: 1.5px solid #39ff14;
+  border-bottom: 1.5px solid #39ff14;
+  animation: fundingPulseRow 1.5s ease-in-out infinite;
+}
+tr.funding-due-row td:first-child {
+  border-left: 4px solid #39ff14;
+  box-shadow: inset 6px 0 12px -6px rgba(57,255,20,0.7);
+}
+tr.funding-due-row td:last-child { border-right: 1.5px solid #39ff14; }
+@keyframes fundingPulseRow {
+  0%,100% { background: rgba(57,255,20,0.06); }
+  50%     { background: rgba(57,255,20,0.18); }
+}
+.funding-flag {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.4px; color: #0a0f1a;
+  background: #39ff14; border-radius: 4px; padding: 1px 5px; text-transform: uppercase;
+  box-shadow: 0 0 8px rgba(57,255,20,0.7); white-space: nowrap;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">EX</div>
+    <div class="brand-text">
+      <h1>Exos Aerospace</h1>
+      <p>Opportunities &amp; CRM</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <a href="index.html" class="nav-link">Mission Control</a>
+    <a href="dossier.html" class="nav-link">🤝 Dossiers</a>
+    <a href="contacts.html" class="nav-link">👥 Contacts</a>
+    <a href="research.html" class="nav-link">🔬 Research</a>
+    <a href="crm.html" class="nav-link">Full CRM</a>
+    <button class="tab" style="border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;" onclick="refreshAll()">Refresh</button>
+    <span class="last-updated" id="lastUpdated">Loading...</span>
+  </div>
+</header>
+
+<div class="stats-bar" id="statsBar">
+  <div class="stat-card"><div class="stat-num" style="color:var(--cyan)" id="statOpps">-</div><div class="stat-label">Opportunities</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:var(--green)" id="statFund">-</div><div class="stat-label">Fundraising Leads</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:var(--orange2)" id="statBD">-</div><div class="stat-label">BD Contacts</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:var(--red)" id="statDeadlines">-</div><div class="stat-label">Active Deadlines</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:#ff7070" id="statHP">-</div><div class="stat-label">CRM High Priority</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:var(--text2)" id="statCRMTotal">-</div><div class="stat-label">CRM Total</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="opps" onclick="switchTab('opps')">Opportunities <span class="tab-badge" id="badgeOpps">0</span></button>
+  <button class="tab" data-tab="fund" onclick="switchTab('fund')">Fundraising <span class="tab-badge" id="badgeFund">0</span></button>
+  <button class="tab" data-tab="bd" onclick="switchTab('bd')">Business Dev <span class="tab-badge" id="badgeBD">0</span></button>
+  <button class="tab" data-tab="crm" onclick="switchTab('crm')">Series A CRM <span class="tab-badge" id="badgeCRM">0</span></button>
+</div>
+
+<div class="toolbar">
+  <input type="text" id="searchBox" placeholder="Search..." oninput="renderActive()">
+  <select id="statusFilter" onchange="renderActive()">
+    <option value="">All Statuses</option>
+  </select>
+  <select id="tierFilter" onchange="renderActive()" style="display:none">
+    <option value="">All Tiers</option>
+    <option value="Tier 1">Tier 1</option>
+    <option value="Tier 2">Tier 2</option>
+    <option value="New Target">New Target</option>
+    <option value="Not a Fit">Not a Fit</option>
+  </select>
+  <label id="showClosedWrap" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);cursor:pointer">
+    <input type="checkbox" id="showClosed" onchange="renderActive()"> Show closed</label>
+</div>
+
+<div class="content">
+  <!-- OPPORTUNITIES -->
+  <div class="tab-pane active" id="pane-opps">
+    <div class="table-wrap"><table id="tblOpps">
+      <thead><tr>
+        <th onclick="sortTable('opps','id')">ID <span class="sort-arrow" id="sort-opps-id"></span></th>
+        <th onclick="sortTable('opps','title')">Title <span class="sort-arrow" id="sort-opps-title"></span></th>
+        <th onclick="sortTable('opps','status')">Status <span class="sort-arrow" id="sort-opps-status"></span></th>
+        <th onclick="sortTable('opps','type')">Type <span class="sort-arrow" id="sort-opps-type"></span></th>
+        <th onclick="sortTable('opps','value')">Value</th>
+        <th onclick="sortTable('opps','due')">Due <span class="sort-arrow" id="sort-opps-due"></span></th>
+        <th>Next Action</th>
+        <th onclick="sortTable('opps','priority')">Pri <span class="sort-arrow" id="sort-opps-priority"></span></th>
+      </tr></thead>
+      <tbody id="bodyOpps"><tr><td colspan="8" class="empty-state">Loading...</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <!-- FUNDRAISING -->
+  <div class="tab-pane" id="pane-fund">
+    <div class="table-wrap"><table id="tblFund">
+      <thead><tr>
+        <th>ID</th>
+        <th onclick="sortTable('fund','title')">Lead <span class="sort-arrow" id="sort-fund-title"></span></th>
+        <th onclick="sortTable('fund','status')">Status <span class="sort-arrow" id="sort-fund-status"></span></th>
+        <th>Next Action</th>
+        <th onclick="sortTable('fund','priority')">Pri <span class="sort-arrow" id="sort-fund-priority"></span></th>
+      </tr></thead>
+      <tbody id="bodyFund"><tr><td colspan="5" class="empty-state">Loading...</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <!-- BUSINESS DEV -->
+  <div class="tab-pane" id="pane-bd">
+    <div class="table-wrap"><table id="tblBD">
+      <thead><tr>
+        <th>ID</th>
+        <th onclick="sortTable('bd','title')">Contact / Company <span class="sort-arrow" id="sort-bd-title"></span></th>
+        <th onclick="sortTable('bd','status')">Status <span class="sort-arrow" id="sort-bd-status"></span></th>
+        <th>Next Action</th>
+        <th onclick="sortTable('bd','priority')">Pri <span class="sort-arrow" id="sort-bd-priority"></span></th>
+      </tr></thead>
+      <tbody id="bodyBD"><tr><td colspan="5" class="empty-state">Loading...</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <!-- CRM -->
+  <div class="tab-pane" id="pane-crm">
+    <div class="table-wrap"><table id="tblCRM">
+      <thead><tr>
+        <th onclick="sortTable('crm','firm')">Firm <span class="sort-arrow" id="sort-crm-firm"></span></th>
+        <th onclick="sortTable('crm','tier')">Tier <span class="sort-arrow" id="sort-crm-tier"></span></th>
+        <th onclick="sortTable('crm','score')">Score <span class="sort-arrow" id="sort-crm-score">↓</span></th>
+        <th>Stage</th>
+        <th>Flags</th>
+        <th>Notes</th>
+      </tr></thead>
+      <tbody id="bodyCRM"><tr><td colspan="6" class="empty-state">Loading...</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+let oppsData = [];
+let crmData = [];
+let currentTab = 'opps';
+let sortState = {};  // { tab: { field, dir } }
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── FETCH ──
+async function loadData() {
+  const ts = '?_=' + Date.now();
+  try {
+    const [oppResp, crmResp, docsResp, linksResp] = await Promise.all([
+      fetch('data/opportunities.json' + ts),
+      fetch('data/crm.json' + ts),
+      fetch('data/opportunity-docs.json' + ts).catch(() => null),
+      fetch('data/pipeline-crm-links.json' + ts).catch(() => null),
+    ]);
+    if (!oppResp.ok) throw new Error('opportunities.json not found');
+    if (!crmResp.ok) throw new Error('crm.json not found');
+    const oppJson = await oppResp.json();
+    const crmJson = await crmResp.json();
+    oppsData = oppJson.opportunities || [];
+    crmData  = crmJson.contacts || [];
+    window.docsById = (docsResp && docsResp.ok) ? await docsResp.json() : {};
+    window.crmLinks = (linksResp && linksResp.ok) ? ((await linksResp.json()).links || {}) : {};
+
+    // Update last-updated
+    const ts1 = oppJson.generated_display || '';
+    document.getElementById('lastUpdated').textContent = ts1 ? 'Data: ' + ts1 : 'Loaded';
+
+    renderStats();
+    renderAll();
+    populateFilters();
+    focusFromUrl();
+  } catch(e) {
+    document.getElementById('lastUpdated').textContent = 'Error: ' + e.message;
+    console.error(e);
+  }
+}
+
+// Deep-link: opportunities.html?focus=OPP-123 → jump straight to that item.
+function focusFromUrl() {
+  const id = new URLSearchParams(location.search).get('focus');
+  if (!id) return;
+  if (typeof switchTab === 'function') switchTab('opps');
+  const stf = document.getElementById('statusFilter'); if (stf) stf.value = '';
+  const sb = document.getElementById('searchBox'); if (sb) sb.value = id;
+  renderActive();
+}
+
+// ── STATS ──
+function renderStats() {
+  const opps = oppsData.filter(o => o.category === 'Opportunity');
+  const fund = oppsData.filter(o => o.category === 'Fundraising');
+  const bd   = oppsData.filter(o => o.category === 'Business Development');
+  const deadlines = oppsData.filter(o => o.due && !['CLOSED','SUBMITTED'].includes(o.status) && /DEADLINE|MAY|JUN|2026/i.test(o.due)).length;
+  const hp = crmData.filter(c => c.is_high_priority).length;
+
+  document.getElementById('statOpps').textContent = opps.length;
+  document.getElementById('statFund').textContent = fund.length;
+  document.getElementById('statBD').textContent = bd.length;
+  document.getElementById('statDeadlines').textContent = deadlines;
+  document.getElementById('statHP').textContent = hp;
+  document.getElementById('statCRMTotal').textContent = crmData.length;
+
+  document.getElementById('badgeOpps').textContent = opps.length;
+  document.getElementById('badgeFund').textContent = fund.length;
+  document.getElementById('badgeBD').textContent = bd.length;
+  document.getElementById('badgeCRM').textContent = crmData.length;
+}
+
+// ── STATUS BADGE ──
+function statusBadge(status) {
+  const s = (status||'').toUpperCase();
+  let cls = 'badge-new';
+  if (s === 'ACTIVE' || s === 'ADVANCING' || s === 'ENGAGED') cls = 'badge-active';
+  else if (s === 'DRAFT') cls = 'badge-draft';
+  else if (s === 'TRACKING' || s === 'MONITOR') cls = 'badge-tracking';
+  else if (s === 'SUBMITTED') cls = 'badge-submitted';
+  else if (s === 'CLOSED' || s === 'COMPLETED') cls = 'badge-closed';
+  else if (s === 'DUE DILIGENCE') cls = 'badge-dd';
+  else if (s.includes('MEETING')) cls = 'badge-meeting';
+  else if (s === 'EVALUATING') cls = 'badge-evaluating';
+  return `<span class="badge ${cls}">${esc(status||'—')}</span>`;
+}
+
+// ── SCORE BAR ──
+function scoreBar(score) {
+  const pct = Math.max(0, Math.min(100, score || 0));
+  let color = '#4a5568';
+  if (pct >= 70) color = '#ff7070';
+  else if (pct >= 50) color = '#eab308';
+  else if (pct >= 30) color = '#60a5fa';
+  return `<div class="score-bar-wrap">
+    <span class="score-num" style="color:${color}">${pct}</span>
+    <div class="score-bar"><div class="score-fill" style="width:${pct}%;background:${color}"></div></div>
+  </div>`;
+}
+
+// ── FLAGS ──
+function renderFlags(flags) {
+  if (!flags || !flags.length) return '';
+  return flags.map(f => {
+    if (f === 'HIGH_PRIORITY') return `<span class="flag-high">${esc(f)}</span>`;
+    if (f.startsWith('WEAK')) return `<span class="flag-weak">${esc(f)}</span>`;
+    return `<span class="flag-nodp">${esc(f)}</span>`;
+  }).join('');
+}
+
+// ── FILTER & SORT ──
+function getSearch() { return (document.getElementById('searchBox').value || '').toLowerCase(); }
+function getStatusFilter() { return document.getElementById('statusFilter').value; }
+function getTierFilter() { return document.getElementById('tierFilter').value; }
+
+function isClosedOpp(o) {
+  return o.closed === true || /\bCLOSED\b|\bDEAD\b|DECLINED|\bLOST\b|WITHDRAWN|NOT A FIT|PASSED/i.test(o.status || '');
+}
+function filterOpps(category) {
+  const q = getSearch();
+  const sf = getStatusFilter();
+  const showClosed = (document.getElementById('showClosed') || {}).checked;
+  return oppsData.filter(o => {
+    if (o.category !== category) return false;
+    if (!showClosed && !sf && isClosedOpp(o)) return false;   // hide closed unless toggled or explicitly filtered
+    if (sf && o.status !== sf) return false;
+    if (q) {
+      const hay = [o.title, o.status, o.type, o.value, o.next_action, o.id].join(' ').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function filterCRM() {
+  const q = getSearch();
+  const tf = getTierFilter();
+  return crmData.filter(c => {
+    if (tf && c.tier !== tf) return false;
+    if (q) {
+      const hay = [c.firm, c.tier, c.stage, c.notes, c.category, (c.flags||[]).join(' ')].join(' ').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function sortItems(items, tab) {
+  const s = sortState[tab];
+  if (!s) return items;
+  const { field, dir } = s;
+  return [...items].sort((a, b) => {
+    let va = a[field] ?? '', vb = b[field] ?? '';
+    if (typeof va === 'number' && typeof vb === 'number') {
+      return dir === 'asc' ? va - vb : vb - va;
+    }
+    va = String(va).toLowerCase();
+    vb = String(vb).toLowerCase();
+    if (va < vb) return dir === 'asc' ? -1 : 1;
+    if (va > vb) return dir === 'asc' ? 1 : -1;
+    return 0;
+  });
+}
+
+function sortTable(tab, field) {
+  const prev = sortState[tab] || {};
+  const dir = (prev.field === field && prev.dir === 'desc') ? 'asc' : 'desc';
+  sortState[tab] = { field, dir };
+  // Update arrow UI
+  document.querySelectorAll(`[id^="sort-${tab}-"]`).forEach(el => {
+    el.textContent = '';
+    el.classList.remove('active');
+  });
+  const arrowEl = document.getElementById(`sort-${tab}-${field}`);
+  if (arrowEl) { arrowEl.textContent = dir === 'asc' ? '↑' : '↓'; arrowEl.classList.add('active'); }
+  renderActive();
+}
+
+// ── RENDER TABLES ──
+// Parse a date out of free-text due strings ("July 8, 2026...", "2026-06-30", "June 30, 2026")
+function parseDueDate(s) {
+  if (!s) return null;
+  let m = String(s).match(/(\d{4})-(\d{2})-(\d{2})/);
+  if (m) return new Date(+m[1], +m[2]-1, +m[3]);
+  m = String(s).match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+(\d{1,2}),?\s+(\d{4})/i);
+  if (m) {
+    const mo = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+    return new Date(+m[3], mo[m[1].slice(0,3).toLowerCase()], +m[2]);
+  }
+  return null;
+}
+// True if a FUNDING submittal is due within the next 5 days (not already submitted/closed)
+const FUNDING_RE = /\b(SBIR|STTR|TACFI|STRATFI|D2P2|BAA|RFI|RFP|NOFA|white\s?paper|proposal|solicitation|submission|submit|on-?ramp|phase\s?(?:ii|iii|2|3)|grant|award|ONR|DARPA|NASA|SpaceWERX|AFRL|AFWERX|OSP-?4|SEARF|direct\s?award|funding|RDRE|IDIQ)\b/i;
+const REGULATORY_RE = /\b(SEC|EDGAR|annual report|10-?K|franchise tax|tax filing|compliance|EO\s?\d)\b/i;
+function fundingDueSoon(o) {
+  const st = (o.status || '').toUpperCase();
+  if (/SUBMITTED|CLOSED|DEAD|PASSED|AWARDED|WON|LOST/.test(st)) return false;
+  const hay = `${o.id||''} ${o.title||''} ${o.type||''} ${o.category||''} ${o.next_action||''}`;
+  if (REGULATORY_RE.test(hay)) return false;       // regulatory filing, not a funding submittal
+  if (!FUNDING_RE.test(hay)) return false;          // must look like a funding/BD submittal
+  const d = parseDueDate(o.due);
+  if (!d) return false;
+  const diff = (d - new Date()) / 86400000;
+  return diff > -1 && diff <= 5;
+}
+
+function crmBadge(id) {
+  const l = (window.crmLinks || {})[id];
+  if (!l) return '';
+  const conf = l.conflict
+    ? ` · <span style="color:var(--red)" title="${esc(l.conflict)}">⚠️ ${esc(l.conflict)}</span>`
+    : '';
+  return `<div style="margin-top:3px;font-size:10.5px;color:var(--text2)">🔗 CRM: <span style="color:var(--cyan)">${esc(l.crm_stage || l.crm_status || '—')}</span>${conf}</div>`;
+}
+
+function docLinks(id) {
+  const ds = (window.docsById || {})[id];
+  if (!ds || !ds.length) return '';
+  return '<div style="margin-top:4px;font-size:11px;color:var(--text2)">📎 ' +
+    ds.map(d => `<a href="${esc(d.file)}" target="_blank" style="color:var(--cyan);text-decoration:none">${esc(d.name)}</a>`).join(' · ') +
+    '</div>';
+}
+
+function renderOpps(cat, bodyId) {
+  const items = sortItems(filterOpps(cat), cat === 'Opportunity' ? 'opps' : cat === 'Fundraising' ? 'fund' : 'bd');
+  const tbody = document.getElementById(bodyId);
+  if (!items.length) {
+    tbody.innerHTML = `<tr><td colspan="8" class="empty-state">No results</td></tr>`;
+    return;
+  }
+  const colCount = cat === 'Opportunity' ? 8 : 5;
+  tbody.innerHTML = items.map(o => {
+    const hasDeadline = o.due && /DEADLINE|⚠️/i.test(o.due + o.next_action + o.description);
+    const alertDot = hasDeadline ? '<span class="alert-dot red"></span>' : '';
+    const neon = fundingDueSoon(o) ? ' class="funding-due-row"' : '';
+    const neonFlag = fundingDueSoon(o) ? '<span class="funding-flag">⚡ ≤5d</span> ' : '';
+    if (cat === 'Opportunity') {
+      return `<tr${neon} style="cursor:pointer" onclick="if(!event.target.closest('a'))openOppDetail('${esc(o.id)}')">
+        <td style="font-size:11px;color:var(--text2);white-space:nowrap">${esc(o.id)}</td>
+        <td><strong>${alertDot}${neonFlag}${esc(o.title)}</strong>${crmBadge(o.id)}${docLinks(o.id)}</td>
+        <td>${statusBadge(o.status)}</td>
+        <td style="font-size:11px;color:var(--text2)">${esc(o.type||'—')}</td>
+        <td style="font-size:12px;color:var(--green);white-space:nowrap">${esc(o.value||'—')}</td>
+        <td style="font-size:12px;white-space:nowrap;color:${/2026-05-2[0-9]|MAY 2[0-9]/i.test(o.due||'') ? 'var(--red)' : 'var(--text2)'}">${esc(o.due||'—')}</td>
+        <td style="font-size:12px;color:var(--text2);max-width:300px">${esc((o.next_action||'').slice(0,100))}${(o.next_action||'').length>100?'…':''}</td>
+        <td>${scoreBar(o.priority)}</td>
+      </tr>`;
+    } else {
+      // Fundraising / BD — 5 columns
+      return `<tr${neon} style="cursor:pointer" onclick="if(!event.target.closest('a'))openOppDetail('${esc(o.id)}')">
+        <td style="font-size:11px;color:var(--text2);white-space:nowrap">${esc(o.id)}</td>
+        <td><strong>${alertDot}${neonFlag}${esc(o.title)}</strong>${crmBadge(o.id)}${docLinks(o.id)}</td>
+        <td>${statusBadge(o.status)}</td>
+        <td style="font-size:12px;color:var(--text2);max-width:350px">${esc((o.next_action||'').slice(0,120))}${(o.next_action||'').length>120?'…':''}</td>
+        <td>${scoreBar(o.priority)}</td>
+      </tr>`;
+    }
+  }).join('');
+}
+
+function renderCRM() {
+  const items = sortItems(filterCRM(), 'crm');
+  const tbody = document.getElementById('bodyCRM');
+  if (!items.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No results</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = items.map(c => {
+    const tierColor = c.tier === 'Tier 1' ? 'var(--orange2)' : c.tier === 'Tier 2' ? 'var(--blue2)' : c.tier === 'New Target' ? 'var(--green)' : 'var(--text2)';
+    const firmStyle = c.is_high_priority ? 'font-weight:700;color:#fff' : '';
+    const bounced = c.bounced ? '<span class="flag-nodp">BOUNCED</span> ' : '';
+    const stale = c.stale ? '<span class="flag-weak">STALE</span> ' : '';
+    const workCell = c.next_action
+      ? `<span style="color:var(--cyan,#22d3ee)">▸ ${esc(c.next_action.slice(0,110))}${c.next_action.length>110?'…':''}</span>`
+      : `${esc((c.notes||'').slice(0,110))}${(c.notes||'').length>110?'…':''}`;
+    return `<tr style="cursor:pointer" onclick="if(!event.target.closest('a'))openCrmDetail('${encodeURIComponent(c.firm)}')">
+      <td style="${firmStyle}">${bounced}${esc(c.firm)}</td>
+      <td style="color:${tierColor};font-size:12px;white-space:nowrap">${esc(c.tier||'—')}</td>
+      <td>${scoreBar(c.score)}</td>
+      <td style="font-size:12px;color:var(--text2);white-space:nowrap">${esc(c.stage||'—')}</td>
+      <td style="white-space:nowrap">${stale}${renderFlags(c.flags)}</td>
+      <td style="font-size:12px;color:var(--text2);max-width:300px">${workCell}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAll() {
+  renderOpps('Opportunity', 'bodyOpps');
+  renderOpps('Fundraising', 'bodyFund');
+  renderOpps('Business Development', 'bodyBD');
+  renderCRM();
+}
+
+function renderActive() {
+  if (currentTab === 'opps') renderOpps('Opportunity', 'bodyOpps');
+  else if (currentTab === 'fund') renderOpps('Fundraising', 'bodyFund');
+  else if (currentTab === 'bd') renderOpps('Business Development', 'bodyBD');
+  else if (currentTab === 'crm') renderCRM();
+}
+
+// ── FILTERS ──
+function populateFilters() {
+  const statusSel = document.getElementById('statusFilter');
+  const statuses = [...new Set(oppsData.map(o => o.status).filter(Boolean))].sort();
+  statusSel.innerHTML = '<option value="">All Statuses</option>' +
+    statuses.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id === 'pane-' + tab));
+
+  // Show/hide tier filter for CRM tab
+  document.getElementById('tierFilter').style.display = tab === 'crm' ? '' : 'none';
+  document.getElementById('statusFilter').style.display = tab === 'crm' ? 'none' : '';
+
+  // Clear search
+  document.getElementById('searchBox').value = '';
+  renderActive();
+}
+
+function refreshAll() {
+  document.getElementById('lastUpdated').textContent = 'Refreshing...';
+  loadData();
+}
+
+// ── INIT ──
+// Default sort: CRM by score desc, others by priority desc
+sortState['opps'] = { field: 'priority', dir: 'desc' };
+sortState['fund'] = { field: 'priority', dir: 'desc' };
+sortState['bd']   = { field: 'priority', dir: 'desc' };
+sortState['crm']  = { field: 'score', dir: 'desc' };
+
+loadData();
+
+// ── DETAIL / EDIT PANEL ──────────────────────────────────────────────
+let currentOpp = null;
+function openOppDetail(id) {
+  const o = oppsData.find(x => x.id === id);
+  if (!o) return;
+  currentOpp = o;
+  const val = (k, d='') => (o[k] === undefined || o[k] === null) ? d : o[k];
+  const set = (elid, v) => { const el = document.getElementById(elid); if (el) el.value = v; };
+  document.getElementById('oppPanelId').textContent = o.id + '  ·  ' + (o.category || '');
+  set('oppEditTitle', val('title'));
+  set('oppEditStatus', val('status'));
+  set('oppEditType', val('type'));
+  set('oppEditValue', val('value'));
+  set('oppEditDue', val('due'));
+  set('oppEditPriority', val('priority', 0));
+  set('oppEditNext', val('next_action'));
+  set('oppEditDesc', val('description'));
+  document.getElementById('oppPanelDocs').innerHTML = (typeof docLinks === 'function' ? docLinks(o.id) : '') || '<span style="color:var(--text2)">no attached docs</span>';
+  document.getElementById('oppSaveMsg').textContent = '';
+  document.getElementById('oppEditOutcome').value = '';
+  document.getElementById('oppCloseComment').value = '';
+  document.getElementById('oppFailedDdBox').style.display = 'none';
+  document.getElementById('oppCloseBtn').style.display = 'none';
+  document.getElementById('oppPanel').classList.add('open');
+  document.getElementById('oppBackdrop').classList.add('open');
+}
+function oppOutcomeChange() {
+  const out = document.getElementById('oppEditOutcome').value;
+  document.getElementById('oppCloseBtn').style.display = out ? '' : 'none';
+  const isDD = out === 'Failed DD';
+  document.getElementById('oppFailedDdBox').style.display = isDD ? '' : 'none';
+  if (isDD && currentOpp) {
+    // best-effort parse: firm = title before " - " or " / "; emails from description
+    const t = (currentOpp.title || '');
+    const firm = (t.split(/\s[-–]\s|\s\/\s/)[0] || t).trim();
+    document.getElementById('oppFailedDdFirm').value = firm;
+    const emails = ((currentOpp.description || '') + ' ' + t).match(/[\w.+-]+@[\w.-]+\.\w+/g) || [];
+    document.getElementById('oppFailedDdEmail').value = [...new Set(emails)].join(', ');
+  }
+}
+async function closeOutOpp() {
+  if (!currentOpp) return;
+  const outcome = document.getElementById('oppEditOutcome').value;
+  if (!outcome) return;
+  const comment = document.getElementById('oppCloseComment').value.trim();
+  const today = new Date().toISOString().slice(0, 10);
+  const stamp = `[${today}] CLOSED — ${outcome}${comment ? ': ' + comment : ''}`;
+  const desc = (document.getElementById('oppEditDesc').value || '').trim();
+  const fields = {
+    status: 'CLOSED — ' + outcome,
+    closed: true, closed_reason: outcome, closed_at: today,
+    description: stamp + (desc ? '\n' + desc : ''),
+    next_action: document.getElementById('oppEditNext').value,
+  };
+  const payload = { id: currentOpp.id, fields };
+  if (outcome === 'Failed DD' && document.getElementById('oppFailedDdReg').checked) {
+    payload.failed_dd = true;
+    payload.failed_dd_firm = document.getElementById('oppFailedDdFirm').value.trim();
+    payload.failed_dd_reason = comment || 'Failed DD (closed from Mission Control)';
+    payload.failed_dd_emails = document.getElementById('oppFailedDdEmail').value.split(',').map(s => s.trim()).filter(Boolean);
+    payload.failed_dd_domains = payload.failed_dd_emails.map(e => e.split('@')[1]).filter(Boolean);
+  }
+  const msg = document.getElementById('oppSaveMsg');
+  msg.style.color = 'var(--text2)'; msg.textContent = 'Closing…';
+  try {
+    const r = await fetch('/api/opportunities/update', { method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (r.status === 401) { msg.style.color = 'var(--red)'; msg.textContent = 'Session expired — reload and log in.'; return; }
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    Object.assign(currentOpp, fields);
+    renderActive();
+    msg.style.color = 'var(--green)';
+    msg.textContent = '✓ Closed' + (payload.failed_dd ? ' + added to Failed-DD blocklist.' : '.');
+    setTimeout(closeOppPanel, 1100);
+  } catch (e) { msg.style.color = 'var(--red)'; msg.textContent = 'Close failed: ' + e.message; }
+}
+function closeOppPanel() {
+  document.getElementById('oppPanel').classList.remove('open');
+  document.getElementById('oppBackdrop').classList.remove('open');
+  currentOpp = null;
+}
+async function saveOppDetail() {
+  if (!currentOpp) return;
+  const g = id => document.getElementById(id).value;
+  const fields = {
+    title: g('oppEditTitle'), status: g('oppEditStatus'), type: g('oppEditType'),
+    value: g('oppEditValue'), due: g('oppEditDue'), priority: g('oppEditPriority'),
+    next_action: g('oppEditNext'), description: g('oppEditDesc'),
+  };
+  const msg = document.getElementById('oppSaveMsg');
+  msg.style.color = 'var(--text2)'; msg.textContent = 'Saving…';
+  try {
+    const r = await fetch('/api/opportunities/update', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: currentOpp.id, fields }),
+    });
+    if (r.status === 401) { msg.style.color = 'var(--red)'; msg.textContent = 'Session expired — reload and log in.'; return; }
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    Object.assign(currentOpp, fields, { priority: Number(fields.priority) || 0 });
+    renderActive();
+    msg.style.color = 'var(--green)'; msg.textContent = '✓ Saved (survives the nightly refresh).';
+    setTimeout(closeOppPanel, 900);
+  } catch (e) {
+    msg.style.color = 'var(--red)'; msg.textContent = 'Save failed: ' + e.message;
+  }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeOppPanel(); if (typeof closeCrmPanel === 'function') closeCrmPanel(); } });
+
+// ── SERIES A CRM DETAIL / EDIT PANEL ─────────────────────────────────
+let currentCrm = null;
+function openCrmDetail(firmEnc) {
+  const firm = decodeURIComponent(firmEnc);
+  const c = crmData.find(x => x.firm === firm);
+  if (!c) return;
+  currentCrm = c;
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = (v === undefined || v === null) ? '' : v; };
+  document.getElementById('crmPanelId').textContent = (c.tier || '—') + '  ·  score ' + (c.score ?? 0) + (c.is_high_priority ? '  ·  ★ high priority' : '');
+  document.getElementById('crmPanelFirm').textContent = c.firm;
+  set('crmEditTier', c.tier || '');
+  set('crmEditStage', c.stage || '');
+  set('crmEditNext', c.next_action || '');
+  set('crmEditTouched', (c.last_touched || '').slice(0, 10));
+  set('crmEditNotes', c.notes || '');
+  document.getElementById('crmSaveMsg').textContent = '';
+  document.getElementById('crmPanel').classList.add('open');
+  document.getElementById('oppBackdrop').classList.add('open');
+}
+function closeCrmPanel() {
+  document.getElementById('crmPanel').classList.remove('open');
+  document.getElementById('oppBackdrop').classList.remove('open');
+  currentCrm = null;
+}
+function crmTouchedToday() { document.getElementById('crmEditTouched').value = new Date().toISOString().slice(0, 10); }
+async function saveCrmDetail() {
+  if (!currentCrm) return;
+  const g = id => document.getElementById(id).value;
+  const fields = { tier: g('crmEditTier'), stage: g('crmEditStage'), next_action: g('crmEditNext'),
+                   last_touched: g('crmEditTouched'), notes: g('crmEditNotes') };
+  const msg = document.getElementById('crmSaveMsg');
+  msg.style.color = 'var(--text2)'; msg.textContent = 'Saving…';
+  try {
+    const r = await fetch('/api/crm/update', { method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firm: currentCrm.firm, fields }) });
+    if (r.status === 401) { msg.style.color = 'var(--red)'; msg.textContent = 'Session expired — reload and log in.'; return; }
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    Object.assign(currentCrm, fields);
+    renderActive();
+    msg.style.color = 'var(--green)'; msg.textContent = '✓ Saved (score updates on next refresh).';
+    setTimeout(closeCrmPanel, 900);
+  } catch (e) { msg.style.color = 'var(--red)'; msg.textContent = 'Save failed: ' + e.message; }
+}
+</script>
+
+<div id="crmPanel" class="opp-panel">
+  <div class="opp-panel-head">
+    <div><div style="font-size:11px;color:var(--text2)" id="crmPanelId">—</div>
+      <div style="font-weight:700;font-size:15px;margin-top:2px" id="crmPanelFirm">Firm</div></div>
+    <button onclick="closeCrmPanel()" class="opp-x">✕</button>
+  </div>
+  <div class="opp-panel-body">
+    <div class="opp-row2">
+      <label>Tier<select id="crmEditTier">
+        <option value="Tier 1">Tier 1</option><option value="Tier 2">Tier 2</option>
+        <option value="Tier 3">Tier 3</option><option value="New Target">New Target</option>
+        <option value="Not a Fit">Not a Fit</option></select></label>
+      <label>Stage<input id="crmEditStage" type="text" placeholder="Active, Meeting, DD, Committed…"></label>
+    </div>
+    <label>Next action<textarea id="crmEditNext" rows="2" placeholder="Call, send deck, follow up…"></textarea></label>
+    <label>Last touched
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="crmEditTouched" type="date" style="flex:1">
+        <button type="button" class="opp-btn-ghost" style="padding:6px 10px" onclick="crmTouchedToday()">Today</button>
+      </div>
+    </label>
+    <label>Notes<textarea id="crmEditNotes" rows="5"></textarea></label>
+    <div style="font-size:11px;color:var(--text2)">Marking "last touched" today lowers this firm in the queue; leaving it stale (14+ days) pushes it back up so it resurfaces.</div>
+  </div>
+  <div class="opp-panel-foot">
+    <span id="crmSaveMsg" style="font-size:12px;flex:1"></span>
+    <button class="opp-btn-ghost" onclick="closeCrmPanel()">Cancel</button>
+    <button class="opp-btn-save" onclick="saveCrmDetail()">Save</button>
+  </div>
+</div>
+
+<div id="oppBackdrop" class="opp-backdrop" onclick="closeOppPanel();closeCrmPanel()"></div>
+<div id="oppPanel" class="opp-panel">
+  <div class="opp-panel-head">
+    <div><div style="font-size:11px;color:var(--text2)" id="oppPanelId">—</div>
+      <div style="font-weight:700;font-size:15px;margin-top:2px">Edit opportunity</div></div>
+    <button onclick="closeOppPanel()" class="opp-x">✕</button>
+  </div>
+  <div class="opp-panel-body">
+    <label>Title<input id="oppEditTitle" type="text"></label>
+    <div class="opp-row2">
+      <label>Status<input id="oppEditStatus" type="text" list="oppStatusList" placeholder="ACTIVE, TRACKING, SUBMITTED…"></label>
+      <label>Type<input id="oppEditType" type="text"></label>
+    </div>
+    <div class="opp-row2">
+      <label>Value<input id="oppEditValue" type="text" placeholder="$1.2M"></label>
+      <label>Due<input id="oppEditDue" type="text" placeholder="2026-09-01 / MAY 2026"></label>
+    </div>
+    <label>Priority / score (0–100)<input id="oppEditPriority" type="number" min="0" max="100"></label>
+    <label>Next action<textarea id="oppEditNext" rows="2"></textarea></label>
+    <label>Description / notes<textarea id="oppEditDesc" rows="4"></textarea></label>
+    <div style="font-size:12px;color:var(--text2)">Docs: <span id="oppPanelDocs"></span></div>
+    <div style="border-top:1px solid var(--border,#2a3f63);padding-top:12px;margin-top:2px;display:flex;flex-direction:column;gap:10px">
+      <label>Close out — outcome
+        <select id="oppEditOutcome" onchange="oppOutcomeChange()">
+          <option value="">— keep open —</option>
+          <option>Failed DD</option><option>Passed / Declined</option><option>Lost / Went cold</option>
+          <option>Won / Committed</option><option>Withdrawn</option><option>Not a fit</option>
+        </select></label>
+      <label>Close comment<textarea id="oppCloseComment" rows="2" placeholder="Reason / what happened — appended to notes with today's date"></textarea></label>
+      <div id="oppFailedDdBox" style="display:none;background:#2a1520;border:1px solid #5a2030;border-radius:7px;padding:9px">
+        <label style="flex-direction:row;align-items:center;gap:8px;color:#ffb0b0;font-weight:600">
+          <input type="checkbox" id="oppFailedDdReg" checked style="width:auto"> Add to shared Failed-DD blocklist (do-not-engage across Exos)</label>
+        <div class="opp-row2" style="margin-top:8px">
+          <label>Firm<input id="oppFailedDdFirm" type="text"></label>
+          <label>Email(s)<input id="oppFailedDdEmail" type="text" placeholder="comma-separated"></label>
+        </div>
+      </div>
+    </div>
+    <datalist id="oppStatusList">
+      <option>NEW</option><option>ACTIVE</option><option>ADVANCING</option><option>ENGAGED</option>
+      <option>TRACKING</option><option>MONITOR</option><option>DRAFT</option><option>DUE DILIGENCE</option>
+      <option>EVALUATING</option><option>SUBMITTED</option><option>CLOSED</option>
+    </datalist>
+  </div>
+  <div class="opp-panel-foot">
+    <span id="oppSaveMsg" style="font-size:12px;flex:1"></span>
+    <button class="opp-btn-ghost" onclick="closeOppPanel()">Cancel</button>
+    <button class="opp-btn-danger" id="oppCloseBtn" onclick="closeOutOpp()" style="display:none">Close out</button>
+    <button class="opp-btn-save" onclick="saveOppDetail()">Save</button>
+  </div>
+</div>
+<style>
+.opp-btn-danger{background:#b91c1c;color:#fff;border:none;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.opp-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .18s;z-index:60}
+.opp-backdrop.open{opacity:1;pointer-events:auto}
+.opp-panel{position:fixed;top:0;right:0;height:100%;width:440px;max-width:92vw;background:var(--panel,#0f1e38);
+  border-left:1px solid var(--border,#2a3f63);box-shadow:-8px 0 30px rgba(0,0,0,.4);transform:translateX(100%);
+  transition:transform .2s;z-index:61;display:flex;flex-direction:column}
+.opp-panel.open{transform:translateX(0)}
+.opp-panel-head{display:flex;justify-content:space-between;align-items:flex-start;padding:16px 18px;border-bottom:1px solid var(--border,#2a3f63)}
+.opp-x{background:none;border:none;color:var(--text2,#8aa0bd);font-size:18px;cursor:pointer}
+.opp-panel-body{padding:16px 18px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:12px}
+.opp-panel-body label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--text2,#8aa0bd);font-weight:600}
+.opp-panel-body input,.opp-panel-body textarea{background:#0a1830;border:1px solid var(--border,#2a3f63);border-radius:7px;
+  color:var(--text,#e8edf5);padding:8px 10px;font-size:13px;font-family:inherit;outline:none}
+.opp-panel-body input:focus,.opp-panel-body textarea:focus{border-color:var(--blue,#60a5fa)}
+.opp-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opp-panel-foot{display:flex;align-items:center;gap:8px;padding:14px 18px;border-top:1px solid var(--border,#2a3f63)}
+.opp-btn-save{background:var(--blue,#2563eb);color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
+.opp-btn-ghost{background:none;border:1px solid var(--border,#2a3f63);color:var(--text2,#8aa0bd);border-radius:7px;padding:8px 14px;font-size:13px;cursor:pointer}
+</style>
+</body>
+</html>

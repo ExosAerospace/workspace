@@ -214,6 +214,7 @@
   }
   .ms-chip { font-size: 10px; font-weight: 700; color: #0a1628; background: #f5a623; border-radius: 4px; padding: 1px 6px; margin-right: 2px; }
   .ms-chip.ms-blocked { background: #6b7280; color: #fff; }
+  .ms-chip.ms-pinned { background: #7c3aed; color: #fff; }
   .filter-btn#scoreToggle.active { background: #f5a623; color: #0a1628; border-color: #f5a623; }
   .task-priority-high { font-size: 10px; color: var(--blocked-accent); font-weight: 600; }
   .task-priority-med { font-size: 10px; color: var(--yellow); }
@@ -691,6 +692,18 @@
           </div>
         </div>
         <div class="edit-row">
+          <div style="flex:1">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+              <input type="checkbox" id="editPinEnable" onchange="document.getElementById('editPinValue').disabled=!this.checked" style="width:auto;margin:0">
+              📌 Pin Mission Score (manual override)
+            </label>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+              <input type="number" id="editPinValue" min="0" max="100" placeholder="e.g. 95" disabled style="max-width:120px">
+              <span class="empty" style="font-size:12px">Overrides the computed score and pins this task on the board. Clear the checkbox to return to auto-scoring.</span>
+            </div>
+          </div>
+        </div>
+        <div class="edit-row">
           <div>
             <label>Category / Project</label>
             <input type="text" id="editCategory">
@@ -1152,7 +1165,12 @@ function buildCard(task) {
   // Mission Score (shadow) — joined from data/mission-scores.json, non-authoritative
   const ms = MSCORES[String(task.id)];
   const msHtml = (ms && typeof ms.score === 'number')
-    ? `<span class="ms-chip${ms.blocked ? ' ms-blocked' : ''}" title="Mission Score (shadow) — ${escHtml(ms.pillar || '')}${ms.blocked ? ' · BLOCKED, needs a decision' : ''}">★ ${ms.score}${ms.blocked ? ' 🔒' : ''}</span>`
+    ? (() => {
+        const pinTip = ms.pinned ? ` · 📌 Pinned to ${ms.pin_value} (computed: ${ms.computed_score})` : '';
+        const blkTip = ms.blocked ? ' · BLOCKED, needs a decision' : '';
+        const chipClass = `ms-chip${ms.blocked ? ' ms-blocked' : ''}${ms.pinned ? ' ms-pinned' : ''}`;
+        return `<span class="${chipClass}" title="Mission Score — ${escHtml(ms.pillar || '')}${pinTip}${blkTip}">${ms.pinned ? '📌' : '★'} ${ms.score}${ms.blocked ? ' 🔒' : ''}</span>`;
+      })()
     : '';
 
   div.innerHTML = `
@@ -1233,6 +1251,14 @@ function openEdit(id) {
   const isProj = Array.isArray(task.tags) && task.tags.map(x => String(x).toLowerCase()).includes('project');
   document.getElementById('editType').value = isProj ? 'project' : 'task';
 
+  // Pin (manual Mission Score override) — read from a `pin:<N>` tag
+  const pinTag = (Array.isArray(task.tags) ? task.tags : []).map(String).find(x => /^pin:\d{1,3}$/i.test(x));
+  const pinChk = document.getElementById('editPinEnable');
+  const pinVal = document.getElementById('editPinValue');
+  pinChk.checked = !!pinTag;
+  pinVal.value = pinTag ? pinTag.split(':')[1] : '';
+  pinVal.disabled = !pinTag;
+
   // Hide delete button for early adopters
   const deleteBtn = document.querySelector('.edit-actions .btn.danger');
   if (deleteBtn) deleteBtn.style.display = (currentUserRole === 'early_adopter') ? 'none' : '';
@@ -1252,18 +1278,24 @@ function openEdit(id) {
 function renderOverview(task) {
   const grid = document.getElementById('detailGrid');
   const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) : '<span class="empty">Not set</span>';
-  const priLabel = (p) => {
-    if (!p) return '<span class="empty">Unscored</span>';
-    if (p >= 60) return `<span style="color:var(--blocked-accent);font-weight:600">${p} (High)</span>`;
-    if (p >= 40) return `<span style="color:var(--yellow)">${p} (Medium)</span>`;
-    return `<span>${p} (Low)</span>`;
+  const priLabel = (p, ms) => {
+    if (!p && !ms) return '<span class="empty">Unscored</span>';
+    const score = (ms && typeof ms.score === 'number') ? ms.score : p;
+    let band = score >= 60 ? `<span style="color:var(--blocked-accent);font-weight:600">${score} (High)</span>`
+             : score >= 40 ? `<span style="color:var(--yellow)">${score} (Medium)</span>`
+             : `<span>${score} (Low)</span>`;
+    if (ms && ms.pinned) {
+      band += ` <span style="color:#7c3aed;font-size:11px;font-weight:600">📌 Pinned (computed: ${ms.computed_score})</span>`;
+    }
+    return band;
   };
+  const _msRec = MSCORES[String(task.id)];
 
   grid.innerHTML = `
     <div class="detail-field"><label>Owner</label><div class="val"><span class="owner-badge ${ownerClass(task.owner)}" style="font-size:12px;padding:3px 10px">${ownerLabel(task.owner)}</span></div></div>
     <div class="detail-field"><label>State</label><div class="val">${task.state}</div></div>
     <div class="detail-field"><label>Due Date</label><div class="val">${fmtDate(task.due_date)}</div></div>
-    <div class="detail-field"><label>Priority (Mission Score)</label><div class="val">${priLabel(msOf(task))}</div></div>
+    <div class="detail-field"><label>Priority (Mission Score)</label><div class="val">${priLabel(msOf(task), _msRec)}</div></div>
     <div class="detail-field"><label>Category / Project</label><div class="val">${task.category ? escHtml(task.category) : '<span class="empty">None</span>'}</div></div>
     <div class="detail-field"><label>Source</label><div class="val">${task.source ? escHtml(task.source) : 'manual'}</div></div>
     <div class="detail-field"><label>Created</label><div class="val">${task.created_at ? new Date(task.created_at).toLocaleString('en-US', {timeZone:'America/Chicago',month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '?'}</div></div>
@@ -1363,14 +1395,25 @@ async function saveEdit() {
     priority: parseInt(document.getElementById('editPriority').value) || 0,
     category: document.getElementById('editCategory').value.trim() || null,
   };
-  // Type: toggle the 'project' tag while preserving any other tags
+  // Type + pin: toggle tags while preserving all others
   const curTask = tasks.find(t => t.id == id);
-  let tags = (curTask && Array.isArray(curTask.tags)) ? curTask.tags.filter(x => String(x).toLowerCase() !== 'project') : [];
+  let tags = (curTask && Array.isArray(curTask.tags))
+    ? curTask.tags.filter(x => String(x).toLowerCase() !== 'project' && !/^pin:\d{1,3}$/i.test(String(x)))
+    : [];
   if (document.getElementById('editType').value === 'project') tags.push('project');
+  const pinEnabled = document.getElementById('editPinEnable').checked;
+  const pinRaw = parseInt(document.getElementById('editPinValue').value);
+  if (pinEnabled && !isNaN(pinRaw) && pinRaw >= 0 && pinRaw <= 100) {
+    tags.push(`pin:${pinRaw}`);
+  }
   fields.tags = tags;
 
   try {
     await apiFetch('/api/tasks', { method: 'PATCH', body: JSON.stringify(fields) });
+    // Immediately rescore this task so the chip reflects the pin without waiting 2h
+    apiFetch('/api/rescore', { method: 'POST', body: JSON.stringify({ task_id: id }) })
+      .then(() => loadMissionScores().then(() => render()))
+      .catch(() => {});  // best-effort; board still shows correctly after next cron run
     const task = tasks.find(t => t.id == id);
     if (task) Object.assign(task, { ...fields, state: normalizeState(fields.state) });
     render();

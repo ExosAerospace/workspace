@@ -177,6 +177,29 @@ def aging_score(days, state):
     return 0
 
 
+PIN_RX = re.compile(r'pin:(\d{1,3})', re.I)
+
+
+def manual_pin(tags):
+    """Extract a manual Mission-Score override from a `pin:<N>` tag (0-100), if present.
+    A pin is a deliberate human override set from the board's Edit tab — it HARD-SETS the
+    displayed score, beating the computed value and the blocker downgrade. Tags come back
+    from PostgREST as a list, but tolerate a raw string too. Returns int 0-100 or None."""
+    if not tags:
+        return None
+    if isinstance(tags, (list, tuple)):
+        blob = " ".join(str(x) for x in tags)
+    else:
+        blob = str(tags)
+    m = PIN_RX.search(blob)
+    if not m:
+        return None
+    try:
+        return max(0, min(100, int(m.group(1))))
+    except Exception:
+        return None
+
+
 def main():
     # Score EVERY task (Jon 2026-07-29: "all tasks have some kind of score"). Legacy-lane items
     # (source=mc-board-legacy) are hidden from the main board but several are real strategic work,
@@ -228,9 +251,15 @@ def main():
         raw = strategic + val + urg + sig + age + label_floor
         blk = blocked_by(t["id"])
         factor = 0.45 if blk else 1.0
-        final = round(min(100, raw) * factor)
+        computed = round(min(100, raw) * factor)
+        # Manual override: a `pin:<N>` tag hard-sets the score, beating the computed value
+        # (and the blocker downgrade). Explicit human intent wins. The computed score is kept
+        # in the breakdown so we can show "pinned to 95 (would compute 58)".
+        pin = manual_pin(t.get("tags"))
+        final = pin if pin is not None else computed
         scores[str(t["id"])] = {
             "score": final, "pillar": pillar, "blocked": bool(blk),
+            "pinned": pin is not None, "pin_value": pin, "computed_score": computed,
             "north_star": ns, "role_ns": role_ns, "owner": t.get("assigned_email") or t.get("owner"),
             "title": (t.get("title") or "")[:70],
             "blocked_by": blk, "days_to_due": days,

@@ -1081,7 +1081,7 @@ const server = http.createServer((req, res) => {
 
   // early_adopter role: strict sandbox — tasks board only, no CRM/deals/admin/docusign
   if (session && session.role === 'early_adopter') {
-    const allowedAPIs = ['/api/tasks', '/api/uploads', '/api/me', '/api/logout'];
+    const allowedAPIs = ['/api/tasks', '/api/uploads', '/api/me', '/api/logout', '/api/rescore'];
     const isAllowedAPI = allowedAPIs.some(p => req.url.startsWith(p));
     if (req.url.startsWith('/api/') && !isAllowedAPI) {
       res.writeHead(403, { 'Content-Type': 'application/json' });
@@ -1102,6 +1102,41 @@ const server = http.createServer((req, res) => {
       res.end();
       return;
     }
+  }
+
+  // ── SALES COMMISSIONS (restricted): Jon + CTO see all; a sales agent sees ONLY their own ──
+  // Data lives in the audited ERP db (erp-foundation/mc.db), not the CRM. Access is enforced here
+  // by an explicit allowlist, NOT by MC role (Lizi is an admin AND an agent → must see only hers).
+  if (req.url.split('?')[0] === '/api/commissions' && req.method === 'GET') {
+    const s = getSession(req);
+    const email = (s && s.email || '').toLowerCase();
+    let cfg = { full_view: ['jquinn@exosaero.com'], cto_email: '' };
+    try { cfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'commission-access.json'))); } catch (e) {}
+    const fullView = new Set([...(cfg.full_view || []), cfg.cto_email].filter(Boolean).map(x => x.toLowerCase()));
+    let erp;
+    try {
+      const { openErp } = require('../erp-foundation/dal');
+      erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: email || 'mc-server', agent: 'mc-commissions-view' });
+      let scope, rows;
+      if (fullView.has(email)) {
+        scope = 'full';
+        rows = erp.listCommissions({ limit: 500 });
+      } else {
+        const agent = erp.getAgentByEmail(email);   // registered sales agent → sees ONLY their own
+        if (agent) { scope = 'self'; rows = erp.listCommissions({ agent_id: agent.id, limit: 500 }); }
+        else { scope = 'none'; rows = []; }
+      }
+      const totals = rows.reduce((a, r) => {
+        if (r.status === 'paid') a.paid += r.commission_amount || 0; else a.due += r.commission_amount || 0;
+        return a;
+      }, { due: 0, paid: 0 });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ scope, viewer: email, rows, totals }));
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'commissions unavailable', detail: String(e).slice(0, 200) }));
+    } finally { try { erp && erp.close(); } catch (e) {} }
+    return;
   }
 
   // ── WELCOME PAGE (early adopter onboarding) ──
@@ -1242,6 +1277,19 @@ const server = http.createServer((req, res) => {
       supabaseRequest('DELETE', `tasks?id=eq.${id}`)
         .then(({ status }) => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
         .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
+    }); return;
+  }
+
+  // ── RESCORE — instant re-run of mission-score.py after a pin is set ──
+  if (req.url === '/api/rescore' && req.method === 'POST') {
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      const { spawn } = require('child_process');
+      const py = spawn('python3', ['/Users/exomac/.openclaw/workspace/scripts/mission-score.py'], {
+        detached: true, stdio: 'ignore'
+      });
+      py.unref();
+      res.writeHead(202, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ queued: true }));
     }); return;
   }
 
@@ -2367,9 +2415,23 @@ const server = http.createServer((req, res) => {
       try {
         const p = JSON.parse(body || '{}');
         const arr = loadDecisions();
-        // De-dupe: if an open decision with the same dedupeKey exists, update it instead of adding.
-        let existing = p.dedupeKey ? arr.find(d => d.status === 'open' && d.dedupeKey === p.dedupeKey) : null;
         const now = new Date().toISOString();
+        // De-dupe is GLOBAL on dedupeKey (any status), not just open. A stable dedupeKey identifies
+        // one decision for its whole life. If it was already answered/closed, an agent re-raising the
+        // same key must NOT spawn a fresh duplicate — that was the "same card multiple times a day"
+        // bug (overnight resolver + morning digest each re-created the rollup after Jon answered it).
+        const isOpenStatus = s => { s = (s || 'open'); return s === 'open' || s === 'pending'; };
+        if (p.dedupeKey) {
+          const already = arr.find(d => d.dedupeKey === p.dedupeKey && !isOpenStatus(d.status));
+          if (already) {
+            // Already resolved — respect the answer, do not duplicate.
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ...already, deduped: true, reason: 'already answered — not re-raised' }));
+            return;
+          }
+        }
+        // Open decision with the same dedupeKey exists → update it in place instead of adding.
+        let existing = p.dedupeKey ? arr.find(d => isOpenStatus(d.status) && d.dedupeKey === p.dedupeKey) : null;
         if (existing) {
           Object.assign(existing, {
             title: p.title || existing.title, question: p.question || existing.question,
@@ -2395,6 +2457,16 @@ const server = http.createServer((req, res) => {
           approver: p.approver || '', assignedTo: p.assignedTo || '',
         };
         arr.push(d); saveDecisions(arr);
+        // Event-driven delivery: a "deliver-to-Jon draft" decision is delivered NOW, not on the
+        // polling watcher's timer — a draft Jon requested shouldn't wait for another job to sweep it.
+        try {
+          const _blob = `${d.proposedAction || ''} ${d.question || ''} ${d.context || ''}`;
+          if (/deliver .{0,30}?(your|to your) inbox|for you to send|to your inbox to send|on\s+yes[, ].{0,40}?deliver|i deliver the draft/i.test(_blob)) {
+            const { execFile } = require('child_process');
+            execFile('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'decision-send-watcher.py')],
+              { timeout: 90000, env: { ...process.env, PATH: '/opt/homebrew/bin:' + (process.env.PATH || '/usr/bin:/bin') } }, () => {});
+          }
+        } catch {}
         res.writeHead(201, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(d));
       } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
     }); return;
