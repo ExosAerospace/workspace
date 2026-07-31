@@ -19,10 +19,15 @@ Three pools (config: all three in parallel each run):
 
 Lead CTA (config): the open BLK3 Flight 2 bay slot, ~Mar-2027, Spaceport America.
 
-ITAR GATE (config: global w/ gate): foreign / unknown-origin targets are staged but
-HELD — status "ITAR-HOLD" + an export-review Decision is filed BEFORE any outreach is
-drafted. The processor skips ITAR-HOLD items until Jon clears them. Domestic targets
-flow straight to the processor for pricing + draft.
+COUNTRY POLICY (Jon's standing policy 2026-07-31, via export_screen.classify_country):
+marketing our services to the world is the job, and being outside the US is not being
+an enemy. Adversary / embargoed nations (China, Russia, Belarus, North Korea, Iran,
+Cuba, Syria, Venezuela, Myanmar, Nicaragua) are dropped silently — no outreach, no
+draft, no decision, no ask. Everyone else, US + allies (Germany, Italy, France, etc.)
++ neutral nations, is cleared for marketing outreach and flows straight to the
+processor for pricing + draft. NO per-target export decision is filed for outreach.
+This governs MARKETING only; any controlled technical-data transfer stays gated by the
+separate ITAR data-transfer process, and inbound controlled content by itar_ear_screen.
 
 Usage: derisk_orbital_outreach.py [--model sonnet] [--limit 9] [--dry-run] [--no-discord]
 """
@@ -62,6 +67,13 @@ END   = "<!-- DERISK-ORBITAL-AUTO:END -->"
 # Anything not clearly US-domestic gets the ITAR gate (fail-safe toward screening).
 US_TOKENS = ("us", "usa", "u.s.", "u.s.a.", "united states", "united states of america", "america", "domestic")
 
+# Country policy for outbound marketing outreach (Jon's standing policy 2026-07-31):
+# block adversary/embargoed nations silently, clear allies + neutral nations with
+# no decision. Centralized in export_screen so every outreach engine screens the same.
+import os as _os2, sys as _sys2
+_sys2.path.insert(0, _os2.path.dirname(_os2.path.abspath(__file__)))
+from export_screen import classify_country
+
 POOLS = """POOL A — SUBORBITAL REPEAT-FLIERS (warmest; they already buy suborbital):
   Organizations/PIs that have ALREADY flown a payload suborbitally — Blue Origin New
   Shepard payload customers, Virgin Galactic research-flight payloads, UP Aerospace
@@ -92,7 +104,9 @@ PROMPT = (
     "(~Mar-2027, Spaceport America) — 135kg / 25\"x36\", reusable, 2-3 day turnaround, "
     "hardware recovered and returned. Tie each target's specific program to that slot.\n\n"
     "Source NEW targets across ALL THREE pools below (rotate, return a mix of all three). "
-    "Search globally — include international launch and satellite developers.\n\n"
+    "Search globally — include international launch and satellite developers. "
+    "EXCLUDE targets based in adversary or embargoed nations (China, Russia, Belarus, "
+    "North Korea, Iran, Cuba, Syria, Venezuela, Myanmar, Nicaragua); we do not market to them.\n\n"
     + POOLS +
     "\n\nFor EACH target return: org (company/lab), pool ('A'|'B'|'C'), country (the org's "
     "home country — be precise, this drives export screening), a named POC with title and "
@@ -199,8 +213,9 @@ def render_block(oid, it, foreign):
     g = lambda k: str(it.get(k, "") or "").strip()
     pool = (g("pool") or "B").upper()[:1]
     poc = ", ".join(x for x in [g("poc_name"), g("poc_title"), g("poc_email")] if x)
-    status = ("ITAR-HOLD — foreign/unknown origin, export review filed (hold until cleared)"
-              if foreign else f"NEW — DRO sourced {TODAY}; lead w/ open BLK3 Mar-2027 slot")
+    status = (f"NEW — DRO sourced {TODAY}; lead w/ open BLK3 Mar-2027 slot"
+              + (" · international target: marketing outreach only, controlled technical-data transfer stays ITAR-gated"
+                 if foreign else ""))
     desc = (f"De-Risk Orbital target ({POOL_LABEL.get(pool,'orbital')}). {g('why_fit')} "
             f"Program: {g('program')}. Funding: {g('funding')}.")
     return (
@@ -227,7 +242,7 @@ def regenerate():
         print(f"  generator failed: {e}"); return False
 
 
-def deliver_discord(staged, itar_n):
+def deliver_discord(staged, blocked_n):
     tok = secret("discord_token")
     if not tok: print("  Discord: no token"); return False
     by = {"A": 0, "B": 0, "C": 0}
@@ -235,13 +250,13 @@ def deliver_discord(staged, itar_n):
     for oid, it, foreign in staged:
         p = str(it.get("pool", "B")).upper()[:1]
         by[p] = by.get(p, 0) + 1
-        flag = " 🛂ITAR-HOLD" if foreign else ""
+        flag = " 🌍intl" if foreign else ""
         lines.append(f"• **{oid}** {str(it.get('org',''))[:60]} — Pool {p}{flag}")
     body = "\n".join(lines[:12]) or "_No new targets this run._"
     msg = (f"🚀 **De-Risk Orbital Outreach — {TODAY}**\n"
            f"{len(staged)} new target{'s' if len(staged)!=1 else ''} staged → Opportunities "
            f"(A:{by['A']} repeat-fliers · B:{by['B']} launch devs · C:{by['C']} sat/payload)\n"
-           f"{itar_n} held for ITAR review (Decision filed).\n\n"
+           f"{blocked_n} blocked (adversary/embargoed, no outreach).\n\n"
            f"{body}\n\n_Draft-only. Processor prices + drafts; you approve every send in Decisions._")[:1900]
     try:
         req = urllib.request.Request(
@@ -268,7 +283,7 @@ def main():
     print(f"  sourced {len(items)} candidate targets")
 
     existing = existing_keys()
-    staged, seen = [], set()
+    staged, seen, blocked = [], set(), []
     for it in items:
         org = str(it.get("org", "")).strip()
         if not org:
@@ -277,17 +292,23 @@ def main():
         if key in seen or key in existing:
             continue
         seen.add(key)
+        verdict, reason = classify_country(it.get("country"))
+        if verdict == "block":
+            # Adversary/embargoed nation: no outreach, no draft, no decision, no ask.
+            blocked.append((org, it.get("country", "?")))
+            continue
         foreign = is_foreign(it.get("country"))
-        oid = dro_id(key)
-        staged.append((oid, it, foreign))
+        staged.append((dro_id(key), it, foreign))
 
-    itar_n = sum(1 for _, _, f in staged if f)
+    if blocked:
+        print(f"  blocked {len(blocked)} adversary/embargoed (no outreach): "
+              + ", ".join(f"{o} [{c}]" for o, c in blocked[:8]))
 
     if args.dry_run:
-        print(f"  [dry-run] {len(staged)} would stage ({itar_n} ITAR-hold):")
+        print(f"  [dry-run] {len(staged)} would stage, {len(blocked)} blocked:")
         for oid, it, foreign in staged:
             print(f"    {oid}  P{str(it.get('pool','?')).upper()[:1]}  "
-                  f"{'🛂' if foreign else '  '} {str(it.get('org',''))[:50]:50} [{it.get('country','?')}]")
+                  f"{'🌍' if foreign else '  '} {str(it.get('org',''))[:50]:50} [{it.get('country','?')}]")
         return
 
     if not staged:
@@ -303,26 +324,15 @@ def main():
     open(OPP_MD, "w").write(cur.rstrip() + "\n\n" + section)
     print(f"  staged {len(staged)} targets: " + ", ".join(oid for oid, _, _ in staged))
 
-    # ITAR gate: file an export-review Decision for each foreign/unknown target
-    for oid, it, foreign in staged:
-        if not foreign:
-            continue
-        org = str(it.get("org", ""))
-        mc_post("/api/decisions/ingest", {
-            "dedupeKey": f"dro-itar-{oid}",
-            "title": f"ITAR review: outreach to {org[:70]} ({it.get('country','?')})",
-            "question": f"Clear De-Risk Orbital outreach to {org} ({it.get('country','?')})? "
-                        f"Foreign target — confirm no ITAR/EAR export concern before we draft.",
-            "context": f"{oid} · Pool {str(it.get('pool','?')).upper()[:1]} · {it.get('program','')}\n"
-                       f"Why fit: {it.get('why_fit','')}\nSource: {it.get('source_url','')}",
-            "proposedAction": "Clear for outreach (status → NEW so the processor drafts it), or Hold/Reject.",
-            "type": "yesno", "options": ["Clear", "Hold", "Reject"],
-            "priority": "med", "relatedItem": org[:120], "source": "De-Risk Orbital Engine"})
+    # No per-target export decision for marketing outreach (Jon's policy 2026-07-31):
+    # allies + neutral nations are cleared to market to; adversary/embargoed nations
+    # were already dropped above. Any controlled technical-data transfer, if it ever
+    # occurs, stays gated by the separate ITAR data-transfer process, not here.
 
     print(f"  regenerate dashboard: {'OK' if regenerate() else 'FAIL'}")
     if not args.no_discord:
-        print(f"  Discord: {'OK' if deliver_discord(staged, itar_n) else 'FAIL'}")
-    try: _gevent(_GRUN, "executed", detail=f"{len(staged)} targets ({itar_n} itar-hold)")
+        print(f"  Discord: {'OK' if deliver_discord(staged, len(blocked)) else 'FAIL'}")
+    try: _gevent(_GRUN, "executed", detail=f"{len(staged)} staged, {len(blocked)} blocked")
     except Exception: pass
     print("done.")
 

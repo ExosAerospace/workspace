@@ -168,8 +168,8 @@
       "rollback_path": "Idempotent AUTO-marker section (git-versioned markdown) -> revert = re-run or git checkout. No external side effects (outreach is human-sent).",
       "memory_boundary": "Reads target pools + web + rate card; stateless per run; persists staged/priced opportunity rows.",
       "decision_boundary": {
-        "execute": ["Source/enrich/price targets across the 3 pools", "Stage priced opportunities (idempotent)", "Set ITAR-HOLD status on export-sensitive targets"],
-        "escalate": ["Any external outreach/send (always Jon-sent via Opportunity Processor)", "Export-review Decision on any ITAR-HOLD target BEFORE outreach", "Any price quoted externally", "Capability/traction claims beyond documented fact"]
+        "execute": ["Source/enrich/price targets across the 3 pools", "Stage priced opportunities (idempotent)", "Clear US + allies + neutral nations for marketing outreach with NO decision (policy 2026-07-31)", "Drop adversary/embargoed nations silently (no outreach, no ask; export_screen blocklist)"],
+        "escalate": ["Any external outreach/send (always Jon-sent via Opportunity Processor)", "Any sharing of controlled technical data (goes to the ITAR data-transfer process, not this engine)", "Any price quoted externally", "Capability/traction claims beyond documented fact"]
       },
       "escalation_owner": "Jon (Decisions inbox)",
       "override_rate_ceiling": 0.45,
