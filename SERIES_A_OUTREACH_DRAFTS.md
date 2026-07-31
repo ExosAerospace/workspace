@@ -223,13 +223,13 @@ CEO, Exos Aerospace | +1-972-740-8355
 
 ## Draft 9: Cerberus Capital Management
 **⚠️ CERBERUS FLAG ACTIVE — Stratolaunch owner. Lead with Scorpius ROFR/cryo only. No flight test framing.**
-**CRM Contacts:** Dan Quayle (dquayle@cerberus.com), Frank Bruno (fbruno@cerberus.com) | Last Touch: 1/14/2026
+**CRM Contacts (UPDATED 6/26):** Frank Bruno (fbruno@cerberus.com) — fallback contact + Kent Lietzau (direct channel). ❌ Do NOT copy Dan Quayle — hard exclude per Jon directive. | Last Touch: 1/14/2026
 
 **Subject:** Following Up — Scorpius ROFR and Cryogenic Asset Opportunity
 
 ---
 
-Dan / Frank,
+Frank,
 
 Following up on our conversation in January. I wanted to bring your attention back to the Scorpius dimension of this opportunity, which I believe is the most directly relevant to Cerberus's current portfolio.
 

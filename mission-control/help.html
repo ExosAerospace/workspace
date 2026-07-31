@@ -24,6 +24,12 @@
   .tip{background:#0a1830;border:1px dashed var(--line);border-radius:8px;padding:10px 12px;color:#bcd0ee;font-size:14px;margin-top:10px}
   .big{font-size:15px}
   a{color:var(--accent)}
+  table.cmd{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+  table.cmd th,table.cmd td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  table.cmd th{background:#0a1830;color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.03em}
+  table.cmd td code{white-space:nowrap}
+  table.cmd tr:nth-child(even) td{background:#0c1c36}
+  .wrapscroll{overflow-x:auto}
 </style>
 </head>
 <body>
@@ -38,6 +44,81 @@
     <h2>What Mission Control is</h2>
     <p class="big">Think of it as one shared online board for everything we are working on: who is doing what, what is due, what is waiting on a decision, and where the documents live. Instead of work scattered across email, Teamwork, and people's heads, it all lives in one place everyone can see. You open it in a web browser. It is replacing Teamwork.</p>
     <p class="big"><b>The big idea — you do not maintain it by hand.</b> You keep working in email exactly as you do now. By forwarding or BCC'ing the right messages to <b>one address</b> (<code>exosmc@proton.me</code>), your everyday communication <b>becomes</b> the work management: Mission Control turns it into tasks, contacts, decisions, and status updates for you. No separate system to keep up, no data entry.</p>
+  </div>
+
+  <div class="card" style="border-left-color:var(--accent)">
+    <h2>✨ What's new (from your feedback — July 2026)</h2>
+    <p class="big">The July team-review recommendations are live:</p>
+    <ul class="big">
+      <li><b>💬 Ask Exobot — chat window.</b> A <b>💬 button, bottom-right of the board</b>, opens a private chat with Exobot — no email round-trip. Ask questions, tell it to add a task, run DD, or find a document. Each person gets their own session. (Replies take a few seconds — it's the full assistant doing real work.)</li>
+      <li><b>Projects.</b> Tasks are now grouped into projects — <b>BLK3 to Flight, HVRR-RDRE, Structural Health Monitoring</b>. Use the <b>"All Projects"</b> dropdown or the <b>Projects</b> button. Change a task's project by editing its category.</li>
+      <li><b>Documents that open.</b> Attachments on a task now open (docx/PDF view). Anything a task references gets auto-attached. In the <b>Procedures</b> library, click a procedure name to open its document; empty ones say "no document yet."</li>
+      <li><b>Exobot is now your document manager (non-CUI).</b> Forward any non-CUI document to <code>exosmc@proton.me</code> with subject starting <b>[DOC]</b> and it's filed + searchable — then just ask Exobot to find it ("pull the MDB MNDA"). Controlled/ITAR/CUI docs are automatically screened out.</li>
+      <li><b>Smarter board.</b> The first column is now <b>"New"</b> (not "Blocked"); anything <b>due within 5 days floats to the top</b>; and you can filter by <b>priority</b> and <b>due date</b>. "High" now reflects real mission-score priority, not a default.</li>
+      <li><b>Meetings.</b> Weekly team meeting <b>Tuesdays 10am</b>; monthly work-management meeting moved to the <b>last Tuesday</b>. You'll get the agenda the day before automatically.</li>
+    </ul>
+    <p class="big"><b>Still needs you:</b> to turn on the finance + HR automations, we need the <b>QuickBooks API key</b> (Kyle) and the <b>BambooHR API key</b> (Lizi) — ask Exobot "how do I get an API key for [QuickBooks/Bamboo]?" and it will walk you through it securely.</p>
+  </div>
+
+  <div class="card" style="border-left-color:var(--accent)">
+    <h2>📋 Exobot command cheat sheet — everything you can do by email</h2>
+    <p class="big">One address does it all: <code>exosmc@proton.me</code>. What happens depends on what you put at the top of the message (or in the subject). This table is the whole system on one screen — the sections below explain each in more detail.</p>
+    <div class="wrapscroll">
+    <table class="cmd">
+      <thead>
+        <tr><th>What you want</th><th>What to send</th><th>What Exobot does</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Just log it</b> (capture)</td>
+          <td>BCC / CC / forward to <code>exosmc@proton.me</code> with <b>no</b> <code>@Exobot</code></td>
+          <td>Adds people to Contacts, files the email under a <b>matching existing</b> task, logs your sends. <b>Does not create a new task.</b></td>
+        </tr>
+        <tr>
+          <td><b>Create / change work</b></td>
+          <td><code>@Exobot</code> + plain-English instruction at the top of the body <br>(or start the <b>subject</b> with <code>[EXO]</code>)</td>
+          <td>Creates a task, reassigns, drafts a reply, pulls research. The <b>only</b> way to make a new task appear.</td>
+        </tr>
+        <tr>
+          <td><b>Add a task</b></td>
+          <td><code>@Exobot create a task to … , assign to me, due Friday</code></td>
+          <td>Creates it, assigns it to <b>you</b>, sets the due date.</td>
+        </tr>
+        <tr>
+          <td><b>Draft a reply</b></td>
+          <td>Forward the email with <code>@Exobot draft a reply for my review</code></td>
+          <td>Writes a draft and puts it on <b>your</b> Decisions tab; on approval it emails the ready message to <b>your</b> inbox to send.</td>
+        </tr>
+        <tr>
+          <td><b>Research something</b></td>
+          <td><code>@Exobot pull the latest on … and summarize it</code></td>
+          <td>Researches and returns a summary; files it if it ties to a task.</td>
+        </tr>
+        <tr>
+          <td><b>Vet a solicitor</b> (DD)</td>
+          <td>Forward the suspicious email with <code>@Exobot run DD on this</code></td>
+          <td>Checks the shared bad-actor registry (instant flag if known), runs diligence, records new bad actors for the whole team. <b>No need to route to Jon.</b></td>
+        </tr>
+        <tr>
+          <td><b>Log a call</b> (transcript)</td>
+          <td>Email the transcript with <code>[TRANSCRIPT]</code> in the <b>subject</b> (attach or paste)</td>
+          <td>Adds attendees to Contacts, pulls key points / decisions / action items, files under the relationship. <b>You confirm before the record changes.</b></td>
+        </tr>
+        <tr>
+          <td><b>Get help / troubleshoot</b></td>
+          <td><code>@Exobot</code> + describe the problem and <b>attach photos</b> (wiring, valve, error screen)</td>
+          <td>Reads the images and walks you through diagnosis and fix.</td>
+        </tr>
+        <tr>
+          <td><b>Learn something</b></td>
+          <td><code>@Exobot explain how … works</code> / <code>walk me through …</code></td>
+          <td>Acts as a standing on-call expert — no question too basic.</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="tip">🔑 <b>The one rule to remember:</b> no <code>@Exobot</code> = it only <b>captures</b> (no new task). With <code>@Exobot</code> = it <b>acts</b>. Prefer <b>BCC</b> over CC for outside email so the <code>exosmc@proton.me</code> address stays hidden from your recipient.</div>
+    <div class="tip">⚠️ <b>Compliance still applies to every row:</b> never send <b>CUI</b> or <b>ITAR / EAR</b> content to <code>exosmc@proton.me</code> — keep it in SharePoint. See the compliance note below.</div>
   </div>
 
   <div class="card" style="border-left-color:var(--red)">
@@ -112,11 +193,13 @@
     <h2>Step 4 — The engine: your email does the work management for you</h2>
     <p class="big">This is the heart of it. You do not log tasks or keep a system up to date by hand — <b>your email is the input.</b> On your normal work emails, add <code>exosmc@proton.me</code>. Mission Control reads who you are and what the message is about and does the filing for you — no task numbers, no codes, nothing to look up.</p>
     <p class="big"><b>Why BCC'ing Exo matters — two payoffs.</b> First, it is how your board <b>stays current for you</b>: every message you route updates the right task, contact, and status with zero data entry, so nothing falls through the cracks. Second, it is how <b>Exobot learns your world</b> — your relationships, your priorities, how you actually work. The more you loop it in, the sharper its help gets and the more it can take off your plate. Routing your email is what turns Exobot into a genuinely better assistant for <i>you</i>.</p>
-    <p class="big">One address, two ways to use it:</p>
+    <p class="big"><b>One address, two very different jobs — this is the part that trips people up, so read it carefully:</b></p>
     <ul>
-      <li><b>BCC or forward it, with no instruction → it captures.</b> The email is filed under the matching task, the people on it are added to Contacts, and the record is updated. Your everyday correspondence becomes the running log automatically.</li>
-      <li><b>Forward it with <code>@Exobot</code> plus a plain-English instruction at the top → it acts.</b> It creates or updates <i>your</i> task, drafts a reply, pulls research (see the next card).</li>
+      <li><b>BCC / CC / forward it with NO <code>@Exobot</code> → it CAPTURES (it does <u>not</u> create a task).</b> The people on the email are added to Contacts, and <i>if the message matches a task that already exists</i>, it is filed under that task and the status is updated. This is also how a <b>send you make gets logged</b> — e.g. a cold outreach auto-closes, or a warm follow-up advances. What it will <b>not</b> do is make a <b>new</b> task appear: if there is no existing task to match, nothing new shows up on the board. That is expected behavior, not a malfunction.</li>
+      <li><b>Put <code>@Exobot</code> + a plain-English instruction at the top → it ACTS.</b> This is the <b>only</b> way to <b>create</b> a task, reassign one, draft a reply, or pull research. Example: <code>@Exobot create a task to order harness connectors, assign to me, due Friday</code>. Simply CC'ing or forwarding to the address <b>without</b> <code>@Exobot</code> will not create anything — you must include <code>@Exobot</code> in the body (or start the <b>subject</b> with <code>[EXO]</code>).</li>
     </ul>
+    <div class="tip">📩 <b>BCC vs CC — which to use.</b> Use <b>BCC</b> to loop Exo in: it captures the copy <i>without</i> revealing <code>exosmc@proton.me</code> to the person you emailed. CC works identically for Exo, but it shows that address to your recipient — so for any outside correspondence, prefer <b>BCC</b>. Either way, remember: capturing a copy is not the same as creating a task — for a task, you still need <code>@Exobot</code>.</div>
+    <div class="tip">⚠️ <b>Forward inline, not "as an attachment."</b> When forwarding from Outlook, use the normal <b>Forward</b> so the original lands in the message body — <b>not</b> "Forward as Attachment" (an "Outlook Item"). The attachment form wraps the message in a Microsoft-proprietary format that Proton can reject, so it may bounce back as undeliverable. If a forward ever bounces, resend it inline.</div>
     <div class="tip">🔒 <b>Compliance is in your hands.</b> Only send messages you have confirmed are free of <b>CUI</b> and <b>ITAR</b>. Nothing enters Mission Control unless <i>you</i> send it to <code>exosmc@proton.me</code> — it does not read your mailbox, so you decide exactly what is captured. When in doubt, keep it in SharePoint and do not forward it.</div>
   </div>
 
@@ -127,6 +210,7 @@
       <li><b>Examples:</b> <code>@Exobot</code> add a task to follow up with Marlett on Friday · <code>@Exobot</code> pull the latest on the AEDC solicitation and summarize it · <code>@Exobot</code> draft a reply to this email for my review.</li>
       <li>It works the same way in <b>chat</b> and in <b>email</b> — in email, forward the message to <code>exosmc@proton.me</code> with <code>@Exobot</code> plus your instruction at the top (same address as Step 4).</li>
       <li><b>The guardrail:</b> Exobot does safe, internal work directly — creating and updating tasks, research, drafts, summaries, reminders — and any task or document it makes for you is assigned and attached to <b>you</b>. Anything external or sensitive — sending emails, government or contract submissions, financial or legal actions — it prepares and adds to <b>your own Decisions matrix</b> in Mission Control for <b>your</b> review and approval. It never sends those on its own, and approvals for your work come to you, not to anyone else. When you approve a send, the <b>ready message is emailed to your own inbox for you to send</b> — the system never sends to the outside party for you.</li>
+      <li><b>Vetting a solicitor or suspicious inbound?</b> Forward it with <code>@Exobot run DD on this</code>. Exo checks it against a shared <b>failed-DD registry</b> of known bad actors and runs diligence — a known cold-broker/advance-fee/scam is flagged <b>instantly</b>, and any new one it catches is added so the <b>whole team</b> is protected the next time that outfit emails anyone. <b>You do not need to forward these to Jon</b> — Exo handles the vetting and only surfaces what's real.</li>
     </ul>
   </div>
 

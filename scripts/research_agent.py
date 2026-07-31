@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 research_agent.py — Local Exos research-agent runner.
 
@@ -120,7 +120,7 @@ def deliver_discord(agent, title, highlights, body):
     chan = agent.get("discord_channel_id"); tok = secret("discord_token")
     if not chan or not tok:
         print("  Discord: no channel/token, skipped"); return False
-    hl = "\n".join(f"• {re.sub(r'\\*\\*','',h)[:180]}" for h in highlights[:6])
+    hl = "\n".join("• " + re.sub(r'\*\*', '', h)[:180] for h in highlights[:6])
     msg = (f"📡 **{agent['display']} — {TODAY}**\n**{title}**\n\n{hl}\n\n"
            f"_Full brief in Mission Control → Research_")
     msg = msg[:1900]

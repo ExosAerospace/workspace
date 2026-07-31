@@ -24,7 +24,7 @@ _Maintained by Exo | Last updated: 2026-03-31_
 
 | # | Firm | Contact | Score | Last Touch | Key Action |
 |---|------|---------|-------|------------|------------|
-| 1 | **Cerberus Capital** | Dan Quayle / Frank Bruno / Kent Lietzau | 92/100 | 2026-01-01 | ⚠️ See conflict flag above. Lead with Scorpius cryo/ROFR angle, NOT flight test. Call all 3. |
+| 1 | **Cerberus Capital** | Frank Bruno / Kent Lietzau (❌ NOT Dan Quayle — hard exclude 6/26) | 92/100 | 2026-01-01 | ⚠️ See conflict flag above. Lead with Scorpius cryo/ROFR angle, NOT flight test. |
 | 2 | **Ricci Global Partners** | Riccardo Ricci | 63/100 | 2026-03-13 | Most recent active engagement. MNDA signed, data room open. Book finance session NOW. |
 | 3 | **Rochefort Management** | Grayson Wotnosky | 69/100 | 2026-02-03 | Board approved OSC path 2/6. Ghosting via email. CALL DIRECT — stop emailing. |
 

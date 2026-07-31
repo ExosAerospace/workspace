@@ -85,11 +85,20 @@ def resolve(task, by_email, by_name):
 
 
 def fetch_tasks():
-    url = (f"{SB}/tasks?select=id,title,description,state,priority,due_date,"
-           f"category,owner,assigned_to,assigned_email&limit=5000")
-    req = urllib.request.Request(url, headers=H)
-    with urllib.request.urlopen(req, timeout=60) as f:
-        return json.load(f)
+    # PostgREST caps every response at 1000 rows regardless of limit=, so page with
+    # offset until a short page. Without this, tasks beyond the first 1000 (high ids,
+    # newly created) are invisible and their assignees never get notified.
+    sel = ("select=id,title,description,state,priority,due_date,"
+           "category,owner,assigned_to,assigned_email&order=id&limit=1000")
+    out, off = [], 0
+    while True:
+        req = urllib.request.Request(f"{SB}/tasks?{sel}&offset={off}", headers=H)
+        with urllib.request.urlopen(req, timeout=60) as f:
+            page = json.load(f)
+        out += page
+        if len(page) < 1000:
+            return out
+        off += 1000
 
 
 def send(to, name, task):

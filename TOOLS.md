@@ -37,4 +37,27 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 
 ---
 
+## Email — ProtonMail Bridge
+
+Jon's email is **jquinnexo@pm.me** (ProtonMail).
+
+**ProtonMail Bridge** is installed and running on ExoMac. It exposes local SMTP and IMAP:
+
+- **Outbound (SMTP):** `msmtp` configured for jquinnexo@pm.me via Bridge on port 1025
+  - Bridge cert: `~/.protonmail-bridge.crt`
+  - Bridge must be running for outbound to work
+- **Inbound (IMAP):** Available via Bridge on localhost (port 1143 typically)
+  - Script: `scripts/mission-control-imap.py` reads inbox
+- **Use cases:** Sending emails (drafts, outreach, follow-ups), scanning inbox for opportunities, daily briefings
+
+**Remember:** You CAN send and read email. Don't say you can't. ProtonMail Bridge makes this possible locally — no external API needed.
+
+---
+
+## QuickBooks
+
+Jon has provided QuickBooks access. Available for financial queries, invoicing, expense tracking, and reporting as needed.
+
+---
+
 Add whatever helps you do your job. This is your cheat sheet.

@@ -171,7 +171,7 @@ This was the mechanism the Irish/EU victims used (via their courts) to obtain th
 
 | # | Action | Channel | Time Required |
 |---|--------|---------|---------------|
-| 1 | **Email US Embassy Abu Dhabi ACS** — reference Irish Embassy + Case #207/2023/5263 | Embassy | 30 min |
+| 1 | **Email US Embassy Abu Dhabi ACS** — sent 2026-04-06 (waiting on response) | Embassy | 30 min |
 | 2 | **File FBI IC3 complaint** at ic3.gov | FBI | 1–2 hrs |
 | 3 | **Call FBI Dallas** (972) 559-5000 — request Financial Crimes Squad | FBI | 30 min |
 | 4 | **File FinCEN tip** referencing BNY Mellon wire routing + Infinity Group IBAN | FinCEN | 30 min |

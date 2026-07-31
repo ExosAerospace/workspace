@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execSync, execFileSync } = require('child_process');
 const http = require('http');
 const https = require('https');
 const nodemailer = require('nodemailer');
@@ -217,6 +217,42 @@ function loadUploadsMeta() {
 }
 function saveUploadsMeta(meta) {
   fs.writeFileSync(UPLOADS_META, JSON.stringify(meta, null, 2));
+}
+
+// --- Office-doc -> PDF rendition for in-browser "Open" (viewing) ---
+// Browsers can't render .docx/.doc inline; we generate a cached PDF so the
+// Open button previews. Download still serves the original. docx/doc only —
+// converted via macOS `textutil` (docx/doc -> html) + headless Chrome (html -> pdf),
+// which is reliable here (LibreOffice/soffice hangs in this environment).
+const PDF_CACHE_DIR = path.join(UPLOADS_DIR, '.pdfcache');
+const CHROME_BIN = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const OPENCLAW_BIN = '/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw';
+const PDF_CONVERTIBLE = ['.docx', '.doc'];
+function ensurePdfRendition(storedName) {
+  const ext = path.extname(storedName).toLowerCase();
+  if (!PDF_CONVERTIBLE.includes(ext)) return null;
+  const src = path.join(UPLOADS_DIR, storedName);
+  if (!src.startsWith(UPLOADS_DIR) || storedName.includes('..')) return null;
+  if (!fs.existsSync(src) || !fs.statSync(src).isFile()) return null;
+  if (!fs.existsSync(PDF_CACHE_DIR)) fs.mkdirSync(PDF_CACHE_DIR, { recursive: true });
+  const pdfPath = path.join(PDF_CACHE_DIR, storedName + '.pdf');
+  // Serve cached PDF if it is newer than the source
+  try {
+    if (fs.existsSync(pdfPath) && fs.statSync(pdfPath).mtimeMs >= fs.statSync(src).mtimeMs) return pdfPath;
+  } catch {}
+  const tmpHtml = path.join(PDF_CACHE_DIR, storedName + '.html');
+  try {
+    execFileSync('textutil', ['-convert', 'html', '-output', tmpHtml, src], { timeout: 30000, stdio: 'ignore' });
+    execFileSync(CHROME_BIN, ['--headless=new', '--disable-gpu', '--no-sandbox',
+      '--no-pdf-header-footer', `--print-to-pdf=${pdfPath}`, 'file://' + tmpHtml],
+      { timeout: 60000, stdio: 'ignore' });
+    try { fs.unlinkSync(tmpHtml); } catch {}
+    if (fs.existsSync(pdfPath) && fs.statSync(pdfPath).size > 0) return pdfPath;
+  } catch (e) {
+    try { fs.unlinkSync(tmpHtml); } catch {}
+    console.log('pdf rendition failed for', storedName, e.message);
+  }
+  return null;
 }
 
 // Simple multipart parser for file uploads
@@ -453,7 +489,7 @@ function findOwnerUser(owner) {
 function mcBaseUrl() {
   let u = process.env.MC_PUBLIC_URL;
   if (!u) { try { u = fs.readFileSync(path.join(__dirname, '.public-url'), 'utf-8').trim(); } catch {} }
-  return (u || 'http://192.168.1.216:8080').replace(/\/+$/, '');
+  return (u || 'http://192.168.143.216:8080').replace(/\/+$/, '');
 }
 
 async function sendTaskAssignmentEmail(task, assignedBy) {
@@ -1061,7 +1097,7 @@ const server = http.createServer((req, res) => {
     // Block internal pages — only allow tasks board and welcome
     const allowedPages = ['/', '/index.html', '/welcome', '/welcome.html', '/login', '/login.html'];
     const isAllowedPage = allowedPages.some(p => req.url === p || req.url.startsWith(p + '?'));
-    if (req.method === 'GET' && !req.url.startsWith('/api/') && !isAllowedPage && !req.url.startsWith('/brand-assets') && !req.url.startsWith('/uploads/')) {
+    if (req.method === 'GET' && !req.url.startsWith('/api/') && !isAllowedPage && !req.url.startsWith('/brand-assets') && !req.url.startsWith('/uploads/') && !req.url.startsWith('/viewpdf/')) {
       res.writeHead(302, { 'Location': '/' });
       res.end();
       return;
@@ -1073,6 +1109,29 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end(generateWelcomePage(session));
     return;
+  }
+
+  // ── PROCESS LIBRARY documents (session-gated) ── serves files from the workspace
+  // process-library/ folder, EXCEPT Security/CUI (08), which is handled in GCC High and never
+  // served here. Path-traversal safe.
+  if (req.url.startsWith('/process-library/') && req.method === 'GET') {
+    if (!getSession(req)) { res.writeHead(302, { Location: '/login' }); res.end(); return; }
+    let rel = decodeURIComponent(req.url.replace(/^\/process-library\//, '').split('?')[0]).replace(/\\/g, '/');
+    const base = path.join(__dirname, '..', 'process-library');
+    const full = path.normalize(path.join(base, rel));
+    if (!full.startsWith(base + path.sep)) { res.writeHead(403, { 'Content-Type': 'text/plain' }); res.end('bad path'); return; }
+    if (/(^|\/)08-security-cui(\/|$)/i.test(rel)) {
+      res.writeHead(403, { 'Content-Type': 'text/plain' });
+      res.end('CUI documents are handled in GCC High (CMMC boundary), not Mission Control.'); return;
+    }
+    if (!fs.existsSync(full) || !fs.statSync(full).isFile()) { res.writeHead(404, { 'Content-Type': 'text/plain' }); res.end('not found'); return; }
+    const ext = path.extname(full).toLowerCase();
+    const ct = { '.pdf': 'application/pdf', '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      '.doc': 'application/msword', '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      '.md': 'text/markdown; charset=utf-8', '.txt': 'text/plain; charset=utf-8' }[ext] || 'application/octet-stream';
+    res.writeHead(200, { 'Content-Type': ct, 'Content-Disposition': 'inline; filename="' + path.basename(full).replace(/"/g, '') + '"' });
+    fs.createReadStream(full).pipe(res); return;
   }
 
   // ── TASKS API (Supabase-backed) ──
@@ -2173,6 +2232,34 @@ const server = http.createServer((req, res) => {
   }
 
   // Serve uploaded files for download
+  // In-browser preview for Office docs: convert (cached) to PDF and serve inline.
+  // Falls back to serving the original file inline if conversion is unavailable.
+  if (req.url.startsWith('/viewpdf/') && req.method === 'GET') {
+    const fileName = decodeURIComponent(req.url.replace('/viewpdf/', '').split('?')[0]);
+    const filePath = path.join(UPLOADS_DIR, fileName);
+    if (!filePath.startsWith(UPLOADS_DIR) || fileName.includes('..') || fileName.startsWith('_')) {
+      res.writeHead(403); res.end('Forbidden'); return;
+    }
+    if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
+      res.writeHead(404); res.end('Not Found'); return;
+    }
+    const meta = loadUploadsMeta().find(m => m.stored_name === fileName);
+    const origBase = (meta ? meta.filename : fileName).replace(/\.[^.]+$/, '');
+    const pdfPath = ensurePdfRendition(fileName);
+    if (pdfPath) {
+      res.writeHead(200, {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `inline; filename="${origBase}.pdf"`,
+      });
+      res.end(fs.readFileSync(pdfPath));
+    } else {
+      // Conversion not possible — serve original inline as a fallback.
+      res.writeHead(200, { 'Content-Type': 'application/octet-stream', 'Content-Disposition': `inline; filename="${fileName}"` });
+      res.end(fs.readFileSync(filePath));
+    }
+    return;
+  }
+
   if (req.url.startsWith('/uploads/') && req.method === 'GET') {
     const fileName = decodeURIComponent(req.url.replace('/uploads/', ''));
     const filePath = path.join(UPLOADS_DIR, fileName);
@@ -2333,7 +2420,10 @@ const server = http.createServer((req, res) => {
         return (me && assignee === me) || (approverEmail && approverEmail === me);
       });
     }
-    if (status !== 'all') arr = arr.filter(d => (d.status || 'open') === status);
+    // Normalize actionable-status synonyms: agent-written decisions sometimes use 'pending'
+    // instead of the canonical 'open'; treat them as open so they can never hide from the board.
+    const normStatus = s => { s = (s || 'open'); return s === 'pending' ? 'open' : s; };
+    if (status !== 'all') arr = arr.filter(d => normStatus(d.status) === status);
     // Rank by composite score: opportunity value + deadline are the primary drivers.
     // Answered items keep recency order (most recently answered first); open items rank by score.
     if (status === 'answered') {
@@ -2392,6 +2482,122 @@ const server = http.createServer((req, res) => {
         res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ updated })); return;
       } catch (e) { res.writeHead(400); res.end(JSON.stringify({ error: e.message })); }
     }); return;
+  }
+
+  // Update an opportunity from the detail/edit panel (session-gated). Persists to
+  // opportunity-overrides.json (survives the markdown->json regeneration) AND patches the live
+  // opportunities.json so the edit reflects immediately without waiting for the generator.
+  if (req.url === '/api/opportunities/update' && req.method === 'POST') {
+    const session = getSession(req);
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const p = JSON.parse(body || '{}');
+        const id = (p.id || '').toString();
+        if (!id) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'missing id' })); return; }
+        const ALLOWED = ['status', 'value', 'due', 'next_action', 'priority', 'type', 'description', 'title', 'closed', 'closed_reason', 'closed_at'];
+        const fields = {};
+        for (const k of ALLOWED) {
+          if (p.fields && p.fields[k] !== undefined) fields[k] = (k === 'priority') ? Number(p.fields[k]) || 0 : p.fields[k];
+        }
+        // Optional: closing as Failed DD also flags the party in the shared Failed-DD blocklist
+        // so any future inbound from them is recognized as a known do-not-engage across Exos.
+        if (p.failed_dd && p.failed_dd_firm) {
+          try {
+            const args = ['scripts/failed_dd.py', 'add', '--firm', String(p.failed_dd_firm),
+              '--reason', String(p.failed_dd_reason || 'Failed DD (closed from Mission Control)'),
+              '--source', 'mc-opportunity-close'];
+            for (const e of (Array.isArray(p.failed_dd_emails) ? p.failed_dd_emails : [])) { if (e) args.push('--email', String(e)); }
+            for (const d of (Array.isArray(p.failed_dd_domains) ? p.failed_dd_domains : [])) { if (d) args.push('--domain', String(d)); }
+            execFileSync('python3', args, { cwd: path.join(__dirname, '..'), timeout: 20000 });
+          } catch (e) { /* registry add best-effort; the close still proceeds */ }
+        }
+        if (!Object.keys(fields).length) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'no fields' })); return; }
+        // 1) merge into the overrides file
+        const ovPath = path.join(__dirname, 'data', 'opportunity-overrides.json');
+        let ov = {}; try { ov = JSON.parse(fs.readFileSync(ovPath, 'utf-8')); } catch {}
+        ov[id] = Object.assign({}, ov[id] || {}, fields, { _updated: new Date().toISOString(), _by: (session.email || '') });
+        fs.mkdirSync(path.dirname(ovPath), { recursive: true });
+        fs.writeFileSync(ovPath, JSON.stringify(ov, null, 2));
+        // 2) patch live opportunities.json for instant reflect
+        try {
+          const oppPath = path.join(__dirname, 'data', 'opportunities.json');
+          const oj = JSON.parse(fs.readFileSync(oppPath, 'utf-8'));
+          const arr = Array.isArray(oj) ? oj : (oj.opportunities || []);
+          const it = arr.find(o => o.id === id);
+          if (it) { Object.assign(it, fields); fs.writeFileSync(oppPath, JSON.stringify(oj, null, 2)); }
+        } catch {}
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, id, fields }));
+      } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+    }); return;
+  }
+
+  // Update a Series A CRM firm from the detail/edit panel (session-gated). Persists to
+  // crm-overrides.json (keyed by firm, survives regeneration) AND patches live crm.json.
+  if (req.url === '/api/crm/update' && req.method === 'POST') {
+    const session = getSession(req);
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const p = JSON.parse(body || '{}');
+        const firm = (p.firm || '').toString();
+        if (!firm) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'missing firm' })); return; }
+        const ALLOWED = ['stage', 'next_action', 'last_touched', 'notes', 'tier'];
+        const fields = {};
+        for (const k of ALLOWED) { if (p.fields && p.fields[k] !== undefined) fields[k] = p.fields[k]; }
+        if (!Object.keys(fields).length) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'no fields' })); return; }
+        const ovPath = path.join(__dirname, 'data', 'crm-overrides.json');
+        let ov = {}; try { ov = JSON.parse(fs.readFileSync(ovPath, 'utf-8')); } catch {}
+        ov[firm] = Object.assign({}, ov[firm] || {}, fields, { _updated: new Date().toISOString(), _by: (session.email || '') });
+        fs.mkdirSync(path.dirname(ovPath), { recursive: true });
+        fs.writeFileSync(ovPath, JSON.stringify(ov, null, 2));
+        try {
+          const crmPath = path.join(__dirname, 'data', 'crm.json');
+          const cj = JSON.parse(fs.readFileSync(crmPath, 'utf-8'));
+          const arr = cj.contacts || [];
+          const it = arr.find(c => c.firm === firm);
+          if (it) { Object.assign(it, fields); fs.writeFileSync(crmPath, JSON.stringify(cj, null, 2)); }
+        } catch {}
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, firm, fields }));
+      } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+    }); return;
+  }
+
+  // In-MC chat with Exobot (session-gated). Runs a synchronous agent turn via the OpenClaw
+  // gateway, in a per-user chat session (agent:main:mcchat-<email>), and returns the reply.
+  // Each logged-in user gets their own persistent Exobot thread — no email round-trip.
+  if (req.url === '/api/chat' && req.method === 'POST') {
+    const session = getSession(req);
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      let msg = '';
+      try { msg = (JSON.parse(body || '{}').message || '').toString().trim(); } catch {}
+      if (!msg) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'empty message' })); return; }
+      if (msg.length > 4000) msg = msg.slice(0, 4000);
+      const slug = (session.email || 'anon').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+      const skey = 'agent:main:mcchat-' + slug;
+      // Tag the message with who's asking so Exobot has the user context.
+      const tagged = `[Mission Control chat · ${session.email || 'user'}] ${msg}`;
+      const { execFile } = require('child_process');
+      // openclaw is a `#!/usr/bin/env node` script and REQUIRES a compliant node (>=22.22.3 <23
+      // or >=24.15). The server itself runs on node 24.14.0 (too old for openclaw), so prepend a
+      // compliant node (homebrew v22.23.2) to PATH or the agent call fails silently (no JSON).
+      const NODE_BIN = '/opt/homebrew/bin';
+      const childEnv = { ...process.env, PATH: NODE_BIN + ':' + (process.env.PATH || '/usr/bin:/bin') };
+      execFile(OPENCLAW_BIN, ['agent', '--session-key', skey, '-m', tagged, '--json', '--timeout', '150'],
+        { timeout: 165000, maxBuffer: 16 * 1024 * 1024, env: childEnv }, (err, stdout) => {
+          let reply = '';
+          try {
+            const j = JSON.parse(stdout);
+            reply = (j.result && Array.isArray(j.result.payloads) ? j.result.payloads.map(p => p && p.text).filter(Boolean).join('\n') : '')
+              || (j.result && j.result.meta && j.result.meta.finalAssistantVisibleText) || '';
+          } catch {}
+          if (!reply) reply = err ? 'Exobot timed out or errored on that one — try again or use the email lane.' : 'No reply.';
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ reply, session: skey }));
+        });
+    });
+    return;
   }
 
   // Submittal deadlines: parsed + sorted deadlines for all live submittal opportunities.

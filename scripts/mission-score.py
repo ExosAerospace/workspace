@@ -88,6 +88,19 @@ def supa_get(path):
             time.sleep(2)
 
 
+def supa_get_all(select_path):
+    """Paginated fetch — PostgREST caps every response at 1000 rows regardless of limit=, so page
+    with offset until a short page. Without this the scorer only sees the first 1000 tasks and
+    everything beyond (higher ids) goes unscored. select_path must NOT include limit/offset."""
+    out, off = [], 0
+    while True:
+        page = supa_get(f"{select_path}&order=id&limit=1000&offset={off}")
+        out += page
+        if len(page) < 1000:
+            return out
+        off += 1000
+
+
 def parse_dollars(text):
     best = 0
     for m in DOLLAR.finditer(text or ""):
@@ -165,9 +178,11 @@ def aging_score(days, state):
 
 
 def main():
-    tasks = [t for t in supa_get("tasks?select=id,title,description,state,priority,due_date,owner,"
-                                 "assigned_email,source,tags,category,updated_at&limit=5000")
-             if t.get("source") != "mc-board-legacy"]
+    # Score EVERY task (Jon 2026-07-29: "all tasks have some kind of score"). Legacy-lane items
+    # (source=mc-board-legacy) are hidden from the main board but several are real strategic work,
+    # so they get scored too — the score is a shadow side-store, harmless where the task isn't shown.
+    tasks = supa_get_all("tasks?select=id,title,description,state,priority,due_date,owner,"
+                         "assigned_email,source,tags,category,updated_at")
     # open decisions → blocker map (match relatedItem or an id reference to the task)
     dec = json.load(open(DEC_FILE)) if os.path.exists(DEC_FILE) else []
     dec = dec if isinstance(dec, list) else dec.get("decisions", [])

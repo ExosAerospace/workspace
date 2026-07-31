@@ -51,7 +51,7 @@ def supa_get(path):
 
 def alert(text):
     env = dict(os.environ)
-    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.14.0/bin:"
+    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.15.0/bin:"
                    "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin")
     try:
         subprocess.run([OPENCLAW, "message", "send", "--channel", "discord", "--target", JON, "-m", text],

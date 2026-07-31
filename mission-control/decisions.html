@@ -82,7 +82,7 @@
     <div class="sub">Everything Exo is waiting on you for, in one place. Answer, then hit submit.</div>
   </div>
   <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-    <input id="decSearch" type="text" placeholder="🔍 Search decisions (task, title, keyword…)" oninput="searchQuery=this.value;render()" style="background:#0a1830;border:1px solid #2a3f63;border-radius:8px;color:#e8edf5;padding:7px 12px;font-size:13px;outline:none;min-width:230px">
+    <input id="decSearch" type="text" placeholder="🔍 Search all decisions — open + answered (id, task, title, keyword…)" oninput="searchQuery=this.value;render()" style="background:#0a1830;border:1px solid #2a3f63;border-radius:8px;color:#e8edf5;padding:7px 12px;font-size:13px;outline:none;min-width:230px">
     <div class="tabs">
       <button class="tab active" data-tab="open" onclick="setTab('open')">Open</button>
       <button class="tab" data-tab="answered" onclick="setTab('answered')">Answered</button>
@@ -121,19 +121,32 @@ async function uploadDoc(id,input){
   const r=await fetch('/api/uploads',{method:'POST',credentials:'same-origin',body:fd});
   if(r.ok){toast('Attached '+input.files[0].name);load();} else {toast('Upload failed');}
 }
-function setTab(t){tab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));load();}
+function setTab(t){tab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));render();}
 async function load(){
-  const r=await fetch('/api/decisions?status='+tab,{credentials:'same-origin'});
+  // Load every status once so tab switches and (critically) ID/keyword search work across
+  // open AND answered — a tracking id must stay findable after the decision is answered.
+  const r=await fetch('/api/decisions?status=all',{credentials:'same-origin'});
   if(r.status===401||r.status===302){document.getElementById('list').innerHTML='<div class="empty">Please <a href="/login" style="color:var(--accent)">log in</a> to view decisions.</div>';return;}
-  data=await r.json(); picks={}; render();
+  data=await r.json(); picks={};
+  // Deep-link: decisions.html?focus=D-110 pre-fills the search so a jumped-to id lands filtered.
+  const focus=new URLSearchParams(location.search).get('focus');
+  if(focus){searchQuery=focus;const sb=document.getElementById('decSearch');if(sb)sb.value=focus;}
+  render();
 }
 function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 function render(){
   const el=document.getElementById('list');
   const q=(searchQuery||'').trim().toLowerCase();
-  let rows=data;
-  if(q) rows=rows.filter(d=>[d.title,d.question,d.context,d.relatedItem,d.id,d.source,d.proposedAction]
-    .some(x=>String(x||'').toLowerCase().includes(q)));
+  // A search spans EVERY status (so a tracking id stays findable after it's answered);
+  // with no query, show only the current tab (open = actionable, answered = answered).
+  let rows;
+  if(q){
+    rows=data.filter(d=>[d.title,d.question,d.context,d.relatedItem,d.id,d.source,d.proposedAction]
+      .some(x=>String(x||'').toLowerCase().includes(q)));
+  } else {
+    rows=data.filter(d=> tab==='answered' ? d.status==='answered'
+      : (d.status!=='answered' && d.status!=='cancelled' && d.status!=='superseded'));
+  }
   if(!rows.length){el.innerHTML='<div class="empty">'+(q?('No decisions match "'+esc(searchQuery)+'".'):(tab==='open'?'🎉 Nothing waiting on you. Inbox zero.':'No answered items yet.'))+'</div>';document.getElementById('bar').style.display='none';return;}
   const prio={high:0,med:1,low:2};
   const sorted=[...rows].sort((a,b)=>((prio[a.priority]??1)-(prio[b.priority]??1))||(new Date(b.created||0)-new Date(a.created||0)));
@@ -181,7 +194,8 @@ function noteChange(id,v){picks[id]=picks[id]||{};picks[id].note=v;updateCount()
 function answeredCount(){return Object.keys(picks).filter(id=>(picks[id].answer!==undefined&&picks[id].answer!=='')||(picks[id].note&&picks[id].note.trim())).length;}
 function updateCount(){
   const n=answeredCount();
-  document.getElementById('count').textContent=n+' answered · '+data.length+' open';
+  const openCount=data.filter(d=>d.status!=='answered'&&d.status!=='cancelled'&&d.status!=='superseded').length;
+  document.getElementById('count').textContent=n+' answered · '+openCount+' open';
   document.getElementById('submit').disabled=n===0;
 }
 async function submitAll(){

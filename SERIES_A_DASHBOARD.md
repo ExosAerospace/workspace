@@ -52,7 +52,7 @@
 | **J2 Ventures** | 11/11/2025 | ~140 days | HIGH | Requested deck. Adam Briley. Follow up now. |
 | **Enlightenment Capital** | 1/14/2026 | ~76 days | HIGH | Asked for one-pager. Send + follow up. |
 | **Hale Capital** | 1/9/2026 | ~81 days | HIGH | Toby Albright referral. Use warm intro now. |
-| **Cerberus Capital** | 1/14/2026 | ~76 days | HIGH | Follow up Dan Quayle / Frank Bruno. Scorpius angle only. |
+| **Cerberus Capital** | 1/14/2026 | ~76 days | HIGH | Follow up Frank Bruno (+ Kent). ❌ NOT Dan Quayle (hard exclude, 6/26). Scorpius angle only. |
 | **8VC** | 11/24/2025 | ~127 days | MED | Trae Stephens defense angle. Very overdue. |
 | **Razor's Edge Ventures** | 12/5/2025 | ~116 days | MED | Defense VC. Past follow-up date. |
 | **America's Frontier Fund** | 9/22/2025 | ~190 days | MED | Gilman Louie. National security dual-use. Re-engage. |

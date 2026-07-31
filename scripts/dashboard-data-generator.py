@@ -925,6 +925,27 @@ def main():
     else:
         print("[prune] dropped 0 past-due opportunities: ")
 
+    # Apply manual UI edits (opportunity-overrides.json, written by the detail/edit panel) so
+    # they survive this markdown->json regeneration instead of being clobbered every run.
+    try:
+        ov_path = os.path.join(DATA_DIR, 'opportunity-overrides.json')
+        if os.path.exists(ov_path):
+            with open(ov_path) as _f:
+                ov = json.load(_f)
+            applied = 0
+            for o in opportunities:
+                patch = ov.get(o.get('id'))
+                if not patch:
+                    continue
+                for k, v in patch.items():
+                    if not k.startswith('_'):
+                        o[k] = v
+                applied += 1
+            if applied:
+                print(f'  [overrides] applied manual edits to {applied} opportunities')
+    except Exception as _e:
+        print('  [overrides] skipped:', _e)
+
     opps_out = {
         'generated_at': NOW_ISO,
         'generated_display': NOW_DISPLAY,
@@ -972,6 +993,57 @@ def main():
         print('  [crm] Supabase fetch failed, falling back to md:', _e)
         contacts = parse_crm(read_file(CRM_MD))
         crm_source = 'SERIES_A_SCORED_CRM.md (fallback)'
+
+    # Apply manual worklist edits (crm-overrides.json, written by the Series A detail panel):
+    # next_action / last_touched / stage / tier / notes, keyed by firm. Survives regeneration.
+    try:
+        _ovp = os.path.join(DATA_DIR, 'crm-overrides.json')
+        if os.path.exists(_ovp):
+            with open(_ovp) as _f:
+                _cov = json.load(_f)
+            for c in contacts:
+                patch = _cov.get(c.get('firm'))
+                if not patch:
+                    continue
+                for k, v in patch.items():
+                    if not k.startswith('_'):
+                        c[k] = v
+                if c.get('tier') == 'Tier 1':
+                    c['is_high_priority'] = True
+    except Exception as _e:
+        print('  [crm] overrides skipped:', _e)
+
+    # Real priority score so the Series A tab ranks top-to-bottom (0-100). Weights: tier base,
+    # high-priority flag, penalties for bounced/stale, and follow-up urgency from last_touched
+    # (overdue ranks UP so it surfaces; freshly touched ranks down; never-touched gets a nudge).
+    from datetime import date as _date
+    _today = _date.today()
+    _TIER_BASE = {'Tier 1': 60, 'Tier 2': 40, 'Tier 3': 20, 'New Target': 30, 'A': 50, 'Not a Fit': 0}
+    def _crm_score(c):
+        s = _TIER_BASE.get(c.get('tier'), 10)
+        if c.get('is_high_priority'):
+            s += 15
+        fl = [str(f).upper() for f in (c.get('flags') or [])]
+        if 'BOUNCED' in fl or c.get('bounced'):
+            s -= 40
+        if 'STALE' in fl or c.get('stale'):
+            s -= 10
+        lt = c.get('last_touched')
+        if lt:
+            try:
+                d = (_today - _date.fromisoformat(str(lt)[:10])).days
+                s += 15 if d >= 14 else 8 if d >= 7 else -5
+            except Exception:
+                pass
+        else:
+            s += 5  # never touched — needs a first contact
+        return max(0, min(100, s))
+    for c in contacts:
+        c['score'] = _crm_score(c)
+        c.setdefault('next_action', '')
+        c.setdefault('last_touched', '')
+    contacts.sort(key=lambda x: (-x.get('score', 0), _TIER_ORDER.get(x['tier'], 5)))
+
     high_priority = [c for c in contacts if c.get('is_high_priority')]
     crm_out = {
         'generated_at': NOW_ISO,

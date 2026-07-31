@@ -90,8 +90,9 @@ def main():
 
     keep, sched = [], []
     for t in opn:
-        dd = d10(t.get("due_date"))
-        if dd and str(win_start) <= dd <= str(win_end):
+        # NEVER overwrite an existing due date — a date already set (by a person or a prior
+        # deadline) is intentional and must be preserved. Only tasks with NO due date get one.
+        if d10(t.get("due_date")):
             keep.append(t)
         else:
             sched.append(t)

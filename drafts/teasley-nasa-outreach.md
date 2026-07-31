@@ -1,57 +1,50 @@
 # Draft: Thomas Teasley (NASA MSFC) Outreach Email
-_Status: DRAFT — Ready to send_
-_Created: 2026-03-25_
+_Status: DRAFT, Ready to send — v7, rewritten 2026-06-30: corrected current USAF engine = PRESSURE-FED RDRE; opened scoping (no firm $/options); ask "what serves NASA best" within what Tom can legally comment on._
+_Created: 2026-03-25 | Last revised: 2026-06-30_
 
 ---
 
 **To:** thomas.teasley@nasa.gov
-**Subject:** Exos Aerospace — RDRE Development Under NASA DUA / HVRR Program Alignment
+**Cc:** (optional) ramon.j.osorio@nasa.gov
+**Subject:** Exos BLK3 as a reusable flight demonstrator for NASA's RDRE transition to industry
 
 ---
 
-Thomas,
+Hello Thomas,
 
-I'm John Quinn, Cofounder and CEO of Exos Aerospace Systems & Technologies. We've been working under a NASA Data Usage Agreement utilizing RDRE technical data from Marshall Space Flight Center — and your recent AAS paper on NASA's RDRE development roadmap has been directly informative to our work.
+I'm John Quinn, Cofounder and CEO of Exos Aerospace Systems & Technologies. We've followed NASA Marshall's RDRE work closely, including your December pump-fed thrust-chamber test, and your AAS paper on the RDRE development roadmap has been directly informative to our planning.
 
-I'm reaching out because I believe there's a meaningful opportunity to tighten the connection between what Exos is building and where the NASA RDRE program is heading, and I'd like to explore that with you directly.
+NASA's published InRoDES roadmap calls for a vacuum test followed by transfer of the technology to industry. I'm writing because Exos may be a strong fit for the flight side of that transition: a reusable suborbital platform that can fly a NASA RDRE above the Kármán line and bring the hardware back for inspection and reflight.
 
-**Where Exos is today:**
+Where Exos sits today:
 
-- We hold an active FAA launch license (§431, transitioning to Part 450) on our **BLK3** reusable suborbital launch vehicle — 135 kg to 100 km altitude
-- We are one of three U.S.-licensed reusable suborbital RLV operators
-- We have an active **USAF contract to build a High Velocity Research Rocket (HVRR) test vehicle** intended to fly a small RDRE
-- We are developing our own RDRE using NASA technical data received under the Data Usage Agreement you issued, as our design foundation
-- Our pathfinder commercial flight is planned for Q1–Q2 2027
+- We hold an active FAA launch license on our BLK3 reusable suborbital vehicle, 135 kg to 100 km, and we are one of only three U.S.-licensed reusable suborbital launch operators.
+- Under USAF AFRL contract FA9300-25-C-6022 we are currently flight-qualifying a pressure-fed RDRE on the vehicle. That contract also gives NASA a clean sole-source SBIR Phase III nexus for follow-on RDRE flight work.
+- Our role is the flight-test platform and vehicle integrator. We fly the engine; we do not develop the RDRE combustor, that is NASA's, and our intent is to fly it, not duplicate it.
+- Our pathfinder BLK3 campaign is manifested for July 2027, which is a window we could hold for an integrated engine demonstration.
 
-**Why I'm reaching out now:**
+I want to be candid that we do not yet have enough detail on NASA's 10,000 lbf pump-fed engine or its pumps to put a firm scope or price on the table, and I would rather shape this around what serves NASA best than propose something prematurely. We can structure a flight demonstration to fit whatever funding mechanism and content NASA is able to support.
 
-We have an active GFE RDRE risk on the HVRR program — the government-furnished engine delivery timeline is uncertain, and we're exploring options to develop an alternative RDRE using the NASA technical baseline data from the DUA. We want to ensure we're doing this in full coordination with NASA and in a way that benefits both programs.
+To the extent you are able to comment, I would value your read on a few things:
 
-I have three specific questions I'd welcome your input on:
+1. As InRoDES moves toward the vacuum test and transfer to industry, is there a useful role for a reusable, recover-and-refly flight demonstrator?
+2. What flight-demonstration shape would be most valuable to NASA, and which funding mechanism might it fit, the Game Changing Development line, the turbomachinery-integration TDM, or Flight Opportunities, and who would the contracting point of contact be?
+3. What furnishing or licensing path would NASA prefer for the engine and pumps, GFE, a tech-transfer license, or both, and what could we learn about the system to scope a demonstration accurately?
 
-1. **TechPort** — Is Exos's RDRE development program currently listed in NASA TechPort as an industry partner? If not, how do we get it added?
+As best we can tell, the only RDRE flight demonstration currently announced for 2026 flies a different company's engine on an orbital testbed, so NASA's own engine does not yet have a reusable flight path.
 
-2. **DUA scope** — Is there scope within the current DUA (or a modification to it) to provide additional NASA technical support for our RDRE development, particularly as we work toward an HVRR flight demonstration?
+On timing, our BLK3 pathfinder campaign is manifested for July 2027. Holding that window for an integrated demonstration would mean beginning to shape scope over the next couple of months, ideally while NASA's FY27 planning is still open. There is no deadline on our side, and we are glad to move at NASA's pace, but the earlier we can align, the more options we both keep.
 
-3. **Flight demo alignment** — As the INRODES TDM project progresses toward a turbopump-integrated 10,000 lbf system, is there a role for Exos's BLK3 as the flight demonstration platform? We'd welcome a conversation about how our iterative flight cadence (multiple flights per quarter) could serve NASA's flight demo objectives.
+As a next step, could we set up a brief scoping call, perhaps thirty minutes in the next two to three weeks? I would bring our lead engineer, Phil Eaton, who has corresponded with your team on engine specifications. Anything you are able to share in advance on the 10,000 lbf engine and its pumps would help us arrive with a realistic flight-demonstration concept and the right funding fit. I can work around your calendar, and if it is easier to meet in person, we expect to be at the Joint HELIOTECH and Suborbital Research Symposium at APL, August 31 to September 4.
 
-I'd welcome a call at your convenience. We're moving quickly on the HVRR program and would value your guidance on how to best leverage the NASA partnership we have in place.
+Best regards,
 
-Best Regards,
-
-**John Quinn**
-Cofounder and CEO
-Exos Aerospace Systems & Technologies, Inc.
-+1-972-740-8355
-299 FM 1903, Greenville, TX 75402
-www.exosaero.com
+John Quinn
 
 ---
 
-**NOTES:**
-- Thomas Teasley: Liquid Propulsion Systems Development Engineer, Engine Component Development and Technology Branch, NASA MSFC
-- Standard NASA email format: thomas.teasley@nasa.gov (confirm before sending)
-- Recommend sending this AFTER the USAF GFE letter is filed — establishes Exos is actively pursuing solutions
-- CC Ramon Osorio (ramon.j.osorio@nasa.gov) as media/comms POC if appropriate
-- This email positions the conversation as peer-to-peer technical, not a vendor pitch
-
+**NOTES (internal, not part of email):**
+- v7 corrections (Jon 6/30): (a) current USAF FA9300 engine = **pressure-fed RDRE**, NOT pump-fed — do not conflate with NASA's pump-fed 10K InRoDES engine; (b) removed the firm $2.5M ROM + Option A/B prescription — we don't know the 10K engine/pumps well enough to price; (c) reframed to open "what serves NASA best," with "to the extent you are able to comment" to respect Tom's procurement-sensitivity limits.
+- Exos role stays compliant with no-overstate-RDRE: flight-test platform + integrator; NASA owns the combustor; we fly it, not develop it. Pump electric-drive is NO LONGER asserted as committed scope.
+- HOLD the prescriptive white paper ($2.5M / two-option) — inconsistent with open scoping. Offer a non-prescriptive capability brief instead if Jon wants an attachment.
+- Confirm Tom's address (thomas.teasley@nasa.gov standard NASA format) before send. Osorio cc optional. Gov contact routes through Jon.

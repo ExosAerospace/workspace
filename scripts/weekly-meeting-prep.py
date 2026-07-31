@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+"""
+WEEKLY TEAM MEETING prep — builds the agenda for the Tuesday 10:00 weekly sync (Steve, Phil, John,
+Lizi) and delivers it the day before (Monday). SKIPS the week of the monthly Work Management Meeting
+(the last Tuesday) — that week the monthly runs instead. Deterministic; launchd Mondays 15:00.
+
+Run:  python3 scripts/weekly-meeting-prep.py            # gated (only the day before a weekly Tue)
+      python3 scripts/weekly-meeting-prep.py --force    # test now
+"""
+import os, sys, json, datetime, urllib.request, subprocess
+
+WS = os.path.expanduser("~/.openclaw/workspace")
+K = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+H = {"apikey": K, "Authorization": "Bearer " + K}
+SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
+OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+JON = "1501632195163590739"
+FORCE = "--force" in sys.argv
+ATTENDEES = [("Steve Norsworthy", "snorsworthy@exosaero.com"), ("Phil Eaton", "peaton@exosaero.com"),
+             ("John Quinn", "jquinn@exosaero.com"), ("Lizi Quinn", "lquinn@exosaero.com")]
+
+
+def is_last_tuesday(d):
+    return d.weekday() == 1 and (d + datetime.timedelta(days=7)).month != d.month
+
+
+def is_weekly_prep_day(d):
+    nxt = d + datetime.timedelta(days=1)
+    return nxt.weekday() == 1 and not is_last_tuesday(nxt)   # Monday, and tomorrow's Tue isn't the monthly
+
+
+def page(path):
+    out, off = [], 0
+    while True:
+        r = urllib.request.Request(f"{SB}{path}&limit=1000&offset={off}", headers=H)
+        pg = json.load(urllib.request.urlopen(r, timeout=30))
+        out += pg
+        if len(pg) < 1000:
+            return out
+        off += 1000
+
+
+def build_agenda(meeting_day):
+    tasks = [t for t in page("tasks?select=id,title,due_date,state,owner,assigned_email,priority,category&order=id")
+             if (t.get("state") or "").lower() != "done" and t.get("source") != "mc-board-legacy"]
+    today = datetime.date.today()
+    soon = today + datetime.timedelta(days=10)
+    lines = [f"Exos Weekly Team Meeting — {meeting_day:%A, %b %d} 10:00 CT",
+             "Attendees: Steve, Phil, John, Lizi\n"]
+    for name, email in ATTENDEES:
+        mine = [t for t in tasks if (t.get("assigned_email") or "").lower() == email
+                or (t.get("owner") or "").lower() in (name.lower(), name.split()[0].lower())]
+        def due(t):
+            try: return datetime.date.fromisoformat((t.get("due_date") or "")[:10])
+            except Exception: return None
+        hot = [t for t in mine if (due(t) and due(t) <= soon) or (t.get("priority") or 0) >= 80]
+        hot.sort(key=lambda t: (due(t) or datetime.date(2099, 1, 1)))
+        lines.append(f"— {name}: {len(mine)} open ({len(hot)} due-soon/high)")
+        for t in hot[:5]:
+            d = due(t)
+            flag = " ⚠️overdue" if d and d < today else (f" (due {d:%b %d})" if d else "")
+            lines.append(f"    • #{t['id']} {(t.get('title') or '')[:60]}{flag}")
+    # project pulse
+    proj = {}
+    for t in tasks:
+        c = t.get("category") or ""
+        if c in ("BLK3 to Flight", "HVRR-RDRE"):
+            proj[c] = proj.get(c, 0) + 1
+    if proj:
+        lines.append("\nProjects: " + " · ".join(f"{k} ({v} open)" for k, v in proj.items()))
+    try:
+        dec = json.load(open(os.path.join(WS, "mission-control", "data", "decisions.json")))
+        dec = dec if isinstance(dec, list) else dec.get("decisions", [])
+        opend = [d for d in dec if (d.get("status") or "open") == "open"]
+        lines.append(f"Open decisions needing answers: {len(opend)}")
+    except Exception:
+        pass
+    return "\n".join(lines)
+
+
+def main():
+    today = datetime.date.today()
+    if not (FORCE or is_weekly_prep_day(today)):
+        print(f"{today} is not the day before a weekly Tuesday (or it's the monthly week) — skipping."); return
+    meeting_day = today + datetime.timedelta(days=1)
+    agenda = build_agenda(meeting_day)
+    # email to Jon (organizer) the day before
+    body = f"Hello Jon,\n\nTomorrow ({meeting_day:%A, %b %d}) is the weekly team meeting (10:00 CT). Draft agenda:\n\n{agenda}\n\nReply with edits and I'll update it.\n\n— Exo"
+    from email.message import EmailMessage
+    m = EmailMessage(); m["From"] = "Exo <jquinnexo@pm.me>"; m["To"] = "jquinn@exosaero.com"
+    m["Subject"] = f"Tomorrow: Weekly Team Meeting agenda ({meeting_day:%b %d})"; m.set_content(body)
+    try:
+        subprocess.run(["/opt/homebrew/bin/msmtp", "-a", "protonmail", "jquinn@exosaero.com"],
+                       input=m.as_bytes(), check=True, timeout=60)
+    except Exception as e:
+        print("email failed:", e)
+    try:
+        subprocess.run([OPENCLAW, "message", "send", "--channel", "discord", "--target", JON, "-m",
+                        f"📅 **Weekly Team Meeting — tomorrow ({meeting_day:%a %b %d}) 10:00 CT**\nAgenda emailed. Steve · Phil · John · Lizi."],
+                       timeout=60, capture_output=True)
+    except Exception:
+        pass
+    print(f"weekly agenda prepped for {meeting_day}.")
+    if FORCE:
+        print("\n" + agenda)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,81 @@
+{
+  "updated": "2026-07-30",
+  "note": "Shared FAILED-DD blocklist. Any inbound from these entities is recognized as a known do-not-engage bad actor across Exos. Checked by lead-auto-capture (flags instead of creating a lead) and by DD-on-inbound (short-circuits with the known verdict). Add new entries with: python3 scripts/failed_dd.py add.",
+  "entities": [
+    {
+      "firm": "Simple Wealth Fund",
+      "domains": [
+        "simplewealthfund.com"
+      ],
+      "emails": [
+        "joshu@simplewealthfund.com"
+      ],
+      "people": [
+        "Josh Keller"
+      ],
+      "verdict": "do-not-engage",
+      "category": "advance-fee cold-broker solicitation",
+      "reason": "Domain registered 2026-06-09 (Porkbun/parked, no real site); no SEC/FINRA/IAPD registration or web footprint for the firm or the person; vague 'funding options for expansion' one-liner = classic advance-fee bait (setup to extract financials then charge an upfront fee).",
+      "date": "2026-07-24",
+      "source": "DD via @Exobot (Jon inbound)"
+    },
+    {
+      "firm": "GG Ventures / Capstone (Grimes)",
+      "domains": [],
+      "emails": [],
+      "people": [
+        "Grimes"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Prior DD flag on file (Grimes / GG Ventures / Capstone). Domains and emails to be enriched from the original inbound.",
+      "date": "2026-07-24",
+      "source": "prior DD flag"
+    },
+    {
+      "firm": "SMG Capital",
+      "domains": [],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Prior DD flag on file. Domains and emails to be enriched from the original inbound.",
+      "date": "2026-07-24",
+      "source": "prior DD flag"
+    },
+    {
+      "firm": "Novus Global (impersonation)",
+      "domains": [
+        "novusglobal-usa.com"
+      ],
+      "emails": [
+        "arron.chambers@novusglobal-usa.com"
+      ],
+      "people": [
+        "Arron Chambers (name spoofed)"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Fake-invoice/BEC fraud: lookalike domain impersonating real coaching firm Novus Global (real domain novus.global); fabricated forwarded thread pressuring payment of a nonexistent invoice. No Exos relationship.",
+      "date": "2026-07-30",
+      "source": "manual"
+    },
+    {
+      "firm": "Logalty sender (David Mitchell)",
+      "domains": [
+        "logalty.com"
+      ],
+      "emails": [
+        "logalty@logalty.com"
+      ],
+      "people": [
+        "David Mitchell (name/domain mismatch)"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Delivery vector for Novus Global fake-invoice fraud; display name David Mitchell does not match generic logalty@logalty.com mailbox (likely spoofed/abused). Treat as scam relay.",
+      "date": "2026-07-30",
+      "source": "manual"
+    }
+  ]
+}

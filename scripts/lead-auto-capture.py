@@ -21,6 +21,7 @@ from email.utils import getaddresses, parsedate_to_datetime
 from datetime import datetime, timedelta, timezone, date
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import itar_ear_screen as ee
+import failed_dd  # shared do-not-engage / failed-DD registry
 
 WS = "/Users/exomac/.openclaw/workspace"
 SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
@@ -166,6 +167,22 @@ def main():
         if not lead:
             continue
         name, addr, src = lead
+        # FAILED-DD gate: a known do-not-engage bad actor is flagged (recognized), never captured as a live lead.
+        fd = failed_dd.check(email=addr, name=(name or org_from(addr.split("@")[-1])))
+        if fd:
+            if addr not in existing and not dry:
+                screate({"name": (name or addr.split("@")[0]).strip(), "email": addr,
+                         "organization": fd.get("firm") or org_from(addr.split("@")[-1]),
+                         "owner": "Jon", "source": "failed-dd", "stage": "Disqualified",
+                         "status": "failed-dd", "type": "Lead", "tags": ["failed-dd", "do-not-engage"],
+                         "priority_score": 0, "last_contacted": date.today().isoformat(),
+                         "next_action": "DO NOT ENGAGE — known failed DD",
+                         "notes": f"⚠️ KNOWN FAILED DD ({fd.get('firm')}): {fd.get('reason','')} "
+                                  f"[verdict {fd.get('verdict')}, DD {fd.get('date')}]"})
+            existing.add(addr)
+            log(f"FAILED-DD flagged (not a lead): {addr} [{fd.get('firm')}]")
+            print(f"  ⚠ FAILED-DD: {addr} [{fd.get('firm')}] -- flagged do-not-engage")
+            continue
         if addr in existing:
             continue  # already a CRM contact — not a new lead
         try:

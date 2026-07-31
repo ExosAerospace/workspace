@@ -1,0 +1,17 @@
+{
+  "_comment": "Priority inbox watcher config. Any new INBOX email matching a domain/sender substring OR carrying the subject tag triggers a Discord DM to Jon + a logged hit. Edit freely; matching is case-insensitive substring.",
+  "subject_tag": "[EXO]",
+  "watch_domains": [
+    "cerberus.com",
+    "cerberusoperations.com",
+    "us.af.mil",
+    "nasa.gov",
+    "senate.texas.gov",
+    "state.gov"
+  ],
+  "watch_senders": [
+    "klietzau",
+    "fbruno@cerberus.com"
+  ],
+  "dm_target": "user:1501632195163590739"
+}

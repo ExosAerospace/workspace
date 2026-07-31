@@ -1,0 +1,153 @@
+{
+  "generated": "2026-07-24",
+  "source": "Capability surveys submitted by email to the intake, 2026-07-20/21",
+  "scale": "1-5 (5=expert/lead it, 1=none); ranges reduced to midpoint, 0=left blank",
+  "domains": [
+    "propulsion",
+    "structures_tanks",
+    "avionics_gnc",
+    "flight_software",
+    "test_integration_launchops",
+    "manufacturing_supply",
+    "business_development",
+    "proposals_contracts",
+    "finance_accounting",
+    "regulatory_faa_export",
+    "program_management",
+    "investor_relations",
+    "it_automation"
+  ],
+  "members": {
+    "nmilburn@exosaero.com": {
+      "name": "Neil Milburn",
+      "role": "Co-Founder & COO",
+      "status": "complete",
+      "ratings": {
+        "propulsion": 0,
+        "structures_tanks": 2,
+        "avionics_gnc": 2,
+        "flight_software": 2,
+        "test_integration_launchops": 5,
+        "manufacturing_supply": 5,
+        "business_development": 5,
+        "proposals_contracts": 5,
+        "finance_accounting": 5,
+        "regulatory_faa_export": 5,
+        "program_management": 5,
+        "investor_relations": 4,
+        "it_automation": 3
+      },
+      "superpowers": [
+        "Technical sales & marketing (50yr, domestic+intl)",
+        "Team building / turnarounds",
+        "Relationship building"
+      ],
+      "special": [
+        "20yr TAOS (launch-licensing tool)",
+        "XSO launch Safety Officer",
+        "Masters in Teaching"
+      ],
+      "capacity_hrs_week": "50-60 (remote)",
+      "handoff_wanted": [
+        "launch licensing",
+        "FAA AST",
+        "XSO safety officer"
+      ],
+      "constraint": "Retiring ~2027-05-25 after BLK3 Q1-2027 launches; wants to TRAIN successors, not take new load. De-prioritize for net-new assignment; route succession/handoff items here."
+    },
+    "snorsworthy@exosaero.com": {
+      "name": "Steve Norsworthy",
+      "role": "Engineering / Test",
+      "status": "complete",
+      "ratings": {
+        "propulsion": 2.5,
+        "structures_tanks": 2.5,
+        "avionics_gnc": 2,
+        "flight_software": 1,
+        "test_integration_launchops": 3.5,
+        "manufacturing_supply": 3,
+        "business_development": 2,
+        "proposals_contracts": 1.5,
+        "finance_accounting": 2,
+        "regulatory_faa_export": 1,
+        "program_management": 2.5,
+        "investor_relations": 3,
+        "it_automation": 1
+      },
+      "superpowers": [
+        "Test operations",
+        "Purchasing",
+        "Customer/vendor relationships",
+        "Harness work",
+        "Buckling down to close things out"
+      ],
+      "capacity_hrs_week": null,
+      "constraint": "Succession to Victor ~Sep/Oct 2026 (per plan). Self-describes as helper, not lead-expert."
+    },
+    "mtalley@exosaero.com": {
+      "name": "Mike Talley",
+      "role": "Machinist / Manufacturing",
+      "status": "complete",
+      "ratings": {
+        "propulsion": 1,
+        "structures_tanks": 3,
+        "avionics_gnc": 1,
+        "flight_software": 1,
+        "test_integration_launchops": 1,
+        "manufacturing_supply": 4,
+        "business_development": 1,
+        "proposals_contracts": 1,
+        "finance_accounting": 1,
+        "regulatory_faa_export": 1,
+        "program_management": 2,
+        "investor_relations": 1,
+        "it_automation": 1
+      },
+      "superpowers": [],
+      "capacity_hrs_week": "3-5 (available for other tasks beyond core)",
+      "constraint": "New hire; strongest in manufacturing (4) and structures/tanks (3)."
+    },
+    "peaton@exosaero.com": {
+      "name": "Phil Eaton",
+      "role": "BLK3 Vehicle Engineering & Flight Test",
+      "status": "pending_ratings",
+      "ratings": {},
+      "domain_by_assignment": "BLK3 vehicle engineering & flight test \u2014 recovery methodology, integration flight test, ~12-mo build, payload vehicle interface",
+      "constraint": "Functional-domain ratings not yet returned ('I will work on it'). Owns BLK3 flight-hardware by assignment; treat as primary for that domain until ratings land."
+    },
+    "lquinn@exosaero.com": {
+      "name": "Lizi Quinn",
+      "role": "Business Development",
+      "status": "complete",
+      "ratings": {
+        "propulsion": 1,
+        "structures_tanks": 1,
+        "avionics_gnc": 1,
+        "flight_software": 1,
+        "test_integration_launchops": 1,
+        "manufacturing_supply": 1,
+        "business_development": 4,
+        "proposals_contracts": 2,
+        "finance_accounting": 2,
+        "regulatory_faa_export": 2,
+        "program_management": 2,
+        "investor_relations": 4,
+        "it_automation": 3
+      },
+      "superpowers": [
+        "Business development (wants to own)",
+        "Investor relations"
+      ],
+      "constraint": "Strong on BD (4) and investor relations (4); low technical. Owns CRM/social. Wants to grow proposals/finance/regulatory."
+    }
+  },
+  "missing_surveys": [
+    "rblink@exosaero.com",
+    "kballard@exosaero.com"
+  ],
+  "issues_surfaced": [
+    "Phil Eaton reports copying exosmc@proton.me does NOT create tasks/updates in Mission Control (tested 24h, nothing appeared) \u2014 email->task capture broken for him.",
+    "Mike Talley's received survey email was TRUNCATED (Q5 capacity cut off) \u2014 survey-distribution truncation bug."
+  ],
+  "updated": "2026-07-27"
+}

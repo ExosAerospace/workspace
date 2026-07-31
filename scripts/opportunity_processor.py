@@ -420,10 +420,29 @@ def _ingest_decision(payload):
         except Exception: pass
     mc_post("/api/decisions/ingest", payload)
 
+def parse_deadline(text):
+    """Extract a submission deadline from opportunity text (mirrors the inbox-capture fix in
+    mission-control-imap.py) so decision/task cards carry a real due date and surface as
+    overdue instead of rotting silently. Anchored to deadline keywords so we don't grab
+    version/meeting/program dates."""
+    if not text: return None
+    kw  = r'(?:due(?:\s+by)?|deadline|closes?|close date|submission deadline|submit(?:\s+by)?|apply by|response due|proposals?\s+due|noo\s+closes?|white\s*paper\s+due)'
+    mon = r'(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}(?:,?\s*\d{4})?'
+    num = r'\d{1,2}/\d{1,2}(?:/\d{2,4})?'
+    m = (re.search(rf'{kw}[:\s]+({mon})', text, re.I) or re.search(rf'{kw}[:\s]+({num})', text, re.I))
+    if not m: return None
+    try:
+        from dateutil import parser as _dp
+        return _dp.parse(m.group(1)).strftime('%Y-%m-%dT23:59:59Z')
+    except Exception:
+        return None
+
 def route_to_mc(opp, res, draft_path):
     route = (res.get("route") or "TASK").upper()
     rel = opp.get("id","")
     sc = score(opp)
+    # Parse a real submission deadline from the opportunity so downstream cards can go overdue.
+    due = parse_deadline(f"{opp.get('title','')} {opp.get('description','') or ''} {res.get('next_step','') or ''}") or opp.get("due")
     if route == "SEND":
         d = res.get("deliverable") or {}
         _ingest_decision({
@@ -434,7 +453,7 @@ def route_to_mc(opp, res, draft_path):
             "proposedAction": (d.get("body","") or "")[:1200],
             "type": "yesno", "options": ["Send","Edit","Hold"],
             "priority": "high" if res.get("_tier")=="top" else "med",
-            "relatedItem": opp.get("title","")[:120], "source": "Opportunity Engine"})
+            "relatedItem": opp.get("title","")[:120], "source": "Opportunity Engine", "dueDate": due})
     elif route == "DECISION":
         _ingest_decision({
             "dedupeKey": f"opp-dec-{rel}",
@@ -443,7 +462,7 @@ def route_to_mc(opp, res, draft_path):
             "context": res.get("blockers",""), "proposedAction": res.get("next_step",""),
             "type":"yesno","options":["Approve","Reject"],
             "priority":"high" if res.get("_tier")=="top" else "med",
-            "relatedItem": opp.get("title","")[:120], "source":"Opportunity Engine"})
+            "relatedItem": opp.get("title","")[:120], "source":"Opportunity Engine", "dueDate": due})
     elif route == "CLOSE":
         # Execute-path: a low-scoring CLOSE is reversible bookkeeping. File it to the
         # research feed (recoverable) and log it; do NOT consume an inbox decision.
@@ -469,8 +488,9 @@ def route_to_mc(opp, res, draft_path):
     else:  # TASK
         mc_post("/api/research/ingest", {
             "id": f"opp-task-{rel}", "title": f"Action: {opp.get('title')[:120]}",
-            "date": TODAY, "category":"BD Intel","source":"Opportunity Engine",
-            "highlights":[f"**Next step:** {res.get('next_step')}",
+            "date": TODAY, "due": due, "category":"BD Intel","source":"Opportunity Engine",
+            "highlights":[f"**Deadline:** {due or 'none'}",
+                          f"**Next step:** {res.get('next_step')}",
                           f"**Owner:** {res.get('owner')}",
                           f"**Blockers:** {res.get('blockers') or 'none'}"],
             "body": f"{res.get('next_step')}\n\nOwner: {res.get('owner')}\nDraft: {draft_path or 'n/a'}"})

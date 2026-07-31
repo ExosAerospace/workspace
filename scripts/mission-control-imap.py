@@ -32,7 +32,7 @@ import socket
 import urllib.request
 import urllib.parse
 import urllib.error
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 # Prevent IMAP calls from hanging indefinitely
 socket.setdefaulttimeout(30)
@@ -432,6 +432,28 @@ def resolve_display_name(team_email):
         return _DISPLAY_NAME_CACHE[email_l]
     return email_l.split('@')[0].replace('.', ' ').title()
 
+def is_task_worthy(team_email, subject, body):
+    """Gate the intake so we stop auto-creating a task for EVERY sent email (the root of the
+    +300/week task inflation). A sent email becomes a task only when it is a genuine delegation.
+    Skip: self-copies to Jon (captures, already digested), automated/newsletter/notification noise,
+    and bare FYI/forwards with no actual ask. Keep anything with a real request, deadline, or question."""
+    blob = ((subject or '') + ' ' + (body or '')[:1000]).lower().strip()
+    # 1) self-copy to Jon = a capture/forward-to-self, not a delegated task
+    if team_email == 'jquinn@exosaero.com':
+        return False
+    # 2) automated / non-actionable noise
+    NOISE = ('unsubscribe', 'newsletter', 'no-reply', 'noreply', 'out of office', 'automatic reply',
+             'auto-reply', 'read receipt', 'delivery status', 'undeliverable', 'mailer-daemon',
+             '[mission control]', 'calendar invite', 'accepted:', 'declined:', 'do not reply')
+    if any(k in blob for k in NOISE):
+        return False
+    # 3) require SOME actionable signal — a request, deadline, or question; otherwise it's an FYI
+    ASK = ('please', 'can you', 'could you', 'need ', 'needs ', 'review', 'send ', 'draft', 'prepare',
+           'complete', 'provide', 'follow up', 'follow-up', 'action', 'due', 'deadline', 'by ',
+           'let me know', 'confirm', 'update', 'assign', 'handle', 'get me', 'pull ', 'sign', '?')
+    return any(k in blob for k in ASK)
+
+
 def process_outbound_to_team(msg, subject, body):
     """When we send email to @exosaero.com, auto-create/assign a task."""
     recipients = extract_recipients(msg)
@@ -439,9 +461,21 @@ def process_outbound_to_team(msg, subject, body):
     if not team_recipients:
         return
 
+    # (a) Exo's OWN automated status replies (subject "…, Exo update") are outbound from Exo to the
+    # requester, not new delegations. They were looping back through this intake and spawning
+    # duplicate reply-thread cards ("Re: X, Exo update"). Never turn them into tasks.
+    if re.search(r',?\s*exo\s+update\s*$', (subject or ''), flags=re.I):
+        print("  Skipped: Exo's own automated reply (…Exo update) — not a task")
+        return
+
     for team_email in team_recipients:
         team_name = resolve_display_name(team_email)
         print(f"  Outbound to team: {team_email} ({team_name})")
+
+        # INTAKE GATE — only genuine delegations become tasks (kills the every-email-is-a-task flood)
+        if not is_task_worthy(team_email, subject, body):
+            print(f"  Skipped (self-copy / noise / FYI, not task-worthy): {team_email}")
+            continue
 
         # Create a task assigned to this team member
         combined = (subject + ' ' + (body or '')).lower()
@@ -508,18 +542,35 @@ def process_outbound_to_team(msg, subject, body):
         # fuzzy match, scoped to the same assignee (or unassigned) and to OPEN tasks only.
         import difflib, urllib.parse as _up
         def _norm_title(t):
-            t = re.sub(r'^(?:\s*\[[^\]]*\]\s*)+', '', t or '')      # strip leading [..] tags
+            # Peel interleaved reply/forward prefixes, [..] tags, and the notifier prefix so
+            # thread variants of the SAME deliverable normalize to one canonical string.
+            # ("Re: Fw: [Mission Control] Task assigned to you: PD Aerospace ..., Exo update"
+            #  -> "pd aerospace ..."). Without this, every reply/forward spawned a new task.
+            t = t or ''
+            prev = None
+            while prev != t:
+                prev = t
+                t = re.sub(r'^\s*(?:re|fw|fwd)\s*:\s*', '', t, flags=re.I)          # Re:/Fw:/Fwd:
+                t = re.sub(r'^\s*\[[^\]]*\]\s*', '', t)                             # one leading [..] tag
+                t = re.sub(r'^\s*task assigned to you\s*:?\s*', '', t, flags=re.I)  # notifier prefix
+            t = re.sub(r'(?:\s*,?\s*exo update)+\s*$', '', t, flags=re.I)           # trailing thread suffix
             t = re.sub(r'\s+', ' ', t).strip().lower().strip(' .:-—')
             return t
         norm_new = _norm_title(task['title'])
+        # (b) A task closed within this window still blocks a same-owner+title re-ingest — a thread
+        # re-processed days later is a dupe loop, not genuinely new work.
+        _recent_cut = (datetime.now(timezone.utc) - timedelta(days=7)).strftime('%Y-%m-%d')
         already_exists = False
         try:
-            _q = (f"{SUPABASE_URL}/rest/v1/tasks?select=id,title,state,completed_at"
+            _q = (f"{SUPABASE_URL}/rest/v1/tasks?select=id,title,state,completed_at,created_at"
                   f"&or=(assigned_email.eq.{_up.quote(team_email)},assigned_email.is.null)&limit=800")
             _chk = urllib.request.Request(_q, headers={'apikey': SUPABASE_KEY, 'Authorization': f'Bearer {SUPABASE_KEY}'})
             for _e in json.load(urllib.request.urlopen(_chk)):
                 if _e.get('state') == 'Done' or _e.get('completed_at'):
-                    continue                                        # closed tasks don't block new ones
+                    _c = (_e.get('completed_at') or _e.get('created_at') or '')[:10]
+                    if _c < _recent_cut:
+                        continue                                    # old closed task: doesn't block new work
+                    # else: recently closed -> fall through and let it block a re-ingest dupe
                 _ne = _norm_title(_e.get('title'))
                 if _ne and norm_new and (_ne == norm_new or difflib.SequenceMatcher(None, _ne, norm_new).ratio() >= 0.90):
                     already_exists = True
@@ -653,7 +704,17 @@ def check_sent_folder():
 
                 # Skip internal system notification emails — these are generated by
                 # assignment-notifier.py and would create a feedback loop if processed.
-                _is_system_notification = any(subject.startswith(pfx) for pfx in [
+                # Peel leading Re:/Fw:/Fwd: before matching so that FORWARDED or REPLIED
+                # notification emails ("Re: [Mission Control] Task assigned to you: X",
+                # "Fw: Task assigned to you: X") are also recognized as system mail and skipped.
+                # Without this, wrapped notifications slipped through and created nested-prefix
+                # tasks like "[Mission Control] Task assigned to you: [Mission Control] ...".
+                _subj_probe = subject or ''
+                _p = None
+                while _p != _subj_probe:
+                    _p = _subj_probe
+                    _subj_probe = re.sub(r'^\s*(?:re|fw|fwd)\s*:\s*', '', _subj_probe, flags=re.I)
+                _is_system_notification = any(_subj_probe.startswith(pfx) for pfx in [
                     '[Mission Control]', 'Task assigned to you', '[TaskAssign]',
                     '[EXO]', 'HEARTBEAT', '[Cron', '[Nightly',
                 ])

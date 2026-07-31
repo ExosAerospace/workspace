@@ -4,7 +4,7 @@
 - **What to call them:** Jon
 - **Pronouns:** _(not specified)_
 - **Timezone:** America/Chicago (CDT)
-- **Telegram ID:** 5724414696
+- **Discord User ID:** 1501632195163590739
 - **First contact:** 2026-03-25
 
 ## Role & Focus
@@ -33,20 +33,19 @@ Operator and business development lead across two companies:
 
 **Title:** Cofounder and CEO
 **Company:** Exos Aerospace Systems & Technologies, Inc.
+**Email (work):** jquinn@exosaero.com  — EXACT address; NEVER jon.quinn@ / john.quinn@ / j.quinn@. Do not guess a firstname.lastname form.
+**Email (Proton):** jquinnexo@pm.me
 **Mobile:** +1-972-740-8355
 **Address:** 299 FM 1903, Greenville, TX 75402
 **Website:** www.exosaero.com
 **Also:** Exos Aerospace Italia, Srl — c/o I3P Scpa, C.so Castelfidardo 30/A, 10129 Torino
 
-## Key Contacts
-
-- **Alex Finn** — Mission Control system Jon uses for tracking opportunities
 
 ## Company Context
 
 ### Exos Aerospace
 - One of only **3 U.S.-licensed reusable suborbital launch companies**
-- Operates a licensed PSRLV (Partially Reusable Suborbital Launch Vehicle) platform
+- Operates a licensed PSRLV (Precision Suborbital Reusable Launch Vehicle) platform
 - Strategic position: reduces risk and cost for emerging orbital launch companies globally
 - Value prop: proven reusable platform others can use to test, qualify, and derisk hardware before orbital
 
@@ -64,12 +63,15 @@ Operator and business development lead across two companies:
 
 ## Active Capital Raise
 
-**Exos Series A — $10M target**
+**Exos Series A — up to $25M target** (expanded from $10M on 2026-06-05 to fund RDRE development + BLK4)
 
 Use of proceeds:
 1. Acquire remaining 82% of Scorpius (exercise ROFR at 2021 basis)
-2. Expand RDRE (Rotating Detonation Rocket Engine) development
-3. Build another BLK3 PSRLV
+2. Expand RDRE (Rotating Detonation Rocket Engine) development — hardware path to be down-selected in a program trade study: GTL fully-machined RDRE method vs. NASA MSFC RDRE license (Exos does NOT own the GTL tech; frame as trade-study down-select, never an owned/decided path)
+3. Build BLK4 (next-gen PSRLV) — expanded from prior "another BLK3"
+4. Working capital / certification / team / contingency
+
+Recommended structure: tranched (~$10M first close + ~$15M milestone-gated second close) with valuation step-ups; layer non-dilutive SBIR/TACFI/Phase III pipeline on top.
 
 **Investor profile priorities:**
 - Aerospace platform investors (understand TRL, reusability, launch economics)
@@ -100,7 +102,7 @@ Build Exos into a credible, agile aerospace platform anchored on:
 4. **BD targets** — contracts, RFPs, deals worth pursuing
 5. **Outreach strategy** — who to reach, how, when
 6. **Meeting prep** — briefs, talking points, background
-7. **Mission Control-ready summaries** — formatted cards for Alex Finn
+7. **Mission Control-ready summaries** — formatted for the mission control dashboard
 
 ## Operating Principles for Exo
 
@@ -117,5 +119,6 @@ Build Exos into a credible, agile aerospace platform anchored on:
 
 ## Operational Notes
 
-- Running daily 6:30 AM CT aerospace opportunity scan → delivered to Telegram
+- Confirm receipt of every tasking immediately before starting work
 - High-conviction items formatted as Mission Control cards
+- Discord delivery: DM to Jon (user ID: 1501632195163590739, server: 1501635980094996631)

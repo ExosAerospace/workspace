@@ -5,7 +5,7 @@
       "id": "REL-STRATELLIGENCE",
       "name": "Stratelligence / CDT",
       "headline": "Defense fractional-CFO + M&A advisory; brought the CDT composites acquisition",
-      "stage": "ACTIVE \u2014 diligence unlocked",
+      "stage": "ACTIVE — diligence unlocked",
       "stage_color": "green",
       "company_aliases": [
         "Stratelligence",
@@ -27,12 +27,12 @@
         }
       ],
       "deals": [
-        "FUND-031 \u2014 advisory: QoE / data-room for Series A diligence (MDB), Scorpius/ROFR structuring, defense investor intros, fractional CFO",
-        "CDT acquisition \u2014 acquire Composite Technology Development (composites mfr) bundled with the Scorpius acquisition as one industrial+space play; could reshape Series A use-of-proceeds"
+        "FUND-031 — advisory: QoE / data-room for Series A diligence (MDB), Scorpius/ROFR structuring, defense investor intros, fractional CFO",
+        "CDT acquisition — acquire Composite Technology Development (composites mfr) bundled with the Scorpius acquisition as one industrial+space play; could reshape Series A use-of-proceeds"
       ],
       "agreements": [
-        "Exos\u2194Stratelligence advisory MNDA \u2014 SIGNED (confirmed 6/30)",
-        "Exos\u2194CDT Mutual NDA \u2014 EXECUTED via DocuSign 6/25"
+        "Exos↔Stratelligence advisory MNDA — SIGNED (confirmed 6/30)",
+        "Exos↔CDT Mutual NDA — EXECUTED via DocuSign 6/25"
       ],
       "status": "Both NDAs in place. Diligence on CDT is now open.",
       "next_step": "Kick off CDT data-room / QoE diligence with Stratelligence; structure CDT + Scorpius combined play into the Series A narrative.",
@@ -44,7 +44,7 @@
       "id": "REL-CERBERUS",
       "name": "Cerberus Capital",
       "headline": "Tier-1 Series A investor ($65B+ AUM); Scorpius ROFR + Stratolaunch de-risking upside",
-      "stage": "ENGAGED \u2014 invite ready to send",
+      "stage": "ENGAGED — invite ready to send",
       "stage_color": "orange",
       "company_aliases": [
         "Cerberus"
@@ -63,13 +63,13 @@
         },
         {
           "name": "Dan Quayle",
-          "role": "HARD EXCLUDE \u2014 never copy",
+          "role": "HARD EXCLUDE — never copy",
           "email": "dquayle@cerberus.com",
           "exclude": true
         }
       ],
       "deals": [
-        "Series A investor \u2014 lead with the standalone thesis (licensed reusable platform, Scorpius ROFR arbitrage at 2021 basis); Stratolaunch de-risking is upside, not basis"
+        "Series A investor — lead with the standalone thesis (licensed reusable platform, Scorpius ROFR arbitrage at 2021 basis); Stratolaunch de-risking is upside, not basis"
       ],
       "agreements": [],
       "status": "Rocket Factory (Greenville) in-person invitation is SUBMIT-READY (subject leads on Exos/Scorpius, booking-link close).",
@@ -96,11 +96,11 @@
         }
       ],
       "deals": [
-        "Series A \u2014 advisory/underwriting discussions",
-        "TicketPlus IPO \u2014 MDB-underwritten deal offered to Jon (evaluated: speculative micro-cap; diligence asks sent)"
+        "Series A — advisory/underwriting discussions",
+        "TicketPlus IPO — MDB-underwritten deal offered to Jon (evaluated: speculative micro-cap; diligence asks sent)"
       ],
       "agreements": [
-        "MDB MNDA \u2014 EXECUTED 6/16 (MDB's own form; supersedes Rev 5)"
+        "MDB MNDA — EXECUTED 6/16 (MDB's own form; supersedes Rev 5)"
       ],
       "status": "Kipton reply is SUBMIT-READY (TicketPlus evaluation + AI-native operating-model showcase + 3 diligence asks).",
       "next_step": "Jon sends the Kipton reply; keep MDB warm ahead of Exos's own raise.",
@@ -109,8 +109,8 @@
     {
       "id": "REL-SPACECOTAN",
       "name": "SPACE COTAN / Hokkaido",
-      "headline": "BLK3 at Hokkaido Spaceport \u2014 payload services + wet-lease; plus Innovation Dojo Japan raise",
-      "stage": "ACTIVE \u2014 call being scheduled",
+      "headline": "BLK3 at Hokkaido Spaceport — payload services + wet-lease; plus Innovation Dojo Japan raise",
+      "stage": "ACTIVE — call being scheduled",
       "stage_color": "green",
       "company_aliases": [
         "COTAN",
@@ -138,9 +138,9 @@
         }
       ],
       "deals": [
-        "Payload services \u2014 book SPACE COTAN / Japanese payloads onto early-2027 BLK3 flights",
-        "Wet lease \u2014 1\u20132 BLK3 vehicles operating from Hokkaido Spaceport (HOSPO)",
-        "Innovation Dojo \u2014 Japan investor-session RFI (Toshi); Japan-entity ~$1M raise question pending Jon"
+        "Payload services — book SPACE COTAN / Japanese payloads onto early-2027 BLK3 flights",
+        "Wet lease — 1–2 BLK3 vehicles operating from Hokkaido Spaceport (HOSPO)",
+        "Innovation Dojo — Japan investor-session RFI (Toshi); Japan-entity ~$1M raise question pending Jon"
       ],
       "agreements": [
         "NDA in place with SPACE COTAN"
@@ -155,7 +155,7 @@
       "id": "REL-POSTOAK",
       "name": "Post Oak Group",
       "headline": "Lower-middle-market M&A advisory + capital markets; REVIVED 6/30 via Jack Rawdon for buy-side M&A",
-      "stage": "REVIVED \u2014 revised engagement letter incoming",
+      "stage": "REVIVED — revised engagement letter incoming",
       "stage_color": "orange",
       "company_aliases": [
         "Post Oak",
@@ -167,7 +167,7 @@
       "contacts": [
         {
           "name": "Jack Rawdon",
-          "role": "NEW lead contact \u2014 mech engineer, ex-oil&gas (Marathon), has raised capital on Wall Street ($60M, did a Series A)",
+          "role": "NEW lead contact — mech engineer, ex-oil&gas (Marathon), has raised capital on Wall Street ($60M, did a Series A)",
           "email": ""
         },
         {
@@ -182,25 +182,25 @@
         }
       ],
       "deals": [
-        "Buy-side M&A advisory \u2014 Scorpius asset acquisition (clean asset purchase) + Exos's ~10-company acquisition pipeline (3 short-listed, 1 officially for sale)",
-        "Growth capital \u2014 Series A, Jon now framing ~$30\u201340M over 3 years; first $10M tranche gates the Scorpius acquisition"
+        "Buy-side M&A advisory — Scorpius asset acquisition (clean asset purchase) + Exos's ~10-company acquisition pipeline (3 short-listed, 1 officially for sale)",
+        "Growth capital — Series A, Jon now framing ~$30–40M over 3 years; first $10M tranche gates the Scorpius acquisition"
       ],
       "agreements": [
         "Prior engagement letter DECLINED (terms presented as non-negotiable; failed Exos DD). Jack to send a REVISED, negotiable engagement letter for Jon to redline."
       ],
       "status": "REVIVED 6/30 via Jack Rawdon call (~16 min). Jack reset the relationship, conceded terms ARE negotiable (cited a live $150M engagement-letter negotiation), and committed to a revised letter + a follow-up M&A-scope call. Strong engineer-to-engineer rapport. Jon wants Post Oak BUY-SIDE only (not repping a seller).",
-      "next_step": "Await Jack's revised engagement letter \u2192 Jon redlines (MUST clear Marion Keyes). Schedule the follow-up Teams call on M&A scope. Possible Jack site visit to Greenville.",
+      "next_step": "Await Jack's revised engagement letter → Jon redlines (MUST clear Marion Keyes). Schedule the follow-up Teams call on M&A scope. Possible Jack site visit to Greenville.",
       "flags": [
-        "Engagement letter + Series A = securities/advisor engagement \u2192 route through Marion Keyes before signing (prior deal died on attorney review)",
+        "Engagement letter + Series A = securities/advisor engagement → route through Marion Keyes before signing (prior deal died on attorney review)",
         "Conflict check: Post Oak must represent Exos BUY-SIDE, not the sell-side of any target",
-        "Series A now described as ~$30\u201340M/3yr in this call \u2192 confirm if that is the new official target (canonical docs say $25M)"
+        "Series A now described as ~$30–40M/3yr in this call → confirm if that is the new official target (canonical docs say $25M)"
       ]
     },
     {
       "id": "REL-ASGSR",
       "name": "ASGSR (Ellen Gertsen)",
-      "headline": "American Society for Gravitational & Space Research \u2014 December conference; BLK3 suborbital payload + community positioning",
-      "stage": "ACTIVE \u2014 warm; recap follow-up owed",
+      "headline": "American Society for Gravitational & Space Research — December conference; BLK3 suborbital payload + community positioning",
+      "stage": "ACTIVE — warm; recap follow-up owed",
       "stage_color": "green",
       "company_aliases": [
         "ASGSR",
@@ -217,9 +217,9 @@
         }
       ],
       "deals": [
-        "ASGSR 2026 conference (December) \u2014 Exos presence telling the ground\u2192suborbital\u2192orbital research spectrum story; Wed pre-conference workshops (NASA Flight Opportunities AM + grant-writing PM) to plug in and meet PIs",
-        "BLK3 payload sales \u2014 135 kg/flight to ~850+ microgravity researchers; still need a second payload for the Q1 2027 manifest (BD-021)",
-        "PI\u2194platform matchmaking entities discussed as an opportunity"
+        "ASGSR 2026 conference (December) — Exos presence telling the ground→suborbital→orbital research spectrum story; Wed pre-conference workshops (NASA Flight Opportunities AM + grant-writing PM) to plug in and meet PIs",
+        "BLK3 payload sales — 135 kg/flight to ~850+ microgravity researchers; still need a second payload for the Q1 2027 manifest (BD-021)",
+        "PI↔platform matchmaking entities discussed as an opportunity"
       ],
       "agreements": [],
       "status": "Warm call 6/30 with Ellen Gertsen (+ Lizi Quinn). Ellen is planning next year and wants Exos there in December telling the suborbital story; open to ongoing chats.",
@@ -263,21 +263,21 @@
         }
       ],
       "deals": [
-        "BD-018 \u2014 every-flight composite-aging data feed (25\u2013100 flights) + life-prediction model; Navy as anchor data customer; pricing set with the PO"
+        "BD-018 — every-flight composite-aging data feed (25–100 flights) + life-prediction model; Navy as anchor data customer; pricing set with the PO"
       ],
       "agreements": [],
       "status": "Reframed (accelerated aging, not hypersonics; ongoing every-flight data model; no fabricated $). Reply-all + revised white paper are SUBMIT-READY.",
       "next_step": "Jon sends the reply-all (To: Nickerson + Brindza; Cc: Gonzalez + Marineau) with the revised white paper attached.",
       "flags": [
-        "GOV \u2014 routes through Jon",
+        "GOV — routes through Jon",
         "Phase ROM illustrative until Phil confirms"
       ]
     },
     {
       "id": "REL-COLOMBIA-FAC",
-      "name": "Colombian Air Force (FAC) \u2014 FACSAT / NCE",
-      "headline": "Colombian Air Force space program (FACSAT-3) \u2014 National Charter Enterprise wet-lease pitch + near-term microsat flight-test on the 2027 BLK3 campaign",
-      "stage": "INTRODUCED \u2014 presented 7/17; deck + video to send; Colombia internal review",
+      "name": "Colombian Air Force (FAC) — FACSAT / NCE",
+      "headline": "Colombian Air Force space program (FACSAT-3) — National Charter Enterprise wet-lease pitch + near-term microsat flight-test on the 2027 BLK3 campaign",
+      "stage": "INTRODUCED — presented 7/17; deck + video to send; Colombia internal review",
       "stage_color": "yellow",
       "company_aliases": [
         "Colombian Air Force",
@@ -295,7 +295,7 @@
         },
         {
           "name": "Jean Paul Infante",
-          "role": "Liaison Exos\u2194Colombian Air Force; retired Colombian Air Force officer (warm-intro broker)",
+          "role": "Liaison Exos↔Colombian Air Force; retired Colombian Air Force officer (warm-intro broker)",
           "email": ""
         },
         {
@@ -310,17 +310,212 @@
         }
       ],
       "deals": [
-        "National Charter Enterprise (NCE) Program \u2014 2 suborbital reusable launch vehicles via wet lease, ~$10M commitment; includes training + TAA/MLA transfers so Colombia can operate/repair locally; 50% up front on vehicle #1, deliver #1 at 12 months / #2 at 18 months; launch within ~12 months (vs ~2yr US licensing). Purpose: de-risk Colombia's path to indigenous orbital capability (cut the typical 3-7 lost rockets down to 1-4).",
-        "Near-term microsat flight-test \u2014 fly a FACSAT-3-class microsat as a payload on the early-2027 (Mar/Apr) Spaceport America BLK3 campaign; 135 kg to 100 km, 25 in dia x 38-48 in bay; ~$75K for a 10 kg flight test per the exosaero.com payload calculator; returns payload ~25 min later for failure analysis \u2192 ~TRL 8."
+        "National Charter Enterprise (NCE) Program — 2 suborbital reusable launch vehicles via wet lease, ~$10M commitment; includes training + TAA/MLA transfers so Colombia can operate/repair locally; 50% up front on vehicle #1, deliver #1 at 12 months / #2 at 18 months; launch within ~12 months (vs ~2yr US licensing). Purpose: de-risk Colombia's path to indigenous orbital capability (cut the typical 3-7 lost rockets down to 1-4).",
+        "Near-term microsat flight-test — fly a FACSAT-3-class microsat as a payload on the early-2027 (Mar/Apr) Spaceport America BLK3 campaign; 135 kg to 100 km, 25 in dia x 38-48 in bay; ~$75K for a 10 kg flight test per the exosaero.com payload calculator; returns payload ~25 min later for failure analysis → ~TRL 8."
       ],
       "agreements": [],
-      "status": "Intro presentation 7/17/26 (Teams). Infante (retired FAC) brokered. Maj. Saenz is assistant engineer on FACSAT-3, which is transitioning from nanosat (FACSAT-1 3U/2018, FACSAT-2 6U) to a microsat adding a NEW propulsion subsystem \u2014 they explicitly need training + thermal-vacuum/space qualification, which is exactly the NCE + suborbital flight-test value prop. FAC research lines: satellite platforms, spatial-data exploitation, mission-control SW, space domain awareness, satcom, and AIV (assembly-integration-verification). State Dept approval for the transfer estimated ~2 months (same as the Italy/Sardinia precedent). \u26a0 ITAR/EAR/TAA/MLA + securities-adjacent framing \u2014 gov/foreign-national channel, route through Jon; nothing auto-sent.",
+      "status": "Intro presentation 7/17/26 (Teams). Infante (retired FAC) brokered. Maj. Saenz is assistant engineer on FACSAT-3, which is transitioning from nanosat (FACSAT-1 3U/2018, FACSAT-2 6U) to a microsat adding a NEW propulsion subsystem — they explicitly need training + thermal-vacuum/space qualification, which is exactly the NCE + suborbital flight-test value prop. FAC research lines: satellite platforms, spatial-data exploitation, mission-control SW, space domain awareness, satcom, and AIV (assembly-integration-verification). State Dept approval for the transfer estimated ~2 months (same as the Italy/Sardinia precedent). ⚠ ITAR/EAR/TAA/MLA + securities-adjacent framing — gov/foreign-national channel, route through Jon; nothing auto-sent.",
       "next_step": "Jon to send (1) the non-ITAR NCE PowerPoint deck and (2) the Super Mod VTVL video + his contact info. Colombia (Maj. Saenz) to review internally with the Space Operations Dept and R&D Dept. Then schedule follow-up on TAA/MLA path + specific FACSAT-3 payload requirements.",
       "flags": [
         "ITAR",
         "EAR",
         "foreign-gov",
         "route-through-jon"
+      ]
+    },
+    {
+      "id": "REL-QUANTUMSPACE",
+      "name": "Quantum Space",
+      "headline": "CEO Jim Bridenstine (ex-NASA Admin) opened the Claremore spaceport door for Exos; Ghaffarian/Intuitive Machines nexus = Scorpius cryo-tank + refueling follow-on",
+      "stage": "ENGAGED — CEO Bridenstine is an active champion",
+      "stage_color": "green",
+      "company_aliases": [
+        "Quantum Space",
+        "QuantumSpace",
+        "QSPC"
+      ],
+      "opportunity_ids": [],
+      "contacts": [
+        {
+          "name": "Jim Bridenstine",
+          "role": "CEO (former NASA Administrator); made warm intro 7/23 recommending Claremore contract Exos",
+          "email": ""
+        },
+        {
+          "name": "Kam Ghaffarian",
+          "role": "Founder & Executive Chairman — also founded Intuitive Machines, X-energy, IBX",
+          "email": ""
+        }
+      ],
+      "deals": [
+        "Claremore spaceport — Bridenstine recommended Claremore contract Exos for an FAA-AST feasibility analysis and offered to convene ODAA/OSIDA/OK Commerce (live deal tracked under REL-CLAREMORE)",
+        "In-space refueling / cryo tankage — Ranger refuels allied assets on-orbit; Scorpius Type-5 TRL-9 cryo tanks (Odysseus + Athena heritage) fit as propellant-storage / refueling supplier",
+        "Golden Dome — Quantum pitching Ranger to host missile-tracking / interceptor payloads; Exos suborbital as a rapid test / de-risk platform"
+      ],
+      "agreements": [],
+      "status": "Bridenstine (Quantum CEO) made a warm intro 7/23 into the Claremore spaceport opportunity — active relationship, not cold. Quantum separately going public via de-SPAC at ~$1.2B (Nasdaq: QSPC; ~$300M PIPE led by Inflection Point; close ~Q4 2026); ~$80M Series A; IBX portfolio co; HQ Rockville MD, propulsion Hawthorne CA, new mfg Tulsa OK; contracts/proposals with Space Force, DARPA, AFRL.",
+      "next_step": "Meet Bridenstine around the Aug Claremore site visit; then advance Scorpius cryo tankage for Ranger refueling + the Golden Dome de-risk angle. Verify a direct email before outbound.",
+      "flags": [
+        "Relationship is warm via Bridenstine — treat as customer/partner + BD champion, NOT a Series A capital target",
+        "Cross-linked to REL-CLAREMORE (the live spaceport engagement he opened)"
+      ]
+    },
+    {
+      "id": "REL-CLAREMORE",
+      "name": "Claremore Spaceport (Rogers County, OK)",
+      "headline": "FAA-AST spaceport licensing at Claremore Regional Airport; Exos positioned as feasibility-analysis contractor — warm intro via Bridenstine",
+      "stage": "ACTIVE — Aug site visit being scheduled",
+      "stage_color": "green",
+      "company_aliases": [
+        "Claremore",
+        "Rogers County",
+        "Claremore Regional Airport",
+        "morestartshere"
+      ],
+      "opportunity_ids": [],
+      "contacts": [
+        {
+          "name": "John Feary",
+          "role": "Claremore City Manager",
+          "email": "john.feary@claremore.com"
+        },
+        {
+          "name": "Meggie Froman-Knight",
+          "role": "Executive Director, Claremore Economic Development",
+          "email": "meggie@morestartshere.com"
+        },
+        {
+          "name": "Jim Bridenstine",
+          "role": "Referrer — Quantum Space CEO / ex-NASA Administrator (see REL-QUANTUMSPACE)",
+          "email": ""
+        }
+      ],
+      "deals": [
+        "Preliminary feasibility analysis — Claremore to contract Exos to assess making Claremore Regional Airport an FAA-AST licensed spaceport (Bridenstine's recommendation)",
+        "Anchor-tenant / vertical launch-test foothold — Exos minimal-infrastructure fit (pad + power/comms); ladders to BLK3/Karmen flight cadence"
+      ],
+      "agreements": [],
+      "status": "Reply-all sent 7/24 (D-369) engaging Feary + Froman-Knight, offering a preliminary feasibility analysis and proposing a visit the week of Aug 4-8 or Aug 11-15. Bridenstine to convene ODAA, OSIDA, and OK Dept of Commerce after the visit. Cc: Bridenstine, Neil Milburn, Steven Hjelm, Richard Ketchum. Related MC task #1517.",
+      "next_step": "Lock the Aug visit date with Feary/Froman-Knight; prep a preliminary feasibility scope + fee (paid services engagement). Keep Neil/Hjelm/Ketchum on the thread.",
+      "flags": [
+        "Paid feasibility contract + potential launch-site foothold — ladders to Revenue and flight cadence, not Series A capital",
+        "Contact emails verified from the 7/24 sent thread"
+      ]
+    },
+    {
+      "id": "REL-VETERANFUND",
+      "name": "The Veteran Fund",
+      "headline": "Top-decile veteran-only defense/dual-use VC; Fund II ($50M, closed 7/4/26) actively deploying. Strategic Series A participant + gov-capture/co-investor network.",
+      "stage": "ENGAGED — intro call Jul 28 10:00 CDT (Nahama)",
+      "stage_color": "orange",
+      "company_aliases": [
+        "Veteran Fund",
+        "The Veteran Fund",
+        "veteran.fund",
+        "TVF"
+      ],
+      "opportunity_ids": [
+        "FUND-015"
+      ],
+      "contacts": [
+        {
+          "name": "Justin Nahama",
+          "role": "General Partner / co-founder — USMC vet, attorney (Pierson Ferdinand partner), founder of The Honor Foundation (5,000+ SEALs/SOF). Relationship-first, values-forward. LEAD contact for Jul 28 call.",
+          "email": ""
+        },
+        {
+          "name": "Mike Sherbakov",
+          "role": "General Partner / co-founder — USMC vet; MD, Founder Institute SoCal. Original CRM contact (MDB/Kipton intro).",
+          "email": "mike@veteran.fund"
+        },
+        {
+          "name": "Ryan Micheletti",
+          "role": "General Partner / co-founder",
+          "email": ""
+        },
+        {
+          "name": "Lisa Song Sutton",
+          "role": "General Partner / co-founder",
+          "email": ""
+        }
+      ],
+      "deals": [
+        "FUND-015 — Series A ($25M) engagement: play TVF as strategic participant / SPV, NOT lead (they are seed/pre-seed anchored; Fund II writes larger checks but can't lead a $25M A).",
+        "Network value > check: door into TVF co-investor + LP network (Gen. McChrystal is an LP), DC/DoD-wired, gov-capture connector.",
+        "Portfolio adjacency: Proteus Space, Defiant Space, Lonestar Lunar (payload to Moon — resonates w/ Scorpius tanks on Odysseus/Athena), Firestorm, Natilus, Havoc AI. No category education needed."
+      ],
+      "agreements": [
+        "Veteran Fund application completed 6/16; Jon sent re-engagement email 7/1 (AI-forward one-liner)."
+      ],
+      "status": "Intro call booked Jul 28 10:00 CDT with Justin Nahama. DD complete (verdict: take the meeting — high value, low risk). Meeting-prep Word brief attached to MC task FUND-VF.",
+      "next_step": "Jul 28 call: lead mission → veteran identity (Jon's service record — THEIR hard gate) → national-security/dual-use → flight heritage since 2018 → Scorpius lunar → where TVF fits the Series A (participant/SPV + network).",
+      "flags": [
+        "HARD GATE: veteran-only thesis (\"we only bet on someone who raised their right hand\"). Confirm Jon's veteran-status framing before Jul 28 — single strongest card, must be stated cleanly.",
+        "Stage mismatch: seed/pre-seed anchored — cannot lead the $25M Series A. Position as strategic participant + network, not lead.",
+        "Guardrails: RDRE = trade-study down-select; 'flew since 2018'; BLK3 licensed-not-flown."
+      ]
+    },
+    {
+      "id": "REL-GG-VENTURES",
+      "name": "GG Ventures (Gerald Grimes)",
+      "headline": "Dallas warehouse/logistics & 3PL consulting (NOT a VC despite the name); ~1,500 facility locations N. America",
+      "stage": "NEW — Neil-sourced 7/24",
+      "stage_color": "gray",
+      "company_aliases": [
+        "GG Ventures",
+        "GG Ventures LLC",
+        "ggventuresllc.com"
+      ],
+      "opportunity_ids": [],
+      "contacts": [
+        {
+          "name": "Gerald Grimes",
+          "role": "Principal, GG Ventures LLC (Dallas) — warehouse/logistics & 3PL consulting",
+          "email": ""
+        }
+      ],
+      "deals": [
+        "Potential: industrial/storage footprint, cold storage, distribution/3PL strategy for Exos ops/expansion"
+      ],
+      "agreements": [
+        "Flagged alongside completed EXOS MNDA Rev 4 (250716) — confirm whether GG is an MNDA counterparty"
+      ],
+      "status": "New contact passed by Neil Milburn. Function is warehouse/logistics consulting, not capital. Verify direct email + intended angle.",
+      "next_step": "Confirm angle with Neil; verify Grimes' direct email; draft intro note for Neil to send.",
+      "flags": [
+        "Do NOT categorize as investor/VC",
+        "Email unverified"
+      ]
+    },
+    {
+      "id": "REL-CAPSTONE-CRE",
+      "name": "Capstone Commercial (Daniel Segreto)",
+      "headline": "DFW commercial real-estate brokerage (industrial/land/office/retail, deals $1M–$20M); DFW site-selection & off-market deal flow",
+      "stage": "NEW — Neil-sourced 7/24",
+      "stage_color": "gray",
+      "company_aliases": [
+        "Capstone Commercial",
+        "capstonecommercial.com"
+      ],
+      "opportunity_ids": [],
+      "contacts": [
+        {
+          "name": "Daniel Segreto",
+          "role": "Broker, Capstone Commercial, Dallas (4300 Sigma Rd Ste 100, 75244) — verify title",
+          "email": ""
+        }
+      ],
+      "deals": [
+        "Potential: DFW industrial/land site selection, tenant rep (no cost to tenant), off-market deal flow for Greenville-area expansion / facility needs"
+      ],
+      "agreements": [
+        "Flagged alongside completed EXOS MNDA Rev 4 (250716) — confirm whether Capstone/Segreto is an MNDA counterparty"
+      ],
+      "status": "New contact passed by Neil Milburn. Firm lead broker is Steve Burris, CCIM; confirm Segreto's role. Verify direct email + intended angle.",
+      "next_step": "Confirm angle with Neil; verify Segreto's role + direct email; draft intro note for Neil to send.",
+      "flags": [
+        "Email unverified",
+        "Confirm Segreto's role vs. principal Steve Burris"
       ]
     }
   ]

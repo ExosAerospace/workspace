@@ -9,6 +9,25 @@ ALERT=""
 
 mkdir -p "$LOG_DIR"
 
+# --- Decisions inbox routing -------------------------------------------------
+# Any condition that genuinely requires Jon to act (reboot, enable firewall, etc.)
+# is pushed to the Decisions inbox so it lands in front of him. dedupeKey keeps a
+# still-pending item from re-posting every night until it's answered/resolved.
+DECISIONS_API="http://localhost:8080/api/decisions/ingest"
+EXO_TOKEN="33bad1599d6fdc99af6c10026cdab10c46c5a7bbcbbff18b"
+
+# post_decision <dedupeKey> <priority> <title> <question> <proposedAction>
+post_decision() {
+    curl -s -X POST "$DECISIONS_API" \
+        -H "X-Exo-Token: $EXO_TOKEN" \
+        -H "Content-Type: application/json" \
+        -d "{\"source\":\"Nightly Security Scan\",\"relatedItem\":\"security-$(date +%Y-%m-%d)\",\"title\":\"$3\",\"question\":\"$4\",\"proposedAction\":\"$5\",\"type\":\"yesno\",\"options\":[\"Yes\",\"No\"],\"priority\":\"$2\",\"dedupeKey\":\"$1\"}" \
+        >> "$LOG_FILE" 2>&1
+    echo "" >> "$LOG_FILE"
+    echo "[→] Decision routed to inbox: $3" >> "$LOG_FILE"
+}
+# ----------------------------------------------------------------------------
+
 echo "=== Nightly Security Run: $(date) ===" >> "$LOG_FILE"
 
 # 1. macOS Software Updates (security patches only, non-interactive)
@@ -20,6 +39,10 @@ if echo "$UPDATE_CHECK" | grep -qi "recommended\|security"; then
     # Download only — cannot install headless, requires interactive auth
     /usr/sbin/softwareupdate --download --recommended 2>&1 >> "$LOG_FILE"
     ALERT="${ALERT}📦 macOS security updates downloaded and ready to install. Reboot when convenient to apply.\n"
+    post_decision "macos-security-update-reboot" "high" \
+        "Reboot ExoMac to apply pending macOS security update" \
+        "A recommended macOS security update is downloaded and staged. Installing requires your password and a reboot. Apply it now?" \
+        "Reboot ExoMac at a convenient time to install the staged security update."
 else
     echo "[✓] macOS up to date" >> "$LOG_FILE"
 fi
@@ -36,8 +59,16 @@ else
     echo "[✓] Homebrew packages current" >> "$LOG_FILE"
 fi
 
-# Resolve openclaw binary — resilient across OS updates
-OC_BIN=$(which openclaw 2>/dev/null || find /Users/exomac/.local/share/mise -name "openclaw" 2>/dev/null | head -1)
+# Resolve openclaw binary — resilient across OS updates and cold launchd PATH.
+# Try each candidate and keep the first that is actually executable. Never let a
+# failed lookup (e.g. zsh `which` printing "openclaw not found") pollute OC_BIN.
+OC_BIN=""
+for cand in \
+    "$(command -v openclaw 2>/dev/null)" \
+    /Users/exomac/.local/share/mise/shims/openclaw \
+    /Users/exomac/.local/share/mise/installs/node/*/bin/openclaw; do
+    if [ -n "$cand" ] && [ -x "$cand" ]; then OC_BIN="$cand"; break; fi
+done
 
 # 3. OpenClaw security audit
 echo "[3] Running OpenClaw security audit..." >> "$LOG_FILE"
@@ -100,6 +131,10 @@ FIREWALL=$(/usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate 2>&1
 echo "$FIREWALL" >> "$LOG_FILE"
 if echo "$FIREWALL" | grep -qi "disabled"; then
     ALERT="${ALERT}🚨 macOS firewall is DISABLED — recommend enabling.\n"
+    post_decision "macos-firewall-disabled" "high" \
+        "Re-enable the macOS firewall on ExoMac" \
+        "The macOS application firewall is currently DISABLED, leaving the machine more exposed. Re-enable it?" \
+        "Enable the macOS firewall via System Settings > Network > Firewall, or socketfilterfw --setglobalstate on."
 else
     echo "[✓] Firewall active" >> "$LOG_FILE"
 fi

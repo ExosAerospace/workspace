@@ -29,7 +29,7 @@
 |---|---|---|---|---|---|
 | **Shield Capital** | Financial Investor | Contacted | **82** | `HIGH_PRIORITY` | National security dual-use VC. Raj Shah. Series A avg $29.9M. Perfect sector fit. CRM shows prior contact; task adds warm path via Toby Albright referral network. |
 | **Lockheed Martin Ventures** | Strategic/CVC | Research | **82** | `HIGH_PRIORITY` | Tier-1 strategic CVC, deep propulsion/defense portfolio. Recommended by Toby Albright. STRATFI/OTA pathway access. |
-| **Cerberus Capital Management** | Financial Investor | Term Sheet/Proposal | **72** | `HIGH_PRIORITY` ⚠️ CERBERUS FLAG | $65B+ AUM. Dan Quayle / Frank Bruno contacts. Intro deck sent 1/14. Awaiting response. **CERBERUS FLAG: Owns Stratolaunch. Do NOT frame as flight test competitor. Lead with Scorpius ROFR arbitrage only.** |
+| **Cerberus Capital Management** | Financial Investor | Term Sheet/Proposal | **72** | `HIGH_PRIORITY` ⚠️ CERBERUS FLAG | $65B+ AUM. Contacts: Frank Bruno (fbruno@cerberus.com) + Kent Lietzau (direct). ❌ Do NOT copy Dan Quayle — hard exclude (Jon 6/26). Intro deck sent 1/14. **CERBERUS FLAG: Owns Stratolaunch. Do NOT frame as flight test competitor. Lead with Scorpius ROFR arbitrage only.** |
 | **AE Industrial Partners** | Financial Investor | Research/Follow Up | **72** | `HIGH_PRIORITY` | Aerospace/defense PE, proven hardware investor. Multiple contacts in CRM. Strong sector fit, follow-on capacity likely. |
 | **Ricci Global Partners** | Financial Investor | Engaged | **52** | `NO_DRY_POWDER` | MNDA executed, data room shared, active finance working sessions. Engagement signal is strong but AUM/fund size unverified. |
 | **Tristate Capital** | Intermediary | Engaged | **28** | `WEAK_FIT` | Contracted intermediary. 2% + 1% equity on Tristate-sourced capital only. Use as intro channel, not lead investor. |
@@ -51,7 +51,7 @@
 | TEL Venture Capital | Financial Investor | Meeting Requested | **40** | `NO_DRY_POWDER` | Meeting set 10/2 (2025). Stage unclear. No check size signal. |
 | Collective Equity | Financial Investor | Meeting Requested | **32** | `NO_DRY_POWDER` `WEAK_FIT` | Limited AUM evidence. Follow-up meeting in works. |
 | REI (Choctaw Nation group) | Financial Investor | Meeting Held | **45** | `NO_DRY_POWDER` | Choctaw Nation investment group. Space interest, site tour requested. Check size and follow-on unclear. |
-| Palm Drive Capital | Financial Investor | Meeting Held | **35** | `NO_DRY_POWDER` | Meeting held 7/2025. No further engagement noted. |
+| Palm Drive Capital | Financial Investor | Meeting Held | **35** | `NO_DRY_POWDER` | Meeting held 7/2025. No further engagement noted. ⚠️ carter@palmdrive.vc — `BOUNCED` |
 | Prospect Capital | Financial Investor | Meeting Held | **30** | `WEAK_FIT` | BDC credit structure. Better fit for debt/structured capital than equity. |
 | Rockfleet Financial | Financial Investor | Meeting Held | **35** | `NO_DRY_POWDER` | Meeting held 7/2025. NDA in process. No follow-up signal. |
 | IPO Club | Financial Investor | Meeting Held | **18** | `WEAK_FIT` | Pre-IPO structure. Not aligned with Series A equity. |
@@ -67,22 +67,22 @@
 |---|---|---|---|---|
 | **MarlinSpike** | Follow Up | **75** | `HIGH_PRIORITY` | Defense fund, recommended by Toby Albright. Last touch 2/26/2026. Warm. |
 | **Hale Capital** | Follow Up | **74** | `HIGH_PRIORITY` | Recommended by Toby Albright. Martin Hale / Nathan Foos. Last touch 1/9/2026. |
-| **Embedded Ventures** | Follow Up | **74** | `HIGH_PRIORITY` | Jordan Noone (ex-Relativity), dual-use defense VC. Last touch 12/3/2025. DUE. |
+| **Embedded Ventures** | Follow Up | **74** | `HIGH_PRIORITY` | Jordan Noone (ex-Relativity), dual-use defense VC. Last touch 12/3/2025. DUE. STALE — re-engagement needed |
 | **Generational Partners** | Contacted | **72** | `HIGH_PRIORITY` | Recommended by Toby Albright. No last touch recorded. Needs first contact. |
-| **Decisive Point Ventures** | Follow Up | **78** | `HIGH_PRIORITY` | Dual-use/defense transition VC, DC. In CRM as "Decisive Point" (3 contacts, last touch 9/22/2025). Very overdue. |
+| **Decisive Point Ventures** | Follow Up | **78** | `HIGH_PRIORITY` | Dual-use/defense transition VC, DC. In CRM as "Decisive Point" (3 contacts, last touch 9/22/2025). Very overdue. STALE — re-engagement needed |
 | **Enlightenment Capital** | Follow Up | **70** | `HIGH_PRIORITY` | Defense-focused PE. Asked for one-pager 1/14/2026. Follow up DUE. |
 | **Blue Delta Capital Partners** | Follow Up | **68** | — | Defense-focused VC, Chris Torti / Kevin Robbins / Phil Nolan. No last touch. |
-| **J2 Ventures** | Follow Up | **68** | — | Defense VC, requested deck. Adam Briley / Jonathan Bronson. Last touch 11/11/2025. Very overdue. |
-| **Razor's Edge Ventures** | Follow Up | **68** | — | Defense tech VC. Last touch 12/5/2025. Follow up DUE. |
-| **Paladin Capital Group** | Follow Up | **65** | — | Defense-focused fund. Last touch 12/30/2025. |
-| **8VC** | Follow Up | **65** | — | Trae Stephens (defense/DoD). Joe Lonsdale. Dual-use history. Last touch 11/24/2025. Very overdue. |
-| **Arlington Capital** | Follow Up | **65** | — | Defense/A&D PE. $1B+ AUM. Last touch 11/25/2025. Overdue. |
-| **NightDragon** | Follow Up | **63** | — | Defense/cybersecurity. Last touch 12/18/2025 - 12/30/2025. |
-| **Dual Use Ventures** | Follow Up | **62** | — | Kipton intro. Rahul Singh. Last touch 11/24/2025. Overdue. |
+| **J2 Ventures** | Follow Up | **68** | — | Defense VC, requested deck. Adam Briley / Jonathan Bronson. Last touch 11/11/2025. Very overdue. STALE — re-engagement needed |
+| **Razor's Edge Ventures** | Follow Up | **68** | — | Defense tech VC. Last touch 12/5/2025. Follow up DUE. STALE — re-engagement needed |
+| **Paladin Capital Group** | Follow Up | **65** | — | Defense-focused fund. Last touch 12/30/2025. STALE — re-engagement needed |
+| **8VC** | Follow Up | **65** | — | Trae Stephens (defense/DoD). Joe Lonsdale. Dual-use history. Last touch 11/24/2025. Very overdue. STALE — re-engagement needed |
+| **Arlington Capital** | Follow Up | **65** | — | Defense/A&D PE. $1B+ AUM. Last touch 11/25/2025. Overdue. STALE — re-engagement needed |
+| **NightDragon** | Follow Up | **63** | — | Defense/cybersecurity. Last touch 12/18/2025 - 12/30/2025. STALE — re-engagement needed |
+| **Dual Use Ventures** | Follow Up | **62** | — | Kipton intro. Rahul Singh. Last touch 11/24/2025. Overdue. STALE — re-engagement needed |
 | **Dauntless Ventures** | Follow Up | **60** | — | Defense VC, Pete Koziol. No last touch. |
-| **America's Frontier Fund** | Follow Up | **60** | — | National security dual-use. Gilman Louie. Last touch 9/22/2025. Very overdue. |
+| **America's Frontier Fund** | Follow Up | **60** | — | National security dual-use. Gilman Louie. Last touch 9/22/2025. Very overdue. STALE — re-engagement needed |
 | Starburst Aero | Follow Up | **52** | `WEAK_FOLLOW_ON` | Aerospace accelerator/fund. Last touch 1/14/2026. |
-| DCVC Ventures | Follow Up | **50** | — | Deep tech dual-use. Last touch 11/24/2025. |
+| DCVC Ventures | Follow Up | **50** | — | Deep tech dual-use. Last touch 11/24/2025. STALE — re-engagement needed |
 | Seraphim VC | Contacted | **48** | — | Space-focused VC. Passed to deals team. Last touch noted. |
 
 ### Space-Focused VCs
@@ -97,11 +97,11 @@
 
 | Firm | Score | Flags | Notes |
 |---|---|---|---|
-| Founders Fund (Trae Stephens) | 55 | `NO_DRY_POWDER` | Defense angle via Trae. Hard to get. Last touch 11/11/2025. |
+| Founders Fund (Trae Stephens) | 55 | `NO_DRY_POWDER` | Defense angle via Trae. Hard to get. Last touch 11/11/2025. STALE — re-engagement needed |
 | Andreessen Horowitz (Katherine Boyle) | 50 | — | a16z defense thesis. Hard to get without warm intro. |
-| KKR | 45 | — | Large PE, some defense. Last touch 11/25/2025. |
-| 137 Ventures | 38 | — | Growth stage, some tech. Last touch 11/12/2025. |
-| 8090 Industries | 30 | `NO_DRY_POWDER` | Stage unclear. |
+| KKR | 45 | — | Large PE, some defense. Last touch 11/25/2025. STALE — re-engagement needed |
+| 137 Ventures | 38 | — | Growth stage, some tech. Last touch 11/12/2025. STALE — re-engagement needed |
+| 8090 Industries | 30 | `NO_DRY_POWDER` | Stage unclear. ⚠️ Filip Vurdelja departed. New contacts: Christie Allardyce (christie@8090industries.com — investor relations), Kerem Ozmen (kerem@8090industries.com — fund/general). |
 
 ### Flagged as NOT A FIT (archive)
 | Firm | Stage | Score | Flag |
@@ -132,3 +132,16 @@
 | **Generational Partners** | — | **72** | `HIGH_PRIORITY` | New (also in CRM Contacted) |
 | **One Bow River** | Stowe Faircloth | **68** | — | New (also in CRM Meeting Requested) |
 | **Elliott Investment Management** | — | **65** | — | New — Stratolaunch co-investor; Scorpius ROFR angle only |
+
+---
+
+## BOUNCED CONTACTS LOG
+
+| Email | Firm | Notes |
+|---|---|---|
+| carter@palmdrive.vc | Palm Drive Capital | `BOUNCED` — also flagged in Tier 1 row |
+| ascaramucci@skybridge.com | Skybridge | `BOUNCED` — firm not otherwise in pipeline |
+| dbarile@skybridge.com | Skybridge | `BOUNCED` — firm not otherwise in pipeline |
+| jdarsie@skybridge.com | Skybridge | `BOUNCED` — firm not otherwise in pipeline |
+| rnolte@skybridge.com | Skybridge | `BOUNCED` — firm not otherwise in pipeline |
+| brant@tracvc.com | TRAC VC | `BOUNCED` — firm not otherwise in pipeline |

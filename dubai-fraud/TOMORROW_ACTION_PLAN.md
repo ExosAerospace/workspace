@@ -7,21 +7,16 @@
 
 ---
 
-### ACTION 1: FBI IC3 Online Filing (30 min)
+### ACTION 1: FBI IC3 Online Filing (30 min) - ✅ COMPLETED + RE-SENT 2026-05-18
 **URL:** https://www.ic3.gov/complaint/splash
-**Do this first** — creates federal record, triggers FBI analyst review automatically.
-
-**Key fields to fill:**
-- Subject: International Wire Fraud / Organized Fraud Scheme / Money Laundering
-- Loss amount: $613,097.63
-- Perpetrator: Ralf Jung (aka Frank Kahn), Ferhat Dogan, Ashraf Mahmoud — Dubai, UAE
-- Attach: Wire transfer records (Chase 9197 Dec 2021 stmt, Chase 3307 May + Sep 2022 stmts), Silent Partnership Agreement, Dubai Police complaint #225004184901, Dubai Supreme Court Case #207/2023/5263 ruling
+**Status:** Filed online AND re-sent via email on May 18, 2026. Federal record created.
+**Next step:** Monitor for IC3 case assignment number. Follow up in 2 weeks (by June 1) if no acknowledgment.
 
 ---
 
-### ACTION 2: Email US Embassy Abu Dhabi (20 min)
+### ACTION 2: Email US Embassy Abu Dhabi (20 min) - ✅ COMPLETED 2026-04-06
 **To:** ACSAbuDhabi@state.gov
-**Subject:** US Citizen/US Company — Organized International Fraud — Coordination Request with Irish Embassy
+**Status:** Sent. Waiting for response to determine if they will assign a Consular Officer to coordinate with the Irish Embassy. Follow up in 3-5 days if no reply.
 
 ---
 
@@ -56,46 +51,23 @@
 
 ---
 
-### ACTION 3: Call FBI Dallas Field Office (30 min)
+### ACTION 3: Call FBI Dallas Field Office (30 min) - ✅ COMPLETED 2026-04-23
 **Number:** (972) 559-5000
-**Ask for:** Financial Crimes Squad
-**What to say:**
-> "I'm calling to report an international wire fraud and money laundering case involving US bank accounts. $613,000 was wired from our Chase accounts in Texas to a UAE fraud ring. The Dubai Supreme Court already ruled in our favor but enforcement has been blocked for 2 years. I've filed with IC3 today and want to speak with someone in Financial Crimes."
-
-Have ready when they call back: IC3 confirmation number, wire records, Dubai court case number.
+**Status:** Called April 23, 2026. Requested update on case, they took Jon's information. Awaiting callback/assignment.
+**Next step:** Follow up if no response within 5 business days (by April 30). If no traction, escalate via Senator's office or walk-in.
 
 ---
 
-### ACTION 4: Email Senator Cornyn's Office (20 min)
-**URL:** https://www.cornyn.senate.gov/contact (online form)
-**Subject:** Congressional Inquiry Request — US Aerospace Company Defrauded $613K by UAE Fraud Ring / State Dept + DOJ Escalation Needed
+### ACTION 4: Contact Senator Cornyn & Cruz — ✅ COMPLETED 2026-04-23
+**Status:** Emailed both offices AND submitted online contact forms on April 23, 2026. Full letters saved in `letter-senator-cornyn.md` and `letter-senator-cruz.md`. Awaiting constituent services response.
+**Next step:** Follow up if no acknowledgment within 5 business days (by April 30).
 
 ---
 
-**DRAFT:**
-
-> Dear Senator Cornyn's office,
->
-> I am a constituent — John Quinn, CEO of Exos Aerospace Systems & Technologies, Inc., based in Greenville, TX (Hunt County). I am writing to request a congressional inquiry on behalf of Exos Aerospace regarding an international fraud case.
->
-> In brief: A UAE-based organized fraud ring defrauded Exos Aerospace of $613,097 via wire transfers from Texas bank accounts. The Dubai Supreme Court ruled in our favor (2023) but enforcement has been obstructed for 2+ years while the perpetrators — German nationals with prior convictions — continue to operate openly in Dubai. This ring has victimized approximately 100 companies across 8+ countries for over €20 million.
->
-> I am requesting congressional assistance to:
-> 1. Urge the State Department to formally engage UAE authorities regarding contempt of the Supreme Court ruling
-> 2. Encourage DOJ/FBI to pursue the international wire fraud case (IC3 filed today)
-> 3. Support Interpol Red Notice requests for the identified perpetrators
->
-> I can provide full documentation. Exos Aerospace is one of only three FAA-licensed reusable rocket companies in the US — this fraud has directly hampered our ability to advance US space launch capability.
->
-> Contact: John Quinn | jquinn@exosaero.com | +1-972-740-8355
-> 299 FM 1903, Greenville, TX 75402
-
----
-
-### ACTION 5: Email An Garda Síochána — Joseph Wyse (15 min)
+### ACTION 5: Email An Garda Síochána — Joseph Wyse (15 min) - 🔴 BLOCKED
 **To:** joseph.m.wyse@garda.ie
 **CC:** rob@irishsustainablehomes.com
-**Subject:** Introduction — US Victim Coordination / Interpol Red Notice Request
+**Status:** Draft ready. Waiting on Rob Cass approval to send since he is CC'd.
 
 ---
 
