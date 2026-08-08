@@ -102,6 +102,54 @@ function openErp(file, opts = {}) {
         + ' ORDER BY priority DESC LIMIT ?';
       return db.all(sql, ...args, limit);
     },
+    /** HR directory (read-through from the Bamboo mirror). Directory-level fields ONLY —
+     *  no comp_band / emergency_contact / PII. Bamboo remains authoritative. */
+    getEmployees() {
+      return db.all(
+        `SELECT e.id, e.full_name, e.employment_status,
+                p.title AS position_title,
+                o.name  AS department,
+                e.org_unit_id, e.manager_id,
+                m.full_name AS manager_name,
+                json_extract(e.raw_json,'$.email')      AS work_email,
+                json_extract(e.raw_json,'$.bamboo_id')  AS bamboo_id
+           FROM employee e
+           LEFT JOIN position  p ON p.id = e.position_id
+           LEFT JOIN org_unit  o ON o.id = e.org_unit_id
+           LEFT JOIN employee  m ON m.id = e.manager_id
+          ORDER BY o.name IS NULL, o.name, e.full_name`);
+    },
+    getOrgUnits() {
+      return db.all('SELECT id, name, parent_id FROM org_unit ORDER BY name');
+    },
+    getPositions() {
+      return db.all('SELECT id, title, org_unit_id FROM position ORDER BY title');
+    },
+
+    // ---- HR reconcile deletes (audited) — used by bamboo_sync to keep the mirror == Bamboo ----
+    deleteEmployee(id) {
+      id = String(id);
+      const before = db.get('SELECT * FROM employee WHERE id = ?', id);
+      if (!before) return false;
+      // A departing manager can no longer be referenced — null out reports' manager_id first (FK-safe).
+      db.run('UPDATE employee SET manager_id = NULL WHERE manager_id = ?', id);
+      writeAudited('employee', id, 'delete', before, null, () => db.run('DELETE FROM employee WHERE id = ?', id));
+      return true;
+    },
+    deletePosition(id) {
+      id = String(id);
+      const before = db.get('SELECT * FROM position WHERE id = ?', id);
+      if (!before) return false;
+      writeAudited('position', id, 'delete', before, null, () => db.run('DELETE FROM position WHERE id = ?', id));
+      return true;
+    },
+    deleteOrgUnit(id) {
+      id = String(id);
+      const before = db.get('SELECT * FROM org_unit WHERE id = ?', id);
+      if (!before) return false;
+      writeAudited('org_unit', id, 'delete', before, null, () => db.run('DELETE FROM org_unit WHERE id = ?', id));
+      return true;
+    },
 
     // ---- writes (audited) ----
     /** Insert or update a deal; audits before/after. */
@@ -252,6 +300,110 @@ function openErp(file, opts = {}) {
         material_cost: a.material_cost + (r.material_cost || 0),
       }), { budget: 0, labor_hours: 0, material_cost: 0 });
       return { rows, totals };
+    },
+
+    // ---- Sales-agent commissions: contract → who initiated → payout, all audited ----
+    upsertSalesAgent(a) {
+      if (!a || !a.id) throw new Error('upsertSalesAgent requires id');
+      const id = String(a.id);
+      const before = db.get('SELECT * FROM sales_agent WHERE id = ?', id) || null;
+      writeAudited('sales_agent', id, before ? 'update' : 'insert', before, a, () => {
+        db.run('INSERT INTO sales_agent (id,name,email,base_rate,bonus_rate,bonus_condition,equity_shares,equity_vesting,agreement_doc,status,raw_json) ' +
+          'VALUES (?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name, email=excluded.email, ' +
+          'base_rate=excluded.base_rate, bonus_rate=excluded.bonus_rate, bonus_condition=excluded.bonus_condition, ' +
+          'equity_shares=excluded.equity_shares, equity_vesting=excluded.equity_vesting, agreement_doc=excluded.agreement_doc, ' +
+          'status=excluded.status, raw_json=excluded.raw_json',
+          id, a.name ?? null, a.email ?? null, a.base_rate ?? null, a.bonus_rate ?? 0, a.bonus_condition ?? null,
+          a.equity_shares ?? null, a.equity_vesting ?? null, a.agreement_doc ?? null, a.status ?? 'Active', JSON.stringify(a));
+      });
+      return db.get('SELECT * FROM sales_agent WHERE id = ?', id);
+    },
+    /** Record WHO initiated/supported a contract — this is what drives commission routing. */
+    upsertAttribution(x) {
+      if (!x || !x.id) throw new Error('upsertAttribution requires id');
+      const id = String(x.id);
+      const before = db.get('SELECT * FROM contract_attribution WHERE id = ?', id) || null;
+      writeAudited('contract_attribution', id, before ? 'update' : 'insert', before, x, () => {
+        db.run('INSERT INTO contract_attribution (id,contract_id,agent_id,role,rate,effective_date,note,raw_json) ' +
+          'VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET contract_id=excluded.contract_id, agent_id=excluded.agent_id, ' +
+          'role=excluded.role, rate=excluded.rate, effective_date=excluded.effective_date, note=excluded.note, raw_json=excluded.raw_json',
+          id, x.contract_id, x.agent_id, x.role ?? 'initiated', x.rate ?? null, x.effective_date ?? null, x.note ?? null, JSON.stringify(x));
+      });
+      return db.get('SELECT * FROM contract_attribution WHERE id = ?', id);
+    },
+    /** THE TRIGGER: Exos received a customer payment on a contract → accrue a commission (status
+     *  'due', due 30 days out per the agreement) for every attributed agent. Idempotent per
+     *  (contract, payment_date, agent).
+     *
+     *  Bonus rule (Jon 2026-07-31): base rate applies to the WHOLE payment. The +bonus rate
+     *  applies ONLY to the revenue for the mass booked in the TOP 25% of the payload bay — i.e.
+     *  the booked mass above the 75%-of-capacity line. bonus_mass = max(0, booked_kg − 0.75*capacity).
+     *  bonus revenue = amount * (bonus_mass / booked_kg). So a full bay earns base on all + bonus on
+     *  just its top-25% slice; a ≤75% booking earns no bonus. Non-payload payments: omit booked_kg → no bonus.
+     */
+    recordContractPayment(contractId, { amount, date, customer = null, booked_kg = 0, capacity_kg = 135 } = {}) {
+      if (!contractId || amount == null || !date) throw new Error('recordContractPayment requires contractId, amount, date');
+      const attrs = db.all('SELECT * FROM contract_attribution WHERE contract_id = ?', String(contractId));
+      const due = new Date(new Date(date).getTime() + 30 * 86400000).toISOString().slice(0, 10);
+      const amt = Number(amount);
+      const bk = Number(booked_kg) || 0;
+      const cap = Number(capacity_kg) || 135;
+      const bonusMass = bk > 0 ? Math.max(0, Math.min(bk, cap) - 0.75 * cap) : 0;
+      const bonusFraction = bk > 0 ? bonusMass / bk : 0;      // share of THIS booking's revenue in the top 25%
+      const bonusApplies = bonusMass > 0 ? 1 : 0;
+      const out = [];
+      for (const a of attrs) {
+        const agent = db.get('SELECT * FROM sales_agent WHERE id = ?', a.agent_id);
+        if (!agent) continue;
+        const rate = a.rate != null ? a.rate : (agent.base_rate || 0);
+        const bonusRate = bonusApplies ? (agent.bonus_rate || 0) : 0;
+        const bonusBase = Math.round(bonusFraction * amt * 100) / 100;   // revenue the bonus rate applies to
+        const commissionAmount = Math.round((rate * amt + bonusRate * bonusBase) * 100) / 100;
+        const cid = `comm-${contractId}-${String(date).slice(0,10)}-${a.agent_id}`;
+        const before = db.get('SELECT * FROM commission WHERE id = ?', cid) || null;
+        const row = { id: cid, contract_id: String(contractId), agent_id: a.agent_id, customer,
+          payment_amount: amt, payment_date: date, rate, bonus_applies: bonusApplies, bonus_rate: bonusRate,
+          booked_kg: bk, capacity_kg: cap, bonus_mass: Math.round(bonusMass * 100) / 100, bonus_base_amount: bonusBase,
+          commission_amount: commissionAmount, status: (before ? before.status : 'due'), due_date: due };
+        writeAudited('commission', cid, before ? 'update' : 'insert', before, row, () => {
+          db.run('INSERT INTO commission (id,contract_id,agent_id,customer,payment_amount,payment_date,rate,bonus_applies,bonus_rate,booked_kg,capacity_kg,bonus_mass,bonus_base_amount,commission_amount,status,due_date,raw_json) ' +
+            'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET payment_amount=excluded.payment_amount, ' +
+            'rate=excluded.rate, bonus_applies=excluded.bonus_applies, bonus_rate=excluded.bonus_rate, booked_kg=excluded.booked_kg, ' +
+            'capacity_kg=excluded.capacity_kg, bonus_mass=excluded.bonus_mass, bonus_base_amount=excluded.bonus_base_amount, ' +
+            'commission_amount=excluded.commission_amount, due_date=excluded.due_date, customer=excluded.customer, raw_json=excluded.raw_json',
+            cid, row.contract_id, row.agent_id, customer, amt, date, rate, bonusApplies, bonusRate, bk, cap,
+            row.bonus_mass, bonusBase, commissionAmount, row.status, due, JSON.stringify(row));
+        });
+        out.push({ ...db.get('SELECT * FROM commission WHERE id = ?', cid), agent_name: agent.name, agent_email: agent.email });
+      }
+      return out;
+    },
+    markCommissionPaid(id, { paid_date, qb_ref } = {}) {
+      const cid = String(id);
+      const before = db.get('SELECT * FROM commission WHERE id = ?', cid);
+      if (!before) throw new Error(`commission ${id} not found`);
+      const after = { ...before, status: 'paid', paid_date: paid_date || new Date().toISOString().slice(0,10), qb_ref: qb_ref ?? before.qb_ref };
+      writeAudited('commission', cid, 'update', before, after, () => {
+        db.run('UPDATE commission SET status=?, paid_date=?, qb_ref=COALESCE(?,qb_ref) WHERE id=?',
+          'paid', after.paid_date, qb_ref ?? null, cid);
+      });
+      return after;
+    },
+    listCommissions({ status, agent_id, limit = 200 } = {}) {
+      const where = [], args = [];
+      if (status) { where.push('c.status = ?'); args.push(status); }
+      if (agent_id) { where.push('c.agent_id = ?'); args.push(agent_id); }
+      return db.all('SELECT c.*, a.name AS agent_name, a.email AS agent_email FROM commission c ' +
+        'LEFT JOIN sales_agent a ON a.id = c.agent_id' +
+        (where.length ? ' WHERE ' + where.join(' AND ') : '') +
+        ' ORDER BY c.due_date LIMIT ?', ...args, limit);
+    },
+    getAgentByEmail(email) {
+      if (!email) return null;
+      return db.get('SELECT * FROM sales_agent WHERE lower(email) = lower(?)', String(email)) || null;
+    },
+    listAttributions(contractId) {
+      return db.all('SELECT x.*, a.name AS agent_name FROM contract_attribution x LEFT JOIN sales_agent a ON a.id=x.agent_id WHERE x.contract_id = ?', String(contractId));
     },
 
     // ---- audit inspection ----

@@ -77,7 +77,18 @@ async function main() {
       employment_status: 'Active', source: 'bamboo', bamboo_id: e.id,
     });
   }
+  // ── RECONCILE: prune anything not in this Bamboo pull, so the mirror == Bamboo (read-through, self-healing) ──
+  const keepEmp = new Set(emps.map(e => 'bamboo-' + e.id));
+  const keepOrg = new Set(['org-exos', ...depts.map(d => 'org-' + slug(d))]);
+  const keepPos = new Set(titles.map(t => 'pos-' + slug(t)));
+  const pruned = { employee: 0, position: 0, org_unit: 0 };
+  for (const row of erp.getEmployees()) if (!keepEmp.has(row.id) && erp.deleteEmployee(row.id)) pruned.employee++;
+  for (const row of erp.getPositions()) if (!keepPos.has(row.id) && erp.deletePosition(row.id)) pruned.position++;
+  for (const row of erp.getOrgUnits()) if (!keepOrg.has(row.id) && erp.deleteOrgUnit(row.id)) pruned.org_unit++;
+
   console.log(`\n✓ Mirrored from Bamboo: ${depts.length} departments, ${titles.length} positions, ${emps.length} employees (audited; Bamboo remains authoritative).`);
+  if (pruned.employee || pruned.position || pruned.org_unit)
+    console.log(`  Reconciled (pruned stale non-Bamboo rows): ${pruned.employee} employees, ${pruned.position} positions, ${pruned.org_unit} org units.`);
   erp.close();
 }
 

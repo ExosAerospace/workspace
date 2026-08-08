@@ -1139,6 +1139,26 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── HR DIRECTORY (read-only) — read-through mirror of BambooHR; directory-level only, no PII ──
+  // Bamboo remains the system of record; this serves name/title/department/manager/work-email
+  // for the MC directory + org-chart views. Requires a logged-in session.
+  if (req.url.split('?')[0] === '/api/hr/directory' && req.method === 'GET') {
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    let erp;
+    try {
+      const { openErp } = require('../erp-foundation/dal');
+      erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: (session && session.email) || 'mc-server', agent: 'mc-hr-directory' });
+      const employees = erp.getEmployees();
+      const org_units = erp.getOrgUnits();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ source: 'BambooHR (read-through mirror; Bamboo authoritative)', count: employees.length, employees, org_units }));
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'hr directory unavailable', detail: String(e).slice(0, 200) }));
+    } finally { try { erp && erp.close(); } catch (e) {} }
+    return;
+  }
+
   // ── WELCOME PAGE (early adopter onboarding) ──
   if ((req.url === '/welcome' || req.url === '/welcome.html') && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'text/html' });
@@ -2402,6 +2422,65 @@ const server = http.createServer((req, res) => {
         saveResearchIngest(arr.slice(0, 500));
         res.writeHead(201, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ ok: true, ingested: out.length, briefs: out }));
+      } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+    }); return;
+  }
+
+  // Capability-Gap Ledger — the acquire/build/license/partner pipeline fed by the commercialization
+  // engine. GET serves the ledger; token-protected POST lets the opportunity/quote engines log a gap
+  // when a deal is lost/blocked for a missing capability (the recursive corp-dev loop).
+  if (req.url.split('?')[0] === '/api/capability-gaps' && req.method === 'GET') {
+    let d = { generated_at: null, gaps: [] };
+    try { d = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'capability-gaps.json'))); } catch (e) {}
+    const order = { high: 0, medium: 1, low: 2 };
+    (d.gaps || []).sort((a, b) => (order[a.severity] ?? 3) - (order[b.severity] ?? 3) || String(a.capability).localeCompare(String(b.capability)));
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ generated_at: d.generated_at || null, count: (d.gaps || []).length, gaps: d.gaps || [] }));
+    return;
+  }
+  // Ranked corp-dev shortlist — which target/partner to move on first (third-party fit-scorer).
+  if (req.url.split('?')[0] === '/api/gap-targets' && req.method === 'GET') {
+    let d = { generated_at: null, targets: [], unmatched: [] };
+    try { d = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'gap-targets.json'))); } catch (e) {}
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(d));
+    return;
+  }
+  // Update a gap's status/tag from the UI (auth'd session; admin/Jon).
+  if (req.url === '/api/capability-gaps/update' && req.method === 'POST') {
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const p = JSON.parse(body || '{}');
+        const fp = path.join(__dirname, 'data', 'capability-gaps.json');
+        const d = JSON.parse(fs.readFileSync(fp));
+        const g = (d.gaps || []).find(x => x.id === p.id);
+        if (!g) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'not found' })); return; }
+        if (p.status) g.status = p.status;
+        if (p.tag) g.tag = p.tag;
+        if (typeof p.note === 'string') g.note = p.note.slice(0, 1000);
+        g.updated = new Date().toISOString();
+        d.generated_at = g.updated;
+        fs.writeFileSync(fp, JSON.stringify(d, null, 2));
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, gap: g }));
+      } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+    }); return;
+  }
+  // Token-protected ingest — the engines call this when a deal reveals a missing capability.
+  if (req.url === '/api/capability-gaps/ingest' && req.method === 'POST') {
+    if ((req.headers['x-exo-token'] || '') !== decisionsToken()) {
+      res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'bad token' })); return;
+    }
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const p = JSON.parse(body || '{}');
+        const cp = require('child_process');
+        const args = ['scripts/capability_gap_ledger.py', 'add', '--capability', String(p.capability || '').slice(0, 120)];
+        if (p.description) { args.push('--description', String(p.description).slice(0, 500)); }
+        if (p.source) { args.push('--source', String(p.source).slice(0, 120)); }
+        if (p.severity) { args.push('--severity', String(p.severity)); }
+        if (p.tag) { args.push('--tag', String(p.tag)); }
+        const r = cp.execFileSync('python3', args, { cwd: path.join(__dirname, '..'), encoding: 'utf8', timeout: 20000 });
+        res.writeHead(201, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, result: r.trim() }));
       } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
     }); return;
   }

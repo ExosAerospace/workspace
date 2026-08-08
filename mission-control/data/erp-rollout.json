@@ -1,279 +1,279 @@
 {
- "generated": "2026-07-29",
- "meta": {
-  "name": "Mission Control \u2192 Work-Management ERP",
-  "tag": "PROGRAM \u00b7 ERP ROLLOUT",
-  "summary": "Transform Mission Control into a DCAA-grade, CMMC-ready Work-Management ERP \u2014 HR, timekeeping, contracts/CDRL, procurement, production, and finance \u2014 interfacing (not replacing) BambooHR and closing the government/DIB readiness gaps.",
-  "sponsor": "John Quinn",
-  "program_lead": "[ASSIGN]",
-  "process_turnover": "Lizi \u2192 Exo (COMPLETE \u2014 library live in MC; Lizi advises on revisions)",
-  "started": "2026-07-20",
-  "current_phase": "Phase 0 \u2014 Foundation (branch erp-phase0)"
- },
- "milestones": [
-  {
-   "id": "P0",
-   "name": "Phase 0 \u2014 Foundation",
-   "due": "2026-08",
-   "status": "In Progress",
-   "deliverables": [
+  "generated": "2026-08-08",
+  "meta": {
+    "name": "Mission Control → Work-Management ERP",
+    "tag": "PROGRAM · ERP ROLLOUT",
+    "summary": "Transform Mission Control into a DCAA-grade, CMMC-ready Work-Management ERP — HR, timekeeping, contracts/CDRL, procurement, production, and finance — interfacing (not replacing) BambooHR and closing the government/DIB readiness gaps.",
+    "sponsor": "John Quinn",
+    "program_lead": "Phil Eaton",
+    "process_turnover": "Lizi → Exo (COMPLETE — library live in MC; Lizi advises on revisions)",
+    "started": "2026-07-20",
+    "current_phase": "Phase 1 complete (BambooHR interface live) · Phase 0 hardening + Phase 2 (Timekeeping) in progress"
+  },
+  "milestones": [
     {
-     "name": "SQLite system-of-record + full schema (38 tables)",
-     "status": "done",
-     "owner": "Exo",
-     "note": "erp-foundation/mc.db live; all plan \u00a77 entities modeled"
+      "id": "P0",
+      "name": "Phase 0 — Foundation",
+      "due": "2026-08",
+      "status": "In Progress",
+      "deliverables": [
+        {
+          "name": "SQLite system-of-record + full schema (38 tables)",
+          "status": "done",
+          "owner": "Exo",
+          "note": "erp-foundation/mc.db live; all plan §7 entities modeled"
+        },
+        {
+          "name": "JSON → SQLite migration (CRM/tasks/opps/decisions)",
+          "status": "done",
+          "owner": "Exo",
+          "note": "1183 companies/contacts/deals + 110 opps + 87 tasks migrated"
+        },
+        {
+          "name": "Immutable audit log on every mutation",
+          "status": "done",
+          "owner": "Exo",
+          "note": "audit_log live (3,900+ rows); DAL writeAudited() chokepoint"
+        },
+        {
+          "name": "RBAC — roles & clearances",
+          "status": "in_progress",
+          "owner": "Exo",
+          "note": "role + clearance tables seeded; single /api authz middleware pending"
+        },
+        {
+          "name": "Backups (3-2-1, restore-tested)",
+          "status": "done",
+          "owner": "Exo",
+          "note": "backup_erp.js nightly (launchd), VACUUM-INTO snapshot + restore-verify (7 tables reconcile); remote legs (node + GCC High offsite) pending"
+        },
+        {
+          "name": "Availability / failover when ExoMac is down",
+          "status": "in_progress",
+          "owner": "Exo",
+          "note": "MC launchd KeepAlive auto-restart live (crash/reboot covered); Azure Gov warm standby pending"
+        },
+        {
+          "name": "CMMC 2.0 / CUI hosting boundary",
+          "status": "in_progress",
+          "owner": "Atomus",
+          "note": "GCC High confirmed; Azure Gov compute for the CUI-bearing app to be added (blocks HR PII go-live)"
+        }
+      ]
     },
     {
-     "name": "JSON \u2192 SQLite migration (CRM/tasks/opps/decisions)",
-     "status": "done",
-     "owner": "Exo",
-     "note": "1183 companies/contacts/deals + 110 opps + 87 tasks migrated"
+      "id": "P1",
+      "name": "Phase 1 — BambooHR Interface (read-through)",
+      "due": "2026-09",
+      "status": "Done",
+      "note": "Decision 2026-07-30 (Jon): HR is STRICTLY an interface to BambooHR. Bamboo stays the system of record — no absorption, no cutover. MC displays a read-through mirror only; HR PII stays in Bamboo (out of ExoMac scope).",
+      "deliverables": [
+        {
+          "name": "HR read-through cache schema (org, position, employee)",
+          "status": "done",
+          "owner": "Exo",
+          "note": "employee/org_unit/position live via audited DAL; now populated from the live Bamboo sync (no longer placeholder) — 11 employees / 3 depts / 10 positions."
+        },
+        {
+          "name": "BambooHR interface adapter (directory + org sync)",
+          "status": "done",
+          "owner": "Exo",
+          "note": "VALIDATED 2026-08-08 against live Bamboo (subdomain exosaero): dry-run + --apply mirrored 3 departments, 10 positions, 11 employees into the audited read-through cache. Read-only, never writes Bamboo, no PII."
+        },
+        {
+          "name": "HR directory / org-chart views in MC (read-only)",
+          "status": "done",
+          "owner": "Exo",
+          "note": "BUILT 2026-08-08: read-only /api/hr/directory endpoint + hr.html (directory + org-by-department, mailto + Bamboo deep-links). Session-gated. Renders from the reconciled Bamboo mirror (11 employees, no PII)."
+        }
+      ]
     },
     {
-     "name": "Immutable audit log on every mutation",
-     "status": "done",
-     "owner": "Exo",
-     "note": "audit_log live (3,900+ rows); DAL writeAudited() chokepoint"
+      "id": "P2",
+      "name": "Phase 2 — Timekeeping (Bamboo/DCAA) → MC Cost Accounting",
+      "due": "2026-10",
+      "status": "In Progress",
+      "note": "Decision 2026-07-30: timekeeping lives in BAMBOO — projects structured to the DCAA-required format, employees book time under DCAA cost codes, Bamboo object-lock = immutability. Fixed-Price (FFP) is the primary vehicle, which limits the DCAA compliance burden. MC does NOT build timekeeping; it reads Bamboo actuals for cost rollup.",
+      "deliverables": [
+        {
+          "name": "DCAA timekeeping (in Bamboo — projects + cost codes + object-lock)",
+          "status": "blocked",
+          "owner": "Lizi Quinn (create) + Kyle Ballard (support)",
+          "note": "ASSIGNED 2026-08-08 to Lizi (create) w/ Kyle Ballard CFO support (task #1870). Stand up in BambooHR: charge codes/WBS→contracts + indirect pools, total-time accounting, object-lock+audit trail, approval/segregation of duties, written policy + floor-check readiness. Prerequisite to the Exo interface + rollup. FFP-primary limits mandatory scope."
+        },
+        {
+          "name": "Read Bamboo project/time actuals into MC (interface)",
+          "status": "todo",
+          "owner": "Exo",
+          "note": "Exo build, GATED on: (a) Lizi/Kyle DCAA setup complete, (b) Bamboo Time-Tracking API scope on the key. Extend bamboo_sync.js (read-only, audited, idempotent — apply P1 reconcile lesson)."
+        },
+        {
+          "name": "Labor actuals → project / WBS cost rollup (feeds Phase 4)",
+          "status": "todo",
+          "owner": "Exo"
+        }
+      ]
     },
     {
-     "name": "RBAC \u2014 roles & clearances",
-     "status": "in_progress",
-     "owner": "Exo",
-     "note": "role + clearance tables seeded; single /api authz middleware pending"
+      "id": "P3",
+      "name": "Phase 3 — BambooHR Cutover & Decommission",
+      "due": "—",
+      "status": "N/A",
+      "note": "Removed by decision 2026-07-30 — BambooHR remains the HR system of record permanently; MC interfaces to it, never replaces it.",
+      "deliverables": [
+        {
+          "name": "N/A — Bamboo stays authoritative (no cutover/decommission)",
+          "status": "blocked",
+          "owner": "—",
+          "note": "superseded by the read-through interface in Phase 1"
+        }
+      ]
     },
     {
-     "name": "Backups (3-2-1, restore-tested)",
-     "status": "done",
-     "owner": "Exo",
-     "note": "backup_erp.js nightly (launchd), VACUUM-INTO snapshot + restore-verify (7 tables reconcile); remote legs (node + GCC High offsite) pending"
+      "id": "P4",
+      "name": "Phase 4 — Contracts & CDRL + Cost Rollup",
+      "due": "2026-12",
+      "status": "In Progress",
+      "deliverables": [
+        {
+          "name": "Contract → WBS → CDRL model (audited)",
+          "status": "done",
+          "owner": "Exo",
+          "note": "confirmed awards modeled: FA9300-25-C-6022 (HVRR-RDRE Ph II / Hermes) + Karmen D2P2; 7 DCAA-aligned WBS + 3 CDRLs. Pursuits (TACFI, NASA Ph III) stay in pipeline until awarded."
+        },
+        {
+          "name": "Budget-vs-actual cost-accounting rollup",
+          "status": "done",
+          "owner": "Exo",
+          "note": "per-WBS rollup built + proven (joins Bamboo/DCAA labor hours + PO material $ vs WBS budget); populates automatically as time + POs flow"
+        },
+        {
+          "name": "Load funded values, WBS budgets, CDRL due dates",
+          "status": "todo",
+          "owner": "Jon",
+          "note": "kept null until verified — no fabricated financials"
+        }
+      ]
     },
     {
-     "name": "Availability / failover when ExoMac is down",
-     "status": "in_progress",
-     "owner": "Exo",
-     "note": "MC launchd KeepAlive auto-restart live (crash/reboot covered); Azure Gov warm standby pending"
+      "id": "P5",
+      "name": "Phase 5 — Procurement + Asset/Hardware Tracking",
+      "due": "2027-Q1",
+      "status": "Planned",
+      "deliverables": [
+        {
+          "name": "Vendors, POs, receiving (feeds SCRM scorecards)",
+          "status": "todo",
+          "owner": "Exo"
+        },
+        {
+          "name": "Serialized flight-hardware asset register",
+          "status": "todo",
+          "owner": "Exo"
+        }
+      ]
     },
     {
-     "name": "CMMC 2.0 / CUI hosting boundary",
-     "status": "in_progress",
-     "owner": "Atomus",
-     "note": "GCC High confirmed; Azure Gov compute for the CUI-bearing app to be added (blocks HR PII go-live)"
+      "id": "P5B",
+      "name": "Phase 5B — Production Management (Manufacturing)",
+      "due": "2027-Q1",
+      "status": "Planned",
+      "deliverables": [
+        {
+          "name": "Bill of Materials (BOM)",
+          "status": "todo",
+          "owner": "Exo"
+        },
+        {
+          "name": "Work orders / routings + WIP",
+          "status": "todo",
+          "owner": "Exo"
+        },
+        {
+          "name": "Quality records (NCR / CAPA / first-article)",
+          "status": "todo",
+          "owner": "Exo",
+          "note": "QMS transactional home"
+        },
+        {
+          "name": "Closes gov-readiness gap MQ-1 (manufacturing management)",
+          "status": "todo",
+          "owner": "Exo"
+        }
+      ]
+    },
+    {
+      "id": "P6",
+      "name": "Phase 6 — Finance Integration + Doc Control / ITAR",
+      "due": "2027-Q2",
+      "status": "Planned",
+      "deliverables": [
+        {
+          "name": "QuickBooks integration (budget-vs-actual)",
+          "status": "todo",
+          "owner": "Exo"
+        },
+        {
+          "name": "Controlled document control / ITAR",
+          "status": "todo",
+          "owner": "Exo"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "id": "P1",
-   "name": "Phase 1 \u2014 BambooHR Interface (read-through)",
-   "due": "2026-09",
-   "status": "In Progress",
-   "note": "Decision 2026-07-30 (Jon): HR is STRICTLY an interface to BambooHR. Bamboo stays the system of record \u2014 no absorption, no cutover. MC displays a read-through mirror only; HR PII stays in Bamboo (out of ExoMac scope).",
-   "deliverables": [
+  ],
+  "process_register": [
     {
-     "name": "HR read-through cache schema (org, position, employee)",
-     "status": "done",
-     "owner": "Exo",
-     "note": "employee/org_unit/position live via audited DAL; serves as the Bamboo mirror (placeholder org seeded until the sync runs)"
+      "name": "Supplier Management & SCRM Policy",
+      "artifact": "Exos_Supplier_SCRM_Policy.docx",
+      "owner": "Lizi → Exo/MC",
+      "status": "in_progress",
+      "note": "Draft delivered; adopt & sign"
     },
     {
-     "name": "BambooHR interface adapter (directory + org sync)",
-     "status": "blocked",
-     "owner": "Exo",
-     "note": "adapter BUILT (erp-foundation/bamboo_sync.js) \u2014 runs on BAMBOO_SUBDOMAIN + BAMBOO_API_KEY; read-only, never writes back to Bamboo, no PII"
+      "name": "Quality Management System (QMS) Charter",
+      "artifact": "Exos_QMS_Charter.docx",
+      "owner": "Lizi → Exo/MC",
+      "status": "in_progress",
+      "note": "AS9100D-aligned; cert is target"
     },
     {
-     "name": "HR directory / org-chart views in MC (read-only)",
-     "status": "todo",
-     "owner": "Exo",
-     "note": "renders from the Bamboo mirror; deep-links to Bamboo for authoritative HR actions"
+      "name": "Manufacturing Maturation Plan (MRL)",
+      "artifact": "Exos_Manufacturing_Maturation_Plan.docx",
+      "owner": "Lizi → Exo/MC",
+      "status": "in_progress",
+      "note": "Draft delivered"
+    },
+    {
+      "name": "Government / DIB Readiness Register",
+      "artifact": "gov-readiness.html",
+      "owner": "Exo/MC",
+      "status": "live",
+      "note": "9 items tracked; links ERP data"
+    },
+    {
+      "name": "Exos Process & Procedures Library (Lizi turnover)",
+      "artifact": "process-library.html",
+      "owner": "Lizi → Exo/MC",
+      "status": "live",
+      "note": "61 files organized into 11 functional areas; 34 register entries; add→approve→record workflow (QMS-001) live. Lizi turnover COMPLETE — Exo now manages/tracks."
     }
-   ]
-  },
-  {
-   "id": "P2",
-   "name": "Phase 2 \u2014 Timekeeping (Bamboo/DCAA) \u2192 MC Cost Accounting",
-   "due": "2026-10",
-   "status": "Planned",
-   "note": "Decision 2026-07-30: timekeeping lives in BAMBOO \u2014 projects structured to the DCAA-required format, employees book time under DCAA cost codes, Bamboo object-lock = immutability. Fixed-Price (FFP) is the primary vehicle, which limits the DCAA compliance burden. MC does NOT build timekeeping; it reads Bamboo actuals for cost rollup.",
-   "deliverables": [
+  ],
+  "metrics": [
     {
-     "name": "DCAA timekeeping (in Bamboo \u2014 projects + cost codes + object-lock)",
-     "status": "blocked",
-     "owner": "Bamboo",
-     "note": "configured in BambooHR, not built in MC; FFP-primary limits the compliance scope"
+      "big": "8",
+      "lbl": "ERP phases (0 → 6, incl. 5B)"
     },
     {
-     "name": "Read Bamboo project/time actuals into MC (interface)",
-     "status": "todo",
-     "owner": "Exo",
-     "note": "bamboo_sync.js extends to pull projects + time entries when the API key lands"
+      "big": "9",
+      "lbl": "Gov/DIB readiness items tracked"
     },
     {
-     "name": "Labor actuals \u2192 project / WBS cost rollup (feeds Phase 4)",
-     "status": "todo",
-     "owner": "Exo"
+      "big": "DCAA",
+      "lbl": "Timekeeping grade (target)"
+    },
+    {
+      "big": "CMMC L2",
+      "lbl": "Compliance target (via Atomus)"
     }
-   ]
-  },
-  {
-   "id": "P3",
-   "name": "Phase 3 \u2014 BambooHR Cutover & Decommission",
-   "due": "\u2014",
-   "status": "N/A",
-   "note": "Removed by decision 2026-07-30 \u2014 BambooHR remains the HR system of record permanently; MC interfaces to it, never replaces it.",
-   "deliverables": [
-    {
-     "name": "N/A \u2014 Bamboo stays authoritative (no cutover/decommission)",
-     "status": "blocked",
-     "owner": "\u2014",
-     "note": "superseded by the read-through interface in Phase 1"
-    }
-   ]
-  },
-  {
-   "id": "P4",
-   "name": "Phase 4 \u2014 Contracts & CDRL + Cost Rollup",
-   "due": "2026-12",
-   "status": "In Progress",
-   "deliverables": [
-    {
-     "name": "Contract \u2192 WBS \u2192 CDRL model (audited)",
-     "status": "done",
-     "owner": "Exo",
-     "note": "confirmed awards modeled: FA9300-25-C-6022 (HVRR-RDRE Ph II / Hermes) + Karmen D2P2; 7 DCAA-aligned WBS + 3 CDRLs. Pursuits (TACFI, NASA Ph III) stay in pipeline until awarded."
-    },
-    {
-     "name": "Budget-vs-actual cost-accounting rollup",
-     "status": "done",
-     "owner": "Exo",
-     "note": "per-WBS rollup built + proven (joins Bamboo/DCAA labor hours + PO material $ vs WBS budget); populates automatically as time + POs flow"
-    },
-    {
-     "name": "Load funded values, WBS budgets, CDRL due dates",
-     "status": "todo",
-     "owner": "Jon",
-     "note": "kept null until verified \u2014 no fabricated financials"
-    }
-   ]
-  },
-  {
-   "id": "P5",
-   "name": "Phase 5 \u2014 Procurement + Asset/Hardware Tracking",
-   "due": "2027-Q1",
-   "status": "Planned",
-   "deliverables": [
-    {
-     "name": "Vendors, POs, receiving (feeds SCRM scorecards)",
-     "status": "todo",
-     "owner": "Exo"
-    },
-    {
-     "name": "Serialized flight-hardware asset register",
-     "status": "todo",
-     "owner": "Exo"
-    }
-   ]
-  },
-  {
-   "id": "P5B",
-   "name": "Phase 5B \u2014 Production Management (Manufacturing)",
-   "due": "2027-Q1",
-   "status": "Planned",
-   "deliverables": [
-    {
-     "name": "Bill of Materials (BOM)",
-     "status": "todo",
-     "owner": "Exo"
-    },
-    {
-     "name": "Work orders / routings + WIP",
-     "status": "todo",
-     "owner": "Exo"
-    },
-    {
-     "name": "Quality records (NCR / CAPA / first-article)",
-     "status": "todo",
-     "owner": "Exo",
-     "note": "QMS transactional home"
-    },
-    {
-     "name": "Closes gov-readiness gap MQ-1 (manufacturing management)",
-     "status": "todo",
-     "owner": "Exo"
-    }
-   ]
-  },
-  {
-   "id": "P6",
-   "name": "Phase 6 \u2014 Finance Integration + Doc Control / ITAR",
-   "due": "2027-Q2",
-   "status": "Planned",
-   "deliverables": [
-    {
-     "name": "QuickBooks integration (budget-vs-actual)",
-     "status": "todo",
-     "owner": "Exo"
-    },
-    {
-     "name": "Controlled document control / ITAR",
-     "status": "todo",
-     "owner": "Exo"
-    }
-   ]
-  }
- ],
- "process_register": [
-  {
-   "name": "Supplier Management & SCRM Policy",
-   "artifact": "Exos_Supplier_SCRM_Policy.docx",
-   "owner": "Lizi \u2192 Exo/MC",
-   "status": "in_progress",
-   "note": "Draft delivered; adopt & sign"
-  },
-  {
-   "name": "Quality Management System (QMS) Charter",
-   "artifact": "Exos_QMS_Charter.docx",
-   "owner": "Lizi \u2192 Exo/MC",
-   "status": "in_progress",
-   "note": "AS9100D-aligned; cert is target"
-  },
-  {
-   "name": "Manufacturing Maturation Plan (MRL)",
-   "artifact": "Exos_Manufacturing_Maturation_Plan.docx",
-   "owner": "Lizi \u2192 Exo/MC",
-   "status": "in_progress",
-   "note": "Draft delivered"
-  },
-  {
-   "name": "Government / DIB Readiness Register",
-   "artifact": "gov-readiness.html",
-   "owner": "Exo/MC",
-   "status": "live",
-   "note": "9 items tracked; links ERP data"
-  },
-  {
-   "name": "Exos Process & Procedures Library (Lizi turnover)",
-   "artifact": "process-library.html",
-   "owner": "Lizi \u2192 Exo/MC",
-   "status": "live",
-   "note": "61 files organized into 11 functional areas; 34 register entries; add\u2192approve\u2192record workflow (QMS-001) live. Lizi turnover COMPLETE \u2014 Exo now manages/tracks."
-  }
- ],
- "metrics": [
-  {
-   "big": "8",
-   "lbl": "ERP phases (0 \u2192 6, incl. 5B)"
-  },
-  {
-   "big": "9",
-   "lbl": "Gov/DIB readiness items tracked"
-  },
-  {
-   "big": "DCAA",
-   "lbl": "Timekeeping grade (target)"
-  },
-  {
-   "big": "CMMC L2",
-   "lbl": "Compliance target (via Atomus)"
-  }
- ]
+  ]
 }
