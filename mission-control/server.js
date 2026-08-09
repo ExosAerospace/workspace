@@ -1159,6 +1159,23 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── ASSET REGISTER (read-only) — serialized flight-hardware register + events (audited ERP db) ──
+  if (req.url.split('?')[0] === '/api/assets' && req.method === 'GET') {
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    let erp;
+    try {
+      const { openErp } = require('../erp-foundation/dal');
+      erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: (session && session.email) || 'mc-server', agent: 'mc-asset-register' });
+      const assets = erp.listAssets().map(a => ({ ...a, event_list: erp.listAssetEvents(a.id) }));
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ count: assets.length, assets }));
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'asset register unavailable', detail: String(e).slice(0, 200) }));
+    } finally { try { erp && erp.close(); } catch (e) {} }
+    return;
+  }
+
   // ── WELCOME PAGE (early adopter onboarding) ──
   if ((req.url === '/welcome' || req.url === '/welcome.html') && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'text/html' });

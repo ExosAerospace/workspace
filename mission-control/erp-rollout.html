@@ -75,7 +75,7 @@
 </div>
 <script id="data" type="application/json">
 {
- "generated": "2026-08-08",
+ "generated": "2026-08-09",
  "meta": {
   "name": "Mission Control → Work-Management ERP",
   "tag": "PROGRAM · ERP ROLLOUT",
@@ -235,17 +235,19 @@
    "id": "P5",
    "name": "Phase 5 — Procurement + Asset/Hardware Tracking",
    "due": "2027-Q1",
-   "status": "Planned",
+   "status": "In Progress",
    "deliverables": [
     {
      "name": "Vendors, POs, receiving (feeds SCRM scorecards)",
      "status": "todo",
-     "owner": "Exo"
+     "owner": "Exo",
+     "note": "Next increment: vendor/PO/receiving tables exist (empty); DAL + views to follow. Feeds SCRM scorecards."
     },
     {
      "name": "Serialized flight-hardware asset register",
-     "status": "todo",
-     "owner": "Exo"
+     "status": "in_progress",
+     "owner": "Exo",
+     "note": "Asset Register LIVE 2026-08-09 (assets.html + read-only /api/assets, audited). Seeded real hardware: BLK3 vehicle + 2x GEO-FOG 3D INS (SARGE spares) — serials TBD, confirm w/ Neil/Mike. Lifecycle events + audit trail."
     }
    ]
   },

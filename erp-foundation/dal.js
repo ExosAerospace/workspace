@@ -151,6 +151,37 @@ function openErp(file, opts = {}) {
       return true;
     },
 
+    // ---- P5: Asset register (serialized flight hardware) — reads + audited writes ----
+    listAssets() {
+      return db.all(
+        `SELECT a.id, a.serial, a.name, a.config, a.location,
+                (SELECT COUNT(*) FROM asset_event e WHERE e.asset_id = a.id) AS events
+           FROM asset a ORDER BY a.name`);
+    },
+    listAssetEvents(asset_id) {
+      return db.all('SELECT id, asset_id, kind, occurred_at, notes FROM asset_event WHERE asset_id = ? ORDER BY occurred_at DESC, id DESC', String(asset_id));
+    },
+    upsertAsset(a) {
+      if (!a || !a.id) throw new Error('upsertAsset requires id');
+      const id = String(a.id);
+      const before = db.get('SELECT * FROM asset WHERE id = ?', id) || null;
+      writeAudited('asset', id, before ? 'update' : 'insert', before, a, () => {
+        db.run('INSERT INTO asset (id,serial,name,config,location,raw_json) VALUES (?,?,?,?,?,?) ' +
+          'ON CONFLICT(id) DO UPDATE SET serial=excluded.serial, name=excluded.name, config=excluded.config, location=excluded.location, raw_json=excluded.raw_json',
+          id, a.serial ?? null, a.name ?? null, a.config ?? null, a.location ?? null, JSON.stringify(a));
+      });
+      return db.get('SELECT * FROM asset WHERE id = ?', id);
+    },
+    addAssetEvent(ev) {
+      if (!ev || !ev.id || !ev.asset_id) throw new Error('addAssetEvent requires id + asset_id');
+      const id = String(ev.id);
+      writeAudited('asset_event', id, 'insert', null, ev, () => {
+        db.run('INSERT INTO asset_event (id,asset_id,kind,occurred_at,notes,raw_json) VALUES (?,?,?,?,?,?)',
+          id, String(ev.asset_id), ev.kind ?? null, ev.occurred_at ?? null, ev.notes ?? null, JSON.stringify(ev));
+      });
+      return db.get('SELECT * FROM asset_event WHERE id = ?', id);
+    },
+
     // ---- writes (audited) ----
     /** Insert or update a deal; audits before/after. */
     upsertDeal(deal) {
