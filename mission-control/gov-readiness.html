@@ -1,0 +1,182 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exos — Government / DIB Readiness</title>
+<style>
+:root{--navy:#0b1a3a;--navy2:#12294f;--gold:#e8aa3c;--ink:#0f1626;--paper:#0a1224;--line:#24406e;--grey:#9fb4d8}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#060c1a,#0a1224);color:#e7eefc;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 22px 60px}
+h1{font-size:26px;margin:0 0 2px;color:#fff}
+.sub{color:var(--grey);font-size:14px;margin-bottom:16px}
+.principle{background:rgba(232,170,60,.08);border:1px solid rgba(232,170,60,.4);border-radius:10px;padding:12px 16px;color:#f0e6cf;font-size:13.5px;margin-bottom:8px}
+.updated{color:var(--grey);font-size:12px;margin:6px 2px 22px}
+.summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.chip{border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600;border:1px solid var(--line)}
+.chip b{font-size:15px}
+h2{font-size:18px;color:var(--gold);border-bottom:1px solid var(--line);padding-bottom:6px;margin:26px 0 12px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:10px 10px;border-bottom:1px solid rgba(36,64,110,.6);vertical-align:top}
+th{color:var(--grey);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+td.id{font-weight:700;color:#cfe0ff;white-space:nowrap}
+.q{color:#fff}
+.note{color:var(--grey);font-size:12px;margin-top:3px}
+.badge{display:inline-block;padding:3px 10px;border-radius:14px;font-size:12px;font-weight:700;white-space:nowrap}
+.b-yes{background:rgba(28,107,47,.25);color:#7fe0a0;border:1px solid #1c6b2f}
+.b-prog{background:rgba(232,170,60,.18);color:#f2c760;border:1px solid #b8861f}
+.b-gap{background:rgba(138,26,26,.25);color:#ff9a9a;border:1px solid #8a1a1a}
+.own{color:#bcd0f2;font-size:12.5px}
+.art{color:var(--gold);font-size:12px}
+.src{color:var(--grey);font-size:11.5px}
+.foot{color:#5f6f8f;font-size:11px;margin-top:30px}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:6px;margin-left:4px}
+.t-erp{background:#123;border:1px solid #2a6;color:#7fe0a0}
+.t-mc{background:#213;border:1px solid #b8861f;color:#f2c760}
+</style></head>
+<body><div class="wrap">
+<h1 id="title">Government / DIB Readiness Register</h1>
+<div class="sub" id="subtitle"></div>
+<div class="principle" id="principle"></div>
+<div class="updated" id="updated"></div>
+<div class="summary" id="summary"></div>
+<div id="content"></div>
+<div class="foot">Generated from <code>mission-control/data/gov-readiness.json</code>. ERP = system of record (transactions); MC = readiness/compliance status. PROPRIETARY — Exos Aerospace.</div>
+</div>
+<script id="data" type="application/json">
+{
+ "meta": {
+  "title": "Government / DIB Readiness Register",
+  "subtitle": "Supplier (SCRM) + Manufacturing & Quality readiness for federal work",
+  "principle": "ERP runs the operation (transactions, system of record); Mission Control proves the readiness (status, policy, plans, certifications). Each item has one owner; the readiness view references ERP data and never duplicates it.",
+  "updated": "2026-07-29",
+  "legend": {
+   "Yes": "Documented and in effect",
+   "In progress": "Artifact/process being stood up",
+   "Gap": "Capability not yet in place"
+  }
+ },
+ "domains": [
+  {
+   "domain": "Supplier & Subcontract (SCRM)",
+   "items": [
+    {
+     "id": "SCRM-1",
+     "question": "Documented sourcing policies for suppliers/subcontractors meeting federal standards",
+     "status": "In progress",
+     "owner": "MC readiness (policy) + ERP (vendor master)",
+     "artifact": "Exos_Supplier_SCRM_Policy.docx §2-3",
+     "dataSource": "ERP: vendor / approved-supplier list",
+     "note": "FAR/DFARS flow-downs, NIST SP 800-161, counterfeit-parts controls"
+    },
+    {
+     "id": "SCRM-2",
+     "question": "Assess and monitor quality/performance of suppliers & subcontractors",
+     "status": "In progress",
+     "owner": "ERP (data) → MC (status)",
+     "artifact": "SCRM Policy §4",
+     "dataSource": "ERP: PO / receipt / inspection → supplier scorecards",
+     "note": "On-time delivery, defect rate, corrective actions on a set cadence"
+    },
+    {
+     "id": "SCRM-3",
+     "question": "Assess and monitor risk with suppliers/subcontractors",
+     "status": "In progress",
+     "owner": "MC readiness",
+     "artifact": "SCRM Policy §5",
+     "dataSource": "ERP vendor data + MC risk register",
+     "note": "Financial, single-source, geographic, cyber risk ratings + mitigation"
+    },
+    {
+     "id": "SCRM-4",
+     "question": "Assess and monitor supplier/subcontractor scalability constraints if demand increases",
+     "status": "In progress",
+     "owner": "MC readiness",
+     "artifact": "SCRM Policy §6",
+     "dataSource": "ERP lead-time/PO history + MC surge plan",
+     "note": "Lead times, single-source exposure, second-source / surge planning"
+    },
+    {
+     "id": "SCRM-5",
+     "question": "Assess and monitor subcontractors handling FCI/CUI for required CMMC level",
+     "status": "In progress",
+     "owner": "MC readiness (CMMC program)",
+     "artifact": "SCRM Policy §7",
+     "dataSource": "CMMC flow-down tracker (Atomus program)",
+     "note": "DFARS 252.204-7012 flow-down; verify each sub's CMMC level"
+    }
+   ]
+  },
+  {
+   "domain": "Manufacturing & Quality",
+   "items": [
+    {
+     "id": "MQ-1",
+     "question": "Manufacturing management in place to plan and run production",
+     "status": "In progress",
+     "owner": "ERP production module (Exo)",
+     "artifact": "MC Production Control (production.html) — work orders + routing/WIP + quality (NCR/CAPA/FAI)",
+     "dataSource": "ERP: work_order / work_order_op / ncr (live, audited)",
+     "note": "ADDRESSED 2026-08-09: lightweight production-control increment live — plan via work orders, run via routing/WIP, quality via NCR/CAPA/first-article. BOM = future enhancement."
+    },
+    {
+     "id": "MQ-2",
+     "question": "Working Quality Management System",
+     "status": "In progress",
+     "owner": "MC (status) + ERP (records)",
+     "artifact": "Exos_QMS_Charter.docx",
+     "dataSource": "ERP quality records (future) + MC QMS status",
+     "note": "AS9100D/ISO 9001-aligned operating QMS; certification is the target"
+    },
+    {
+     "id": "MQ-3",
+     "question": "Manufacturing Maturation Plan",
+     "status": "In progress",
+     "owner": "MC readiness (program/WBS)",
+     "artifact": "Exos_Manufacturing_Maturation_Plan.docx",
+     "dataSource": "MRL milestone tracker",
+     "note": "DoD Manufacturing Readiness Level (MRL) roadmap"
+    },
+    {
+     "id": "MQ-4",
+     "question": "Quality assurance certifications maintained",
+     "status": "In progress",
+     "owner": "MC readiness (cert register)",
+     "artifact": "QMS Charter §10 + cert register",
+     "dataSource": "MC compliance register (body, status, expiry)",
+     "note": "CMMC in progress via Atomus; AS9100D is the target QMS cert; FAA license held"
+    }
+   ]
+  }
+ ]
+}
+</script>
+<script>
+const DATA=JSON.parse(document.getElementById('data').textContent);
+const m=DATA.meta;
+document.getElementById('title').textContent=m.title;
+document.getElementById('subtitle').textContent=m.subtitle;
+document.getElementById('principle').textContent="Principle — "+m.principle;
+document.getElementById('updated').textContent="Updated "+m.updated;
+const badge=s=>{const c=s==='Yes'?'b-yes':s==='Gap'?'b-gap':'b-prog';return `<span class="badge ${c}">${s}</span>`};
+const ownTag=o=>{let t='';if(/ERP/.test(o))t+='<span class="tag t-erp">ERP</span>';if(/MC|readiness/i.test(o))t+='<span class="tag t-mc">MC</span>';return t};
+// summary counts
+const all=DATA.domains.flatMap(d=>d.items);
+const cnt={Yes:0,'In progress':0,Gap:0};all.forEach(i=>cnt[i.status]=(cnt[i.status]||0)+1);
+document.getElementById('summary').innerHTML=
+ `<span class="chip">${all.length} items</span>`+
+ `<span class="chip b-yes"><b>${cnt['Yes']||0}</b> Yes</span>`+
+ `<span class="chip b-prog"><b>${cnt['In progress']||0}</b> In progress</span>`+
+ `<span class="chip b-gap"><b>${cnt['Gap']||0}</b> Gap</span>`;
+let html='';
+for(const d of DATA.domains){
+  html+=`<h2>${d.domain}</h2><table><thead><tr><th>ID</th><th>Diligence question</th><th>Status</th><th>Owner</th><th>Artifact / data source</th></tr></thead><tbody>`;
+  for(const it of d.items){
+    html+=`<tr><td class="id">${it.id}</td>`+
+      `<td><div class="q">${it.question}</div><div class="note">${it.note||''}</div></td>`+
+      `<td>${badge(it.status)}</td>`+
+      `<td class="own">${it.owner} ${ownTag(it.owner)}</td>`+
+      `<td><div class="art">${it.artifact||''}</div><div class="src">${it.dataSource||''}</div></td></tr>`;
+  }
+  html+='</tbody></table>';
+}
+document.getElementById('content').innerHTML=html;
+</script>
+</body></html>

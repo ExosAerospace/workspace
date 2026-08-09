@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "title": "Government / DIB Readiness Register",
+    "subtitle": "Supplier (SCRM) + Manufacturing & Quality readiness for federal work",
+    "principle": "ERP runs the operation (transactions, system of record); Mission Control proves the readiness (status, policy, plans, certifications). Each item has one owner; the readiness view references ERP data and never duplicates it.",
+    "updated": "2026-07-29",
+    "legend": {
+      "Yes": "Documented and in effect",
+      "In progress": "Artifact/process being stood up",
+      "Gap": "Capability not yet in place"
+    }
+  },
+  "domains": [
+    {
+      "domain": "Supplier & Subcontract (SCRM)",
+      "items": [
+        {
+          "id": "SCRM-1",
+          "question": "Documented sourcing policies for suppliers/subcontractors meeting federal standards",
+          "status": "In progress",
+          "owner": "MC readiness (policy) + ERP (vendor master)",
+          "artifact": "Exos_Supplier_SCRM_Policy.docx §2-3",
+          "dataSource": "ERP: vendor / approved-supplier list",
+          "note": "FAR/DFARS flow-downs, NIST SP 800-161, counterfeit-parts controls"
+        },
+        {
+          "id": "SCRM-2",
+          "question": "Assess and monitor quality/performance of suppliers & subcontractors",
+          "status": "In progress",
+          "owner": "ERP (data) → MC (status)",
+          "artifact": "SCRM Policy §4",
+          "dataSource": "ERP: PO / receipt / inspection → supplier scorecards",
+          "note": "On-time delivery, defect rate, corrective actions on a set cadence"
+        },
+        {
+          "id": "SCRM-3",
+          "question": "Assess and monitor risk with suppliers/subcontractors",
+          "status": "In progress",
+          "owner": "MC readiness",
+          "artifact": "SCRM Policy §5",
+          "dataSource": "ERP vendor data + MC risk register",
+          "note": "Financial, single-source, geographic, cyber risk ratings + mitigation"
+        },
+        {
+          "id": "SCRM-4",
+          "question": "Assess and monitor supplier/subcontractor scalability constraints if demand increases",
+          "status": "In progress",
+          "owner": "MC readiness",
+          "artifact": "SCRM Policy §6",
+          "dataSource": "ERP lead-time/PO history + MC surge plan",
+          "note": "Lead times, single-source exposure, second-source / surge planning"
+        },
+        {
+          "id": "SCRM-5",
+          "question": "Assess and monitor subcontractors handling FCI/CUI for required CMMC level",
+          "status": "In progress",
+          "owner": "MC readiness (CMMC program)",
+          "artifact": "SCRM Policy §7",
+          "dataSource": "CMMC flow-down tracker (Atomus program)",
+          "note": "DFARS 252.204-7012 flow-down; verify each sub's CMMC level"
+        }
+      ]
+    },
+    {
+      "domain": "Manufacturing & Quality",
+      "items": [
+        {
+          "id": "MQ-1",
+          "question": "Manufacturing management in place to plan and run production",
+          "status": "In progress",
+          "owner": "ERP production module (Exo)",
+          "artifact": "MC Production Control (production.html) — work orders + routing/WIP + quality (NCR/CAPA/FAI)",
+          "dataSource": "ERP: work_order / work_order_op / ncr (live, audited)",
+          "note": "ADDRESSED 2026-08-09: lightweight production-control increment live — plan via work orders, run via routing/WIP, quality via NCR/CAPA/first-article. BOM = future enhancement."
+        },
+        {
+          "id": "MQ-2",
+          "question": "Working Quality Management System",
+          "status": "In progress",
+          "owner": "MC (status) + ERP (records)",
+          "artifact": "Exos_QMS_Charter.docx",
+          "dataSource": "ERP quality records (future) + MC QMS status",
+          "note": "AS9100D/ISO 9001-aligned operating QMS; certification is the target"
+        },
+        {
+          "id": "MQ-3",
+          "question": "Manufacturing Maturation Plan",
+          "status": "In progress",
+          "owner": "MC readiness (program/WBS)",
+          "artifact": "Exos_Manufacturing_Maturation_Plan.docx",
+          "dataSource": "MRL milestone tracker",
+          "note": "DoD Manufacturing Readiness Level (MRL) roadmap"
+        },
+        {
+          "id": "MQ-4",
+          "question": "Quality assurance certifications maintained",
+          "status": "In progress",
+          "owner": "MC readiness (cert register)",
+          "artifact": "QMS Charter §10 + cert register",
+          "dataSource": "MC compliance register (body, status, expiry)",
+          "note": "CMMC in progress via Atomus; AS9100D is the target QMS cert; FAA license held"
+        }
+      ]
+    }
+  ]
+}

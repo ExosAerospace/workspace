@@ -1176,6 +1176,24 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── PRODUCTION CONTROL (read-only) — work orders + routing/WIP + quality (MQ-1) ──
+  if (req.url.split('?')[0] === '/api/production' && req.method === 'GET') {
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    let erp;
+    try {
+      const { openErp } = require('../erp-foundation/dal');
+      erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: (session && session.email) || 'mc-server', agent: 'mc-production' });
+      const work_orders = erp.listWorkOrders().map(w => ({ ...w, ops_list: erp.listWorkOrderOps(w.id) }));
+      const ncrs = erp.listNCRs();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ work_orders, ncrs }));
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'production unavailable', detail: String(e).slice(0, 200) }));
+    } finally { try { erp && erp.close(); } catch (e) {} }
+    return;
+  }
+
   // ── WELCOME PAGE (early adopter onboarding) ──
   if ((req.url === '/welcome' || req.url === '/welcome.html') && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'text/html' });

@@ -182,6 +182,55 @@ function openErp(file, opts = {}) {
       return db.get('SELECT * FROM asset_event WHERE id = ?', id);
     },
 
+    // ---- P5B: Production control (work orders + routing/WIP + quality; closes MQ-1) ----
+    listWorkOrders() {
+      return db.all(
+        `SELECT w.id, w.wo_number, w.item, w.qty, w.status, w.due, w.project_id, w.wbs_id,
+                (SELECT COUNT(*) FROM work_order_op o WHERE o.work_order_id=w.id) AS ops,
+                (SELECT COUNT(*) FROM work_order_op o WHERE o.work_order_id=w.id AND o.status='complete') AS ops_done,
+                (SELECT COUNT(*) FROM ncr n WHERE n.work_order_id=w.id AND n.status!='closed') AS open_ncr
+           FROM work_order w ORDER BY w.due IS NULL, w.due, w.wo_number`);
+    },
+    listWorkOrderOps(work_order_id) {
+      return db.all('SELECT id, work_order_id, seq, operation, work_center, status FROM work_order_op WHERE work_order_id = ? ORDER BY seq', String(work_order_id));
+    },
+    listNCRs() {
+      return db.all('SELECT id, ncr_number, work_order_id, kind, description, status, disposition FROM ncr ORDER BY status, ncr_number');
+    },
+    upsertWorkOrder(w) {
+      if (!w || !w.id) throw new Error('upsertWorkOrder requires id');
+      const id = String(w.id);
+      const before = db.get('SELECT * FROM work_order WHERE id = ?', id) || null;
+      writeAudited('work_order', id, before ? 'update' : 'insert', before, w, () => {
+        db.run('INSERT INTO work_order (id,wo_number,item,project_id,wbs_id,qty,status,due,raw_json) VALUES (?,?,?,?,?,?,?,?,?) ' +
+          'ON CONFLICT(id) DO UPDATE SET wo_number=excluded.wo_number, item=excluded.item, project_id=excluded.project_id, wbs_id=excluded.wbs_id, qty=excluded.qty, status=excluded.status, due=excluded.due, raw_json=excluded.raw_json',
+          id, w.wo_number ?? null, w.item ?? null, w.project_id ?? null, w.wbs_id ?? null, w.qty ?? null, w.status ?? 'planned', w.due ?? null, JSON.stringify(w));
+      });
+      return db.get('SELECT * FROM work_order WHERE id = ?', id);
+    },
+    upsertWorkOrderOp(o) {
+      if (!o || !o.id || !o.work_order_id) throw new Error('upsertWorkOrderOp requires id + work_order_id');
+      const id = String(o.id);
+      const before = db.get('SELECT * FROM work_order_op WHERE id = ?', id) || null;
+      writeAudited('work_order_op', id, before ? 'update' : 'insert', before, o, () => {
+        db.run('INSERT INTO work_order_op (id,work_order_id,seq,operation,work_center,status,raw_json) VALUES (?,?,?,?,?,?,?) ' +
+          'ON CONFLICT(id) DO UPDATE SET seq=excluded.seq, operation=excluded.operation, work_center=excluded.work_center, status=excluded.status, raw_json=excluded.raw_json',
+          id, String(o.work_order_id), o.seq ?? null, o.operation ?? null, o.work_center ?? null, o.status ?? 'pending', JSON.stringify(o));
+      });
+      return db.get('SELECT * FROM work_order_op WHERE id = ?', id);
+    },
+    upsertNCR(n) {
+      if (!n || !n.id) throw new Error('upsertNCR requires id');
+      const id = String(n.id);
+      const before = db.get('SELECT * FROM ncr WHERE id = ?', id) || null;
+      writeAudited('ncr', id, before ? 'update' : 'insert', before, n, () => {
+        db.run('INSERT INTO ncr (id,ncr_number,work_order_id,kind,description,status,disposition,raw_json) VALUES (?,?,?,?,?,?,?,?) ' +
+          'ON CONFLICT(id) DO UPDATE SET ncr_number=excluded.ncr_number, work_order_id=excluded.work_order_id, kind=excluded.kind, description=excluded.description, status=excluded.status, disposition=excluded.disposition, raw_json=excluded.raw_json',
+          id, n.ncr_number ?? null, n.work_order_id ?? null, n.kind ?? 'NCR', n.description ?? null, n.status ?? 'open', n.disposition ?? null, JSON.stringify(n));
+      });
+      return db.get('SELECT * FROM ncr WHERE id = ?', id);
+    },
+
     // ---- writes (audited) ----
     /** Insert or update a deal; audits before/after. */
     upsertDeal(deal) {

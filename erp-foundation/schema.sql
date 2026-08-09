@@ -474,3 +474,40 @@ CREATE TABLE IF NOT EXISTS asset_event (
   raw_json    TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_asset_event_asset ON asset_event(asset_id);
+
+-- ── P5B: Production management (closes gov-readiness gap MQ-1) — lightweight production control ──
+CREATE TABLE IF NOT EXISTS work_order (
+  id          TEXT PRIMARY KEY,
+  wo_number   TEXT,                       -- WO-2026-001
+  item        TEXT,                       -- assembly/part being built
+  project_id  TEXT REFERENCES project(id),
+  wbs_id      TEXT REFERENCES wbs_element(id),
+  qty         REAL,
+  status      TEXT,                       -- planned/released/in_progress/complete/hold
+  due         TEXT,
+  raw_json    TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_work_order_status ON work_order(status);
+
+CREATE TABLE IF NOT EXISTS work_order_op (
+  id            TEXT PRIMARY KEY,
+  work_order_id TEXT REFERENCES work_order(id) ON DELETE CASCADE,
+  seq           INTEGER,                  -- routing step order
+  operation     TEXT,                     -- layup/cure/machining/integration/test
+  work_center   TEXT,
+  status        TEXT,                     -- pending/in_progress/complete
+  raw_json      TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_wo_op_wo ON work_order_op(work_order_id);
+
+CREATE TABLE IF NOT EXISTS ncr (
+  id            TEXT PRIMARY KEY,
+  ncr_number    TEXT,
+  work_order_id TEXT REFERENCES work_order(id),
+  kind          TEXT,                     -- NCR/CAPA/first-article
+  description   TEXT,
+  status        TEXT,                     -- open/in_review/closed
+  disposition   TEXT,                     -- use-as-is/rework/scrap/return-to-vendor
+  raw_json      TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_ncr_wo ON ncr(work_order_id);
