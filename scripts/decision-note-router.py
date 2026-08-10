@@ -62,16 +62,20 @@ def post_discord(text):
         logline(f"WARN discord: {e}"); return False
 
 
-def mktask(task):
-    body = json.dumps(task).encode()
-    req = urllib.request.Request(SUPA + "/tasks", method="POST", data=body,
+def supa(method, path, body=None):
+    req = urllib.request.Request(SUPA + "/" + path, method=method,
+        data=json.dumps(body).encode() if body is not None else None,
         headers={"apikey": KEY, "Authorization": "Bearer " + KEY,
                  "Content-Type": "application/json", "Prefer": "return=representation"})
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
-            d = json.loads(r.read().decode() or "[]"); return d[0]["id"] if d else None
+            t = r.read().decode(); return json.loads(t) if t else []
     except Exception as e:
-        logline(f"WARN task: {e}"); return None
+        logline(f"WARN supa {method} {path[:30]}: {e}"); return None
+
+
+def mktask(task):
+    d = supa("POST", "tasks", task); return d[0]["id"] if d else None
 
 
 def resolve_name(note, first, full):
@@ -106,6 +110,22 @@ def main():
         nh = h(note)
         if state.get(d["id"]) == nh: continue           # unchanged note already handled
         title = d.get("title") or d.get("question") or d["id"]
+        low = note.lower()
+        tid = re.search(r"#(\d{2,})", note)
+        if tid:                                          # (0) UPDATE an existing task by #id
+            taskid = tid.group(1); did = []
+            owner = resolve_name(note, first, full)
+            if owner and re.search(r"reassign|assign to|have\s|hand", low):
+                supa("PATCH", f"tasks?id=eq.{taskid}", {"owner": owner[0], "assigned_email": owner[1]})
+                did.append(f"reassigned to {owner[0]}")
+            if re.search(r"\b(done|closed?|complete[d]?|resolved?)\b", low):
+                supa("PATCH", f"tasks?id=eq.{taskid}", {"state": "Done"})
+                did.append("marked Done")
+            supa("POST", "activities", {"type": "task_note", "subject": f"task:{taskid}",
+                 "body": f"[from decision {d['id']}] {note}", "owner": "Decisions note", "status": "completed"})
+            did.append("note logged")
+            logline(f"{d['id']}: task #{taskid} update -> {did}")
+            state[d["id"]] = nh; acted += 1; continue
         mentions = MENTION_RE.findall(note)
         if mentions:                                     # (1) explicit mention -> ping + task
             txt = (" ".join(mentions) + f" — decision **{d['id']}**: {title}\n> {note}\n"
