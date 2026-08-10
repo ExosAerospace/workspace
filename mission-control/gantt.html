@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos — BLK3 Schedule Gantt</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--blue2:#0080ff;--text:#e8edf5;--text2:#a0aec0;--border:rgba(255,255,255,0.08);--card:#0f1e38}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);min-height:100vh;line-height:1.5}
+  header{background:linear-gradient(135deg,#0a1628,#0d2050);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;min-height:64px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-logo{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,#0066cc,#ff6b00);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+  .brand-text h1{font-size:1.05rem}.brand-text p{font-size:.78rem;color:var(--text2)}
+  .header-right a{color:var(--blue2);text-decoration:none;font-size:.85rem;margin-left:14px}
+  .wrap{max-width:1600px;margin:0 auto;padding:22px 24px 64px}
+  .titleblock{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+  .titleblock h2{font-size:1.5rem}
+  .titleblock .meta{font-size:.82rem;color:var(--text2)}
+  .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .btn{background:var(--blue2);color:#fff;border:none;border-radius:8px;padding:8px 15px;font-size:.85rem;font-weight:600;cursor:pointer}
+  .btn.sec{background:var(--navy3);border:1px solid var(--border);color:var(--text)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.78rem;color:var(--text2);margin-left:auto}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .swatch{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .chartwrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px;overflow-x:auto}
+  svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+  .g-lbl{fill:var(--text);font-size:11px}
+  .g-sub{fill:var(--text2);font-size:9.5px}
+  .g-list{fill:#cfe4ff;font-size:11.5px;font-weight:700}
+  .g-month{fill:var(--text2);font-size:10px}
+  .g-grid{stroke:rgba(255,255,255,0.07)}
+  .g-listbg{fill:rgba(255,255,255,0.04)}
+  .g-today{stroke:#ff6b00;stroke-width:1.5;stroke-dasharray:4 3}
+  .g-todaylbl{fill:#ff6b00;font-size:10px;font-weight:700}
+  .err{background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.3);color:#ffb0b0;padding:14px 18px;border-radius:10px;font-size:.85rem}
+  footer{text-align:center;color:var(--text2);font-size:.74rem;padding:26px 0 8px}
+  @page{size:landscape;margin:12mm}
+  @media print{
+    body{background:#fff;color:#000}
+    header,.header-right,.controls{display:none}
+    .wrap{max-width:none;padding:0}
+    .chartwrap{background:#fff;border:none;padding:0;overflow:visible}
+    .titleblock h2,.titleblock .meta{color:#000}
+    .legend{color:#333}
+    .g-lbl{fill:#111}.g-sub{fill:#555}.g-list{fill:#0b3d91}.g-month{fill:#333}
+    .g-grid{stroke:#ccc}.g-listbg{fill:#f0f3f8}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-logo">EX</div>
+    <div class="brand-text"><h1>Exos Aerospace</h1><p>Mission Control · BLK3 Schedule Gantt</p></div>
+  </div>
+  <div class="header-right">
+    <a href="/index.html">← Board</a>
+    <a href="schedule.html">📅 Schedule</a>
+    <a href="production.html">🏭 Production</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="titleblock">
+    <div>
+      <h2>📊 <span id="projName">BLK3</span> Program Schedule — Gantt</h2>
+      <div class="meta" id="meta"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="btn" onclick="window.print()">🖨 Print / Save as PDF</button>
+    <button class="btn sec" onclick="downloadSVG()">⬇ Download SVG</button>
+    <div class="legend">
+      <span><i class="swatch" style="background:#3b82f6"></i>To Do</span>
+      <span><i class="swatch" style="background:#eab308"></i>In Progress</span>
+      <span><i class="swatch" style="background:#ef4444"></i>Blocked</span>
+      <span><i class="swatch" style="background:#22c55e"></i>Done</span>
+    </div>
+  </div>
+  <div class="chartwrap"><div id="content"><p style="color:var(--text2)">Loading Gantt…</p></div></div>
+  <footer>Exos Aerospace · Mission Control · BLK3 Program Schedule (audited ERP · system of record)</footer>
+</div>
+
+<script>
+const LEFT=300, ROW=24, HEADER=48, LISTH=26, MONTHW=96, PAD=10;
+const WIN_START='2026-08-10', WIN_END='2027-03-15';
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function d2(s){return s?new Date(s+'T00:00:00'):null;}
+function daysBetween(a,b){return (b-a)/86400000;}
+function statusColor(st){const s=(st||'').toLowerCase();
+  if(s==='done'||s==='complete'||s==='completed')return'#22c55e';
+  if(s.includes('progress'))return'#eab308';
+  if(s.includes('block')||s.includes('hold'))return'#ef4444';
+  return'#3b82f6';}
+function monthList(start,end){const out=[];let d=new Date(start.getFullYear(),start.getMonth(),1);
+  const last=new Date(end.getFullYear(),end.getMonth(),1);
+  while(d<=last){out.push(new Date(d));d=new Date(d.getFullYear(),d.getMonth()+1,1);}return out;}
+
+let SVGSTR='';
+async function load(){
+  const el=document.getElementById('content');
+  try{
+    const r=await fetch('/api/schedule');
+    if(!r.ok) throw new Error('HTTP '+r.status+(r.status===401?' — please sign in':''));
+    const d=await r.json();
+    if(d.project) document.getElementById('projName').textContent=d.project.name||'BLK3';
+    build(d);
+  }catch(err){ el.innerHTML='<div class="err">Could not load Gantt: '+esc(err.message)+'</div>'; }
+}
+
+function build(d){
+  const tasks=(d.tasks||[]).filter(t=>t.start_date||t.due_date);
+  const lists=d.lists||[];
+  // domain
+  let starts=tasks.map(t=>d2(t.start_date||t.due_date)).filter(Boolean);
+  let dues=tasks.map(t=>d2(t.due_date||t.start_date)).filter(Boolean);
+  let domStart=d2(WIN_START), domEnd=d2(WIN_END);
+  starts.concat([domStart]).forEach(x=>{if(x<domStart)domStart=x;});
+  dues.concat([domEnd]).forEach(x=>{if(x>domEnd)domEnd=x;});
+  const months=monthList(domStart,domEnd);
+  const chartW=months.length*MONTHW;
+  const totalDays=daysBetween(domStart,domEnd)||1;
+  const x=dt=>LEFT+(daysBetween(domStart,d2(typeof dt==='string'?dt:dt.toISOString().slice(0,10)))/totalDays)*chartW;
+
+  // group tasks by list, preserve list order; unlisted go last
+  const byList={}; tasks.forEach(t=>{(byList[t.task_list_id]=byList[t.task_list_id]||[]).push(t);});
+  const groups=[]; lists.forEach(l=>{ if((byList[l.id]||[]).length) groups.push({name:l.name,rows:byList[l.id]}); });
+  const listed=new Set(lists.map(l=>l.id)); const orphan=tasks.filter(t=>!listed.has(t.task_list_id));
+  if(orphan.length) groups.push({name:'(unassigned)',rows:orphan});
+
+  // height
+  let bodyH=0; groups.forEach(g=>{bodyH+=LISTH+g.rows.length*ROW;});
+  const H=HEADER+bodyH+PAD;
+  const W=LEFT+chartW+PAD;
+
+  const document_date=new Date().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+  document.getElementById('meta').innerHTML=
+    'Program window <b style="color:var(--text)">'+WIN_START+' → '+WIN_END+'</b> · '+tasks.length+' tasks · '+groups.length+' work packages · generated '+document_date+' · Exos Aerospace / Mission Control ERP';
+
+  let s='<svg id="gantt" xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+  // month columns + labels
+  months.forEach((m,i)=>{
+    const mx=x(m);
+    s+='<line class="g-grid" x1="'+mx.toFixed(1)+'" y1="'+HEADER+'" x2="'+mx.toFixed(1)+'" y2="'+H+'"/>';
+    s+='<text class="g-month" x="'+(mx+4).toFixed(1)+'" y="20">'+m.toLocaleDateString('en-US',{month:'short'})+'</text>';
+    s+='<text class="g-month" x="'+(mx+4).toFixed(1)+'" y="34" opacity="0.7">'+m.getFullYear()+'</text>';
+  });
+  // header divider + left title
+  s+='<line class="g-grid" x1="0" y1="'+HEADER+'" x2="'+W+'" y2="'+HEADER+'"/>';
+  s+='<line class="g-grid" x1="'+LEFT+'" y1="0" x2="'+LEFT+'" y2="'+H+'"/>';
+  s+='<text class="g-list" x="8" y="30">WORK PACKAGE / TASK</text>';
+
+  // rows
+  let y=HEADER;
+  groups.forEach(g=>{
+    s+='<rect class="g-listbg" x="0" y="'+y+'" width="'+W+'" height="'+LISTH+'"/>';
+    s+='<text class="g-list" x="8" y="'+(y+17)+'">'+esc(g.name)+'</text>';
+    y+=LISTH;
+    g.rows.forEach(t=>{
+      const nm=(t.title||'').length>44?(t.title||'').slice(0,43)+'…':(t.title||'');
+      s+='<text class="g-lbl" x="16" y="'+(y+15)+'">'+esc(nm)+'</text>';
+      if(t.owner) s+='<text class="g-sub" x="'+(LEFT-6)+'" y="'+(y+15)+'" text-anchor="end">'+esc(t.owner)+'</text>';
+      const sd=t.start_date||t.due_date, dd=t.due_date||t.start_date;
+      if(sd&&dd){
+        let bx=x(sd), bw=Math.max(3,x(dd)-x(sd));
+        const col=statusColor(t.state);
+        s+='<rect x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+bw.toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="'+col+'"><title>'+esc(t.title)+' | '+esc(sd)+' → '+esc(dd)+' | '+esc(t.state||'')+(t.owner?' | '+esc(t.owner):'')+'</title></rect>';
+        const pg=Number(t.progress)||0;
+        if(pg>0&&pg<100) s+='<rect x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+(bw*pg/100).toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="rgba(0,0,0,0.28)"/>';
+      }
+      y+=ROW;
+    });
+  });
+  // today line
+  const today=new Date(); const todayStr=today.toISOString().slice(0,10);
+  if(d2(todayStr)>=domStart&&d2(todayStr)<=domEnd){const tx=x(todayStr);
+    s+='<line class="g-today" x1="'+tx.toFixed(1)+'" y1="'+(HEADER-4)+'" x2="'+tx.toFixed(1)+'" y2="'+H+'"/>';
+    s+='<text class="g-todaylbl" x="'+(tx+3).toFixed(1)+'" y="'+(HEADER-6)+'">TODAY</text>';
+  }
+  s+='</svg>';
+  SVGSTR=s;
+  document.getElementById('content').innerHTML=s;
+}
+
+function downloadSVG(){
+  if(!SVGSTR) return;
+  const blob=new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n'+SVGSTR],{type:'image/svg+xml'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='BLK3_Program_Schedule_Gantt.svg'; a.click(); URL.revokeObjectURL(a.href);
+}
+load();
+</script>
+</body>
+</html>
