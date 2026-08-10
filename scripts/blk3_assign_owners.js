@@ -20,14 +20,16 @@ let fab = 0;
 function ownerFor(title) {
   const t = (title || '').toLowerCase();
   if (/budget|quote|price|cost|invoice/.test(t)) return KYLE;                                   // CFO
-  if (/fcc|licen|faa|regulat|waiver|part 450/.test(t)) return NEIL;                              // COO/XSO regulatory
-  if (/\bsim\b|trick|simulation|r&d|\br and d\b|redesign|design model|noise solution|model\b/.test(t)) return NEIL; // Russ tech -> Neil
-  if (/fsw|flight software|telemetry|serial|\bgps\b|itos|\bacs\b|deadband|variable|power supply|avionics|spark detect|software/.test(t)) return STEVE; // avionics
-  if (/recovery|servo|release|parachute|canopy|drogue/.test(t)) return STEVE;                    // recovery electronics
-  if (/payload|ejector|ejection|lifting|enclosure|processing/.test(t)) return PHIL;              // ops/payload
-  if (/design|harness design|airframe section design/.test(t)) return PHIL;                      // design coordination
-  if (/fabricat|bulkhead|harness|launch stool|fincan|\bfin\b|fins|\btank\b|pressure section|reinforcement|mount|support|refurbish|rebuild|\bbuild\b|section|machin|weld|composite/.test(t))
-    return (fab++ % 2) ? VIC : MIKE;                                                             // machinists, load-balanced
+  if (/fcc|licen|faa|regulat|waiver|part 450/.test(t)) return NEIL;                             // COO/XSO regulatory
+  if (/\bsim\b|trick|simulation|r&d|\br and d\b|redesign|design model|noise solution/.test(t)) return NEIL; // Russ tech -> Neil
+  // Steve = FSW / flight software / firmware ONLY (Jon: keep Steve to FSW technical, reduce load)
+  if (/fsw|flight software|\bsoftware\b|firmware|spark detect|deadband|serial control|unused variable|speed up telemetry|telemetry where possible/.test(t)) return STEVE;
+  // Phil = payload + design coordination (checked before AIT so "…Design" isn't grabbed as fab)
+  if (/payload|ejector|ejection|lifting|enclosure|processing/.test(t)) return PHIL;
+  if (/\bdesign\b|airframe/.test(t)) return PHIL;
+  // Machinists = AIT default (assembly / integration / test / fabrication / mount / procure / structures)
+  if (/fabricat|assembl|integrat|\btest\b|\bmount\b|install|purchase|procure|refurbish|rebuild|\bbuild\b|\bsection\b|machin|weld|composite|antenna|power supply|component|servo|serial port|launch stool|bulkhead|harness|fincan|\bfins?\b|\btank\b|reinforcement|\bsupport\b|release|parachute|canopy|drogue|recovery/.test(t))
+    return (fab++ % 2) ? VIC : MIKE;                                                             // load-balanced
   return PHIL;                                                                                   // default: Ops Manager dispositions
 }
 
