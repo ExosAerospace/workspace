@@ -182,7 +182,19 @@ function card(d){
       ${opts.map(o=>`<button class="opt" onclick="pick('${d.id}',this,${JSON.stringify(o).replace(/"/g,'&quot;')})">${esc(o)}</button>`).join('')}
     </div>
     <textarea class="note" id="note-${d.id}" placeholder="Add a note / answer (optional for open questions)…" oninput="noteChange('${d.id}',this.value)"></textarea>
+    <div style="margin-top:6px"><button onclick="reassignDecision('${d.id}')" title="This decision isn't mine — send it to the right person or let Exo reroute it" style="background:transparent;border:1px solid #3a4f73;color:#8aa0bd;border-radius:7px;padding:4px 10px;font-size:12px;cursor:pointer">🔀 Not my decision</button></div>
   </div>`;
+}
+function reassignDecision(id){
+  const to=prompt("Who should own this decision?\nEnter a name or email — or leave blank to have Exo reroute it:","");
+  if(to===null) return; // cancelled
+  fetch('/api/decisions/reassign',{method:'POST',credentials:'same-origin',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify({id,to:(to||'').trim()})})
+    .then(r=>r.json()).then(d=>{
+      if(d.error){toast('Could not reassign: '+d.error);return;}
+      toast(d.queued? (d.message||'Flagged for Exo to reroute') : ('Reassigned to '+(d.reassignedTo||'the owner')));
+      load();
+    }).catch(e=>toast('Could not reassign: '+e.message));
 }
 function pick(id,btn,val){
   const box=document.getElementById('opts-'+id);

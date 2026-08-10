@@ -2731,6 +2731,54 @@ const server = http.createServer((req, res) => {
     }); return;
   }
 
+  // "Not mine" — reassign a misrouted decision to the correct owner, or flag it for Exo to reroute.
+  // Body: { id, to?  (name or email), reason? }. Session-gated.
+  if (req.url === '/api/decisions/reassign' && req.method === 'POST') {
+    const rsess = getSession(req);
+    if (!rsess) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const p = JSON.parse(body || '{}');
+        const arr = loadDecisions();
+        const d = arr.find(x => String(x.id) === String(p.id));
+        if (!d) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'decision not found' })); return; }
+        const who = (rsess.name || rsess.email || 'someone');
+        const now = new Date().toISOString();
+        // Resolve the target owner's email.
+        let email = '', label = '';
+        const to = (p.to || '').trim();
+        if (/@/.test(to)) { email = to.toLowerCase(); label = to; }
+        else if (to) {
+          try {
+            const { openErp } = require('../erp-foundation/dal');
+            const erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: rsess.email || 'mc', agent: 'decision-reassign' });
+            const emps = erp.getEmployees(); erp.close();
+            const hit = emps.find(e => (e.full_name || '').toLowerCase() === to.toLowerCase())
+              || emps.find(e => (e.full_name || '').toLowerCase().includes(to.toLowerCase()));
+            if (hit && hit.work_email) { email = hit.work_email.toLowerCase(); label = hit.full_name; }
+          } catch (e) {}
+        }
+        const from = String(d.assignedTo || 'jquinn@exosaero.com');
+        const note = `Reassigned by ${who} (not mine)${p.reason ? ': ' + p.reason : ''}`;
+        d.note = (d.note ? d.note + ' | ' : '') + note;
+        d.reassignedFrom = from; d.updated = now;
+        if (email) {
+          d.assignedTo = email; d.status = d.status === 'answered' ? d.status : 'open';
+          d.needsExoRouting = false;
+          saveDecisions(arr);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, reassignedTo: label || email }));
+        } else {
+          // Couldn't determine the owner — take it out of the sender's inbox and flag it for Exo.
+          d.assignedTo = 'exo@exosaero.com'; d.status = 'reassigning'; d.needsExoRouting = true;
+          saveDecisions(arr);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, queued: true, message: "Flagged for Exo to reroute — it's out of your inbox." }));
+        }
+      } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+    }); return;
+  }
+
   // Update an opportunity from the detail/edit panel (session-gated). Persists to
   // opportunity-overrides.json (survives the markdown->json regeneration) AND patches the live
   // opportunities.json so the edit reflects immediately without waiting for the generator.
