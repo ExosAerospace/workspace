@@ -55,7 +55,7 @@
   </div>
   <div class="header-right">
     <a href="/index.html">← Board</a>
-    <a href="erp-rollout.html">ERP</a>
+    <a href="erp-rollout.html">ERP-exo3</a>
     <a href="assets.html">🛰️ Assets</a>
     <a href="hr.html">👥 HR</a>
   </div>
@@ -88,7 +88,7 @@ async function load(){
       const route=(w.ops_list||[]).map(o=>'<span class="op '+esc(o.status)+'">'+o.seq+'. '+esc(o.operation)+'</span>').join('');
       html+='<div class="wo"><div class="wo-head">'
         +'<div><span class="wo-num">'+esc(w.wo_number||w.id)+'</span> &nbsp;<span class="wo-item">'+esc(w.item||'')+'</span></div>'
-        +'<span class="badge st-'+esc(w.status)+'">'+esc((w.status||'').replace(/_/g,\' \'))+'</span></div>'
+        +'<span class="badge st-'+esc(w.status)+'">'+esc((w.status||'').replace(/_/g,' '))+'</span></div>'
         +'<div class="wo-meta">Qty '+esc(w.qty!=null?w.qty:'—')+' · Due '+esc(w.due||'—')+' · '+w.ops_done+'/'+w.ops+' ops complete</div>'
         +'<div class="bar"><span style="width:'+pct+'%"></span></div>'
         +'<div class="route">'+(route||'<span class="muted">no routing</span>')+'</div>'
