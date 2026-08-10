@@ -280,6 +280,29 @@ function openErp(file, opts = {}) {
         "FROM task WHERE project_id = ? ORDER BY due_date IS NULL, due_date", pid);
       return { project, lists, tasks };
     },
+    /** Audited edit of a single schedule task's start/due/owner/state; preserves all other raw_json. */
+    updateScheduleTask(id, p) {
+      id = String(id); p = p || {};
+      const before = db.get('SELECT * FROM task WHERE id = ?', id);
+      if (!before) return null;
+      const after = { ...before, ...p };
+      writeAudited('task', id, 'update', before, after, () => {
+        db.run(
+          "UPDATE task SET " +
+          "due_date = CASE WHEN ? THEN ? ELSE due_date END, " +
+          "owner = CASE WHEN ? THEN ? ELSE owner END, " +
+          "state = CASE WHEN ? THEN ? ELSE state END, " +
+          "raw_json = json_set(json_set(raw_json,'$.startDate',COALESCE(?,json_extract(raw_json,'$.startDate'))),'$.due_date',COALESCE(?,json_extract(raw_json,'$.due_date'))) " +
+          "WHERE id = ?",
+          p.due_date !== undefined ? 1 : 0, p.due_date ?? null,
+          p.owner !== undefined ? 1 : 0, p.owner ?? null,
+          p.state !== undefined ? 1 : 0, p.state ?? null,
+          p.start_date !== undefined ? (p.start_date ?? null) : null,
+          p.due_date !== undefined ? (p.due_date ?? null) : null,
+          id);
+      });
+      return db.get('SELECT * FROM task WHERE id = ?', id);
+    },
     deleteTask(id) { id = String(id); const b = db.get('SELECT * FROM task WHERE id = ?', id); if (!b) return false; writeAudited('task', id, 'delete', b, null, () => db.run('DELETE FROM task WHERE id = ?', id)); return true; },
     deleteTaskList(id) { id = String(id); const b = db.get('SELECT * FROM task_list WHERE id = ?', id); if (!b) return false; writeAudited('task_list', id, 'delete', b, null, () => db.run('DELETE FROM task_list WHERE id = ?', id)); return true; },
     deleteProject(id) { id = String(id); const b = db.get('SELECT * FROM project WHERE id = ?', id); if (!b) return false; writeAudited('project', id, 'delete', b, null, () => db.run('DELETE FROM project WHERE id = ?', id)); return true; },

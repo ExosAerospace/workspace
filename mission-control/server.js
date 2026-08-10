@@ -1212,6 +1212,31 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── SCHEDULE: edit a task's start/due/owner/status (audited ERP; MC is system of record) ──
+  if (req.url.split('?')[0] === '/api/schedule/task' && req.method === 'PATCH') {
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    let body = ''; req.on('data', c => { body += c; if (body.length > 1e5) req.destroy(); });
+    req.on('end', () => {
+      let erp;
+      try {
+        const { id, start_date, due_date, owner, state } = JSON.parse(body);
+        if (!id) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'id required' })); return; }
+        const patch = {};
+        if (start_date !== undefined) patch.start_date = start_date || null;
+        if (due_date !== undefined) patch.due_date = due_date || null;
+        if (owner !== undefined) patch.owner = owner || null;
+        if (state !== undefined) patch.state = state || null;
+        const { openErp } = require('../erp-foundation/dal');
+        erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: (session && session.email) || 'mc-server', agent: 'mc-schedule-edit' });
+        const row = erp.updateScheduleTask(id, patch);
+        if (!row) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'task not found' })); return; }
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true }));
+      } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e).slice(0, 200) })); }
+      finally { try { erp && erp.close(); } catch (e) {} }
+    });
+    return;
+  }
+
   // ── EXPENSE REPORTS: submit (employee) → auto-create manager approval task ──
   if (req.url.split('?')[0] === '/api/expense/submit' && req.method === 'POST') {
     if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
