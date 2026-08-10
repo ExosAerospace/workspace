@@ -82,14 +82,19 @@ async function main() {
   const projId = 'tw-' + PROJECT_ID;
   erp.upsertProject({ id: projId, name: proj.name || `Teamwork ${PROJECT_ID}`, status: proj.status || 'active', source: 'teamwork', teamwork_id: PROJECT_ID });
   for (const l of lists) erp.upsertTaskList({ id: 'tw-tl-' + l.id, project_id: projId, name: l.name, source: 'teamwork', teamwork_id: l.id });
+  // Preserve locally-planned start/due when Teamwork has none, so an ERP-side schedule rebase
+  // isn't wiped by a date-less Teamwork task. Real Teamwork dates still win when present.
+  const existingDates = {};
+  try { for (const r of erp.getProjectSchedule(projId).tasks) existingDates[r.id] = { s: r.start_date, d: r.due_date }; } catch (e) {}
   for (const t of tasks) {
+    const ex = existingDates['tw-task-' + t.id] || {};
     erp.upsertTask({
       id: 'tw-task-' + t.id, project_id: projId,
       task_list_id: t.tasklistId ? 'tw-tl-' + t.tasklistId : null,
       title: t.name, state: mapState(t.status), owner: ownerOf(t),
-      due_date: t.dueDate || null, priority: t.priority || null, category: 'schedule',
+      due_date: t.dueDate || ex.d || null, priority: t.priority || null, category: 'schedule',
       description: t.description || null, source: 'teamwork',
-      startDate: t.startDate || null, progress: t.progress ?? null,
+      startDate: t.startDate || ex.s || null, progress: t.progress ?? null,
       parentTaskId: t.parentTaskId || null, tw_status: t.status, teamwork_id: t.id,
     });
   }
