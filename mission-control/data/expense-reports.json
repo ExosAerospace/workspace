@@ -1,0 +1,17 @@
+[
+  {
+    "id": "EXP-MSNT1K5L",
+    "submitter_email": "lquinn@exosaero.com",
+    "submitter_name": "Lizi Quinn",
+    "manager_email": "jquinn@exosaero.com",
+    "manager_name": "John Quinn",
+    "amount": 90.47999999999999,
+    "purpose": "Arclabs - Fort Worth",
+    "period": "Week ending Aug 16, 2026",
+    "file": "/uploads/expenses/EXP-MSNT1K5L_Exos_Expense_Report_8.10.26.xlsx",
+    "submitted_at": "2026-08-10T22:30:19.616Z",
+    "state": "submitted",
+    "approval_task_id": 1966,
+    "payment_task_id": null
+  }
+]

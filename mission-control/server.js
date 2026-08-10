@@ -1248,6 +1248,21 @@ const server = http.createServer((req, res) => {
           description: `Expense report from ${name} (${email}).\nAmount: $${amtStr} · Purpose: ${exPurpose || '—'} · Period: ${exPeriod || '—'}\n(auto-read from the uploaded report)\nReport file: ${fileUrl}\nAPPROVE by marking this task Done — payment then auto-routes to Finance (CFO + AP). Ref ${id}.`
         };
         const created = await supabaseRequest('POST', 'tasks', task).then(r => Array.isArray(r.data) ? r.data[0] : r.data).catch(() => null);
+        // Attach the uploaded report to the task's Documents tab (uploads registry).
+        if (created && created.id && dataBase64) {
+          try {
+            const um = loadUploadsMeta();
+            um.push({
+              id: crypto.randomBytes(8).toString('hex'),
+              filename: filename || stored, stored_name: 'expenses/' + stored,
+              size: fs.statSync(path.join(EXP_DIR, stored)).size,
+              extension: (safe.split('.').pop() || '').toLowerCase(),
+              task_id: created.id, project_id: null, decision_id: null,
+              uploaded_by: name, uploaded_at: new Date().toISOString(),
+            });
+            saveUploadsMeta(um);
+          } catch (e) { /* non-fatal: file still linked in the description */ }
+        }
         const LEDGER = path.join(__dirname, 'data', 'expense-reports.json');
         let led = []; try { led = JSON.parse(fs.readFileSync(LEDGER, 'utf8')); } catch (e) {}
         led.unshift({ id, submitter_email: email, submitter_name: name, manager_email: mgrEmail, manager_name: mgrName, amount: exAmount != null ? exAmount : null, purpose: exPurpose || null, period: exPeriod || null, file: fileUrl, submitted_at: new Date().toISOString(), state: 'submitted', approval_task_id: created && created.id || null, payment_task_id: null });

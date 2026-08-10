@@ -1320,13 +1320,33 @@ function renderOverview(task) {
   `;
 
   const descEl = document.getElementById('detailDesc');
-  if (task.description && task.description.trim()) {
-    descEl.textContent = task.description;
+  const desc = task.description || '';
+  const isExpenseTask = task.category === 'Expense' || task.source === 'expense-workflow';
+  if (isExpenseTask) {
+    const m = desc.match(/Report file:\s*(\/uploads\/\S+)/);
+    const fileLink = m ? m[1] : null;
+    const approved = task.state === 'Done';
+    let html = '';
+    if (fileLink) html += `<a href="${fileLink}" target="_blank" style="display:inline-block;margin:0 0 12px;background:var(--navy3);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--blue2);text-decoration:none;font-weight:600">📄 Open expense report</a><br>`;
+    if (!approved) html += `<button onclick="approveExpense(${task.id})" style="background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;border:none;border-radius:8px;padding:11px 20px;font-weight:700;cursor:pointer;font-size:14px">✅ Approve &amp; send to Finance</button>`;
+    else html += `<div style="color:#22c55e;font-weight:700">✅ Approved — payment routed to Finance</div>`;
+    html += `<div style="margin-top:16px;white-space:pre-wrap;color:var(--text2)">${escHtml(desc)}</div>`;
+    descEl.innerHTML = html;
+    descEl.classList.remove('empty');
+  } else if (desc.trim()) {
+    descEl.textContent = desc;
     descEl.classList.remove('empty');
   } else {
     descEl.textContent = 'No description yet. Switch to Edit tab to add one.';
     descEl.classList.add('empty');
   }
+}
+
+async function approveExpense(id) {
+  if (!confirm('Approve this expense report and send it to Finance for payment?')) return;
+  await moveTask(id, 'Done');
+  toast('Approved — routed to Finance');
+  closePanel();
 }
 
 // ── TIMELINE ──
