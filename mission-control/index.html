@@ -1040,10 +1040,14 @@ function render() {
   // explicit lenses that override this.
   const SOON = Date.now() + 5 * 86400000;
   const urgent = t => (t.due_date && t.state !== 'Done' && new Date(t.due_date).getTime() <= SOON) ? 1 : 0;
+  // Expense-approval tasks pin to the very top of their column (default view), newest first.
+  const isExp = t => ((t.category === 'Expense' || t.source === 'expense-workflow') && t.state !== 'Done') ? 1 : 0;
   const sorted = [...filtered].sort((a, b) =>
     sortByDue ? (dueVal(a) - dueVal(b)) || (b.priority || 0) - (a.priority || 0)
     : sortByScore ? (msOf(b) - msOf(a)) || (b.id || 0) - (a.id || 0)
-    : (urgent(b) - urgent(a))
+    : (isExp(b) - isExp(a))
+      || (isExp(a) ? (b.id || 0) - (a.id || 0) : 0)
+      || (urgent(b) - urgent(a))
       || (urgent(a) ? (dueVal(a) - dueVal(b)) : 0)
       || (msOf(b) - msOf(a)) || (b.priority || 0) - (a.priority || 0) || (b.id || 0) - (a.id || 0));
 
