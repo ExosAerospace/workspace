@@ -1195,6 +1195,29 @@ const server = http.createServer((req, res) => {
   }
 
   // ── SCHEDULE (read-only) — Teamwork -> ERP replicated project schedule ──
+  // Critical Path Method over the schedule's finish-to-start dependencies. Mutates tasks in place,
+  // adding predecessors[] (parsed), critical(bool), slack(days); returns {projectDays, criticalCount}.
+  function scheduleCPM(tasks) {
+    const byId = {};
+    tasks.forEach(t => {
+      let pre = []; try { pre = JSON.parse(t.predecessors_json || '[]') || []; } catch (e) {}
+      t.predecessors = Array.isArray(pre) ? pre : [];
+      delete t.predecessors_json;
+      t._succ = []; byId[t.id] = t;
+    });
+    const dur = t => { if (t.start_date && t.due_date) { const d = (new Date(t.due_date) - new Date(t.start_date)) / 86400000; return Math.max(1, Math.round(d)); } return 1; };
+    tasks.forEach(t => t.predecessors.forEach(p => { if (byId[p]) byId[p]._succ.push(t.id); }));
+    // topological order (cycle-safe)
+    const order = [], seen = {}, temp = {};
+    const visit = t => { if (!t || seen[t.id] || temp[t.id]) return; temp[t.id] = 1; t.predecessors.forEach(p => visit(byId[p])); temp[t.id] = 0; seen[t.id] = 1; order.push(t); };
+    tasks.forEach(t => visit(t));
+    order.forEach(t => { let es = 0; t.predecessors.forEach(p => { if (byId[p]) es = Math.max(es, byId[p]._ef); }); t._es = es; t._ef = es + dur(t); });
+    const end = tasks.reduce((m, t) => Math.max(m, t._ef || 0), 0);
+    [...order].reverse().forEach(t => { let lf = end; if (t._succ.length) lf = Math.min(...t._succ.map(s => byId[s]._ls)); t._lf = lf; t._ls = lf - dur(t); });
+    let crit = 0;
+    tasks.forEach(t => { t.slack = Math.max(0, Math.round(t._ls - t._es)); t.critical = t.slack <= 0; if (t.critical) crit++; delete t._succ; delete t._es; delete t._ef; delete t._ls; delete t._lf; });
+    return { projectDays: end, criticalCount: crit };
+  }
   if (req.url.split('?')[0] === '/api/schedule' && req.method === 'GET') {
     if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
     let erp;
@@ -1203,8 +1226,9 @@ const server = http.createServer((req, res) => {
       erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: (session && session.email) || 'mc-server', agent: 'mc-schedule' });
       const projId = (new URLSearchParams(req.url.split('?')[1] || '')).get('project') || 'tw-902146';
       const sched = erp.getProjectSchedule(projId);
+      const cpm = scheduleCPM(sched.tasks || []);
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ source: 'Mission Control + ERP (system of record; Teamwork retired)', ...sched, projects: erp.listProjects() }));
+      res.end(JSON.stringify({ source: 'Mission Control + ERP (system of record; Teamwork retired)', ...sched, cpm, projects: erp.listProjects() }));
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'schedule unavailable', detail: String(e).slice(0, 200) }));
@@ -1219,13 +1243,14 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
       let erp;
       try {
-        const { id, start_date, due_date, owner, state } = JSON.parse(body);
+        const { id, start_date, due_date, owner, state, predecessors } = JSON.parse(body);
         if (!id) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'id required' })); return; }
         const patch = {};
         if (start_date !== undefined) patch.start_date = start_date || null;
         if (due_date !== undefined) patch.due_date = due_date || null;
         if (owner !== undefined) patch.owner = owner || null;
         if (state !== undefined) patch.state = state || null;
+        if (predecessors !== undefined) patch.predecessors = Array.isArray(predecessors) ? predecessors.filter(p => p && p !== id) : [];
         const { openErp } = require('../erp-foundation/dal');
         erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: (session && session.email) || 'mc-server', agent: 'mc-schedule-edit' });
         const row = erp.updateScheduleTask(id, patch);

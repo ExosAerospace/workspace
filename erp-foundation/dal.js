@@ -276,7 +276,8 @@ function openErp(file, opts = {}) {
       const lists = db.all('SELECT id, name FROM task_list WHERE project_id = ? ORDER BY name', pid);
       const tasks = db.all(
         "SELECT id, task_list_id, title, state, owner, due_date, " +
-        "json_extract(raw_json,'$.startDate') AS start_date, json_extract(raw_json,'$.progress') AS progress " +
+        "json_extract(raw_json,'$.startDate') AS start_date, json_extract(raw_json,'$.progress') AS progress, " +
+        "json_extract(raw_json,'$.predecessors') AS predecessors_json, json_extract(raw_json,'$.seq') AS seq " +
         "FROM task WHERE project_id = ? ORDER BY due_date IS NULL, due_date", pid);
       return { project, lists, tasks };
     },
@@ -300,6 +301,10 @@ function openErp(file, opts = {}) {
           p.start_date !== undefined ? (p.start_date ?? null) : null,
           p.due_date !== undefined ? (p.due_date ?? null) : null,
           id);
+        if (p.predecessors !== undefined)
+          db.run("UPDATE task SET raw_json = json_set(raw_json,'$.predecessors',json(?)) WHERE id = ?", JSON.stringify(p.predecessors || []), id);
+        if (p.seq !== undefined)
+          db.run("UPDATE task SET raw_json = json_set(raw_json,'$.seq',?) WHERE id = ?", p.seq, id);
       });
       return db.get('SELECT * FROM task WHERE id = ?', id);
     },

@@ -71,8 +71,9 @@
 <script>
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 const STATES=['To Do','In Progress','Blocked','Done'];
-let SCHED={tasks:[],lists:[]}, editing=null;
+let SCHED={tasks:[],lists:[]}, editing=null, IDTOSEQ={}, SEQTOID={};
 function tById(id){return SCHED.tasks.find(t=>String(t.id)===String(id));}
+function predSeqStr(t){return (t.predecessors||[]).map(p=>IDTOSEQ[p]).filter(x=>x!=null).map(n=>'#'+n).join(', ');}
 async function load(){
   const el=document.getElementById('content');
   try{
@@ -88,52 +89,63 @@ async function load(){
 function render(){
   const el=document.getElementById('content');
   const tasks=SCHED.tasks||[], lists=SCHED.lists||[];
+  IDTOSEQ={}; SEQTOID={};
+  tasks.forEach(t=>{ if(t.seq!=null){IDTOSEQ[t.id]=t.seq; SEQTOID[t.seq]=t.id;} });
   const done=tasks.filter(t=>t.state==='Done').length;
+  const cpm=SCHED.cpm||{};
   document.getElementById('summary').innerHTML=
     '<div class="pill"><b>Task-lists</b>'+lists.length+'</div>'+
     '<div class="pill"><b>Tasks</b>'+tasks.length+'</div>'+
-    '<div class="pill"><b>Complete</b>'+done+' / '+tasks.length+'</div>';
+    '<div class="pill"><b>Complete</b>'+done+' / '+tasks.length+'</div>'+
+    (cpm.criticalCount?'<div class="pill" style="border-color:#ff3b3b55"><b style="color:#ff6b6b">⚡ Critical path</b>'+cpm.criticalCount+' tasks / '+cpm.projectDays+'d</div>':'');
   const byList={}; tasks.forEach(t=>{(byList[t.task_list_id]=byList[t.task_list_id]||[]).push(t);});
   let html='';
   lists.forEach(l=>{
     const rows=byList[l.id]||[];
     html+='<h3 class="list">'+esc(l.name)+'<span class="n">'+rows.length+'</span></h3>';
     if(!rows.length){html+='<p class="muted" style="font-size:.82rem;margin-bottom:8px">No tasks.</p>';return;}
-    html+='<table><thead><tr><th>Task</th><th>Start → Due</th><th>Owner</th><th>Status</th><th></th></tr></thead><tbody>';
+    html+='<table><thead><tr><th>#</th><th>Task</th><th>Start → Due</th><th>Owner</th><th>Status</th><th>Depends on</th><th></th></tr></thead><tbody>';
     rows.forEach(t=>{ html+= (String(t.id)===String(editing)) ? editRow(t) : viewRow(t); });
     html+='</tbody></table>';
   });
   el.innerHTML=html||'<p class="muted">No schedule data.</p>';
 }
+function seqCell(t){return '<td class="muted" style="white-space:nowrap">'+(t.seq!=null?('#'+t.seq):'')+(t.critical?' <span title="On critical path" style="color:#ff6b6b">⚡</span>':'')+'</td>';}
 function viewRow(t){
   const dates=(t.start_date||t.due_date)?('<span class="dates">'+esc(t.start_date||'?')+' → '+esc(t.due_date||'?')+'</span>'):'<span class="muted">—</span>';
-  return '<tr><td class="task">'+esc(t.title||'')+'</td><td>'+dates+'</td><td class="muted">'+esc(t.owner||'—')+'</td>'+
+  const deps=predSeqStr(t); const slack=(t.slack!=null&&!t.critical)?' <span class="muted" style="font-size:.72rem">('+t.slack+'d slack)</span>':'';
+  return '<tr'+(t.critical?' style="background:rgba(255,59,59,0.05)"':'')+'>'+seqCell(t)+'<td class="task">'+esc(t.title||'')+'</td><td>'+dates+'</td><td class="muted">'+esc(t.owner||'—')+'</td>'+
     '<td><span class="st st-'+esc(t.state)+'">'+esc(t.state)+'</span></td>'+
+    '<td class="muted" style="white-space:nowrap">'+(deps?esc(deps):'—')+slack+'</td>'+
     '<td style="text-align:right"><button onclick="startEdit(\''+esc(t.id)+'\')" style="background:none;border:1px solid var(--border);border-radius:6px;color:var(--blue2,#0080ff);cursor:pointer;font-size:.75rem;padding:3px 9px">✏️ Edit</button></td></tr>';
 }
 function editRow(t){
   const opts=STATES.concat(STATES.includes(t.state)?[]:[t.state]).map(s=>'<option'+(s===t.state?' selected':'')+'>'+esc(s)+'</option>').join('');
   const inp='background:#0a1628;border:1px solid var(--border);border-radius:6px;color:#e8edf5;padding:5px 7px;font-size:.8rem;font-family:inherit';
-  return '<tr><td class="task">'+esc(t.title||'')+'</td>'+
+  return '<tr>'+seqCell(t)+'<td class="task">'+esc(t.title||'')+'</td>'+
     '<td><input type="date" id="e-start" value="'+esc(t.start_date||'')+'" style="'+inp+'"> → <input type="date" id="e-due" value="'+esc(t.due_date||'')+'" style="'+inp+'"></td>'+
-    '<td><input type="text" id="e-owner" value="'+esc(t.owner||'')+'" placeholder="owner" style="'+inp+';width:130px"></td>'+
+    '<td><input type="text" id="e-owner" value="'+esc(t.owner||'')+'" placeholder="owner" style="'+inp+';width:120px"></td>'+
     '<td><select id="e-state" style="'+inp+'">'+opts+'</select></td>'+
+    '<td><input type="text" id="e-pred" value="'+esc(predSeqStr(t).replace(/#/g,''))+'" placeholder="e.g. 3, 5" title="Predecessor task numbers, comma-separated" style="'+inp+';width:90px"></td>'+
     '<td style="text-align:right;white-space:nowrap"><button onclick="saveEdit(\''+esc(t.id)+'\')" style="background:linear-gradient(135deg,#16a34a,#22c55e);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:.75rem;font-weight:700;padding:4px 10px">Save</button> '+
     '<button onclick="cancelEdit()" style="background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted,#a0aec0);cursor:pointer;font-size:.75rem;padding:4px 8px">Cancel</button></td></tr>';
 }
 function startEdit(id){ editing=id; render(); }
 function cancelEdit(){ editing=null; render(); }
 async function saveEdit(id){
+  const predRaw=(document.getElementById('e-pred')||{}).value||'';
+  const predecessors=predRaw.split(',').map(x=>x.trim().replace(/^#/,'')).filter(Boolean)
+    .map(n=>SEQTOID[Number(n)]).filter(pid=>pid&&pid!==id);   // seq -> id, drop self/unknown
   const body={ id,
     start_date:document.getElementById('e-start').value||null,
     due_date:document.getElementById('e-due').value||null,
     owner:document.getElementById('e-owner').value.trim()||null,
-    state:document.getElementById('e-state').value };
+    state:document.getElementById('e-state').value,
+    predecessors };
   try{
     const r=await fetch('/api/schedule/task',{method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(body)});
     const d=await r.json(); if(!r.ok||!d.ok) throw new Error(d.error||('HTTP '+r.status));
-    const t=tById(id); if(t){ t.start_date=body.start_date; t.due_date=body.due_date; t.owner=body.owner; t.state=body.state; }
-    editing=null; render();
+    editing=null; await load();   // reload so the critical path recomputes
   }catch(e){ alert('Could not save: '+e.message); }
 }
 load();
