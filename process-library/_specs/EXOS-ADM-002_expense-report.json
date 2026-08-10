@@ -1,0 +1,33 @@
+{
+  "title": "Expense Report Submission Procedure",
+  "doc_no": "EXOS-ADM-002-0",
+  "area": "Administrative",
+  "area_id": "11-administrative",
+  "owner": "Kyle Ballard (Finance) / Exo",
+  "rev": "0",
+  "status": "Approved",
+  "intl_release": "Yes",
+  "reference_docs": "Exos Expense Report Template (ADM-EXP-01)",
+  "remarks": "End-to-end expense workflow in Mission Control: download template, upload, auto manager approval, auto Finance payment.",
+  "objective": "provide employees a single, auditable process to submit, approve, and pay reimbursable business expenses entirely within Mission Control.",
+  "overview": "Employees submit expense reports from the Mission Control Expenses page. On submission the report routes automatically to the employee's manager (from the BambooHR org) for approval, then to the Finance role holders for payment. Status is tracked Submitted, Approved, Paid.",
+  "tasks": [
+    {"name": "Task 1 - Prepare the report", "steps": [
+      "Open Mission Control and go to the Expenses page.",
+      "Download the Exos Expense Report Template (.xlsx).",
+      "Enter each expense line: date, category, description, amount. Retain receipts per Finance policy.",
+      "Total the report."]},
+    {"name": "Task 2 - Submit for approval", "steps": [
+      "On the Expenses page, choose your completed file.",
+      "Enter the total amount, expense period, and a short purpose.",
+      "Click Submit for approval; Mission Control creates the manager approval task automatically."]},
+    {"name": "Task 3 - Manager approval", "steps": [
+      "Manager receives the approval task (auto-notified) with the report attached.",
+      "Manager reviews the report against policy.",
+      "Manager approves by marking the task Done, or returns it for correction."]},
+    {"name": "Task 4 - Finance payment", "steps": [
+      "On approval, Mission Control creates payment tasks for the Finance role holders (CFO/Finance and BD/AP).",
+      "Finance verifies and processes payment.",
+      "Finance marks the payment task Done; the report then shows Paid on the employee Expenses page."]}
+  ]
+}

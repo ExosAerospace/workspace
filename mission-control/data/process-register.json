@@ -628,15 +628,15 @@
    "area": "Administrative",
    "area_id": "11-administrative",
    "procedure": "Expense Report Submission Procedure",
-   "doc_no": "ADM-EXP-02",
-   "rev": "2026",
+   "doc_no": "EXOS-ADM-002-0",
+   "rev": "0",
    "status": "Approved",
    "intl_release": "Yes",
    "ack_required": false,
    "owner": "Kyle Ballard (Finance) / Exo",
-   "remarks": "End-to-end expense workflow: download template -> upload in MC -> auto manager approval -> auto Finance payment. See MC Expenses page.",
+   "remarks": "End-to-end expense workflow in Mission Control: download template, upload, auto manager approval, auto Finance payment.",
    "files": [
-    "11-administrative/Expense_Report_Submission_Procedure.md"
+    "11-administrative/EXOS-ADM-002-0_Expense_Report_Submission_Procedure.docx"
    ],
    "file_count": 1
   }
