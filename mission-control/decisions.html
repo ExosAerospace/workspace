@@ -181,7 +181,7 @@ function card(d){
     <div class="opts" id="opts-${d.id}">
       ${opts.map(o=>`<button class="opt" onclick="pick('${d.id}',this,${JSON.stringify(o).replace(/"/g,'&quot;')})">${esc(o)}</button>`).join('')}
     </div>
-    <textarea class="note" id="note-${d.id}" placeholder="Add a note / answer (optional for open questions)…" oninput="noteChange('${d.id}',this.value)"></textarea>
+    <textarea class="note" id="note-${d.id}" placeholder="Note / answer… — or route it: @mention a role/person, or type e.g. 'have Neil handle X'" oninput="noteChange('${d.id}',this.value)"></textarea>
     <div style="margin-top:6px"><button onclick="reassignDecision('${d.id}')" title="This decision isn't mine — send it to the right person or let Exo reroute it" style="background:transparent;border:1px solid #3a4f73;color:#8aa0bd;border-radius:7px;padding:4px 10px;font-size:12px;cursor:pointer">🔀 Not my decision</button></div>
   </div>`;
 }
