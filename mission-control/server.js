@@ -1282,6 +1282,42 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify({ reports: led.filter(r => (r.submitter_email || '').toLowerCase() === email) }));
     return;
   }
+  // ── EXPENSE REPORTS: manager decision (approve -> Finance / deny -> back to employee) ──
+  if (req.url.split('?')[0] === '/api/expense/decide' && req.method === 'POST') {
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    let body = ''; req.on('data', c => { body += c; if (body.length > 1e6) req.destroy(); });
+    req.on('end', async () => {
+      try {
+        const { id, decision, comment } = JSON.parse(body);
+        const approver = session.name || session.email || 'Manager';
+        const LEDGER = path.join(__dirname, 'data', 'expense-reports.json');
+        let led = []; try { led = JSON.parse(fs.readFileSync(LEDGER, 'utf8')); } catch (e) {}
+        const entry = led.find(r => String(r.approval_task_id) === String(id));
+        if (decision === 'denied') {
+          if (!comment || !String(comment).trim()) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'A reason is required to deny.' })); return; }
+          if (entry) { entry.state = 'denied'; entry.denied_comment = String(comment).trim(); entry.denied_by = approver; entry.denied_at = new Date().toISOString(); fs.writeFileSync(LEDGER, JSON.stringify(led, null, 2)); }
+          await supabaseRequest('PATCH', `tasks?id=eq.${id}`, { state: 'Done' }).catch(() => {});
+          await supabaseRequest('POST', 'activities', { type: 'task_note', subject: `task:${id}`, body: `Expense DENIED by ${approver}: ${String(comment).trim()}`, owner: approver, status: 'completed' }).catch(() => {});
+          if (entry && entry.submitter_email) {
+            try {
+              const { execFileSync } = require('child_process');
+              const amt = entry.amount != null ? ` ($${Number(entry.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})` : '';
+              const per = entry.period ? `, ${entry.period}` : '';
+              const mail = `From: Exos Mission Control <jquinnexo@pm.me>\nTo: ${entry.submitter_email}\nSubject: Expense report returned - please revise and resubmit\n\nHello ${entry.submitter_name || ''},\n\nYour expense report${amt}${per} was reviewed by ${approver} and returned for changes.\n\nReason: ${String(comment).trim()}\n\nPlease correct it and resubmit in Mission Control under the Expenses page (the Submit an Expense Report button). Once resubmitted it routes back for approval.\n\n- Exos Mission Control`;
+              execFileSync('/opt/homebrew/bin/msmtp', ['-a', 'protonmail', entry.submitter_email], { input: mail, timeout: 20000 });
+            } catch (e) { /* email best-effort */ }
+          }
+          res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, decision: 'denied', emailed: !!(entry && entry.submitter_email) }));
+          return;
+        }
+        // approved: move to Done; the expense-workflow cron creates the Finance payment task(s).
+        await supabaseRequest('PATCH', `tasks?id=eq.${id}`, { state: 'Done' }).catch(() => {});
+        await supabaseRequest('POST', 'activities', { type: 'task_note', subject: `task:${id}`, body: `Expense APPROVED by ${approver} - routing to Finance for payment.`, owner: approver, status: 'completed' }).catch(() => {});
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, decision: 'approved' }));
+      } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e).slice(0, 200) })); }
+    });
+    return;
+  }
 
   // ── WELCOME PAGE (early adopter onboarding) ──
   if ((req.url === '/welcome' || req.url === '/welcome.html') && req.method === 'GET') {

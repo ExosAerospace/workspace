@@ -1328,8 +1328,19 @@ function renderOverview(task) {
     const approved = task.state === 'Done';
     let html = '';
     if (fileLink) html += `<a href="${fileLink}" target="_blank" style="display:inline-block;margin:0 0 12px;background:var(--navy3);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--blue2);text-decoration:none;font-weight:600">📄 Open expense report</a><br>`;
-    if (!approved) html += `<button onclick="approveExpense(${task.id})" style="background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;border:none;border-radius:8px;padding:11px 20px;font-weight:700;cursor:pointer;font-size:14px">✅ Approve &amp; send to Finance</button>`;
-    else html += `<div style="color:#22c55e;font-weight:700">✅ Approved — payment routed to Finance</div>`;
+    if (!approved) {
+      html += `<div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button onclick="decideExpense(${task.id},'approved')" style="background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;border:none;border-radius:8px;padding:11px 20px;font-weight:700;cursor:pointer;font-size:14px">✅ Approved</button>
+        <button onclick="showDenyBox(${task.id})" style="background:linear-gradient(135deg,#b91c1c,#ef4444);color:#fff;border:none;border-radius:8px;padding:11px 20px;font-weight:700;cursor:pointer;font-size:14px">⛔ Denied</button>
+      </div>
+      <div id="denyBox-${task.id}" style="display:none;margin-top:12px">
+        <label style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;display:block">Reason (sent back to the employee)</label>
+        <textarea id="denyComment-${task.id}" rows="3" placeholder="What needs to change before resubmitting…" style="width:100%;background:var(--navy);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:9px 11px;font-size:14px;font-family:inherit"></textarea>
+        <button onclick="decideExpense(${task.id},'denied')" style="margin-top:8px;background:linear-gradient(135deg,#b91c1c,#ef4444);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer;font-size:14px">Deny &amp; send back to employee</button>
+      </div>`;
+    } else {
+      html += `<div style="color:#22c55e;font-weight:700">✅ Decision recorded — see the Updates tab for approve/deny detail.</div>`;
+    }
     html += `<div style="margin-top:16px;white-space:pre-wrap;color:var(--text2)">${escHtml(desc)}</div>`;
     descEl.innerHTML = html;
     descEl.classList.remove('empty');
@@ -1342,11 +1353,29 @@ function renderOverview(task) {
   }
 }
 
-async function approveExpense(id) {
-  if (!confirm('Approve this expense report and send it to Finance for payment?')) return;
-  await moveTask(id, 'Done');
-  toast('Approved — routed to Finance');
-  closePanel();
+function showDenyBox(id) {
+  const b = document.getElementById('denyBox-' + id);
+  if (b) { b.style.display = 'block'; const t = document.getElementById('denyComment-' + id); if (t) t.focus(); }
+}
+
+async function decideExpense(id, decision) {
+  let comment = '';
+  if (decision === 'denied') {
+    const t = document.getElementById('denyComment-' + id);
+    comment = t ? t.value.trim() : '';
+    if (!comment) { toast('Add a reason before denying'); if (t) t.focus(); return; }
+  } else {
+    if (!confirm('Approve this expense report and send it to Finance for payment?')) return;
+  }
+  try {
+    const r = await fetch('/api/expense/decide', { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ id, decision, comment }) });
+    const d = await r.json();
+    if (!r.ok || !d.ok) throw new Error(d.error || ('HTTP ' + r.status));
+    const t = tasks.find(x => x.id == id); if (t) t.state = 'Done';
+    render(); renderStats();
+    toast(decision === 'denied' ? 'Denied — sent back to employee' : 'Approved — routed to Finance');
+    closePanel();
+  } catch (e) { toast('Could not record decision: ' + e.message); }
 }
 
 // ── TIMELINE ──
