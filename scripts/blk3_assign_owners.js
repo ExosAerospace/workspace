@@ -14,16 +14,16 @@ const { openErp } = require('../erp-foundation/dal');
 const APPLY = process.argv.includes('--apply');
 
 const KYLE = 'Kyle Ballard', NEIL = 'Neil Milburn', STEVE = 'Steven Norsworthy',
-      PHIL = 'Phillip Eaton', MIKE = 'Mike Talley', VIC = 'Victor Castilleja';
+      PHIL = 'Phillip Eaton', MIKE = 'Mike Talley', VIC = 'Victor Castilleja', JOHN = 'John Quinn';
 
 let fab = 0;
 function ownerFor(title) {
   const t = (title || '').toLowerCase();
   if (/budget|quote|price|cost|invoice/.test(t)) return KYLE;                                   // CFO
   if (/fcc|licen|faa|regulat|waiver|part 450/.test(t)) return NEIL;                             // COO/XSO regulatory
-  if (/\bsim\b|trick|simulation|r&d|\br and d\b|redesign|design model|noise solution/.test(t)) return NEIL; // Russ tech -> Neil
-  // Steve = FSW / flight software / firmware ONLY (Jon: keep Steve to FSW technical, reduce load)
-  if (/fsw|flight software|\bsoftware\b|firmware|spark detect|deadband|serial control|unused variable|speed up telemetry|telemetry where possible/.test(t)) return STEVE;
+  // Software / FSW / GNC -> John Quinn (placeholder until Timm joins as FSW/GNC contractor)
+  if (/fsw|flight software|\bsoftware\b|firmware|spark detect|deadband|serial control|unused variable|speed up telemetry|telemetry where possible|flight sim|\btrick\b|\bgnc\b|guidance|navigation/.test(t)) return JOHN;
+  if (/\bsim\b|simulation|r&d|\br and d\b|redesign|design model|noise solution/.test(t)) return NEIL; // Russ tech -> Neil (non-software R&D)
   // Phil = payload + design coordination (checked before AIT so "…Design" isn't grabbed as fab)
   if (/payload|ejector|ejection|lifting|enclosure|processing/.test(t)) return PHIL;
   if (/\bdesign\b|airframe/.test(t)) return PHIL;
