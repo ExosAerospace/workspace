@@ -11,7 +11,12 @@ from email.message import EmailMessage
 OUT = os.path.expanduser("~/.openclaw/workspace/meetings")
 os.makedirs(OUT, exist_ok=True)
 ATTENDEES = [("John Quinn", "jquinn@exosaero.com"), ("Steve Norsworthy", "snorsworthy@exosaero.com"),
-             ("Phil Eaton", "peaton@exosaero.com"), ("Lizi Quinn", "lquinn@exosaero.com")]
+             ("Phil Eaton", "peaton@exosaero.com"), ("Lizi Quinn", "lquinn@exosaero.com"),
+             ("Mike Talley", "mtalley@exosaero.com"), ("Neil Milburn", "nmilburn@exosaero.com"),
+             ("Victor Castilleja", "vcastilleja@exosaero.com"), ("Kyle Ballard", "kballard@exosaero.com")]
+# Weekly is virtual (Teams); Monthly is on-site at Greenville.
+LOC_WEEKLY = "Microsoft Teams (virtual)"
+LOC_MONTHLY = "Exos Aerospace, 299 FM 1903, Greenville, TX 75402 (on-site)"
 TODAY = datetime.date(2026, 7, 30)  # generation date (stamped, not runtime-derived)
 
 VTIMEZONE = """BEGIN:VTIMEZONE
@@ -62,7 +67,7 @@ def attendees_lines():
     return "\n".join(lines)
 
 
-def ics(uid, dtstart, dtend, rrule, summary, desc, exdates=None):
+def ics(uid, dtstart, dtend, rrule, summary, desc, exdates=None, location="Microsoft Teams"):
     stamp = TODAY.strftime("%Y%m%dT120000Z")
     ev = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Exos//Team Meetings//EN",
           "METHOD:REQUEST", "CALSCALE:GREGORIAN", VTIMEZONE, "BEGIN:VEVENT",
@@ -73,7 +78,7 @@ def ics(uid, dtstart, dtend, rrule, summary, desc, exdates=None):
         # one EXDATE line per date keeps Outlook happy
         for ex in exdates:
             ev.append(f"EXDATE;TZID=America/Chicago:{ex.strftime('%Y%m%d')}T100000")
-    ev += [f"SUMMARY:{summary}", f"DESCRIPTION:{desc}", "LOCATION:Microsoft Teams",
+    ev += [f"SUMMARY:{summary}", f"DESCRIPTION:{desc}", f"LOCATION:{location}",
            "STATUS:CONFIRMED", "SEQUENCE:0", "END:VEVENT", "END:VCALENDAR"]
     return "\n".join(ev).replace("\n", "\r\n")
 
@@ -86,15 +91,16 @@ def main():
         f"{first_tue:%Y%m%d}T100000", f"{first_tue:%Y%m%d}T104500",
         "FREQ=WEEKLY;BYDAY=TU",
         "Exos Weekly Team Meeting",
-        "Weekly work-management sync — Steve, Phil, John, Lizi. Skipped the week of the monthly Work Management Meeting (last Tuesday).",
-        exdates=lasts)
+        "Weekly work-management sync (virtual / Teams). Skipped the week of the monthly Work Management Meeting (last Tuesday).",
+        exdates=lasts, location=LOC_WEEKLY)
     first_monthly = lasts[0]                           # first last-Tuesday (2026-08-25)
     monthly = ics(
         f"exos-monthly-workmgmt-{first_monthly:%Y%m%d}@exosaero.com",
         f"{first_monthly:%Y%m%d}T100000", f"{first_monthly:%Y%m%d}T110000",
         "FREQ=MONTHLY;BYDAY=-1TU",
         "Exos Monthly Work Management Meeting",
-        "Monthly Mission Control work-management review (moved to the last Tuesday). Replaces the weekly sync this week. Agenda delivered the day before.")
+        "Monthly Mission Control work-management review (ON-SITE at Greenville). Replaces the weekly sync this week. Agenda delivered the day before.",
+        location=LOC_MONTHLY)
     wp = os.path.join(OUT, "Exos_Weekly_Team_Meeting.ics")
     mp = os.path.join(OUT, "Exos_Monthly_WorkMgmt_Meeting.ics")
     open(wp, "w").write(weekly)
@@ -110,11 +116,11 @@ def main():
     m.set_content(
         "Hello Jon,\n\n"
         "Two recurring calendar invites are attached, ready to open in Outlook and send to the team:\n\n"
-        f"1) Weekly Team Meeting — every Tuesday 10:00-10:45 CT, starting {first_tue:%A, %b %d}.\n"
-        "   Attendees: Steve, Phil, John, Lizi. It automatically SKIPS the last Tuesday of each month\n"
-        "   (that week is the monthly meeting instead).\n\n"
-        f"2) Monthly Work Management Meeting — moved to the LAST Tuesday, 10:00-11:00 CT, starting {first_monthly:%A, %b %d}.\n"
-        "   This replaces the weekly that week.\n\n"
+        f"1) Weekly Team Meeting (VIRTUAL / Teams) — every Tuesday 10:00-10:45 CT, starting {first_tue:%A, %b %d}.\n"
+        "   Attendees: John, Steve, Phil, Lizi, Mike Talley, Neil, Victor, Kyle. It automatically SKIPS the\n"
+        "   last Tuesday of each month (that week is the monthly meeting instead).\n\n"
+        f"2) Monthly Work Management Meeting (ON-SITE, Greenville) — LAST Tuesday, 10:00-11:00 CT, starting {first_monthly:%A, %b %d}.\n"
+        "   Same attendees, in person. This replaces the weekly that week.\n\n"
         "To send: open each .ics in Outlook (double-click the attachment), confirm the attendees, and hit Send.\n"
         "That puts them on everyone's calendar. I've also moved the agenda automation to the new Tuesday cadence,\n"
         "and the weekly agenda will skip the monthly week automatically.\n\n"
