@@ -85,6 +85,10 @@ def register(spec, rel_docx):
              "intl_release": spec.get("intl_release", "Yes"), "ack_required": bool(spec.get("ack_required", False)),
              "owner": spec.get("owner", "Exo (Lizi advising)"), "remarks": spec.get("remarks", ""),
              "files": [rel_docx], "file_count": 1}
+    # optional call-to-action button on the Process Library row (e.g. self-service page)
+    if spec.get("apply_link"):
+        entry["apply_link"] = spec["apply_link"]
+        entry["apply_label"] = spec.get("apply_label", "Open →")
 
     def add(d):
         d["meta"]["updated"] = datetime.date.today().isoformat()

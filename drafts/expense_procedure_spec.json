@@ -1,0 +1,47 @@
+{
+  "title": "Expense Report Submission Procedure",
+  "doc_no": "EXOS-ADM-002-0",
+  "rev": "1",
+  "area": "Administrative",
+  "area_id": "11-administrative",
+  "owner": "Kyle Ballard (Finance) / Exo",
+  "status": "Approved",
+  "intl_release": "Yes",
+  "reference_docs": "Exos Expense Report Template (ADM-EXP-01)",
+  "apply_link": "/expenses.html",
+  "apply_label": "💵 Submit an expense report",
+  "remarks": "End-to-end expense workflow in Mission Control: download template, upload (amount/period/purpose auto-read), manager Approved/Denied with reason, denial emails the employee to resubmit, approval auto-routes to Finance for payment.",
+  "objective": "provide a standard, self-service way for employees to submit expense reports and for managers and Finance to approve, deny, and pay them entirely within Mission Control, with the amount, period, and purpose read automatically from the uploaded report.",
+  "overview": "The entire expense process runs inside Mission Control. Employees download the house template, complete it, and upload it on the Expenses page; the system reads the total, expense period, and purpose directly from the file, so no values are retyped. The report routes to the employee's manager as an approval task pinned to the top of the board with the report attached. The manager either approves it (the task closes and payment auto-routes to Finance) or denies it with a required reason (the employee is emailed the reason and the report returns for correction and resubmission). Finance pays approved reports and the ledger records the report as Paid.",
+  "tasks": [
+    {
+      "name": "Employee - submit your expense report",
+      "steps": [
+        "Open Mission Control and go to the Expenses page (the Submit an expense report button on the Process and Procedures Library also links here).",
+        "Download the current Expense Report template (.xlsx) from the top card.",
+        "Complete the template: enter expenses by day, the WEEK ENDING date, and the Event Location / business purpose, and attach all receipts.",
+        "Save the file, then upload it in the same card using Choose file.",
+        "Click Submit for approval. Do NOT retype the amount, period, or purpose - Mission Control reads them automatically from your uploaded report.",
+        "Track status any time under My expense reports on the Expenses page."
+      ]
+    },
+    {
+      "name": "Manager - review and decide",
+      "steps": [
+        "Open the approval task at the top of your Mission Control board (Approve expense report - [employee] ($amount)).",
+        "Click Open expense report (or the Documents tab) to review the attached report and receipts; amount, period, and purpose are shown auto-read from the file.",
+        "If correct, click Approved. The task moves to Done and payment auto-routes to Finance.",
+        "If changes are needed, click Denied, enter the reason (required), and click Deny and send back to employee.",
+        "On denial the employee is emailed the reason automatically, the report is returned for correction, and no payment is issued."
+      ]
+    },
+    {
+      "name": "Finance - pay approved reports",
+      "steps": [
+        "An approved report generates a payment task for the Finance role holders defined in expense-roles.json.",
+        "Process the reimbursement per Finance policy, then mark the payment task Done.",
+        "When all payment tasks are Done, Mission Control records the report as Paid."
+      ]
+    }
+  ]
+}
