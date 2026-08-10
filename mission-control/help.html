@@ -184,13 +184,13 @@
       <tr><th>Type this in the Note (then Submit)</th><th>What happens</th></tr>
       <tr><td><code>have Neil handle the fin resize</code></td><td><b>Redirect:</b> creates a task <b>assigned to Neil</b> (name resolved from the directory). No Discord ping.</td></tr>
       <tr><td><code>Lizi to follow up on the quote</code></td><td><b>Redirect:</b> same idea — any <code>&lt;name&gt; + action verb</code> assigns a task to that person.</td></tr>
-      <tr><td><code>&lt;@&amp;RoleID&gt;</code> + your instruction</td><td><b>Ping + task:</b> pings that role/person in Discord <i>and</i> creates a task. (The role must be mentionable — see below.)</td></tr>
+      <tr><td><code>order a new release servo</code> (no name)</td><td><b>Redirect (auto-assigned):</b> you don't need to know who owns it — Exo picks the right person from their role and assigns the task.</td></tr>
       <tr><td><code>#1234 done</code></td><td><b>Update:</b> marks task <b>#1234 Done</b>.</td></tr>
       <tr><td><code>#1234 have Lizi take it</code></td><td><b>Update:</b> <b>reassigns task #1234</b> to Lizi.</td></tr>
       <tr><td><code>#1234 waiting on legal until Fri</code></td><td><b>Update:</b> logs that as an <b>update note on task #1234</b>.</td></tr>
     </table>
-    <div class="tip"><b>The gist:</b> to <b>redirect</b>, name a person (<code>have Neil…</code>) or @mention a role. To <b>update a task</b>, start with its number (<code>#1234 …</code>). Plain names always work with zero Discord setup. Yes/No and 🔀 Not my decision keep working exactly as before — the Note is just the catch-all.</div>
-    <p style="font-size:.85em;color:var(--muted)"><b>About Discord role pings:</b> for a role ping to actually notify people, that role must be set <b>mentionable</b> in Discord (Server Settings → Roles → the role → toggle <i>"Allow anyone to @mention this role"</i>). Individual <code>#1234</code> updates and <code>have Neil…</code> redirects need none of this.</p>
+    <div class="tip"><b>The gist:</b> to <b>redirect</b>, just say what needs doing — name a person if you know who, or don't and Exo assigns the right owner. To <b>update a task</b>, start the note with its number (<code>#1234 …</code>). Yes/No and 🔀 Not my decision keep working exactly as before — the Note is the catch-all.</div>
+    <p style="font-size:.85em;color:var(--muted)"><b>How auto-assign works:</b> if you don't name a person, Exo routes by role — e.g. expenses → Finance, production/machining → Ops, avionics/test → test engineering, export/ITAR → COO, contracts → CEO, BD/sales → BD. If it can't tell, it still creates the task and Exo assigns the owner, so nothing is ever lost.</p>
   </div>
 
   <div class="card">

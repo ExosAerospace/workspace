@@ -1,0 +1,86 @@
+[
+ {
+  "name": "Andrew Overman",
+  "first": "Andrew",
+  "title": "International Business Development Manager",
+  "dept": "Administrative",
+  "email": "aoverman@exosaero.com"
+ },
+ {
+  "name": "Kyle Ballard",
+  "first": "Kyle",
+  "title": "Chief Financial Officer",
+  "dept": "Administrative",
+  "email": "kballard@exosaero.com"
+ },
+ {
+  "name": "Elizabeth Quinn",
+  "first": "Elizabeth",
+  "title": "Business Development",
+  "dept": "Operations",
+  "email": "lquinn@exosaero.com"
+ },
+ {
+  "name": "Mike Talley",
+  "first": "Mike",
+  "title": "Multi Skilled Machinist / AIT",
+  "dept": "Operations",
+  "email": "mtalley@exosaero.com"
+ },
+ {
+  "name": "Neil Milburn",
+  "first": "Neil",
+  "title": "COO/XSO",
+  "dept": "Operations",
+  "email": "nmilburn@exosaero.com"
+ },
+ {
+  "name": "Phillip Eaton",
+  "first": "Phillip",
+  "title": "Aerospace Operations Manager",
+  "dept": "Operations",
+  "email": "peaton@exosaero.com"
+ },
+ {
+  "name": "Russell Blink",
+  "first": "Russell",
+  "title": "Chief Technology Officer",
+  "dept": "Operations",
+  "email": "rblink@exosaero.com"
+ },
+ {
+  "name": "Steven Norsworthy",
+  "first": "Steven",
+  "title": "Avionics Test Technician",
+  "dept": "Operations",
+  "email": "snorsworthy@exosaero.com"
+ },
+ {
+  "name": "Victor Castilleja",
+  "first": "Victor",
+  "title": "Multi Skilled Machinist / AIT",
+  "dept": "Operations",
+  "email": "vcastilleja@exosaero.com"
+ },
+ {
+  "name": "Toshihisa Kumazawa",
+  "first": "Toshihisa",
+  "title": "Japan Sales & Marketing Development Manager",
+  "dept": "Sales",
+  "email": "toshihisa@exosaero.com"
+ },
+ {
+  "name": "David Mitchell",
+  "first": "David",
+  "title": "President",
+  "dept": "",
+  "email": "dmitchell@exosaero.com"
+ },
+ {
+  "name": "John Quinn",
+  "first": "John",
+  "title": "CEO",
+  "dept": "",
+  "email": "jquinn@exosaero.com"
+ }
+]
