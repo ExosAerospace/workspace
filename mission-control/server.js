@@ -1204,7 +1204,7 @@ const server = http.createServer((req, res) => {
       const projId = (new URLSearchParams(req.url.split('?')[1] || '')).get('project') || 'tw-902146';
       const sched = erp.getProjectSchedule(projId);
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ source: 'Teamwork (read-through; Teamwork authoritative)', ...sched, projects: erp.listProjects() }));
+      res.end(JSON.stringify({ source: 'Mission Control + ERP (system of record; Teamwork retired)', ...sched, projects: erp.listProjects() }));
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'schedule unavailable', detail: String(e).slice(0, 200) }));

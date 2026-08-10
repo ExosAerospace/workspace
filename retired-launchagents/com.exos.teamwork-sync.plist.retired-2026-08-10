@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.exos.teamwork-sync</string>
+  <key>ProgramArguments</key><array>
+    <string>/opt/homebrew/bin/node</string>
+    <string>/Users/exomac/.openclaw/workspace/erp-foundation/teamwork_sync.js</string>
+    <string>--apply</string>
+  </array>
+  <key>WorkingDirectory</key><string>/Users/exomac/.openclaw/workspace</string>
+  <key>StartInterval</key><integer>21600</integer>
+  <key>RunAtLoad</key><true/>
+  <key>StandardOutPath</key><string>/Users/exomac/.openclaw/workspace/logs/teamwork-sync.log</string>
+  <key>StandardErrorPath</key><string>/Users/exomac/.openclaw/workspace/logs/teamwork-sync.log</string>
+</dict></plist>
