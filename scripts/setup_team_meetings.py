@@ -67,6 +67,11 @@ def attendees_lines():
     return "\n".join(lines)
 
 
+def esc_text(s):
+    # RFC 5545: escape backslash, semicolon, comma, and newlines in TEXT values.
+    return (str(s).replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n"))
+
+
 def ics(uid, dtstart, dtend, rrule, summary, desc, exdates=None, location="Microsoft Teams"):
     stamp = TODAY.strftime("%Y%m%dT120000Z")
     ev = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Exos//Team Meetings//EN",
@@ -78,7 +83,7 @@ def ics(uid, dtstart, dtend, rrule, summary, desc, exdates=None, location="Micro
         # one EXDATE line per date keeps Outlook happy
         for ex in exdates:
             ev.append(f"EXDATE;TZID=America/Chicago:{ex.strftime('%Y%m%d')}T100000")
-    ev += [f"SUMMARY:{summary}", f"DESCRIPTION:{desc}", f"LOCATION:{location}",
+    ev += [f"SUMMARY:{esc_text(summary)}", f"DESCRIPTION:{esc_text(desc)}", f"LOCATION:{esc_text(location)}",
            "STATUS:CONFIRMED", "SEQUENCE:0", "END:VEVENT", "END:VCALENDAR"]
     return "\n".join(ev).replace("\n", "\r\n")
 
