@@ -1194,6 +1194,24 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── SCHEDULE (read-only) — Teamwork -> ERP replicated project schedule ──
+  if (req.url.split('?')[0] === '/api/schedule' && req.method === 'GET') {
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    let erp;
+    try {
+      const { openErp } = require('../erp-foundation/dal');
+      erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: (session && session.email) || 'mc-server', agent: 'mc-schedule' });
+      const projId = (new URLSearchParams(req.url.split('?')[1] || '')).get('project') || 'tw-902146';
+      const sched = erp.getProjectSchedule(projId);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ source: 'Teamwork (read-through; Teamwork authoritative)', ...sched, projects: erp.listProjects() }));
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'schedule unavailable', detail: String(e).slice(0, 200) }));
+    } finally { try { erp && erp.close(); } catch (e) {} }
+    return;
+  }
+
   // ── WELCOME PAGE (early adopter onboarding) ──
   if ((req.url === '/welcome' || req.url === '/welcome.html') && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'text/html' });

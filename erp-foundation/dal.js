@@ -231,6 +231,51 @@ function openErp(file, opts = {}) {
       return db.get('SELECT * FROM ncr WHERE id = ?', id);
     },
 
+    // ---- Schedule integration (Teamwork -> ERP: project / task_list / task) ----
+    upsertProject(p) {
+      if (!p || !p.id) throw new Error('upsertProject requires id');
+      const id = String(p.id); const before = db.get('SELECT * FROM project WHERE id = ?', id) || null;
+      writeAudited('project', id, before ? 'update' : 'insert', before, p, () => {
+        db.run('INSERT INTO project (id,name,contract_id,status,raw_json) VALUES (?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name, contract_id=excluded.contract_id, status=excluded.status, raw_json=excluded.raw_json',
+          id, p.name ?? null, p.contract_id ?? null, p.status ?? null, JSON.stringify(p));
+      });
+      return db.get('SELECT * FROM project WHERE id = ?', id);
+    },
+    upsertTaskList(tl) {
+      if (!tl || !tl.id) throw new Error('upsertTaskList requires id');
+      const id = String(tl.id); const before = db.get('SELECT * FROM task_list WHERE id = ?', id) || null;
+      writeAudited('task_list', id, before ? 'update' : 'insert', before, tl, () => {
+        db.run('INSERT INTO task_list (id,project_id,name,raw_json) VALUES (?,?,?,?) ON CONFLICT(id) DO UPDATE SET project_id=excluded.project_id, name=excluded.name, raw_json=excluded.raw_json',
+          id, tl.project_id ?? null, tl.name ?? null, JSON.stringify(tl));
+      });
+      return db.get('SELECT * FROM task_list WHERE id = ?', id);
+    },
+    upsertTask(t) {
+      if (!t || !t.id) throw new Error('upsertTask requires id');
+      const id = String(t.id); const before = db.get('SELECT * FROM task WHERE id = ?', id) || null;
+      writeAudited('task', id, before ? 'update' : 'insert', before, t, () => {
+        db.run('INSERT INTO task (id,task_list_id,project_id,title,state,owner,due_date,priority,category,description,source,raw_json) VALUES (?,?,?,?,?,?,?,?,?,?,?,?) ' +
+          'ON CONFLICT(id) DO UPDATE SET task_list_id=excluded.task_list_id, project_id=excluded.project_id, title=excluded.title, state=excluded.state, owner=excluded.owner, due_date=excluded.due_date, priority=excluded.priority, category=excluded.category, description=excluded.description, source=excluded.source, raw_json=excluded.raw_json',
+          id, t.task_list_id ?? null, t.project_id ?? null, t.title ?? null, t.state ?? null, t.owner ?? null, t.due_date ?? null, t.priority ?? null, t.category ?? null, t.description ?? null, t.source ?? null, JSON.stringify(t));
+      });
+      return db.get('SELECT * FROM task WHERE id = ?', id);
+    },
+    listProjects() { return db.all('SELECT id, name, status, contract_id FROM project ORDER BY name'); },
+    listTasksBySource(source) { return db.all('SELECT id FROM task WHERE source = ?', String(source)); },
+    getProjectSchedule(pid) {
+      pid = String(pid);
+      const project = db.get('SELECT id, name, status FROM project WHERE id = ?', pid);
+      const lists = db.all('SELECT id, name FROM task_list WHERE project_id = ? ORDER BY name', pid);
+      const tasks = db.all(
+        "SELECT id, task_list_id, title, state, owner, due_date, " +
+        "json_extract(raw_json,'$.startDate') AS start_date, json_extract(raw_json,'$.progress') AS progress " +
+        "FROM task WHERE project_id = ? ORDER BY due_date IS NULL, due_date", pid);
+      return { project, lists, tasks };
+    },
+    deleteTask(id) { id = String(id); const b = db.get('SELECT * FROM task WHERE id = ?', id); if (!b) return false; writeAudited('task', id, 'delete', b, null, () => db.run('DELETE FROM task WHERE id = ?', id)); return true; },
+    deleteTaskList(id) { id = String(id); const b = db.get('SELECT * FROM task_list WHERE id = ?', id); if (!b) return false; writeAudited('task_list', id, 'delete', b, null, () => db.run('DELETE FROM task_list WHERE id = ?', id)); return true; },
+    deleteProject(id) { id = String(id); const b = db.get('SELECT * FROM project WHERE id = ?', id); if (!b) return false; writeAudited('project', id, 'delete', b, null, () => db.run('DELETE FROM project WHERE id = ?', id)); return true; },
+
     // ---- writes (audited) ----
     /** Insert or update a deal; audits before/after. */
     upsertDeal(deal) {

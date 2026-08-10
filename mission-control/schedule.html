@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos — BLK3 Schedule</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--blue:#0066cc;--blue2:#0080ff;--orange:#ff6b00;--orange2:#ff8c33;--text:#e8edf5;--text2:#a0aec0;--border:rgba(255,255,255,0.08);--card:#0f1e38;--green:#22c55e;--yellow:#eab308;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);min-height:100vh;line-height:1.5}
+  header{background:linear-gradient(135deg,#0a1628 0%,#0d2050 100%);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;min-height:64px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-logo{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--orange));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+  .brand-text h1{font-size:1.05rem;line-height:1.1}
+  .brand-text p{font-size:0.78rem;color:var(--text2)}
+  .header-right a{color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-left:14px}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 24px 64px}
+  .hero{background:linear-gradient(135deg,var(--navy3),var(--navy2));border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:24px}
+  .hero .tag{display:inline-block;background:rgba(0,128,255,.15);color:var(--blue2);border:1px solid rgba(0,128,255,.3);border-radius:20px;padding:3px 12px;font-size:.72rem;font-weight:600;letter-spacing:.04em;margin-bottom:12px}
+  .hero h2{font-size:1.6rem;margin-bottom:6px}
+  .hero p{color:var(--text2);max-width:840px;font-size:.9rem}
+  .hero p strong{color:var(--text)}
+  .src{font-size:.74rem;color:var(--text2);margin-top:10px}
+  .src b{color:var(--green)}
+  h3.list{font-size:1rem;margin:24px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border);color:var(--orange2)}
+  h3.list .n{font-size:.72rem;color:var(--text2);font-weight:400;margin-left:6px}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:8px}
+  th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--navy2);font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text2)}
+  tr:last-child td{border-bottom:none}
+  .task{color:var(--text)}
+  .st{border-radius:9px;padding:1px 8px;font-size:.68rem;font-weight:700;text-transform:uppercase}
+  .st-Done{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+  .st-Open{background:rgba(0,128,255,.12);color:var(--blue2);border:1px solid rgba(0,128,255,.25)}
+  .muted{color:var(--text2)}
+  .dates{font-family:ui-monospace,Menlo,monospace;font-size:.78rem}
+  .summary{display:flex;gap:14px;flex-wrap:wrap;margin-top:16px}
+  .pill{background:var(--navy);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font-size:.82rem}
+  .pill b{color:var(--orange2);display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.04em}
+  footer{text-align:center;color:var(--text2);font-size:.74rem;padding:30px 0 10px}
+  .err{background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.3);color:#ffb0b0;padding:14px 18px;border-radius:10px;font-size:.85rem}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-logo">EX</div>
+    <div class="brand-text"><h1>Exos Aerospace</h1><p>Mission Control · BLK3 Schedule</p></div>
+  </div>
+  <div class="header-right">
+    <a href="/index.html">← Board</a>
+    <a href="erp-rollout.html">ERP</a>
+    <a href="production.html">🏭 Production</a>
+    <a href="assets.html">🛰️ Assets</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <span class="tag">ERP · SCHEDULE · TEAMWORK INTERFACE</span>
+    <h2>📅 <span id="projName">BLK3</span> Schedule</h2>
+    <p><strong>Teamwork is the system of record.</strong> This is a read-through replica of the vehicle schedule — task-lists and tasks with start/due dates, owner, and status — mirrored into the ERP so production work orders and CDRL milestones can tie to real dates. Edit the schedule in Teamwork; this refreshes on sync.</p>
+    <div class="src" id="src"></div>
+    <div class="summary" id="summary"></div>
+  </div>
+  <div id="content"><p class="muted">Loading schedule…</p></div>
+  <footer>Exos Aerospace · Mission Control · Schedule (Teamwork read-through, audited ERP)</footer>
+</div>
+
+<script>
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+async function load(){
+  const el=document.getElementById('content');
+  try{
+    const r=await fetch('/api/schedule');
+    if(!r.ok) throw new Error('HTTP '+r.status+(r.status===401?' — please sign in':''));
+    const d=await r.json();
+    if(d.project) document.getElementById('projName').textContent=d.project.name||'BLK3';
+    document.getElementById('src').innerHTML='Source: <b>'+esc(d.source)+'</b>';
+    const tasks=d.tasks||[], lists=d.lists||[];
+    const done=tasks.filter(t=>t.state==='Done').length;
+    document.getElementById('summary').innerHTML=
+      '<div class="pill"><b>Task-lists</b>'+lists.length+'</div>'+
+      '<div class="pill"><b>Tasks</b>'+tasks.length+'</div>'+
+      '<div class="pill"><b>Complete</b>'+done+' / '+tasks.length+'</div>';
+    // group tasks by list
+    const byList={}; tasks.forEach(t=>{(byList[t.task_list_id]=byList[t.task_list_id]||[]).push(t);});
+    let html='';
+    lists.forEach(l=>{
+      const rows=byList[l.id]||[];
+      html+='<h3 class="list">'+esc(l.name)+'<span class="n">'+rows.length+'</span></h3>';
+      if(!rows.length){html+='<p class="muted" style="font-size:.82rem;margin-bottom:8px">No tasks.</p>';return;}
+      html+='<table><thead><tr><th>Task</th><th>Start → Due</th><th>Owner</th><th>Status</th></tr></thead><tbody>';
+      rows.forEach(t=>{
+        const dates=(t.start_date||t.due_date)?('<span class="dates">'+esc(t.start_date||'?')+' → '+esc(t.due_date||'?')+'</span>'):'<span class="muted">—</span>';
+        html+='<tr><td class="task">'+esc(t.title||'')+'</td><td>'+dates+'</td><td class="muted">'+esc(t.owner||'—')+'</td><td><span class="st st-'+esc(t.state)+'">'+esc(t.state)+'</span></td></tr>';
+      });
+      html+='</tbody></table>';
+    });
+    el.innerHTML=html||'<p class="muted">No schedule data.</p>';
+  }catch(err){ el.innerHTML='<div class="err">Could not load schedule: '+esc(err.message)+'</div>'; }
+}
+load();
+</script>
+</body>
+</html>
