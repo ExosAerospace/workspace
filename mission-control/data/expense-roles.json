@@ -1,0 +1,8 @@
+{
+  "_comment": "Expense-report PAYMENT approvers, by role. 'whoever holds Lizi's and Kyle's roles.' Update the email when the role holder changes — routing is role-based, not name-based.",
+  "payment_approvers": [
+    { "role": "CFO / Finance", "email": "kballard@exosaero.com" },
+    { "role": "BD / Accounts Payable", "email": "lquinn@exosaero.com" }
+  ],
+  "template_path": "11-administrative/Exos_Expense_Report_Template_2026.xlsx"
+}

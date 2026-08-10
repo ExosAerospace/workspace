@@ -122,6 +122,14 @@ function openErp(file, opts = {}) {
     getOrgUnits() {
       return db.all('SELECT id, name, parent_id FROM org_unit ORDER BY name');
     },
+    /** Resolve an employee (and their manager's email) by work email — for approval routing. */
+    getEmployeeByEmail(email) {
+      return db.get(
+        "SELECT e.id, e.full_name, json_extract(e.raw_json,'$.email') AS work_email, e.manager_id, " +
+        "m.full_name AS manager_name, json_extract(m.raw_json,'$.email') AS manager_email " +
+        "FROM employee e LEFT JOIN employee m ON m.id = e.manager_id " +
+        "WHERE lower(json_extract(e.raw_json,'$.email')) = lower(?)", String(email || ''));
+    },
     getPositions() {
       return db.all('SELECT id, title, org_unit_id FROM position ORDER BY title');
     },

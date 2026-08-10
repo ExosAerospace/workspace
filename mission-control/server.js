@@ -1212,6 +1212,49 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── EXPENSE REPORTS: submit (employee) → auto-create manager approval task ──
+  if (req.url.split('?')[0] === '/api/expense/submit' && req.method === 'POST') {
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    let body = ''; req.on('data', c => { body += c; if (body.length > MAX_UPLOAD_SIZE) req.destroy(); });
+    req.on('end', async () => {
+      try {
+        const { filename, dataBase64, amount, purpose, period } = JSON.parse(body);
+        const email = (session.email || '').toLowerCase(), name = session.name || email;
+        const EXP_DIR = path.join(UPLOADS_DIR, 'expenses'); fs.mkdirSync(EXP_DIR, { recursive: true });
+        const id = 'EXP-' + Date.now().toString(36).toUpperCase();
+        const safe = (filename || 'expense.xlsx').replace(/[^\w.\-]/g, '_');
+        const stored = id + '_' + safe;
+        if (dataBase64) fs.writeFileSync(path.join(EXP_DIR, stored), Buffer.from(String(dataBase64).split(',').pop(), 'base64'));
+        let mgrEmail = null, mgrName = null;
+        try { const { openErp } = require('../erp-foundation/dal'); const erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: email, agent: 'expense-submit' }); const me = erp.getEmployeeByEmail(email); mgrEmail = me && me.manager_email; mgrName = me && me.manager_name; erp.close(); } catch (e) {}
+        const fileUrl = '/uploads/expenses/' + encodeURIComponent(stored);
+        const task = {
+          title: `Approve expense report — ${name} ($${amount || '?'})`,
+          owner: mgrName || 'John Quinn', assigned_email: mgrEmail || 'jquinn@exosaero.com', assigned_to: mgrName || null,
+          state: 'To Do', priority: 75, category: 'Expense', source: 'expense-workflow', tags: ['expense-approval'],
+          description: `Expense report from ${name} (${email}).\nAmount: $${amount || '?'} · Purpose: ${purpose || '—'} · Period: ${period || '—'}\nReport file: ${fileUrl}\nAPPROVE by marking this task Done — payment then auto-routes to Finance (CFO + AP). Ref ${id}.`
+        };
+        const created = await supabaseRequest('POST', 'tasks', task).then(r => Array.isArray(r.data) ? r.data[0] : r.data).catch(() => null);
+        const LEDGER = path.join(__dirname, 'data', 'expense-reports.json');
+        let led = []; try { led = JSON.parse(fs.readFileSync(LEDGER, 'utf8')); } catch (e) {}
+        led.unshift({ id, submitter_email: email, submitter_name: name, manager_email: mgrEmail, manager_name: mgrName, amount: amount || null, purpose: purpose || null, period: period || null, file: fileUrl, submitted_at: new Date().toISOString(), state: 'submitted', approval_task_id: created && created.id || null, payment_task_id: null });
+        fs.writeFileSync(LEDGER, JSON.stringify(led, null, 2));
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, id, manager: mgrName, approval_task_id: created && created.id }));
+      } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e).slice(0, 200) })); }
+    });
+    return;
+  }
+  // ── EXPENSE REPORTS: my submissions (status) ──
+  if (req.url.split('?')[0] === '/api/expense/mine' && req.method === 'GET') {
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    let led = []; try { led = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'expense-reports.json'), 'utf8')); } catch (e) {}
+    const email = (session.email || '').toLowerCase();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ reports: led.filter(r => (r.submitter_email || '').toLowerCase() === email) }));
+    return;
+  }
+
   // ── WELCOME PAGE (early adopter onboarding) ──
   if ((req.url === '/welcome' || req.url === '/welcome.html') && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'text/html' });
