@@ -1225,19 +1225,32 @@ const server = http.createServer((req, res) => {
         const safe = (filename || 'expense.xlsx').replace(/[^\w.\-]/g, '_');
         const stored = id + '_' + safe;
         if (dataBase64) fs.writeFileSync(path.join(EXP_DIR, stored), Buffer.from(String(dataBase64).split(',').pop(), 'base64'));
+        // Extract amount / period / purpose from the uploaded sheet (no manual entry required).
+        let exAmount = amount || null, exPurpose = purpose || null, exPeriod = period || null;
+        try {
+          const { execFileSync } = require('child_process');
+          const outp = execFileSync('/usr/bin/python3',
+            [path.join(__dirname, '..', 'scripts', 'parse_expense_report.py'), path.join(EXP_DIR, stored)],
+            { env: { ...process.env, PYTHONPATH: '/Users/Shared/exos-archive/pylibs' }, timeout: 15000 }).toString();
+          const pd = JSON.parse(outp);
+          if (pd.amount != null) exAmount = pd.amount;
+          if (pd.period) exPeriod = pd.period;
+          if (pd.purpose) exPurpose = pd.purpose;
+        } catch (e) { /* leave blank if unparseable; manager reads the attachment */ }
         let mgrEmail = null, mgrName = null;
         try { const { openErp } = require('../erp-foundation/dal'); const erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: email, agent: 'expense-submit' }); const me = erp.getEmployeeByEmail(email); mgrEmail = me && me.manager_email; mgrName = me && me.manager_name; erp.close(); } catch (e) {}
         const fileUrl = '/uploads/expenses/' + encodeURIComponent(stored);
+        const amtStr = exAmount != null ? Number(exAmount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '?';
         const task = {
-          title: `Approve expense report — ${name} ($${amount || '?'})`,
+          title: `Approve expense report — ${name} ($${amtStr})`,
           owner: mgrName || 'John Quinn', assigned_email: mgrEmail || 'jquinn@exosaero.com', assigned_to: mgrName || null,
           state: 'To Do', priority: 75, category: 'Expense', source: 'expense-workflow', tags: ['expense-approval'],
-          description: `Expense report from ${name} (${email}).\nAmount: $${amount || '?'} · Purpose: ${purpose || '—'} · Period: ${period || '—'}\nReport file: ${fileUrl}\nAPPROVE by marking this task Done — payment then auto-routes to Finance (CFO + AP). Ref ${id}.`
+          description: `Expense report from ${name} (${email}).\nAmount: $${amtStr} · Purpose: ${exPurpose || '—'} · Period: ${exPeriod || '—'}\n(auto-read from the uploaded report)\nReport file: ${fileUrl}\nAPPROVE by marking this task Done — payment then auto-routes to Finance (CFO + AP). Ref ${id}.`
         };
         const created = await supabaseRequest('POST', 'tasks', task).then(r => Array.isArray(r.data) ? r.data[0] : r.data).catch(() => null);
         const LEDGER = path.join(__dirname, 'data', 'expense-reports.json');
         let led = []; try { led = JSON.parse(fs.readFileSync(LEDGER, 'utf8')); } catch (e) {}
-        led.unshift({ id, submitter_email: email, submitter_name: name, manager_email: mgrEmail, manager_name: mgrName, amount: amount || null, purpose: purpose || null, period: period || null, file: fileUrl, submitted_at: new Date().toISOString(), state: 'submitted', approval_task_id: created && created.id || null, payment_task_id: null });
+        led.unshift({ id, submitter_email: email, submitter_name: name, manager_email: mgrEmail, manager_name: mgrName, amount: exAmount != null ? exAmount : null, purpose: exPurpose || null, period: exPeriod || null, file: fileUrl, submitted_at: new Date().toISOString(), state: 'submitted', approval_task_id: created && created.id || null, payment_task_id: null });
         fs.writeFileSync(LEDGER, JSON.stringify(led, null, 2));
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ ok: true, id, manager: mgrName, approval_task_id: created && created.id }));

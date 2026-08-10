@@ -62,12 +62,7 @@
     <h3 style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border)">2 · Upload your completed report</h3>
     <label>Completed expense spreadsheet (.xlsx)</label>
     <input type="file" id="file" accept=".xlsx,.xls,.csv,.pdf">
-    <div class="row">
-      <div><label>Total amount (USD)</label><input id="amount" type="number" step="0.01" placeholder="0.00"></div>
-      <div><label>Expense period</label><input id="period" type="text" placeholder="e.g. Aug 2026"></div>
-    </div>
-    <label>Purpose / description</label>
-    <textarea id="purpose" rows="2" placeholder="Travel to Spaceport America, materials, etc."></textarea>
+    <p class="muted" style="margin:8px 0 4px;font-size:.85rem">Amount, period, and purpose are read automatically from your report — no need to retype them.</p>
     <button class="btn" id="submitBtn" onclick="submitExpense()">Submit for approval</button>
     <div class="msg" id="msg"></div>
   </div>
@@ -85,18 +80,17 @@ function fileToB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.
 async function submitExpense(){
   const msg=document.getElementById('msg'), btn=document.getElementById('submitBtn');
   const f=document.getElementById('file').files[0];
-  const amount=document.getElementById('amount').value, purpose=document.getElementById('purpose').value, period=document.getElementById('period').value;
   msg.style.display='none';
   if(!f){msg.className='msg err';msg.style.display='block';msg.textContent='Please choose your completed expense file first.';return;}
   btn.disabled=true;btn.textContent='Submitting…';
   try{
     const dataBase64=await fileToB64(f);
-    const r=await fetch('/api/expense/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:f.name,dataBase64,amount,purpose,period})});
+    const r=await fetch('/api/expense/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:f.name,dataBase64})});
     const d=await r.json();
     if(!r.ok||!d.ok) throw new Error(d.error||('HTTP '+r.status));
     msg.className='msg ok';msg.style.display='block';
     msg.textContent='Submitted ('+d.id+'). Sent to '+(d.manager||'your manager')+' to approve; Finance pays once approved.';
-    document.getElementById('file').value='';document.getElementById('amount').value='';document.getElementById('purpose').value='';document.getElementById('period').value='';
+    document.getElementById('file').value='';
     loadMine();
   }catch(e){msg.className='msg err';msg.style.display='block';msg.textContent='Could not submit: '+esc(e.message);}
   btn.disabled=false;btn.textContent='Submit for approval';
