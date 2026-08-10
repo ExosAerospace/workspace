@@ -75,6 +75,18 @@ def build_agenda(meeting_day):
         lines.append(f"Open decisions needing answers: {len(opend)}")
     except Exception:
         pass
+    # scripted review items (standing, from agenda-review-items.json)
+    try:
+        ri = json.load(open(os.path.join(WS, "mission-control", "data", "agenda-review-items.json"))).get("review_items", [])
+        if ri:
+            lines.append("\nReview items (scripted):")
+            for it in ri:
+                who = f" — {it['owner']}" if it.get("owner") else ""
+                lines.append(f"  ▸ {it.get('title','')}{who}")
+                for s in it.get("script", []):
+                    lines.append(f"      - {s}")
+    except Exception:
+        pass
     return "\n".join(lines)
 
 

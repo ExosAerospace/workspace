@@ -50,13 +50,27 @@ async function main() {
   const emps = dir.employees || [];
   console.log(`  ${emps.length} employees in the Bamboo directory.`);
 
-  // Build department → org_unit and jobTitle → position sets
-  const depts = [...new Set(emps.map(e => e.department).filter(Boolean))];
+  // Local overrides (dept/email corrections + extra org units not yet in Bamboo). Applied ON TOP of Bamboo.
+  let ov = { department_overrides: {}, email_overrides: {}, extra_org_units: [] };
+  try { ov = { ...ov, ...JSON.parse(fs.readFileSync(path.join(__dirname, 'hr-overrides.json'), 'utf8')) }; } catch {}
+
+  // Bamboo's directory endpoint omits supervisor — pull it per employee for the manager mapping.
+  const supByName = {};                 // "Last, First" -> that person's bamboo id
+  for (const e of emps) supByName[`${e.lastName}, ${e.firstName}`] = 'bamboo-' + e.id;
+  for (const e of emps) {
+    try { e._supervisor = (await bambooGet(sub, key, `employees/${e.id}?fields=supervisor`)).supervisor || null; }
+    catch { e._supervisor = null; }
+    e._dept = ov.department_overrides[e.displayName] || e.department || null;
+    e._email = ov.email_overrides[e.displayName] || e.workEmail || null;
+  }
+
+  // department (incl. override depts like "C Suite") + position sets
+  const depts = [...new Set([...emps.map(e => e._dept).filter(Boolean), ...(ov.extra_org_units || [])])];
   const titles = [...new Set(emps.map(e => e.jobTitle).filter(Boolean))];
 
   if (!APPLY) {
-    console.log(`\nDRY-RUN (no writes). Would mirror: ${depts.length} departments, ${titles.length} positions, ${emps.length} employees.`);
-    emps.slice(0, 12).forEach(e => console.log(`   ${e.displayName}  ·  ${e.jobTitle || '—'}  ·  ${e.department || '—'}`));
+    console.log(`\nDRY-RUN (no writes). Would mirror: ${depts.length} departments, ${titles.length} positions, ${emps.length} employees (+overrides, +managers).`);
+    emps.slice(0, 12).forEach(e => console.log(`   ${e.displayName}  ·  ${e.jobTitle || '—'}  ·  ${e._dept || '—'}  ·  mgr ${e._supervisor || '—'}`));
     console.log('   Re-run with --apply to write the read-through cache (audited).');
     return;
   }
@@ -65,15 +79,12 @@ async function main() {
   erp.upsertOrgUnit({ id: 'org-exos', name: 'Exos Aerospace' });
   for (const d of depts) erp.upsertOrgUnit({ id: 'org-' + slug(d), name: d, parent_id: 'org-exos', source: 'bamboo' });
   for (const t of titles) erp.upsertPosition({ id: 'pos-' + slug(t), title: t, source: 'bamboo' });
-  // pass 1: employees (no manager yet); pass 2: resolve manager by displayName
-  const byName = {};
-  for (const e of emps) byName[e.displayName] = 'bamboo-' + e.id;
   for (const e of emps) {
     erp.upsertEmployee({
-      id: 'bamboo-' + e.id, full_name: e.displayName, email: e.workEmail || null,
-      org_unit_id: e.department ? 'org-' + slug(e.department) : null,
+      id: 'bamboo-' + e.id, full_name: e.displayName, email: e._email,
+      org_unit_id: e._dept ? 'org-' + slug(e._dept) : null,
       position_id: e.jobTitle ? 'pos-' + slug(e.jobTitle) : null,
-      manager_id: e.supervisor && byName[e.supervisor] ? byName[e.supervisor] : null,
+      manager_id: e._supervisor && supByName[e._supervisor] ? supByName[e._supervisor] : null,
       employment_status: 'Active', source: 'bamboo', bamboo_id: e.id,
     });
   }

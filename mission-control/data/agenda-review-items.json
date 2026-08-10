@@ -1,0 +1,26 @@
+{
+  "_comment": "Scripted review items appended to the weekly team-meeting agenda by scripts/weekly-meeting-prep.py. Remove an item once reviewed/closed.",
+  "review_items": [
+    {
+      "title": "ERP / Mission Control build review — what shipped this week",
+      "owner": "Exo / John",
+      "added": "2026-08-10",
+      "script": [
+        "HR Directory & Org (MC → 👥 HR): now live from BambooHR with managers, C-Suite (John, David), Victor → Operations, Andrew's email; org-chart + CSV download available.",
+        "Asset Register (🛰️ Assets) and Production Control (🏭 Production) live — closes gov-readiness gap MQ-1 (manufacturing management).",
+        "Phil Eaton is now the ERP program lead; Lizi + Kyle own Phase 2 DCAA timekeeping setup in Bamboo."
+      ]
+    },
+    {
+      "title": "BLK3 schedule → ERP integration (Teamwork)",
+      "owner": "Phil (lead) + Steve",
+      "added": "2026-08-10",
+      "script": [
+        "The Teamwork 'Blk3 Flight' schedule is now replicated live into Mission Control (📅 Schedule): 11 task-lists, 35 tasks, auto-syncs every 6h — Teamwork stays the system of record.",
+        "FLAG: the schedule is stale — tasks carry 2022–2024 dates and most have no assignee. Team decision: refresh start/due dates + assign owners in Teamwork (task #1884, Phil lead + Steve).",
+        "Confirm 'Blk3 Flight' (Teamwork 902146) is the authoritative BLK3 vehicle schedule (ORIONAST BLK3 and Purdue BLK3 projects are empty).",
+        "Next once refreshed: tie Production work orders (Phase 5B) and CDRL milestones (Phase 4) to real schedule dates."
+      ]
+    }
+  ]
+}

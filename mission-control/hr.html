@@ -62,6 +62,10 @@
     <h2>👥 Employee Directory &amp; Org</h2>
     <p><strong>BambooHR is the system of record.</strong> This is a read-only mirror for the org chart and to link work to people. It carries directory-level fields only — name, title, department, manager, work email — and <strong>no compensation, benefits, or PII</strong>. To make an authoritative HR change, use BambooHR.</p>
     <div class="src" id="src"></div>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+      <button onclick="downloadCSV()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:.82rem;cursor:pointer">⬇ Download directory (CSV)</button>
+      <button onclick="printOrgChart()" style="background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:.82rem;cursor:pointer">🖨 Org chart (print / PDF)</button>
+    </div>
   </div>
 
   <div id="content"><p class="muted">Loading directory…</p></div>
@@ -80,6 +84,7 @@ async function load(){
     const d=await r.json();
     document.getElementById('src').innerHTML='Source: <b>'+esc(d.source)+'</b> · '+d.count+' employees';
     const emps=d.employees||[];
+    window.__emps=emps;
     // group by department
     const byDept={};
     emps.forEach(e=>{const k=e.department||'Unassigned';(byDept[k]=byDept[k]||[]).push(e);});
@@ -103,6 +108,35 @@ async function load(){
   }catch(err){
     el.innerHTML='<div class="err">Could not load the directory: '+esc(err.message)+'</div>';
   }
+}
+function downloadCSV(){
+  const emps=window.__emps||[];
+  const cols=['full_name','position_title','department','manager_name','work_email'];
+  const head=['Name','Title','Department','Manager','Work email'];
+  const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const rows=[head.map(q).join(',')].concat(emps.map(e=>cols.map(c=>q(e[c])).join(',')));
+  const blob=new Blob([rows.join('\r\n')],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='Exos_Employee_Directory_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+}
+function printOrgChart(){
+  const emps=window.__emps||[];
+  const byMgr={}; emps.forEach(e=>{const k=e.manager_name||'__root__';(byMgr[k]=byMgr[k]||[]).push(e);});
+  const node=e=>{const kids=(byMgr[e.full_name]||[]).sort((a,b)=>(a.full_name||'').localeCompare(b.full_name||''));
+    return '<li><div class="oc-card"><b>'+esc(e.full_name)+'</b><span>'+esc(e.position_title||'')+'</span><em>'+esc(e.department||'')+'</em></div>'
+      +(kids.length?'<ul>'+kids.map(node).join('')+'</ul>':'')+'</li>';};
+  const roots=(byMgr['__root__']||[]).sort((a,b)=>(a.full_name||'').localeCompare(b.full_name||''));
+  const html='<!doctype html><html><head><meta charset="utf-8"><title>Exos Org Chart</title><style>'
+    +'body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;padding:24px;color:#111}'
+    +'h1{font-size:18px;margin:0 0 4px}p.sub{color:#555;margin:0 0 18px;font-size:12px}'
+    +'ul{list-style:none;margin:0;padding-left:22px;border-left:1px solid #bbb}li{margin:6px 0;position:relative}'
+    +'.oc-card{display:inline-block;border:1px solid #999;border-radius:8px;padding:6px 12px;background:#f7f9fc}'
+    +'.oc-card b{display:block;font-size:13px}.oc-card span{display:block;font-size:11px;color:#333}.oc-card em{font-size:10px;color:#777}'
+    +'@media print{.oc-card{background:#fff}}</style></head><body>'
+    +'<h1>Exos Aerospace — Organization Chart</h1><p class="sub">Live from BambooHR (read-through) · generated '+new Date().toLocaleDateString()+'</p>'
+    +'<ul>'+roots.map(node).join('')+'</ul>'
+    +'<script>window.onload=function(){window.print();}<\/script></body></html>';
+  const w=window.open('','_blank');w.document.write(html);w.document.close();
 }
 load();
 </script>
