@@ -128,16 +128,18 @@
   </div>
 
   <div class="card">
-    <h2>Step 1 — Connect with Cloudflare WARP (required for everyone, one-time)</h2>
+    <h2>Step 1 — Connect with the Cloudflare One Client (required for everyone, one-time)</h2>
+    <p>Mission Control runs on a secured machine that is <b>not on the public internet</b>, so the <b>Cloudflare One Client</b> is the only way to reach it — in the office or remote.</p>
     <ol>
-      <li>Download the <b>Cloudflare WARP</b> app (Windows; on Mac get the macOS version from the same page).</li>
-      <li>Open it, click the <b>gear icon</b> (bottom right), then <b>Preferences</b>, then <b>Account</b>.</li>
-      <li>Click <b>"Login with Cloudflare Zero Trust."</b></li>
+      <li>Install the <b>Cloudflare One Client</b> (Windows or macOS). If the installer says a newer version is already installed, that's fine — <b>skip the install and open the app you already have</b>.</li>
+      <li>Open the app. In the left menu, go to <b>Profile</b>.</li>
+      <li>Scroll to the bottom, to <b>"Cloudflare One team login"</b>, and click <b>Login</b>.</li>
       <li>Team name: <code>exosaero</code></li>
-      <li>Log in with your <b>Microsoft (work) credentials</b>.</li>
-      <li>It should say "Zero Trust" and "Connected."</li>
+      <li>Sign in with your <b>Microsoft (work) credentials</b> and approve the enrollment.</li>
+      <li><b>Verify it worked:</b> back on the <b>Profile</b> screen, <b>"Account type" must show your Cloudflare One / Zero Trust org — NOT "WARP."</b></li>
     </ol>
-    <div class="tip">Mission Control runs on a secured machine that is <b>not on the Exos office network</b>, so Cloudflare WARP is the <b>only</b> way to reach it — you need it whether you are in the office or remote. Cloudflare problems → Atomus at <a href="mailto:success@atomuscyber.com">success@atomuscyber.com</a>.</div>
+    <div class="tip" style="border-left-color:var(--red)"><b>The #1 gotcha:</b> if the app says <b>"Connected / your internet is private"</b> but <b>Account type = "WARP,"</b> you are only in consumer mode and Mission Control will <b>not</b> load. You must do the <b>"Cloudflare One team login → Login"</b> with team <code>exosaero</code> (step 3). After that, Account type changes to your org and the connection carries the route to Mission Control.</div>
+    <div class="tip">Cloudflare problems → Atomus at <a href="mailto:success@atomuscyber.com">success@atomuscyber.com</a>, or ask in the team channel.</div>
   </div>
 
   <div class="card">
@@ -147,7 +149,20 @@
       <li><b>Email</b> = your work email. <b>Password</b> = your temporary password (from your invite).</li>
       <li>Set your own password on the <b>🔑 Set Password</b> page (link in the top menu). It stays private to you — no one else sets or sees it.</li>
     </ol>
-    <div class="tip"><b>Bookmark it:</b> add <code>http://192.168.143.216:8080</code> to your browser favorites / bookmarks bar so you can reopen Mission Control in one click. It only loads while Cloudflare WARP is connected.</div>
+    <div class="tip"><b>Bookmark it:</b> add <code>http://192.168.143.216:8080</code> to your browser favorites / bookmarks bar so you can reopen Mission Control in one click. It only loads while the <b>Cloudflare One Client</b> is connected to the <code>exosaero</code> org.</div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--accent)">
+    <h2>💻 Remote into your work computer from home (VPN-style)</h2>
+    <p>The Cloudflare One Client <b>replaces a traditional VPN</b>. Once you're enrolled in the <code>exosaero</code> org (Step 1), your laptop has a secure path to Exos internal resources from anywhere — no separate VPN app. Reaching Mission Control is automatic. Reaching <b>your own office desktop</b> (to see and control its screen) is a related but slightly different setup:</p>
+    <ol>
+      <li><b>One-time IT setup (request it):</b> your office computer must be (a) added to the Cloudflare One network routes and (b) have <b>Remote Desktop enabled</b> (Windows Pro: Settings → System → Remote Desktop → On). Ask Jon / Atomus to enable this for your machine and give you its office IP address.</li>
+      <li><b>Leave your office computer powered on</b> (and plugged in) when you want to reach it from home.</li>
+      <li><b>From home:</b> open the <b>Cloudflare One Client</b> and confirm it's <b>Connected</b> to <code>exosaero</code> (Account type shows your org, not "WARP").</li>
+      <li>Open <b>Remote Desktop Connection</b> (Windows) or <b>Windows App / Microsoft Remote Desktop</b> (Mac), enter your office computer's <b>IP address</b>, and sign in with your work credentials.</li>
+      <li>You now see and control your office desktop as if you were sitting at it.</li>
+    </ol>
+    <div class="tip">Think of it as two layers: the <b>Cloudflare One Client</b> is the secure network path (the "VPN"), and <b>Remote Desktop</b> is what actually shows your desktop. Mission Control needs only the first layer; controlling your office PC needs both. Setup help → Atomus at <a href="mailto:success@atomuscyber.com">success@atomuscyber.com</a>.</div>
   </div>
 
   <div class="card">
