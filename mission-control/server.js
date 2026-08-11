@@ -397,6 +397,22 @@ function supabaseRequest(method, pathAndQuery, body) {
   });
 }
 
+// GET that pages past PostgREST's hard 1000-row response cap. Pass a query WITHOUT limit/offset;
+// returns { status, data: [...all rows] }. Use for any list that can exceed 1000 rows.
+async function supabaseGetAll(pathAndQuery) {
+  const sep = pathAndQuery.includes('?') ? '&' : '?';
+  let all = [], offset = 0, status = 200;
+  for (let page = 0; page < 100; page++) {
+    const r = await supabaseRequest('GET', `${pathAndQuery}${sep}limit=1000&offset=${offset}`);
+    status = r.status;
+    const chunk = Array.isArray(r.data) ? r.data : [];
+    all = all.concat(chunk);
+    if (chunk.length < 1000) break;
+    offset += 1000;
+  }
+  return { status, data: all };
+}
+
 // Map Supabase row → frontend format
 function toFrontend(row) {
   return {
@@ -1683,7 +1699,7 @@ const server = http.createServer((req, res) => {
 
   // ── COMPANIES API ──
   if (req.url === '/api/companies' && req.method === 'GET') {
-    supabaseRequest('GET', 'companies?order=name.asc&limit=5000')
+    supabaseGetAll('companies?order=name.asc')
       .then(({ status, data }) => {
         res.writeHead(status >= 400 ? status : 200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(data));
@@ -1716,7 +1732,7 @@ const server = http.createServer((req, res) => {
 
   // ── DEALS API ──
   if (req.url === '/api/deals' && req.method === 'GET') {
-    supabaseRequest('GET', 'deals?order=created_at.desc&limit=5000')
+    supabaseGetAll('deals?order=created_at.desc')
       .then(({ status, data }) => {
         res.writeHead(status >= 400 ? status : 200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(data));
@@ -1870,7 +1886,7 @@ const server = http.createServer((req, res) => {
     Promise.all([
       supabaseRequest('GET', `projects?id=eq.${projId}&limit=1`),
       supabaseRequest('GET', `task_lists?project_id=eq.${projId}&order=position.asc&limit=500`),
-      supabaseRequest('GET', `tasks?project_id=eq.${projId}&order=position.asc&limit=5000`),
+      supabaseGetAll(`tasks?project_id=eq.${projId}&order=position.asc`),
       supabaseRequest('GET', `milestones?project_id=eq.${projId}&order=due_date.asc&limit=100`),
       supabaseRequest('GET', `time_entries?project_id=eq.${projId}&order=date.desc&limit=500`),
     ]).then(([project, lists, tasks, milestones, timeEntries]) => {
@@ -2086,12 +2102,12 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/exosops/dashboard' && req.method === 'GET') {
     Promise.all([
       supabaseRequest('GET', 'projects?select=id,name,status&limit=500'),
-      supabaseRequest('GET', 'tasks?select=id,state,project_id,priority,due_date&limit=5000'),
+      supabaseGetAll('tasks?select=id,state,project_id,priority,due_date'),
       supabaseRequest('GET', 'milestones?select=id,status,due_date&limit=500'),
-      supabaseRequest('GET', 'time_entries?select=id,hours,date&limit=5000'),
+      supabaseGetAll('time_entries?select=id,hours,date'),
       supabaseRequest('GET', 'users?select=id,name&limit=100'),
       supabaseRequest('GET', 'contacts?select=id&limit=1'),
-      supabaseRequest('GET', 'deals?select=id,stage,amount&limit=5000'),
+      supabaseGetAll('deals?select=id,stage,amount'),
     ]).then(([projects, tasks, milestones, timeEntries, users, contacts, deals]) => {
       const projData = Array.isArray(projects.data) ? projects.data : [];
       const taskData = Array.isArray(tasks.data) ? tasks.data : [];
@@ -2130,7 +2146,7 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/dashboard' && req.method === 'GET') {
     Promise.all([
       supabaseRequest('GET', 'contacts?select=id&limit=1&Prefer=count=exact'),
-      supabaseRequest('GET', 'deals?select=id,stage,amount&limit=5000'),
+      supabaseGetAll('deals?select=id,stage,amount'),
       supabaseRequest('GET', 'activities?select=id,type,created_at&order=created_at.desc&limit=100'),
       supabaseRequest('GET', 'companies?select=id&limit=1'),
     ]).then(([contacts, deals, activities, companies]) => {
@@ -2170,7 +2186,7 @@ const server = http.createServer((req, res) => {
         const twTasks = results.flat();
 
         // 2. Fetch existing synced tasks from Supabase
-        const existing = await supabaseRequest('GET', 'tasks?source=like.teamwork-*&limit=5000');
+        const existing = await supabaseGetAll('tasks?source=like.teamwork-*');
         const existingMap = {};
         if (Array.isArray(existing.data)) {
           existing.data.forEach(t => { existingMap[t.source] = t; });
