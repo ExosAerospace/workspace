@@ -87,9 +87,11 @@ def fold_line(line):
 
 def ics(uid, dtstart, dtend, rrule, summary, desc, exdates=None, location="Microsoft Teams"):
     stamp = TODAY.strftime("%Y%m%dT120000Z")
+    # METHOD:PUBLISH + no ORGANIZER/ATTENDEE = a plain published event. GCC High (outlook.office365.us)
+    # OWA rejects external METHOD:REQUEST meeting invites but WILL import a published event to the calendar.
     ev = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Exos//Team Meetings//EN",
-          "METHOD:REQUEST", "CALSCALE:GREGORIAN", VTIMEZONE, "BEGIN:VEVENT",
-          f"UID:{uid}", f"DTSTAMP:{stamp}", attendees_lines(),
+          "METHOD:PUBLISH", "CALSCALE:GREGORIAN", VTIMEZONE, "BEGIN:VEVENT",
+          f"UID:{uid}", f"DTSTAMP:{stamp}",
           f"DTSTART;TZID=America/Chicago:{dtstart}", f"DTEND;TZID=America/Chicago:{dtend}",
           f"RRULE:{rrule}"]
     if exdates:
@@ -134,22 +136,23 @@ def main():
     m = EmailMessage()
     m["From"] = "Exo (Exos AI Assistant) <jquinnexo@pm.me>"
     m["To"] = "jquinn@exosaero.com"
-    m["Subject"] = "Team meeting invites — Weekly (Tue 10am) + Monthly (last Tue) — open & send from Outlook"
+    m["Subject"] = "Team meeting events (GCC High) — Weekly (Tue 10am) + Monthly (last Tue)"
     m.set_content(
         "Hello Jon,\n\n"
-        "Two recurring calendar invites are attached, ready to open in Outlook and send to the team:\n\n"
+        "These are re-cut as plain PUBLISHED events (METHOD:PUBLISH, no embedded attendees) because GCC High\n"
+        "(outlook.office365.us) rejects an external meeting REQUEST but will import a published event.\n\n"
         f"1) Weekly Team Meeting (VIRTUAL / Teams) — every Tuesday 10:00-10:45 CT, starting {first_tue:%A, %b %d}.\n"
-        "   Attendees: John, Steve, Phil, Lizi, Mike Talley, Neil, Victor, Kyle. It automatically SKIPS the\n"
-        "   last Tuesday of each month (that week is the monthly meeting instead).\n\n"
-        f"2) Monthly Work Management Meeting (ON-SITE, Greenville) — LAST Tuesday, 10:00-11:00 CT, starting {first_monthly:%A, %b %d}.\n"
-        "   Same attendees, in person. This replaces the weekly that week.\n\n"
-        "To send: open each .ics in Outlook (double-click the attachment), confirm the attendees, and hit Send.\n"
-        "If the inline preview says \"Couldn't import,\" SAVE the .ics to your desktop first, then double-click the\n"
-        "saved file (or in Outlook use File > Open & Export > Open Calendar). These files are now RFC-corrected.\n\n"
-        "If you'd rather just set them up by hand (60 seconds), the exact details are:\n"
-        f"  - Weekly: New Teams Meeting, Tuesdays 10:00-10:45 AM CT, starts {first_tue:%b %d}, recurrence Weekly on Tuesday.\n"
-        f"  - Monthly: New Meeting (on-site, 299 FM 1903 Greenville), 10:00-11:00 AM CT, starts {first_monthly:%b %d},\n"
-        "    recurrence Monthly on the LAST Tuesday. Invite: John, Steve, Phil, Lizi, Mike, Neil, Victor, Kyle.\n\n"
+        "   Automatically SKIPS the last Tuesday of each month (that week is the monthly meeting).\n"
+        f"2) Monthly Work Management Meeting (ON-SITE, Greenville) — LAST Tuesday, 10:00-11:00 CT, starting {first_monthly:%A, %b %d}.\n\n"
+        "TO ADD TO YOUR CALENDAR (GCC High web):\n"
+        "  Calendar > Add calendar > Upload from file > pick the .ics (from OneDrive) > choose your calendar > Import.\n"
+        "  (Opening the downloaded .ics also works now that they're RFC-corrected.)\n\n"
+        "TO INVITE THE TEAM: GCC High won't send invites from a file, so open each event after import and add\n"
+        "attendees, then Send — John, Steve, Phil, Lizi, Mike Talley, Neil, Victor, Kyle.\n\n"
+        "OR just create them natively (most reliable, ~60 sec each):\n"
+        f"  - Weekly: New Teams meeting, Tue 10:00-10:45 AM CT, starts {first_tue:%b %d}, repeat Weekly on Tuesday.\n"
+        f"  - Monthly: New meeting (299 FM 1903, Greenville), 10:00-11:00 AM CT, starts {first_monthly:%b %d}, repeat\n"
+        "    Monthly on the last Tuesday. Invite the 8 above.\n\n"
         "— Exo")
     for p in (wp, mp):
         with open(p, "rb") as f:
