@@ -799,6 +799,12 @@ async function initUserRole() {
     if (me && me.role) {
       currentUser = me;
       currentUserRole = me.role;
+      // Non-admins land on THEIR tasks — the full board is 650+ items and they'd never find their own.
+      if (me.role !== 'admin') {
+        currentFilter = 'mine';
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'mine'));
+        render();
+      }
       if (me.role === 'early_adopter') {
         // Hide internal nav links
         document.getElementById('syncTwBtn').style.display = 'none';
