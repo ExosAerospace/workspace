@@ -31,7 +31,7 @@ IDENTITY = ("Exos Aerospace is one of only three FAA-licensed reusable rocket la
             "America with 135 kg of payload capacity open now, including small rideshare slots.")
 
 CLOSE = ("I can send our Payload User Guide and hold a tentative slot while you evaluate fit. "
-         "Would you have 20 minutes in the next week or two to talk?\n\nBest regards,\nLizi Quinn")
+         "Would you have 15 minutes in the next week or two to talk?\n\nBest regards,\nLizi Quinn")
 
 ASK = {
  "univ":    "A 1U to 3U slot on Flight 2 would give your team real microgravity plus recovery of the hardware after flight, at a fraction of an orbital campaign.",

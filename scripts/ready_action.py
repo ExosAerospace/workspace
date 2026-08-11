@@ -93,12 +93,47 @@ def email_ready(subject, body, to=JON):
     _log(f"emailed ready-to-send: {subject}")
 
 
+import re as _re
+# Volatile aging counters like "(36+ days READY)", "(12 days ready)", "(day 40)" bump every
+# cron cycle. If they leak into the dedup hash, Jon gets re-nagged on the SAME ready-to-send
+# every day it ages — exactly the "stop asking me to send this" complaint. Strip them before
+# hashing so aging alone can NEVER re-deliver; only a real content change re-delivers.
+_AGE_RE = _re.compile(r"\(\s*(?:day\s+\d+|\d+\+?\s*days?\b[^)]*)\)", _re.IGNORECASE)
+# Bare (non-parenthesized) aging counters like "9 days", "8 days dark", "6 days since
+# first ask", "12 days post-panel", "~2 wks post-approval" also bump every cron cycle and
+# were leaking into the hash (parenthesized form above never caught them). Strip the
+# numeric age token itself so only the count changing can NEVER re-deliver; the stable
+# trailing words ("dark", "post-panel") are left intact and don't move between cycles.
+_AGE_BARE_RE = _re.compile(r"~?\d+\+?\s*(?:days?|wks?|weeks?|hrs?|hours?|mos?|months?)\b", _re.IGNORECASE)
+def _dedup_norm(*parts):
+    s = "\n".join(p or "" for p in parts)
+    s = _AGE_RE.sub("", s)
+    s = _AGE_BARE_RE.sub("", s)
+    return _re.sub(r"\s+", " ", s).strip()
+
+
+# Meeting-duration guardrail (feedback_meeting_durations): calendar slots are ONLY 15/30/60 min.
+# Any non-slot duration in outgoing ready-to-send copy is snapped to the nearest allowed slot so
+# no "20 minutes"-style ask ever leaves, regardless of what a model wrote.
+_DUR_MAP = {"10": "15", "20": "15", "25": "30", "40": "30", "45": "30", "50": "60", "90": "60"}
+def scrub_durations(text):
+    if not text:
+        return text
+    bad = "|".join(_DUR_MAP)
+    # hyphenated adjective form first ("20-minute"/"20-min" -> "15-minute"), then the noun form
+    text = _re.sub(r"\b(" + bad + r")-min(?:ute)?s?\b", lambda m: _DUR_MAP[m.group(1)] + "-minute", text)
+    text = _re.sub(r"\b(" + bad + r")\s?min(?:ute)?s?\b", lambda m: _DUR_MAP[m.group(1)] + " minutes", text)
+    return text
+
+
 def deliver(key, subject, body, to_line="", cc_line="", task_title=None,
             category="BD", priority=75, do_email=True, do_mc=True):
     """Idempotent: emails Jon the ready-to-send + opens an MC task. Re-running with the
-    same key+content is a no-op. Changed content re-delivers. Returns a result dict."""
+    same key+content is a no-op. Changed content re-delivers. Returns a result dict.
+    Aging day-counters are stripped before hashing so a stale item never re-nags on age."""
+    subject = scrub_durations(subject); body = scrub_durations(body); task_title = scrub_durations(task_title)
     st = _load_state()
-    h = hashlib.sha256((subject + "\n" + body + "\n" + to_line).encode()).hexdigest()[:16]
+    h = hashlib.sha256(_dedup_norm(subject, body, to_line, task_title).encode()).hexdigest()[:16]
     prev = st.get(key)
     if prev and prev.get("hash") == h:
         return {"key": key, "skipped": True, "task_id": prev.get("task_id")}
