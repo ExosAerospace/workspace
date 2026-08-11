@@ -72,6 +72,19 @@ def esc_text(s):
     return (str(s).replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n"))
 
 
+def fold_line(line):
+    # RFC 5545 line folding: no content line may exceed 75 octets; continuation
+    # lines begin with a single space. Strict parsers (new Outlook) reject long lines.
+    b = line.encode("utf-8")
+    if len(b) <= 75:
+        return line
+    chunks, rest = [b[:75]], b[75:]
+    while rest:
+        chunks.append(b" " + rest[:74])
+        rest = rest[74:]
+    return b"\r\n".join(chunks).decode("utf-8")
+
+
 def ics(uid, dtstart, dtend, rrule, summary, desc, exdates=None, location="Microsoft Teams"):
     stamp = TODAY.strftime("%Y%m%dT120000Z")
     ev = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Exos//Team Meetings//EN",
@@ -85,7 +98,11 @@ def ics(uid, dtstart, dtend, rrule, summary, desc, exdates=None, location="Micro
             ev.append(f"EXDATE;TZID=America/Chicago:{ex.strftime('%Y%m%d')}T100000")
     ev += [f"SUMMARY:{esc_text(summary)}", f"DESCRIPTION:{esc_text(desc)}", f"LOCATION:{esc_text(location)}",
            "STATUS:CONFIRMED", "SEQUENCE:0", "END:VEVENT", "END:VCALENDAR"]
-    return "\n".join(ev).replace("\n", "\r\n")
+    # flatten (attendees_lines() carries embedded newlines), fold every line, CRLF-join, trailing CRLF
+    lines = []
+    for part in ev:
+        lines.extend(part.split("\n"))
+    return "\r\n".join(fold_line(l) for l in lines) + "\r\n"
 
 
 def main():
@@ -127,8 +144,12 @@ def main():
         f"2) Monthly Work Management Meeting (ON-SITE, Greenville) — LAST Tuesday, 10:00-11:00 CT, starting {first_monthly:%A, %b %d}.\n"
         "   Same attendees, in person. This replaces the weekly that week.\n\n"
         "To send: open each .ics in Outlook (double-click the attachment), confirm the attendees, and hit Send.\n"
-        "That puts them on everyone's calendar. I've also moved the agenda automation to the new Tuesday cadence,\n"
-        "and the weekly agenda will skip the monthly week automatically.\n\n"
+        "If the inline preview says \"Couldn't import,\" SAVE the .ics to your desktop first, then double-click the\n"
+        "saved file (or in Outlook use File > Open & Export > Open Calendar). These files are now RFC-corrected.\n\n"
+        "If you'd rather just set them up by hand (60 seconds), the exact details are:\n"
+        f"  - Weekly: New Teams Meeting, Tuesdays 10:00-10:45 AM CT, starts {first_tue:%b %d}, recurrence Weekly on Tuesday.\n"
+        f"  - Monthly: New Meeting (on-site, 299 FM 1903 Greenville), 10:00-11:00 AM CT, starts {first_monthly:%b %d},\n"
+        "    recurrence Monthly on the LAST Tuesday. Invite: John, Steve, Phil, Lizi, Mike, Neil, Victor, Kyle.\n\n"
         "— Exo")
     for p in (wp, mp):
         with open(p, "rb") as f:

@@ -25,13 +25,20 @@ UID:exos-weekly-team-20260804@exosaero.com
 DTSTAMP:20260730T120000Z
 ORGANIZER;CN=John Quinn:mailto:jquinn@exosaero.com
 ATTENDEE;CN=John Quinn;ROLE=CHAIR;RSVP=TRUE:mailto:jquinn@exosaero.com
-ATTENDEE;CN=Steve Norsworthy;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:snorsworthy@exosaero.com
-ATTENDEE;CN=Phil Eaton;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:peaton@exosaero.com
-ATTENDEE;CN=Lizi Quinn;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:lquinn@exosaero.com
-ATTENDEE;CN=Mike Talley;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:mtalley@exosaero.com
-ATTENDEE;CN=Neil Milburn;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:nmilburn@exosaero.com
-ATTENDEE;CN=Victor Castilleja;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:vcastilleja@exosaero.com
-ATTENDEE;CN=Kyle Ballard;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:kballard@exosaero.com
+ATTENDEE;CN=Steve Norsworthy;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:snorswor
+ thy@exosaero.com
+ATTENDEE;CN=Phil Eaton;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:peaton@exosaer
+ o.com
+ATTENDEE;CN=Lizi Quinn;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:lquinn@exosaer
+ o.com
+ATTENDEE;CN=Mike Talley;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:mtalley@exosa
+ ero.com
+ATTENDEE;CN=Neil Milburn;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:nmilburn@exo
+ saero.com
+ATTENDEE;CN=Victor Castilleja;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:vcastil
+ leja@exosaero.com
+ATTENDEE;CN=Kyle Ballard;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:kballard@exo
+ saero.com
 DTSTART;TZID=America/Chicago:20260804T100000
 DTEND;TZID=America/Chicago:20260804T104500
 RRULE:FREQ=WEEKLY;BYDAY=TU
@@ -54,7 +61,8 @@ EXDATE;TZID=America/Chicago:20271130T100000
 EXDATE;TZID=America/Chicago:20271228T100000
 EXDATE;TZID=America/Chicago:20280125T100000
 SUMMARY:Exos Weekly Team Meeting
-DESCRIPTION:Weekly work-management sync (virtual / Teams). Skipped the week of the monthly Work Management Meeting (last Tuesday).
+DESCRIPTION:Weekly work-management sync (virtual / Teams). Skipped the week
+  of the monthly Work Management Meeting (last Tuesday).
 LOCATION:Microsoft Teams (virtual)
 STATUS:CONFIRMED
 SEQUENCE:0

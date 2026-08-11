@@ -25,18 +25,27 @@ UID:exos-monthly-workmgmt-20260825@exosaero.com
 DTSTAMP:20260730T120000Z
 ORGANIZER;CN=John Quinn:mailto:jquinn@exosaero.com
 ATTENDEE;CN=John Quinn;ROLE=CHAIR;RSVP=TRUE:mailto:jquinn@exosaero.com
-ATTENDEE;CN=Steve Norsworthy;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:snorsworthy@exosaero.com
-ATTENDEE;CN=Phil Eaton;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:peaton@exosaero.com
-ATTENDEE;CN=Lizi Quinn;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:lquinn@exosaero.com
-ATTENDEE;CN=Mike Talley;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:mtalley@exosaero.com
-ATTENDEE;CN=Neil Milburn;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:nmilburn@exosaero.com
-ATTENDEE;CN=Victor Castilleja;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:vcastilleja@exosaero.com
-ATTENDEE;CN=Kyle Ballard;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:kballard@exosaero.com
+ATTENDEE;CN=Steve Norsworthy;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:snorswor
+ thy@exosaero.com
+ATTENDEE;CN=Phil Eaton;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:peaton@exosaer
+ o.com
+ATTENDEE;CN=Lizi Quinn;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:lquinn@exosaer
+ o.com
+ATTENDEE;CN=Mike Talley;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:mtalley@exosa
+ ero.com
+ATTENDEE;CN=Neil Milburn;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:nmilburn@exo
+ saero.com
+ATTENDEE;CN=Victor Castilleja;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:vcastil
+ leja@exosaero.com
+ATTENDEE;CN=Kyle Ballard;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:kballard@exo
+ saero.com
 DTSTART;TZID=America/Chicago:20260825T100000
 DTEND;TZID=America/Chicago:20260825T110000
 RRULE:FREQ=MONTHLY;BYDAY=-1TU
 SUMMARY:Exos Monthly Work Management Meeting
-DESCRIPTION:Monthly Mission Control work-management review (ON-SITE at Greenville). Replaces the weekly sync this week. Agenda delivered the day before.
+DESCRIPTION:Monthly Mission Control work-management review (ON-SITE at Gree
+ nville). Replaces the weekly sync this week. Agenda delivered the day befo
+ re.
 LOCATION:Exos Aerospace\, 299 FM 1903\, Greenville\, TX 75402 (on-site)
 STATUS:CONFIRMED
 SEQUENCE:0
