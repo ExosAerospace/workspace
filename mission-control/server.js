@@ -1401,8 +1401,20 @@ const server = http.createServer((req, res) => {
 
   // ── TASKS API (Supabase-backed) ──
   if (req.url === '/api/tasks' && req.method === 'GET') {
-    supabaseRequest('GET', 'tasks?order=priority.desc.nullslast,due_date.asc.nullslast&limit=5000')
-      .then(({ status, data }) => {
+    (async () => {
+      try {
+        // PostgREST caps EVERY response at 1000 rows regardless of limit=, so a single fetch
+        // silently drops all tasks ranked below the top 1000 (low-priority tasks vanish from the
+        // board for everyone). Page through with offset until a short page is returned.
+        let data = [], offset = 0, status = 200;
+        for (let page = 0; page < 50; page++) {
+          const r = await supabaseRequest('GET', `tasks?order=priority.desc.nullslast,due_date.asc.nullslast&limit=1000&offset=${offset}`);
+          status = r.status;
+          const chunk = Array.isArray(r.data) ? r.data : [];
+          data = data.concat(chunk);
+          if (chunk.length < 1000) break;
+          offset += 1000;
+        }
         let filtered = data;
         // Members see tasks ASSIGNED to them (by email — the source of truth), plus legacy
         // name-owned tasks, plus shared/group tasks (owner 'Team' or tagged 'group').
@@ -1430,7 +1442,8 @@ const server = http.createServer((req, res) => {
         if (Array.isArray(filtered)) filtered = filtered.filter(t => t.source !== 'mc-board-legacy');
         res.writeHead(status >= 400 ? status : 200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(filtered));
-      }).catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
+      } catch (e) { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); }
+    })();
     return;
   }
 
