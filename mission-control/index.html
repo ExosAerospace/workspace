@@ -854,6 +854,15 @@ function colIdForState(state) {
 }
 
 // ── LOAD ──
+// Delta polling: after the first full load, the 30s poll only fetches rows changed since the last
+// sync (tiny), merging them in. Every 10th poll (and manual Refresh) does a FULL load to reconcile
+// deletes. Cuts recurring board egress ~95%.
+let lastSync = null, pollN = 0;
+function bumpLastSync(rows) {
+  let mx = lastSync;
+  (rows || []).forEach(r => { if (r.updated_at && (!mx || r.updated_at > mx)) mx = r.updated_at; });
+  if (mx) lastSync = mx;
+}
 async function loadTasks(showFeedback = false) {
   // Never wipe the board on the 30s auto-refresh while the user is reading/editing a task
   // (this is what blanked Phil's list and lost in-progress notes). Manual Refresh still works.
@@ -861,10 +870,13 @@ async function loadTasks(showFeedback = false) {
   if (showFeedback) setRefreshBadge('Refreshing...', false);
   try {
     await loadMissionScores();   // shadow scores joined at render time
+    // Full load on: first load, manual Refresh, and every 10th poll (delete reconcile). Else delta.
+    const doDelta = lastSync && !showFeedback && (pollN % 10 !== 0);
     // Try live API first; fall back to generated JSON file
     let data;
     try {
-      data = await apiFetch('/api/tasks');
+      const q = doDelta ? '?since=' + encodeURIComponent(new Date(new Date(lastSync).getTime() - 5000).toISOString()) : '';
+      data = await apiFetch('/api/tasks' + q);
     } catch (apiErr) {
       // Fallback: load from markdown-generated JSON
       const resp = await fetch('data/tasks.json?_=' + Date.now());
@@ -891,17 +903,28 @@ async function loadTasks(showFeedback = false) {
       scheduleRefresh();
       return;
     }
+    const stamp = () => setRefreshBadge('Updated ' + new Date().toLocaleTimeString('en-US', { timeZone:'America/Chicago', hour: '2-digit', minute: '2-digit' }), true);
+    if (doDelta) {
+      // Merge only the changed rows by id (empty delta = nothing changed, the common case).
+      if (Array.isArray(data) && data.length) {
+        const idx = {}; tasks.forEach((t, i) => idx[t.id] = i);
+        data.forEach(r => { const nt = { ...r, state: normalizeState(r.state) };
+          if (idx[r.id] !== undefined) tasks[idx[r.id]] = nt; else { tasks.push(nt); idx[r.id] = tasks.length - 1; } });
+        bumpLastSync(data); render(); renderStats(); updateCategoryFilter();
+      }
+      pollN++; hideError(); stamp(); scheduleRefresh(); return;
+    }
     if ((!data || data.length === 0) && Array.isArray(tasks) && tasks.length > 0) {
       // Transient empty/failed API response — keep the last good board instead of blanking it.
       setRefreshBadge('Kept last view', true); scheduleRefresh(); return;
     }
     tasks = data.map(t => ({ ...t, state: normalizeState(t.state) }));
+    bumpLastSync(data); pollN++;
     render();
     renderStats();
     updateCategoryFilter();
     hideError();
-    const now = new Date().toLocaleTimeString('en-US', { timeZone:'America/Chicago', hour: '2-digit', minute: '2-digit' });
-    setRefreshBadge(`Updated ${now}`, true);
+    stamp();
   } catch (e) {
     showError('Could not load tasks: ' + e.message);
     setRefreshBadge('Error', false);

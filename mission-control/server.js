@@ -1465,24 +1465,29 @@ const server = http.createServer((req, res) => {
   }
 
   // ── TASKS API (Supabase-backed) ──
-  if (req.url === '/api/tasks' && req.method === 'GET') {
+  if (req.url.split('?')[0] === '/api/tasks' && req.method === 'GET') {
     (async () => {
       try {
-        // PostgREST caps EVERY response at 1000 rows regardless of limit=, so a single fetch
-        // silently drops all tasks ranked below the top 1000 (low-priority tasks vanish from the
-        // board for everyone). Page through with offset until a short page is returned.
-        // Column projection: skip `description` (≈70% of payload) from the board list — it's only
-        // needed in the detail/edit panel, which lazy-loads it via /api/task-desc. Cuts the ~1.18MB
-        // board response by ~70% and the egress on the 30s poll. (Supabase health-check finding.)
+        // Column projection: skip `description` (≈70% of payload) from the board list — the detail
+        // panel lazy-loads it via /api/task-desc. (Supabase health-check finding.)
         const BOARD_COLS = 'id,title,owner,state,created_at,priority,due_date,category,contact_id,deal_id,company_id,source,tags,completed_at,updated_at,assigned_to,assigned_email,assigned_at';
-        let data = [], offset = 0, status = 200;
-        for (let page = 0; page < 50; page++) {
-          const r = await supabaseRequest('GET', `tasks?select=${BOARD_COLS}&order=priority.desc.nullslast,due_date.asc.nullslast&limit=1000&offset=${offset}`);
-          status = r.status;
-          const chunk = Array.isArray(r.data) ? r.data : [];
-          data = data.concat(chunk);
-          if (chunk.length < 1000) break;
-          offset += 1000;
+        // Delta polling: ?since=<iso> returns only rows changed since then (tiny), so the recurring
+        // 30s poll stops re-pulling the whole board. The client does a periodic FULL load to
+        // reconcile deletes. PostgREST caps responses at 1000 rows, so the full path pages by offset.
+        const since = new URLSearchParams(req.url.split('?')[1] || '').get('since');
+        let data = [], status = 200;
+        if (since) {
+          const r = await supabaseRequest('GET', `tasks?select=${BOARD_COLS}&updated_at=gt.${encodeURIComponent(since)}&order=updated_at.desc&limit=1000`);
+          status = r.status; data = Array.isArray(r.data) ? r.data : [];
+        } else {
+          for (let page = 0, offset = 0; page < 50; page++) {
+            const r = await supabaseRequest('GET', `tasks?select=${BOARD_COLS}&order=priority.desc.nullslast,due_date.asc.nullslast&limit=1000&offset=${offset}`);
+            status = r.status;
+            const chunk = Array.isArray(r.data) ? r.data : [];
+            data = data.concat(chunk);
+            if (chunk.length < 1000) break;
+            offset += 1000;
+          }
         }
         let filtered = data;
         // Members see tasks ASSIGNED to them (by email — the source of truth), plus legacy
@@ -1550,6 +1555,7 @@ const server = http.createServer((req, res) => {
         const { id, ...fields } = JSON.parse(body);
         if (fields.state === 'Done' && !fields.completed_at) fields.completed_at = new Date().toISOString();
         if (fields.state && fields.state !== 'Done') fields.completed_at = null;
+        fields.updated_at = new Date().toISOString();   // stamp so delta polling reliably catches app edits
 
         // Fetch current task to diff changes
         const current = await supabaseRequest('GET', `tasks?id=eq.${id}&limit=1`);
