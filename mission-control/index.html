@@ -583,7 +583,7 @@
   <div class="column" data-col="blocked">
     <div class="col-header">
       <div class="col-dot"></div>
-      <div class="col-title">New</div>
+      <div class="col-title">To Do</div>
       <span class="col-count" id="count-blocked">0</span>
     </div>
     <div class="col-body" id="col-blocked" ondragover="dragOver(event,'Blocked')" ondrop="drop(event,'Blocked')" ondragleave="dragLeave(event)"></div>
@@ -922,7 +922,7 @@ function renderStats() {
   const ac = (f) => currentFilter === f ? ' active' : '';
   document.getElementById('statsBar').innerHTML = `
     <div class="stat-card${ac('all')}" onclick="setFilter('all')"><div class="stat-num">${total}</div><div class="stat-label">Total</div></div>
-    <div class="stat-card${ac('blocked')}" onclick="setFilter('blocked')"><div class="stat-num" style="color:var(--blocked-accent)">${blocked}</div><div class="stat-label">New</div></div>
+    <div class="stat-card${ac('blocked')}" onclick="setFilter('blocked')"><div class="stat-num" style="color:var(--blocked-accent)">${blocked}</div><div class="stat-label">To Do</div></div>
     <div class="stat-card${ac('in_progress')}" onclick="setFilter('in_progress')"><div class="stat-num" style="color:var(--progress-accent)">${progress}</div><div class="stat-label">In Progress</div></div>
     <div class="stat-card${ac('done')}" onclick="setFilter('done')"><div class="stat-num" style="color:var(--done-accent)">${done}</div><div class="stat-label">Done</div></div>
     <div class="stat-card${ac('overdue')}" onclick="setFilter('overdue')"><div class="stat-num" style="color:${overdue > 0 ? 'var(--blocked-accent)' : 'var(--text2)'}">${overdue}</div><div class="stat-label">Overdue</div></div>
@@ -1325,6 +1325,21 @@ function renderOverview(task) {
     <div class="detail-field"><label>Last Updated</label><div class="val">${task.updated_at ? new Date(task.updated_at).toLocaleString('en-US', {timeZone:'America/Chicago',month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '?'}</div></div>
   `;
 
+  renderTaskDescription(task);
+  // Description is omitted from the board list payload (≈70% smaller) — lazy-load it on open.
+  if (task.description === undefined) {
+    fetch('/api/task-desc?id=' + encodeURIComponent(task.id), { credentials: 'same-origin' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (!d) return; task.description = d.description || '';
+        if (String(currentPanelTaskId) === String(task.id)) {
+          renderTaskDescription(task);
+          const ed = document.getElementById('editDesc'); if (ed && !ed.value) ed.value = task.description;
+        } })
+      .catch(() => {});
+  }
+}
+
+function renderTaskDescription(task) {
   const descEl = document.getElementById('detailDesc');
   const desc = task.description || '';
   const isExpenseTask = task.category === 'Expense' || task.source === 'expense-workflow';
@@ -1354,7 +1369,7 @@ function renderOverview(task) {
     descEl.textContent = desc;
     descEl.classList.remove('empty');
   } else {
-    descEl.textContent = 'No description yet. Switch to Edit tab to add one.';
+    descEl.textContent = (task.description === undefined) ? 'Loading…' : 'No description yet. Switch to Edit tab to add one.';
     descEl.classList.add('empty');
   }
 }

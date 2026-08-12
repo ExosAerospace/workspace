@@ -872,6 +872,55 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── CUSTOM DASHBOARD LAYOUTS ──────────────────────────────────────────────
+  // Per-user dashboard arrangement, keyed by the logged-in identity (MC session, which
+  // rides on top of Cloudflare Access). GET returns the user's layout, or the company
+  // default when they have none. POST saves the user's layout; POST ?default=1 (admin only)
+  // also promotes it to the company default. GET ?default=1 forces the company default
+  // (the "reset to company default" button). Stored as data/layouts/<email>.json + _default.json.
+  if (req.url.split('?')[0] === '/api/layout') {
+    const sess = getSession(req);
+    if (!sess) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    const LAYOUT_DIR = path.join(__dirname, 'data', 'layouts');
+    try { fs.mkdirSync(LAYOUT_DIR, { recursive: true }); } catch (e) {}
+    const DEFAULT_FILE = path.join(LAYOUT_DIR, '_default.json');
+    const safe = (sess.email || 'anon').toLowerCase().replace(/[^a-z0-9._-]/g, '_');
+    const userFile = path.join(LAYOUT_DIR, safe + '.json');
+    const readJson = (f) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { return null; } };
+    const q = new URL(req.url, 'http://localhost').searchParams;
+
+    if (req.method === 'GET') {
+      let layout, isDefault = false;
+      if (q.get('default') === '1') { layout = readJson(DEFAULT_FILE); isDefault = true; }
+      else { layout = readJson(userFile); if (!layout) { layout = readJson(DEFAULT_FILE); isDefault = true; } }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ layout: layout || null, isDefault, email: sess.email, name: sess.name, role: sess.role }));
+      return;
+    }
+    if (req.method === 'POST') {
+      let body = ''; req.on('data', c => body += c); req.on('end', () => {
+        try {
+          const p = JSON.parse(body || '{}');
+          const asDefault = q.get('default') === '1';
+          if (asDefault && sess.role !== 'admin') {
+            res.writeHead(403, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Only an admin can set the company default layout' })); return;
+          }
+          if (!p.layout || !Array.isArray(p.layout.widgets)) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'layout.widgets[] required' })); return;
+          }
+          fs.writeFileSync(userFile, JSON.stringify(p.layout, null, 2));
+          if (asDefault) fs.writeFileSync(DEFAULT_FILE, JSON.stringify(p.layout, null, 2));
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true, savedDefault: asDefault }));
+        } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+      });
+      return;
+    }
+    res.writeHead(405, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Method not allowed' })); return;
+  }
+
   // Logout
   if (req.url === '/api/logout' && req.method === 'POST') {
     const cookies = parseCookies(req);
@@ -1097,7 +1146,7 @@ const server = http.createServer((req, res) => {
 
   // early_adopter role: strict sandbox — tasks board only, no CRM/deals/admin/docusign
   if (session && session.role === 'early_adopter') {
-    const allowedAPIs = ['/api/tasks', '/api/uploads', '/api/me', '/api/logout', '/api/rescore'];
+    const allowedAPIs = ['/api/tasks', '/api/uploads', '/api/me', '/api/logout', '/api/rescore', '/api/layout'];
     const isAllowedAPI = allowedAPIs.some(p => req.url.startsWith(p));
     if (req.url.startsWith('/api/') && !isAllowedAPI) {
       res.writeHead(403, { 'Content-Type': 'application/json' });
@@ -1111,7 +1160,7 @@ const server = http.createServer((req, res) => {
       return;
     }
     // Block internal pages — only allow tasks board and welcome
-    const allowedPages = ['/', '/index.html', '/welcome', '/welcome.html', '/login', '/login.html'];
+    const allowedPages = ['/', '/index.html', '/welcome', '/welcome.html', '/login', '/login.html', '/dashboard', '/dashboard.html'];
     const isAllowedPage = allowedPages.some(p => req.url === p || req.url.startsWith(p + '?'));
     if (req.method === 'GET' && !req.url.startsWith('/api/') && !isAllowedPage && !req.url.startsWith('/brand-assets') && !req.url.startsWith('/uploads/') && !req.url.startsWith('/viewpdf/')) {
       res.writeHead(302, { 'Location': '/' });
@@ -1422,9 +1471,13 @@ const server = http.createServer((req, res) => {
         // PostgREST caps EVERY response at 1000 rows regardless of limit=, so a single fetch
         // silently drops all tasks ranked below the top 1000 (low-priority tasks vanish from the
         // board for everyone). Page through with offset until a short page is returned.
+        // Column projection: skip `description` (≈70% of payload) from the board list — it's only
+        // needed in the detail/edit panel, which lazy-loads it via /api/task-desc. Cuts the ~1.18MB
+        // board response by ~70% and the egress on the 30s poll. (Supabase health-check finding.)
+        const BOARD_COLS = 'id,title,owner,state,created_at,priority,due_date,category,contact_id,deal_id,company_id,source,tags,completed_at,updated_at,assigned_to,assigned_email,assigned_at';
         let data = [], offset = 0, status = 200;
         for (let page = 0; page < 50; page++) {
-          const r = await supabaseRequest('GET', `tasks?order=priority.desc.nullslast,due_date.asc.nullslast&limit=1000&offset=${offset}`);
+          const r = await supabaseRequest('GET', `tasks?select=${BOARD_COLS}&order=priority.desc.nullslast,due_date.asc.nullslast&limit=1000&offset=${offset}`);
           status = r.status;
           const chunk = Array.isArray(r.data) ? r.data : [];
           data = data.concat(chunk);
@@ -1460,6 +1513,16 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify(filtered));
       } catch (e) { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); }
     })();
+    return;
+  }
+
+  // Lazy-load a single task's description (the board list omits it to cut payload).
+  if (req.url.split('?')[0] === '/api/task-desc' && req.method === 'GET') {
+    const id = (new URLSearchParams(req.url.split('?')[1] || '')).get('id');
+    if (!id) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'id required' })); return; }
+    supabaseRequest('GET', `tasks?id=eq.${encodeURIComponent(id)}&select=id,description`)
+      .then(({ data }) => { const row = Array.isArray(data) ? data[0] : null; res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ id, description: row ? (row.description || '') : '' })); })
+      .catch(e => { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e).slice(0, 200) })); });
     return;
   }
 
