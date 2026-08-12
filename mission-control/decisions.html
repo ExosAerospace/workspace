@@ -95,7 +95,6 @@
     ✉️ <b>How "send it" works:</b> when you authorize a send decision, the ready message (and any attachment) is emailed to <b>your own inbox</b> for you to send. It is <b>never sent to the outside recipient by the system</b> — you send every external message yourself, so you stay in control.
   </div>
 </div>
-<div id="submittals"></div>
 <div class="wrap" id="list"><div class="empty">Loading…</div></div>
 <div class="bar" id="bar" style="display:none">
   <div class="barwrap">
@@ -103,6 +102,7 @@
     <button class="submit" id="submit" disabled onclick="submitAll()">Submit answers</button>
   </div>
 </div>
+<div id="submittals" style="margin-top:22px"></div>
 <script>
 let tab='open', data=[], picks={}, searchQuery=''; // picks[id]={answer,note}
 function attachHtml(d){
