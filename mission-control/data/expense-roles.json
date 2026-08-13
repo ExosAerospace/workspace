@@ -1,8 +1,10 @@
 {
-  "_comment": "Expense-report PAYMENT approvers, by role. 'whoever holds Lizi's and Kyle's roles.' Update the email when the role holder changes — routing is role-based, not name-based.",
+  "_comment": "Expense-report PAYMENT approver (single payer to avoid duplicate tasks). Kyle holds QuickBooks/Finance. Update the email when the role holder changes \u2014 role-based, not name-based. A submitter is auto-skipped as payer (segregation of duties).",
   "payment_approvers": [
-    { "role": "CFO / Finance", "email": "kballard@exosaero.com" },
-    { "role": "BD / Accounts Payable", "email": "lquinn@exosaero.com" }
+    {
+      "role": "CFO / Finance",
+      "email": "kballard@exosaero.com"
+    }
   ],
   "template_path": "11-administrative/Exos_Expense_Report_Template_2026.xlsx"
 }

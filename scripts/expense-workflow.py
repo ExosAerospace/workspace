@@ -51,14 +51,19 @@ def main():
                 print(f"{e['id']}: manager approved -> payment tasks for {[a.get('role') for a in approvers]}")
                 if APPLY:
                     ptids = []
+                    _amt = (f"${float(e['amount']):,.2f}" if isinstance(e.get('amount'), (int, float)) else f"${e.get('amount', '?')}")
+                    _sub = (e.get('submitter_email') or '').lower()
                     for ap in approvers:
+                        # Segregation of duties: never route the payment task to the person who submitted it.
+                        if (ap.get('email') or '').lower() == _sub:
+                            print(f"  skip payer {ap.get('email')} (is the submitter of {e['id']})"); continue
                         task = {
-                            "title": f"Pay expense report — {e.get('submitter_name')} (${e.get('amount','?')})",
+                            "title": f"Pay expense report — {e.get('submitter_name')} ({_amt})",
                             "owner": ap.get("role"), "assigned_email": ap.get("email"), "assigned_to": ap.get("role"),
                             "state": "To Do", "priority": 80, "category": "Expense",
                             "source": "expense-workflow", "tags": ["expense-payment"],
                             "description": (f"APPROVED expense from {e.get('submitter_name')} ({e.get('submitter_email')}). "
-                                            f"Amount ${e.get('amount','?')} · Purpose: {e.get('purpose','—')}. File: {e.get('file')}. "
+                                            f"Amount {_amt} · Purpose: {e.get('purpose','—')}. File: {e.get('file')}. "
                                             f"Manager {e.get('manager_name')} approved. Action for your role ({ap.get('role')}): process payment. Ref {e['id']}."),
                         }
                         created = sreq("POST", "tasks", task)
