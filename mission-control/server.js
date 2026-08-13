@@ -3241,7 +3241,12 @@ function _cmdOfPid(pid) {
   try { return execSync(`ps -o command= -p ${pid}`, { encoding: 'utf8' }).trim(); }
   catch { return ''; }
 }
-const _SELF = __filename;  // absolute path to THIS server.js
+// Match on the last two path segments ("mission-control/server.js") rather than the full
+// home-dir absolute path: macOS `ps -o command=` can truncate long paths, which would make
+// a legit launchd peer look "hand-started" and get killed. This short tail survives
+// truncation, still identifies any proper invocation as a peer, and a stale relative
+// `node server.js` (the real squatter case) does NOT contain it — so it's still reclaimed.
+const _SELF = __filename.split('/').slice(-2).join('/');  // "mission-control/server.js"
 const _ts = () => new Date().toISOString();
 let _reclaimAttempts = 0;
 function startListen() {
