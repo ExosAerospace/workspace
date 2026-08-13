@@ -4,30 +4,36 @@
   "area": "Administrative",
   "area_id": "11-administrative",
   "owner": "Kyle Ballard (Finance) / Exo",
-  "rev": "0",
+  "rev": "1",
   "status": "Approved",
   "intl_release": "Yes",
-  "reference_docs": "Exos Expense Report Template (ADM-EXP-01)",
-  "remarks": "End-to-end expense workflow in Mission Control: download template, upload, auto manager approval, auto Finance payment.",
-  "objective": "provide employees a single, auditable process to submit, approve, and pay reimbursable business expenses entirely within Mission Control.",
-  "overview": "Employees submit expense reports from the Mission Control Expenses page. On submission the report routes automatically to the employee's manager (from the BambooHR org) for approval, then to the Finance role holders for payment. Status is tracked Submitted, Approved, Paid.",
+  "reference_docs": "Mission Control Expenses page; expense-norms.json (area-cost bands + IRS mileage rate)",
+  "remarks": "End-to-end expense workflow in Mission Control: native web-form entry (no spreadsheets), Exobot pre-screen against area-normal costs, auto manager approval, auto Finance payment.",
+  "objective": "provide employees a single, auditable process to create, screen, approve, and pay reimbursable business expenses entirely within Mission Control, with no spreadsheets to download or upload.",
+  "overview": "Employees enter expenses directly on the Mission Control Expenses page as line items. Mileage is calculated automatically at the current IRS standard rate. On submission, Exobot pre-screens every line against area-normal cost bands and attaches any flags to the approval task, so the reviewer sees concerns before approving. The report then routes automatically to the employee's manager (from the BambooHR org) for approval, then to Finance for payment. Status is tracked Submitted, Approved, Paid, or Denied. Exobot also produces a monthly monitoring digest (mileage reimbursement by employee and any out-of-normal expenses).",
   "tasks": [
-    {"name": "Task 1 - Prepare the report", "steps": [
+    {"name": "Task 1 - Create the report (web form)", "steps": [
       "Open Mission Control and go to the Expenses page.",
-      "Download the Exos Expense Report Template (.xlsx).",
-      "Enter each expense line: date, category, description, amount. Retain receipts per Finance policy.",
-      "Total the report."]},
-    {"name": "Task 2 - Submit for approval", "steps": [
-      "On the Expenses page, choose your completed file.",
-      "Enter the total amount, expense period, and a short purpose.",
-      "Click Submit for approval; Mission Control creates the manager approval task automatically."]},
+      "Enter a Purpose/trip and Period for the report.",
+      "Add a line for each expense: Date, Category, Description, Location (city, ST), and Amount.",
+      "For mileage, choose category Mileage and enter miles - the reimbursement is calculated automatically at the current IRS rate (read from expense-norms.json).",
+      "Attach receipt(s) if needed (optional). The running total updates as you add lines."]},
+    {"name": "Task 2 - Submit and Exobot pre-screen", "steps": [
+      "Click Submit for approval.",
+      "Exobot pre-screens each line against area-normal cost bands (lodging, meals, ground transport, etc.), applies high-cost-area caps, checks mileage math, and detects likely duplicates.",
+      "Any flags are shown to you immediately and attached to the reviewer's approval task. Reports with flags are marked with a warning and prioritized for the reviewer.",
+      "Mission Control creates the manager approval task automatically."]},
     {"name": "Task 3 - Manager approval", "steps": [
-      "Manager receives the approval task (auto-notified) with the report attached.",
-      "Manager reviews the report against policy.",
-      "Manager approves by marking the task Done, or returns it for correction."]},
+      "Manager receives the approval task (auto-notified) with the itemized lines and the Exobot pre-screen results.",
+      "Manager reviews flagged items first, then the report against policy.",
+      "Manager approves by marking the task Done, or denies with a required reason (which emails the employee to revise and resubmit)."]},
     {"name": "Task 4 - Finance payment", "steps": [
-      "On approval, Mission Control creates payment tasks for the Finance role holders (CFO/Finance and BD/AP).",
+      "On approval, Mission Control creates a single payment task for the Finance payer (CFO/Finance; the submitter is never routed their own payment).",
       "Finance verifies and processes payment.",
-      "Finance marks the payment task Done; the report then shows Paid on the employee Expenses page."]}
+      "Finance marks the payment task Done; the report then shows Paid on the employee Expenses page."]},
+    {"name": "Task 5 - Monitoring (Exobot)", "steps": [
+      "Exobot maintains area-cost norms in expense-norms.json and updates the IRS mileage rate there when it changes.",
+      "A monthly digest reports mileage reimbursement per employee and any expenses outside area-normal ranges, emailed to leadership.",
+      "Norms can be tuned over time from actual spend."]}
   ]
 }

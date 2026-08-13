@@ -1,0 +1,26 @@
+{
+  "_comment": "Area-aware expected-cost bands for the Exobot expense pre-screen. Amounts are USD. flag_over = single-line amount above this triggers a reviewer flag; day_flag_over = per-day category total above this flags. high_cost_areas raise lodging/meals caps for pricey metros (matched on city or state token in the line's location). Exobot can tune these from actuals over time.",
+  "mileage_rate": 0.70,
+  "mileage_rate_note": "IRS standard business mileage rate (2025-26 = $0.70/mi). Update here when the IRS changes it; the form and screen both read this value.",
+  "mileage": {
+    "single_trip_flag_over_miles": 500,
+    "period_flag_over_miles": 2000
+  },
+  "categories": {
+    "Lodging":          { "expected": 175, "flag_over": 250, "unit": "night" },
+    "Meals":            { "expected": 45,  "flag_over": 75,  "day_flag_over": 100, "unit": "meal" },
+    "Airfare":          { "expected": 400, "flag_over": 700, "unit": "ticket" },
+    "Ground transport": { "expected": 40,  "flag_over": 100, "unit": "trip" },
+    "Rental car":       { "expected": 75,  "flag_over": 150, "unit": "day" },
+    "Fuel":             { "expected": 55,  "flag_over": 100, "unit": "fill" },
+    "Supplies":         { "expected": 75,  "flag_over": 250, "unit": "item" },
+    "Conference/Registration": { "expected": 500, "flag_over": 1500, "unit": "item" },
+    "Other":            { "expected": 50,  "flag_over": 150, "unit": "item" }
+  },
+  "high_cost_areas": {
+    "_note": "Multiplier applied to Lodging + Meals caps when the line location contains one of these tokens (case-insensitive).",
+    "multiplier": 1.6,
+    "tokens": ["san francisco", "sf", "new york", "nyc", "manhattan", "boston", "seattle", "los angeles", "washington", "dc", "san jose", "chicago", "honolulu", "arlington va"]
+  },
+  "duplicate_window_days": 1
+}

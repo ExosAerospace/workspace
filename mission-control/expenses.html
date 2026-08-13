@@ -6,38 +6,49 @@
 <title>Exos — Expense Reports</title>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--blue:#0066cc;--blue2:#0080ff;--orange:#ff6b00;--orange2:#ff8c33;--text:#e8edf5;--text2:#a0aec0;--border:rgba(255,255,255,0.08);--card:#0f1e38;--green:#22c55e;--yellow:#eab308;}
+  :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--blue:#0066cc;--blue2:#0080ff;--orange:#ff6b00;--orange2:#ff8c33;--text:#e8edf5;--text2:#a0aec0;--border:rgba(255,255,255,0.08);--card:#0f1e38;--green:#22c55e;--yellow:#eab308;--red:#ff6b6b;}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);min-height:100vh;line-height:1.5}
   header{background:linear-gradient(135deg,#0a1628 0%,#0d2050 100%);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;min-height:64px}
   .brand{display:flex;align-items:center;gap:12px}
   .brand-logo{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--orange));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
   .brand-text h1{font-size:1.05rem;line-height:1.1}.brand-text p{font-size:0.78rem;color:var(--text2)}
   .header-right a{color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-left:14px}
-  .wrap{max-width:900px;margin:0 auto;padding:28px 24px 64px}
+  .wrap{max-width:960px;margin:0 auto;padding:28px 24px 64px}
   .hero{background:linear-gradient(135deg,var(--navy3),var(--navy2));border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:22px}
   .hero .tag{display:inline-block;background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);border-radius:20px;padding:3px 12px;font-size:.72rem;font-weight:600;margin-bottom:12px}
-  .hero h2{font-size:1.6rem;margin-bottom:6px}.hero p{color:var(--text2);font-size:.9rem;max-width:760px}
+  .hero h2{font-size:1.6rem;margin-bottom:6px}.hero p{color:var(--text2);font-size:.9rem;max-width:780px}
   .steps{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;font-size:.78rem;color:var(--text2)}
   .steps span{background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:6px 11px}
   .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:20px}
   .card h3{font-size:1.05rem;margin-bottom:14px}
   label{display:block;font-size:.78rem;color:var(--text2);margin:12px 0 4px}
-  input,textarea{width:100%;background:var(--navy);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:9px 11px;font-size:.9rem;font-family:inherit}
+  input,textarea,select{width:100%;background:var(--navy);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:9px 11px;font-size:.9rem;font-family:inherit}
   .row{display:flex;gap:14px;flex-wrap:wrap}.row>div{flex:1;min-width:180px}
   .btn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:.9rem;font-weight:600;cursor:pointer;margin-top:16px}
-  .btn.ghost{background:var(--card);border:1px solid var(--border);color:var(--text);font-weight:500}
-  .dl{display:inline-block;background:rgba(0,128,255,.12);color:var(--blue2);border:1px solid rgba(0,128,255,.3);border-radius:8px;padding:8px 14px;font-size:.85rem;text-decoration:none}
+  .btn.ghost{background:var(--card);border:1px solid var(--border);color:var(--text);font-weight:500;margin-top:0}
+  .btn.sm{padding:6px 12px;font-size:.82rem;margin-top:0}
   table{width:100%;border-collapse:collapse;font-size:.84rem}
-  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border)}
-  th{font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text2)}
+  th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+  th{font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text2)}
+  .lt input,.lt select{padding:7px 8px;font-size:.84rem}
+  .lt td{padding:6px 6px}
+  .amtcell{white-space:nowrap;font-variant-numeric:tabular-nums;text-align:right}
+  .x{background:none;border:none;color:var(--red);cursor:pointer;font-size:1.1rem;line-height:1}
   .st{border-radius:9px;padding:1px 9px;font-size:.7rem;font-weight:700;text-transform:uppercase}
   .st-submitted{background:rgba(234,179,8,.15);color:var(--yellow)}
   .st-approved{background:rgba(0,128,255,.14);color:var(--blue2)}
   .st-paid{background:rgba(34,197,94,.15);color:var(--green)}
+  .st-denied{background:rgba(255,68,68,.14);color:var(--red)}
+  .flagpill{background:rgba(255,107,0,.16);color:var(--orange2);border:1px solid rgba(255,107,0,.4);border-radius:9px;padding:1px 8px;font-size:.68rem;font-weight:700}
   .msg{margin-top:14px;font-size:.86rem;padding:10px 14px;border-radius:8px;display:none}
   .msg.ok{background:rgba(34,197,94,.12);color:#9be7b4;border:1px solid rgba(34,197,94,.3)}
+  .msg.warn{background:rgba(255,107,0,.1);color:#ffc99a;border:1px solid rgba(255,107,0,.35)}
   .msg.err{background:rgba(255,68,68,.1);color:#ffb0b0;border:1px solid rgba(255,68,68,.3)}
+  .total{font-size:1.25rem;font-weight:800;color:var(--text)}
   .muted{color:var(--text2)}
+  .screen{margin-top:12px;border:1px solid rgba(255,107,0,.35);background:rgba(255,107,0,.07);border-radius:10px;padding:12px 14px;display:none}
+  .screen.clean{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.07)}
+  .screen ul{margin:6px 0 0 18px}.screen li{font-size:.84rem;margin:3px 0}
   footer{text-align:center;color:var(--text2);font-size:.74rem;padding:24px 0 10px}
 </style>
 </head>
@@ -49,20 +60,32 @@
 <div class="wrap">
   <div class="hero">
     <span class="tag">ADMINISTRATIVE · EXPENSE REPORTS</span>
-    <h2>💵 Submit an Expense Report</h2>
-    <p>Do the whole process here. Download the template, fill it out, and upload it — it routes automatically to your manager to approve, then to Finance for payment.</p>
-    <div class="steps"><span>1 · Download template</span><span>2 · Fill it out</span><span>3 · Upload here</span><span>4 · Manager approves</span><span>5 · Finance pays</span></div>
+    <h2>💵 Create an Expense Report</h2>
+    <p>Enter your expenses right here — no spreadsheets to download or upload. Add a line for each expense; mileage is calculated automatically at the current IRS rate. Exobot pre-screens every report against area-normal costs and flags anything unusual to your reviewer before it goes for approval.</p>
+    <div class="steps"><span>1 · Add expense lines</span><span>2 · Exobot pre-screens</span><span>3 · Manager approves</span><span>4 · Finance pays</span></div>
   </div>
 
   <div class="card">
-    <h3>1 · Get the template</h3>
-    <a class="dl" href="/process-library/11-administrative/Exos_Expense_Report_Template_2026.xlsx" target="_blank">⬇ Download expense report template (.xlsx)</a>
-    <p class="muted" style="margin-top:8px;font-size:.85rem">Fill it out, then upload it right below ⬇</p>
+    <h3>New expense report</h3>
+    <div class="row">
+      <div><label>Purpose / trip</label><input id="purpose" placeholder="e.g. Arclabs site visit — Fort Worth"></div>
+      <div><label>Period</label><input id="period" placeholder="e.g. Week ending Aug 16, 2026"></div>
+    </div>
 
-    <h3 style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border)">2 · Upload your completed report</h3>
-    <label>Completed expense spreadsheet (.xlsx)</label>
-    <input type="file" id="file" accept=".xlsx,.xls,.csv,.pdf">
-    <p class="muted" style="margin:8px 0 4px;font-size:.85rem">Amount, period, and purpose are read automatically from your report — no need to retype them.</p>
+    <label style="margin-top:18px">Expense lines <span class="muted" id="rateNote"></span></label>
+    <table class="lt"><thead><tr>
+      <th style="width:120px">Date</th><th style="width:150px">Category</th><th>Description</th>
+      <th style="width:150px">Location (city, ST)</th><th style="width:110px" id="amtHdr">Amount / Miles</th>
+      <th style="width:96px" class="amtcell">Line $</th><th style="width:28px"></th>
+    </tr></thead><tbody id="lines"></tbody></table>
+    <button class="btn ghost sm" style="margin-top:10px" onclick="addLine()">+ Add line</button>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:10px">
+      <div><label style="margin:0">Receipt(s) — optional</label><input type="file" id="receipt" accept=".pdf,.jpg,.jpeg,.png,.xlsx,.csv" style="max-width:320px"></div>
+      <div style="text-align:right"><div class="muted" style="font-size:.76rem">Report total</div><div class="total" id="total">$0.00</div></div>
+    </div>
+
+    <div class="screen" id="screen"></div>
     <button class="btn" id="submitBtn" onclick="submitExpense()">Submit for approval</button>
     <div class="msg" id="msg"></div>
   </div>
@@ -71,26 +94,85 @@
     <h3>My expense reports</h3>
     <div id="mine"><p class="muted">Loading…</p></div>
   </div>
-  <footer>Exos Aerospace · Mission Control · Expense workflow (manager approval → Finance payment)</footer>
+  <footer>Exos Aerospace · Mission Control · Expense workflow (Exobot pre-screen → manager approval → Finance payment)</footer>
 </div>
 
 <script>
+var RATE=0.70, CATS=['Mileage','Lodging','Meals','Airfare','Ground transport','Rental car','Fuel','Supplies','Conference/Registration','Other'];
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function fileToB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);});}
+
+async function loadNorms(){
+  try{const r=await fetch('/api/expense/norms');if(r.ok){const d=await r.json();RATE=d.mileage_rate||RATE;if(d.categories&&d.categories.length){CATS=['Mileage'].concat(d.categories.filter(c=>c!=='Mileage'));}}}catch(e){}
+  document.getElementById('rateNote').textContent='· mileage auto-calculated at $'+RATE.toFixed(2)+'/mi';
+}
+function catOptions(sel){return CATS.map(c=>'<option'+(c===sel?' selected':'')+'>'+esc(c)+'</option>').join('');}
+function addLine(pref){
+  pref=pref||{};
+  const tb=document.getElementById('lines');
+  const tr=document.createElement('tr');
+  tr.innerHTML='<td><input type="date" class="f-date" value="'+esc(pref.date||'')+'"></td>'
+    +'<td><select class="f-cat" onchange="onCat(this)">'+catOptions(pref.category)+'</select></td>'
+    +'<td><input class="f-desc" placeholder="what was it for" value="'+esc(pref.description||'')+'"></td>'
+    +'<td><input class="f-loc" placeholder="Fort Worth TX" value="'+esc(pref.location||'')+'"></td>'
+    +'<td><input class="f-val" type="number" step="0.01" min="0" placeholder="0.00" oninput="recalc()" value="'+esc(pref.val||'')+'"></td>'
+    +'<td class="amtcell f-line">$0.00</td>'
+    +'<td><button class="x" title="remove" onclick="this.closest(\'tr\').remove();recalc()">×</button></td>';
+  tb.appendChild(tr);
+  onCat(tr.querySelector('.f-cat'));
+}
+function onCat(sel){
+  const tr=sel.closest('tr'), val=tr.querySelector('.f-val');
+  if(sel.value==='Mileage'){val.placeholder='miles';val.title='Enter miles — reimbursement auto-calculated';}
+  else{val.placeholder='0.00';val.title='Enter dollar amount';}
+  recalc();
+}
+function lineAmount(tr){
+  const cat=tr.querySelector('.f-cat').value, v=parseFloat(tr.querySelector('.f-val').value)||0;
+  return cat==='Mileage' ? Math.round(v*RATE*100)/100 : Math.round(v*100)/100;
+}
+function recalc(){
+  let t=0;
+  document.querySelectorAll('#lines tr').forEach(tr=>{const a=lineAmount(tr);t+=a;tr.querySelector('.f-line').textContent='$'+a.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});});
+  document.getElementById('total').textContent='$'+t.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function collect(){
+  const items=[];
+  document.querySelectorAll('#lines tr').forEach(tr=>{
+    const cat=tr.querySelector('.f-cat').value, v=parseFloat(tr.querySelector('.f-val').value)||0;
+    const it={date:tr.querySelector('.f-date').value,category:cat,description:tr.querySelector('.f-desc').value,location:tr.querySelector('.f-loc').value};
+    if(cat==='Mileage'){it.miles=v;}else{it.amount=v;}
+    if((cat==='Mileage'&&v>0)||(cat!=='Mileage'&&v>0)||it.description) items.push(it);
+  });
+  return items;
+}
 async function submitExpense(){
-  const msg=document.getElementById('msg'), btn=document.getElementById('submitBtn');
-  const f=document.getElementById('file').files[0];
-  msg.style.display='none';
-  if(!f){msg.className='msg err';msg.style.display='block';msg.textContent='Please choose your completed expense file first.';return;}
-  btn.disabled=true;btn.textContent='Submitting…';
+  const msg=document.getElementById('msg'), btn=document.getElementById('submitBtn'), scr=document.getElementById('screen');
+  msg.style.display='none';scr.style.display='none';
+  const items=collect();
+  if(!items.length){msg.className='msg err';msg.style.display='block';msg.textContent='Add at least one expense line with an amount.';return;}
+  btn.disabled=true;btn.textContent='Screening & submitting…';
   try{
-    const dataBase64=await fileToB64(f);
-    const r=await fetch('/api/expense/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:f.name,dataBase64})});
+    let receiptFilename=null,receiptBase64=null;
+    const rf=document.getElementById('receipt').files[0];
+    if(rf){receiptFilename=rf.name;receiptBase64=await fileToB64(rf);}
+    const r=await fetch('/api/expense/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      purpose:document.getElementById('purpose').value,period:document.getElementById('period').value,line_items:items,receiptFilename,receiptBase64})});
     const d=await r.json();
     if(!r.ok||!d.ok) throw new Error(d.error||('HTTP '+r.status));
+    // Show the pre-screen result to the submitter too (transparency).
+    if(d.flag_count>0){
+      scr.className='screen';scr.style.display='block';
+      scr.innerHTML='<b>⚠️ Exobot flagged '+d.flag_count+' item(s)</b> — your reviewer will see these before approving:<ul>'
+        +d.flags.filter(f=>f.severity==='review').map(f=>'<li>'+esc(f.message)+'</li>').join('')+'</ul>';
+    }else{
+      scr.className='screen clean';scr.style.display='block';
+      scr.innerHTML='✅ Exobot pre-screen: all lines within area-normal cost ranges.';
+    }
     msg.className='msg ok';msg.style.display='block';
-    msg.textContent='Submitted ('+d.id+'). Sent to '+(d.manager||'your manager')+' to approve; Finance pays once approved.';
-    document.getElementById('file').value='';
+    msg.textContent='Submitted ('+d.id+', $'+Number(d.total).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'). Sent to '+(d.manager||'your manager')+' to approve; Finance pays once approved.';
+    document.getElementById('lines').innerHTML='';addLine();recalc();
+    document.getElementById('purpose').value='';document.getElementById('period').value='';document.getElementById('receipt').value='';
     loadMine();
   }catch(e){msg.className='msg err';msg.style.display='block';msg.textContent='Could not submit: '+esc(e.message);}
   btn.disabled=false;btn.textContent='Submit for approval';
@@ -101,14 +183,16 @@ async function loadMine(){
     const r=await fetch('/api/expense/mine'); if(!r.ok) throw new Error('HTTP '+r.status);
     const d=await r.json(); const rows=d.reports||[];
     if(!rows.length){el.innerHTML='<p class="muted">No expense reports submitted yet.</p>';return;}
-    let h='<table><thead><tr><th>Ref</th><th>Amount</th><th>Purpose</th><th>Submitted</th><th>Status</th><th>File</th></tr></thead><tbody>';
-    rows.forEach(x=>{const st=(x.state||'submitted');
-      h+='<tr><td>'+esc(x.id)+'</td><td>$'+esc(x.amount||'?')+'</td><td>'+esc(x.purpose||'—')+'</td><td>'+esc((x.submitted_at||'').slice(0,10))+'</td>'
+    let h='<table><thead><tr><th>Ref</th><th>Amount</th><th>Purpose</th><th>Submitted</th><th>Screen</th><th>Status</th><th>Receipt</th></tr></thead><tbody>';
+    rows.forEach(x=>{const st=(x.state||'submitted');const fc=x.screen&&x.screen.flag_count||0;
+      h+='<tr><td>'+esc(x.id)+'</td><td>$'+esc(Number(x.amount||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}))+'</td><td>'+esc(x.purpose||'—')+'</td><td>'+esc((x.submitted_at||'').slice(0,10))+'</td>'
+        +'<td>'+(fc>0?'<span class="flagpill">⚠ '+fc+'</span>':'<span class="muted">clean</span>')+'</td>'
         +'<td><span class="st st-'+esc(st)+'">'+esc(st)+'</span></td>'
         +'<td>'+(x.file?'<a href="'+esc(x.file)+'" target="_blank" style="color:var(--blue2)">open</a>':'—')+'</td></tr>';});
     h+='</tbody></table>';el.innerHTML=h;
   }catch(e){el.innerHTML='<p class="muted">Could not load: '+esc(e.message)+'</p>';}
 }
+loadNorms().then(()=>{addLine();recalc();});
 loadMine();
 </script>
 </body>

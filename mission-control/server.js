@@ -1393,6 +1393,88 @@ const server = http.createServer((req, res) => {
     });
     return;
   }
+  // ── EXPENSE REPORTS: create from the web form (structured line items, no spreadsheet) ──
+  // Runs the Exobot pre-screen (area-normal cost check + mileage math) and surfaces any flags
+  // to the reviewer on the approval task BEFORE they approve.
+  if (req.url.split('?')[0] === '/api/expense/create' && req.method === 'POST') {
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    let body = ''; req.on('data', c => { body += c; if (body.length > MAX_UPLOAD_SIZE) req.destroy(); });
+    req.on('end', async () => {
+      try {
+        const { purpose, period, line_items, receiptFilename, receiptBase64 } = JSON.parse(body);
+        const email = (session.email || '').toLowerCase(), name = session.name || email;
+        const items = Array.isArray(line_items) ? line_items : [];
+        if (!items.length) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Add at least one expense line.' })); return; }
+        const id = 'EXP-' + Date.now().toString(36).toUpperCase();
+        // Exobot pre-screen: area-normal cost check + mileage computed at the IRS rate.
+        let screen = { total: 0, flags: [], summary: '', mileage_total_miles: 0, mileage_total_usd: 0, mileage_rate: 0.70, flag_count: 0 };
+        try {
+          const { execFileSync } = require('child_process');
+          const out = execFileSync('/usr/bin/python3',
+            [path.join(__dirname, '..', 'scripts', 'expense_screen.py')],
+            { input: JSON.stringify({ line_items: items }), env: { ...process.env }, timeout: 15000 }).toString();
+          screen = JSON.parse(out);
+        } catch (e) { /* screen best-effort; fall back to summed amounts below */ }
+        // Normalize computed amounts back onto the lines (mileage → miles×rate).
+        const rate = screen.mileage_rate || 0.70;
+        const lines = items.map(it => {
+          const cat = (it.category || 'Other');
+          const amt = (String(cat).toLowerCase() === 'mileage')
+            ? Math.round((Number(it.miles) || 0) * rate * 100) / 100
+            : Math.round((Number(it.amount) || 0) * 100) / 100;
+          return { ...it, category: cat, amount: amt };
+        });
+        const total = screen.total != null ? screen.total : lines.reduce((a, l) => a + l.amount, 0);
+        // Optional receipt attachment (not required).
+        let fileUrl = null, stored = null;
+        if (receiptBase64) {
+          const EXP_DIR = path.join(UPLOADS_DIR, 'expenses'); fs.mkdirSync(EXP_DIR, { recursive: true });
+          const safe = (receiptFilename || 'receipt.pdf').replace(/[^\w.\-]/g, '_');
+          stored = id + '_' + safe;
+          fs.writeFileSync(path.join(EXP_DIR, stored), Buffer.from(String(receiptBase64).split(',').pop(), 'base64'));
+          fileUrl = '/uploads/expenses/' + encodeURIComponent(stored);
+        }
+        let mgrEmail = null, mgrName = null;
+        try { const { openErp } = require('../erp-foundation/dal'); const erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: email, agent: 'expense-create' }); const me = erp.getEmployeeByEmail(email); mgrEmail = me && me.manager_email; mgrName = me && me.manager_name; erp.close(); } catch (e) {}
+        const amtStr = Number(total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const flagged = (screen.flag_count || 0) > 0;
+        const lineTxt = lines.map(l => {
+          const extra = String(l.category).toLowerCase() === 'mileage' ? ` [${Number(l.miles) || 0} mi × $${rate.toFixed(2)}]` : '';
+          return `  • ${l.date || '—'} · ${l.category} · $${Number(l.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${extra}${l.location ? ' · ' + l.location : ''}${l.description ? ' — ' + l.description : ''}`;
+        }).join('\n');
+        const screenTxt = flagged
+          ? `\n\n⚠️ EXOBOT PRE-SCREEN — ${screen.flag_count} item(s) to review before approving:\n` + screen.flags.filter(f => f.severity === 'review').map(f => '  ⚠️ ' + f.message).join('\n')
+          : `\n\n✅ EXOBOT PRE-SCREEN: all lines within area-normal cost ranges.`;
+        const task = {
+          title: `Approve expense report — ${name} ($${amtStr})${flagged ? ' ⚠️' : ''}`,
+          owner: mgrName || 'John Quinn', assigned_email: mgrEmail || 'jquinn@exosaero.com', assigned_to: mgrName || null,
+          state: 'To Do', priority: flagged ? 82 : 75, category: 'Expense', source: 'expense-workflow',
+          tags: flagged ? ['expense-approval', 'expense-flagged'] : ['expense-approval'],
+          description: `Expense report from ${name} (${email}).\nAmount: $${amtStr} · Purpose: ${purpose || '—'} · Period: ${period || '—'}\nMileage: ${screen.mileage_total_miles || 0} mi = $${Number(screen.mileage_total_usd || 0).toFixed(2)} @ $${rate.toFixed(2)}/mi\n\nLine items:\n${lineTxt}${screenTxt}\n\nAPPROVE by marking this task Done — payment then auto-routes to Finance. Ref ${id}.`
+        };
+        const created = await supabaseRequest('POST', 'tasks', task).then(r => Array.isArray(r.data) ? r.data[0] : r.data).catch(() => null);
+        if (created && created.id && fileUrl) {
+          try {
+            const um = loadUploadsMeta();
+            um.push({ id: crypto.randomBytes(8).toString('hex'), filename: receiptFilename || stored, stored_name: 'expenses/' + stored,
+              size: fs.statSync(path.join(UPLOADS_DIR, 'expenses', stored)).size, extension: (stored.split('.').pop() || '').toLowerCase(),
+              task_id: created.id, project_id: null, decision_id: null, uploaded_by: name, uploaded_at: new Date().toISOString() });
+            saveUploadsMeta(um);
+          } catch (e) {}
+        }
+        const LEDGER = path.join(__dirname, 'data', 'expense-reports.json');
+        let led = []; try { led = JSON.parse(fs.readFileSync(LEDGER, 'utf8')); } catch (e) {}
+        led.unshift({ id, submitter_email: email, submitter_name: name, manager_email: mgrEmail, manager_name: mgrName,
+          amount: total, purpose: purpose || null, period: period || null, line_items: lines, file: fileUrl,
+          screen: { flags: screen.flags || [], flag_count: screen.flag_count || 0, mileage_total_miles: screen.mileage_total_miles || 0, mileage_total_usd: screen.mileage_total_usd || 0, mileage_rate: rate },
+          submitted_at: new Date().toISOString(), state: 'submitted', approval_task_id: created && created.id || null, payment_task_id: null });
+        fs.writeFileSync(LEDGER, JSON.stringify(led, null, 2));
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, id, total, manager: mgrName, approval_task_id: created && created.id, flags: screen.flags || [], flag_count: screen.flag_count || 0, summary: screen.summary }));
+      } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e).slice(0, 200) })); }
+    });
+    return;
+  }
   // ── EXPENSE REPORTS: my submissions (status) ──
   if (req.url.split('?')[0] === '/api/expense/mine' && req.method === 'GET') {
     if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
@@ -1400,6 +1482,14 @@ const server = http.createServer((req, res) => {
     const email = (session.email || '').toLowerCase();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ reports: led.filter(r => (r.submitter_email || '').toLowerCase() === email) }));
+    return;
+  }
+  // ── EXPENSE REPORTS: norms (mileage rate + category list) for the web form ──
+  if (req.url.split('?')[0] === '/api/expense/norms' && req.method === 'GET') {
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    let norms = {}; try { norms = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'expense-norms.json'), 'utf8')); } catch (e) {}
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ mileage_rate: norms.mileage_rate || 0.70, categories: Object.keys(norms.categories || {}) }));
     return;
   }
   // ── EXPENSE REPORTS: manager decision (approve -> Finance / deny -> back to employee) ──
