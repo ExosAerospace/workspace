@@ -492,6 +492,7 @@
     <!-- Business Development -->
     <a href="opportunities.html" style="color:var(--orange2);text-decoration:none;font-size:0.85rem;margin-right:4px;">Opportunities</a>
     <a href="capability-gaps.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🧩 Gap Ledger</a>
+    <a href="consortium.html" style="color:var(--orange2,#ff8c33);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🤝 Consortium</a>
     <a href="crm.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">CRM</a>
     <a href="dossier.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;">Dossiers</a>
     <a href="program.html" style="color:var(--purple,#a855f7);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🛰️ Payloads-exo3</a>
@@ -878,7 +879,13 @@ async function loadTasks(showFeedback = false) {
       const q = doDelta ? '?since=' + encodeURIComponent(new Date(new Date(lastSync).getTime() - 5000).toISOString()) : '';
       data = await apiFetch('/api/tasks' + q);
     } catch (apiErr) {
-      // Fallback: load from markdown-generated JSON
+      // API failed (server blip). If we already have a populated board, keep it — never blank
+      // the user's view because of a transient server restart. Only fall back to the static
+      // tasks.json snapshot when there is nothing else to show (first load with no live data).
+      if (Array.isArray(tasks) && tasks.length > 0) {
+        setRefreshBadge('Kept last view', true); scheduleRefresh(); return;
+      }
+      // First-load fallback: load from markdown-generated JSON
       const resp = await fetch('data/tasks.json?_=' + Date.now());
       if (!resp.ok) throw new Error('data/tasks.json not found — run dashboard-data-generator.py');
       const jsonData = await resp.json();

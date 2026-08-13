@@ -1,0 +1,39 @@
+{
+  "generated_display": "2026-08-13",
+  "note": "Exos Integrated Consortium (EIC) — partner bench + per-pursuit teams. Exos = prime integrator; each partner FFP-quotes its own scope; Exos holds the contract + single-point-of-failure backup. Model: drafts/Exos_Integrated_Consortium_Model.md.",
+  "partners": [
+    {"name": "Exos Aerospace", "role": "PRIME / INTEGRATOR", "capabilities": "Reusable suborbital launch (PSRLV/BLK3), flight ops, systems engineering, program management, contract + compliance boundary", "scopes": ["Integration / SE / PM", "Vehicle + flight test", "Contract hold + contingency bench"], "status": "Prime", "contact": "John Quinn — jquinn@exosaero.com"},
+    {"name": "Scorpius Space Launch Co.", "role": "Partner (18% owned)", "capabilities": "Propulsion; Type-5 composite cryogenic tanks (TRL9, lunar heritage)", "scopes": ["Propulsion", "Cryo tanks / pressurized structures"], "status": "Affiliate", "contact": "via Exos"},
+    {"name": "MATECH GSM / Dr. Ed Pope", "role": "Partner (materials)", "capabilities": "Ceramic matrix composites (SiC/SiC, C/SiC); FAST densification; AFRL RDE-tested", "scopes": ["RDRE CMC combustion chamber / nozzle (~$50K/part)"], "status": "MNDA sent 8/13", "contact": "Dr. Ed Pope — ed@matechgsm.com"},
+    {"name": "Super Carbon Composites", "role": "Partner (materials, MATECH affiliate)", "capabilities": "Ultra-high-density carbon-carbon (>2.20 g/cc), FAST/SPS", "scopes": ["RDRE carbon-carbon throat (reusable)"], "status": "MNDA sent 8/13 (affiliate)", "contact": "Dr. Ed Pope — ed@matechgsm.com"},
+    {"name": "Hybron (ex-BladeX)", "role": "Prospect (materials/mfg)", "capabilities": "Ultra-fast composite (carbon-fiber) manufacturing; turbomachinery blades, structures", "scopes": ["Rapid composite structures / turbopump blades"], "status": "Prospect", "contact": "Brennan Lieu (CEO), El Segundo CA"},
+    {"name": "CDT (Composite Technology Development)", "role": "Partner / acquisition target", "capabilities": "Composites manufacturing; RT-cure resin (under Scorpius Type-5)", "scopes": ["Composite structures / tanks mfg"], "status": "Acquisition target", "contact": "via Stratelligence"},
+    {"name": "Starfighters", "role": "Partner (flight test)", "capabilities": "F-104 flight test; consortium of underutilized aerospace companies", "scopes": ["Flight test / captive-carry / mission set", "Underutilized-company sub-consortium"], "status": "Consortium play", "contact": "via Exos BD"},
+    {"name": "Atomus", "role": "Partner (compliance)", "capabilities": "CMMC 2.0, GCC High / Azure Gov, CUI/ITAR boundary", "scopes": ["Compliance boundary (ITAR/CUI/CMMC)"], "status": "Contracted", "contact": "success@atomuscyber.com"},
+    {"name": "CertBuddyAI", "role": "Partner (regulatory)", "capabilities": "AI-assisted FAA Part 450/420 licensing prep", "scopes": ["Regulatory / licensing"], "status": "LOI executed", "contact": "Kannan Govindasamy (CEO)"},
+    {"name": "Albers Aerospace", "role": "Partner (hub)", "capabilities": "North-Texas aerospace hub (McKinney)", "scopes": ["N-TX facility / integration hub"], "status": "Developing", "contact": "Rich Carter"}
+  ],
+  "pursuits": [
+    {"name": "Reusable RDRE flight demonstration", "customer": "USAF / NASA (Hermes Phase II→III; Series A RDRE)", "prime": "Exos", "status": "Forming", "members": [
+      {"partner": "Exos", "scope": "Integrator + PSRLV + flight ops", "backup": "self"},
+      {"partner": "Scorpius", "scope": "Propulsion / Type-5 tanks", "backup": "TBD"},
+      {"partner": "MATECH", "scope": "CMC chamber / nozzle", "backup": "alt CMC vendor (2-deep TBD)"},
+      {"partner": "Super Carbon", "scope": "Carbon-carbon throat", "backup": "alt C-C vendor (2-deep TBD)"},
+      {"partner": "Hybron", "scope": "Fast composite structures", "backup": "CDT"},
+      {"partner": "GTL / NASA MSFC", "scope": "RDRE core (trade-study down-select)", "backup": "the other path"}
+    ]},
+    {"name": "National suborbital test & qualification enterprise", "customer": "DoD / gov (test enterprise)", "prime": "Exos", "status": "Concept", "members": [
+      {"partner": "Exos", "scope": "Licensed reusable platform + flight ops", "backup": "self"},
+      {"partner": "Starfighters", "scope": "Flight test / underutilized-company consortium", "backup": "TBD"},
+      {"partner": "CDT", "scope": "Composites", "backup": "Hybron"},
+      {"partner": "Atomus", "scope": "CMMC compliance", "backup": "self-managed"},
+      {"partner": "CertBuddyAI", "scope": "Part 450/420", "backup": "in-house (Neil)"}
+    ]},
+    {"name": "Hypersonic materials-to-flight-test", "customer": "DoD / prime subcontract", "prime": "Exos", "status": "Concept", "members": [
+      {"partner": "Exos", "scope": "Integrator + suborbital test platform", "backup": "self"},
+      {"partner": "MATECH", "scope": "C/ZrOC, HfC fiber", "backup": "alt UHTC vendor"},
+      {"partner": "Super Carbon", "scope": "UHDCC", "backup": "TBD"},
+      {"partner": "Scorpius", "scope": "Structures", "backup": "CDT"}
+    ]}
+  ]
+}

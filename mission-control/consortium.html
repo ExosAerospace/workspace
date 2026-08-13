@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos — Consortium / Teaming</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--blue2:#0080ff;--orange:#ff6b00;--orange2:#ff8c33;--text:#e8edf5;--text2:#a0aec0;--border:rgba(255,255,255,0.08);--card:#0f1e38;--green:#22c55e;--gold:#e8aa3c}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);min-height:100vh;line-height:1.5}
+  header{background:linear-gradient(135deg,#0a1628,#0d2050);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;min-height:64px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-logo{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,#0066cc,#ff6b00);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+  .brand-text h1{font-size:1.05rem}.brand-text p{font-size:.78rem;color:var(--text2)}
+  .header-right a{color:var(--blue2);text-decoration:none;font-size:.85rem;margin-left:14px}
+  .wrap{max-width:1240px;margin:0 auto;padding:24px 24px 64px}
+  .hero{background:linear-gradient(135deg,var(--navy3),var(--navy2));border:1px solid var(--border);border-radius:14px;padding:22px 26px;margin-bottom:20px}
+  .hero .tag{display:inline-block;background:rgba(255,107,0,.15);color:var(--orange2);border:1px solid rgba(255,107,0,.3);border-radius:20px;padding:3px 12px;font-size:.72rem;font-weight:700;letter-spacing:.04em;margin-bottom:10px}
+  .hero h2{font-size:1.6rem;margin-bottom:6px}
+  .hero p{color:var(--text2);max-width:920px;font-size:.9rem}
+  h3.section{font-size:1.1rem;margin:26px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:8px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--navy2);font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text2)}
+  tr:last-child td{border-bottom:none}
+  .role{font-weight:700;color:#cfe0ff;white-space:nowrap}
+  .role.prime{color:var(--orange2)}
+  .chip{display:inline-block;background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:1px 8px;font-size:.72rem;margin:1px 3px 1px 0}
+  .st{border-radius:10px;padding:1px 9px;font-size:.7rem;font-weight:700}
+  .pursuit{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .pursuit h4{font-size:1rem;color:#fff}
+  .pursuit .meta{font-size:.78rem;color:var(--text2);margin:2px 0 10px}
+  .muted{color:var(--text2)}
+  .err{background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.3);color:#ffb0b0;padding:14px 18px;border-radius:10px;font-size:.85rem}
+  footer{text-align:center;color:var(--text2);font-size:.74rem;padding:26px 0 8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-logo">EX</div>
+    <div class="brand-text"><h1>Exos Aerospace</h1><p>Mission Control · Consortium / Teaming</p></div>
+  </div>
+  <div class="header-right">
+    <a href="/index.html">← Board</a>
+    <a href="opportunities.html">Opportunities</a>
+    <a href="capability-gaps.html">🧩 Gap Ledger</a>
+  </div>
+</header>
+<div class="wrap">
+  <div class="hero">
+    <span class="tag">EXOS INTEGRATED CONSORTIUM (EIC)</span>
+    <h2>🤝 Consortium / Teaming</h2>
+    <p><strong>Exos as prime integrator.</strong> We knit specialized partners into a virtual prime that bids Firm-Fixed-Price — each partner quotes and owns its own scope, Exos holds the contract, integration, compliance boundary, and the <strong>single-point-of-failure backup bench</strong>. Below: the partner bench and the per-pursuit teams. <span id="src" class="muted"></span></p>
+  </div>
+  <div id="content"><p class="muted">Loading consortium…</p></div>
+  <footer>Exos Aerospace · Mission Control · Consortium / Teaming (EIC model)</footer>
+</div>
+<script>
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function stColor(s){s=(s||'').toLowerCase();
+  if(s.includes('sent')||s.includes('executed')||s.includes('contracted')||s.includes('affiliate'))return'background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.3)';
+  if(s.includes('prospect')||s.includes('concept')||s.includes('forming')||s.includes('developing'))return'background:rgba(234,170,60,.15);color:#e8aa3c;border:1px solid rgba(234,170,60,.3)';
+  if(s.includes('prime'))return'background:rgba(255,107,0,.15);color:#ff8c33;border:1px solid rgba(255,107,0,.3)';
+  return'background:rgba(0,128,255,.12);color:#0080ff;border:1px solid rgba(0,128,255,.25)';}
+async function load(){
+  const el=document.getElementById('content');
+  try{
+    const r=await fetch('data/consortium.json?_='+Date.now());
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    document.getElementById('src').textContent=(d.partners||[]).length+' partners · '+(d.pursuits||[]).length+' pursuits · updated '+(d.generated_display||'');
+    let html='<h3 class="section">Partner Bench</h3>';
+    html+='<table><thead><tr><th>Partner</th><th>Role</th><th>Capabilities</th><th>Scopes it can own (FFP)</th><th>Status</th><th>Contact</th></tr></thead><tbody>';
+    (d.partners||[]).forEach(p=>{
+      const scopes=(p.scopes||[]).map(s=>'<span class="chip">'+esc(s)+'</span>').join('');
+      html+='<tr><td class="role'+((p.role||'').toLowerCase().includes('prime')?' prime':'')+'">'+esc(p.name)+'</td>'+
+        '<td class="muted">'+esc(p.role||'')+'</td><td>'+esc(p.capabilities||'')+'</td><td>'+(scopes||'—')+'</td>'+
+        '<td><span class="st" style="'+stColor(p.status)+'">'+esc(p.status||'')+'</span></td>'+
+        '<td class="muted" style="white-space:nowrap;font-size:.78rem">'+esc(p.contact||'')+'</td></tr>';
+    });
+    html+='</tbody></table>';
+    html+='<h3 class="section">Per-Pursuit Teams</h3>';
+    (d.pursuits||[]).forEach(pu=>{
+      html+='<div class="pursuit"><h4>'+esc(pu.name)+' <span class="st" style="'+stColor(pu.status)+';font-size:.68rem">'+esc(pu.status||'')+'</span></h4>';
+      html+='<div class="meta">Customer: '+esc(pu.customer||'—')+' · Prime: <b>'+esc(pu.prime||'Exos')+'</b></div>';
+      html+='<table><thead><tr><th>Partner</th><th>Scope</th><th>Backup (single-point-of-failure)</th></tr></thead><tbody>';
+      (pu.members||[]).forEach(m=>{ html+='<tr><td class="role">'+esc(m.partner)+'</td><td>'+esc(m.scope)+'</td><td class="muted">'+esc(m.backup||'—')+'</td></tr>'; });
+      html+='</tbody></table></div>';
+    });
+    el.innerHTML=html;
+  }catch(err){ el.innerHTML='<div class="err">Could not load consortium: '+esc(err.message)+'</div>'; }
+}
+load();
+</script>
+</body>
+</html>
