@@ -21,7 +21,15 @@ from email.message import EmailMessage
 
 WS = "/Users/exomac/.openclaw/workspace"
 USERS = os.path.join(WS, "mission-control", "users.json")
+OPTOUT = os.path.join(WS, "mission-control", "data", "weekly-report-optout.json")
 SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
+
+
+def optout_set():
+    try:
+        return {e.lower() for e in json.load(open(OPTOUT)).get("optout", [])}
+    except Exception:
+        return set()
 NS = json.load(open(os.path.join(WS, "mission-control", "data", "north-stars.json")))
 PREVIEW = "--preview" in sys.argv
 JON = "jquinn@exosaero.com"
@@ -83,7 +91,10 @@ def send(to, subject, body):
 
 
 def main():
-    users = [u for u in json.load(open(USERS)) if (u.get("email") or "").lower() != JON]
+    skip = optout_set()
+    users = [u for u in json.load(open(USERS))
+             if (u.get("email") or "").lower() != JON
+             and (u.get("email") or "").lower() not in skip]
     tasks = supa("tasks?select=id,title,state,due_date,assigned_email&limit=5000")
     sent = 0
     for u in users:

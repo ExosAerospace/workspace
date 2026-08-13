@@ -1,0 +1,6 @@
+{
+  "_comment": "Emails here are skipped by scripts/weekly-employee-report.py (the 'Your Mission Control weekly' digest). Employee opt-out list. Remove an email to resume their weekly.",
+  "optout": [
+    "kballard@exosaero.com"
+  ]
+}
