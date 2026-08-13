@@ -48,6 +48,22 @@ Channel/thread sessions accumulate everything said in them — big artifacts blo
 - **Don't re-dump reference docs.** Read a file once when you need it; don't paste the same big block every turn.
 - Long sessions now auto-rotate on compaction (`agents.defaults.compaction.truncateAfterCompaction` + `maxActiveTranscriptBytes: 1mb`). Keeping artifacts out of the thread is what keeps that clean.
 
+## Git Hygiene (shared working tree — READ THIS before committing)
+
+Multiple Exo sessions/crons share ONE working tree. If you commit with `git add -A` /
+`git commit -a`, you sweep up every OTHER session's in-flight edits into your commit —
+so unrelated changes land under the wrong message and history becomes untraceable
+(this is exactly how a `server.js` fix got buried inside an "E-sign hardening" commit).
+
+Rules:
+- **Stage explicit paths only.** `git add <path1> <path2>` then `git commit`. NEVER
+  `git add -A`, `git add .`, or `git commit -a` in this repo.
+- **Commit your own edits atomically and promptly** — don't leave code sitting
+  uncommitted in the working tree where the next session's commit will grab it.
+- **Before committing, run `git status` and confirm every staged file is yours.** If you
+  see changes you didn't make, they belong to another session — do not stage them.
+- Commit/push only when the user asks (per standing rule); when you do, keep it scoped.
+
 ## Delegation
 
 - Opus: planning, synthesis, strategy, final answers
