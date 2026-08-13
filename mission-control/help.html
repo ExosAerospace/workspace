@@ -132,13 +132,17 @@
     <p>Mission Control runs on a secured machine that is <b>not on the public internet</b>, so the <b>Cloudflare One Client</b> is the only way to reach it — in the office or remote.</p>
     <ol>
       <li>Install the <b>Cloudflare One Client</b> (Windows or macOS). If the installer says a newer version is already installed, that's fine — <b>skip the install and open the app you already have</b>.</li>
-      <li>Open the app. In the left menu, go to <b>Profile</b>.</li>
-      <li>Scroll to the bottom, to <b>"Cloudflare One team login"</b>, and click <b>Login</b>.</li>
-      <li>Team name: <code>exosaero</code></li>
-      <li>Sign in with your <b>Microsoft (work) credentials</b> and approve the enrollment.</li>
-      <li><b>Verify it worked:</b> back on the <b>Profile</b> screen, <b>"Account type" must show your Cloudflare One / Zero Trust org — NOT "WARP."</b></li>
+      <li><b>Enroll in the Exos org.</b> The app now asks how you want to use it up front:
+        <ul>
+          <li><b>Fresh install / first launch:</b> on the <b>"What would you like to use the Cloudflare One Client for?"</b> screen, choose <b>Zero Trust security</b>. (Do <b>not</b> pick the personal / privacy option — that's consumer "WARP" mode and Mission Control won't load.)</li>
+          <li><b>Already installed / no setup screen:</b> click the <b>gear / settings icon</b> (top right, or the Cloudflare cloud icon in the menu bar/system tray → <b>Preferences</b>), open <b>Account</b>, and click <b>"Login with Cloudflare Zero Trust."</b></li>
+        </ul>
+      </li>
+      <li>When prompted for <b>Team name</b>, enter <code>exosaero</code>.</li>
+      <li>A browser window opens — sign in with your <b>Microsoft (work) credentials</b> and approve the enrollment, then return to the app.</li>
+      <li><b>Verify it worked:</b> open <b>Settings → Account</b> (or Preferences → Account). <b>"Account type" must show your Cloudflare One / Zero Trust org — NOT "WARP."</b></li>
     </ol>
-    <div class="tip" style="border-left-color:var(--red)"><b>The #1 gotcha:</b> if the app says <b>"Connected / your internet is private"</b> but <b>Account type = "WARP,"</b> you are only in consumer mode and Mission Control will <b>not</b> load. You must do the <b>"Cloudflare One team login → Login"</b> with team <code>exosaero</code> (step 3). After that, Account type changes to your org and the connection carries the route to Mission Control.</div>
+    <div class="tip" style="border-left-color:var(--red)"><b>The #1 gotcha:</b> if the app says <b>"Connected / your internet is private"</b> but <b>Account type = "WARP,"</b> you are only in consumer mode and Mission Control will <b>not</b> load. Enroll in the org — pick <b>Zero Trust security</b> (or <b>Account → "Login with Cloudflare Zero Trust"</b>) and use team <code>exosaero</code>. After that, Account type changes to your org and the connection carries the route to Mission Control.</div>
     <div class="tip">Cloudflare problems → Atomus at <a href="mailto:success@atomuscyber.com">success@atomuscyber.com</a>, or ask in the team channel.</div>
   </div>
 
