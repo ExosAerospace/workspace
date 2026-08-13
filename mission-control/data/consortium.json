@@ -121,8 +121,8 @@
     },
     {
      "partner": "Scorpius",
-     "scope": "Propulsion / Type-5 tanks",
-     "backup": "TBD"
+     "scope": "Propulsion / Type-5 tanks (affiliate \u2014 self-perform, no RFQ)",
+     "backup": "affiliate/self-perform (ROFR); alt propulsion only for delivery risk"
     },
     {
      "partner": "MATECH",
@@ -202,7 +202,7 @@
     },
     {
      "partner": "Scorpius",
-     "scope": "Structures",
+     "scope": "Propulsion / Type-5 tanks (affiliate \u2014 self-perform, no RFQ)",
      "backup": "CDT"
     }
    ]
