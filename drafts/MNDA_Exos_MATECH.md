@@ -1,5 +1,5 @@
 # MUTUAL NON-DISCLOSURE AGREEMENT
-## Exos Aerospace Systems & Technologies, Inc. ↔ MATECH GSM, Inc.
+## Exos Aerospace Systems & Technologies, Inc. ↔ Global Strategic Materials, LLC (MATECH)
 ### Version 1
 
 This Mutual Non-Disclosure Agreement ("Agreement") is entered into as of _____________, 2026 ("Effective Date") by and between:
@@ -8,7 +8,7 @@ This Mutual Non-Disclosure Agreement ("Agreement") is entered into as of _______
 
 and
 
-**MATECH GSM, Inc.**, a California corporation, with its principal place of business at 31304 Via Colinas, Suite 102, Westlake Village, CA 91362 ("MATECH").
+**Global Strategic Materials, LLC** (d/b/a MATECH), a California limited liability company, with its principal place of business at 31304 Via Colinas, Suite 102, Westlake Village, CA 91362 ("MATECH").
 
 Exos and MATECH are each referred to individually as a "Party" and collectively as the "Parties." For purposes of this Agreement, "MATECH" includes its affiliate **Super Carbon Composites Technologies LLC**, and "Party" includes each Party's affiliates that receive or disclose Confidential Information hereunder.
 
@@ -94,9 +94,9 @@ Name: John Quinn
 Title: Cofounder and CEO
 Date: _______________________________
 
-**MATECH GSM, INC.**
+**GLOBAL STRATEGIC MATERIALS, LLC** (d/b/a MATECH)
 
 By: _______________________________
 Name: Edward J. A. Pope, Ph.D.
-Title: Founder and Chief Executive Officer
+Title: Founder and Managing Member
 Date: _______________________________
