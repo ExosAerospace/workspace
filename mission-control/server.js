@@ -682,7 +682,11 @@ function getSession(req) {
 // deals, financials, uploads. A ds_session can never reach anything else.
 const dsSessions = new Map();        // token -> { kind, createdAt, ip }
 const dsLoginThrottle = new Map();   // ip -> { fails, until }
-const DS_PASSCODE = process.env.MC_DOCUSIGN_PASSCODE || 'exos2014';
+// Passcode source (no weak default): env var, else a local .ds-passcode file, else a random
+// per-boot value that no one knows (effectively locks /docusign until the file is set).
+const DS_PASSCODE = process.env.MC_DOCUSIGN_PASSCODE
+  || (() => { try { return fs.readFileSync(path.join(__dirname, '.ds-passcode'), 'utf-8').trim(); } catch { return ''; } })()
+  || crypto.randomBytes(24).toString('hex');
 // Exact paths a DocuSign-only session is permitted to touch. Nothing else.
 const DS_ALLOWED = new Set([
   '/docusign', '/docusign.html',

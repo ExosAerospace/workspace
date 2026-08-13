@@ -1,0 +1,6 @@
+
+# governance instrumentation backups
+scripts/*.govbak
+governance/events.jsonl
+doc-library/
+mission-control/.ds-passcode
