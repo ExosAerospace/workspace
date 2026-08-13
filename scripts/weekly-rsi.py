@@ -171,6 +171,62 @@ def main():
         L.append("\n**Proposed action:** review 2-3 of these; if the human priority is right, the pillar/urgency weights for that work type get nudged next week. This is the recursive loop.")
     else:
         L.append("- No large divergences — Mission Score is tracking human intent well.")
+    # ==== Recursive self-improvement extensions (Jon 2026-08-13): my perf, employee perf,
+    # all-programs + consortium coverage, and proactive "where you need me" prompts. Each guarded. ====
+    _REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _MCDATA = os.path.dirname(DEC_FILE)
+    pursuits = []
+    # 6. Exo (AI) performance this week
+    try:
+        import subprocess as _sp
+        commits = _sp.run(["git", "-C", _REPO, "log", "--since=7 days ago", "--oneline"],
+                          capture_output=True, text=True, timeout=15).stdout.strip().splitlines()
+        L.append("\n## 6. Exo (AI) performance this week")
+        L.append(f"- Shipped **{len(commits)} commits** to Mission Control / automation this week.")
+        for c in commits[:6]:
+            L.append(f"  - {c[:92]}")
+        L.append(f"- Tasks closed system-wide this week: **{len(closed_week)}**.")
+    except Exception:
+        pass
+    # 7. Employee performance — throughput this week
+    try:
+        from collections import Counter as _Counter
+        closed_by = _Counter((t.get('assigned_to') or t.get('owner') or 'unassigned') for t in closed_week)
+        L.append("\n## 7. Employee performance — tasks closed this week")
+        for who, n in closed_by.most_common(10):
+            L.append(f"  - {who}: {n}")
+        L.append("  (Full detail in the weekly employee report.)")
+    except Exception:
+        pass
+    # 8. Programs & Consortium coverage
+    try:
+        cj = json.load(open(os.path.join(_MCDATA, 'consortium.json')))
+        pursuits = cj.get('pursuits', [])
+        L.append(f"\n## 8. Programs & Consortium coverage ({len(pursuits)} pursuits)")
+        for pu in pursuits:
+            gaps = [m for m in pu.get('members', []) if (m.get('backup') in (None, '', 'TBD', '2-deep TBD'))]
+            note = (f"; ⚠️ {len(gaps)} scope(s) need a 2-deep backup" if gaps else "; backups covered")
+            L.append(f"  - **{pu.get('name')}** [{pu.get('status')}] — {len(pu.get('members', []))} partners{note}")
+    except Exception:
+        pass
+    # 9. Where Exos needs me — how I can help (proactive)
+    try:
+        L.append("\n## 9. Where Exos needs me this week — how I can help")
+        _help = []
+        if overdue:
+            _help.append(f"Draft status-nudges for the {len(overdue)} overdue high-value items and route them to owners.")
+        if any((m.get('backup') in (None, '', 'TBD', '2-deep TBD')) for pu in pursuits for m in pu.get('members', [])):
+            _help.append("Source 2-deep backups for consortium scopes still marked TBD — protects FFP delivery.")
+        for pu in pursuits:
+            if pu.get('status') in ('Concept', 'Forming'):
+                _help.append(f"Draft the teaming agreement + partner outreach for '{pu.get('name')}'.")
+        _help.append("Run the consortium lens on this week's new opportunities and propose the 2-3 strongest prime plays.")
+        for h in _help[:6]:
+            L.append(f"  - {h}")
+        L.append("\n_Reply to the Decision card or tell me which to run._")
+    except Exception:
+        pass
+
     report = "\n".join(L)
 
     os.makedirs(REPORTS, exist_ok=True)
