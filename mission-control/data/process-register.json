@@ -982,6 +982,54 @@
         "cmmc-2.0/SOP-VLNSCNREM_Vulnerability_Scanning_and_Remediation_v1.pdf"
       ],
       "file_count": 1
+    },
+    {
+      "area": "CMMC 2.0",
+      "area_id": "cmmc-2.0",
+      "procedure": "IT Systems Review Items & Cadence Plan",
+      "doc_no": "PLAN-RVWITMS",
+      "rev": "1",
+      "status": "Active",
+      "intl_release": "No",
+      "ack_required": true,
+      "owner": "Atomus / Exo (Jon signed 8/13)",
+      "remarks": "CMMC 2.0 Level 2 / NIST SP 800-171r2 / DFARS 7012. Authored by Atomus (nathaniel@atomuscyber.com), v1 Aug 11 2026; signed by Jon Aug 13 2026.",
+      "files": [
+        "cmmc-2.0/PLAN-RVWITMS_IT_Systems_Review_Items_and_Cadence_v1.pdf"
+      ],
+      "file_count": 1
+    },
+    {
+      "area": "CMMC 2.0",
+      "area_id": "cmmc-2.0",
+      "procedure": "Company-Specific Security Values Policy",
+      "doc_no": "POLICY-CMPNYVAL",
+      "rev": "1",
+      "status": "Active",
+      "intl_release": "No",
+      "ack_required": true,
+      "owner": "Atomus / Exo (Jon signed 8/13)",
+      "remarks": "CMMC 2.0 Level 2 / NIST SP 800-171r2 / DFARS 7012. Authored by Atomus (nathaniel@atomuscyber.com), v1 Aug 11 2026; signed by Jon Aug 13 2026.",
+      "files": [
+        "cmmc-2.0/POLICY-CMPNYVAL_Company_Specific_Security_Values_v1.pdf"
+      ],
+      "file_count": 1
+    },
+    {
+      "area": "CMMC 2.0",
+      "area_id": "cmmc-2.0",
+      "procedure": "Information Security Policy (master)",
+      "doc_no": "POLICY-ISP",
+      "rev": "1",
+      "status": "Active",
+      "intl_release": "No",
+      "ack_required": true,
+      "owner": "Atomus / Exo (Jon signed 8/13)",
+      "remarks": "CMMC 2.0 Level 2 / NIST SP 800-171r2 / DFARS 7012. Authored by Atomus (nathaniel@atomuscyber.com), v1 Aug 11 2026; signed by Jon Aug 13 2026.",
+      "files": [
+        "cmmc-2.0/POLICY-ISP_Information_Security_Policy_v1.pdf"
+      ],
+      "file_count": 1
     }
   ]
 }
