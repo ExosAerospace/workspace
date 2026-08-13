@@ -173,6 +173,7 @@ function esignRequestEmail(signer, link, env) {
       <p>${(env.message||'You have a document ready for your signature.').replace(/\n/g,'<br>')}</p>
       <p style="margin:24px 0;"><a href="${link}" style="background:#0066cc;color:#fff;text-decoration:none;padding:14px 28px;border-radius:6px;font-weight:bold;display:inline-block;">Review &amp; Sign: ${env.title}</a></p>
       <p style="font-size:12px;color:#888;">Or paste this link into your browser:<br><span style="color:#0066cc;">${link}</span></p>
+      <p style="font-size:13px;color:#c0392b;font-weight:bold;">⏳ This secure link expires in 5 days${env.expiresAt ? ' (on ' + new Date(env.expiresAt).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) + ')' : ''} — please sign before then.</p>
       <hr style="border:none;border-top:1px solid #eee;margin:20px 0;">
       <p style="font-size:11px;color:#999;">This is a legally binding electronic signature request under the U.S. E-SIGN Act (15 U.S.C. §7001) and UETA. Your signature, name, IP address, and timestamp will be recorded. Questions: <a href="mailto:jquinn@exosaero.com">jquinn@exosaero.com</a>.</p>
     </div>
@@ -2429,7 +2430,7 @@ const server = http.createServer((req, res) => {
         const env = {
           id: esignToken().slice(0,12), title: title || 'Document', html: html || '',
           message: message || '', subject: subject || ('Signature requested: ' + (title||'Document')),
-          createdAt: new Date().toISOString(), status: 'pending',
+          createdAt: new Date().toISOString(), expiresAt: new Date(Date.now() + 5*24*60*60*1000).toISOString(), status: 'pending',
           signers: valid.map(s => ({ name: s.name||'Signer', email: s.email, role: s.role||'', token: esignToken(), signed:false, signedAt:null, ip:null, signatureType:null, signatureData:null }))
         };
         const all = loadEnvelopes(); all.push(env); saveEnvelopes(all);
@@ -2453,6 +2454,14 @@ const server = http.createServer((req, res) => {
     let env=null, signer=null;
     for (const e of all) { const s = e.signers.find(x => x.token === token); if (s) { env=e; signer=s; break; } }
     if (!env) { res.writeHead(404,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:'Invalid or expired signing link'})); return; }
+    // Hardening: link closes once this signer has signed, or after the 5-day TTL (can't reopen to view).
+    const _expired = env.expiresAt && Date.now() > Date.parse(env.expiresAt);
+    if (signer.signed || _expired) {
+      res.writeHead(410,{'Content-Type':'application/json'});
+      res.end(JSON.stringify({ closed:true, reason: signer.signed?'signed':'expired', signedAt: signer.signedAt, expiresAt: env.expiresAt,
+        error: signer.signed ? 'This document has already been signed — the link is now closed.' : 'This signing link has expired (5-day limit).' }));
+      return;
+    }
     res.writeHead(200,{'Content-Type':'application/json'});
     res.end(JSON.stringify({
       title: env.title, html: env.html, message: env.message, status: env.status,
@@ -2471,6 +2480,8 @@ const server = http.createServer((req, res) => {
         let env=null, signer=null;
         for (const e of all) { const s = e.signers.find(x => x.token === token); if (s) { env=e; signer=s; break; } }
         if (!env) { res.writeHead(404,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:'Invalid signing link'})); return; }
+        if (env.expiresAt && Date.now() > Date.parse(env.expiresAt)) { res.writeHead(410,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:'This signing link has expired (5-day limit).'})); return; }
+        if (signer.signed) { res.writeHead(409,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:'This document has already been signed — the link is closed.'})); return; }
         if (!signer.signed) {
           signer.signed = true;
           signer.signedAt = new Date().toISOString();
@@ -3213,6 +3224,60 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Mission Control server running on port ${PORT}`);
+// ── Authoritative port ownership (durable fix, 2026-08-13) ──
+// The launchd-managed service (com.exos.missioncontrol) is the ONE true instance. If a
+// hand-started server is squatting PORT, the old code crashed on EADDRINUSE and — under
+// launchd KeepAlive — crash-looped SILENTLY while the stale process kept serving old code
+// (root cause of Neil's "My Tasks blank" glitch: it squatted the port for ~1.7 days).
+// Now: on EADDRINUSE we identify the squatter and reclaim the port instead of dying, so a
+// manual instance can never block the managed service for more than a few seconds.
+function _pidsOnPort(port) {
+  try {
+    const out = execSync(`lsof -nP -iTCP:${port} -sTCP:LISTEN -t`, { encoding: 'utf8' }).trim();
+    return out ? out.split('\n').map(s => parseInt(s, 10)).filter(Boolean) : [];
+  } catch { return []; }  // lsof exits non-zero when nothing is listening
+}
+function _cmdOfPid(pid) {
+  try { return execSync(`ps -o command= -p ${pid}`, { encoding: 'utf8' }).trim(); }
+  catch { return ''; }
+}
+const _SELF = __filename;  // absolute path to THIS server.js
+const _ts = () => new Date().toISOString();
+let _reclaimAttempts = 0;
+function startListen() {
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`[${_ts()}] Mission Control server running on port ${PORT} (pid ${process.pid})`);
+  });
+}
+server.on('error', (err) => {
+  if (err && err.code === 'EADDRINUSE') {
+    const mypid = process.pid;
+    const holders = _pidsOnPort(PORT).filter(p => p !== mypid);
+    // CRITICAL: never kill another instance already running THIS same server.js — that
+    // creates a mutual-kill flap under launchd KeepAlive. If a peer already serves the
+    // port, stand down cleanly (exit 0 → KeepAlive:{SuccessfulExit:false} won't respawn us).
+    const peer = holders.find(p => _cmdOfPid(p).includes(_SELF));
+    if (peer) {
+      console.error(`[${_ts()}] PORT ${PORT} already served by a peer server.js (pid ${peer}); standing down (pid ${mypid} exits 0, no mutual-kill).`);
+      process.exit(0);
+    }
+    // Otherwise the holder is a HAND-STARTED squatter (e.g. a relative `node server.js`).
+    // The launchd-managed service is authoritative — reclaim the port from it.
+    _reclaimAttempts++;
+    if (_reclaimAttempts <= 5 && holders.length) {
+      console.error(`[${_ts()}] PORT ${PORT} squatted by hand-started pid(s) [${holders.join(',')}]. Reclaiming (attempt ${_reclaimAttempts}/5).`);
+      for (const p of holders) { try { process.kill(p, 'SIGTERM'); } catch {} }
+      setTimeout(() => {
+        for (const p of _pidsOnPort(PORT).filter(p => p !== mypid)) { try { process.kill(p, 'SIGKILL'); } catch {} }
+        setTimeout(startListen, 500);
+      }, 1500);
+    } else {
+      console.error(`[${_ts()}] Could not reclaim port ${PORT} after ${_reclaimAttempts} attempts — exiting so launchd restarts cleanly.`);
+      process.exit(1);
+    }
+  } else {
+    console.error(`[${_ts()}] Fatal server error:`, err);
+    process.exit(1);
+  }
 });
+startListen();
