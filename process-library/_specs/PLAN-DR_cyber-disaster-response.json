@@ -24,7 +24,9 @@
       "On invocation, follow PLAN-IR to contain first (isolate the host, preserve evidence), THEN recover per this plan onto clean/known-good hardware."]},
     {"name": "3 - Asset backup to the drive attached to MC", "steps": [
       "Automated nightly (02:30) via scripts/mc-asset-backup.py (launchd com.exos.mc-asset-backup).",
-      "Captures: mc.db (consistent sqlite online backup), mission-control/data, uploads, process-library, capture, config, users.json, .ds-passcode, ~/.openclaw/secrets.json, key notes, and a Supabase export (tasks + activities JSON).",
+      "Captures MC's own data: mc.db (consistent sqlite online backup), mission-control/data, uploads, process-library, capture, config, users.json, .ds-passcode, ~/.openclaw/secrets.json, key notes.",
+      "Captures CONNECTED assets: the full Supabase cloud set (board tasks/activities AND the CRM - contacts, companies, deals), the 69-job automation fleet (~/Library/LaunchAgents/com.exos.*.plist), and the OpenClaw gateway config (openclaw.json, exec-approvals). This restores not just the data but the automation and integrations that make MC run.",
+      "External SaaS that connect in (QuickBooks, BambooHR, Cloudflare Zero Trust, Proton, DocuSign) are vendor-durable; recovery reconnects via the backed-up secrets, and BambooHR/QuickBooks data can be re-exported. These are noted in the inventory, not duplicated here.",
       "Format: hard-link incremental snapshots (each is a full, independently-restorable point-in-time copy); a sha256 manifest.json makes every snapshot verifiable; restore-me.txt documents the steps.",
       "Retention: 14 daily + 8 weekly snapshots; older pruned automatically.",
       "Target: a write-enabled external drive attached to ExoMac (set MC_BACKUP_DIR or a writable /Volumes drive). Until an admin write-enables a dedicated drive, backups run to a local store (~/exos-asset-backups) which Time Machine then sweeps to the external drive.",

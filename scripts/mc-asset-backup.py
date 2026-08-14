@@ -100,11 +100,15 @@ def sha256(path):
         return None
 
 
+# Cloud tables that connect to MC (board + CRM). Export all so a Supabase-side loss is recoverable.
+SUPA_TABLES = ("tasks", "activities", "contacts", "companies", "deals")
+
+
 def supabase_export(dest):
-    """Export the two big cloud tables so a Supabase-side loss is recoverable."""
+    """Export every connected Supabase table (board + CRM) so a cloud-side loss is recoverable."""
     os.makedirs(dest, exist_ok=True)
     out = {}
-    for table in ("tasks", "activities"):
+    for table in SUPA_TABLES:
         rows, offset = [], 0
         try:
             while True:
@@ -185,8 +189,23 @@ def main():
         if os.path.exists(f):
             os.makedirs(secrets_dst, exist_ok=True); shutil.copy2(f, os.path.join(secrets_dst, os.path.basename(f)))
 
-    # 3) Supabase cloud export
+    # 3) Supabase cloud export (board + CRM)
     counts = supabase_export(os.path.join(snap, "supabase-export"))
+
+    # 3b) Connected assets: the automation fleet (launchd defs) + the OpenClaw gateway config.
+    import glob
+    la_dst = os.path.join(snap, "launch-agents"); os.makedirs(la_dst, exist_ok=True)
+    la_n = 0
+    for p in glob.glob(os.path.expanduser("~/Library/LaunchAgents/com.exos.*.plist")):
+        try: shutil.copy2(p, os.path.join(la_dst, os.path.basename(p))); la_n += 1
+        except Exception: pass
+    oc_dst = os.path.join(snap, "openclaw-config"); os.makedirs(oc_dst, exist_ok=True)
+    for f in ("openclaw.json", "openclaw.json.last-good", ".env", "exec-approvals.json"):
+        s = os.path.expanduser(f"~/.openclaw/{f}")
+        if os.path.exists(s):
+            try: shutil.copy2(s, os.path.join(oc_dst, f))
+            except Exception: pass
+    logline(f"connected assets: {la_n} launch-agents + openclaw config")
 
     # 4) manifest (verifiable) + restore instructions
     manifest = {"created": stamp, "host": "ExoMac", "supabase": counts, "files": {}}
