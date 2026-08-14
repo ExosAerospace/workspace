@@ -479,6 +479,12 @@ def process_outbound_to_team(msg, subject, body):
         print("  Skipped: Exo automated digest/newsletter — not a task")
         return
 
+    # (a3) Anything Exo composed and sent on Jon's behalf carries a "(via Exo)" sign-off. That is Exo
+    # acting on an already-tracked item, not a fresh human delegation, so it must not spawn its own card.
+    if re.search(r'\bvia exo\b', (body or ''), flags=re.I):
+        print("  Skipped: Exo-authored outbound (…via Exo) — not a task")
+        return
+
     for team_email in team_recipients:
         team_name = resolve_display_name(team_email)
         print(f"  Outbound to team: {team_email} ({team_name})")
