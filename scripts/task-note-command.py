@@ -111,6 +111,33 @@ def domain_owner(text, by_email):
     return None
 
 
+_MONTHS = {m: i for i, m in enumerate(
+    ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"], 1)}
+
+
+def parse_due(text):
+    """Parse a due date from 'due <date>' in a command; ISO or None. Future-biased."""
+    from datetime import date as _date
+    m = re.search(r"\bdue\s*(?:date)?\s*:?\s*([^\n.;]{0,30})", text, re.I)
+    w = (m.group(1) if m else text).lower()
+    today = _date.today()
+    mm = re.search(r"\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z.]*\s+(\d{1,2})(?:st|nd|rd|th)?(?:,?\s*(20\d{2}))?", w)
+    if mm:
+        try:
+            d = _date(int(mm.group(3) or today.year), _MONTHS[mm.group(1)[:3]], int(mm.group(2)))
+            if not mm.group(3) and d < today: d = _date(d.year + 1, d.month, d.day)
+            return d.isoformat()
+        except ValueError: pass
+    mm = re.search(r"\b(\d{1,2})/(\d{1,2})(?:/(20\d{2}))?\b", w)
+    if mm:
+        try:
+            d = _date(int(mm.group(3) or today.year), int(mm.group(1)), int(mm.group(2)))
+            if not mm.group(3) and d < today: d = _date(d.year + 1, d.month, d.day)
+            return d.isoformat()
+        except ValueError: pass
+    return None
+
+
 def directive_after(body):
     """Return the text following the FIRST @Exobot mention (that's the command)."""
     m = re.search(r"@exo(?:bot)?\b[:,\-\s]*(.*)", body, re.I | re.S)
@@ -174,6 +201,11 @@ def main():
         # 3) priority bump
         if re.search(r"\b(urgent|asap|high priority|top priority|escalate|critical)\b", low):
             supa("PATCH", f"tasks?id=eq.{taskid}", {"priority": 92}); did.append("prioritized")
+        # 3b) due date  (@Exobot due 8/17  |  due Aug 17)
+        if re.search(r"\bdue\b", low):
+            iso = parse_due(cmd)
+            if iso:
+                supa("PATCH", f"tasks?id=eq.{taskid}", {"due_date": iso}); did.append(f"due {iso}")
 
         if did:
             reply(taskid, f"✅ Exo: {', '.join(did)} (per {owner_of_note or 'note'}: “{cmd[:120]}”).")
