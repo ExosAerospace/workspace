@@ -987,11 +987,9 @@ function getFilteredTasks() {
     // (prevents a task assigned to someone else leaking in via a stale owner name)
     if (ae) return !!me && ae === me;
     // legacy tasks with NO assigned_email: fall back to owner-name match
-    const o = (t.owner || '').toLowerCase();
-    const n = (currentUser.name || '').toLowerCase();
-    const firstName = n.split(/\s+/)[0];
-    return o === n || o.split(/\s+/)[0] === firstName ||
-           (firstName === 'john' && (o === 'jon' || o.includes('john')));
+    const mineC = canonOwner(currentUser.name || '');
+    const oC = canonOwner(t.owner || '');
+    return oC === mineC || (mineC === 'Jon' && oC === 'Jon+Exo');
   });
   else if (currentFilter === 'group') filtered = filtered.filter(t =>
     (t.owner || '').toLowerCase() === 'team' ||
@@ -1102,8 +1100,29 @@ function render() {
   document.getElementById('count-done').textContent     = counts['Done'] || 0;
 }
 
+// Canonical identity: one person is stored under many free-text spellings (name variants,
+// emails, bare first name), which made the board render the same person as several chips.
+// Collapse every known spelling to a single canonical owner so chips/labels/filters agree.
+function canonOwner(owner) {
+  if (!owner) return '';
+  var l = String(owner).trim().toLowerCase();
+  if (l.indexOf('+') !== -1 || l === 'both') return 'Jon+Exo';   // composite = Both
+  var local = l.indexOf('@') !== -1 ? l.split('@')[0] : l;
+  var MAP = {
+    'jon':'Jon','john quinn':'Jon','john':'Jon','jquinn':'Jon','j quinn':'Jon','you':'Jon',
+    'exo':'Exo','exomac':'Exo','research':'Exo',
+    'lizi quinn':'Lizi Quinn','lquinn':'Lizi Quinn','lizi':'Lizi Quinn',
+    'neil milburn':'Neil Milburn','nmilburn':'Neil Milburn','neil':'Neil Milburn',
+    'phil eaton':'Phil Eaton','peaton':'Phil Eaton',
+    'steve norsworthy':'Steve Norsworthy','snorsworthy':'Steve Norsworthy',
+    'russell blink':'Russell Blink','rblink':'Russell Blink'
+  };
+  return MAP[l] || MAP[local] || String(owner).trim();
+}
+
 function ownerClass(owner) {
   if (!owner) return 'owner-other';
+  owner = canonOwner(owner);
   const l = owner.toLowerCase();
   if (l.includes('+') || l === 'both') return 'owner-both';
   if (l === 'exo' || l === 'exomac') return 'owner-exo';
@@ -1115,6 +1134,7 @@ function ownerClass(owner) {
 
 function ownerLabel(owner) {
   if (!owner) return '?';
+  owner = canonOwner(owner);
   const l = owner.toLowerCase();
   if (l.includes('+') || l === 'both') return 'BOTH';
   if (l === 'exo' || l === 'exomac') return 'EXO';
