@@ -1,0 +1,51 @@
+{
+  "title": "Cyber Disaster Response & Recovery Plan",
+  "doc_no": "PLAN-DR",
+  "area": "CMMC 2.0",
+  "area_id": "cmmc-2.0",
+  "owner": "Security Admin / Exo (Company Admin approves)",
+  "rev": "0",
+  "status": "Draft",
+  "intl_release": "No",
+  "reference_docs": "PLAN-IR (Incident Response), PLAN-RSKRSP (Risk Response), DEF-BSLNCNFG (Baseline Config), SOP-DVCSAN (Sanitization), scripts/mc-asset-backup.py",
+  "remarks": "Recovery/continuity half of the CMMC program: how Exos restores Mission Control, the ERP, and CUI-adjacent systems after a cyber event or hardware loss. Pairs with PLAN-IR (detect/contain) and NIST SP 800-171 3.8.9 (backup) / DFARS 7012.",
+  "objective": "ensure Exos can recover Mission Control, the ERP database, and business-critical data quickly and verifiably after a cyber incident (ransomware, compromise), hardware failure, or accidental loss, with defined RPO/RTO and a tested restore path.",
+  "overview": "Exos protects its operational systems with layered, verifiable backups and a documented restore procedure. The crown-jewel local-only asset is the ERP database (erp-foundation/mc.db) on ExoMac, which is not in version control; Mission Control task/activity data lives in the Supabase cloud. This plan defines what is backed up, where, how often, how it is verified, and the exact steps to restore. It aligns with the 3-2-1 rule (three copies, two media types, one off-site/off-line) and complements PLAN-IR: PLAN-IR detects and contains an incident, PLAN-DR recovers from it.",
+  "tasks": [
+    {"name": "1 - Scope and objectives (RPO/RTO)", "steps": [
+      "Systems in scope: Mission Control web app + server, the ERP SQLite database (mc.db), MC data/uploads/process-library/capture/config, integration secrets, and the Supabase-hosted task/activity data.",
+      "Recovery Point Objective (RPO): at most 24 hours of data loss (nightly backup at 02:30), tightening to near-zero for Supabase (cloud-durable) and to the last snapshot for local data.",
+      "Recovery Time Objective (RTO): Mission Control restored and serving within 4 business hours of a declared event; read-only reference (CMMC docs, contacts) available immediately from the latest snapshot.",
+      "CUI note: CUI itself is not stored in Mission Control; the SSP/POA&M and controlled data live in GCC High SharePoint and are covered by Microsoft 365 GCC High retention, not this plan."]},
+    {"name": "2 - Roles and invocation", "steps": [
+      "Security Admin: owns backups, runs restores, verifies integrity, and executes this plan.",
+      "Company Admin (Jon): declares a disaster, authorizes recovery actions, and approves any rebuild/rekey.",
+      "Invocation triggers: confirmed ransomware or compromise (from PLAN-IR), ExoMac disk failure, corruption or accidental deletion of mc.db or MC data, or loss/theft of the host.",
+      "On invocation, follow PLAN-IR to contain first (isolate the host, preserve evidence), THEN recover per this plan onto clean/known-good hardware."]},
+    {"name": "3 - Asset backup to the drive attached to MC", "steps": [
+      "Automated nightly (02:30) via scripts/mc-asset-backup.py (launchd com.exos.mc-asset-backup).",
+      "Captures: mc.db (consistent sqlite online backup), mission-control/data, uploads, process-library, capture, config, users.json, .ds-passcode, ~/.openclaw/secrets.json, key notes, and a Supabase export (tasks + activities JSON).",
+      "Format: hard-link incremental snapshots (each is a full, independently-restorable point-in-time copy); a sha256 manifest.json makes every snapshot verifiable; restore-me.txt documents the steps.",
+      "Retention: 14 daily + 8 weekly snapshots; older pruned automatically.",
+      "Target: a write-enabled external drive attached to ExoMac (set MC_BACKUP_DIR or a writable /Volumes drive). Until an admin write-enables a dedicated drive, backups run to a local store (~/exos-asset-backups) which Time Machine then sweeps to the external drive.",
+      "Verify on demand: scripts/mc-asset-backup.py --verify <snapshot>. If the drive is not writable, the job emails the Company Admin (fail-loud)."]},
+    {"name": "4 - The 3-2-1 posture", "steps": [
+      "Copy 1 (primary): live data on ExoMac's internal disk.",
+      "Copy 2 (local media): the attached external drive - both Time Machine (whole-disk) and the app-consistent asset snapshots above.",
+      "Copy 3 (off-site / off-line): Supabase (cloud) for task/activity data, plus a periodic encrypted export pushed to GCC High SharePoint for true off-site durability (ACTION: enable once the SharePoint URL/credentials are provisioned).",
+      "Ransomware resilience: keep at least one off-line/immutable copy; the external drive should be rotated or a second drive kept off-line so a host compromise cannot encrypt every copy."]},
+    {"name": "5 - Recovery procedure (restore)", "steps": [
+      "Contain first per PLAN-IR (isolate the affected host; do not restore onto a compromised machine).",
+      "Provision clean hardware or a re-imaged host per DEF-BSLNCNFG.",
+      "Restore code: clone the repo and checkout the commit recorded in the snapshot manifest (git_head).",
+      "Restore local-only data from the latest verified snapshot: mc.db, mission-control/data, uploads, process-library, capture, config, users.json, .ds-passcode, secrets.",
+      "If Supabase was affected: re-import supabase-export/tasks.json and activities.json.",
+      "Start Mission Control (launchctl bootstrap the user agent) and validate the board, uploads, a CMMC doc, and integrations.",
+      "Rekey any credentials that may have been exposed (rotate Supabase keys, DocuSign passcode, integration secrets) before returning to service."]},
+    {"name": "6 - Testing and maintenance", "steps": [
+      "Quarterly restore drill: restore the latest snapshot to a scratch location and verify checksums + a sample of records; record the result.",
+      "Monthly: confirm the nightly job is succeeding (cron-watchdog) and the external drive is attached and writable.",
+      "Review this plan annually or after any invocation or significant architecture change; fold in lessons learned.",
+      "Track RPO/RTO actuals from each drill and tighten the schedule if needed."]}
+  ]
+}
