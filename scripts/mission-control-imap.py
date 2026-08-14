@@ -468,6 +468,17 @@ def process_outbound_to_team(msg, subject, body):
         print("  Skipped: Exo's own automated reply (…Exo update) — not a task")
         return
 
+    # (a2) Exo's OWN automated digests / newsletters (weekly report, previews, briefings) are
+    # broadcasts, not delegations. They were looping back through this Sent-folder intake and
+    # spawning a redundant "Your Mission Control weekly" card on top of tasks people already have
+    # (Kyle flagged the flood). Never turn Exo's own digests into tasks.
+    _subj_l = (subject or '').strip().lower()
+    DIGEST_SUBJECTS = ('your mission control weekly', 'mission control weekly', 'weekly mc report',
+                       'your mission control daily', 'mission control daily', "today's brief", 'daily brief')
+    if _subj_l.startswith('[preview]') or any(s in _subj_l for s in DIGEST_SUBJECTS):
+        print("  Skipped: Exo automated digest/newsletter — not a task")
+        return
+
     for team_email in team_recipients:
         team_name = resolve_display_name(team_email)
         print(f"  Outbound to team: {team_email} ({team_name})")
