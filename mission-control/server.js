@@ -150,6 +150,18 @@ function decisionsToken() {
     return t;
   }
 }
+// Streaming backup download (see /backup/ route). Files live here; token gates access.
+const BACKUP_DL_DIR = path.join(process.env.HOME || '/Users/exomac', 'exos-asset-backups', '_download');
+const BTOKEN_FILE = path.join(__dirname, 'data', '.backup-token');
+function backupToken() {
+  try { return fs.readFileSync(BTOKEN_FILE, 'utf-8').trim(); }
+  catch {
+    const t = crypto.randomBytes(24).toString('hex');
+    fs.mkdirSync(path.dirname(BTOKEN_FILE), { recursive: true });
+    fs.writeFileSync(BTOKEN_FILE, t, { mode: 0o600 });
+    return t;
+  }
+}
 function nextDecisionId(arr) {
   let max = 0;
   for (const d of arr) { const m = /^D-(\d+)$/.exec(d.id || ''); if (m) max = Math.max(max, parseInt(m[1], 10)); }
@@ -1116,6 +1128,40 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/html' });
       res.end(docusignGatePage());
     }
+    return;
+  }
+
+  // ── Streaming backup download (token-gated; STREAMS, never readFileSync) ──
+  // Serves the latest asset-backup archive from BACKUP_DL_DIR for off-machine copy to
+  // SharePoint over Cloudflare One. GET /backup/<file>?token=<t>. Uses createReadStream so a
+  // multi-hundred-MB download never blocks the event loop (unlike /uploads). Token-gated on
+  // top of the Cloudflare One org gate. Supports HTTP Range so downloads can resume.
+  if (req.url.startsWith('/backup/') && req.method === 'GET') {
+    const u = new URL(req.url, 'http://localhost');
+    if ((u.searchParams.get('token') || '') !== backupToken()) { res.writeHead(403); res.end('Forbidden'); return; }
+    const name = decodeURIComponent(u.pathname.replace('/backup/', ''));
+    const file = path.join(BACKUP_DL_DIR, name);
+    if (!file.startsWith(BACKUP_DL_DIR) || name.includes('..') || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
+      res.writeHead(404); res.end('Not found'); return;
+    }
+    const size = fs.statSync(file).size;
+    const range = req.headers.range;
+    const headers = { 'Content-Type': 'application/gzip', 'Accept-Ranges': 'bytes',
+      'Content-Disposition': `attachment; filename="${path.basename(file).replace(/"/g, '')}"` };
+    let stream;
+    if (range) {
+      const m = /bytes=(\d+)-(\d*)/.exec(range) || [];
+      const start = parseInt(m[1], 10) || 0;
+      const end = m[2] ? parseInt(m[2], 10) : size - 1;
+      res.writeHead(206, { ...headers, 'Content-Range': `bytes ${start}-${end}/${size}`, 'Content-Length': end - start + 1 });
+      stream = fs.createReadStream(file, { start, end });
+    } else {
+      res.writeHead(200, { ...headers, 'Content-Length': size });
+      stream = fs.createReadStream(file);
+    }
+    stream.on('error', () => { try { res.destroy(); } catch {} });
+    req.on('close', () => { try { stream.destroy(); } catch {} });
+    stream.pipe(res);
     return;
   }
 
