@@ -1,0 +1,49 @@
+tap "cloudflare/cloudflare"
+# Cloudflare Tunnel client (formerly Argo Tunnel)
+brew "cloudflared"
+# Load/unload environment variables based on $PWD
+brew "direnv"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Client for fetching mail from POP, IMAP, ETRN or ODMR-capable servers
+brew "fetchmail"
+# Play, record, convert, and stream select audio and video codecs
+brew "ffmpeg"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# GitHub command-line tool
+brew "gh"
+# Polyglot runtime manager (asdf rust clone)
+brew "mise"
+# SMTP client that can be used as an SMTP plugin for Mutt
+brew "msmtp"
+# Port scanning utility for large networks
+brew "nmap"
+# Open-source, cross-platform JavaScript runtime environment
+brew "node@22", link: true
+# Create, run, and share large language models (LLMs)
+brew "ollama"
+# Fast, disk space efficient package manager
+brew "pnpm"
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# Command-line interface for https://speedtest.net bandwidth tests
+brew "speedtest-cli"
+# OCR (Optical Character Recognition) engine
+brew "tesseract"
+# Terminal multiplexer
+brew "tmux"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
+# Internet file retriever
+brew "wget"
+# Port of OpenAI's Whisper model in C/C++
+brew "whisper-cpp"
+# Suite of barcodes-reading tools
+brew "zbar"
+vscode "ms-vscode-remote.remote-containers"
+npm "corepack"

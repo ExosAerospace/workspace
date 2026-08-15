@@ -1,0 +1,10 @@
+# ExoMac runtime versions (2026-08-15T14:28:08Z)
+macOS: 26.5.2 (arm64)
+node: v22.23.2
+python3: Python 3.9.6
+mise: 2026.5.16 macos-arm64 (2026-05-28)
+brew: Homebrew 6.0.17
+msmtp: msmtp version 1.8.34
+gpg: gpg (GnuPG) 2.5.21
+ollama: ollama version is 0.24.0
+cloudflared: cloudflared version 2026.8.2 (built 2026-08-14T11:22:52Z)

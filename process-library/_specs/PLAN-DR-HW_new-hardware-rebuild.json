@@ -1,0 +1,47 @@
+{
+  "title": "New Apple Hardware Rebuild Runbook",
+  "doc_no": "PLAN-DR-HW",
+  "area": "CMMC 2.0",
+  "area_id": "cmmc-2.0",
+  "owner": "Security Admin / Exo (Company Admin approves)",
+  "rev": "0",
+  "status": "Draft",
+  "intl_release": "No",
+  "reference_docs": "PLAN-DR (Cyber Disaster Response), scripts/mc-asset-backup.py, system-manifest/Brewfile",
+  "remarks": "Turnkey steps to rebuild ExoMac (Mission Control host) onto new Apple hardware, e.g. the Mac on order. The asset backup is the DATA layer; this runbook covers the full-machine restore and the reconnect steps Migration Assistant does not self-document.",
+  "objective": "restore a fully working Mission Control host onto new Apple hardware with minimal downtime, covering the OS, runtime stack, integrations, data, and automation, then verify.",
+  "overview": "The asset backup (mc.db + CRM + MC data + automation fleet + config) is the granular, verifiable DATA layer. It is NOT a full-machine image. The whole-machine restore path to new Apple hardware is Time Machine + Migration Assistant (Path A). A clean install (Path B) uses the captured system-manifest (Brewfile, pip freeze, versions) to reproduce the runtime stack. Either path finishes with reconnecting integrations, restoring/verifying MC+ERP data, and a smoke test.",
+  "tasks": [
+    {"name": "0 - Before you start (verify + gather)", "steps": [
+      "VERIFY Time Machine is current: System Settings > Time Machine, confirm the last backup is recent. A stale TM = a stale restore.",
+      "Gather: the Time Machine drive, the encrypted off-site archive from SharePoint IT backups + its passphrase (from the password manager), the Git repo URL, and admin credentials.",
+      "Confirm the new Mac is Apple Silicon (clean Apple-Silicon to Apple-Silicon migration)."]},
+    {"name": "Path A - Migration Assistant from Time Machine (fastest, recommended)", "steps": [
+      "Power on the new Mac; at Setup Assistant choose 'From a Mac, Time Machine backup, or startup disk'.",
+      "Select the Time Machine drive and the latest backup; migrate Applications, User account (exomac), and system files.",
+      "This restores macOS user data, /opt/homebrew and the runtime stack, ~/.openclaw, /Library LaunchDaemons, and the workspace. Proceed to 'Reconnect integrations'."]},
+    {"name": "Path B - Clean install (only if not using Migration Assistant)", "steps": [
+      "Install macOS; create the 'exomac' account (and the admin account).",
+      "Install Homebrew, then reproduce the stack:  brew bundle --file system-manifest/Brewfile  (node, python, mise, ollama, cloudflared, gpg, msmtp, etc.).",
+      "Restore Python libs:  pip install -r system-manifest/pip-freeze.txt  (into the PYTHONPATH used by the crons).",
+      "Install OpenClaw (npm) and restore ~/.openclaw/openclaw.json + secrets.json + .env from the backup.",
+      "Clone the workspace repo and  git checkout  the commit in the snapshot manifest (git_head)."]},
+    {"name": "Reconnect integrations (after either path)", "steps": [
+      "Proton Bridge: install and log in; confirm local IMAP 1143 / SMTP works (email tracker + sends).",
+      "Cloudflare One client: re-enroll ExoMac to the exosaero Zero Trust org (so MC is reachable and RDP/VPN works).",
+      "Verify keychain items migrated; re-auth Ollama models if missing (ollama pull as needed).",
+      "Confirm ~/.msmtprc and ~/.protonmail-bridge.crt are present."]},
+    {"name": "Restore + verify MC / ERP data", "steps": [
+      "Restore local-only data from the latest verified asset snapshot: erp-foundation/mc.db, mission-control/data, uploads, process-library, capture, config, users.json, .ds-passcode.",
+      "Verify integrity:  python3 scripts/mc-asset-backup.py --verify <snapshot>  (expect 0 mismatches).",
+      "If Supabase was also lost, re-import supabase-export/*.json (tasks, activities, contacts, companies, deals)."]},
+    {"name": "Bring services up + smoke test", "steps": [
+      "Load the automation fleet: the 69 com.exos.*.plist LaunchAgents (launchctl bootstrap) and the root com.exos.mission-control LaunchDaemon.",
+      "Start Mission Control; open http://<MC-LAN-IP>:8080 and check the board, an upload, a CMMC 2.0 doc, and one integration (e.g. an email send).",
+      "Confirm the nightly backup runs and targets the attached drive."]},
+    {"name": "Post-restore", "steps": [
+      "If a compromise was suspected, rotate credentials (Supabase keys, DocuSign passcode, integration secrets) before returning to service.",
+      "Run one manual backup to confirm the new host is protected.",
+      "Record the actual recovery time (RTO) and fold any gaps back into PLAN-DR."]}
+  ]
+}

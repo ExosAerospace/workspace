@@ -207,6 +207,22 @@ def main():
             except Exception: pass
     logline(f"connected assets: {la_n} launch-agents + openclaw config")
 
+    # 3c) System rebuild manifest (for bare-metal restore to new Apple hardware): the runtime stack
+    # Time Machine/Migration Assistant restores, but this makes a CLEAN reinstall reproducible.
+    sm = os.path.join(snap, "system-manifest"); os.makedirs(sm, exist_ok=True)
+    try:
+        subprocess.run(["/opt/homebrew/bin/brew", "bundle", "dump", "--force",
+                        "--file", os.path.join(sm, "Brewfile")], timeout=120, check=False)
+        with open(os.path.join(sm, "pip-freeze.txt"), "w") as f:
+            subprocess.run(["/usr/bin/python3", "-m", "pip", "freeze"], stdout=f, timeout=60, check=False)
+        with open(os.path.join(sm, "versions.txt"), "w") as f:
+            f.write(f"# ExoMac runtime ({stamp})\n")
+            try: f.write("macOS: " + subprocess.check_output(["sw_vers", "-productVersion"], timeout=10).decode().strip()
+                         + " " + subprocess.check_output(["uname", "-m"], timeout=10).decode().strip() + "\n")
+            except Exception: pass
+    except Exception as e:
+        logline(f"WARN system-manifest: {e}")
+
     # 4) manifest (verifiable) + restore instructions
     manifest = {"created": stamp, "host": "ExoMac", "supabase": counts, "files": {}}
     try:
