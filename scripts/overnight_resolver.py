@@ -33,6 +33,15 @@ SB_URL = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
 JON = "user:1501632195163590739"
 OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
 DRY = "--dry-run" in sys.argv
+APPLY = "--apply" in sys.argv  # v2: actually mutate the board (auto-close + false-overdue fix)
+
+OLLAMA = "http://localhost:11434/api/generate"
+OLLAMA_MODEL = "gemma4:e4b"  # small/fast; the task is a 3-way DONE/CANCELLED/LEAVE classification
+AUTO_CAP = 12                 # hard cap on autonomous board changes per run
+NO_DEADLINE_MARKERS = ("no firm deadline", "rolling", "open call", "open-call", "confirm-with-organizer",
+                       "no hard deadline", "no set deadline", "deadline tbd", "rolling deadline")
+# NEVER auto-close/cancel/retouch these (active per Jon directive).
+PROTECTED = ("osc", "opp-021")
 
 LEVERAGE = ("series a", "sbir", "sttr", "tacfi", "stratfi", "darpa", "rofr", "scorpius",
             "osc", "opp-021", "nasa", "afrl", "entx", "rdre")
@@ -55,6 +64,127 @@ def sb_get(path):
     req = urllib.request.Request(SB_URL + path, headers={"apikey": key, "Authorization": "Bearer " + key})
     with urllib.request.urlopen(req, timeout=30, context=ssl.create_default_context()) as r:
         return json.loads(r.read().decode())
+
+
+def sb_patch(task_id, payload):
+    key = sb_key()
+    data = json.dumps(payload).encode()
+    req = urllib.request.Request(SB_URL + f"tasks?id=eq.{task_id}", data=data, method="PATCH",
+                                 headers={"apikey": key, "Authorization": "Bearer " + key,
+                                          "Content-Type": "application/json", "Prefer": "return=representation"})
+    with urllib.request.urlopen(req, timeout=30, context=ssl.create_default_context()) as r:
+        b = r.read().decode()
+        return json.loads(b) if b else []
+
+
+def ollama(prompt):
+    """Best-effort local judgment. Returns text or None (degrade gracefully if Ollama is down)."""
+    try:
+        data = json.dumps({"model": OLLAMA_MODEL, "prompt": prompt, "stream": False,
+                           "options": {"temperature": 0}}).encode()
+        req = urllib.request.Request(OLLAMA, data=data, headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return json.loads(r.read().decode()).get("response", "").strip()
+    except Exception as e:
+        logline(f"ollama unavailable: {e}")
+        return None
+
+
+def load_answered_recent(days=7):
+    """Answered decisions from the last `days` (for auto-close of their linked tasks)."""
+    try:
+        d = json.load(open(DECISIONS_FILE))
+        arr = d if isinstance(d, list) else d.get("decisions", d.get("items", []))
+    except Exception:
+        return []
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+    out = []
+    for x in arr:
+        if (x.get("status") or "") != "answered":
+            continue
+        ts = x.get("answeredAt") or x.get("updated") or ""
+        try:
+            if datetime.fromisoformat(ts.replace("Z", "+00:00")) >= cutoff:
+                out.append(x)
+        except Exception:
+            out.append(x)  # no/odd timestamp -> include (better to consider than skip)
+    return out
+
+
+def _protected(t):
+    blob = (str(t.get("title", "")) + " " + str(t.get("category", "")) + " " + str(t.get("id", ""))).lower()
+    return any(p in blob for p in PROTECTED)
+
+
+def auto_resolve(tasks, answered, apply):
+    """v2 (conservative): (1) close/cancel tasks whose linked ANSWERED decision clearly means
+    done/declined (LLM-gated); (2) fix false-overdue tasks that DECLARE no hard deadline
+    (deterministic). Returns (resolved_lines, resolved_ids). Respects PROTECTED + AUTO_CAP."""
+    resolved, ids = [], set()
+    now = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+    by_id = {str(t["id"]): t for t in tasks}
+
+    # (1) Answered-decision -> close linked task (the entX/TruSight pattern). LLM classifies.
+    for dec in answered:
+        if len(ids) >= AUTO_CAP:
+            break
+        tid = str(dec.get("relatedItem") or "")
+        if tid not in by_id:
+            # try to find a task id embedded in the decision title/dedupeKey
+            blob = (str(dec.get("title", "")) + str(dec.get("dedupeKey", "")))
+            tid = next((k for k in by_id if k and (" " + k + " ") in (" " + blob + " ")), "")
+        t = by_id.get(tid)
+        if not t or t.get("state") in ("Done", "Cancelled") or _protected(t):
+            continue
+        verdict = ollama(
+            "Decide the state of a TASK given the answer to its decision. Be very strict.\n"
+            f"TASK: {t.get('title','')}\n"
+            f"DECISION: {dec.get('title','') or dec.get('question','')}\n"
+            f"ANSWER: {dec.get('answer','')}\nNOTE: {dec.get('note','')}\n\n"
+            "Rules:\n"
+            "- DONE only if the answer states the work is ALREADY FINISHED/sent/issued/received/resolved.\n"
+            "- CANCELLED only if the answer DECLINES it (no / stand down / pass / do not do it).\n"
+            "- LEAVE for everything else. CRITICAL: an approval or go-ahead to START or PROCEED "
+            "(e.g. 'yes, draft it', 'go', 'approve & release', 'ready — submit now', 'yes send it') "
+            "is NOT completion — that is LEAVE, because the work still has to happen.\n"
+            "Reply with ONE word: DONE, CANCELLED, or LEAVE.")
+        v = (verdict or "").strip().upper()
+        v = "DONE" if v.startswith("DONE") else "CANCELLED" if v.startswith("CANCEL") else "LEAVE"
+        if v == "LEAVE" or verdict is None:
+            continue
+        note = f" [AUTO-{v} {now[:10]} by overnight-resolver: linked decision {dec.get('id')} answered '{str(dec.get('answer',''))[:40]}'. Reversible — flip state if wrong.]"
+        if apply:
+            try:
+                sb_patch(t["id"], {"state": v.title(), "completed_at": now,
+                                   "description": (t.get("description") or "") + note})
+            except Exception as e:
+                logline(f"auto-close PATCH failed for {t['id']}: {e}"); continue
+        resolved.append(f"[{t['id']}] {(t.get('title') or '')[:56]} → {v} (decision {dec.get('id')} answered)")
+        ids.add(str(t["id"]))
+
+    # (2) False-overdue fix: task is overdue but its OWN description says there is no hard deadline.
+    d0 = today()
+    for t in tasks:
+        if len(ids) >= AUTO_CAP:
+            break
+        if str(t["id"]) in ids or _protected(t):
+            continue
+        due = parse_due(t)
+        if not (due and due < d0):
+            continue
+        desc = (t.get("description") or "").lower()
+        if any(m in desc for m in NO_DEADLINE_MARKERS):
+            newdue = (d0 + timedelta(days=30)).isoformat() + "T23:59:59+00:00"
+            note = f" [AUTO-DATEFIX {d0} by overnight-resolver: was false-overdue (description declares no hard deadline); internal due bumped +30d. Reversible.]"
+            if apply:
+                try:
+                    sb_patch(t["id"], {"due_date": newdue, "description": (t.get("description") or "") + note})
+                except Exception as e:
+                    logline(f"date-fix PATCH failed for {t['id']}: {e}"); continue
+            resolved.append(f"[{t['id']}] {(t.get('title') or '')[:56]} → due bumped +30d (was false-overdue, no hard deadline)")
+            ids.add(str(t["id"]))
+
+    return resolved, ids
 
 
 def _subprocess_env():
@@ -156,6 +286,13 @@ def main():
         logline("decisions fetch returned 0 for a large board — treating as unreliable (fail-safe)")
         decisions_ok = False
 
+    # v2 — autonomous reversible resolution (auto-close on answered decisions + false-overdue fix).
+    answered = load_answered_recent() if decisions_ok else []
+    resolved, resolved_ids = auto_resolve(tasks, answered, APPLY)
+    if resolved_ids:
+        tasks = [t for t in tasks if str(t["id"]) not in resolved_ids]
+        ws = [t for t in ws if str(t["id"]) not in resolved_ids]
+
     # Blocked + needs-Jon are computed from the FULL board (not just the top-15) so they always
     # surface; the radar/Top-3 use the ranked working set. Each item appears in ONE bucket.
     claimed = set()
@@ -192,6 +329,10 @@ def main():
 
     parts = [f"🌙 **Overnight Resolver — {d}**",
              f"Working set: top {len(ws)} of {len(tasks)} open items (ranked: overdue → nearest deadline → leverage).", ""]
+    if resolved:
+        parts.append(f"✅ **RESOLVED/ADVANCED{'' if APPLY else ' (proposed — not applied)'}:**")
+        parts += [f"• {x}" for x in resolved[:AUTO_CAP]]
+        parts.append("")
     if needs_jon:
         parts.append("🗳️ **NEEDS JON:**")
         parts += [f"• {x}" for x in needs_jon[:8]]
@@ -210,15 +351,16 @@ def main():
         parts.append("")
         parts.append("_Note: decisions store was unreadable/implausible this run — escalation matching skipped (fail-safe). Board data above is good._")
     parts.append("")
-    parts.append("_Analysis + surfacing only; no autonomous board changes. Full board: http://192.168.1.216:8080_")
+    mode = "auto-resolve on" if APPLY else "surface-only"
+    parts.append(f"_v2 {mode}: reversible auto-close + false-overdue fixes; one-way doors always escalated. Full board: http://192.168.1.216:8080_")
     summary = "\n".join(parts)
 
     delivered = post_discord(summary)
-    logline(f"run ok: ws={len(ws)} blocked={len(blocked)} needs_jon={len(needs_jon)} radar={len(advancing)} "
-            f"decisions_ok={decisions_ok} delivered={delivered}{' (dry-run)' if DRY else ''}")
+    logline(f"run ok: ws={len(ws)} resolved={len(resolved)} blocked={len(blocked)} needs_jon={len(needs_jon)} "
+            f"radar={len(advancing)} decisions_ok={decisions_ok} apply={APPLY} delivered={delivered}{' (dry-run)' if DRY else ''}")
     try:
         with open(USAGE_LOG, "a") as f:
-            f.write(f"| {d} | launchd-deterministic | {len(ws)} | 0 | {len(needs_jon)} | 0 |\n")
+            f.write(f"| {d} | launchd+ollama | {len(ws)} | {len(resolved)} | {len(needs_jon)} | 0 |\n")
     except Exception:
         pass
 

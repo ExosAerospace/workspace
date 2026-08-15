@@ -8,6 +8,7 @@
     <array>
         <string>/usr/bin/python3</string>
         <string>/Users/exomac/.openclaw/workspace/scripts/overnight_resolver.py</string>
+        <string>--apply</string>
     </array>
     <key>RunAtLoad</key>
     <false/>
