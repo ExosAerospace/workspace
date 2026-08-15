@@ -1717,6 +1717,20 @@ const server = http.createServer((req, res) => {
         const current = await supabaseRequest('GET', `tasks?id=eq.${id}&limit=1`);
         const oldTask = Array.isArray(current.data) && current.data[0] ? current.data[0] : {};
 
+        // Keep assignment fields in sync when owner changes via the board dropdown.
+        // The "My Tasks" filter treats assigned_email as the SOLE source of truth, so a
+        // reassign that only touched `owner` left a stale assigned_email — making the task
+        // still show under the PREVIOUS assignee (e.g. Neil's task lingering under Jon).
+        // Resolve the new owner to a login account: set the email when matched, null it out
+        // otherwise so the filter falls back to owner-name matching (the @Exobot path already
+        // sets all three; this brings the UI dropdown to parity).
+        if (fields.owner && fields.owner !== oldTask.owner) {
+          const ownerUser = findOwnerUser(fields.owner);
+          fields.assigned_to = fields.owner;
+          fields.assigned_email = (ownerUser && ownerUser.email) ? ownerUser.email : null;
+          fields.assigned_at = new Date().toISOString();
+        }
+
         // Apply update
         const result = await supabaseRequest('PATCH', `tasks?id=eq.${id}`, fields);
 
