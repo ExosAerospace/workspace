@@ -1229,7 +1229,7 @@ const server = http.createServer((req, res) => {
   // doc (investor decks, 409A, financial model, ITAR-adjacent) to an external sandbox user
   // (e.g. the UTD capstone students, who are scoped to "Payload Sales" only).
   if (session && session.role === 'early_adopter') {
-    const allowedAPIs = ['/api/tasks', '/api/me', '/api/logout', '/api/layout'];
+    const allowedAPIs = ['/api/tasks', '/api/me', '/api/logout', '/api/layout', '/api/capstone-program'];
     const isAllowedAPI = allowedAPIs.some(p => req.url.startsWith(p));
     if (req.url.startsWith('/api/') && !isAllowedAPI) {
       auditDeny(session, req, 'out-of-scope-api');
@@ -1250,13 +1250,22 @@ const server = http.createServer((req, res) => {
       res.writeHead(403); res.end('Forbidden'); return;
     }
     // Block internal pages — only allow tasks board and welcome
-    const allowedPages = ['/', '/index.html', '/welcome', '/welcome.html', '/login', '/login.html', '/dashboard', '/dashboard.html'];
+    const allowedPages = ['/', '/index.html', '/welcome', '/welcome.html', '/login', '/login.html', '/dashboard', '/dashboard.html', '/capstone-tracker', '/capstone-tracker.html'];
     const isAllowedPage = allowedPages.some(p => req.url === p || req.url.startsWith(p + '?'));
     if (req.method === 'GET' && !req.url.startsWith('/api/') && !isAllowedPage && !req.url.startsWith('/brand-assets')) {
       res.writeHead(302, { 'Location': '/' });
       res.end();
       return;
     }
+  }
+
+  // ── Capstone program feed (read-only; students + Edwin see the timeline gates + scorecard) ──
+  if (req.url.split('?')[0] === '/api/capstone-program' && req.method === 'GET') {
+    try {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(fs.readFileSync(path.join(__dirname, 'data', 'capstone-program.json')));
+    } catch (e) { res.writeHead(404); res.end(JSON.stringify({ error: 'not found' })); }
+    return;
   }
 
   // ── SALES COMMISSIONS (restricted): Jon + CTO see all; a sales agent sees ONLY their own ──
