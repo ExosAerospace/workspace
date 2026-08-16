@@ -186,38 +186,62 @@
     "determination": "Edwin (UTD) + Exos jointly. Metrics are the objective input; both must affirm eligibility.",
     "metrics_rated": [
       {
-        "key": "attributed_pipeline",
-        "label": "Attributed pipeline contribution",
+        "key": "primary_track_impact",
+        "label": "Primary-track impact",
         "weight": 35,
-        "definition": "Qualified pipeline $ + high-prob opps traceable to the individual's owned segments/prospects. Direct line from person \u2192 real revenue."
+        "definition": "Output measured in the currency of the student's declared track (outreach pipeline $, OR shipped/adopted web+tooling, OR creative performance, OR analytics rigor). A web/pipeline builder's infrastructure counts as fully as an outreach person's pipeline."
       },
       {
-        "key": "shipped_content",
-        "label": "Shipped creative/content",
+        "key": "team_outcome_contribution",
+        "label": "Contribution to team outcome",
         "weight": 20,
-        "definition": "Assets they authored that were APPROVED and shipped (copy, creative, site sections, design-loop requests, social)."
+        "definition": "Demonstrable effect of their work on the team's real-$ result \u2014 credits ENABLING work (a converting site the outreach rides on counts like booked pipeline)."
       },
       {
         "key": "ai_leverage",
         "label": "AI-leverage effectiveness",
         "weight": 15,
-        "definition": "How well their AI-directed campaigns performed vs baseline \u2014 the core skill the program teaches."
+        "definition": "How well they use the fleet/tools within their lane."
       },
       {
         "key": "consistency",
         "label": "Consistency & reliability",
         "weight": 15,
-        "definition": "Queue tasks completed on time, weekly-gate participation, meeting/site-visit attendance. Free-rider guard."
+        "definition": "Deliverables on time, weekly-gate participation, site-visit/meeting attendance. Universal, role-agnostic."
       },
       {
         "key": "assessment",
         "label": "Instructor + peer assessment",
         "weight": 15,
-        "definition": "Edwin + Exos material-contribution judgment + peer contribution input (catches coasting the objective metrics miss)."
+        "definition": "Edwin + Exos + peer judgment of material contribution, ROLE-AWARE (a builder is judged on the build, not on outreach they didn't do)."
       }
     ],
-    "eligibility_threshold": "Material contributor = individual score >= 60/100 AND affirmed by BOTH Edwin and Exos. Below that OR not affirmed = NOT eligible for the launch trip or any 1U-payload content.",
-    "weights_sum": 100
+    "eligibility_threshold": "Material contributor = individual score >= 60/100 (scored in their track) AND affirmed by BOTH Edwin and Exos, role-aware. Below that OR not affirmed = not eligible for the launch trip or 1U content.",
+    "weights_sum": 100,
+    "role_fair_principle": "CONTRIBUTION IS ROLE-FAIR. Dedicating fully to the website/pipeline build (or creative, or analytics/ops) is an EQUAL, unpenalized path to eligibility \u2014 no student is required to do outreach marketing. Each person is scored in the currency of THEIR track, and Edwin + Exos assess material contribution WITHIN that role. Enabling work (a converting site, a tool the team relies on) counts as fully as booked pipeline.",
+    "contribution_tracks": [
+      {
+        "key": "growth_outreach",
+        "label": "Growth / Outreach",
+        "currency": "attributed qualified pipeline $ + high-prob opps"
+      },
+      {
+        "key": "web_pipeline_eng",
+        "label": "Web & Pipeline Engineering",
+        "currency": "shipped-and-adopted site, tools, automation the team relies on + their measured effect (conversion, time saved, adoption)"
+      },
+      {
+        "key": "creative_content",
+        "label": "Creative / Content",
+        "currency": "shipped campaign assets + their performance (engagement/reply lift)"
+      },
+      {
+        "key": "data_analytics_ops",
+        "label": "Data / Analytics & Ops",
+        "currency": "dashboards, segmentation models, scorecard tooling, experiment rigor"
+      }
+    ],
+    "track_note": "Each student declares a PRIMARY track (or Edwin assigns to skill); may contribute across tracks. Scored primarily in their track's currency."
   },
   "team_1u_payload_reward": {
     "value_usd": 8000,
