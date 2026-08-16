@@ -246,14 +246,23 @@
   "team_1u_payload_reward": {
     "value_usd": 8000,
     "description": "A 1U payload container (~10x10x10 cm) on the BLK3 flight the team can put content into (names/logo chip, mementos, small flight-safe artifacts). 'Your content goes to space.'",
-    "team_objective": "Unlocks when the team hits its core mission gate \u2014 DEFAULT: bundle with the 100 kg booked gate (the team that fills 100 kg earns the launch trip AND the 1U). Jon to confirm the exact bar (could be a distinct qualified-pipeline-$ threshold).",
-    "individual_eligibility": "Only materially-contributing members (per individual_contribution) may place content. Non-contributors get nothing in the 1U.",
-    "content_constraints": "All 1U content subject to Exos flight-safety review (mass/volume/materials per Payload User's Guide) + export screening. No controlled/ITAR items."
+    "team_objective": "Unlocks at the 75 kg BOOKED milestone (of the 135 kg bay).",
+    "individual_eligibility": "ONLY materially-contributing members (per individual_contribution, affirmed by Edwin + Exos) may place a small item. Non-contributors are NOT allowed to place anything.",
+    "content_constraints": "All items: \u22641 kg total, fit the 1U volume, flight-safe materials per the PUG, export-safe (no ITAR). Any use of Exos/Armadillo marks on sold items is gated by Lizi/Exos.",
+    "mass_limit_kg": 1,
+    "mass_note": "The 1U payload contents must weigh NO MORE THAN 1 kg total.",
+    "use_determination": "The eligible (participating) team members decide the use of the payload \u2014 e.g., engraved dog tags / names, sticker or flown-item sales, or other creative. It MAY include revenue generation for a UNIVERSITY-APPROVED eligible team activity (the students' fundraiser, NOT Exos revenue), or both."
   },
   "source_materials": {
     "primary": "Exos BLK3 Payload User's Guide (PUG) \u2014 the primary/authoritative source for all specs and claims.",
     "context": "Historical Exos Aerospace + Armadillo Aerospace YouTube videos for context/heritage.",
     "attribution_rule": "\u26a0\ufe0f ANY material used from former Armadillo Aerospace (images, video, footage, etc.) MUST credit 'Armadillo Aerospace' (Exos is the commercial successor/buyout of Armadillo). Non-negotiable attribution.",
     "guardrail": "Public claims still bound by positioning rules (flying since 2018, one of three FAA-licensed reusable, never 'first commercial flight', no overstatement, export-safe). Lizi gates public content."
-  }
+  },
+  "launch_trip_reward": {
+    "team_gate": "Team books 100 kg \u2192 the launch trip is unlocked (2nd BLK3 launch, Spaceport America).",
+    "individual_eligibility": "PER PERSON \u2014 only materially-contributing members travel. If Exos spends money to send someone, they must have materially contributed to getting us there.",
+    "logistics": "See travel_package (15-pax van, ~4 days, M/F-separate lodging, per-diem)."
+  },
+  "rewards_eligibility_CLEAR": "PERFECTLY CLEAR: anyone who does NOT materially participate (as determined by Edwin + Exos) will NOT go on the launch trip AND will NOT be allowed to place any item in the 1U payload. Participation is the price of both rewards. Two rungs: 75 kg booked \u2192 1U payload (eligible members place items); 100 kg booked \u2192 launch trip (eligible members travel)."
 }
