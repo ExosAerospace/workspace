@@ -207,7 +207,7 @@
         "key": "consistency",
         "label": "Consistency & reliability",
         "weight": 15,
-        "definition": "Deliverables on time, weekly-gate participation, site-visit/meeting attendance. Universal, role-agnostic."
+        "definition": "Deliverables on time, weekly-gate participation, site-visit/meeting attendance. Universal, role-agnostic. Includes EXPENSE-REPORT DISCIPLINE on the trip (receipts, timeliness, policy compliance) as a real professional-accountability signal."
       },
       {
         "key": "assessment",
@@ -283,7 +283,10 @@
       "card_controls": "Per-card daily limit ($55) + trip-total cap; food/incidentals merchant categories; issued only to eligible travelers; activated for the trip window; auto-freeze/expire after the trip.",
       "central_costs": "Van + lodging booked and paid CENTRALLY by Exos (not on student cards). Student cards cover food/incidentals only.",
       "verify": "Confirm with Divvy/Bill: (1) non-employee/student cardholder eligibility + KYC; (2) accountable-plan structure so receipted reimbursements are NOT taxable income / no 1099; (3) all students 18+.",
-      "supersedes": "Replaces the flat $55/day per-diem assumption used in the cost estimate (actual spend likely averages below $55, so this also trims cost)."
+      "supersedes": "Replaces the flat $55/day per-diem assumption used in the cost estimate (actual spend likely averages below $55, so this also trims cost).",
+      "food_only_gating": "HARD GATE at point of sale: restrict each virtual card by Merchant Category Code to FOOD ONLY \u2014 restaurants, fast food, and grocery/food stores. Non-food swipes (apparel, gift/novelty shops, memorabilia, general retail) are DECLINED automatically. So the card itself enforces the policy; they cannot buy T-shirts or souvenirs with the funds.",
+      "accountability_assessment": "Each student submits their OWN expense reports (receipts, categorization, on-time). How they handle it \u2014 timeliness, completeness, accuracy, policy compliance \u2014 is OBSERVED and feeds their individual evaluation (professional-behavior / consistency track). A real accountability test: 'see how they do with that.'",
+      "gating_summary": "Two layers: (1) card MCC controls enforce food-only at the register; (2) mandatory individual expense reports test personal accountability and are assessed."
     }
   },
   "rewards_eligibility_CLEAR": "PERFECTLY CLEAR: anyone who does NOT materially participate (as determined by Edwin + Exos) will NOT go on the launch trip AND will NOT be allowed to place any item in the 1U payload. Participation is the price of both rewards. Two rungs: 75 kg booked \u2192 1U payload (eligible members place items); 100 kg booked \u2192 launch trip (eligible members travel).",
