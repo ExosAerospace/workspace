@@ -180,5 +180,56 @@
     "food": "Per-person per-day food budget (Lizi to set the per-diem cap).",
     "owner": "Lizi plans/books; Exo pre-staged options above."
   },
-  "commission_credit_rule": "A hired Payload Sales Engineer gets ATTRIBUTION CREDIT carried forward for opportunities they sourced during the capstone \u2014 but commissions are payable ONLY on FUTURE sales that close BEYOND the capstone period (capstone-period work is graded, not commissioned). Fold into the comp model + MOU."
+  "commission_credit_rule": "A hired Payload Sales Engineer gets ATTRIBUTION CREDIT carried forward for opportunities they sourced during the capstone \u2014 but commissions are payable ONLY on FUTURE sales that close BEYOND the capstone period (capstone-period work is graded, not commissioned). Fold into the comp model + MOU.",
+  "individual_contribution": {
+    "purpose": "It's a team effort, but EACH person must materially contribute to earn the launch trip AND 1U-payload content. Objective per-person score informs the call; Edwin + Exos JOINTLY make the final material-contribution determination.",
+    "determination": "Edwin (UTD) + Exos jointly. Metrics are the objective input; both must affirm eligibility.",
+    "metrics_rated": [
+      {
+        "key": "attributed_pipeline",
+        "label": "Attributed pipeline contribution",
+        "weight": 35,
+        "definition": "Qualified pipeline $ + high-prob opps traceable to the individual's owned segments/prospects. Direct line from person \u2192 real revenue."
+      },
+      {
+        "key": "shipped_content",
+        "label": "Shipped creative/content",
+        "weight": 20,
+        "definition": "Assets they authored that were APPROVED and shipped (copy, creative, site sections, design-loop requests, social)."
+      },
+      {
+        "key": "ai_leverage",
+        "label": "AI-leverage effectiveness",
+        "weight": 15,
+        "definition": "How well their AI-directed campaigns performed vs baseline \u2014 the core skill the program teaches."
+      },
+      {
+        "key": "consistency",
+        "label": "Consistency & reliability",
+        "weight": 15,
+        "definition": "Queue tasks completed on time, weekly-gate participation, meeting/site-visit attendance. Free-rider guard."
+      },
+      {
+        "key": "assessment",
+        "label": "Instructor + peer assessment",
+        "weight": 15,
+        "definition": "Edwin + Exos material-contribution judgment + peer contribution input (catches coasting the objective metrics miss)."
+      }
+    ],
+    "eligibility_threshold": "Material contributor = individual score >= 60/100 AND affirmed by BOTH Edwin and Exos. Below that OR not affirmed = NOT eligible for the launch trip or any 1U-payload content.",
+    "weights_sum": 100
+  },
+  "team_1u_payload_reward": {
+    "value_usd": 8000,
+    "description": "A 1U payload container (~10x10x10 cm) on the BLK3 flight the team can put content into (names/logo chip, mementos, small flight-safe artifacts). 'Your content goes to space.'",
+    "team_objective": "Unlocks when the team hits its core mission gate \u2014 DEFAULT: bundle with the 100 kg booked gate (the team that fills 100 kg earns the launch trip AND the 1U). Jon to confirm the exact bar (could be a distinct qualified-pipeline-$ threshold).",
+    "individual_eligibility": "Only materially-contributing members (per individual_contribution) may place content. Non-contributors get nothing in the 1U.",
+    "content_constraints": "All 1U content subject to Exos flight-safety review (mass/volume/materials per Payload User's Guide) + export screening. No controlled/ITAR items."
+  },
+  "source_materials": {
+    "primary": "Exos BLK3 Payload User's Guide (PUG) \u2014 the primary/authoritative source for all specs and claims.",
+    "context": "Historical Exos Aerospace + Armadillo Aerospace YouTube videos for context/heritage.",
+    "attribution_rule": "\u26a0\ufe0f ANY material used from former Armadillo Aerospace (images, video, footage, etc.) MUST credit 'Armadillo Aerospace' (Exos is the commercial successor/buyout of Armadillo). Non-negotiable attribution.",
+    "guardrail": "Public claims still bound by positioning rules (flying since 2018, one of three FAA-licensed reusable, never 'first commercial flight', no overstatement, export-safe). Lizi gates public content."
+  }
 }
