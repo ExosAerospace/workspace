@@ -41,7 +41,7 @@ It is a team effort, but **each person must materially contribute** to earn rewa
 
 ### 8. Reward ladder (two rungs; both gated per person)
 - **75 kg booked → 1U payload reward** ($8,000 value; contents ≤ 1 kg): eligible members place a small item and **decide its use** — engraved dog tags/names, or **flown-item/sticker sales for a university-approved team activity** (their fundraiser, not Exos revenue), or both. All items flight-safe per the PUG, export-safe.
-- **100 kg booked → launch trip** to the BLK3 launch (Spaceport America): eligible members travel. Exos provides a 15-passenger van, ~4-day trip, group lodging (men/women separate), and a **Divvy virtual-card food budget** (actual receipted expenses up to $55/person/day, food-only merchant controls, students submit reports in the Divvy app — a real corporate-expense experience).
+- **100 kg booked → launch trip** to the BLK3 launch (Spaceport America; est. April 2027): eligible members travel. Exos provides a 15-passenger van, ~4-day trip, group lodging (men/women separate), and a **Divvy virtual-card food budget** (actual receipted expenses up to $55/person/day, food-only merchant controls, students submit reports in the Divvy app — a real corporate-expense experience). **Every student is issued and physically handed a company Divvy card at the on-site kickoff** and holds it through to the launch as a briefing lesson in professional responsibility; cards remain inactive until the launch window is set and the student is booked (a non-eligible student's card simply never activates).
 - **Perfectly clear:** anyone who does not materially participate goes on **no** trip and places **nothing** in the 1U.
 
 ### 9. Total Exos contribution
