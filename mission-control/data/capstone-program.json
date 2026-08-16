@@ -1,5 +1,5 @@
 {
-  "program": "Exos × UTD EXO3 Payload Capstone",
+  "program": "Exos \u00d7 UTD EXO3 Payload Capstone",
   "owner_exos": "Lizi Quinn (relationship + public-content gate); Jon Quinn supportive",
   "utd_admin": "Edwin Van Der Vlist",
   "team_name": "",
@@ -7,50 +7,156 @@
   "start_date": "",
   "start_date_note": "Edwin sets the start date; all weekly gate dates derive from it.",
   "scope_category": "Payload Sales",
-  "restricted": ["Narravity", "Napier Park"],
-  "goal": "Market and fill the open 135 kg on BLK3 Flight 2 (early 2027, Spaceport America NM) via the SPACEavailable…™ campaign, directing the EXO3 agent fleet.",
+  "restricted": [
+    "Narravity",
+    "Napier Park"
+  ],
+  "goal": "Market and fill the open 135 kg on BLK3 Flight 2 (early 2027, Spaceport America NM) via the SPACEavailable\u2026\u2122 campaign, directing the EXO3 agent fleet.",
   "north_star_targets": {
-    "high_prob_opportunities": "10× the current weekly run-rate (baseline locked Week 1)",
+    "high_prob_opportunities": "10\u00d7 the current weekly run-rate (baseline locked Week 1)",
     "kg_booked_reward_gate": 100,
     "bay_capacity_kg": 135
   },
   "grading_metrics": {
     "student_outcomes_real_dollars": [
-      {"key": "qualified_pipeline_usd", "label": "Qualified pipeline $ generated", "weight": "primary", "definition": "Sum of payload-value of opportunities advanced to qualified/handoff (ROM ~$75k/10kg or actual quote)."},
-      {"key": "high_prob_opps", "label": "High-probability close opportunities", "weight": "primary", "definition": "ICP-fit + buying signal (reply/meeting/budget) = handoff-ready. Graded vs the 10× target."},
-      {"key": "kg_advanced", "label": "kg of the 135 kg bay advanced → booked", "weight": "primary", "definition": "Payload kg moved into qualified pipeline and ultimately booked."},
-      {"key": "booked_usd", "label": "$ booked", "weight": "north-star", "definition": "Actual customer payload bookings attributed to the team."},
-      {"key": "funnel_conversion", "label": "Funnel conversion", "weight": "secondary", "definition": "outreach → reply → qualified → handoff rates."}
+      {
+        "key": "qualified_pipeline_usd",
+        "label": "Qualified pipeline $ generated",
+        "weight": "primary",
+        "definition": "Sum of payload-value of opportunities advanced to qualified/handoff (ROM ~$75k/10kg or actual quote)."
+      },
+      {
+        "key": "high_prob_opps",
+        "label": "High-probability close opportunities",
+        "weight": "primary",
+        "definition": "ICP-fit + buying signal (reply/meeting/budget) = handoff-ready. Graded vs the 10\u00d7 target."
+      },
+      {
+        "key": "kg_advanced",
+        "label": "kg of the 135 kg bay advanced \u2192 booked",
+        "weight": "primary",
+        "definition": "Payload kg moved into qualified pipeline and ultimately booked."
+      },
+      {
+        "key": "booked_usd",
+        "label": "$ booked",
+        "weight": "north-star",
+        "definition": "Actual customer payload bookings attributed to the team."
+      },
+      {
+        "key": "funnel_conversion",
+        "label": "Funnel conversion",
+        "weight": "secondary",
+        "definition": "outreach \u2192 reply \u2192 qualified \u2192 handoff rates."
+      }
     ],
     "ai_effectiveness": [
-      {"key": "leverage_ratio", "label": "Leverage ratio", "definition": "Outreach volume + personalization per student-hour vs a manual baseline."},
-      {"key": "ai_reply_rate", "label": "AI-assisted reply rate", "definition": "Reply rate on fleet-personalized outreach vs a generic benchmark."},
-      {"key": "attribution", "label": "Human-shaped vs AI-executed attribution", "definition": "Whether student strategy/creative or fleet scale drove each win."},
-      {"key": "cost_per_opp", "label": "Cost per qualified opportunity", "definition": "Marginal cost/opportunity (near-zero proves the thesis)."}
+      {
+        "key": "leverage_ratio",
+        "label": "Leverage ratio",
+        "definition": "Outreach volume + personalization per student-hour vs a manual baseline."
+      },
+      {
+        "key": "ai_reply_rate",
+        "label": "AI-assisted reply rate",
+        "definition": "Reply rate on fleet-personalized outreach vs a generic benchmark."
+      },
+      {
+        "key": "attribution",
+        "label": "Human-shaped vs AI-executed attribution",
+        "definition": "Whether student strategy/creative or fleet scale drove each win."
+      },
+      {
+        "key": "cost_per_opp",
+        "label": "Cost per qualified opportunity",
+        "definition": "Marginal cost/opportunity (near-zero proves the thesis)."
+      }
     ],
     "challenge": "AI-only (fleet autonomous) vs Hybrid (students directing fleet) on matched prospect cohorts; the same metrics referee both arms head-to-head.",
     "cadence": "Weekly scorecard (this tracker + Friday digest); week-over-week trend; graded student column."
   },
   "weekly_gates": [
-    {"week": 1, "title": "Onboard & baseline", "gate": "Access live; team space-themed NAME set; learn EXO3 stack + brand + board; lock the 10× baseline + KPIs."},
-    {"week": 2, "title": "ICP & segmentation", "gate": "Ideal payload customer profile defined; 5 segments prioritized; CRM/fleet loaded."},
-    {"week": 3, "title": "TAM sized", "gate": "Payload TAM segmented + sized; first outreach messaging shaped and approved."},
-    {"week": 4, "title": "Outreach v1 live", "gate": "First personalized outreach wave out (Exos-approved); reply tracking active."},
-    {"week": 5, "title": "Campaign build starts", "gate": "SPACEavailable…™ microsite v1 + one-pager drafted (PR-gated to Lizi)."},
-    {"week": 6, "title": "Full campaign kit", "gate": "Deck + social/video series drafted; microsite live-staged; outreach ramping."},
-    {"week": 7, "title": "Scale-up", "gate": "Outreach cadence at target volume; first qualified opportunities in pipeline."},
-    {"week": 8, "title": "Challenge kickoff", "gate": "AI-only vs Hybrid cohorts split (matched); challenge clock starts; metrics pre-registered."},
-    {"week": 9, "title": "Pipeline gate A", "gate": "Weekly qualified-pipeline $ target hit; first handoffs to Lizi."},
-    {"week": 10, "title": "Pipeline gate B", "gate": "10× high-prob run-rate on track; conversion improving week-over-week."},
-    {"week": 11, "title": "Pipeline gate C", "gate": "Sustained qualified pipeline; kg-advanced climbing toward 100 kg."},
-    {"week": 12, "title": "Mid-challenge review", "gate": "Head-to-head AI-vs-Hybrid readout; cumulative qualified pipeline $ gate."},
-    {"week": 13, "title": "Convert push", "gate": "Handoffs converting; booked $ and kg accelerating."},
-    {"week": 14, "title": "100 kg push", "gate": "Drive toward the 100 kg reward gate; finalize challenge data."},
-    {"week": 15, "title": "Final & selection", "gate": "Final presentation + reusable GTM playbook; challenge outcome; Payload Sales Engineer selections."}
+    {
+      "week": 1,
+      "title": "Onboard & baseline",
+      "gate": "Access live; team sets its space-themed NAME; learn EXO3 stack + brand + board; LOCK the 10\u00d7 high-prob baseline; start ICP. EXOS SITE VISIT (Greenville, TX) scheduled in weeks 1\u20132 \u2014 Jon/Lizi + BD team address the team in person + facility tour."
+    },
+    {
+      "week": 2,
+      "title": "Prep the race",
+      "gate": "ICP + 5 segments finalized; campaign v1 messaging shaped/approved; matched prospect cohorts split; challenge metrics pre-registered. (Exos site visit falls in this weeks-1\u20132 window if not held in week 1.)"
+    },
+    {
+      "week": 3,
+      "title": "\u26a1 CHALLENGE KICKOFF",
+      "gate": "AI-only vs Hybrid BOTH live \u2014 clock starts. First personalized outreach out (Exos-approved) on both arms."
+    },
+    {
+      "week": 4,
+      "title": "First pipeline gate",
+      "gate": "First qualified opportunities in pipeline; SPACEavailable\u2026\u2122 microsite v1 staged (PR-gated to Lizi)."
+    },
+    {
+      "week": 5,
+      "title": "Full campaign kit",
+      "gate": "Deck + social/video + site live-staged; outreach at target weekly volume on both arms."
+    },
+    {
+      "week": 6,
+      "title": "Pipeline gate A",
+      "gate": "Weekly qualified-pipeline $ target hit; first handoffs to Lizi; head-to-head standings visible."
+    },
+    {
+      "week": 7,
+      "title": "Pipeline gate B",
+      "gate": "10\u00d7 high-prob run-rate on track; conversion improving week-over-week."
+    },
+    {
+      "week": 8,
+      "title": "Mid-challenge readout",
+      "gate": "Cumulative AI-vs-Hybrid readout; cumulative qualified pipeline $ gate."
+    },
+    {
+      "week": 9,
+      "title": "Scale",
+      "gate": "Sustained qualified pipeline; kg-advanced climbing toward 100 kg."
+    },
+    {
+      "week": 10,
+      "title": "Convert",
+      "gate": "Handoffs converting; booked $ and kg accelerating."
+    },
+    {
+      "week": 11,
+      "title": "100 kg push A",
+      "gate": "Drive kg-advanced toward the 100 kg reward gate."
+    },
+    {
+      "week": 12,
+      "title": "100 kg push B",
+      "gate": "Close toward 100 kg; finalize challenge dataset."
+    },
+    {
+      "week": 13,
+      "title": "Lock results",
+      "gate": "Freeze challenge metrics; verify attribution; prep readout."
+    },
+    {
+      "week": 14,
+      "title": "Results analysis",
+      "gate": "AI-only vs Hybrid outcome analyzed; ROI + leverage written up."
+    },
+    {
+      "week": 15,
+      "title": "Final & selection",
+      "gate": "Final presentation + reusable GTM playbook; challenge outcome; Payload Sales Engineer selections."
+    }
   ],
   "scorecard": {
     "last_computed": "",
     "baseline_high_prob_weekly": null,
     "weeks": []
-  }
+  },
+  "challenge_kickoff_week": 3,
+  "exos_site_visit": "Scheduled within the first two weeks \u2014 Exos site visit to Greenville, TX: Jon, Lizi + BD team address the team in person, facility tour, and program alignment. Exos hosts."
 }
