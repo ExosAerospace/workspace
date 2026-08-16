@@ -1210,9 +1210,13 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  // early_adopter role: strict sandbox — tasks board only, no CRM/deals/admin/docusign
+  // early_adopter role: strict sandbox — tasks board only, no CRM/deals/admin/docusign.
+  // Task DATA is further scoped to the user's `project` (category) below. Uploads/viewpdf are
+  // BLOCKED for this role: uploads are NOT project-scoped, so allowing them would leak every
+  // doc (investor decks, 409A, financial model, ITAR-adjacent) to an external sandbox user
+  // (e.g. the UTD capstone students, who are scoped to "Payload Sales" only).
   if (session && session.role === 'early_adopter') {
-    const allowedAPIs = ['/api/tasks', '/api/uploads', '/api/me', '/api/logout', '/api/rescore', '/api/layout'];
+    const allowedAPIs = ['/api/tasks', '/api/me', '/api/logout', '/api/layout'];
     const isAllowedAPI = allowedAPIs.some(p => req.url.startsWith(p));
     if (req.url.startsWith('/api/') && !isAllowedAPI) {
       res.writeHead(403, { 'Content-Type': 'application/json' });
@@ -1225,10 +1229,14 @@ const server = http.createServer((req, res) => {
       res.end(JSON.stringify({ error: 'Not available in the early adopter preview.' }));
       return;
     }
+    // Block doc download routes outright for this sandbox (not project-scoped).
+    if (req.url.startsWith('/uploads/') || req.url.startsWith('/viewpdf/') || req.url.startsWith('/backup/')) {
+      res.writeHead(403); res.end('Forbidden'); return;
+    }
     // Block internal pages — only allow tasks board and welcome
     const allowedPages = ['/', '/index.html', '/welcome', '/welcome.html', '/login', '/login.html', '/dashboard', '/dashboard.html'];
     const isAllowedPage = allowedPages.some(p => req.url === p || req.url.startsWith(p + '?'));
-    if (req.method === 'GET' && !req.url.startsWith('/api/') && !isAllowedPage && !req.url.startsWith('/brand-assets') && !req.url.startsWith('/uploads/') && !req.url.startsWith('/viewpdf/')) {
+    if (req.method === 'GET' && !req.url.startsWith('/api/') && !isAllowedPage && !req.url.startsWith('/brand-assets')) {
       res.writeHead(302, { 'Location': '/' });
       res.end();
       return;
