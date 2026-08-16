@@ -262,7 +262,30 @@
   "launch_trip_reward": {
     "team_gate": "Team books 100 kg \u2192 the launch trip is unlocked (2nd BLK3 launch, Spaceport America).",
     "individual_eligibility": "PER PERSON \u2014 only materially-contributing members travel. If Exos spends money to send someone, they must have materially contributed to getting us there.",
-    "logistics": "See travel_package (15-pax van, ~4 days, M/F-separate lodging, per-diem)."
+    "logistics": "See travel_package (15-pax van, ~4 days, M/F-separate lodging, per-diem).",
+    "estimated_cost": {
+      "assumptions": "~10\u201312 students; drive from DFW to Spaceport America NM (~700 mi/~12 hr each way); ~4-night launch window + travel; group lodging in Truth or Consequences, men/women separate; students are Exos's launch guests (no viewing-ticket cost). Firms up with the roster.",
+      "line_items_usd": {
+        "van_15pax_rental_dfw_5_6_days": 900,
+        "fuel_roundtrip_~1400mi": 450,
+        "lodging_4_nights_group": 3000,
+        "food_perdiem_55pp_day_x5_x11": 3025,
+        "contingency_~10pct": 750
+      },
+      "estimated_total_usd": "~8,100 (range 8,000\u20139,500)",
+      "per_person_usd": "~700\u2013850",
+      "note": "Exos staff (Jon/Lizi/BD) travel to the launch is ADDITIONAL and separate from the student package."
+    }
   },
-  "rewards_eligibility_CLEAR": "PERFECTLY CLEAR: anyone who does NOT materially participate (as determined by Edwin + Exos) will NOT go on the launch trip AND will NOT be allowed to place any item in the 1U payload. Participation is the price of both rewards. Two rungs: 75 kg booked \u2192 1U payload (eligible members place items); 100 kg booked \u2192 launch trip (eligible members travel)."
+  "rewards_eligibility_CLEAR": "PERFECTLY CLEAR: anyone who does NOT materially participate (as determined by Edwin + Exos) will NOT go on the launch trip AND will NOT be allowed to place any item in the 1U payload. Participation is the price of both rewards. Two rungs: 75 kg booked \u2192 1U payload (eligible members place items); 100 kg booked \u2192 launch trip (eligible members travel).",
+  "total_exos_contribution": {
+    "purpose": "Show the full Exos investment in a successful project (mirrors putting a price on the payload).",
+    "direct_dollar_rewards": {
+      "1u_payload_flight": 8000,
+      "launch_trip_team": 8100,
+      "subtotal_usd": 16100
+    },
+    "in_kind_value_substantial": "EXO3 platform + AI agent-fleet access, Exo's code-gen/build time, brand assets + media, CEO + BD team time (3\u20134 hr site visit + weekly touch), and the contracted Payload Sales Engineer opportunity for top performers. Materially exceeds the hard-dollar rewards.",
+    "headline": "~$16,100 in direct rewards for a successful project, on top of significant in-kind platform, mentorship, and a real job pathway."
+  }
 }
