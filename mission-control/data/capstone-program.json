@@ -275,6 +275,15 @@
       "estimated_total_usd": "~8,100 (range 8,000\u20139,500)",
       "per_person_usd": "~700\u2013850",
       "note": "Exos staff (Jon/Lizi/BD) travel to the launch is ADDITIONAL and separate from the student package."
+    },
+    "expense_model": {
+      "method": "Virtual Divvy (Bill Spend & Expense) cards issued per trip-ELIGIBLE student \u2014 NOT a flat per-diem.",
+      "cap": "Up to $55/person/day for ACTUAL, receipted expenses (food/incidentals). Pay real expenses, not a flat rate someone could pocket.",
+      "workflow": "Students submit expense reports via the EXISTING Exos expense framework, replicated into their capstone access area; Exobot pre-screens like it does for employees. Real corporate expense experience + accountability.",
+      "card_controls": "Per-card daily limit ($55) + trip-total cap; food/incidentals merchant categories; issued only to eligible travelers; activated for the trip window; auto-freeze/expire after the trip.",
+      "central_costs": "Van + lodging booked and paid CENTRALLY by Exos (not on student cards). Student cards cover food/incidentals only.",
+      "verify": "Confirm with Divvy/Bill: (1) non-employee/student cardholder eligibility + KYC; (2) accountable-plan structure so receipted reimbursements are NOT taxable income / no 1099; (3) all students 18+.",
+      "supersedes": "Replaces the flat $55/day per-diem assumption used in the cost estimate (actual spend likely averages below $55, so this also trims cost)."
     }
   },
   "rewards_eligibility_CLEAR": "PERFECTLY CLEAR: anyone who does NOT materially participate (as determined by Edwin + Exos) will NOT go on the launch trip AND will NOT be allowed to place any item in the 1U payload. Participation is the price of both rewards. Two rungs: 75 kg booked \u2192 1U payload (eligible members place items); 100 kg booked \u2192 launch trip (eligible members travel).",
