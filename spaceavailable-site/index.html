@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SPACEavailable…™ — Exos Aerospace payload space</title>
+  <meta name="description" content="Reserve payload space on an upcoming Exos Aerospace BLK3 suborbital flight. 135 kg available on Flight 2, targeted early 2027 from Spaceport America, NM." />
+  <!--
+    Static, dependency-free page. No frameworks, no CDNs.
+    Copy is loaded from content/site.json (content-as-data) via the inline
+    <script> below, with a hardcoded fallback so the page still renders if the
+    fetch is blocked (e.g. opened directly from disk). Edit content/site.json,
+    not this markup, for copy changes.
+  -->
+  <style>
+    :root {
+      --ink: #14181f;
+      --muted: #566072;
+      --line: #e2e6ec;
+      --bg: #ffffff;
+      --panel: #f6f8fb;
+      --accent: #0b5cad;
+      --accent-ink: #ffffff;
+      --max: 1080px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    a { color: var(--accent); }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+    header.site {
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; background: rgba(255,255,255,.92);
+      backdrop-filter: blur(6px); z-index: 10;
+    }
+    header.site .wrap { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; }
+    .brand { font-weight: 700; letter-spacing: .2px; font-size: 18px; }
+    .brand .tm { font-weight: 400; color: var(--muted); }
+    .nav a { margin-left: 20px; text-decoration: none; color: var(--muted); font-size: 14px; }
+    .nav a:hover { color: var(--ink); }
+    .btn {
+      display: inline-block; background: var(--accent); color: var(--accent-ink);
+      padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 600;
+      border: none; cursor: pointer; font-size: 15px;
+    }
+    .btn.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+    section { padding: 64px 0; border-bottom: 1px solid var(--line); }
+    .eyebrow { text-transform: uppercase; letter-spacing: 2px; font-size: 12px; color: var(--accent); font-weight: 700; }
+    h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.1; margin: 12px 0 16px; }
+    h2 { font-size: clamp(24px, 3.4vw, 32px); margin: 0 0 16px; }
+    h3 { font-size: 18px; margin: 0 0 8px; }
+    p.lead { font-size: 18px; color: var(--muted); max-width: 60ch; }
+    .hero-bullets { list-style: none; padding: 0; margin: 24px 0; display: flex; flex-wrap: wrap; gap: 10px 24px; }
+    .hero-bullets li { position: relative; padding-left: 20px; color: var(--ink); font-weight: 500; }
+    .hero-bullets li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
+    .positioning { margin-top: 20px; font-size: 14px; color: var(--muted); border-left: 3px solid var(--line); padding-left: 14px; max-width: 70ch; }
+    .grid { display: grid; gap: 20px; }
+    .grid.cols-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .grid.cols-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; }
+    ul.points { padding-left: 18px; color: var(--muted); }
+    ul.points li { margin: 6px 0; }
+    table.specs { width: 100%; border-collapse: collapse; }
+    table.specs td { padding: 12px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    table.specs td.k { color: var(--muted); width: 40%; }
+    table.specs td.v { font-weight: 600; }
+    .source-note { font-size: 13px; color: var(--muted); margin-top: 14px; }
+    .price-figure { font-size: 22px; font-weight: 700; }
+    form.lead { display: grid; gap: 14px; max-width: 560px; }
+    form.lead label { font-size: 14px; font-weight: 600; display: block; margin-bottom: 4px; }
+    form.lead input, form.lead textarea {
+      width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px;
+      font: inherit; background: #fff; color: var(--ink);
+    }
+    form.lead textarea { min-height: 110px; resize: vertical; }
+    .form-note { font-size: 13px; color: var(--muted); }
+    footer.site { padding: 40px 0; color: var(--muted); font-size: 13px; }
+    footer.site .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    @media (max-width: 640px) { .nav { display: none; } section { padding: 48px 0; } }
+  </style>
+</head>
+<body>
+  <header class="site">
+    <div class="wrap">
+      <div class="brand">SPACE<span>available…</span><span class="tm">™</span></div>
+      <nav class="nav">
+        <a href="#why">Why suborbital</a>
+        <a href="#environment">Environment</a>
+        <a href="#segments">Segments</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#request">Request space</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap" id="app">
+    <!-- Hero -->
+    <section id="hero">
+      <div class="eyebrow" data-bind="hero.eyebrow">SPACEavailable…™</div>
+      <h1 data-bind="hero.headline">135 kg of payload space is available on BLK3 Flight 2.</h1>
+      <p class="lead" data-bind="hero.subhead">Reserve capacity on an upcoming Exos Aerospace BLK3 suborbital flight, targeted for early 2027 from Spaceport America, New Mexico.</p>
+      <ul class="hero-bullets" data-list="hero.bullets">
+        <li>135 kg to ~100 km altitude</li>
+        <li>Early 2027 target window</li>
+        <li>Spaceport America, New Mexico</li>
+        <li>Reusable, FAA-licensed launch provider</li>
+      </ul>
+      <div class="cta-row">
+        <a class="btn" href="#request" data-bind="hero.ctaLabel">Request payload space</a>
+        <a class="btn secondary" href="#pricing">See pricing</a>
+      </div>
+      <p class="positioning" data-bind="hero.positioning">Exos Aerospace has been flying since 2018 and is one of only three FAA-licensed reusable rocket launch providers in the US.</p>
+    </section>
+
+    <!-- Why suborbital -->
+    <section id="why">
+      <h2 data-bind="whySuborbital.title">Suborbital flight de-risks orbital programs</h2>
+      <p class="lead" data-bind="whySuborbital.body"></p>
+      <ul class="points" data-list="whySuborbital.points"></ul>
+    </section>
+
+    <!-- Payload environment -->
+    <section id="environment">
+      <h2 data-bind="payloadEnvironment.title">Payload environment</h2>
+      <table class="specs" data-specs="payloadEnvironment.specs"></table>
+      <p class="source-note" data-bind="payloadEnvironment.source">Values from the published Exos BLK3 Payload User Guide.</p>
+    </section>
+
+    <!-- Segments -->
+    <section id="segments">
+      <h2 data-bind="segments.title">Who flies with us</h2>
+      <div class="grid cols-3" data-cards="segments.items"></div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing">
+      <h2 data-bind="pricing.title">Pricing</h2>
+      <p class="price-figure" data-bind="pricing.rom">ROM pricing is approximately $75k for a 10 kg payload.</p>
+      <p class="lead" data-bind="pricing.note"></p>
+      <div class="cta-row">
+        <a class="btn secondary" data-href="pricing.calculatorUrl" data-bind="pricing.calculatorLabel" href="https://exosaero.com">Open the payload calculator</a>
+      </div>
+    </section>
+
+    <!-- Request form -->
+    <section id="request">
+      <h2 data-bind="form.title">Request payload space</h2>
+      <p class="lead" data-bind="cta.body">Tell us about your payload and we’ll follow up to confirm fit, environment, and scheduling.</p>
+      <!--
+        Lead-capture wiring is TODO. This form POSTs to a placeholder endpoint
+        (/api/lead). No backend is wired yet — the static host has no server-side
+        exec by design. Wiring options (to be chosen by Exos): a serverless/edge
+        function, a form service, or an email relay. Do not collect controlled or
+        export-restricted data here.
+      -->
+      <form class="lead" action="/api/lead" method="post" onsubmit="return handleLead(event)">
+        <div>
+          <label for="f-name">Name *</label>
+          <input id="f-name" name="name" type="text" required />
+        </div>
+        <div>
+          <label for="f-org">Organization *</label>
+          <input id="f-org" name="organization" type="text" required />
+        </div>
+        <div>
+          <label for="f-email">Email *</label>
+          <input id="f-email" name="email" type="email" required />
+        </div>
+        <div>
+          <label for="f-mass">Estimated payload mass (kg)</label>
+          <input id="f-mass" name="payloadMassKg" type="number" min="0" step="0.1" />
+        </div>
+        <div>
+          <label for="f-segment">Segment</label>
+          <input id="f-segment" name="segment" type="text" placeholder="Research, defense, pharma/biotech, sensor qual, STEM…" />
+        </div>
+        <div>
+          <label for="f-msg">Tell us about your payload</label>
+          <textarea id="f-msg" name="message"></textarea>
+        </div>
+        <button class="btn" type="submit">Request space</button>
+        <p class="form-note">By submitting you agree Exos may contact you about payload opportunities. Public, non-export-restricted information only.</p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      <div>SPACEavailable…™ · Exos Aerospace</div>
+      <div>One of only three FAA-licensed reusable rocket launch providers in the US · Flying since 2018</div>
+    </div>
+  </footer>
+
+  <script>
+    // --- Content-as-data binder -------------------------------------------
+    // Reads content/site.json and fills [data-bind], [data-list], [data-cards],
+    // [data-specs], [data-href]. If the fetch fails (e.g. opened via file://),
+    // the hardcoded HTML above remains as a graceful fallback.
+    function get(obj, path) {
+      return path.split('.').reduce(function (o, k) { return (o == null ? undefined : o[k]); }, obj);
+    }
+    function render(data) {
+      document.querySelectorAll('[data-bind]').forEach(function (el) {
+        var v = get(data, el.getAttribute('data-bind'));
+        if (typeof v === 'string') el.textContent = v;
+      });
+      document.querySelectorAll('[data-href]').forEach(function (el) {
+        var v = get(data, el.getAttribute('data-href'));
+        if (typeof v === 'string') el.setAttribute('href', v);
+      });
+      document.querySelectorAll('[data-list]').forEach(function (el) {
+        var v = get(data, el.getAttribute('data-list'));
+        if (Array.isArray(v)) {
+          el.innerHTML = v.map(function (item) { return '<li></li>'; }).join('');
+          Array.prototype.forEach.call(el.children, function (li, i) { li.textContent = v[i]; });
+        }
+      });
+      document.querySelectorAll('[data-specs]').forEach(function (el) {
+        var v = get(data, el.getAttribute('data-specs'));
+        if (Array.isArray(v)) {
+          el.innerHTML = '';
+          v.forEach(function (row) {
+            var tr = document.createElement('tr');
+            var k = document.createElement('td'); k.className = 'k'; k.textContent = row.label;
+            var val = document.createElement('td'); val.className = 'v'; val.textContent = row.value;
+            tr.appendChild(k); tr.appendChild(val); el.appendChild(tr);
+          });
+        }
+      });
+      document.querySelectorAll('[data-cards]').forEach(function (el) {
+        var v = get(data, el.getAttribute('data-cards'));
+        if (Array.isArray(v)) {
+          el.innerHTML = '';
+          v.forEach(function (item) {
+            var card = document.createElement('div'); card.className = 'card';
+            var h = document.createElement('h3'); h.textContent = item.name;
+            var p = document.createElement('p'); p.style.margin = '0'; p.style.color = 'var(--muted)'; p.textContent = item.blurb;
+            card.appendChild(h); card.appendChild(p); el.appendChild(card);
+          });
+        }
+      });
+    }
+    fetch('content/site.json')
+      .then(function (r) { if (!r.ok) throw new Error('no content'); return r.json(); })
+      .then(render)
+      .catch(function () { /* keep hardcoded fallback copy */ });
+
+    // --- Lead form (placeholder) ------------------------------------------
+    // TODO: wire /api/lead to a real handler (serverless/edge function, form
+    // service, or email relay). Until then this posts and shows a stub message.
+    function handleLead(e) {
+      e.preventDefault();
+      var form = e.target;
+      var data = Object.fromEntries(new FormData(form).entries());
+      fetch(form.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).catch(function () { /* endpoint not wired yet */ });
+      form.innerHTML = '<p class="lead">Thanks — your request was captured. The Exos team will follow up.</p>' +
+                       '<p class="form-note">(Lead-capture backend wiring is TODO; this is a placeholder confirmation.)</p>';
+      return false;
+    }
+  </script>
+</body>
+</html>

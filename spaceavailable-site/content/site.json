@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "brand": "SPACEavailable…™",
+    "campaign": "Exos Aerospace payload-sales campaign",
+    "note": "This file is the single source of truth for site copy (content-as-data). Edit this, not index.html markup. All public claims must clear Exos review — see README.md Public-claim guardrail.",
+    "primaryCtaUrl": "https://exosaero.com/#book-a-call",
+    "calculatorUrl": "https://exosaero.com"
+  },
+  "hero": {
+    "eyebrow": "SPACEavailable…™",
+    "headline": "135 kg of payload space is available on BLK3 Flight 2.",
+    "subhead": "Reserve capacity on an upcoming Exos Aerospace BLK3 suborbital flight, targeted for early 2027 from Spaceport America, New Mexico.",
+    "bullets": [
+      "135 kg to ~100 km altitude",
+      "Early 2027 target window",
+      "Spaceport America, New Mexico",
+      "Reusable, FAA-licensed launch provider"
+    ],
+    "ctaLabel": "Request payload space",
+    "ctaAnchor": "#request",
+    "positioning": "Exos Aerospace has been flying since 2018 and is one of only three FAA-licensed reusable rocket launch providers in the US."
+  },
+  "whySuborbital": {
+    "title": "Suborbital flight de-risks orbital programs",
+    "body": "A suborbital flight exposes your hardware to real launch loads, vacuum, and microgravity — then returns it to you. It is a low-cost, fast-turnaround way to validate payloads, sensors, and processes before committing to an orbital campaign. Exos positions BLK3 as a de-risk platform for orbital programs, not as an orbital launch service.",
+    "points": [
+      "Flight-qualify hardware under real boost and vacuum conditions",
+      "Recover your payload after the flight for inspection and iteration",
+      "Short mission timeline and fast vehicle turnaround",
+      "Reduce program risk before scaling to an orbital mission"
+    ]
+  },
+  "payloadEnvironment": {
+    "title": "Payload environment",
+    "source": "Values from the published Exos BLK3 Payload User Guide.",
+    "specs": [
+      { "label": "Microgravity quality", "value": "Better than 1 milli-g (< 10⁻³ g)" },
+      { "label": "Microgravity duration", "value": "~150 s" },
+      { "label": "Payload capacity", "value": "135 kg to ~100 km" },
+      { "label": "Bay dimensions", "value": "~25 in diameter × 38–48 in" },
+      { "label": "Environment options", "value": "Vented standard; pressurized available" },
+      { "label": "Total mission duration", "value": "~20–25 min" }
+    ]
+  },
+  "segments": {
+    "title": "Who flies with us",
+    "items": [
+      {
+        "name": "Research",
+        "blurb": "Academic and institutional teams flying experiments that need genuine microgravity and a fast path from concept to flight data."
+      },
+      {
+        "name": "Defense & government test",
+        "blurb": "Test organizations validating hardware and sensors under real launch and space-exposure conditions on a recoverable platform."
+      },
+      {
+        "name": "Pharma & biotech",
+        "blurb": "Life-science teams running microgravity process and materials experiments with recovered samples for post-flight analysis."
+      },
+      {
+        "name": "Sensor & component qualification",
+        "blurb": "Component and instrument makers qualifying hardware against boost loads, vacuum, and the space environment before orbital deployment."
+      },
+      {
+        "name": "STEM & education",
+        "blurb": "University and student programs putting real payloads on a real flight — hands-on engineering with recovered results."
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Pricing",
+    "rom": "ROM pricing is approximately $75k for a 10 kg payload.",
+    "note": "This is a rough order-of-magnitude figure only. Use the payload cost calculator at exosaero.com for a configuration-specific estimate.",
+    "calculatorLabel": "Open the payload calculator",
+    "calculatorUrl": "https://exosaero.com"
+  },
+  "cta": {
+    "title": "Reserve your payload space",
+    "body": "Tell us about your payload and we’ll follow up to confirm fit, environment, and scheduling.",
+    "ctaLabel": "Book a call",
+    "ctaUrl": "https://exosaero.com/#book-a-call"
+  },
+  "form": {
+    "title": "Request payload space",
+    "fields": [
+      { "name": "name", "label": "Name", "type": "text", "required": true },
+      { "name": "organization", "label": "Organization", "type": "text", "required": true },
+      { "name": "email", "label": "Email", "type": "email", "required": true },
+      { "name": "payloadMassKg", "label": "Estimated payload mass (kg)", "type": "number", "required": false },
+      { "name": "segment", "label": "Segment", "type": "text", "required": false },
+      { "name": "message", "label": "Tell us about your payload", "type": "textarea", "required": false }
+    ],
+    "submitLabel": "Request space",
+    "endpoint": "/api/lead"
+  }
+}
