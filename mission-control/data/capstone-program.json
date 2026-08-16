@@ -79,7 +79,7 @@
     {
       "week": 1,
       "title": "Onboard & baseline",
-      "gate": "Access live; team sets its space-themed NAME; learn EXO3 stack + brand + board; LOCK the 10\u00d7 high-prob baseline; start ICP. EXOS SITE VISIT (Greenville, TX) scheduled in weeks 1\u20132 \u2014 Jon/Lizi + BD team address the team in person + facility tour."
+      "gate": "Access live; team sets its space-themed NAME; learn EXO3 stack + brand + board; LOCK the 10\u00d7 high-prob baseline; start ICP. EXOS SITE VISIT (Greenville, TX, 3\u20134 hrs) scheduled in weeks 1\u20132 \u2014 Jon/Lizi + BD team address the team in person + facility tour."
     },
     {
       "week": 2,
@@ -158,5 +158,12 @@
     "weeks": []
   },
   "challenge_kickoff_week": 3,
-  "exos_site_visit": "Scheduled within the first two weeks \u2014 Exos site visit to Greenville, TX: Jon, Lizi + BD team address the team in person, facility tour, and program alignment. Exos hosts."
+  "exos_site_visit": "Scheduled within the first two weeks (3\u20134 hours) \u2014 Exos site visit to Greenville, TX: Jon, Lizi + BD team address the team in person, facility tour, and program alignment. Exos hosts.",
+  "design_request_loop": {
+    "purpose": "Students get Exo's code-gen on tap to build campaign tools/site, safely.",
+    "gate": "EXO BOT is the primary gate \u2014 Exo triages and decides design/build requests autonomously so Jon's inbox is never the bottleneck.",
+    "escalation": "Exo's call on design review \u2192 escalate to Lizi for judgment calls \u2192 escalate to Jon ONLY for critical impact or anything that could affect Exo's own functionality/security.",
+    "isolation": "Exo generates in the fenced capstone sandbox (spaceavailable-site/ + capstone-tools/) only \u2014 never Exos prod/CRM/ERP/MC internals. Every artifact is a reviewed, reversible diff; PR-gated deploy to the static site.",
+    "students": "Students REQUEST; Exo GENERATES; humans REVIEW; isolated DEPLOY. No shell/exec on Exos systems."
+  }
 }
