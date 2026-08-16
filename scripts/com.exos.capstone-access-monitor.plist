@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key><string>com.exos.capstone-access-monitor</string>
+    <key>ProgramArguments</key><array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/exomac/.openclaw/workspace/scripts/capstone_access_monitor.py</string>
+    </array>
+    <key>RunAtLoad</key><false/>
+    <key>StartInterval</key><integer>600</integer>
+    <key>StandardOutPath</key><string>/Users/exomac/.openclaw/workspace/logs/capstone-access-monitor.out.log</string>
+    <key>StandardErrorPath</key><string>/Users/exomac/.openclaw/workspace/logs/capstone-access-monitor.err.log</string>
+    <key>EnvironmentVariables</key><dict>
+        <key>PATH</key><string>/Users/exomac/.local/share/mise/shims:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+</dict>
+</plist>

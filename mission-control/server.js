@@ -153,6 +153,19 @@ function decisionsToken() {
 // Streaming backup download (see /backup/ route). Files live here; token gates access.
 const BACKUP_DL_DIR = path.join(process.env.HOME || '/Users/exomac', 'exos-asset-backups', '_download');
 const BTOKEN_FILE = path.join(__dirname, 'data', '.backup-token');
+// Capstone/sandbox access audit: log every DENIED request by a sandboxed (early_adopter) user so
+// scripts/capstone_access_monitor.py can alert Lizi/Jon on privilege-escalation probing.
+const CAPSTONE_AUDIT = path.join(__dirname, '..', 'logs', 'capstone-access-audit.jsonl');
+function auditDeny(session, req, reason) {
+  try {
+    const ip = (req.headers['x-forwarded-for'] || (req.socket && req.socket.remoteAddress) || '').toString().split(',')[0].trim();
+    fs.appendFileSync(CAPSTONE_AUDIT, JSON.stringify({
+      ts: new Date().toISOString(), reason,
+      userId: session && session.userId, email: session && session.email, role: session && session.role,
+      method: req.method, url: (req.url || '').slice(0, 300), ip,
+    }) + '\n');
+  } catch {}
+}
 function backupToken() {
   try { return fs.readFileSync(BTOKEN_FILE, 'utf-8').trim(); }
   catch {
@@ -1219,18 +1232,21 @@ const server = http.createServer((req, res) => {
     const allowedAPIs = ['/api/tasks', '/api/me', '/api/logout', '/api/layout'];
     const isAllowedAPI = allowedAPIs.some(p => req.url.startsWith(p));
     if (req.url.startsWith('/api/') && !isAllowedAPI) {
+      auditDeny(session, req, 'out-of-scope-api');
       res.writeHead(403, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'This feature is not available in the early adopter preview.' }));
       return;
     }
     // Block task deletion and task capture for early adopters
     if (req.url.startsWith('/api/tasks/delete') || req.url.startsWith('/api/tasks/capture')) {
+      auditDeny(session, req, 'blocked-task-op');
       res.writeHead(403, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Not available in the early adopter preview.' }));
       return;
     }
     // Block doc download routes outright for this sandbox (not project-scoped).
     if (req.url.startsWith('/uploads/') || req.url.startsWith('/viewpdf/') || req.url.startsWith('/backup/')) {
+      auditDeny(session, req, 'blocked-doc-route');
       res.writeHead(403); res.end('Forbidden'); return;
     }
     // Block internal pages — only allow tasks board and welcome
