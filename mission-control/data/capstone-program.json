@@ -165,5 +165,20 @@
     "escalation": "Exo's call on design review \u2192 escalate to Lizi for judgment calls \u2192 escalate to Jon ONLY for critical impact or anything that could affect Exo's own functionality/security.",
     "isolation": "Exo generates in the fenced capstone sandbox (spaceavailable-site/ + capstone-tools/) only \u2014 never Exos prod/CRM/ERP/MC internals. Every artifact is a reviewed, reversible diff; PR-gated deploy to the static site.",
     "students": "Students REQUEST; Exo GENERATES; humans REVIEW; isolated DEPLOY. No shell/exec on Exos systems."
-  }
+  },
+  "hosting": {
+    "current": "exosaero.com on Squarespace.",
+    "decision": "SPACEavailable microsite \u2192 static host (Cloudflare Pages) as subdomain spaceavailable.exosaero.com; EXO3-aligned (git/content-as-data, WAF, immutable, rollback). Main site can migrate off Squarespace later.",
+    "dns_owner": "Lizi has full domain/DNS rights (Jon grants registrar access); Exo gives exact steps + stands up the host."
+  },
+  "ip_ownership": "Exos owns all capstone deliverables (site, copy, campaign assets, pipeline). Integrate into the UTD docs/MOU; verify UTD capstone terms don't auto-assign to students.",
+  "travel_package": {
+    "transport": "15-passenger van (Exos-provided); ~12-hour drive Greenville TX \u2192 Spaceport America NM (drive, not fly).",
+    "duration": "~4 days (second BLK3 launch window).",
+    "lodging": "Group vacation rental / Airbnb (men and women SEPARATE), or hotel block. Consider staying where the Exos team stays (Exos joins for dinner \u22651 night).",
+    "lodging_options_prestaged": "Truth or Consequences NM (~25\u201330 mi, closest): Holiday Inn Express & Suites, Comfort Inn & Suites I-25 (named 'Near Spaceport America'), Sierra Grande Lodge, or a large T-or-C vacation rental. Las Cruces NM (~55 mi/1 hr, more inventory + dinner options): Hotel Encanto + many chains + group Airbnbs. Rec: closest (T-or-C) for early launch mornings; book EARLY (launch draws crowds). (Jon referenced a 'Rocket City/Rocket Inn' in T or C \u2014 Lizi to verify.)",
+    "food": "Per-person per-day food budget (Lizi to set the per-diem cap).",
+    "owner": "Lizi plans/books; Exo pre-staged options above."
+  },
+  "commission_credit_rule": "A hired Payload Sales Engineer gets ATTRIBUTION CREDIT carried forward for opportunities they sourced during the capstone \u2014 but commissions are payable ONLY on FUTURE sales that close BEYOND the capstone period (capstone-period work is graded, not commissioned). Fold into the comp model + MOU."
 }
