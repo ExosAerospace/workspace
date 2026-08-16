@@ -158,7 +158,7 @@
     "weeks": []
   },
   "challenge_kickoff_week": 3,
-  "exos_site_visit": "Scheduled within the first two weeks (3\u20134 hours) \u2014 Exos site visit to Greenville, TX: Jon, Lizi + BD team address the team in person, facility tour, and program alignment. Exos hosts.",
+  "exos_site_visit": "Scheduled within the first two weeks (3\u20134 hours) \u2014 Exos site visit to Greenville, TX: Jon, Lizi + BD team address the team in person, facility tour, and program alignment. Exos hosts. At the kickoff, every student is issued (and physically handed) a company Divvy card to hold through to the launch \u2014 a core briefing moment on responsibility and 'having a job.'",
   "design_request_loop": {
     "purpose": "Students get Exo's code-gen on tap to build campaign tools/site, safely.",
     "gate": "EXO BOT is the primary gate \u2014 Exo triages and decides design/build requests autonomously so Jon's inbox is never the bottleneck.",
@@ -286,7 +286,10 @@
       "supersedes": "Replaces the flat $55/day per-diem assumption used in the cost estimate (actual spend likely averages below $55, so this also trims cost).",
       "food_only_gating": "HARD GATE at point of sale: restrict each virtual card by Merchant Category Code to FOOD ONLY \u2014 restaurants, fast food, and grocery/food stores. Non-food swipes (apparel, gift/novelty shops, memorabilia, general retail) are DECLINED automatically. So the card itself enforces the policy; they cannot buy T-shirts or souvenirs with the funds.",
       "accountability_assessment": "Each student submits their OWN expense reports (receipts, categorization, on-time). How they handle it \u2014 timeliness, completeness, accuracy, policy compliance \u2014 is OBSERVED and feeds their individual evaluation (professional-behavior / consistency track). A real accountability test: 'see how they do with that.'",
-      "gating_summary": "Two layers: (1) card MCC controls enforce food-only at the register; (2) mandatory individual expense reports test personal accountability and are assessed."
+      "gating_summary": "Two layers: (1) card MCC controls enforce food-only at the register; (2) mandatory individual expense reports test personal accountability and are assessed.",
+      "issuance_at_kickoff": "Virtual Divvy cards are issued to EVERYONE at the on-site kickoff (the Exos site visit) as a deliberate briefing moment \u2014 each student physically receives and HOLDS a company card and keeps it through to the launch (est. April 2027). ~8 months of ownership.",
+      "activation_gate": "Cards stay INACTIVE (zero spend possible) until BOTH (1) the launch window is set AND (2) the student is BOOKED for the trip. A student who does not become eligible (material contribution) simply never has their card activated \u2014 issuing to all preserves the experiential intent without breaking the eligibility gate.",
+      "briefing_intent": "Part of the kickoff briefing: students walk away feeling the physical responsibility of holding a company credit card and 'having a job' \u2014 and they carry that responsibility for months until it activates. A standing motivator."
     }
   },
   "rewards_eligibility_CLEAR": "PERFECTLY CLEAR: anyone who does NOT materially participate (as determined by Edwin + Exos) will NOT go on the launch trip AND will NOT be allowed to place any item in the 1U payload. Participation is the price of both rewards. Two rungs: 75 kg booked \u2192 1U payload (eligible members place items); 100 kg booked \u2192 launch trip (eligible members travel).",
@@ -300,5 +303,6 @@
     "in_kind_value_substantial": "EXO3 platform + AI agent-fleet access, Exo's code-gen/build time, brand assets + media, CEO + BD team time (3\u20134 hr site visit + weekly touch), and the contracted Payload Sales Engineer opportunity for top performers. Materially exceeds the hard-dollar rewards.",
     "headline": "~$16,100 in direct rewards for a successful project, on top of significant in-kind platform, mentorship, and a real job pathway."
   },
-  "scope_simplification": "No MC expense-submission build needed \u2014 Divvy/Bill natively handles cards + receipts + reports (Jon, 2026-08-16). Students' scoped MC area stays board/tracker only."
+  "scope_simplification": "No MC expense-submission build needed \u2014 Divvy/Bill natively handles cards + receipts + reports (Jon, 2026-08-16). Students' scoped MC area stays board/tracker only.",
+  "launch_estimate": "Estimated April 2027."
 }
