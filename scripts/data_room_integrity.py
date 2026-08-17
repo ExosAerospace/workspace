@@ -98,8 +98,9 @@ def main():
         if os.path.getmtime(p) < figs_mtime - 1:
             age = int((figs_mtime - os.path.getmtime(p)) / 86400)
             findings.append({"file": rp, "severity": "WARN", "rule": f"stale — older than FIGURES_OF_RECORD by ~{age}d (may predate a locked figure)"})
-        # banned claims (rulebook is never claim-scanned — it quotes the banned phrases)
-        if rp not in SKIP_CLAIMS:
+        # banned claims — skip the governance meta-layer (rulebook + manifests necessarily
+        # quote superseded figures); they're still scanned for staleness + gates above/below.
+        if rp not in SKIP_CLAIMS and "MANIFEST" not in os.path.basename(rp).upper():
             for label, pat, sev, allow, require in BANNED:
                 for m in pat.finditer(text):
                     s, e = max(0, m.start()-55), min(len(text), m.end()+55)

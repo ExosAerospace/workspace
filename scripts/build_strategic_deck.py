@@ -181,7 +181,7 @@ footer(s)
 s=slide(); header(s,"VALIDATION","The government has already validated the platform — and under-resourced it")
 box(s,Inches(0.55),Inches(1.6),Inches(12.2),Inches(1.7),fill=LIGHT,line=CARD,lw=1); box(s,Inches(0.55),Inches(1.6),Pt(3),Inches(1.7),fill=RED)
 txt(s,Inches(0.8),Inches(1.78),Inches(11.7),Inches(0.5),[("PROJECT KARMEN — USSF SBIR SF254-D1002 (Direct-to-Phase-II)",15,NAVY,True)])
-txt(s,Inches(0.8),Inches(2.28),Inches(11.7),Inches(1.0),[("A reusable suborbital platform to empirically qualify cargo, supplies & equipment under real spacelift conditions — a 2-flight / 48-hour rapid-turnaround demonstration. Competitively selected, then funded at ~1/10th of its validated $3M scope. A reissue at the proposed scope funds the next commercial launches and stands the pilot up in months.",12.5,INK,False)])
+txt(s,Inches(0.8),Inches(2.28),Inches(11.7),Inches(1.0),[("A reusable suborbital platform to empirically qualify cargo, supplies & equipment under real spacelift conditions — a proposed 2-flight / 48-hour rapid-turnaround demonstration (not yet demonstrated). Competitively selected, then funded at ~1/10th of its validated $3M scope. A reissue at the proposed scope funds the next commercial launches and stands the pilot up in months.",12.5,INK,False)])
 bullets(s,Inches(0.55),Inches(3.5),Inches(12.2),[
  "**$10M unlocks ~$34M** in government co-investment (TACFI + STRATFI) — a 3.4× capital multiplier. **Non-dilutive upside, milestone-gated — not counted in the base case.**",
  "**$180M AI-built pipeline;** Commission on the Future of the Navy toured Exos (Aug 2026) and is weighing the consortium/ITZ model for its report.",

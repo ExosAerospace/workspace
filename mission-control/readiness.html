@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Room Readiness — Exos Mission Control</title>
+<style>
+  :root{--navy:#0B2A4A;--red:#C8102E;--ink:#14202E;--gray:#5A6675;--line:#E1E8F0;--bg:#F5F8FB}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  header{background:var(--navy);color:#fff;padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
+  header .t{font-weight:800;letter-spacing:.5px}
+  header a{color:#cdd9e6;text-decoration:none;font-size:13px}
+  .wrap{max-width:1000px;margin:0 auto;padding:22px}
+  .hero{display:flex;gap:20px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin-bottom:18px}
+  .badge{font-size:30px;font-weight:900;letter-spacing:1px;padding:14px 26px;border-radius:10px;color:#fff;min-width:150px;text-align:center}
+  .GREEN{background:#1a7f3c}.AMBER{background:#c47f10}.RED{background:var(--red)}
+  .score{font-size:15px;color:var(--gray)}
+  .score b{font-size:34px;color:var(--navy);display:block;line-height:1}
+  .counts{display:flex;gap:10px;flex-wrap:wrap;margin-left:auto}
+  .chip{border:1px solid var(--line);border-top:3px solid var(--navy);border-radius:8px;padding:8px 14px;text-align:center;background:#fbfcfd;min-width:78px}
+  .chip .n{font-size:22px;font-weight:800;color:var(--navy)}
+  .chip.bad .n{color:var(--red)}.chip.bad{border-top-color:var(--red)}
+  .chip .l{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray)}
+  section{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin-bottom:16px}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--navy);border-bottom:2px solid var(--line);padding-bottom:6px;margin:0 0 10px}
+  .item{padding:9px 12px;border-radius:7px;margin-bottom:7px;font-size:13.5px;line-height:1.45}
+  .block{background:#fdecec;border-left:4px solid var(--red)}
+  .warn{background:#fdf5e6;border-left:4px solid #c47f10}
+  .ok{background:#eaf6ee;border-left:4px solid #1a7f3c}
+  .item .f{font-weight:700;color:var(--navy)}
+  .item .m{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#7a2b2b;background:#fff;padding:1px 5px;border-radius:4px}
+  .item .ctx{color:var(--gray);font-size:12px}
+  .files{columns:2;font-size:12.5px;color:var(--gray)}
+  .files div{break-inside:avoid;padding:2px 0}
+  .muted{color:var(--gray);font-size:12px}
+  .foot{color:var(--gray);font-size:12px;margin-top:8px}
+  code{background:#eef2f7;padding:1px 6px;border-radius:4px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="t">🛡️ DATA ROOM READINESS — the MDB firewall</div>
+  <a href="/index.html">← Mission Control</a>
+</header>
+<div class="wrap">
+  <div id="content"><p class="muted">Loading readiness report…</p></div>
+  <div class="foot" id="foot"></div>
+</div>
+<script>
+const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function gate(name){return name.replace(/_/g,' ');}
+async function load(){
+  let d;
+  try{ d=await (await fetch('/data/data-room-readiness.json?t='+Date.now())).json(); }
+  catch(e){ document.getElementById('content').innerHTML='<section><b>Could not load the readiness report.</b><br><span class="muted">Run <code>python3 scripts/data_room_integrity.py</code> to generate it.</span></section>'; return; }
+  const c=d.counts||{};
+  let h='';
+  h+='<div class="hero">';
+  h+='<div class="badge '+esc(d.status)+'">'+esc(d.status)+'</div>';
+  h+='<div class="score">readiness score<b>'+esc(d.score)+'</b>/100</div>';
+  h+='<div class="counts">';
+  h+='<div class="chip '+(c.block? 'bad':'')+'"><div class="n">'+(c.block||0)+'</div><div class="l">Block</div></div>';
+  h+='<div class="chip"><div class="n">'+(c.warn||0)+'</div><div class="l">Warn</div></div>';
+  h+='<div class="chip '+(c.missing_gates? 'bad':'')+'"><div class="n">'+(c.missing_gates||0)+'</div><div class="l">Gaps</div></div>';
+  h+='<div class="chip"><div class="n">'+(c.scanned||0)+'</div><div class="l">Scanned</div></div>';
+  h+='</div></div>';
+
+  if((d.blocks||[]).length){
+    h+='<section><h2>✗ Blocking — cannot ship until cleared</h2>';
+    d.blocks.forEach(f=>{h+='<div class="item block"><span class="f">'+esc(f.file)+'</span> — '+esc(f.rule)+
+      (f.match?'<br><span class="m">'+esc(f.match)+'</span>':'')+(f.context?' <span class="ctx">…'+esc(f.context)+'</span>':'')+'</div>';});
+    h+='</section>';
+  }
+  const miss=(d.governance&&d.governance.missing)||[];
+  if(miss.length){
+    h+='<section><h2>✗ Missing governance gates (C1–C4)</h2>';
+    miss.forEach(g=>{h+='<div class="item block"><span class="f">'+esc(gate(g))+'</span></div>';});
+    h+='</section>';
+  }
+  const pres=(d.governance&&d.governance.present)||{};
+  if(Object.keys(pres).length){
+    h+='<section><h2>✓ Governance gates present</h2>';
+    Object.keys(pres).forEach(g=>{h+='<div class="item ok"><span class="f">'+esc(gate(g))+'</span> <span class="muted">— '+pres[g].length+' doc(s)</span></div>';});
+    h+='</section>';
+  }
+  if((d.warns||[]).length){
+    h+='<section><h2>• Warnings (fix, not fatal)</h2>';
+    d.warns.forEach(f=>{h+='<div class="item warn"><span class="f">'+esc(f.file)+'</span> — '+esc(f.rule)+(f.match?' <span class="m">'+esc(f.match)+'</span>':'')+'</div>';});
+    h+='</section>';
+  }
+  h+='<section><h2>Scanned — active investor set</h2><div class="files">';
+  (d.scanned_files||[]).forEach(f=>{h+='<div>• '+esc(f)+'</div>';});
+  h+='</div>';
+  if((d.not_text_scanned||[]).length){
+    h+='<p class="muted" style="margin-top:10px">Not text-scanned (xlsx/pdf — figure-checking is phase 2): '+d.not_text_scanned.map(esc).join(', ')+'</p>';
+  }
+  h+='</section>';
+  document.getElementById('content').innerHTML=h;
+  document.getElementById('foot').innerHTML='Generated '+esc(d.generated)+' · archive (<code>_ARCHIVE_Superseded/</code>) is walled off by design · re-run: <code>python3 scripts/data_room_integrity.py</code> · auto-refreshes every 60s';
+}
+load(); setInterval(load,60000);
+</script>
+</body>
+</html>

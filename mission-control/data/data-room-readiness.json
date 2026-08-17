@@ -1,0 +1,66 @@
+{
+  "generated": "2026-08-16T21:37:44",
+  "status": "GREEN",
+  "score": 94,
+  "counts": {
+    "block": 0,
+    "warn": 2,
+    "missing_gates": 0,
+    "scanned": 6,
+    "not_text_scanned": 0
+  },
+  "blocks": [],
+  "warns": [
+    {
+      "file": "data-room/Navy_Commission/DATA_ROOM_MANIFEST.md",
+      "severity": "WARN",
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~3d (may predate a locked figure)"
+    },
+    {
+      "file": "data-room/Navy_Commission/EXOS_Navy_Commission_Presentation_2026-08-11.pptx",
+      "severity": "WARN",
+      "rule": "bare 'audited'",
+      "match": "audited",
+      "context": "Profitable in 2025 \u00b7 102% four-year revenue CAGR \u00b7 audited figures in the data room"
+    }
+  ],
+  "governance": {
+    "present": {
+      "C3_fairness_opinion (Eqvista engaged)": [
+        "data-room/Exos_SeriesA/DATA_ROOM_MANIFEST.md",
+        "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_StrategicDeck_2026-08-13_CURRENT.pptx",
+        "drafts/Exos_Strategic_Capital_Deck_2026-08-13.pptx"
+      ],
+      "C4_listing_narrative (private now / TXSE dated+conditioned)": [
+        "data-room/Exos_SeriesA/DATA_ROOM_MANIFEST.md",
+        "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_StrategicDeck_2026-08-13_CURRENT.pptx",
+        "data-room/Navy_Commission/EXOS_Navy_Commission_Presentation_2026-08-11.pptx",
+        "drafts/Exos_Strategic_Capital_Deck_2026-08-13.pptx"
+      ],
+      "C1_reconciliation_tab (DCF/market behind recon)": [
+        "data-room/Exos_SeriesA/DATA_ROOM_MANIFEST.md",
+        "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md"
+      ],
+      "C2_base_upside (contracted base; TACFI/entX labeled upside)": [
+        "data-room/Exos_SeriesA/DATA_ROOM_MANIFEST.md",
+        "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_StrategicDeck_2026-08-13_CURRENT.pptx",
+        "data-room/Navy_Commission/DATA_ROOM_MANIFEST.md",
+        "data-room/Navy_Commission/EXOS_Navy_Commission_Presentation_2026-08-11.pptx",
+        "drafts/Exos_Strategic_Capital_Deck_2026-08-13.pptx"
+      ]
+    },
+    "missing": []
+  },
+  "scanned_files": [
+    "data-room/Exos_SeriesA/DATA_ROOM_MANIFEST.md",
+    "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md",
+    "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_StrategicDeck_2026-08-13_CURRENT.pptx",
+    "data-room/Navy_Commission/DATA_ROOM_MANIFEST.md",
+    "data-room/Navy_Commission/EXOS_Navy_Commission_Presentation_2026-08-11.pptx",
+    "drafts/Exos_Strategic_Capital_Deck_2026-08-13.pptx"
+  ],
+  "not_text_scanned": []
+}
