@@ -46,6 +46,9 @@ STATE= os.path.join(WS, "logs", "decision-send-state.json")
 LOG  = os.path.join(WS, "logs", "decision-send-watcher.log")
 TO   = "jquinn@exosaero.com"          # ALWAYS Jon; never external
 FROM = "jquinnexo@pm.me"
+# A finished deliverable is ONLY ever one of these. We NEVER attach code/build scripts (.py/.js/.sh),
+# data (.json/.csv/.log), or notebooks — attaching those is what filled Jon's inbox with useless files.
+DELIVERABLE_EXT = (".docx", ".pdf", ".pptx", ".xlsx")
 FILE_RX = re.compile(r"((?:drafts|captures|tasks|submissions-archive)/[\w./\- ]+?\.(?:docx|pdf|md|txt|pptx|xlsx))", re.I)
 SEND_RX = re.compile(r"\b(re-?send|send it|send me|send to me|send the draft|email me|for me to send|send drafted|send response)\b", re.I)
 # Jon 2026-07-31: a decision whose ONLY action is "deliver this draft to your inbox to send" is
@@ -85,7 +88,8 @@ def _plausible(path, it):
     """resolved filename must share a significant token with the decision title/relatedItem."""
     fn = os.path.basename(path).lower()
     stop = {"send","draft","drafted","response","email","the","to","for","me","review",
-            "outreach","followup","plan","this","week","capital","exos","nasa","john","jon"}
+            "outreach","followup","plan","this","week","capital","exos","nasa","john","jon",
+            "form","submit","ready","overdue","days","day","sent","build","final"}
     toks = {w.lower() for w in re.findall(r"[A-Za-z]{4,}",
             f"{it.get('title','')} {it.get('relatedItem','')}") if w.lower() not in stop}
     return any(t in fn for t in toks)
@@ -110,7 +114,8 @@ def resolve_draft(it):
                 p = os.path.join(WS, m.group(1).strip())
                 if os.path.exists(p) and _plausible(p, it): return p
     # 3) fuzzy: significant title words -> best matching file in drafts/
-    stop = {"send","draft","drafted","response","email","the","to","for","me","review","a","of","and"}
+    stop = {"send","draft","drafted","response","email","the","to","for","me","review","a","of","and",
+            "form","submit","ready","overdue","days","day","sent","build","final","plan","this"}
     words = [w.lower() for w in re.findall(r"[A-Za-z]{4,}", it.get("title","")) if w.lower() not in stop]
     if words:
         scored=[]
@@ -118,6 +123,8 @@ def resolve_draft(it):
             d=os.path.join(WS,root)
             if not os.path.isdir(d): continue
             for fn in os.listdir(d):
+                # only ever consider finished deliverables — never build scripts / code / data files
+                if not fn.lower().endswith(DELIVERABLE_EXT): continue
                 s=sum(1 for w in words if w in fn.lower())
                 if s>0: scored.append((s, os.path.join(d,fn)))
         scored.sort(key=lambda x:x[0], reverse=True)
@@ -148,8 +155,9 @@ def send(it, draft):
             # NEVER fall back to a raw .md/.txt — Jon works from Word only. Drop the attachment
             # instead and let the note point him at the source path.
             print("md->docx failed, dropping attachment (no raw .md):", str(e)[:80]); att = None
-    # Belt-and-suspenders: if anything still points at a raw markdown/text file, do not attach it.
-    if att and att.lower().endswith((".md", ".txt")):
+    # Belt-and-suspenders: attach ONLY a finished deliverable. Anything else (raw .md/.txt, or a
+    # build script / code / data file that slipped through resolution) is dropped, not emailed.
+    if att and not att.lower().endswith(DELIVERABLE_EXT):
         att = None
     m=EmailMessage(); m["From"]=FROM; m["To"]=to
     title=it.get("title","(decision)")
@@ -175,6 +183,31 @@ def is_deliver_to_jon(it):
     return bool(DELIVER_TO_JON.search(blob))
 
 
+# A proposedAction that DESCRIBES the delivery action rather than BEING the draft — auto-delivering
+# these produces a content-free email (Jon 2026-08-02). Recognize and skip them unless a real draft
+# file is attached.
+META_ACTION = re.compile(r"^\s*(approve send\b|on yes[,;: ]|on approval\b|exo delivers\b|exo drafts\b|"
+                         r"jon forwards\b|jon,?\s+per\b|verify\b|forward (all|the) |deliver the drafted\b)", re.I)
+
+
+def has_deliverable_content(it, draft):
+    """True only if there's something REAL to deliver: a resolved draft file, or a proposedAction
+    that is an actual draft body (addressed + substantial) — not a meta-instruction / multi-doc pointer."""
+    if draft:
+        return True
+    pa = (it.get("proposedAction") or "").strip()
+    if not pa or META_ACTION.search(pa):
+        return False
+    if re.search(r"exo delivers each|exo drafts a|delivers?\s+(?:each|the)\s+letter|each letter to your inbox", pa, re.I):
+        return False
+    # A proposedAction that instructs delivering a draft to someone to send (e.g. "deliver the
+    # drafted email to nmilburn@… to send") is a routing instruction, not the draft itself. Without
+    # a resolved draft file there is nothing to deliver — skip rather than send an empty email.
+    if re.search(r"\bdeliver\b.{0,80}?\bto send\b", pa, re.I):
+        return False
+    return len(pa) >= 200  # a genuine inline draft body, not a one-line instruction
+
+
 def close_decision(did, note):
     """Mark a decision answered/auto-delivered in decisions.json (atomic), so it leaves the box."""
     raw = load_json(DEC, [])
@@ -183,7 +216,7 @@ def close_decision(did, note):
     now = datetime.now(timezone.utc).isoformat()
     for d in arr:
         if str(d.get("id")) == str(did):
-            d["status"] = "answered"; d["answer"] = "Auto-delivered to your inbox (you requested it)"
+            d["status"] = "answered"; d["answer"] = "Auto-delivered to owner's inbox (ready to send)"
             d["note"] = (d.get("note") or "") + f" [{note}]"; d["answeredAt"] = now; d["answeredBy"] = "auto-deliver"
     tmp = DEC + ".tmp"
     with open(tmp, "w") as f:
@@ -192,19 +225,23 @@ def close_decision(did, note):
 
 
 def auto_deliver(it, draft):
-    """Email Jon the ready draft (proposedAction body + file if resolvable) — internal only."""
-    m = EmailMessage(); m["From"] = FROM; m["To"] = "jquinn@exosaero.com"
+    """Email the ready draft to the decision OWNER's own inbox (they send it) — internal only.
+    Routes to assignedTo per the decisions-route-to-assignee rule; falls back to Jon only when the
+    owner is not an internal exosaero.com address. NEVER external."""
+    to = recipient(it)
+    m = EmailMessage(); m["From"] = FROM; m["To"] = to
     title = it.get("title", "(draft)")
-    m["Subject"] = f"[Ready to send — you requested this] {title}"
-    body = (f"You asked for this — here it is, ready to send from your own email (not sent externally by the system).\n\n"
+    m["Subject"] = f"[Ready to send — from you] {title}"
+    body = (f"This draft is ready to send from your own email (it was NOT sent externally by the system — "
+            f"you review it and hit send yourself).\n\n"
             f"{it.get('proposedAction','')}\n\n"
-            f"{('Attached: '+os.path.basename(draft)) if draft and not draft.lower().endswith(('.md','.txt')) else ''}\n"
-            f"(auto-delivered — no decision-box approval needed for things you requested.)")
+            f"{('Attached: '+os.path.basename(draft)) if draft and draft.lower().endswith(DELIVERABLE_EXT) else ''}\n"
+            f"(auto-delivered to your inbox from your pending Decisions — internal only, never external.)")
     m.set_content(body)
-    if draft and not draft.lower().endswith((".md", ".txt")) and os.path.exists(draft):
+    if draft and draft.lower().endswith(DELIVERABLE_EXT) and os.path.exists(draft):
         ct, _ = mimetypes.guess_type(draft); ct = ct or "application/octet-stream"; mt, st = ct.split("/", 1)
         with open(draft, "rb") as f: m.add_attachment(f.read(), maintype=mt, subtype=st, filename=os.path.basename(draft))
-    p = subprocess.run(["msmtp", "-a", "protonmail", "jquinn@exosaero.com"], input=bytes(m), capture_output=True, timeout=60)
+    p = subprocess.run(["msmtp", "-a", "protonmail", to], input=bytes(m), capture_output=True, timeout=60)
     return p.returncode == 0, (p.stderr.decode()[:200] if p.returncode else "")
 
 
@@ -222,6 +259,12 @@ def main():
         if mode == "--baseline":
             done[key] = "1"; continue
         draft = resolve_draft(it)
+        if not has_deliverable_content(it, draft):
+            # meta-instruction / multi-doc with no attachable draft — do NOT send an empty email.
+            # Leave the decision OPEN for proper handling; mark processed so we don't recheck endlessly.
+            done[key] = "skip-nocontent"
+            log(f"SKIP auto-deliver (no attachable draft; meta/multi-doc): {did} '{it.get('title')}'")
+            continue
         ok, err = auto_deliver(it, draft)
         if ok:
             close_decision(did, "auto-delivered on request; no approval needed")
