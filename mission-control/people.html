@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Performance — Mission Control</title>
+<style>
+  :root{--navy:#0a1628;--card:#0f1e38;--text:#e8edf5;--muted:#8aa0bd;
+    --accent:#0080ff;--green:#22c55e;--red:#ff4444;--yellow:#eab308;--orange:#ff8c33;--purple:#a855f7;--line:#1c3052;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--navy);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:18px 24px 60px}
+  a.back{color:var(--accent);text-decoration:none;font-size:13px}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:6px 0 14px}
+  h1{font-size:22px;margin:2px 0 2px} .sub{color:var(--muted);font-size:13px}
+  .tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  button{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:8px;
+    padding:6px 12px;font-size:12px;cursor:pointer}
+  button:hover{border-color:var(--accent)}
+  button.active{border-color:var(--accent);color:var(--accent)}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:10px;padding:12px 14px}
+  .kpi .n{font-size:26px;font-weight:700} .kpi .l{color:var(--muted);font-size:12px;margin-top:2px}
+  .kpi.warn{border-left-color:var(--yellow)} .kpi.bad{border-left-color:var(--red)}
+  .kpi.good{border-left-color:var(--green)} .kpi.purple{border-left-color:var(--purple)}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;user-select:none}
+  th:hover{color:var(--text)}
+  tbody tr{cursor:pointer} tbody tr:hover{background:rgba(255,255,255,.03)}
+  tr.totrow{background:rgba(0,128,255,.06);font-weight:700} tr.totrow td{border-top:2px solid var(--line)}
+  .name{font-weight:600} .role{color:var(--muted);font-size:11px;font-weight:400;margin-left:6px}
+  .z{color:var(--muted);opacity:.45}
+  .b{font-weight:700}
+  .warnv{color:var(--yellow)} .badv{color:var(--red)} .goodv{color:var(--green)}
+  .bar{height:6px;border-radius:4px;background:var(--line);overflow:hidden;min-width:70px;display:inline-block;vertical-align:middle}
+  .bar>span{display:block;height:100%;background:var(--accent)}
+  .det{background:#0b1830;border:1px solid var(--line);border-top:none}
+  .det td{white-space:normal;text-align:left}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .chip{font-size:11px;padding:3px 9px;border-radius:20px;border:1px solid var(--line);color:var(--muted)}
+  .chip b{color:var(--text)}
+  .sechead{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em;margin:22px 0 8px}
+  .note{color:var(--muted);font-size:12px;margin-top:14px;line-height:1.5}
+  .spark{color:var(--muted);font-size:11px}
+  @media print{
+    body{background:#fff;color:#111;padding:0}
+    .tools,a.back{display:none} .kpi,table,.det{border-color:#ccc}
+    .kpi{background:#f4f6fa} table{background:#fff} th{color:#555}
+    tr.totrow{background:#eef4ff}
+  }
+</style>
+</head>
+<body>
+<a class="back" href="/index.html">← Mission Control</a>
+<div class="head">
+  <div>
+    <h1>👥 Team Performance</h1>
+    <div class="sub" id="sub">Loading live task metrics…</div>
+  </div>
+  <div class="tools">
+    <button id="pWeek" class="active" onclick="setWin('week')">Done · 7-day</button>
+    <button id="pMonth" onclick="setWin('month')">Done · 30-day</button>
+    <span style="color:var(--line)">│</span>
+    <button onclick="location.reload()">↻ Refresh</button>
+    <button onclick="window.print()">🖨 Print</button>
+  </div>
+</div>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="sechead">Per-employee — click a row for detail · click a column to sort</div>
+<table id="tbl">
+  <thead><tr>
+    <th data-k="name">Employee</th>
+    <th data-k="open" title="Active tasks (To Do / In Progress / Queued / Blocked)">Open</th>
+    <th data-k="inprog" title="In Progress">In&nbsp;Prog</th>
+    <th data-k="high" title="Open tasks with priority ≥ 80">High&nbsp;Pri</th>
+    <th data-k="overdue" title="Active with a due date in the past">Overdue</th>
+    <th data-k="dueweek" title="Active, due within 7 days">Due&nbsp;≤7d</th>
+    <th data-k="blocked">Blocked</th>
+    <th data-k="doneWin" title="Completed in the selected window">Closed</th>
+    <th data-k="total">Total</th>
+    <th data-k="loadShare" title="Share of all open work">Load</th>
+  </tr></thead>
+  <tbody id="rows"></tbody>
+</table>
+
+<div id="extra"></div>
+
+<div class="note" id="note"></div>
+
+<script>
+let DATA=null, WIN='week', sortK='open', sortDir=-1, openRow=null;
+const F=(v)=> v?('<span class="b">'+v+'</span>'):'<span class="z">0</span>';
+const roleOf={};
+function doneWin(p){return WIN==='week'?p.done7:p.done30}
+function fetchData(){
+  fetch('/api/people-metrics',{credentials:'same-origin'})
+   .then(r=>{if(!r.ok)return r.json().then(j=>Promise.reject(j.error||('HTTP '+r.status)));return r.json()})
+   .then(d=>{DATA=d;render()})
+   .catch(e=>{document.getElementById('sub').innerHTML='<span class="badv">Could not load metrics: '+e+'</span>';});
+}
+function setWin(w){WIN=w;document.getElementById('pWeek').classList.toggle('active',w==='week');
+  document.getElementById('pMonth').classList.toggle('active',w==='month');render();}
+function sortBy(k){if(sortK===k){sortDir*=-1}else{sortK=k;sortDir=(k==='name')?1:-1}render();}
+function fmtOverdue(v){return v?('<span class="badv b">'+v+'</span>'):'<span class="z">0</span>'}
+function fmtHigh(v){return v?('<span class="warnv b">'+v+'</span>'):'<span class="z">0</span>'}
+function fmtBlocked(v){return v?('<span class="badv b">'+v+'</span>'):'<span class="z">0</span>'}
+function fmtDone(v){return v?('<span class="goodv b">'+v+'</span>'):'<span class="z">0</span>'}
+
+function render(){
+  if(!DATA)return;
+  const t=DATA.totals, maxOpen=Math.max(1,...DATA.employees.map(e=>e.open));
+  const g=new Date(DATA.generated_at);
+  document.getElementById('sub').innerHTML=
+    'Live from Mission Control · '+DATA.task_count.toLocaleString()+' tasks · '+
+    DATA.employees.length+' people · generated '+g.toLocaleString();
+  // KPI strip
+  const winLabel=WIN==='week'?'last 7 days':'last 30 days';
+  const closedWin=DATA.employees.reduce((s,e)=>s+doneWin(e),0);
+  document.getElementById('kpis').innerHTML=[
+    ['','Open across team',t.open.toLocaleString()],
+    ['warn','High-priority open',t.high.toLocaleString()],
+    ['bad','Overdue',t.overdue.toLocaleString()],
+    ['warn','Due ≤ 7 days',t.dueweek.toLocaleString()],
+    ['bad','Blocked',t.blocked.toLocaleString()],
+    ['good','Closed · '+winLabel,closedWin.toLocaleString()],
+  ].map(k=>`<div class="kpi ${k[0]}"><div class="n">${k[2]}</div><div class="l">${k[1]}</div></div>`).join('');
+
+  // sort
+  const rows=DATA.employees.slice().sort((a,b)=>{
+    let av,bv;
+    if(sortK==='doneWin'){av=doneWin(a);bv=doneWin(b)}
+    else if(sortK==='loadShare'){av=a.open;bv=b.open}
+    else{av=a[sortK];bv=b[sortK]}
+    if(sortK==='name')return sortDir*String(av).localeCompare(String(bv));
+    return sortDir*((av||0)-(bv||0));
+  });
+  const totOpen=t.open||1;
+  document.getElementById('rows').innerHTML=rows.map(e=>{
+    const share=Math.round(100*e.open/totOpen);
+    const barPct=Math.round(100*e.open/maxOpen);
+    const rl=(roleOf[e.name]||'');
+    return `<tr onclick="toggle('${e.name.replace(/'/g,"\\'")}')">
+      <td class="name">${e.name}${rl?'<span class="role">'+rl+'</span>':''}</td>
+      <td class="b">${e.open}</td>
+      <td>${F(e.inprog)}</td>
+      <td>${fmtHigh(e.high)}</td>
+      <td>${fmtOverdue(e.overdue)}</td>
+      <td>${e.dueweek?('<span class="warnv">'+e.dueweek+'</span>'):'<span class="z">0</span>'}</td>
+      <td>${fmtBlocked(e.blocked)}</td>
+      <td>${fmtDone(doneWin(e))}</td>
+      <td class="spark">${e.total}</td>
+      <td><span class="bar" title="${share}% of open work"><span style="width:${barPct}%"></span></span> ${share}%</td>
+    </tr>`+detailRow(e);
+  }).join('');
+  // totals row
+  document.getElementById('rows').insertAdjacentHTML('beforeend',
+    `<tr class="totrow"><td>Team total (${DATA.employees.length})</td>
+     <td>${t.open}</td><td>${t.inprog}</td><td class="warnv">${t.high}</td>
+     <td class="badv">${t.overdue}</td><td class="warnv">${t.dueweek}</td><td class="badv">${t.blocked}</td>
+     <td class="goodv">${closedWin}</td><td>${t.total}</td><td>100%</td></tr>`);
+  // header sort indicators
+  document.querySelectorAll('#tbl thead th').forEach(th=>{
+    const k=th.dataset.k; th.innerHTML=th.innerHTML.replace(/ [▲▼]$/,'');
+    if(k===sortK) th.innerHTML+=' '+(sortDir<0?'▼':'▲');
+  });
+  // extra sections
+  let ex='';
+  if(DATA.exo){const e=DATA.exo;
+    ex+=`<div class="sechead">Exo (AI agent) — automation workload, shown separately</div>
+    <table><thead><tr><th>Agent</th><th>Open</th><th>In Prog</th><th>Blocked</th><th>Overdue</th>
+    <th>Closed · ${winLabel}</th><th>Total</th></tr></thead><tbody>
+    <tr><td class="name">🤖 Exo</td><td class="b">${e.open}</td><td>${F(e.inprog)}</td>
+    <td>${fmtBlocked(e.blocked)}</td><td>${fmtOverdue(e.overdue)}</td><td>${fmtDone(doneWin(e))}</td>
+    <td class="spark">${e.total}</td></tr></tbody></table>`;
+  }
+  const others=(DATA.others||[]).filter(o=>o.open>0);
+  if(others.length){
+    ex+=`<div class="sechead">Queues &amp; unrostered owners (open work not tied to an employee)</div><div class="chips">`+
+      others.map(o=>`<span class="chip"><b>${o.name}</b> · ${o.open} open</span>`).join('')+`</div>`;
+  }
+  document.getElementById('extra').innerHTML=ex;
+
+  document.getElementById('note').innerHTML=
+    'Attribution uses the task <b>owner</b> field, normalized across name variants '+
+    '(e.g. Jon / John Quinn / Jquinn → one identity; shared "Name + N others" tasks credit the named lead). '+
+    '<b>Open</b> = active states (To&nbsp;Do, In&nbsp;Progress, Queued, Blocked). '+
+    '<b>High Pri</b> = priority ≥ 80. <b>Closed</b> counts tasks with a completion timestamp in the window. '+
+    'Read-only — this page never changes tasks. Reassign work from the board or with an <code>@Exobot reassign to &lt;name&gt;</code> note.';
+}
+
+function detailRow(e){
+  const winLabel=WIN==='week'?'7-day':'30-day';
+  const bl=e.total?Math.round(100*e.done/e.total):0;
+  return `<tr class="det" id="det-${cssId(e.name)}" style="display:none"><td colspan="10">
+    <div class="chips">
+      <span class="chip">Active: <b>${e.open}</b></span>
+      <span class="chip">In progress: <b>${e.inprog}</b></span>
+      <span class="chip">Blocked: <b>${e.blocked}</b></span>
+      <span class="chip">Overdue: <b>${e.overdue}</b></span>
+      <span class="chip">Due ≤7d: <b>${e.dueweek}</b></span>
+      <span class="chip">High priority: <b>${e.high}</b></span>
+      <span class="chip">No due date: <b>${e.nodue}</b></span>
+      <span class="chip">Closed 7d: <b>${e.done7}</b></span>
+      <span class="chip">Closed 30d: <b>${e.done30}</b></span>
+      <span class="chip">Closed all-time: <b>${e.done}</b></span>
+      ${e.topCategory?`<span class="chip">Main area: <b>${e.topCategory}</b> (${e.topCategoryCount})</span>`:''}
+    </div></td></tr>`;
+}
+function cssId(n){return n.replace(/[^a-z0-9]/gi,'_')}
+function toggle(name){
+  const id='det-'+cssId(name);const el=document.getElementById(id);if(!el)return;
+  el.style.display=el.style.display==='none'?'table-row':'none';
+}
+document.querySelectorAll('#tbl thead th').forEach(th=>th.addEventListener('click',()=>sortBy(th.dataset.k)));
+// build role lookup from /api/me is not enough (only self); roles are static-labeled below
+Object.assign(roleOf,{
+ 'John Quinn':'CEO','Lizi Quinn':'Ops/Finance','Neil Milburn':'Chief Engineer','Steve Norsworthy':'Propulsion',
+ 'Phil Eaton':'Production','Kyle Ballard':'Finance','Russ Blink':'Engineering','Mike Talley':'Engineering',
+ 'Toshihisa Kumazawa':'Intl BD','Andrew Overman':'Engineering','Victor Castilleja':'Engineering','Joseph LaGrave':'Engineering'
+});
+fetchData();
+</script>
+</body>
+</html>

@@ -1654,6 +1654,110 @@ const server = http.createServer((req, res) => {
   }
 
   // ── TASKS API (Supabase-backed) ──
+  // ── Management report: per-employee task metrics (live from Supabase) ──────────────
+  // Read-only analytics for the weekly leadership review. Admin/manager only (this exposes
+  // whole-company workload, not just the caller's tasks). Names are normalized to a canonical
+  // roster because owner strings drift (Jon / John Quinn / Jquinn / "Jon+Exo" all = one person).
+  if (req.url.split('?')[0] === '/api/people-metrics' && req.method === 'GET') {
+    const s = getSession(req);
+    if (!s) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    if (!(s.role === 'admin' || s.role === 'manager')) {
+      res.writeHead(403, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Management report — leadership access only.' }));
+      return;
+    }
+    (async () => {
+      try {
+        const COLS = 'id,title,owner,state,priority,due_date,completed_at,assigned_to,category';
+        let rows = [];
+        for (let page = 0, offset = 0; page < 50; page++) {
+          const r = await supabaseRequest('GET', `tasks?select=${COLS}&order=id&limit=1000&offset=${offset}`);
+          const chunk = Array.isArray(r.data) ? r.data : [];
+          rows = rows.concat(chunk);
+          if (chunk.length < 1000) break;
+          offset += 1000;
+        }
+
+        // Canonical roster (from users.json) + known name aliases → one identity per person.
+        const roster = loadUsers().filter(u => u.active).map(u => u.name);
+        const ALIAS = {
+          'jon': 'John Quinn', 'john quinn': 'John Quinn', 'jquinn': 'John Quinn', 'jon+exo': 'John Quinn', 'j quinn': 'John Quinn', 'quinn': 'John Quinn',
+          'lizi quinn': 'Lizi Quinn', 'lquinn': 'Lizi Quinn', 'elizabeth quinn': 'Lizi Quinn', 'lizi': 'Lizi Quinn',
+          'neil milburn': 'Neil Milburn', 'neil': 'Neil Milburn', 'nmilburn': 'Neil Milburn',
+          'steve norsworthy': 'Steve Norsworthy', 'steven norsworthy': 'Steve Norsworthy', 'snorsworthy': 'Steve Norsworthy', 'steve': 'Steve Norsworthy',
+          'phil eaton': 'Phil Eaton', 'phillip eaton': 'Phil Eaton', 'peaton': 'Phil Eaton', 'phil': 'Phil Eaton',
+          'kyle ballard': 'Kyle Ballard', 'kballard': 'Kyle Ballard', 'kyle': 'Kyle Ballard',
+          'russ blink': 'Russ Blink', 'russell blink': 'Russ Blink', 'rblink': 'Russ Blink', 'russ': 'Russ Blink',
+          'mike talley': 'Mike Talley', 'michael talley': 'Mike Talley', 'mtalley': 'Mike Talley', 'mike': 'Mike Talley',
+          'toshihisa kumazawa': 'Toshihisa Kumazawa', 'toshi': 'Toshihisa Kumazawa', 'toshihisa': 'Toshihisa Kumazawa',
+          'andrew overman': 'Andrew Overman', 'aoverman': 'Andrew Overman',
+          'victor castilleja': 'Victor Castilleja', 'vcastilleja': 'Victor Castilleja', 'victor': 'Victor Castilleja',
+          'joseph lagrave': 'Joseph LaGrave', 'jlagrave': 'Joseph LaGrave',
+          'exo': 'Exo (AI)',
+        };
+        const HUMANS = ['John Quinn', 'Lizi Quinn', 'Neil Milburn', 'Steve Norsworthy', 'Phil Eaton', 'Kyle Ballard', 'Russ Blink', 'Mike Talley', 'Toshihisa Kumazawa', 'Andrew Overman', 'Victor Castilleja', 'Joseph LaGrave'];
+        function canon(raw) {
+          if (!raw) return '(unassigned)';
+          // strip shared-task suffix "Name + 2 others" → attribute to the named lead
+          let o = String(raw).replace(/\s*\+\s*\d+\s+other[s]?\s*$/i, '').trim();
+          const k = o.toLowerCase();
+          if (ALIAS[k]) return ALIAS[k];
+          return o;
+        }
+
+        const now = Date.now(), DAY = 86400000;
+        const wk = now + 7 * DAY, cut7 = now - 7 * DAY, cut30 = now - 30 * DAY;
+        const ACTIVE = new Set(['To Do', 'In Progress', 'Queued', 'Blocked', 'Open']);
+        const pd = (x) => { if (!x) return null; const t = Date.parse(x); return isNaN(t) ? null : t; };
+        const M = {};
+        const blank = () => ({ total: 0, open: 0, inprog: 0, blocked: 0, overdue: 0, dueweek: 0, high: 0, nodue: 0, done: 0, done7: 0, done30: 0, cats: {} });
+        for (const t of rows) {
+          const p = canon(t.owner || t.assigned_to);
+          const m = (M[p] = M[p] || blank());
+          m.total++;
+          const st = t.state, pr = t.priority || 0;
+          if (ACTIVE.has(st)) {
+            m.open++;
+            if (st === 'In Progress') m.inprog++;
+            if (st === 'Blocked') m.blocked++;
+            if (pr >= 80) m.high++;
+            if (t.category) m.cats[t.category] = (m.cats[t.category] || 0) + 1;
+            const dd = pd(t.due_date);
+            if (dd) { if (dd < now) m.overdue++; else if (dd <= wk) m.dueweek++; }
+            else m.nodue++;
+          } else if (st === 'Done') {
+            m.done++;
+            const ca = pd(t.completed_at);
+            if (ca && ca >= cut7) m.done7++;
+            if (ca && ca >= cut30) m.done30++;
+          }
+        }
+        // top category per person (their biggest active workstream)
+        for (const p in M) {
+          const c = M[p].cats; let best = null, bn = 0;
+          for (const k in c) if (c[k] > bn) { bn = c[k]; best = k; }
+          M[p].topCategory = best; M[p].topCategoryCount = bn; delete M[p].cats;
+        }
+        const people = Object.keys(M).map(name => ({ name, ...M[name] }));
+        const isHuman = (n) => HUMANS.includes(n) || roster.includes(n);
+        const employees = people.filter(p => isHuman(p.name)).sort((a, b) => b.open - a.open);
+        const exo = people.find(p => p.name === 'Exo (AI)') || null;
+        const others = people.filter(p => !isHuman(p.name) && p.name !== 'Exo (AI)')
+          .sort((a, b) => (b.open + b.total) - (a.open + a.total));
+        const totals = employees.reduce((s, p) => {
+          for (const k of ['total', 'open', 'inprog', 'blocked', 'overdue', 'dueweek', 'high', 'done7', 'done30']) s[k] += p[k];
+          return s;
+        }, { total: 0, open: 0, inprog: 0, blocked: 0, overdue: 0, dueweek: 0, high: 0, done7: 0, done30: 0 });
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ generated_at: new Date().toISOString(), task_count: rows.length, totals, employees, exo, others }));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: String(e && e.message || e) }));
+      }
+    })();
+    return;
+  }
+
   if (req.url.split('?')[0] === '/api/tasks' && req.method === 'GET') {
     (async () => {
       try {
