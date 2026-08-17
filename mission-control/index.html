@@ -594,6 +594,7 @@
 </div>
 
 <div id="errorBanner" class="error-banner" style="display:none"></div>
+<div id="drillBar" style="display:none;align-items:center;gap:16px;background:#12345c;border:1px solid #1c3052;border-left:4px solid #0080ff;border-radius:8px;padding:9px 14px;margin:0 0 10px;font-size:0.9rem;color:#e8edf5;flex-wrap:wrap"></div>
 
 <div class="board">
   <div class="column" data-col="blocked">
@@ -827,6 +828,50 @@ let currentUser = null;
 let panelOpen = false;   // true while a task detail/edit panel is open — pause auto-refresh so edits/notes aren't wiped
 const REFRESH_INTERVAL = 30000;
 
+// ── Team-Performance drill-through (people.html links here as ?person=<name>&flt=<...>) ──
+// Uses the SAME normalization as /api/people-metrics so the board's filtered count matches the
+// number Jon clicked on the dashboard (the board's own canonOwner buckets differently — e.g.
+// "Jon+Exo" separate, "Jon" not "John Quinn" — so we can't reuse it here).
+let urlPerson = '', urlFlt = '';
+const PERSON_ALIAS = {
+  'jon':'John Quinn','john quinn':'John Quinn','jquinn':'John Quinn','jon+exo':'John Quinn','j quinn':'John Quinn','quinn':'John Quinn',
+  'lizi quinn':'Lizi Quinn','lquinn':'Lizi Quinn','elizabeth quinn':'Lizi Quinn','lizi':'Lizi Quinn',
+  'neil milburn':'Neil Milburn','neil':'Neil Milburn','nmilburn':'Neil Milburn',
+  'steve norsworthy':'Steve Norsworthy','steven norsworthy':'Steve Norsworthy','snorsworthy':'Steve Norsworthy','steve':'Steve Norsworthy',
+  'phil eaton':'Phil Eaton','phillip eaton':'Phil Eaton','peaton':'Phil Eaton','phil':'Phil Eaton',
+  'kyle ballard':'Kyle Ballard','kballard':'Kyle Ballard','kyle':'Kyle Ballard',
+  'russ blink':'Russ Blink','russell blink':'Russ Blink','rblink':'Russ Blink','russ':'Russ Blink',
+  'mike talley':'Mike Talley','michael talley':'Mike Talley','mtalley':'Mike Talley','mike':'Mike Talley',
+  'toshihisa kumazawa':'Toshihisa Kumazawa','toshi':'Toshihisa Kumazawa','toshihisa':'Toshihisa Kumazawa',
+  'andrew overman':'Andrew Overman','aoverman':'Andrew Overman',
+  'victor castilleja':'Victor Castilleja','vcastilleja':'Victor Castilleja','victor':'Victor Castilleja',
+  'joseph lagrave':'Joseph LaGrave','jlagrave':'Joseph LaGrave',
+  'exo':'Exo (AI)'
+};
+function personCanon(raw){
+  if(!raw) return '(unassigned)';
+  var o = String(raw).replace(/\s*\+\s*\d+\s+other[s]?\s*$/i,'').trim();
+  var k = o.toLowerCase();
+  return PERSON_ALIAS[k] || o;
+}
+const ACTIVE_STATES = ['To Do','In Progress','Queued','Blocked','Open'];
+function applyPeopleParams(){
+  const p = new URLSearchParams(location.search);
+  urlPerson = p.get('person') || '';
+  urlFlt = (p.get('flt') || '').toLowerCase();
+  const bar = document.getElementById('drillBar');
+  if(!bar) return;
+  if(urlPerson){
+    const flLabel = {open:'Open',overdue:'Overdue',next7:'Due ≤ 7 days',high:'High priority',blocked:'Blocked',inprog:'In progress'}[urlFlt] || 'All';
+    bar.style.display='flex';
+    bar.innerHTML = '<span>📊 Team Performance drill-through — <strong>'+urlPerson+'</strong> · '+flLabel+
+      '</span> <a href="#" onclick="clearDrill();return false;" style="color:#fff;text-decoration:underline">clear filter ✕</a>'+
+      ' <a href="/people.html" style="color:#cfe3ff;text-decoration:none">← back to dashboard</a>';
+  } else { bar.style.display='none'; }
+}
+function clearDrill(){ urlPerson=''; urlFlt=''; history.replaceState({},'','/index.html');
+  const bar=document.getElementById('drillBar'); if(bar) bar.style.display='none'; render(); if(typeof renderStats==='function') renderStats(); }
+
 // ── ROLE-AWARE UI ──
 async function initUserRole() {
   try {
@@ -835,7 +880,8 @@ async function initUserRole() {
       currentUser = me;
       currentUserRole = me.role;
       // Non-admins land on THEIR tasks — the full board is 650+ items and they'd never find their own.
-      if (me.role !== 'admin') {
+      // Exception: a Team-Performance drill-through (?person=) must show that person, not force 'mine'.
+      if (me.role !== 'admin' && !urlPerson) {
         currentFilter = 'mine';
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'mine'));
         render();
@@ -1071,6 +1117,18 @@ function getFilteredTasks() {
       if (due === 'next30') return d >= now - day && d <= new Date(now.getTime() + 30 * day) && t.state !== 'Done';
       return true;
     });
+  }
+  // Team-Performance drill-through: person + metric, matching the dashboard's exact definitions.
+  if (urlPerson) {
+    filtered = filtered.filter(t => personCanon(t.owner || t.assigned_to) === urlPerson);
+    const now = Date.now(), day = 86400000;
+    const active = t => ACTIVE_STATES.includes(t.state);
+    if (urlFlt === 'open') filtered = filtered.filter(active);
+    else if (urlFlt === 'inprog') filtered = filtered.filter(t => t.state === 'In Progress');
+    else if (urlFlt === 'blocked') filtered = filtered.filter(t => t.state === 'Blocked');
+    else if (urlFlt === 'high') filtered = filtered.filter(t => active(t) && (t.priority || 0) >= 80);
+    else if (urlFlt === 'overdue') filtered = filtered.filter(t => active(t) && t.due_date && new Date(t.due_date).getTime() < now);
+    else if (urlFlt === 'next7') filtered = filtered.filter(t => active(t) && t.due_date && new Date(t.due_date).getTime() >= now && new Date(t.due_date).getTime() <= now + 7 * day);
   }
   return filtered;
 }
@@ -1941,6 +1999,7 @@ async function deleteDocument(docId) {
 }
 
 // ── INIT ──
+applyPeopleParams();      // parse ?person=&flt= from the Team-Performance drill-through
 loadTasks(true);
 
 // ── ASK EXOBOT — in-MC chat widget (per-user Exobot session) ──

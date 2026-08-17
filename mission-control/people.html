@@ -71,7 +71,7 @@
 
 <div class="kpis" id="kpis"></div>
 
-<div class="sechead">Per-employee — click a row for detail · click a column to sort</div>
+<div class="sechead">Per-employee — click a number to open those tasks on the board · click a row for detail · click a column header to sort</div>
 <table id="tbl">
   <thead><tr>
     <th data-k="name">Employee</th>
@@ -110,6 +110,14 @@ function fmtOverdue(v){return v?('<span class="badv b">'+v+'</span>'):'<span cla
 function fmtHigh(v){return v?('<span class="warnv b">'+v+'</span>'):'<span class="z">0</span>'}
 function fmtBlocked(v){return v?('<span class="badv b">'+v+'</span>'):'<span class="z">0</span>'}
 function fmtDone(v){return v?('<span class="goodv b">'+v+'</span>'):'<span class="z">0</span>'}
+// drill-through link into the board (filtered to this person + metric); zeros stay plain
+function dl(name,flt,inner,val){
+  if(!val) return inner;
+  const href='/index.html?person='+encodeURIComponent(name)+'&flt='+flt;
+  return '<a href="'+href+'" title="Open these tasks on the board" '+
+    'style="color:inherit;text-decoration:none;border-bottom:1px dotted rgba(255,255,255,.35)" '+
+    'onclick="event.stopPropagation()">'+inner+'</a>';
+}
 
 function render(){
   if(!DATA)return;
@@ -146,12 +154,12 @@ function render(){
     const rl=(roleOf[e.name]||'');
     return `<tr onclick="toggle('${e.name.replace(/'/g,"\\'")}')">
       <td class="name">${e.name}${rl?'<span class="role">'+rl+'</span>':''}</td>
-      <td class="b">${e.open}</td>
-      <td>${F(e.inprog)}</td>
-      <td>${fmtHigh(e.high)}</td>
-      <td>${fmtOverdue(e.overdue)}</td>
-      <td>${e.dueweek?('<span class="warnv">'+e.dueweek+'</span>'):'<span class="z">0</span>'}</td>
-      <td>${fmtBlocked(e.blocked)}</td>
+      <td class="b">${dl(e.name,'open','<span class="b">'+e.open+'</span>',e.open)}</td>
+      <td>${dl(e.name,'inprog',F(e.inprog),e.inprog)}</td>
+      <td>${dl(e.name,'high',fmtHigh(e.high),e.high)}</td>
+      <td>${dl(e.name,'overdue',fmtOverdue(e.overdue),e.overdue)}</td>
+      <td>${dl(e.name,'next7',(e.dueweek?('<span class="warnv">'+e.dueweek+'</span>'):'<span class="z">0</span>'),e.dueweek)}</td>
+      <td>${dl(e.name,'blocked',fmtBlocked(e.blocked),e.blocked)}</td>
       <td>${fmtDone(doneWin(e))}</td>
       <td class="spark">${e.total}</td>
       <td><span class="bar" title="${share}% of open work"><span style="width:${barPct}%"></span></span> ${share}%</td>
