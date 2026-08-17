@@ -751,3 +751,41 @@ END-READY-ACTION -->
 | 2026-08-14 | **MONTANA: NO NEW DEVELOPMENTS.** Waiting on Edgar / POA + Governor Signing Agreement. No nag. | WAITING — NO NAG |
 | 2026-08-14 | **NM LEDA: STILL NEEDS JON AUTH.** ASA meeting is in Albuquerque THIS WEEK — NM EDD / Sierra County co-applicant path live. Submit before September. | PENDING JON |
 | 2026-08-14 | **⭐ BEST-LEVERAGE: (1) Jon sends Sara Harris (MDC) email TODAY — TSC SEARF $800K just confirmed behind this corridor. (2) Jon sends Utah Nelson/Millner/Braceras email by AUG 16 — in his inbox. (3) Jon decides on ASA Albuquerque attendance — 72 hours, room block closed.** | PRIORITY |
+
+## DECISION LOG — 2026-08-17
+
+| 2026-08-17 | **⚡ UTAH AUG 17 TRIGGER FIRES — 4 DAYS TO COMMITTEE. NELSON EMAIL STATUS: SENT JULY 28.** Outreach registry confirms Jon sent Andrew Nelson (RS&H, andrew.nelson@rsandh.com) an email on July 28 at 12:56 — subject: "Exos Aerospace — FAA-licensed VTVL suborbital operator for Concho Valley Use Case 5." Dedup blocked the Aug 17 final-touch (correctly, same recipient already reached). **No reply from Nelson.** Meeting is Aug 21. **Jon action needed: Send a brief follow-up to Nelson's July 28 email.** Subject line: "RE: Exos Aerospace — Follow-Up Before Aug 21 Committee." Body: "Andrew, circling back on my July 28 note ahead of Thursday. Happy to provide a written Utah-specific operator data package (Delta/Green River sites) for the economic record by Wednesday. Let me know." This is a manual send — dedup is blocking the READY-ACTION system. LOI to Millner + Braceras sent July 23; Aug 10 follow-up sent; both still unanswered. | ⚡ JON: MANUAL FOLLOW-UP TO NELSON TODAY |
+| 2026-08-17 | **MDC CORRIDOR: CONSULTANT STILL NOT ANNOUNCED — SARA HARRIS EMAIL REMAINS UNSENT.** Search finds no public announcement of West Texas Aerospace Corridor Master Plan consultant selection as of Aug 17. RFP closed July 31; "early August" window cited in RFP is now 17+ days overdue. Sara Harris READY-ACTION (key: midland-mdc-corridor-anchor-operator-aug2026) confirmed in Jon's inbox. TSC SEARF $800K is behind the corridor study. El Paso County OSIDA is the lead grantee; corridor operator list will be named in the study. Every day without Exos on that list is a day the study shapes the operator landscape without us. **Jon: Sara Harris email is in your inbox. This is the #1 outstanding send.** | ⚡ SEND TODAY — JON INBOX |
+| 2026-08-17 | **ASA ANNUAL MEETING IS NOW — AUG 17-20, ALBUQUERQUE.** 34th ASA Annual Meeting + 7th State Aerospace Policy Summit has started today. Hotel Albuquerque + Hotel Chaco. Includes Spaceport America tour, Sandia NL, Kirtland AFB. Attendees: state lt. governors, governor-appointed delegates, legislators, aerospace industry, all 50 states + territories. National Chair: Lt. Gov. Josh Tenorio of Guam. NM is the host sponsor. Montana, Utah, and NM program contacts are likely all in Albuquerque this week. Room block was closed but walkup hotel rooms may still be available. This is the single best NCE networking venue of the year. **Practical reality: Jon is in Greenville, likely cannot attend last-minute. Flag for Exo to seek attendee list or post-event contact intel. If any Exos partner/affiliate (e.g., Toshi for Japan-Pacific angle, Garza for TSC angle) can represent, worth a call today.** | INTELLIGENCE — JON CALL |
+| 2026-08-17 | **MONTANA: NO NEW DEVELOPMENTS.** No Gianforte or MT aerospace news since Janicki groundbreaking (July 10). Waiting on Edgar / POA + Governor Signing Agreement. Not nagging. | WAITING — NO NAG |
+| 2026-08-17 | **NM LEDA: STILL NEEDS JON AUTH.** ASA meeting is in Albuquerque RIGHT NOW — NM EDD context couldn't be more live. SEARF timing post-Summit postponement is uncertain; LEDA is the independent NM path that doesn't depend on TSC calendar. Sierra County co-applicant path still live. Submit before September while ASA meeting keeps NM aerospace top of mind for EDD. | PENDING JON AUTH |
+| 2026-08-17 | **SPACE FLORIDA NEW ANGLE — FLAG FOR FUTURE.** Space Florida has active Spaceport Improvement Program + new offshore launch partnership (Seagate Space, June 2026). $3.3B private investment since 2012. If Exos ever wants a Gulf Coast NCE play, Space Florida is the vehicle. Not a priority vs. current TX/UT/MT/NM tracks — archiving as a future target. | FUTURE — MONITOR |
+| 2026-08-17 | **⭐ BEST-LEVERAGE THIS WEEK: (1) ⚡ Jon sends Utah Nelson/Millner/Braceras FINAL-TOUCH today — in inbox, 4 days to Aug 21. (2) ⚡ Jon sends Sara Harris (MDC) email — still unconfirmed sent, TSC SEARF $800K behind corridor. (3) Jon decides: NM LEDA auth before September.** | PRIORITY |
+
+---
+<!-- READY-ACTION
+key: utah-nelson-final-touch-aug17
+task_title: Send Utah spaceport operator data offer to RS&H Nelson (Aug 21 committee)
+to: andrew.nelson@rsandh.com
+cc: ann.millner@le.utah.gov; cbraceras@utah.gov
+subject: Exos Aerospace — Operator Data for Utah Spaceport Economic Analysis (Aug 21 Committee)
+body: Hello Andrew,
+
+I understand you're presenting substantially more detailed findings to the Spaceport Exploration Committee on August 21, including economic modeling and governance scenarios. I want to offer something concrete for the record before your September 30 final report.
+
+Exos Aerospace is one of three FAA-licensed reusable rocket launch providers in the United States and the only operator currently selling commercial suborbital payload services. We expressed interest in the Utah process to Senator Millner and Director Braceras in July. For your operator and economic impact analysis, we can provide:
+
+- Site and infrastructure requirements for a VTVL suborbital launch operation (applicable to Delta and Green River use cases, particularly Use Case 5 vertical launch)
+- Workforce and economic anchoring data based on operational experience — jobs, local supply chain, launch cadence, training pipeline
+- BLK3 vehicle overview — the only FAA-licensed reusable suborbital platform in this performance class in the U.S.
+
+I can deliver a written data package by Wednesday, or take a brief call this week if that is more useful for your analysis.
+
+We think Utah's geography and policy direction are a strong match for what Exos does.
+
+John Quinn
+Cofounder and CEO, Exos Aerospace
++1-972-740-8355
+jquinn@exosaero.com
+
+END-READY-ACTION -->
