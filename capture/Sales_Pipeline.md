@@ -1,5 +1,5 @@
 # SALES PIPELINE — Payload BD (Sales Agent state file)
-*Single source of truth for payload sales. The Sales Agent reads + updates this each run. Goal: fill Flight 2 (135 kg @ $7,500/kg) and oversell → Flight 3, generating 50%-at-booking deposits for the Capital Bridge. Last updated: 2026-08-14 (01:30 CT).*
+*Single source of truth for payload sales. The Sales Agent reads + updates this each run. Goal: fill Flight 2 (135 kg @ $7,500/kg) and oversell → Flight 3, generating 50%-at-booking deposits for the Capital Bridge. Last updated: 2026-08-17 (01:30 CT).*
 
 ## 🚫 SENT-GATE PROTOCOL (mandatory, added 2026-07-17)
 Before staging ANY outreach draft, confirm the recipient has NOT already been emailed:
@@ -8,6 +8,7 @@ Before staging ANY outreach draft, confirm the recipient has NOT already been em
 This is why Space Tango, BioServe, SpaceMD, and NASA/Pierce are no longer served — Jon already sent them.
 
 ### Sent (reply-watch, do NOT re-serve):
+- **Draft AJ (Ravee Optics)** — SENT 2026-08-17 01:46 (hello@ravee.space) → reply-watch. DO NOT re-serve.
 - **Draft Q (BioServe/Countryman)** — SENT 2026-07-16 23:02 (countrym@colorado.edu) → reply-watch
 - **Draft O (SpaceTango/Clements)** — SENT → reply-watch
 - **Draft I (SpaceMD/Vellinger)** — SENT → reply-watch
@@ -23,6 +24,8 @@ This is why Space Tango, BioServe, SpaceMD, and NASA/Pierce are no longer served
 - **Draft Y (Varda/Bruey)** — SENT 2026-07-27 (evening) → reply-watch
 - **Draft AE (UCF/Hawking Center)** — SENT 2026-07-27 (morning) → reply-watch
 - **Draft AF (York Space/Wallinger)** — SENT 2026-07-27 (evening) → reply-watch
+- **Satellogic (Emiliano Kargieman, ek@satellogic.com)** — Lizi outreach, latest follow-up SENT 2026-08-14 (prior Jul 6 '26 + Mar '25) → reply-watch. MC task 2035. Do NOT cold re-serve.
+- **GHGSat (Mark [last name TBD], ref. Greg Frey)** — Bucket B (GHG satellite/airborne sensing → suborbital sensor/optical de-risk). Lizi outreach SENT 2026-08-14 (Bookwithme call link + PUG offer) → reply-watch. MC task 2037. Confirm Mark's full name/email → add to registry. Do NOT cold re-serve.
 *(Also confirmed sent per sent/ folder: AA-SierraSpace/Kavandi, AB-VastSpace/Haot, K-BioOrbit, L-Sanford/Jamieson, T-CapitolTech/RockSat)*
 **NOTE: Draft R_Redwire_Rush.md is STALE** — Andrew Rush left Redwire for Star Catcher ~2022; Cannito (correct CEO) already sent 7/27. Do NOT serve Rush draft.
 
@@ -64,7 +67,7 @@ Two motions off a market dislocation. (1) CHANNEL: aggregators/brokers who resel
 | 13 | **Merck Research Labs** | C | Proven repeat ISS buyer (Keytruda crystal growth); biologics formulation has screening value from suborbital; pharma budget = rounding error | $37.5K–$112.5K | ISS National Lab intermediary | Jon confirm path (ISS NL vs LinkedIn) | RESEARCHING |
 | 14 | **NCATS / Tissue Chips** (Dr. Tagle, NIH) | C | 12+ active ISS cohorts; bridges to existing NIH pursuit | TBD | NIH Capture Agent (coordinate — do NOT duplicate) | Coordinate w/ NIH agent | RESEARCHING |
 | 15 | **Texas A&M** (Dr. Kulatilaka, Reacting Flows) | A | Propulsion diagnostics; TX proximity = low integration cost | TBD | Jon TX network | Jon send Draft C (pipeline file) | RESEARCHING |
-| 16 | **Notre Dame HyperLab** (Dr. Thomas Juliano) ⭐ NEW | B/Gov partner | Hypersonic BLT/SWBLI aerothermal payload; MNDA signed 6/26; wants JOINT funding for hypersonic flight tests; BLK3 = ground-to-flight bridge + recovery; STTR/UCAH/AFRL/AFOSR-FTSI follow-on path | Flight line item inside won grant (TBD) | Existing Lizi/Neil/Jon thread | Draft sent to Lizi 6/30 to send from her (cc Jon) w/ Jon's booking link; await Lizi send + Tom reply | DRAFT W/ LIZI |
+| 16 | **Notre Dame HyperLab** (Dr. Thomas Juliano) ⭐ NEW | B/Gov partner | Hypersonic BLT/SWBLI aerothermal payload; MNDA signed 6/26; wants JOINT funding for hypersonic flight tests; BLK3 = ground-to-flight bridge + recovery; STTR/UCAH/AFRL/AFOSR-FTSI follow-on path. **8/10 mtg: converged on 2 parallel SBIR tracks — (1) nose-cone FOSS aerothermal, (2) computational aero + fin-redesign validation (Exos self-funds to start); target fly early 2027.** | Flight line item inside won grant (TBD) + Exos self-fund on aero | Existing Lizi/Neil/Jon thread | **8/10/26: 2nd working call held (Jon+Lizi+Juliano). Jon to send write-up + SBIR topics → Juliano forwards to colleagues (Kinsel=FOS; Zarr+Jemkov=computational). Full recap attached to MC task 2032.** | ACTIVE — POST-MTG |
 | 17 | **BioOrbit** (CEO TBD) ⭐ NEW | C | BOX system on ISS for large-scale protein drug production; signed Vast MOU 6/24 → actively platform-shopping post-ISS; scalable production = iteration-speed problem; suborbital runs compress time-to-clinical | $37.5K–$112.5K (5-15 kg) | Direct (contact TBD — verify on LinkedIn) | Jon send Draft K once contact confirmed | READY ✅ (contact TBD) |
 | 18 | **Sanford Stem Cell Institute (UCSD)** (PI TBD) ⭐ NEW | C | Signed Vast MOU 6/24; stem cell behavior in microgravity is time-sensitive; suborbital = fast-cycle differentiation protocol validation before ISS commitment | TBD | Direct (UCSD contact directory) | Identify PI, draft outreach | RESEARCHING |
 | 20 | **Astrobotic** (Pittsburgh) ⭐ FO-harvest | B | HD Lidar flight-tested via NASA Flight Opps → flying on Griffin-1 lunar lander; landing-sensor/avionics suborbital qual + recovery fits | TBD | Direct | Draft outreach (sensor flight-qual angle) | RESEARCHING |
@@ -1342,3 +1345,15 @@ END-READY-ACTION -->
 
 ## Run log: 2026-08-14 (05:30 CT)
 - 2026-08-14 (05:30 CT) — Sales Agent run: market sweep + 1 new lead. **0 replies, 0 kg booked. Registry: 279 entries.** Dispatch status: AZ/BA/BB auto-dispatching via launchd (no manual action needed). AJ/AW/AX still in Jon's inbox (tasks 1791/1972/1973) — **4 days waiting, send today, no blockers.** **Key market signal: Firefly Aerospace announced record Q2 results** (Payload Space Aug 13) — our Draft N (jkim@fireflyspace.com) was SENT Aug 8; Firefly's growth validates the pitch timing and means Kim's team is in a strong position to engage a partnership. Good news — reply from Kim may come. **NEW LEAD #81: Space Kinetic** — $50M Space Force OTA (announced Aug 13) for "Whirlwind" space maneuvering and deployment system; novel hardware on a hard DoD schedule = prime Bucket B; adding RESEARCHING. No new suborbital platform dislocations; New Shepard research backlog narrative remains valid; VG Q4 return = competitive context only. **Pipeline: 81 prospects, 3 auto-dispatching (AZ/BA/BB), 3 in Jon inbox (AJ/AW/AX), 4 gated, 0 kg booked.** Top 3: (1) **Jon sends AJ/AW/AX from inbox NOW** — 4 days waiting, all clean US, no blockers; (2) **Draft BB (Cowboy Space/Bhatt)** — auto-dispatching to inbox, $275M Series B, 2027 orbital deadline, highest Bucket B priority; (3) **Draft BA (CWRU/Kassemi)** — cryo microgravity PI, $2M fresh grant, Scorpius Type-5 bridge angle, auto-dispatching. Single most important move: Jon sends AJ + AW + AX.
+- **SENT CONFIRMED (auto): ek@satellogic.com** on 2026-07-06 21:00 — subject "Re: Supporting Satellogic with Rapid Payload Testing & Validation". Nudge-to-send STOPPED; reply-watch only.
+- **SENT CONFIRMED (auto): hello@ravee.space** on 2026-08-17 01:46 — subject "=?utf-8?q?Ravee_Optics_=E2=80=94_optical_hardware_validation_before_orbit?= =?utf-8?q?al_demo_-_Exos_suborbital?=". Nudge-to-send STOPPED; reply-watch only.
+
+## New leads (2026-08-17)
+
+| # | Lead | Bucket | Signal | Next action |
+|---|------|--------|--------|-------------|
+| 82 | **Turion Space** (Irvine, CA — CEO Ryan Westerdahl, ex-SpaceX) | B | $75M+ Series B (Washington Harbour Partners) Aug 12, 2026. Scaling 8→40 spacecraft/year. SDA hardware + Starfire OS. Already 2 on orbit. Novel sensors/electronics at volume = suborbital qual before production ramp. US company, clean. | **Draft BC WRITTEN — READY** (verify ryan@turionspace.com) |
+| 83 | **CesiumAstro** (Austin, TX) | B | $270M Series C (Feb 2026). Software-defined satellite comm payloads, phased-array antennas. Novel comms hardware at scale — suborbital qual angle. US company. | CEO/BD contact TBD — RESEARCHING |
+
+## Run log: 2026-08-17 (01:30 CT)
+- 2026-08-17 (01:30 CT) — Sales Agent run: registry audit + market sweep. **0 replies, 0 kg booked. Registry: 281 entries.** **SENT THIS RUN: AJ (Ravee Optics / hello@ravee.space) confirmed SENT 2026-08-17 01:46** — nudge stopped, reply-watch. Remaining pending in Jon's inbox: **AW (Gravitics), AX (ATMOS)** — tasks 1972/1973, ~6 days waiting, NO blockers, send today. Auto-dispatched to inbox (READY-ACTION fired): **AZ (K2/Kunjur), BA (CWRU/Kassemi), BB (Cowboy Space/Bhatt)** — all await Jon's review+send. **Market intel:** Turion Space $75M+ Series B (Aug 12) — scaling to 40 sats/year, SDA hardware, needs component qual at volume; **Draft BC WRITTEN — READY** (pri 83). CesiumAstro $270M Series C — phased-array comm hardware, Austin TX, RESEARCHING. Orbital (Euwyn Poon, a16z Speedrun) — AI data centers in LEO, GPU cluster satellite; Draft AI previously bounced (epoon@orbital.inc bad); need alternative contact. No new replies to any of 59+ tracked payload sends. **Pipeline: 83 prospects, 1 READY in file (BC — verify email), 5 pending Jon send (AW/AX/AZ/BA/BB), 4 gated, 0 kg booked.** Top 3 for Jon: (1) **Send AW/AX/AZ/BA/BB from inbox NOW** — all clean US companies, no blockers, oldest 6 days waiting; (2) **Draft BC (Turion/Westerdahl)** — $75M+ Series B Aug 12, hardware scaling, highest-urgency new Bucket B; (3) **Draft BB (Cowboy Space/Bhatt)** — $275M Series B, 2027 orbital deadline, in inbox. Single most important move: Jon sends batch of 5 (AW/AX/AZ/BA/BB) from inbox.
