@@ -115,8 +115,12 @@ def resolve_draft(it):
                 if os.path.exists(p) and _plausible(p, it): return p
     # 3) fuzzy: significant title words -> best matching file in drafts/
     stop = {"send","draft","drafted","response","email","the","to","for","me","review","a","of","and",
-            "form","submit","ready","overdue","days","day","sent","build","final","plan","this"}
-    words = [w.lower() for w in re.findall(r"[A-Za-z]{4,}", it.get("title","")) if w.lower() not in stop]
+            "form","submit","ready","overdue","days","day","sent","build","final","plan","this",
+            "letter","support","phase","task","your","signature"}
+    # Fuzzy on title + relatedItem + dedupeKey — the title alone (e.g. "…8 days overdue, ready for
+    # your signature") often lacks the subject tokens that name the file; relatedItem/dedupeKey carry them.
+    hay = f"{it.get('title','')} {it.get('relatedItem','')} {str(it.get('dedupeKey','')).replace('-',' ')}"
+    words = list(dict.fromkeys(w.lower() for w in re.findall(r"[A-Za-z]{3,}", hay) if w.lower() not in stop))
     if words:
         scored=[]
         for root in ("drafts","captures"):
@@ -127,9 +131,11 @@ def resolve_draft(it):
                 if not fn.lower().endswith(DELIVERABLE_EXT): continue
                 s=sum(1 for w in words if w in fn.lower())
                 if s>0: scored.append((s, os.path.join(d,fn)))
-        scored.sort(key=lambda x:x[0], reverse=True)
-        # only accept a STRONG, UNIQUELY-DOMINANT match to avoid attaching the wrong draft
-        if scored and scored[0][0]>=3 and (len(scored)==1 or scored[0][0]>scored[1][0]):
+        # Strong match = >=3 distinct significant tokens shared with the filename. When several files
+        # tie at the top score (e.g. versioned/duplicate drafts), the newest-modified wins the tiebreak
+        # instead of the item being HELD forever on an unbreakable tie.
+        scored.sort(key=lambda x:(x[0], os.path.getmtime(x[1])), reverse=True)
+        if scored and scored[0][0] >= 3:
             return scored[0][1]
     return None
 
@@ -193,7 +199,11 @@ META_ACTION = re.compile(r"^\s*(approve send\b|on yes[,;: ]|on approval\b|exo de
 def has_deliverable_content(it, draft):
     """True only if there's something REAL to deliver: a resolved draft file, or a proposedAction
     that is an actual draft body (addressed + substantial) — not a meta-instruction / multi-doc pointer."""
-    if draft:
+    # A resolved draft only counts if send() can actually ATTACH it: a finished deliverable
+    # (docx/pdf/pptx/xlsx) or a convertible source (.md/.txt). A code/data path (.py/.json/.csv/.log)
+    # would be dropped by send()'s attachment guard, leaving an empty "[Ready to send]" shell — the
+    # exact fill-my-inbox failure. So those do NOT count as deliverable content.
+    if draft and draft.lower().endswith(DELIVERABLE_EXT + (".md", ".txt")):
         return True
     pa = (it.get("proposedAction") or "").strip()
     if not pa or META_ACTION.search(pa):
@@ -248,6 +258,7 @@ def auto_deliver(it, draft):
 def main():
     mode = sys.argv[1] if len(sys.argv)>1 else ""
     st = load_json(STATE, {}); done = st.setdefault("processed", {})   # id -> updated
+    awaiting = st.setdefault("awaiting_draft", {})                       # id -> updated (held, no draft yet)
     # NEW: auto-deliver OPEN "deliver-to-Jon draft" decisions immediately + close them (no approval
     # hop for things Jon requested). Delivery is internal (his inbox); he still sends externally.
     for it in [d for d in decisions() if is_deliver_to_jon(d)]:
@@ -284,6 +295,16 @@ def main():
         if mode=="--baseline":
             done[key]=upd; continue
         if already: continue
+        # Root-cause fix (Jon 2026-08-17 "nothing here to work with / fill-my-inbox"): NEVER email a
+        # "[Ready to send]" with no actual deliverable. If no draft resolves and there's no genuine
+        # inline body, HOLD — do not send an empty context-only email. Leave it unprocessed so it
+        # self-heals the instant a draft exists; log once so the log doesn't churn every 8 min.
+        if not has_deliverable_content(it, draft):
+            if awaiting.get(key) != upd:
+                awaiting[key]=upd
+                log(f"HOLD send (no attachable draft — would be empty, NOT emailing): {did} '{it.get('title')}'")
+            continue
+        awaiting.pop(key, None)
         ok,err = send(it, draft)
         if ok:
             done[key]=upd
