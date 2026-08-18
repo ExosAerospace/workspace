@@ -848,6 +848,34 @@
         "domain": "gmail.com",
         "summary": "VERIFIED lead author of AIAA-2025-0113 'Structural Health Monitoring for Launch Vehicle Reusability Using Fiber Bragg Grating Written Optical Fiber' (VADL, w/ Andrew Noonan & Prof. Anilkumar); AIAA RLV Technical Committee. Bullseye BLK3 recoverable FBG/SHM re-flight-certification fit; adjacent to Exos's own SHM/FBG interest. Personal gmail = may have graduated."
       }
+    },
+    {
+      "id": "dd-independent-shiva-bernath",
+      "name": "Independent (Shiva Bernath)",
+      "headline": "VERIFIED launch-vehicle fluids/vehicle-systems engineer; former Relativity Space (Terran 1 fluid systems, concept->flight) + SpaceX; Vanderb",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Lizi 8/18 follow-up to 7/30 initial; await booking-link reply or referral. Marketing/PUG releasable; any technical data or contract routes through Jon + export screen (ITAR/EAR).",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): VERIFIED launch-vehicle fluids/vehicle-systems engineer; former Relativity Space (Terran 1 fluid systems, concept->flight) + SpaceX; Vanderbilt aerospace heritage. Direct-fit BLK3 recoverable propulsion/fluid-system/pressure-thermal validation prospect."
+      ],
+      "contacts": [
+        {
+          "name": "Shivaprem (Shiva) Bernath",
+          "email": "shivabernath@gmail.com"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "gmail.com",
+        "summary": "VERIFIED launch-vehicle fluids/vehicle-systems engineer; former Relativity Space (Terran 1 fluid systems, concept->flight) + SpaceX; Vanderbilt aerospace heritage. Direct-fit BLK3 recoverable propulsion/fluid-system/pressure-thermal validation prospect."
+      }
     }
   ]
 }
