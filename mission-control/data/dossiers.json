@@ -507,6 +507,34 @@
         "domain": "csefire.com",
         "summary": "Legit US combustion R&D firm (Columbia, MD); active SBIR/DoD contractor. Michael Klassen = VP & Principal Research Engineer (~28 yrs, VERIFIED via CSE team page/ZoomInfo/SignalHire); also VP/CTO at affiliated LPP Combustion. Outbound payload prospect, not a solicitor; US firm, marketing/PUG releasable."
       }
+    },
+    {
+      "id": "dd-politecnico-di-torino-dimeas",
+      "name": "Politecnico di Torino (DIMEAS)",
+      "headline": "Legit; fixed-term Asst Prof, Dept of Mech & Aerospace Eng (DIMEAS), Politecnico di Torino; high-speed/hypersonic aerospace systems + LH2 hyp",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Lizi re-nudge sent; hold booking link open, confirm new meeting time; frame student flight-campaign + aerothermal/hypersonic instrumentation angle",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): Legit; fixed-term Asst Prof, Dept of Mech & Aerospace Eng (DIMEAS), Politecnico di Torino; high-speed/hypersonic aerospace systems + LH2 hypersonic transport; verified polito.it staff page, Scholar, LinkedIn. Engaged BLK3 payload prospect ('really really great!'), booked then rescheduled. Same city as Exos Aerospace Italia (Torino). NATO ally = marketing OK; ITAR screen any later data/hardware transfer."
+      ],
+      "contacts": [
+        {
+          "name": "Dr. Roberta Fusaro",
+          "email": "roberta.fusaro@polito.it"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "polito.it",
+        "summary": "Legit; fixed-term Asst Prof, Dept of Mech & Aerospace Eng (DIMEAS), Politecnico di Torino; high-speed/hypersonic aerospace systems + LH2 hypersonic transport; verified polito.it staff page, Scholar, LinkedIn. Engaged BLK3 payload prospect ('really really great!'), booked then rescheduled. Same city as Exos Aerospace Italia (Torino). NATO ally = marketing OK; ITAR screen any later data/hardware transfer."
+      }
     }
   ]
 }
