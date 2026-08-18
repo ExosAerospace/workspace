@@ -708,6 +708,90 @@
         "domain": "purdue.edu",
         "summary": "VERIFIED member of Prof. Terry Meyer's Applied Diagnostics & Propulsion Technologies Lab at Purdue (Maurice J. Zucrow Labs, largest US academic propulsion lab). Laser/optical propulsion & detonation diagnostics = direct BLK3 propulsion-instrumentation/pressure/thermal/sensor recoverable-validation fit + strategic RDRE/detonation-adjacency conduit. Appears grad-researcher; PI Meyer / lab staff may be better decision POC."
       }
+    },
+    {
+      "id": "dd-spacepharma",
+      "name": "SpacePharma",
+      "headline": "Legit Israeli microgravity-lab company (SPAd/DIDO autonomous labs; flew SPENCER w/ Roche + ESA). Declined BLK3 Flight-2 as a payload CUSTOME",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Keep warm, no re-pursuit as cold customer. Trigger outreach only when an Exos stakeholder/customer wants microgravity work w/o their own hardware. Israeli co: marketing OK; any data/ICD/CAD or hardware integration routes through Jon + export screen (ITAR/EAR).",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): Legit Israeli microgravity-lab company (SPAd/DIDO autonomous labs; flew SPENCER w/ Roche + ESA). Declined BLK3 Flight-2 as a payload CUSTOMER (suborbital not their forte) but opened a REVERSE door: Exos may propose SpacePharma's SPAd/DIDO hardware to Exos microgravity customers who lack flight-ready payloads. Relationship flips prospect -> potential payload-hardware supplier/partner."
+      ],
+      "contacts": [
+        {
+          "name": "Yossi Yamin (Chairman, R&D CEO)",
+          "email": "yamin.yossi@spacepharma.health"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "spacepharma.health",
+        "summary": "Legit Israeli microgravity-lab company (SPAd/DIDO autonomous labs; flew SPENCER w/ Roche + ESA). Declined BLK3 Flight-2 as a payload CUSTOMER (suborbital not their forte) but opened a REVERSE door: Exos may propose SpacePharma's SPAd/DIDO hardware to Exos microgravity customers who lack flight-ready payloads. Relationship flips prospect -> potential payload-hardware supplier/partner."
+      }
+    },
+    {
+      "id": "dd-vanderbilt-university-aerospace-design-laboratory-vadl",
+      "name": "Vanderbilt University \u2014 Aerospace Design Laboratory (VADL)",
+      "headline": "VERIFIED VADL member (Prof. Anilkumar lab); MS Mech Eng, aerospace structures + structural health monitoring; also I&T Engineer at SpaceX. D",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Await reply to Lizi 8/18 follow-up; if Jonathan has left VADL for SpaceX, redirect to Prof. Amrutur Anilkumar / current VADL team lead. Dedupe vs Andrew Noonan (same lab). Marketing OK; data/contract routes through Jon + export screen.",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): VERIFIED VADL member (Prof. Anilkumar lab); MS Mech Eng, aerospace structures + structural health monitoring; also I&T Engineer at SpaceX. Direct BLK3 recoverable structures/sensors/SHM fit. US public university."
+      ],
+      "contacts": [
+        {
+          "name": "Jonathan Zak",
+          "email": "jonathan.w.zak@vanderbilt.edu"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "vanderbilt.edu",
+        "summary": "VERIFIED VADL member (Prof. Anilkumar lab); MS Mech Eng, aerospace structures + structural health monitoring; also I&T Engineer at SpaceX. Direct BLK3 recoverable structures/sensors/SHM fit. US public university."
+      }
+    },
+    {
+      "id": "dd-ohio-state-university-aerospace-research-center-arc",
+      "name": "Ohio State University \u2014 Aerospace Research Center (ARC)",
+      "headline": "VERIFIED Research Technician 4 + PhD student at OSU Aerospace Research Center (hypersonics; Large Area Reflected Shock Tunnel, Mach 6-7). Di",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Awaiting reply to Lizi 8/18 follow-up. On response qualify recoverable hardware + hold Flight-2 bay; if Zack defers, get intro to ARC PI/director (Prof. Jesse Little). Marketing OK (US public university); ANY technical data exchange export-screened (ITAR/EAR \u2014 hypersonics adjacency) + routes through Jon.",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): VERIFIED Research Technician 4 + PhD student at OSU Aerospace Research Center (hypersonics; Large Area Reflected Shock Tunnel, Mach 6-7). Direct BLK3 recoverable pressure/thermal/flow-diagnostics/materials validation fit; shock-tunnel-vs-flight-data comparison is the exact pitch."
+      ],
+      "contacts": [
+        {
+          "name": "Zachary (Zack) Stutsman",
+          "email": "stutsman.7@buckeyemail.osu.edu"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "osu.edu",
+        "summary": "VERIFIED Research Technician 4 + PhD student at OSU Aerospace Research Center (hypersonics; Large Area Reflected Shock Tunnel, Mach 6-7). Direct BLK3 recoverable pressure/thermal/flow-diagnostics/materials validation fit; shock-tunnel-vs-flight-data comparison is the exact pitch."
+      }
     }
   ]
 }
