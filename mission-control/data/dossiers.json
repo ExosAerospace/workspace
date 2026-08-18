@@ -792,6 +792,34 @@
         "domain": "osu.edu",
         "summary": "VERIFIED Research Technician 4 + PhD student at OSU Aerospace Research Center (hypersonics; Large Area Reflected Shock Tunnel, Mach 6-7). Direct BLK3 recoverable pressure/thermal/flow-diagnostics/materials validation fit; shock-tunnel-vs-flight-data comparison is the exact pitch."
       }
+    },
+    {
+      "id": "dd-oliver-wyman-marsh-mclennan-aerospace-defense-practice",
+      "name": "Oliver Wyman (Marsh McLennan) \u2014 Aerospace & Defense practice",
+      "headline": "VERIFIED Associate/Consultant, Oliver Wyman A&D practice (strategy/ops/M&A for commercial+gov clients); AIAA Reusable Launch Vehicle Technic",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Follow-up sent 8/18; on reply qualify which client/program in his network has recoverable hardware for BLK3 early-2027 validation, or secure intro to the right OW A&D partner. Marketing releasable; any tech data beyond PUG routes through Jon + export screen.",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): VERIFIED Associate/Consultant, Oliver Wyman A&D practice (strategy/ops/M&A for commercial+gov clients); AIAA Reusable Launch Vehicle Technical Committee member; Vanderbilt B.E. Mech Eng. Top-tier legit firm. Strong referral-conduit fit into A&D programs needing recoverable suborbital validation."
+      ],
+      "contacts": [
+        {
+          "name": "Zachary Friedman",
+          "email": "zachary.friedman@oliverwyman.com"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "oliverwyman.com",
+        "summary": "VERIFIED Associate/Consultant, Oliver Wyman A&D practice (strategy/ops/M&A for commercial+gov clients); AIAA Reusable Launch Vehicle Technical Committee member; Vanderbilt B.E. Mech Eng. Top-tier legit firm. Strong referral-conduit fit into A&D programs needing recoverable suborbital validation."
+      }
     }
   ]
 }
