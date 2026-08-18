@@ -479,6 +479,34 @@
         "domain": "vanderbilt.edu",
         "summary": "Legitimate R1 US university (Vanderbilt) ADL contact; outbound payload prospect, not a solicitor; US .edu, marketing/PUG releasable"
       }
+    },
+    {
+      "id": "dd-combustion-science-engineering-inc-cse",
+      "name": "Combustion Science & Engineering, Inc. (CSE)",
+      "headline": "Legit US combustion R&D firm (Columbia, MD); active SBIR/DoD contractor. Michael Klassen = VP & Principal Research Engineer (~28 yrs, VERIFI",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Lizi driving 8/18 follow-up; if no reply by ~8/25, one nudge or ask for the right CSE flight-testing contact / referral he offered",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): Legit US combustion R&D firm (Columbia, MD); active SBIR/DoD contractor. Michael Klassen = VP & Principal Research Engineer (~28 yrs, VERIFIED via CSE team page/ZoomInfo/SignalHire); also VP/CTO at affiliated LPP Combustion. Outbound payload prospect, not a solicitor; US firm, marketing/PUG releasable."
+      ],
+      "contacts": [
+        {
+          "name": "Michael (Mike) Klassen",
+          "email": "mklassen@csefire.com"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "csefire.com",
+        "summary": "Legit US combustion R&D firm (Columbia, MD); active SBIR/DoD contractor. Michael Klassen = VP & Principal Research Engineer (~28 yrs, VERIFIED via CSE team page/ZoomInfo/SignalHire); also VP/CTO at affiliated LPP Combustion. Outbound payload prospect, not a solicitor; US firm, marketing/PUG releasable."
+      }
     }
   ]
 }
