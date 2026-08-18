@@ -619,6 +619,34 @@
         "domain": "aero.org",
         "summary": "Principal Director, Vehicle Systems Division (leads 120-person team); Aerospace Technical Fellow, 20+ yrs; authored Aerospace's launch-vehicle reusability assessment framework + mission assurance processes (Falcon/OmegA NSSL cert). VERIFIED legit senior FFRDC leader; direct BLK3 structures/sensors/thermal/reusable-flight-validation fit + strong referral conduit."
       }
+    },
+    {
+      "id": "dd-esric-european-space-resources-innovation-centre-list",
+      "name": "ESRIC (European Space Resources Innovation Centre / LIST)",
+      "headline": "Verified R&T Scientist in Lunar at ESRIC (dept of Luxembourg Institute of Science & Technology/LIST; backed by Luxembourg Space Agency + ESA",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Lizi 8/18 follow-up to 7/30 BLK3 payload outreach; awaiting reply/intro. Foreign public research org: marketing OK, any data/contract step routes through Jon + export screen.",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): Verified R&T Scientist in Lunar at ESRIC (dept of Luxembourg Institute of Science & Technology/LIST; backed by Luxembourg Space Agency + ESA). Legit institutional lunar-resources research org. Luxembourg = ally/neutral; marketing OK."
+      ],
+      "contacts": [
+        {
+          "name": "Dr. Trunal Kashinath Patil",
+          "email": "trunal.patil@esric.lu"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "esric.lu",
+        "summary": "Verified R&T Scientist in Lunar at ESRIC (dept of Luxembourg Institute of Science & Technology/LIST; backed by Luxembourg Space Agency + ESA). Legit institutional lunar-resources research org. Luxembourg = ally/neutral; marketing OK."
+      }
     }
   ]
 }
