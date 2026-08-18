@@ -16,6 +16,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 | Innovation First (Tony Norman) | Partner/robotics | RMPC robotics + Greenville | T. Norman | OUTREACH DRAFTED | Awaiting send |
 | **Fortastra ("Mike")** | Commercial space / on-orbit asset protection | Sensor suite needs real-space validation (radiation, thermal, ESD, deploy mechanics) before first orbital ride — classic suborbital de-risk fit | Mike (full name TBD) | OUTREACH SENT (2026-07-29, Jon) | Research Mike + seed round; call-prep brief; follow up ~5-7 days if no reply. MC task #1697 |
 | **Dr. Farid K. Rafla** | Aerothermal / hypersonic (indiv. researcher, AFRL heritage) | Published aerothermal-structural coupling for hypersonic reentry (AIAA 2019-3132, cited 8×); BLK3's real high-speed environment + hardware recovery is a direct model-validation fit for thermal structures / advanced materials | farid.rafla@gmail.com (personal) | OUTREACH SENT (Lizi: 2026-07-29 + follow-up 2026-08-18) | Lizi driving. If no reply to 8/18 follow-up by ~8/25, one more nudge or ask for referral to right person on his team. Owner: Lizi |
+| **John Welsh** | Aerospace / propulsion (indiv. contact; prospect OR referral conduit) | Aerospace + propulsion background; Lizi pitched him as either a direct payload prospect or a warm path to "someone else on your team or network." Fit = propulsion instrumentation, thermal/pressure, advanced materials, sensor validation on recoverable BLK3 flight | jwelshr@gmail.com (personal) | OUTREACH SENT (Lizi: 2026-07-30 + follow-up 2026-08-18) | Lizi driving. Company/role unknown — enrich (LinkedIn, current program). If no reply to 8/18 follow-up by ~8/25, one nudge or ask for the referral he hinted at. Owner: Lizi |
 
 ## PIPELINE (engine to enrich: POC, email, active programs, funding)
 
@@ -297,8 +298,17 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Why BLK3 fits:** Axiom's research clients are exactly our Bucket C — they're ISS customers who need interim platforms during the transition. Axiom cannot do suborbital (they're building orbital infrastructure). BLK3 suborbital is NOT a competitor to Axiom — it's a complementary interim platform their clients can use to maintain research cadence during the gap. Pitch: "Partner with us as the suborbital bridge for your research clients while AxStation ramps up — we keep their programs alive and TRL-advancing; they come to you ready for orbital operations."
 - **Why urgent:** Axiom's commercial model depends on their clients having continuous research programs. If ISS retires and clients have nowhere to fly, they lose the customer relationship. BLK3 as a bridge HELPS Axiom retain clients.
 - **Funding:** Axiom has raised $500M+ and has NASA contracts. Their research clients are commercial — can pay.
-- **Status:** RESEARCHING
-- **Next action:** Identify warmest path to Axiom research team. Check if Jon has any Axiom contact from Space Symposium or other conferences.
+- **Status:** ENGAGED ✅ — live call held 2026-08-18 (John + Lizi + Chyree Batton)
+- **PRIMARY POC (engaged):** **Chyree Batton** — Global Lead, Advanced Materials Innovation, Axiom Space — **Chyree@axiomspace.com**. 4 yrs at Axiom; ex-materials industry (thermoelectrics/semi-volatile compounds); runs Axiom's advanced-materials POC program (identifies materials that benefit from microgravity manufacturing, builds POCs/tech demos toward AxStation).
+- **Secondary POC:** Dr. Lucie Low — Chief Scientist (research@axiomspace.com).
+- **Call intel (2026-08-18):**
+  - Axiom "big bets": **semiconductors, energy harvesting/storage, quantum**; photonics resonated. Doing "the most of any CLD" on advanced materials + bio. Intuitive Machines is Axiom's **sister company** (ties to Scorpius Type-5 tanks flown on IM Odysseus/Athena).
+  - **Fit is short-duration qualification, NOT long-run manufacturing.** Their manufacturing POCs run ~100 hrs (not a BLK3 fit), but Chyree is explicitly hunting a **"pre-project"** — qualify a part, turn something on, test a microgravity-sensitive step in a short window. She'd previously talked to Virgin Galactic / Blue Origin for exactly this; BLK3 flies ~same trajectory as Blue Origin (now offline).
+  - **Battery qualification = strong hook.** Their #1 customer pain is power (customers want 700–900 kW). For 7–8 min a big battery works; BLK3 can carry ~15 kW in 300 lb, surge to kW, expose to vacuum → battery/cooling qual, even welding-in-space POC (high amp draw).
+  - Value prop she liked: **de-risk hardware before an expensive Station slot**, recover it in days; cheaper/more accessible than overburdened ground vacuum-chamber infrastructure.
+  - Payload-bay note shared: keep-out zone for LOx lines (can also heat/cool the bay). RHU first-flight (early 2027) mentioned as future lunar-night-survival tech.
+- **Chyree's ask / next step:** "Send over the guide and I'll take a look and let you know if I have questions." → **Lizi sending Payload User Guide** (follow-up email 2026-08-18). She invited us to "throw payloads across the fence" — positioned Exos as "an extended member of your team."
+- **Next action:** Lizi send PUG + follow-up email (drafted 2026-08-18). Then propose a concrete short-duration pre-qual POC (battery/vacuum or parts-qual) as the first paid demo. Logged to CRM (Chyree@axiomspace.com) + MC opp PAY-1754.
 
 ---
 #### 12. NCATS / Tissue Chips in Space — NIH Research Continuity
