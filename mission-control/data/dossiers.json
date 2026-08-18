@@ -876,6 +876,34 @@
         "domain": "gmail.com",
         "summary": "VERIFIED launch-vehicle fluids/vehicle-systems engineer; former Relativity Space (Terran 1 fluid systems, concept->flight) + SpaceX; Vanderbilt aerospace heritage. Direct-fit BLK3 recoverable propulsion/fluid-system/pressure-thermal validation prospect."
       }
+    },
+    {
+      "id": "dd-sara-tsai-vanderbilt-vadl-alum-gnc-me",
+      "name": "Sara Tsai (Vanderbilt VADL alum, GNC/ME)",
+      "headline": "VERIFIED Vanderbilt mechanical-engineering alum + Vanderbilt Aerospace Design Laboratory (VADL) member (full rocket design process; VADL 201",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Lizi 8/18 follow-up to 7/30 initial; on reply qualify GNC/avionics recoverable experiment for BLK3 early-2027 envelope OR get referral to right team; CONVERGE VADL cluster (Noonan/Zak/Colicci/Tsai) on one owner; export-screen anything beyond Payload Guide.",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): VERIFIED Vanderbilt mechanical-engineering alum + Vanderbilt Aerospace Design Laboratory (VADL) member (full rocket design process; VADL 2018 national win); GNC/rocketry background. Legit individual, marketing-releasable BLK3 payload/GNC prospect. 4th VADL contact in pipeline."
+      ],
+      "contacts": [
+        {
+          "name": "Sara Tsai",
+          "email": "stsai19@gmail.com"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "gmail.com",
+        "summary": "VERIFIED Vanderbilt mechanical-engineering alum + Vanderbilt Aerospace Design Laboratory (VADL) member (full rocket design process; VADL 2018 national win); GNC/rocketry background. Legit individual, marketing-releasable BLK3 payload/GNC prospect. 4th VADL contact in pipeline."
+      }
     }
   ]
 }
