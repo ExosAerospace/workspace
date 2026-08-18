@@ -647,6 +647,34 @@
         "domain": "esric.lu",
         "summary": "Verified R&T Scientist in Lunar at ESRIC (dept of Luxembourg Institute of Science & Technology/LIST; backed by Luxembourg Space Agency + ESA). Legit institutional lunar-resources research org. Luxembourg = ally/neutral; marketing OK."
       }
+    },
+    {
+      "id": "dd-umbra-umbra-lab-inc",
+      "name": "Umbra (Umbra Lab, Inc.)",
+      "headline": "US-based SAR satellite prime (Santa Barbara, CA); Todd Master VERIFIED as Chief Strategy Officer (ex-COO, ex-DARPA PM, ex-Orbital ATK, ex-US",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Lizi 8/18 follow-up sent to Todd Master (after 7/30 initial); await meeting booking or intro to component-team POC. Umbra is US = no export gate on marketing.",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): US-based SAR satellite prime (Santa Barbara, CA); Todd Master VERIFIED as Chief Strategy Officer (ex-COO, ex-DARPA PM, ex-Orbital ATK, ex-USAF space officer). Umbra Space Systems now sells sensors/avionics/comms/power components = direct BLK3 recoverable-flight-validation fit. Domestic co, marketing OK."
+      ],
+      "contacts": [
+        {
+          "name": "Todd Master",
+          "email": "todd.master@umbra.space"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "umbra.space",
+        "summary": "US-based SAR satellite prime (Santa Barbara, CA); Todd Master VERIFIED as Chief Strategy Officer (ex-COO, ex-DARPA PM, ex-Orbital ATK, ex-USAF space officer). Umbra Space Systems now sells sensors/avionics/comms/power components = direct BLK3 recoverable-flight-validation fit. Domestic co, marketing OK."
+      }
     }
   ]
 }
