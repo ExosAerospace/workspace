@@ -451,6 +451,34 @@
         "domain": "rocketlabcorp.com",
         "summary": "VP BD & Strategy, Space Systems at Rocket Lab (VERIFIED: co. team page, AIAA, Planetary Society; since 2019; 12+ yrs JPL planetary missions). Legit senior spacecraft/BD decision-maker + referral conduit."
       }
+    },
+    {
+      "id": "dd-vanderbilt-university-aerospace-design-laboratory",
+      "name": "Vanderbilt University \u2014 Aerospace Design Laboratory",
+      "headline": "Legitimate R1 US university (Vanderbilt) ADL contact; outbound payload prospect, not a solicitor; US .edu, marketing/PUG releasable",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Lizi driving 8/18 follow-up; if no reply by ~8/25, one nudge or ask for right ADL contact",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): Legitimate R1 US university (Vanderbilt) ADL contact; outbound payload prospect, not a solicitor; US .edu, marketing/PUG releasable"
+      ],
+      "contacts": [
+        {
+          "name": "Andrew P. Noonan",
+          "email": "andrew.p.noonan@vanderbilt.edu"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "vanderbilt.edu",
+        "summary": "Legitimate R1 US university (Vanderbilt) ADL contact; outbound payload prospect, not a solicitor; US .edu, marketing/PUG releasable"
+      }
     }
   ]
 }
