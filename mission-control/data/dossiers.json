@@ -600,14 +600,19 @@
       "stage_color": "#2E7D32",
       "deals": [],
       "status": "DD complete (pass) 2026-08-18",
-      "next_step": "Lizi follow-up #2 sent 8/18 w/ booking link; hold for reply through 8/30 window. FFRDC (USAF/USSF) \u2014 marketing outreach OK; any hardware/data or contract step routes through Jon per gov-adjacent policy.",
+      "next_step": "Lizi follow-up (8/18) to 7/29 initial outreach; if he responds, marketing OK. FFRDC gov-adjacent: any data/contract step routes through Jon + export screen (ITAR/EAR); controlled tech data beyond Payload Guide gated.",
       "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): VERIFIED Senior Project Leader, Civil Systems Technology at The Aerospace Corp (FFRDC); launch vehicle concept dev + detonation-based/advanced propulsion (RDRE-adjacent), sensors, materials. Congressional witness on civil space. Direct BLK3 recoverable propulsion/subsystem validation fit.",
         "DD PASS 2026-08-18 (req: Lizi): Principal Director, Vehicle Systems Division (leads 120-person team); Aerospace Technical Fellow, 20+ yrs; authored Aerospace's launch-vehicle reusability assessment framework + mission assurance processes (Falcon/OmegA NSSL cert). VERIFIED legit senior FFRDC leader; direct BLK3 structures/sensors/thermal/reusable-flight-validation fit + strong referral conduit."
       ],
       "contacts": [
         {
           "name": "Dr. Vinay Goyal",
           "email": "vinay.k.goyal@aero.org"
+        },
+        {
+          "name": "Greg V. Meholic",
+          "email": "greg.v.meholic@aero.org"
         }
       ],
       "agreements": [],
@@ -617,7 +622,7 @@
         "date": "2026-08-18",
         "requester": "Lizi",
         "domain": "aero.org",
-        "summary": "Principal Director, Vehicle Systems Division (leads 120-person team); Aerospace Technical Fellow, 20+ yrs; authored Aerospace's launch-vehicle reusability assessment framework + mission assurance processes (Falcon/OmegA NSSL cert). VERIFIED legit senior FFRDC leader; direct BLK3 structures/sensors/thermal/reusable-flight-validation fit + strong referral conduit."
+        "summary": "VERIFIED Senior Project Leader, Civil Systems Technology at The Aerospace Corp (FFRDC); launch vehicle concept dev + detonation-based/advanced propulsion (RDRE-adjacent), sensors, materials. Congressional witness on civil space. Direct BLK3 recoverable propulsion/subsystem validation fit."
       }
     },
     {
