@@ -680,6 +680,34 @@
         "domain": "umbra.space",
         "summary": "US-based SAR satellite prime (Santa Barbara, CA); Todd Master VERIFIED as Chief Strategy Officer (ex-COO, ex-DARPA PM, ex-Orbital ATK, ex-USAF space officer). Umbra Space Systems now sells sensors/avionics/comms/power components = direct BLK3 recoverable-flight-validation fit. Domestic co, marketing OK."
       }
+    },
+    {
+      "id": "dd-purdue-university-applied-diagnostics-propulsion-technologies-lab-prof-terry-meyer-zucrow-labs",
+      "name": "Purdue University \u2014 Applied Diagnostics & Propulsion Technologies Lab (Prof. Terry Meyer / Zucrow Labs)",
+      "headline": "VERIFIED member of Prof. Terry Meyer's Applied Diagnostics & Propulsion Technologies Lab at Purdue (Maurice J. Zucrow Labs, largest US acade",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "US public university: marketing/PUG releasable. Follow-up sent 8/18 (to 7/29 initial); if no reply by ~8/25, one nudge or ask for referral to PI Meyer / Zucrow flight-test POC. Route any hardware/data/contract step through Jon + export screen (ITAR/EAR) for anything beyond Payload User Guide.",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): VERIFIED member of Prof. Terry Meyer's Applied Diagnostics & Propulsion Technologies Lab at Purdue (Maurice J. Zucrow Labs, largest US academic propulsion lab). Laser/optical propulsion & detonation diagnostics = direct BLK3 propulsion-instrumentation/pressure/thermal/sensor recoverable-validation fit + strategic RDRE/detonation-adjacency conduit. Appears grad-researcher; PI Meyer / lab staff may be better decision POC."
+      ],
+      "contacts": [
+        {
+          "name": "Eric Holst",
+          "email": "eholst@purdue.edu"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "purdue.edu",
+        "summary": "VERIFIED member of Prof. Terry Meyer's Applied Diagnostics & Propulsion Technologies Lab at Purdue (Maurice J. Zucrow Labs, largest US academic propulsion lab). Laser/optical propulsion & detonation diagnostics = direct BLK3 propulsion-instrumentation/pressure/thermal/sensor recoverable-validation fit + strategic RDRE/detonation-adjacency conduit. Appears grad-researcher; PI Meyer / lab staff may be better decision POC."
+      }
     }
   ]
 }
