@@ -1,5 +1,5 @@
 # NCE — BLK3 BUILD via National Charter Enterprise (NCE Agent state file)
-*Single source of truth. NCE Agent reads + updates each run. Last updated: 2026-08-11.*
+*Single source of truth. NCE Agent reads + updates each run. Last updated: 2026-08-18.*
 
 ## Model
 National Charter Enterprise = leverage state/national/allied-nation economic-development funds to pay for standing up rocket manufacturing/launch capability in their jurisdiction (jobs + economic growth for them; built vehicles + facilities for Exos). Montana spaceport dev work is the template.
@@ -788,4 +788,51 @@ Cofounder and CEO, Exos Aerospace
 +1-972-740-8355
 jquinn@exosaero.com
 
+END-READY-ACTION -->
+
+## DECISION LOG — 2026-08-18
+
+| 2026-08-18 | **⚡ UTAH AUG 21 IS TOMORROW — MEETING IN ~30 HOURS.** UDOT site confirmed: Aug 21, 9-11am, Senate Building Room 210, SLC. RS&H Nelson presenting "substantially more detailed findings" including site economics (Delta/Green River) and formal governance models — TSC is now in the governance analysis. Nelson final-touch (key: utah-nelson-final-touch-aug17) was DISPATCHED Aug 17 to Jon's inbox. No auto-send-confirm yet. CRITICAL: Jon must confirm he sent (or will send today) the Nelson email. If not yet sent, the email must go out before today (Aug 18) so Nelson sees it before tomorrow's 9am session. No reply from Millner/Braceras to Aug 10 follow-up. Exos remains first known LOI on file. | ⚡ MEETING TOMORROW — CONFIRM JON SENT NELSON EMAIL |
+| 2026-08-18 | **🚨 MDC CORRIDOR FALSE-POSITIVE DEDUP — SARA HARRIS EMAIL NEVER SENT AS CORRIDOR PITCH.** The AUTO SENT-CONFIRMATION "sharris@midlandtxedc.com on 2026-06-19 — subject 'Fw: Potential for testing @ Firehawk test site-'" is a DIFFERENT unrelated email (Firehawk test site forward). The loop-closer matched on the email address and halted nudging, but the MDC West Texas Corridor anchor operator pitch was NEVER sent. New READY-ACTION dispatched below with fresh key (midland-mdc-corridor-aug18-resend). Jon: the corridor pitch was never sent — please send today. No consultant selection announced as of Aug 18. | 🚨 DEDUP BUG — RE-DISPATCHING WITH NEW KEY |
+| 2026-08-18 | **MDC CORRIDOR: NO CONSULTANT SELECTION ANNOUNCED.** Search as of Aug 18: no public announcement from MDC or MRT of corridor consultant award. RFP deadline was July 31; "early August" window is 18+ days overdue. $800K TSC SEARF grant to El Paso County (lead grantee) + MDC as corridor co-participant. Plan covers I-10/I-20 corridor El Paso to Midland. Exos needs to be named by BOTH MDC (Sara Harris) AND potentially El Paso County / Borderplex Alliance as the launch operator. Sara Harris email = immediate priority. OSIDA / Borderplex contact = secondary research next cycle. | ⚡ SEND TODAY |
+| 2026-08-18 | **UTAH AUG 21 MATERIALS: AGENDA LISTED AS "AVAILABLE SOON."** Pre-meeting materials not yet posted per UDOT site, but meeting is confirmed. Sept 30 final report and Oct/Nov legislature presentation remain the policy-lock dates. Even if Exos isn't mentioned live at Aug 21, written data package offer to Nelson post-meeting keeps Exos in the Sept 30 record window. | STATUS |
+| 2026-08-18 | **ASA ANNUAL MEETING (AUG 17-20, ALBUQUERQUE) — IN PROGRESS.** State aerospace directors from all 50 states meeting this week. Montana, NM, and Utah contacts likely present. No Exos representative on-site. Post-event attendee list / recap = value to extract (typically 1-2 weeks post-event). Exo monitoring. | MONITOR |
+| 2026-08-18 | **MONTANA: NO NEW DEVELOPMENTS.** No Edgar, Gianforte, or MT spaceport news found (search returned junk). Janicki $830M construction underway at Great Falls. Ball with Edgar on POA + Governor Signing Agreement. Not nagging. | WAITING — NO NAG |
+| 2026-08-18 | **TEXAS SPACE SUMMIT: POSTPONED TO 2027 — CONFIRMED.** SEARF next round timing uncertain; TSC Sept 23 board meeting still on calendar. Monitoring for TSC announcement of next competitive round. No Summit-related action for Jon. | STABLE |
+| 2026-08-18 | **NM LEDA: STILL PENDING JON AUTH.** ASA in Albuquerque this week. SpinLaunch + HAPSMobile both received 2026 LEDA awards. Exos draft ready (Sierra County co-applicant). Submit before September. Jon's go needed. | PENDING JON AUTH |
+| 2026-08-18 | **⭐ BEST-LEVERAGE TODAY: (1) ⚡ Utah Nelson email — confirm sent or send TODAY (meeting tomorrow 9am). (2) ⚡ MDC Corridor Sara Harris — dedup cleared, new key dispatched, send today. (3) NM LEDA — Jon authorizes before September.** | PRIORITY |
+
+<!-- READY-ACTION
+key: midland-mdc-corridor-aug18-resend
+task_title: [SEND TODAY — Dedup Cleared] Exos West TX Corridor Anchor — Sara Harris (MDC)
+to: jquinn@exosaero.com
+subject: [SEND TODAY — Dedup Cleared] Exos West Texas Corridor Anchor Pitch — Sara Harris (MDC)
+category: BD
+priority: 90
+body:
+IMPORTANT — DEDUP FALSE-POSITIVE CLEARED: The prior MDC corridor outreach was silenced by the loop-closer matching a June 19 Firehawk test-site forward to sharris@midlandtxedc.com. The West Texas Corridor anchor operator pitch was NEVER sent. No consultant selection has been announced (as of Aug 18) — the window is still open.
+
+SEND TO:
+  To: sharris@midlandtxedc.com
+  Cc: john.canipe@txspacecommission.gov
+  Subject: Exos Aerospace — FAA-Licensed Launch Anchor for the West Texas Aerospace Corridor
+
+---
+
+Hello Sara,
+
+Congratulations on the AST SpaceMobile announcement — a landmark deal for Midland and for the West Texas aerospace corridor. I wanted to reach out because Exos Aerospace is positioned to be the launch side of the corridor you are building.
+
+Who we are: Exos Aerospace is one of only three FAA-licensed reusable suborbital launch companies in the United States. We hold an FAA launch license for our BLK3 PSRLV — a vertical-takeoff, vertical-landing reusable rocket capable of 100+ km altitude with a 135 kg payload and a 2-day turnaround between flights. We have an active NASA and Department of Defense pipeline exceeding $50 million in federal programs. We are headquartered in Texas.
+
+The corridor opportunity: The El Paso-to-Midland corridor connects two aerospace anchors — Spaceport America (where Exos is already an active launch tenant) and Midland (where AST SpaceMobile and the spaceport infrastructure investment are now in place). Exos is uniquely positioned to serve both ends operationally. Satellite manufacturers in Midland need launch access. Exos provides it.
+
+As MDC and El Paso County develop the West Texas Aerospace Corridor master plan (TSC SEARF-funded), we would like to be engaged as the corridor's FAA-licensed vertical launch operator. I would welcome a brief call with you and John Canipe to discuss how Exos can anchor the launch capability that makes the corridor operationally complete.
+
+Sincerely,
+
+John Quinn
+Cofounder & CEO, Exos Aerospace Systems & Technologies, Inc.
+jquinn@exosaero.com | +1-972-740-8355
+www.exosaero.com
 END-READY-ACTION -->
