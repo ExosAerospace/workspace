@@ -535,6 +535,34 @@
         "domain": "polito.it",
         "summary": "Legit; fixed-term Asst Prof, Dept of Mech & Aerospace Eng (DIMEAS), Politecnico di Torino; high-speed/hypersonic aerospace systems + LH2 hypersonic transport; verified polito.it staff page, Scholar, LinkedIn. Engaged BLK3 payload prospect ('really really great!'), booked then rescheduled. Same city as Exos Aerospace Italia (Torino). NATO ally = marketing OK; ITAR screen any later data/hardware transfer."
       }
+    },
+    {
+      "id": "dd-dr-ritesh-ghimire-indiv-researcher-missouri-s-t",
+      "name": "Dr. Ritesh Ghimire (indiv. researcher \u2014 Missouri S&T)",
+      "headline": "Verified academic identity: PhD, Missouri S&T Mech/Aero (Liou group); published AM multifunctional-composites, structural batteries, composi",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Lizi follow-up 8/18 sent; if no reply by ~8/25 nudge or request referral. Enrich current employer post-PhD.",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): Verified academic identity: PhD, Missouri S&T Mech/Aero (Liou group); published AM multifunctional-composites, structural batteries, composite certification for aircraft/drones/spacecraft. Strong BLK3 recoverable-composites fit; no adverse signals."
+      ],
+      "contacts": [
+        {
+          "name": "Ritesh Ghimire",
+          "email": "ritesh145@gmail.com"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "gmail.com",
+        "summary": "Verified academic identity: PhD, Missouri S&T Mech/Aero (Liou group); published AM multifunctional-composites, structural batteries, composite certification for aircraft/drones/spacecraft. Strong BLK3 recoverable-composites fit; no adverse signals."
+      }
     }
   ]
 }
