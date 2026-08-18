@@ -563,6 +563,34 @@
         "domain": "gmail.com",
         "summary": "Verified academic identity: PhD, Missouri S&T Mech/Aero (Liou group); published AM multifunctional-composites, structural batteries, composite certification for aircraft/drones/spacecraft. Strong BLK3 recoverable-composites fit; no adverse signals."
       }
+    },
+    {
+      "id": "dd-individual-contact-unconfirmed-org",
+      "name": "Individual contact (unconfirmed org)",
+      "headline": "Outbound BLK3 payload networking target (Lizi 7/30 + 8/18 follow-up). Low risk (outbound cold outreach, no exposure to Exos). Identity uncon",
+      "stage": "DD Caution",
+      "stage_color": "#B8860B",
+      "deals": [],
+      "status": "DD complete (caution) 2026-08-18",
+      "next_step": "Await his reply/booking; on response confirm his org + network so we can qualify referral/payload fit. Owner Lizi.",
+      "flags": [
+        "DD CAUTION 2026-08-18 (req: Lizi): Outbound BLK3 payload networking target (Lizi 7/30 + 8/18 follow-up). Low risk (outbound cold outreach, no exposure to Exos). Identity unconfirmed: multiple aerospace 'Michael Gilliland' candidates (Hermeus/UChicago Booth + AIAA RLV cmte; SpaceX test engineer; Honeywell Aero IT) \u2014 cannot tie personal gmail to a specific one."
+      ],
+      "contacts": [
+        {
+          "name": "Michael Gilliland",
+          "email": "mchlglllnd@gmail.com"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "caution",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "gmail.com",
+        "summary": "Outbound BLK3 payload networking target (Lizi 7/30 + 8/18 follow-up). Low risk (outbound cold outreach, no exposure to Exos). Identity unconfirmed: multiple aerospace 'Michael Gilliland' candidates (Hermeus/UChicago Booth + AIAA RLV cmte; SpaceX test engineer; Honeywell Aero IT) \u2014 cannot tie personal gmail to a specific one."
+      }
     }
   ]
 }

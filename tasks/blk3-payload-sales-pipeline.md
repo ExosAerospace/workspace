@@ -2434,3 +2434,8 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 ### Status Update — 2026-08-18 (LinkedIn, via Lizi)
 
 **Exobiosphere / Kyle Acierno (#51):** ENGAGED ✅ — Kyle Acierno (CEO/Co-Founder) replied on LinkedIn to Lizi's outreach: "Understood. But generally we haven't prioritized this. Sure - share and I can send to the engineers." POC confirmed. Lizi sending Payload User Guide (mission-control/uploads/1786402994903_Payload_User_Guide_-_July_26.pdf) + BLK3 pre-orbital validation one-pager. Next: engineering review; hold Flight-2 (Mar 2027) bay space if envelope fits. EXPORT NOTE: Exobiosphere = Luxembourg (foreign) — PUG/marketing releasable; export-screen anything beyond the guide (detailed ICD/CAD/FEA) before sending. Logged to MC opp PAY-7373 (no email trail — LinkedIn thread).
+
+---
+### Outreach Log — 2026-08-18 (via Lizi, email)
+
+**Michael Gilliland (mchlglllnd@gmail.com) — payload networking / referral conduit:** Lizi follow-up sent 8/18 to her 7/30 initial ("Upcoming BLK3 Flight and Payload Availability"). Framing = referral ask: any research/engineering/tech team in his network needing real flight data + post-flight recovery (sensors/instrumentation, subsystem validation, advanced materials, microgravity). Booking link included. DD: **CAUTION on identity** — multiple aerospace "Michael Gilliland" candidates (Hermeus + UChicago Booth MBA + AIAA Reusable Launch Vehicle Tech Cmte; SpaceX test engineer; Honeywell Aero Eng IT) and personal gmail can't be tied to a specific one; low engagement risk (outbound cold networking, no Exos exposure). Owner Lizi. Status: OUTREACH SENT (follow-up), awaiting reply. On response: confirm his org + network to qualify referral/payload fit. Logged to dossier (/dossier.html).
