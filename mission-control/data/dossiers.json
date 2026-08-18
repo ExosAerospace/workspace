@@ -591,6 +591,34 @@
         "domain": "gmail.com",
         "summary": "Outbound BLK3 payload networking target (Lizi 7/30 + 8/18 follow-up). Low risk (outbound cold outreach, no exposure to Exos). Identity unconfirmed: multiple aerospace 'Michael Gilliland' candidates (Hermeus/UChicago Booth + AIAA RLV cmte; SpaceX test engineer; Honeywell Aero IT) \u2014 cannot tie personal gmail to a specific one."
       }
+    },
+    {
+      "id": "dd-the-aerospace-corporation",
+      "name": "The Aerospace Corporation",
+      "headline": "Principal Director, Vehicle Systems Division (leads 120-person team); Aerospace Technical Fellow, 20+ yrs; authored Aerospace's launch-vehic",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Lizi follow-up #2 sent 8/18 w/ booking link; hold for reply through 8/30 window. FFRDC (USAF/USSF) \u2014 marketing outreach OK; any hardware/data or contract step routes through Jon per gov-adjacent policy.",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): Principal Director, Vehicle Systems Division (leads 120-person team); Aerospace Technical Fellow, 20+ yrs; authored Aerospace's launch-vehicle reusability assessment framework + mission assurance processes (Falcon/OmegA NSSL cert). VERIFIED legit senior FFRDC leader; direct BLK3 structures/sensors/thermal/reusable-flight-validation fit + strong referral conduit."
+      ],
+      "contacts": [
+        {
+          "name": "Dr. Vinay Goyal",
+          "email": "vinay.k.goyal@aero.org"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "aero.org",
+        "summary": "Principal Director, Vehicle Systems Division (leads 120-person team); Aerospace Technical Fellow, 20+ yrs; authored Aerospace's launch-vehicle reusability assessment framework + mission assurance processes (Falcon/OmegA NSSL cert). VERIFIED legit senior FFRDC leader; direct BLK3 structures/sensors/thermal/reusable-flight-validation fit + strong referral conduit."
+      }
     }
   ]
 }
