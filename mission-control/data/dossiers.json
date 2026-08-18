@@ -904,6 +904,103 @@
         "domain": "gmail.com",
         "summary": "VERIFIED Vanderbilt mechanical-engineering alum + Vanderbilt Aerospace Design Laboratory (VADL) member (full rocket design process; VADL 2018 national win); GNC/rocketry background. Legit individual, marketing-releasable BLK3 payload/GNC prospect. 4th VADL contact in pipeline."
       }
+    },
+    {
+      "id": "dd-137-ventures",
+      "name": "137 Ventures",
+      "headline": "Legitimate SF-based VC with verified leadership and recent fund closures; adverse media citing Charlie Javice fraud appears to be a search-s",
+      "stage": "DD Caution",
+      "stage_color": "#B8860B",
+      "deals": [],
+      "status": "DD complete (caution) 2026-08-18",
+      "next_step": "",
+      "flags": [
+        "DD CAUTION 2026-08-18 (req: CRM nightly DD engine): Legitimate SF-based VC with verified leadership and recent fund closures; adverse media citing Charlie Javice fraud appears to be a search-scraping misattribution but requires manual verification before any financial or ITAR-sensitive engag"
+      ],
+      "contacts": [],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "caution",
+        "date": "2026-08-18",
+        "requester": "CRM nightly DD engine",
+        "domain": "137ventures.com",
+        "summary": "Legitimate SF-based VC with verified leadership and recent fund closures; adverse media citing Charlie Javice fraud appears to be a search-scraping misattribution but requires manual verification before any financial or ITAR-sensitive engag"
+      }
+    },
+    {
+      "id": "dd-1up-ventures",
+      "name": "1Up Ventures",
+      "headline": "Explicit SEC fraud allegations, unregistered securities sales, and corporate revocation present critical regulatory and reputational risks f",
+      "stage": "DD Fail",
+      "stage_color": "#B00020",
+      "deals": [],
+      "status": "DD complete (fail) 2026-08-18",
+      "next_step": "",
+      "flags": [
+        "DD FAIL 2026-08-18 (req: CRM nightly DD engine): Explicit SEC fraud allegations, unregistered securities sales, and corporate revocation present critical regulatory and reputational risks for a high-stakes counterparty engagement."
+      ],
+      "contacts": [],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "fail",
+        "date": "2026-08-18",
+        "requester": "CRM nightly DD engine",
+        "domain": "1upfund.com",
+        "summary": "Explicit SEC fraud allegations, unregistered securities sales, and corporate revocation present critical regulatory and reputational risks for a high-stakes counterparty engagement."
+      }
+    },
+    {
+      "id": "dd-3lb-seed-capital",
+      "name": "3LB Seed Capital",
+      "headline": "Alleged SEC fraud investigation and Ponzi scheme claims pose severe compliance risk; thin operational footprint and mismatched adverse sourc",
+      "stage": "DD Fail",
+      "stage_color": "#B00020",
+      "deals": [],
+      "status": "DD complete (fail) 2026-08-18",
+      "next_step": "",
+      "flags": [
+        "DD FAIL 2026-08-18 (req: CRM nightly DD engine): Alleged SEC fraud investigation and Ponzi scheme claims pose severe compliance risk; thin operational footprint and mismatched adverse sources require immediate human verification or rejection."
+      ],
+      "contacts": [],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "fail",
+        "date": "2026-08-18",
+        "requester": "CRM nightly DD engine",
+        "domain": "3lbseed.com",
+        "summary": "Alleged SEC fraud investigation and Ponzi scheme claims pose severe compliance risk; thin operational footprint and mismatched adverse sources require immediate human verification or rejection."
+      }
+    },
+    {
+      "id": "dd-orbital-operations-orbital-ops",
+      "name": "Orbital Operations (Orbital Ops)",
+      "headline": "VERIFIED Principal Analyst/Principal Propulsion Engineer at Orbital Operations (orbitalops.tech, LA); 13+ yrs SpaceX (Falcon 9 2nd-stage Res",
+      "stage": "DD Pass",
+      "stage_color": "#2E7D32",
+      "deals": [],
+      "status": "DD complete (pass) 2026-08-18",
+      "next_step": "Lizi 8/18 follow-up to 7/30 initial; personal gmail is durable POC. Marketing/Payload Guide releasable; propulsion/fluids/cryo/hypersonic is export-sensitive (ITAR/EAR) - any technical data or contract routes through Jon + export screen.",
+      "flags": [
+        "DD PASS 2026-08-18 (req: Lizi): VERIFIED Principal Analyst/Principal Propulsion Engineer at Orbital Operations (orbitalops.tech, LA); 13+ yrs SpaceX (Falcon 9 2nd-stage Responsible Engineer, upper-stage propulsion/fluids), Relativity (Lead Vehicle Fluids Eng, Terran 1 Stage 2 qual), Stratolaunch (Principal Propulsion Eng, hypersonic platforms 4 yrs); Princeton grad, Vanderbilt ME, NDSEG Fellow. Now leads fluids analysis for Orbital Ops cryogenic propellant management system + Astraeus vehicle. Near-exact fit for BLK3 recoverable propulsion/fluid-system/cryo/pressure/thermal validation."
+      ],
+      "contacts": [
+        {
+          "name": "Sam Nackman",
+          "email": "samnackman@gmail.com"
+        }
+      ],
+      "agreements": [],
+      "last_touch": "2026-08-18",
+      "dd": {
+        "verdict": "pass",
+        "date": "2026-08-18",
+        "requester": "Lizi",
+        "domain": "orbitalops.tech",
+        "summary": "VERIFIED Principal Analyst/Principal Propulsion Engineer at Orbital Operations (orbitalops.tech, LA); 13+ yrs SpaceX (Falcon 9 2nd-stage Responsible Engineer, upper-stage propulsion/fluids), Relativity (Lead Vehicle Fluids Eng, Terran 1 Stage 2 qual), Stratolaunch (Principal Propulsion Eng, hypersonic platforms 4 yrs); Princeton grad, Vanderbilt ME, NDSEG Fellow. Now leads fluids analysis for Orbital Ops cryogenic propellant management system + Astraeus vehicle. Near-exact fit for BLK3 recoverable propulsion/fluid-system/cryo/pressure/thermal validation."
+      }
     }
   ]
 }
