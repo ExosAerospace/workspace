@@ -15,6 +15,7 @@ import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirn
 import supabase_util as _sbu; _sbu.install()
 # --- end shim ---
 import json, urllib.request, urllib.parse, datetime, sys
+from exos_capability_gate import is_aligned, filter_new_aligned, escalate
 
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
 KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
@@ -63,31 +64,14 @@ def sam_open_solicitations(today):
                 data = json.load(r)
         except Exception:
             continue
-        # Capability gate: an item must match an Exos-capability phrase (ALLOW) and
-        # must NOT match a known anti-pattern (DENY). The prior bare-word list
-        # ("missile","rocket","space","orbital") let interceptors, GMLRS, and
-        # satellite-bus buys through — none of which Exos can bid.
-        ALLOW = ("reusable launch", "suborbital", "spaceport", "space launch", "launch service",
-                 "launch site", "responsive launch", "responsive space", "sounding rocket",
-                 "rotating detonation", "detonation engine", "rdre",
-                 "cryogenic", "cryocooler", "propellant transfer", "in-space refuel", "on-orbit refuel",
-                 "in-space propellant", "fluid management", "composite tank", "linerless", "type-5", "type 5",
-                 "hosted payload", "payload flight", "flight test service",
-                 "rocket motor case", "solid rocket motor case", "composite overwrap",
-                 "hypersonic flight", "hypersonic test")
-        DENY = ("interceptor", "counter-small", "counter small", "c-uas", "c-suas", "patriot",
-                "guided missile", "multiple launch rocket", "mlrs", "terminal stage", "warhead",
-                "missile defense", "tracking to intercept", "landsat", "spacecraft bus",
-                "satellite bus", "gps iii", "weather satellite")
+        # Capability gate lives in the shared module (exos_capability_gate) so relevance
+        # is defined ONCE and reused by every scan — no per-cron copy-paste to drift.
         for o in (data.get("opportunitiesData") or []):
             dl = o.get("responseDeadLine")
             title = (o.get("title") or "")
             if not dl:
                 continue
-            tl = title.lower()
-            if not any(k in tl for k in ALLOW):
-                continue
-            if any(k in tl for k in DENY):
+            if not is_aligned(title):
                 continue
             try:
                 d = datetime.date.fromisoformat(dl[:10])
@@ -164,10 +148,17 @@ def main():
 
     sam = sam_open_solicitations(today)
     if sam:
-        L.append("🛰️ OPEN GOV SOLICITATIONS (SAM.gov, deadline-filtered — open only)")
+        # escalate genuinely-new aligned solicitations to the monthly report + shared
+        # dedup ledger, so no other scan re-reports them and they land in the record.
+        items = [{"title": title, "due": f"{d:%Y-%m-%d}", "link": link} for d, title, link in sam]
+        new_aligned = filter_new_aligned(items, source="mc_briefing/SAM")
+        escalate(new_aligned, source="mc_briefing/SAM")
+        L.append("🛰️ OPEN GOV SOLICITATIONS (SAM.gov — Exos-capability-gated, open only)")
         for d, title, link in sam[:8]:
             days = (d - today).days
             L.append(f"  • due {d:%b %-d} ({days}d) — {(title or '')[:82]}")
+        if new_aligned:
+            L.append(f"  ↑ {len(new_aligned)} new escalated to reports/aligned-opportunities-{today:%Y-%m}.md")
         L.append("")
 
     L.append("Source: live board (non-Done) + SAM.gov open solicitations. No web-dredged/closed items.")
