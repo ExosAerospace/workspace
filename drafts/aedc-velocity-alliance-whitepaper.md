@@ -52,14 +52,25 @@ EXECUTIVE SUMMARY
 
 Exos Aerospace Systems & Technologies, Inc. ("Exos"), a small business and
 nontraditional defense contractor, requests membership in the AEDC Velocity
-Alliance. Exos brings cryogenic and mechanical engineering competency with
-flight-proven, lunar-heritage hardware, and leads a capability team that adds
-airborne high-speed flight test through external teaming partner Starfighters
-International Inc. As an innovation differentiator, Exos further offers the
-Alliance no-cost bonus in-space propellant transfer flight research on its
-reusable platform, generating cryogenic data that also advances an applied-for
-NASA orbital flight experiment. This whitepaper responds to Section 4.0,
-Parts 1 through 4.
+Alliance to bring the Alliance a capability its ground-test enterprise does
+not have on its own: a reusable, recoverable flight-test range that extends
+AEDC ground test into real flight. On the BLK3 Precision Suborbital Reusable
+Launch Vehicle, one of only three U.S.-licensed reusable suborbital systems,
+Alliance members can validate materials, thermal protection, structures, and
+subsystems in the actual hypersonic-adjacent reentry, microgravity,
+dynamic-load, and thermal-vacuum environments a ground facility cannot fully
+reproduce, and recover the hardware intact for post-flight analysis, closing
+the ground-to-flight test loop.
+
+That flight-test range is backed by deep supporting engineering: flight-proven,
+lunar-heritage Type 5 cryogenic and high-pressure composite systems (through
+internal affiliate Scorpius Space Launch Company) and advanced propulsion
+engineering, directly applicable to AEDC cryogenic and propulsion test-stand
+modernization. Exos leads a capability team that adds above-Mach-2 airborne
+captive-carry test through external teaming partner Starfighters International
+Inc., and offers the Alliance, at no cost, bonus in-space propellant transfer
+flight research that also advances an applied-for NASA orbital experiment. This
+whitepaper responds to Section 4.0, Parts 1 through 4.
 
 1.0  Mandatory Certification Requirements (Part 1)
 ================================================================================
