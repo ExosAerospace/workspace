@@ -1,5 +1,5 @@
 # NCE — BLK3 BUILD via National Charter Enterprise (NCE Agent state file)
-*Single source of truth. NCE Agent reads + updates each run. Last updated: 2026-08-18.*
+*Single source of truth. NCE Agent reads + updates each run. Last updated: 2026-08-19.*
 
 ## Model
 National Charter Enterprise = leverage state/national/allied-nation economic-development funds to pay for standing up rocket manufacturing/launch capability in their jurisdiction (jobs + economic growth for them; built vehicles + facilities for Exos). Montana spaceport dev work is the template.
@@ -466,7 +466,7 @@ Congratulations on the AST SpaceMobile announcement — a landmark deal for Midl
 
 Who we are: Exos Aerospace is one of only three FAA-licensed reusable suborbital launch companies in the United States. We hold an FAA launch license for our BLK3 PSRLV — a vertical-takeoff, vertical-landing reusable rocket capable of 100+ km altitude with a 135 kg payload and 2-day turnaround between flights. We have an active NASA and Department of Defense pipeline exceeding $50 million in federal programs. We are headquartered in Texas.
 
-The corridor opportunity: The El Paso-to-Midland corridor connects two aerospace anchors: Spaceport America (where Exos is already an active launch tenant) and Midland (where AST SpaceMobile and the spaceport infrastructure investment are now in place). Exos is uniquely positioned to serve both ends operationally. Satellite manufacturers in Midland need launch access. Exos provides it.
+The corridor opportunity: The El Paso-to-Midland corridor connects two aerospace anchors: Spaceport America (where Exos is already an active launch tenant) and Midland (where AST SpaceMobile and the spaceport infrastructure investment are now in place). Exos operates at both ends: an active launch tenant at Spaceport America (NM) and ready to fly test/qualification/suborbital-science missions from the Texas end. [CORRECTED 8/18 — do NOT claim Exos serves the satellite manufacturers' orbital launch demand; AST-class sats need Falcon 9/Heavy-class heavy lift. Exos is the resident SUBORBITAL flight operator that de-risks hardware, not the orbital launch provider.]
 
 As MDC develops the West Texas Aerospace Corridor master plan, we would like to be engaged as the corridor's FAA-licensed vertical launch operator. I would welcome a brief call with you and John Canipe to discuss how Exos can anchor the launch capability that makes the corridor operationally complete.
 
@@ -511,7 +511,7 @@ Congratulations on the AST SpaceMobile announcement — a landmark deal for Midl
 
 Who we are: Exos Aerospace is one of only three FAA-licensed reusable suborbital launch companies in the United States. We hold an FAA launch license for our BLK3 PSRLV — a vertical-takeoff, vertical-landing reusable rocket capable of 100+ km altitude with a 135 kg payload and 2-day turnaround between flights. We have an active NASA and Department of Defense pipeline exceeding $50 million in federal programs. We are headquartered in Texas.
 
-The corridor opportunity: The El Paso-to-Midland corridor connects two aerospace anchors — Spaceport America (where Exos is already an active launch tenant) and Midland (where AST SpaceMobile and the spaceport infrastructure investment are now in place). Exos is uniquely positioned to serve both ends operationally. Satellite manufacturers in Midland need launch access. Exos provides it.
+The corridor opportunity: The El Paso-to-Midland corridor connects two aerospace anchors — Spaceport America (where Exos is already an active launch tenant) and Midland (where AST SpaceMobile and the spaceport infrastructure investment are now in place). Exos operates at both ends: an active launch tenant at Spaceport America (NM) and ready to fly test/qualification/suborbital-science missions from the Texas end. [CORRECTED 8/18 — do NOT claim Exos serves the satellite manufacturers' orbital launch demand; AST-class sats need Falcon 9/Heavy-class heavy lift. Exos is the resident SUBORBITAL flight operator that de-risks hardware, not the orbital launch provider.]
 
 As MDC develops the West Texas Aerospace Corridor master plan, we would like to be engaged as the corridor's FAA-licensed vertical launch operator. I would welcome a brief call with you and John Canipe to discuss how Exos can anchor the launch capability that makes the corridor operationally complete.
 
@@ -821,13 +821,62 @@ SEND TO:
 
 Hello Sara,
 
-Congratulations on the AST SpaceMobile announcement — a landmark deal for Midland and for the West Texas aerospace corridor. I wanted to reach out because Exos Aerospace is positioned to be the launch side of the corridor you are building.
+Congratulations on the AST SpaceMobile announcement — a landmark win for Midland and for the West Texas aerospace corridor. I wanted to reach out because Exos Aerospace can add something the corridor does not yet have: an FAA-licensed reusable rocket that actually flies here.
 
-Who we are: Exos Aerospace is one of only three FAA-licensed reusable suborbital launch companies in the United States. We hold an FAA launch license for our BLK3 PSRLV — a vertical-takeoff, vertical-landing reusable rocket capable of 100+ km altitude with a 135 kg payload and a 2-day turnaround between flights. We have an active NASA and Department of Defense pipeline exceeding $50 million in federal programs. We are headquartered in Texas.
+Who we are: Exos Aerospace is one of only three FAA-licensed reusable suborbital launch companies in the United States. We hold an FAA launch license for our BLK3 PSRLV — a vertical-takeoff, vertical-landing reusable rocket that reaches 100+ km with a 135 kg payload and a 2-day turnaround between flights. We have an active NASA and Department of Defense pipeline exceeding $50 million in federal programs, and we are headquartered in Texas.
 
-The corridor opportunity: The El Paso-to-Midland corridor connects two aerospace anchors — Spaceport America (where Exos is already an active launch tenant) and Midland (where AST SpaceMobile and the spaceport infrastructure investment are now in place). Exos is uniquely positioned to serve both ends operationally. Satellite manufacturers in Midland need launch access. Exos provides it.
+Where we fit: The corridor is building world-class satellite manufacturing at the Midland end and has an established launch tenant base at the Spaceport America (NM) end, where Exos already operates. What a corridor like this ultimately needs is a resident flight operator — a licensed vehicle that flies test, qualification, and suborbital science missions from within the region, trains a launch-operations workforce, and de-risks new hardware before it goes to orbit on heavy-lift vehicles. That is precisely what Exos does. We are complementary to the manufacturers, not a competitor to the orbital providers they will use.
 
-As MDC and El Paso County develop the West Texas Aerospace Corridor master plan (TSC SEARF-funded), we would like to be engaged as the corridor's FAA-licensed vertical launch operator. I would welcome a brief call with you and John Canipe to discuss how Exos can anchor the launch capability that makes the corridor operationally complete.
+As MDC and El Paso County develop the West Texas Aerospace Corridor master plan (TSC SEARF-funded), we would like to be engaged as the corridor's resident FAA-licensed vertical launch operator. I would welcome a brief call with you and John Canipe to walk through how Exos can anchor the operational, flight-test side of the corridor.
+
+Sincerely,
+
+John Quinn
+Cofounder & CEO, Exos Aerospace Systems & Technologies, Inc.
+jquinn@exosaero.com | +1-972-740-8355
+www.exosaero.com
+END-READY-ACTION -->
+- **SENT CONFIRMED (auto): john.canipe@txspacecommission.gov** on 2026-08-18 23:54 — subject "=?utf-8?q?Fw:_[READY_TO_SEND]_[SEND_TODAY_=E2=80=94_Dedup_Cleared]_Exos_W?= =?utf-8?q?est_TX_Corridor_Anchor_=E2=80=94_Sara_Harris_(MDC)?=". Nudge-to-send STOPPED; reply-watch only. NOTE: subject shows Jon forwarded the READY-ACTION email to Canipe (TSC). Sara Harris at MDC (sharris@midlandtxedc.com) send still NOT confirmed — forward to Sara too.
+
+## DECISION LOG — 2026-08-19
+
+| 2026-08-19 | **⚡ UTAH AUG 21 = 54 HOURS AWAY (9AM MT THURSDAY).** Meeting confirmed live. Nelson presenting detailed site economics (Delta/Green River) + governance models including TSC. No auto-confirm of Nelson final-touch (key: utah-nelson-final-touch-aug17) — Jon must confirm he sent that email OR send the manual follow-up today: short reply to the July 28 thread: "Andrew, circling back before Thursday. Happy to provide a written Utah-specific data package (Delta/Green River, Use Case 5 VTVL) for the economic record. Let me know." Post-meeting plan: Exo will dispatch a post-Aug 21 follow-up READY-ACTION to Jon's inbox (keyed: utah-nelson-post-aug21-followup) offering a written data package for the Sept 30 final report record. | ⚡ CONFIRM SENT OR MANUAL SEND TODAY |
+| 2026-08-19 | **MDC CORRIDOR: CANIPE CONFIRMED SENT (8/18 23:54). SARA HARRIS STILL NEEDED.** Jon forwarded the dedup-cleared READY-ACTION to john.canipe@txspacecommission.gov — TSC is now aware of Exos's corridor positioning. Critical: sharris@midlandtxedc.com (Sara Harris, MDC ED) has NOT been auto-confirmed. Jon should forward same email to Sara Harris directly. NEW INTEL: MDC board must formally APPROVE any consultant contract (Sara Harris confirmed this to MRT: "Any agreement with individual vendors will come back to the MDC board for review and approval"). This means the consultant selection is a PUBLIC MDC BOARD VOTE — the window doesn't close silently; we can track the MDC board calendar for the announcement. The Canipe send is a useful first contact, but Sara Harris is the operator-list decision-maker at MDC. No consultant announced as of Aug 19. | ⚡ SARA HARRIS FORWARD NEEDED — JON |
+| 2026-08-19 | **MONTANA: NO NEW DEVELOPMENTS.** No Edgar, Gianforte, or MT spaceport news. Janicki $830M construction underway in Great Falls. Ball with Edgar on POA + Governor Signing Agreement. Not nagging. | WAITING — NO NAG |
+| 2026-08-19 | **NM LEDA: STILL NEEDS JON AUTH.** ASA meeting wrapped (Aug 17-20, Albuquerque) — post-meeting attendee list may surface NM EDD contacts useful for LEDA intro. SpinLaunch + HAPSMobile both received 2026 LEDA awards. Exos draft (Sierra County co-applicant) ready. Submit before September. | PENDING JON AUTH |
+| 2026-08-19 | **⭐ BEST-LEVERAGE: (1) ⚡ Utah Nelson — confirm sent or manual follow-up TODAY (meeting in 54hr). (2) Sara Harris MDC — Jon forwards corridor pitch from Canipe send. (3) NM LEDA — Jon authorizes before September. Post-Aug 21: Exo dispatches Utah follow-up READY-ACTION for the Sept 30 record window.** | PRIORITY |
+
+<!-- READY-ACTION
+key: utah-nelson-post-aug21-followup
+task_title: [SEND AUG 22-23] Post-committee follow-up to Nelson + Utah — written data package for Sept 30 record
+to: jquinn@exosaero.com
+subject: [READY AUG 22] Exos → Andrew Nelson — Written Operator Data Package for Utah Final Report
+category: BD
+priority: 85
+body:
+CONTEXT: Utah Spaceport Exploration Committee met Aug 21 (9-11am, SLC). Andrew Nelson (RS&H) presented detailed site economics (Delta/Green River) + governance models. Final report due Sept 30; legislature presentation Oct/Nov 2026. Exos must be named in the final report as a candidate anchor operator. This email delivers on Jon's earlier offer to provide written operator data — send within 48hr of the Aug 21 meeting.
+
+SEND TO:
+  To: andrew.nelson@rsandh.com
+  Cc: ann.millner@le.utah.gov; cbraceras@utah.gov
+  Subject: Following Up — Exos Aerospace Operator Data for Utah Spaceport Final Report
+
+---
+
+Hello Andrew,
+
+Thank you for the work you presented to the committee on Thursday. I wanted to follow through on my offer to provide operator-level data for your final report, due September 30.
+
+Attached is a brief Exos operator data package for the Utah analysis, including:
+
+- BLK3 vehicle specifications (100+ km altitude, 135 kg payload, 2-day turnaround, 4g boost) — applicable to Delta and Green River Use Case 5 (VTVL suborbital) scenarios
+- Workforce and infrastructure requirements for a suborbital launch operation at a greenfield inland site
+- Federal program revenue: NASA Flight Opportunities + DoD pipeline; $50M+ total federal program value
+- Economic anchoring model: launch cadence, local supply chain, STEM/trades workforce pipeline
+
+Exos is one of only three FAA-licensed reusable suborbital launch companies in the United States and the only one currently offering commercial payload services. We would be glad to supplement this data with a call or additional detail before your September 30 submission.
+
+We believe Utah's spaceport program is one of the most credible in the country, and we want to be on the record as a committed, licensed operator.
 
 Sincerely,
 
