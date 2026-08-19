@@ -34,6 +34,19 @@ Point of Contact:   John Quinn, Cofounder & CEO
 Submitted To:       Greggory C. Jones; Brooke Z. Vandeman; Haden D. Welch;
                     Michelle R. Young (AEDC Velocity Alliance, AFTC/AEDC)
 
+REVISED SUBMISSION NOTE (ONBOARDING OPPORTUNITY 2)
+================================================================================
+
+This is Exos's Onboarding Opportunity 2 resubmission. It directly resolves the
+prior round's Part 4 finding by naming Starfighters International Inc. as a
+qualified, independently registered EXTERNAL teaming partner (Self-Certified
+Small Disadvantaged Business and Veteran-Owned Small Business, CAGE 1LZT3),
+supplying an above-Mach-2 airborne test capability Exos does not hold. Scorpius
+Space Launch Company is reclassified as an internal Exos affiliate (CAGE 60ZM1)
+performing under Exos's CAGE 7EMY6, DD Form 2345, and CMMC framework, and is not
+relied upon to satisfy the external-partnership requirement. Starfighters, an
+arms-length external partner, satisfies Section 4.0, Part 4.
+
 EXECUTIVE SUMMARY
 ================================================================================
 
