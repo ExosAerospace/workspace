@@ -1,6 +1,9 @@
 # PURSUIT TRACKER — Capital Bridge ($1M / 4–6 months) [APEX]
 *Single source of truth. The Capital Bridge Agent reads this each run, advances the top open action, drafts (never sends) investor/customer materials, and coordinates the other capture agents by time-to-cash. Last updated: 2026-08-10 (05:00 CT run).*
 
+> **⛔ entX (OPP-007) — RESOLVED / PAID. DO NOT re-open, nag, or run Plan B (2026-08-16, per Jon).**
+> Jon confirmed 2026-08-16: entX's **first two milestone payments (50% + 40%) have been received.** The "$506,250 booking deposit not received" narrative in the log below is **WRONG on two counts**: (1) **$506K was never entX's number** — it is Engine B's *hypothetical full-bay* figure (135 kg × $7,500 = $1,012,500 → 50% = $506,250) that a prior run mis-attributed to entX; entX is a single RHU payload with its own (smaller) contract. (2) entX is **already paid** through milestone 2. All entX deposit READY-ACTIONs (v1/v2/v3) and the Aug-17 Plan-B trigger are neutralized. Do not treat entX as an open cash trigger or generate new entX collection nags. Exact contract total pending Jon's confirmation against the executed LSA.
+
 ## Objective
 Raise **$1,000,000 across the next 4–6 months** (first ~$250–400k inside 60 days) to keep cash flow from slowing the path to **two BLK3 flights >85 km → NASA Flight Opportunities IDIQ on-ramp (~July 2027, ~$1M/flight recurring)**. Diversified across sources (Jon: "source dependence does not seem appropriate") — no single lever must carry it. Non-debt, founder-controlled, minimal dilution.
 
@@ -723,7 +726,7 @@ END-READY-ACTION -->
 - **SENT CONFIRMED (auto): will@varda.com** on 2026-07-28 03:29 — subject "=?utf-8?q?Exos_BLK3_=E2=80=94_suborbital_pre-qual_step_for_your_pharmaceu?= =?utf-8?q?tical_customers?=". Nudge-to-send STOPPED; reply-watch only.
 - **SENT CONFIRMED (auto): lucie.low@axiomspace.com** on 2026-07-28 03:30 — subject "=?utf-8?q?BLK3_suborbital_pre-qual_for_Axiom_payload_customers_=E2=80=94_?= =?utf-8?q?partnership_inquiry?=". Nudge-to-send STOPPED; reply-watch only.
 
-<!-- READY-ACTION
+<!-- RESOLVED-ACTION (entX first two milestone payments received; deposit-collection CLOSED per Jon 2026-08-16 — DO NOT dispatch. $506K was a full-bay hypothetical, not entX's contract.)
 key: capital-bridge-entx-deposit-nudge-v1
 task_title: Call Scott Edwards (entX COO) — execute 50% booking deposit per LSA ($506K)
 to: jquinn@exosaero.com
@@ -808,7 +811,7 @@ END-READY-ACTION -->
 
 | 2026-08-03 (01:00) | **POST-VG PIVOT. 3 days since VG closed (July 31). 23 sends on reply-watch. $83K raised / $917K gap / 0 kg booked.** No new SENT CONFIRMs since Fortastra (July 29). **entX v1 READY-ACTION dispatched July 28 — 6 days elapsed, ZERO deposit confirm.** Morfin LinkedIn DM dispatched July 27 — 7 days in inbox, no confirm — panel hook is dead at 19 days post-panel; cold DM still valid but no longer panel-referenced. Drafts N/Firefly (jkim@fireflyspace.com) + AC/Garza (ngarza@txspacecommission.gov) still in dispatch queue with no confirms — VG timing benefit expired but both remain valid sends. SPARK export screen (Denise Shirey) still pending. Montana/Edgar: 20 days dark, low-probability. **Phase confirmed: program is now fully in (a) reply conversion from 23-send wave, (b) entX deposit execution, (c) Morfin cold-DM, (d) new outreach wave.** New READY-ACTION dispatched this run: entX deposit v2 (escalated; 6-day nudge; priority 98). **Next wave prep:** ZERO-G Bucket D3 is the best available new cohort — ZERO-G cert was revoked Aug 2025, those parabolic-research customers are actively displaced and have validated budget. Exo will draft D3 wave in next run if Jon confirms direction. | **Jon: (1) 🔴 entX — call Scott Edwards ($506K, signed LSA, one call, no new negotiation); READY-ACTION v2 in inbox; 6 days since first ask. (2) Any reply from the 23-send wave → reply to Exo or forward and Exo drafts LSA cover within 24h. (3) Morfin: if LinkedIn DM was never sent, send it cold — panel hook is dead but $250K is still $250K. (4) SPARK: task Denise Shirey for export screen (READY-ACTION still in inbox). (5) On next run: Exo will advance ZERO-G Bucket D3 displaced-customer wave as the new outreach cohort.** |
 
-<!-- READY-ACTION
+<!-- RESOLVED-ACTION (entX PAID — deposit-collection CLOSED per Jon 2026-08-16 — DO NOT dispatch)
 key: capital-bridge-entx-deposit-nudge-v2
 task_title: URGENT — Call Scott Edwards entX $506K deposit, 6 days since first ask
 to: jquinn@exosaero.com
@@ -1026,7 +1029,7 @@ END-READY-ACTION -->
 
 | 2026-08-07 (05:00) | **Status unchanged from 01:00 (Jon asleep). $134,429 raised / $865,571 gap / 0 kg booked / 23 sends on reply-watch.** No new SENT CONFIRMs. All Jon actions from 01:00 remain open: entX v3 ($506K, 11 days, priority 99), UCF follow-up (prior customer, priority 92), BioServe follow-up (channel, priority 78), pending send batch (AS/AO/AQ/AP + Aug 3 Ravee/Lux/UTHR), Morfin LI DM (23 days dark, $250K). Autonomous lever: any warm reply from 23-send wave → LSA draft in 24h. No new drafts or READY-ACTIONs needed — inbox has everything. HELIOTECH registration (hesto.jhuapl.edu) remains open, 24 days out. | **See 01:00. Single most important action: entX call to Scott Edwards ($506K, signed LSA, v3 in inbox, no new negotiation required).** |
 
-<!-- READY-ACTION
+<!-- RESOLVED-ACTION (entX PAID — deposit-collection CLOSED per Jon 2026-08-16 — DO NOT dispatch)
 key: capital-bridge-entx-deposit-v3
 task_title: FINAL ESCALATION — entX Scott Edwards $506K deposit, 11 days
 to: jquinn@exosaero.com
@@ -1440,7 +1443,7 @@ Cofounder & CEO, Exos Aerospace
 jquinn@exosaero.com | 972-740-8355
 END-READY-ACTION -->
 
-<!-- READY-ACTION
+<!-- RESOLVED-ACTION (entX did NOT fail — first two payments received per Jon 2026-08-16; Aug 17 Plan-B trigger VOID — DO NOT dispatch)
 key: capital-bridge-entx-planb-rebalancing-v1
 task_title: Plan B: Capital rebalancing if entX LSA fails (Aug 17 trigger)
 to: jquinn@exosaero.com
@@ -1687,4 +1690,37 @@ If there's a PI or department head this should go to instead, happy to route it 
 John Quinn
 Cofounder & CEO, Exos Aerospace
 jquinn@exosaero.com | 972-740-8355
+END-READY-ACTION -->
+
+
+| 2026-08-14 (05:00) | **Status unchanged from 01:00. 30 SENDS ON REPLY-WATCH. $134,429 raised / $865,571 gap / 0 kg booked.** No new SENT CONFIRMs since StarCatcher/Rush (Aug 11). 01:00 run dispatched UCF/Colwell v2 follow-up — Plan B anchor warm. **entX Plan B = Aug 17 — 3 DAYS.** 16 days stalled on $506K signed LSA; this is the single highest-leverage item in the bridge. Pipeline is in reply-watch mode; follow-up backlog exhausted; no new autonomous drafts this run. Morfin now 31 days dark — recommend Jon treat as a fresh cold open rather than a follow-up. HELIOTECH Aug 31 registration still unconfirmed (17 days). | **Jon: (1) 🔴 entX — 3 DAYS to Aug 17 trigger. One call to Scott Edwards resolves it. Or tell Exo 'LSA is dead' in one line and the plan rebalances immediately to UCF/Morfin/Mailchimp. (2) UCF/Colwell v2 in dispatch — watch for reply. (3) Morfin: 31 days — skip follow-up framing; open fresh/cold with direct 504 question. Exo can draft the 3-sentence LI message on request. (4) Register HELIOTECH Aug 31 (hesto.jhuapl.edu) — 17 days. (5) Any warm reply from 30-send wave → forward and Exo drafts LSA in 24h.** |
+
+| 2026-08-17 (01:00) | **entX RESOLVED (Jon, 2026-08-16). All entX deposit nags and Plan B trigger are neutralized.** Jon confirmed: entX's first two milestone payments (50% + 40%) have been received. The "$506K" was a full-bay hypothetical never attributable to entX — entX is a single RHU payload with its own smaller contract. Exact contract total still pending Jon's confirmation against the executed LSA; once confirmed, ledger updates to reflect true raised total. **Updated capital picture (provisional):** 504 base confirmed = $134,429 + entX payments received (exact $ TBD). Gap vs. $1M = TBD pending LSA confirmation from Jon. **30 sends on reply-watch; 0 kg booked by any other customer.** No new SENT CONFIRMs since StarCatcher/Rush (Aug 11). Pipeline is in reply-watch mode; all follow-up READY-ACTIONs exhausted/dispatched. No new autonomous drafts needed this run. **Remaining open Jon actions:** (1) Confirm exact entX contract total against executed LSA → allows true gap calculation. (2) AT/Reditus (stef@reditus.space — verify + send). (3) Aug 3 batch: Ravee/Shah (pshah@ravee.space), Lux Aeterna/Taylor (btaylor@luxaeterna.space), UTHR/Rothblatt (mrothblatt@unither.com) — all pending email verify. (4) Morfin LinkedIn DM (IronGate, $250K 504 potential, 33 days dark — cold open, no panel hook). (5) HELIOTECH Aug 31 (JHU APL, hesto.jhuapl.edu) — 14 days out, highest payload-buyer density before Flight 2; still unconfirmed registered. (6) Investor Update Issue #7 — drafted, awaiting Jon review/update then forward to David Mitchell. (7) SPARK + SpaceLiinTech export screens — still pending Denise Shirey. (8) Any warm reply from 30-send wave → forward to Exo, LSA draft in 24h. | **Jon: (1) Confirm entX contract total vs. executed LSA so Exo can update the true raised/gap figure. (2) Morfin LinkedIn — $250K, 33 days, cold open is fine (no panel hook needed). Exo can write the 3-sentence DM on request. (3) Register HELIOTECH Aug 31 (hesto.jhuapl.edu) — 14 days, highest Flight 2 buyer density in the calendar. (4) Issue #7 investor update in your files — review, update placeholders (capital total + entX status + HELIOTECH line), then forward to David Mitchell. (5) AT/Reditus + Ravee/Lux/UTHR — verify emails and send; all in inbox. (6) Any warm reply → forward, LSA draft in 24h.** |
+| 2026-08-17 (05:00) | **Status unchanged from 01:00 (Jon asleep). entX resolution logged; entX nags neutralized.** Capital picture remains provisional: $134,429 confirmed (504 base) + entX payments received (exact $ TBD pending LSA confirm from Jon). True gap unknown until Jon supplies the entX contract total. 30 sends on reply-watch; 0 kg booked by non-entX customer. No new SENT CONFIRMs since StarCatcher/Rush (Aug 11 — now 6 days quiet). Pipeline in reply-watch mode; follow-up backlog exhausted; no new autonomous drafts this run. HELIOTECH Aug 31 = 14 days, unconfirmed registered. Morfin $250K at 33 days dark. | **Status unchanged. Single unlocking action: Jon confirms entX contract total against the LSA so the true gap is known. Next highest-value: Morfin LinkedIn DM ($250K, cold open); HELIOTECH registration (hesto.jhuapl.edu, 14 days); any warm reply from 30-send wave → forward to Exo for LSA draft.** |
+| 2026-08-18 (01:00) | **No material change since Aug 17. entX nags neutralized (payments received). Capital: $134,429 confirmed (504 base) + entX payments received (exact $ TBD — Jon must confirm vs. executed LSA). True gap unknown until LSA total is confirmed. 30 sends on reply-watch; 0 kg booked by non-entX customer. No new SENT CONFIRMs since StarCatcher/Rush (Aug 11 — 7 days quiet). Follow-up backlog exhausted; pipeline in reply-watch mode. HELIOTECH Aug 31 = 13 days, unconfirmed registered. Morfin $250K = 34 days dark (cold open, no panel hook needed). AT/Reditus + Aug 3 Ravee/Lux/UTHR still pending email verify. Issue #7 investor update still awaiting Jon review before Mitchell send. SPARK + SpaceLiinTech export screens still pending Denise Shirey.** | **Jon: (1) Confirm entX contract total vs. executed LSA → unlocks true gap/raised figure. (2) Morfin LinkedIn — $250K, 34 days, cold open fine; Exo writes the 3-sentence DM on request. (3) Register HELIOTECH Aug 31 (hesto.jhuapl.edu) — 13 days, highest payload-buyer density before Flight 2. (4) Issue #7 investor update — review, update placeholders, forward to Mitchell. (5) AT/Reditus + Ravee/Lux/UTHR — verify emails, send. (6) Any warm reply → forward to Exo, LSA draft in 24h.** |
+| 2026-08-18 (05:00) | **No material change from 01:00 (Jon asleep). State is stable.** entX payments confirmed (exact total pending LSA confirmation from Jon). Capital: $134,429 confirmed 504 base + entX (TBD) = true raised/gap unknown. 30 sends on reply-watch; 0 kg booked by non-entX customer. No new SENT CONFIRMs in 7 days (since StarCatcher/Rush Aug 11). Follow-up backlog exhausted; pipeline in reply-watch mode. HELIOTECH Aug 31 = 13 days, unconfirmed. Morfin $250K = 34 days dark. No new autonomous drafts or READY-ACTIONs this run — all queues current. | **Status unchanged. Top action: Jon confirms entX contract total → true gap becomes known and capital plan can be formally updated. Next: Morfin cold DM ($250K); HELIOTECH registration (13 days, hesto.jhuapl.edu); Issue #7 to Mitchell; AT/Reditus + Ravee/Lux/UTHR sends.** |
+| 2026-08-19 (01:00) | **No material change. Pipeline stable in reply-watch mode.** entX payments received (Aug 16 confirm); exact contract total still pending LSA confirmation from Jon — true raised/gap remains unknown until supplied. 504 base confirmed: $134,429. 30 sends on reply-watch; 0 kg booked by non-entX customer. No new SENT CONFIRMs since StarCatcher/Rush Aug 11 — 8 days quiet (normal: follow-up backlog exhausted, no new outreach dispatched since then). Follow-up queue exhausted; no new autonomous drafts or READY-ACTIONs needed this run. NCE co-apex: Utah UDOT meeting AUG 21 (9-11am SLC) — Nelson email must be confirmed sent by today. MDC corridor pitch: confirmed sent to john.canipe@txspacecommission.gov (Aug 18 23:54 auto-confirm) but Sara Harris (sharris@midlandtxedc.com) is the primary — check inbox for that dispatch. HELIOTECH Aug 31 = 12 days, still unconfirmed registered. Morfin $250K = 35 days dark. | **Jon: (1) Confirm entX LSA total → unlocks true raised/gap figure. (2) NCE — confirm Nelson email sent (Utah meeting TOMORROW 9am). (3) Morfin LinkedIn — $250K, 35 days, Exo drafts 3-sentence cold DM on request. (4) HELIOTECH Aug 31 — 12 days, register at hesto.jhuapl.edu. (5) Issue #7 investor update — review + forward to Mitchell. (6) AT/Reditus + Ravee/Lux/UTHR (4 emails) — verify and send. (7) Any warm reply from 30-send wave → forward to Exo, LSA in 24h.** |
+| 2026-08-19 (05:00) | **Status unchanged from 01:00 (Jon asleep). No new SENT CONFIRMs. Pipeline stable in reply-watch mode.** Capital: $134,429 confirmed (504 base) + entX payments received (exact TBD — LSA total confirm still needed from Jon). True gap unknown. 30 sends on reply-watch; 0 kg booked by non-entX customer. **New this run: Morfin LinkedIn DM v2 dispatched** — cold open, no panel hook (v1 from Jul 27 had stale panel reference; v2 is a clean 504 interest check, priority 90). This is the highest-probability $250K close remaining that doesn't require new capital infrastructure. HELIOTECH Aug 31 = 12 days, unconfirmed registered. No new outreach drafts or follow-ups needed — all queues current. NCE Utah meeting Aug 21 (9am SLC) is the next hard deadline in the co-apex. | **Jon: (1) Confirm entX LSA total → true raised/gap becomes known. (2) Morfin LinkedIn v2 now in inbox — cold 3-line 504 ask; $250K, send it. (3) HELIOTECH Aug 31 — 12 days, hesto.jhuapl.edu. (4) Issue #7 investor update → forward to Mitchell. (5) AT/Reditus + Ravee/Lux/UTHR — verify and send. (6) Any warm reply from 30-send wave → forward to Exo, LSA in 24h.** |
+
+<!-- READY-ACTION
+key: capital-bridge-morfin-linkedin-dm-v2
+task_title: Send Morfin (IronGate) LinkedIn DM — cold 504 open, $250K potential
+to: jquinn@exosaero.com
+subject: [ACTION] Ryan Morfin / IronGate — LinkedIn DM to send ($250K 504 potential)
+category: Capital
+priority: 90
+body:
+Jon,
+
+Ryan Morfin (IronGate Capital) has been dark for 35 days. The earlier panel-hook message is stale — send this fresh cold version instead via LinkedIn (linkedin.com/in/ryan-morfin):
+
+---
+
+Ryan — I'm Exos Aerospace's CEO. We operate one of three FAA-licensed reusable suborbital rocket platforms in the US and are raising a 504 Reg D round right now to fund two BLK3 flights that unlock a NASA Flight Opportunities IDIQ on-ramp (~$1M/flight recurring). The structure is clean: accredited investors at full 409A, no DLOM. If you'd have any interest in a 20-minute look at the PPM, I'd welcome the conversation.
+
+---
+
+Three sentences. Direct. No context required. $250K from Morfin closes 28% of the remaining gap in one call.
+
+Exo | Capital Bridge Agent
 END-READY-ACTION -->
