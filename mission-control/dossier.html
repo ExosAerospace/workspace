@@ -61,10 +61,17 @@ nav a.active{color:#fff;background:rgba(0,102,204,.18);border-color:var(--blue)}
   <div class="grid" id="grid"></div>
 </div>
 <script>
-function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
-function liList(arr){return '<ul>'+(arr||[]).map(x=>{
-  let cls = /HARD EXCLUDE|never copy|❌/.test(x)?' class="excl"':'';
-  return '<li'+cls+'>'+esc(x)+'</li>';
+function esc(s){return String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+// Items may be plain strings OR objects (e.g. contacts stored as {name,email,title} by the DD
+// engine). Render objects to a readable line so the page never crashes on schema drift.
+function itemStr(x){
+  if(x && typeof x==='object') return [x.name,x.title,x.email].filter(Boolean).join(' — ') || JSON.stringify(x);
+  return String(x==null?'':x);
+}
+function liList(arr){if(!Array.isArray(arr))arr=(arr==null?[]:[arr]);return '<ul>'+arr.map(x=>{
+  const s=itemStr(x);
+  let cls = /HARD EXCLUDE|never copy|❌/.test(s)?' class="excl"':'';
+  return '<li'+cls+'>'+esc(s)+'</li>';
 }).join('')+'</ul>';}
 let ALL=[];
 function byId(id){return ALL.find(x=>x.id===id);}
@@ -91,7 +98,7 @@ function cardHtml(x){const failed=x.dd_status==='failed';return `
       </div>
     </div>`;}
 function editHtml(x){
-  const ta=(label,key,arr)=>`<label>${label}<textarea data-k="${key}" rows="3">${esc((arr||[]).join('\n'))}</textarea></label>`;
+  const ta=(label,key,arr)=>`<label>${label}<textarea data-k="${key}" rows="3">${esc((Array.isArray(arr)?arr:(arr==null?[]:[arr])).map(itemStr).join('\n'))}</textarea></label>`;
   const inp=(label,key,val)=>`<label>${label}<input data-k="${key}" value="${esc(val||'')}"></label>`;
   return `<div class="card editing" id="card-${x.id}"><div class="edit-form">
     ${inp('Name','name',x.name)}
