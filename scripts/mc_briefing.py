@@ -63,15 +63,31 @@ def sam_open_solicitations(today):
                 data = json.load(r)
         except Exception:
             continue
-        RELEVANT = ("launch", "space", "rocket", "propuls", "suborbit", "spaceport",
-                    "detonation", "orbital", "missile", "hypersonic", "cryogenic", "payload")
+        # Capability gate: an item must match an Exos-capability phrase (ALLOW) and
+        # must NOT match a known anti-pattern (DENY). The prior bare-word list
+        # ("missile","rocket","space","orbital") let interceptors, GMLRS, and
+        # satellite-bus buys through — none of which Exos can bid.
+        ALLOW = ("reusable launch", "suborbital", "spaceport", "space launch", "launch service",
+                 "launch site", "responsive launch", "responsive space", "sounding rocket",
+                 "rotating detonation", "detonation engine", "rdre",
+                 "cryogenic", "cryocooler", "propellant transfer", "in-space refuel", "on-orbit refuel",
+                 "in-space propellant", "fluid management", "composite tank", "linerless", "type-5", "type 5",
+                 "hosted payload", "payload flight", "flight test service",
+                 "rocket motor case", "solid rocket motor case", "composite overwrap",
+                 "hypersonic flight", "hypersonic test")
+        DENY = ("interceptor", "counter-small", "counter small", "c-uas", "c-suas", "patriot",
+                "guided missile", "multiple launch rocket", "mlrs", "terminal stage", "warhead",
+                "missile defense", "tracking to intercept", "landsat", "spacecraft bus",
+                "satellite bus", "gps iii", "weather satellite")
         for o in (data.get("opportunitiesData") or []):
             dl = o.get("responseDeadLine")
             title = (o.get("title") or "")
             if not dl:
                 continue
-            # relevance gate — SAM q-matching is loose; keep only space/launch items
-            if not any(k in title.lower() for k in RELEVANT):
+            tl = title.lower()
+            if not any(k in tl for k in ALLOW):
+                continue
+            if any(k in tl for k in DENY):
                 continue
             try:
                 d = datetime.date.fromisoformat(dl[:10])
