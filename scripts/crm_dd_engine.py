@@ -223,6 +223,24 @@ def route_decision(company, dom, summary, owner, deep_confirmed=False):
                 "assignedTo": owner_email, "owner": owner, "deep_confirmed": deep_confirmed})
     json.dump(store, open(DECISIONS, "w"), indent=1)
 
+def clear_decision(dom):
+    """Delete any do-not-engage Decision for this domain — used when a company is NOT a fail (the
+    deep-dive cleared it, or it passes on re-screen). A cleared company must not leave a stale
+    do-not-engage Decision on the board."""
+    try:
+        store = load_json(DECISIONS, {"decisions": []})
+        arr = store if isinstance(store, list) else store.get("decisions", [])
+        dk = f"dd-fail-{dom}"
+        kept = [x for x in arr if not (x.get("source") == "crm-dd-engine"
+                                       and (x.get("dedupeKey") == dk or x.get("relatedItem") == dom))]
+        if len(kept) != len(arr):
+            if isinstance(store, list): store = kept
+            else: store["decisions"] = kept
+            json.dump(store, open(DECISIONS, "w"), indent=1)
+            print(f"  cleared {len(arr)-len(kept)} do-not-engage decision(s) for {dom} (no longer a fail)")
+    except Exception as e:
+        print("clear_decision failed:", e)
+
 # ---- core screen ----
 def _screen_pass(dom, name, deep=False):
     """One DD pass. quick = 1 overview search + base rubric. deep = adds adverse-media + ownership
@@ -290,6 +308,9 @@ def write_record(reg, dom, name, r, owner="Jon"):
     if r["verdict"] == "fail" and r["source"] == "tavily+ollama":
         route_decision(name, dom, r["summary"], owner,
                        deep_confirmed=(r.get("escalated", False) or r.get("depth") == "deep"))
+    else:
+        # not a fail (incl. a deep-dive that CLEARED an initial fail) -> remove any stale do-not-engage Decision
+        clear_decision(dom)
 
 def needs_dd(rec):
     """Stale (>180d), never-scored, error/pending, a low-confidence pass, or a model FAIL that was
