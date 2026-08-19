@@ -1268,6 +1268,15 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── DD registry (read-only; CRM UI reads this for the DD field + red-glow failed companies) ──
+  if (req.url.split('?')[0] === '/api/dd' && req.method === 'GET') {
+    try {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(fs.readFileSync(path.join(__dirname, 'data', 'dd-registry.json')));
+    } catch (e) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{}'); }
+    return;
+  }
+
   // ── SALES COMMISSIONS (restricted): Jon + CTO see all; a sales agent sees ONLY their own ──
   // Data lives in the audited ERP db (erp-foundation/mc.db), not the CRM. Access is enforced here
   // by an explicit allowlist, NOT by MC role (Lizi is an admin AND an agent → must see only hers).
@@ -1654,6 +1663,92 @@ const server = http.createServer((req, res) => {
   }
 
   // ── TASKS API (Supabase-backed) ──
+  // ── Global search across Mission Control (tasks, CRM, opportunities, decisions, …) ──
+  if (req.url.split('?')[0] === '/api/search' && req.method === 'GET') {
+    const s = getSession(req);
+    if (!s) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    (async () => {
+      const raw = (new URLSearchParams(req.url.split('?')[1] || '').get('q') || '').trim();
+      if (raw.length < 2) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ q: raw, groups: [], total: 0 })); return; }
+      const ql = raw.toLowerCase();
+      const enc = encodeURIComponent(raw.replace(/[(),*]/g, ' ').trim());
+      const ilikeOr = cols => `or=(${cols.map(c => `${c}.ilike.*${enc}*`).join(',')})`;
+      const dataDir = path.join(__dirname, 'data');
+      const readJson = f => { try { return JSON.parse(fs.readFileSync(path.join(dataDir, f), 'utf8')); } catch (e) { return null; } };
+      const hit = (obj, fields) => fields.some(f => String(obj[f] == null ? '' : obj[f]).toLowerCase().includes(ql));
+      const groups = [];
+
+      // -- Supabase-backed entities (live) --
+      const sb = async (label, icon, table, cols, selectCols, mapper) => {
+        try {
+          const r = await supabaseRequest('GET', `${table}?select=${selectCols}&${ilikeOr(cols)}&limit=25`);
+          const rows = Array.isArray(r.data) ? r.data : [];
+          if (rows.length) groups.push({ key: table, label, icon, results: rows.map(mapper) });
+        } catch (e) { /* one source failing must not break search */ }
+      };
+      await Promise.all([
+        sb('Tasks', '📋', 'tasks', ['title', 'owner', 'category', 'description'],
+           'id,title,owner,state,category,due_date',
+           t => ({ title: t.title || '(untitled)', subtitle: [t.owner, t.category].filter(Boolean).join(' · '),
+                   badge: t.state, url: `/index.html?task=${encodeURIComponent(t.id)}` })),
+        sb('Contacts', '👤', 'contacts', ['name', 'email', 'organization', 'title', 'notes'],
+           'id,name,email,organization,title',
+           c => ({ title: c.name || c.email || '(contact)', subtitle: [c.title, c.organization, c.email].filter(Boolean).join(' · '),
+                   badge: 'CRM', url: `/crm.html?q=${encodeURIComponent(c.name || c.email || '')}` })),
+        sb('Companies', '🏢', 'companies', ['name', 'domain', 'industry', 'description'],
+           'id,name,domain,industry',
+           c => ({ title: c.name || c.domain || '(company)', subtitle: [c.industry, c.domain].filter(Boolean).join(' · '),
+                   badge: 'CRM', url: `/crm.html?q=${encodeURIComponent(c.name || c.domain || '')}` })),
+        sb('Deals', '💰', 'deals', ['name', 'notes', 'stage'],
+           'id,name,stage,amount',
+           d => ({ title: d.name || '(deal)', subtitle: [d.stage, d.amount ? ('$' + Number(d.amount).toLocaleString()) : ''].filter(Boolean).join(' · '),
+                   badge: 'Deal', url: `/crm.html?q=${encodeURIComponent(d.name || '')}` })),
+      ]);
+
+      // -- Local JSON-backed entities (analytics-derived) --
+      const opps = readJson('opportunities.json');
+      if (opps && Array.isArray(opps.opportunities)) {
+        const r = opps.opportunities.filter(o => hit(o, ['title', 'description', 'next_action', 'category', 'type', 'id'])).slice(0, 25);
+        if (r.length) groups.push({ key: 'opportunities', label: 'Opportunities', icon: '🎯',
+          results: r.map(o => ({ title: o.title || o.id, subtitle: [o.type, o.status, o.value].filter(Boolean).join(' · '),
+            badge: o.priority ? ('P' + o.priority) : 'Opp', url: `/opportunities.html?focus=${encodeURIComponent(o.id)}` })) });
+      }
+      const dec = readJson('decisions.json');
+      if (Array.isArray(dec)) {
+        const r = dec.filter(d => hit(d, ['question', 'context', 'note', 'proposedAction', 'answer', 'id'])).slice(0, 25);
+        if (r.length) groups.push({ key: 'decisions', label: 'Decisions', icon: '🗳️',
+          results: r.map(d => ({ title: d.question || d.proposedAction || d.id, subtitle: (d.answer ? 'Answered: ' + d.answer : (d.context || '')).slice(0, 120),
+            badge: d.answer ? 'answered' : 'open', url: `/decisions.html?focus=${encodeURIComponent(d.id)}` })) });
+      }
+      const dos = readJson('dossiers.json');
+      if (dos && Array.isArray(dos.dossiers)) {
+        const r = dos.dossiers.filter(d => hit(d, ['name', 'headline', 'next_step', 'status', 'stage', 'id'])).slice(0, 25);
+        if (r.length) groups.push({ key: 'dossiers', label: 'Relationship Dossiers', icon: '🤝',
+          results: r.map(d => ({ title: d.name || d.id, subtitle: (d.headline || d.next_step || '').slice(0, 120),
+            badge: d.stage || 'dossier', url: `/dossier.html?q=${encodeURIComponent(d.name || '')}` })) });
+      }
+      const con = readJson('consortium.json');
+      if (con && Array.isArray(con.partners)) {
+        const r = con.partners.filter(p => hit(p, ['name', 'role', 'capabilities', 'scopes', 'status'])).slice(0, 25);
+        if (r.length) groups.push({ key: 'consortium', label: 'Consortium Partners', icon: '🧩',
+          results: r.map(p => ({ title: p.name, subtitle: (p.role || p.capabilities || '').toString().slice(0, 120),
+            badge: p.status || 'partner', url: `/consortium.html` })) });
+      }
+      const gaps = readJson('capability-gaps.json');
+      if (gaps && Array.isArray(gaps.gaps)) {
+        const r = gaps.gaps.filter(g => hit(g, ['capability', 'description', 'category', 'tag', 'id'])).slice(0, 25);
+        if (r.length) groups.push({ key: 'gaps', label: 'Capability Gaps', icon: '🧠',
+          results: r.map(g => ({ title: g.capability || g.id, subtitle: (g.description || '').slice(0, 120),
+            badge: g.severity || 'gap', url: `/capability-gaps.html` })) });
+      }
+
+      const total = groups.reduce((n, g) => n + g.results.length, 0);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ q: raw, total, groups }));
+    })().catch(e => { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e && e.message || e) })); });
+    return;
+  }
+
   // ── Management report: per-employee task metrics (live from Supabase) ──────────────
   // Read-only analytics for the weekly leadership review. Admin/manager only (this exposes
   // whole-company workload, not just the caller's tasks). Names are normalized to a canonical
@@ -2019,19 +2114,45 @@ const server = http.createServer((req, res) => {
     req.on('data', chunk => body += chunk.toString());
     req.on('end', () => {
       const update = JSON.parse(body);
+      // DD pipeline gate: a failed-DD company can't advance to an engaged stage without an explicit override.
+      const ddOverride = update.fields && (update.fields.dd_override === true || update.fields.dd_override === 'true');
+      if (update.fields) delete update.fields.dd_override;   // control flag, not a Supabase column
       const sbFields = toSupabase(update.fields);
-      // Try matching by crm_id first, fall back to uuid
       const filter = update.id.startsWith('EXOS-')
         ? `contacts?crm_id=eq.${encodeURIComponent(update.id)}`
         : `contacts?id=eq.${encodeURIComponent(update.id)}`;
-      supabaseRequest('PATCH', filter, sbFields)
-        .then(({ status, data }) => {
-          if (status >= 400) { res.writeHead(status); res.end(JSON.stringify(data)); return; }
-          const row = Array.isArray(data) && data[0] ? toFrontend(data[0]) : {};
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(row));
-        })
-        .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
+      const doPatch = () => {
+        supabaseRequest('PATCH', filter, sbFields)
+          .then(({ status, data }) => {
+            if (status >= 400) { res.writeHead(status); res.end(JSON.stringify(data)); return; }
+            const row = Array.isArray(data) && data[0] ? toFrontend(data[0]) : {};
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(row));
+          })
+          .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
+      };
+      const ADVANCED = ['Meeting Requested','Meeting Held','Engaged','Term Sheet / Proposal','Active','Engaged — Active Broker','Closed Won'];
+      const newStage = update.fields && update.fields.stage;
+      if (newStage && ADVANCED.includes(newStage) && !ddOverride) {
+        supabaseRequest('GET', filter + '&select=email', null).then(({ data }) => {
+          try {
+            const email = ((Array.isArray(data) && data[0] && data[0].email) || '').toLowerCase();
+            const dom = email.includes('@') ? email.split('@')[1] : '';
+            let ddreg = {};
+            try { ddreg = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'dd-registry.json'), 'utf-8')); } catch (e) {}
+            const rec = dom && ddreg[dom];
+            if (rec && rec.status === 'fail') {
+              res.writeHead(409, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'DD gate', ddFail: true, summary: rec.summary || '',
+                message: `${dom} failed due diligence — cannot advance to "${newStage}" without an override. (${rec.summary || ''})` }));
+              return;
+            }
+          } catch (e) {}
+          doPatch();
+        }).catch(() => doPatch());   // fail-open: never block editing on a lookup error
+        return;
+      }
+      doPatch();
     });
     return;
   }

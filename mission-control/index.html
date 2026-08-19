@@ -502,6 +502,7 @@
     </div>
   </div>
   <div class="header-right">
+    <a href="search.html" title="Global search (⌘K / Ctrl-K)" style="color:var(--text,#e8edf5);text-decoration:none;font-size:0.85rem;margin-right:8px;font-weight:600;background:#12244a;border:1px solid var(--line,#1c3052);border-radius:16px;padding:3px 12px;">🔎 Search <span style="opacity:.5;font-size:.75rem">⌘K</span></a>
     <!-- Business Development -->
     <a href="opportunities.html" style="color:var(--orange2);text-decoration:none;font-size:0.85rem;margin-right:4px;">Opportunities</a>
     <a href="capability-gaps.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🧩 Gap Ledger</a>
@@ -988,6 +989,12 @@ async function loadTasks(showFeedback = false) {
       updateCategoryFilter();
       hideError();
       scheduleRefresh();
+      // Arrived from global search with ?task=<id>: open that task's detail panel once.
+      if (pendingTaskOpen) {
+        const tid = pendingTaskOpen; pendingTaskOpen = '';
+        if (tasks.some(t => String(t.id) === String(tid))) { try { openEdit(tid); } catch (e) {} }
+        history.replaceState({}, '', '/index.html');
+      }
       return;
     }
     const stamp = () => setRefreshBadge('Updated ' + new Date().toLocaleTimeString('en-US', { timeZone:'America/Chicago', hour: '2-digit', minute: '2-digit' }), true);
@@ -2000,6 +2007,12 @@ async function deleteDocument(docId) {
 
 // ── INIT ──
 applyPeopleParams();      // parse ?person=&flt= from the Team-Performance drill-through
+// Global search: ⌘K / Ctrl-K opens the search page from anywhere on the board
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); window.location = '/search.html'; }
+});
+// Deep-open a task when arriving from global search (?task=<id>): open its detail panel once loaded
+let pendingTaskOpen = new URLSearchParams(location.search).get('task') || '';
 loadTasks(true);
 
 // ── ASK EXOBOT — in-MC chat widget (per-user Exobot session) ──

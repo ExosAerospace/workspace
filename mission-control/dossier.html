@@ -136,5 +136,9 @@ reload().then(()=>{
     render(q?ALL.filter(x=>JSON.stringify(x).toLowerCase().includes(q)):ALL);
   });
 }).catch(e=>{document.getElementById('updated').textContent='Failed to load dossiers.json: '+e;});
+// Global-search deep link: /dossier.html?q=<term> pre-fills the search + filters.
+(function(){var q=new URLSearchParams(location.search).get('q');if(!q)return;
+  function apply(){var el=document.getElementById('search');if(el){el.value=q;el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('keyup',{bubbles:true}));}}
+  apply();setTimeout(apply,700);})();
 </script>
 </body></html>

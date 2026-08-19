@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXOS CRM — Mission Control</title>
+<style>
+:root {
+  --bg: #0f1923; --surface: #1a2733; --surface2: #243447; --border: #2d4a5e;
+  --text: #e8edf2; --text2: #8ba4b8; --accent: #3b82f6; --accent2: #1d4ed8;
+  --green: #22c55e; --yellow: #eab308; --red: #ef4444; --orange: #f97316; --purple: #a855f7;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--text); }
+
+/* Header */
+.header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.header h1 { font-size: 20px; font-weight: 700; }
+.header h1 span { color: var(--accent); }
+.header-actions { display: flex; gap: 10px; align-items: center; }
+
+/* Tabs */
+.tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; position: sticky; top: 53px; z-index: 99; }
+.tab { padding: 12px 20px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text2); border-bottom: 2px solid transparent; transition: all 0.15s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent); border-color: var(--accent); }
+.tab .badge { background: var(--surface2); border: 1px solid var(--border); padding: 1px 7px; border-radius: 10px; font-size: 11px; margin-left: 6px; }
+
+/* Common */
+.btn { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.15s; }
+.btn:hover { background: var(--border); }
+.btn-primary { background: var(--accent); border-color: var(--accent2); }
+.btn-primary:hover { background: var(--accent2); }
+.btn-danger { background: var(--red); border-color: #dc2626; }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.btn-ghost { background: transparent; border-color: transparent; }
+.btn-ghost:hover { background: var(--surface2); }
+
+.stats-bar { display: flex; gap: 12px; padding: 16px 24px; flex-wrap: wrap; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 20px; min-width: 160px; flex: 1; }
+.stat-label { font-size: 11px; text-transform: uppercase; color: var(--text2); letter-spacing: 0.5px; }
+.stat-value { font-size: 28px; font-weight: 700; margin-top: 2px; }
+.stat-value.blue { color: var(--accent); }
+.stat-value.green { color: var(--green); }
+.stat-value.yellow { color: var(--yellow); }
+.stat-value.orange { color: var(--orange); }
+.stat-value.purple { color: var(--purple); }
+.stat-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+.filters { display: flex; gap: 10px; padding: 12px 24px; flex-wrap: wrap; align-items: center; border-bottom: 1px solid var(--border); }
+.search-box { flex: 1; min-width: 200px; padding: 8px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; outline: none; }
+.search-box:focus { border-color: var(--accent); }
+.filter-select { padding: 8px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; outline: none; cursor: pointer; }
+
+/* Table */
+.table-wrap { overflow-x: auto; padding: 0 24px 24px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: var(--surface); color: var(--text2); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border-bottom: 2px solid var(--border); cursor: pointer; user-select: none; white-space: nowrap; }
+th:hover { color: var(--text); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover { background: var(--surface); }
+.editable { cursor: pointer; border-bottom: 1px dashed var(--border); }
+.editable:hover { border-color: var(--accent); }
+.edit-input { background: var(--surface2); border: 1px solid var(--accent); color: var(--text); padding: 4px 8px; border-radius: 4px; font-size: 13px; width: 100%; outline: none; }
+.notes-cell { max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.notes-cell:hover { white-space: normal; }
+
+/* Badges */
+.tier-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.tier-1 { background: rgba(239,68,68,0.2); color: var(--red); }
+.tier-2 { background: rgba(234,179,8,0.2); color: var(--yellow); }
+.tier-3 { background: rgba(139,164,184,0.2); color: var(--text2); }
+.stage-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.overdue { background: rgba(239,68,68,0.08); }
+.due-flag { color: var(--red); font-weight: 600; }
+.link { color: var(--accent); text-decoration: none; }
+.link:hover { text-decoration: underline; }
+
+/* Pipeline Kanban */
+.kanban { display: flex; gap: 12px; padding: 16px 24px; overflow-x: auto; min-height: 500px; }
+.kanban-col { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; min-width: 260px; flex: 1; display: flex; flex-direction: column; }
+.kanban-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.kanban-header h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.kanban-header .count { background: var(--surface2); padding: 2px 8px; border-radius: 10px; font-size: 11px; color: var(--text2); }
+.kanban-header .value { font-size: 11px; color: var(--green); margin-top: 2px; }
+.kanban-cards { padding: 8px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; min-height: 50px; }
+.deal-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 12px; cursor: pointer; transition: all 0.15s; }
+.deal-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.deal-card .deal-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+.deal-card .deal-company { font-size: 12px; color: var(--text2); }
+.deal-card .deal-amount { font-size: 14px; font-weight: 700; color: var(--green); margin-top: 6px; }
+.deal-card .deal-meta { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: var(--text2); }
+.deal-card.dragging { opacity: 0.5; }
+.dd-badge { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+.dd-pass { background: rgba(46,125,50,.15); color: #2E7D32; }
+.dd-caution { background: rgba(184,134,11,.18); color: #B8860B; }
+.dd-badge.dd-fail { background: rgba(176,0,32,.18); color: #d11; }
+.dd-none { background: var(--surface2); color: var(--text2); }
+tr.dd-fail td { background: rgba(176,0,32,.06) !important; }
+tr.dd-fail { outline: 2px solid #ff2d2d; outline-offset: -2px; box-shadow: 0 0 8px 2px rgba(255,45,45,.55); animation: ddglow 1.4s ease-in-out infinite; }
+@keyframes ddglow { 0%,100% { box-shadow: 0 0 6px 1px rgba(255,45,45,.45); } 50% { box-shadow: 0 0 15px 4px rgba(255,45,45,.9); } }
+.kanban-cards.drag-over { background: rgba(59,130,246,0.05); border: 1px dashed var(--accent); border-radius: 4px; }
+
+/* Activity Timeline */
+.timeline { padding: 16px 24px; max-width: 900px; }
+.timeline-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.timeline-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; }
+.timeline-icon.email { background: rgba(59,130,246,0.2); color: var(--accent); }
+.timeline-icon.call { background: rgba(34,197,94,0.2); color: var(--green); }
+.timeline-icon.meeting { background: rgba(168,85,247,0.2); color: var(--purple); }
+.timeline-icon.note { background: rgba(234,179,8,0.2); color: var(--yellow); }
+.timeline-icon.task { background: rgba(249,115,22,0.2); color: var(--orange); }
+.timeline-content { flex: 1; }
+.timeline-content .subject { font-weight: 600; font-size: 13px; }
+.timeline-content .body { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.timeline-content .meta { font-size: 11px; color: var(--text2); margin-top: 4px; }
+
+/* Templates */
+.templates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 16px; padding: 16px 24px; }
+.template-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.template-card h3 { font-size: 14px; margin-bottom: 4px; }
+.template-card .template-subject { font-size: 12px; color: var(--accent); margin-bottom: 8px; }
+.template-card .template-body { font-size: 12px; color: var(--text2); line-height: 1.5; max-height: 100px; overflow: hidden; }
+.template-card .template-meta { display: flex; justify-content: space-between; margin-top: 12px; font-size: 11px; color: var(--text2); align-items: center; }
+
+/* Modal */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; }
+.modal-overlay.active { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; width: 90%; max-width: 650px; max-height: 90vh; overflow-y: auto; }
+.modal h2 { margin-bottom: 16px; font-size: 18px; }
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 12px; color: var(--text2); text-transform: uppercase; margin-bottom: 4px; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; outline: none; }
+.form-group textarea { min-height: 80px; resize: vertical; font-family: inherit; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); }
+.form-row { display: flex; gap: 12px; }
+.form-row .form-group { flex: 1; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+.count-info { font-size: 12px; color: var(--text2); padding: 8px 24px; }
+
+/* Tasks */
+.priority-bar { display: inline-block; width: 44px; height: 22px; border-radius: 4px; text-align: center; font-size: 11px; font-weight: 700; line-height: 22px; }
+.priority-critical { background: rgba(239,68,68,0.25); color: var(--red); }
+.priority-high { background: rgba(249,115,22,0.25); color: var(--orange); }
+.priority-medium { background: rgba(234,179,8,0.2); color: var(--yellow); }
+.priority-low { background: rgba(139,164,184,0.15); color: var(--text2); }
+.state-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.state-todo { background: rgba(59,130,246,0.15); color: var(--accent); }
+.state-progress { background: rgba(234,179,8,0.2); color: var(--yellow); }
+.state-blocked { background: rgba(239,68,68,0.15); color: var(--red); }
+.state-done { background: rgba(34,197,94,0.15); color: var(--green); }
+.task-overdue { color: var(--red); font-weight: 600; }
+.task-due-soon { color: var(--orange); font-weight: 600; }
+.task-title { font-weight: 600; }
+.task-desc { font-size: 11px; color: var(--text2); margin-top: 2px; max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.task-desc:hover { white-space: normal; }
+.cat-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.cat-series-a { background: rgba(168,85,247,0.2); color: var(--purple); }
+.cat-revenue { background: rgba(34,197,94,0.2); color: var(--green); }
+.cat-bd { background: rgba(59,130,246,0.15); color: var(--accent); }
+.cat-ops { background: rgba(139,164,184,0.15); color: var(--text2); }
+
+/* Section panels */
+.panel { display: none; }
+.panel.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>EXOS</span> CRM</h1>
+  <div class="header-actions">
+    <a class="btn" href="/index.html" title="Back to Mission Control">← Mission Control</a>
+    <a class="btn" href="/dossier.html" title="Company & relationship dossiers">Dossiers</a>
+    <button class="btn" onclick="exportCSV()">Export CSV</button>
+    <button class="btn btn-primary" id="addBtn" onclick="handleAdd()">+ Add</button>
+  </div>
+</div>
+
+<div class="tabs" id="tabBar">
+  <div class="tab active" data-tab="dashboard">Dashboard</div>
+  <div class="tab" data-tab="contacts">Contacts <span class="badge" id="contactCount">0</span></div>
+  <div class="tab" data-tab="companies">Companies <span class="badge" id="companyCount">0</span></div>
+  <div class="tab" data-tab="deals">Deals <span class="badge" id="dealCount">0</span></div>
+  <div class="tab" data-tab="tasks">Tasks <span class="badge" id="taskCount">0</span></div>
+  <div class="tab" data-tab="activities">Activities</div>
+  <div class="tab" data-tab="templates">Templates</div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="panel active" id="panel-dashboard">
+  <div class="stats-bar" id="dashStats"></div>
+  <div style="display:flex; gap:24px; padding:0 24px 24px; flex-wrap:wrap;">
+    <div style="flex:2; min-width:400px;">
+      <h3 style="margin-bottom:12px; color:var(--text2); font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">Pipeline Summary</h3>
+      <div id="pipelineBars"></div>
+    </div>
+    <div style="flex:1; min-width:300px;">
+      <h3 style="margin-bottom:12px; color:var(--text2); font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">Recent Activity</h3>
+      <div id="recentActivity"></div>
+    </div>
+  </div>
+  <div style="padding:0 24px 24px;">
+    <h3 style="margin-bottom:12px; color:var(--red); font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">Hot Tasks — Series A & Revenue Priority</h3>
+    <div id="dashHotTasks" style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 16px;"></div>
+  </div>
+</div>
+
+<!-- CONTACTS -->
+<div class="panel" id="panel-contacts">
+  <div class="filters">
+    <input type="text" class="search-box" id="contactSearch" placeholder="Search contacts, companies, notes...">
+    <select class="filter-select" id="filterTier"><option value="">All Tiers</option><option value="Tier 1">Tier 1</option><option value="Tier 2">Tier 2</option><option value="Tier 3">Tier 3</option></select>
+    <select class="filter-select" id="filterStage"><option value="">All Stages</option><option value="Engaged">Engaged</option><option value="Term Sheet / Proposal">Term Sheet</option><option value="Meeting Held">Meeting Held</option><option value="Meeting Requested">Meeting Requested</option><option value="Follow Up">Follow Up</option><option value="Contacted">Contacted</option><option value="Research">Research</option><option value="Passed">Passed</option></select>
+    <select class="filter-select" id="filterCategory"><option value="">All Types</option><option value="Financial Investor">Financial Investor</option><option value="Strategic / Corporate">Strategic / Corporate</option><option value="Intermediary / Banker">Intermediary / Banker</option><option value="Other / Review">Other / Review</option></select>
+    <select class="filter-select" id="filterStatus"><option value="">All Status</option><option value="Active">Active</option><option value="Archived">Archived</option></select>
+  </div>
+  <div class="stats-bar" id="contactStats"></div>
+  <div class="count-info" id="contactInfo"></div>
+  <div class="table-wrap"><table><thead><tr>
+    <th data-col="company">Company</th><th>DD</th><th data-col="contact">Contact</th><th data-col="title">Title</th>
+    <th data-col="category">Type</th><th data-col="tier">Tier</th><th data-col="stage">Stage</th>
+    <th data-col="priority_score">Score</th><th data-col="email">Email</th>
+    <th data-col="last_touch">Last Touch</th><th data-col="next_action">Next Action</th>
+    <th data-col="notes">Notes</th><th>Actions</th>
+  </tr></thead><tbody id="contactTable"></tbody></table></div>
+</div>
+
+<!-- COMPANIES -->
+<div class="panel" id="panel-companies">
+  <div class="filters">
+    <input type="text" class="search-box" id="companySearch" placeholder="Search companies...">
+  </div>
+  <div class="table-wrap"><table><thead><tr>
+    <th>Name</th><th>Industry</th><th>Size</th><th>Contacts</th><th>Deals</th><th>Website</th><th>Owner</th><th>Actions</th>
+  </tr></thead><tbody id="companyTable"></tbody></table></div>
+</div>
+
+<!-- DEALS PIPELINE -->
+<div class="panel" id="panel-deals">
+  <div class="stats-bar" id="dealStats"></div>
+  <div class="kanban" id="kanbanBoard"></div>
+</div>
+
+<!-- TASKS -->
+<div class="panel" id="panel-tasks">
+  <div class="filters">
+    <input type="text" class="search-box" id="taskSearch" placeholder="Search tasks...">
+    <select class="filter-select" id="filterTaskCategory">
+      <option value="">All Categories</option>
+      <option value="Series A">Series A</option>
+      <option value="Revenue">Revenue</option>
+      <option value="BD">BD</option>
+      <option value="Operations">Operations</option>
+      <option value="General">General</option>
+    </select>
+    <select class="filter-select" id="filterTaskState">
+      <option value="">All States</option>
+      <option value="To Do">To Do</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Blocked">Blocked</option>
+      <option value="Done">Done</option>
+    </select>
+    <select class="filter-select" id="filterTaskPriority">
+      <option value="">All Priorities</option>
+      <option value="90">Critical (90+)</option>
+      <option value="70">High (70+)</option>
+      <option value="50">Medium (50+)</option>
+      <option value="0">Low</option>
+    </select>
+    <select class="filter-select" id="filterTaskAssigned">
+      <option value="">All Assignees</option>
+      <option value="__unassigned">Unassigned</option>
+    </select>
+    <button class="btn" id="taskViewToggle" onclick="toggleTaskView()">Group by Assignee</button>
+    <button class="btn btn-primary" onclick="openTaskModal()">+ Add Task</button>
+  </div>
+  <div class="stats-bar" id="taskStats"></div>
+  <div class="count-info" id="taskInfo"></div>
+  <div class="table-wrap"><table><thead><tr>
+    <th data-taskcol="priority" style="width:60px">Priority</th>
+    <th data-taskcol="title">Task</th>
+    <th data-taskcol="category">Category</th>
+    <th data-taskcol="assigned_to">Assigned To</th>
+    <th data-taskcol="owner">Owner</th>
+    <th data-taskcol="state">State</th>
+    <th data-taskcol="due_date">Due</th>
+    <th data-taskcol="source">Source</th>
+    <th>Actions</th>
+  </tr></thead><tbody id="taskTable"></tbody></table></div>
+</div>
+
+<!-- ACTIVITIES -->
+<div class="panel" id="panel-activities">
+  <div class="filters">
+    <input type="text" class="search-box" id="activitySearch" placeholder="Search activities...">
+    <select class="filter-select" id="filterActivityType"><option value="">All Types</option><option value="email">Email</option><option value="call">Call</option><option value="meeting">Meeting</option><option value="note">Note</option><option value="task">Task</option></select>
+    <button class="btn btn-primary" onclick="openActivityModal()">+ Log Activity</button>
+  </div>
+  <div class="timeline" id="activityTimeline"></div>
+</div>
+
+<!-- TEMPLATES -->
+<div class="panel" id="panel-templates">
+  <div style="padding:16px 24px; display:flex; justify-content:flex-end;">
+    <button class="btn btn-primary" onclick="openTemplateModal()">+ New Template</button>
+  </div>
+  <div class="templates-grid" id="templatesGrid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+let contacts = [], companies = [], deals = [], activities = [], templates = [], tasks = [];
+let ddReg = {};
+let currentTab = 'dashboard';
+let contactSort = { col: 'priority_score', dir: -1 };
+let taskSort = { col: 'priority', dir: -1 };
+const DEAL_STAGES = ['Qualification','Discovery','Proposal','Negotiation','Closed Won','Closed Lost'];
+const STAGE_COLORS = {'Qualification':'var(--text2)','Discovery':'var(--accent)','Proposal':'var(--yellow)','Negotiation':'var(--orange)','Closed Won':'var(--green)','Closed Lost':'var(--red)'};
+
+async function init() {
+  await Promise.all([loadContacts(), loadCompanies(), loadDeals(), loadActivities(), loadTemplates(), loadTasks(), loadDD()]);
+  renderAll();
+}
+
+async function loadDD() {
+  try { const r = await fetch('/api/dd'); ddReg = r.ok ? await r.json() : {}; } catch (e) { ddReg = {}; }
+  if (typeof ddReg !== 'object' || Array.isArray(ddReg) || ddReg === null) ddReg = {};
+}
+function ddDomain(c) { const e = (c.email || ''); return e.includes('@') ? e.split('@')[1].toLowerCase().trim() : ''; }
+function ddFor(c) { const d = ddDomain(c); return d && ddReg[d] ? ddReg[d] : null; }
+function ddRowClass(c) { const r = ddFor(c); return r && r.status === 'fail' ? 'dd-fail' : ''; }
+function ddStale(r) { if (!r || !r.date) return false; return (Date.now() - new Date(r.date).getTime()) > 180*864e5; }
+function ddBadge(c) {
+  const r = ddFor(c);
+  if (!r) return '<span class="dd-badge dd-none" title="not yet screened">—</span>';
+  const lbl = { pass: '✓ DD', caution: '⚠ DD', fail: '✗ FAIL', error: 'DD ?' }[r.status] || r.status;
+  const stale = ddStale(r), deep = r.depth === 'deep' ? ' ·deep' : '';
+  const tip = esc((r.summary || '') + ` · conf: ${r.confidence || '?'} · ${r.depth || 'quick'} DD · ${r.date || ''}`
+    + (stale ? ' · STALE (auto re-checking)' : '') + (r.sources && r.sources.length ? ` · ${r.sources.length} sources` : ''));
+  return `<span class="dd-badge dd-${r.status}" title="${tip}">${lbl}${deep}${stale ? ' ⏳' : ''}</span>`;
+}
+
+async function loadContacts() { contacts = await api('/api/crm'); document.getElementById('contactCount').textContent = contacts.length; }
+async function loadCompanies() { companies = await api('/api/companies'); document.getElementById('companyCount').textContent = companies.length; }
+async function loadDeals() { deals = await api('/api/deals'); document.getElementById('dealCount').textContent = deals.length; }
+async function loadActivities() { activities = await api('/api/activities'); }
+async function loadTemplates() { templates = await api('/api/templates'); }
+async function loadTasks() { tasks = await api('/api/tasks'); document.getElementById('taskCount').textContent = tasks.filter(t => t.state !== 'Done').length; }
+async function api(url, opts) {
+  try {
+    const r = await fetch(url, opts);
+    if (r.status === 409) { const j = await r.json().catch(() => ({})); if (j && j.ddFail) alert('⛔ DD gate — ' + (j.message || 'This company failed due diligence and cannot advance without an override.')); return []; }
+    if (!r.ok) return [];            // e.g. 403 for role-restricted endpoints (deals/templates for members)
+    const data = await r.json();
+    return Array.isArray(data) ? data : [];  // never let an error object poison array renders
+  } catch { return []; }
+}
+
+document.getElementById('tabBar').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  tab.classList.add('active');
+  currentTab = tab.dataset.tab;
+  document.getElementById('panel-' + currentTab).classList.add('active');
+  renderAll();
+});
+
+function handleAdd() {
+  if (currentTab === 'contacts') openContactModal();
+  else if (currentTab === 'companies') openCompanyModal();
+  else if (currentTab === 'deals') openDealModal();
+  else if (currentTab === 'tasks') openTaskModal();
+  else if (currentTab === 'templates') openTemplateModal();
+}
+
+function renderAll() {
+  if (currentTab === 'dashboard') renderDashboard();
+  else if (currentTab === 'contacts') renderContacts();
+  else if (currentTab === 'companies') renderCompanies();
+  else if (currentTab === 'deals') renderDeals();
+  else if (currentTab === 'tasks') renderTasks();
+  else if (currentTab === 'activities') renderActivities();
+  else if (currentTab === 'templates') renderTemplates();
+}
+
+// ── DASHBOARD ──
+function renderDashboard() {
+  const active = contacts.filter(c => c.status !== 'Archived');
+  const t1 = active.filter(c => c.tier === 'Tier 1');
+  const pipelineValue = deals.filter(d => !d.stage?.includes('Closed')).reduce((s,d) => s + (Number(d.amount)||0), 0);
+  const wonValue = deals.filter(d => d.stage === 'Closed Won').reduce((s,d) => s + (Number(d.amount)||0), 0);
+  const openDeals = deals.filter(d => !d.stage?.includes('Closed'));
+
+  const openTasks = tasks.filter(t => t.state !== 'Done');
+  const criticalTasks = openTasks.filter(t => (Number(t.priority)||0) >= 90);
+  const overdueTasks = openTasks.filter(t => t.due_date && new Date(t.due_date) < new Date());
+
+  document.getElementById('dashStats').innerHTML = `
+    <div class="stat"><div class="stat-label">Total Contacts</div><div class="stat-value blue">${contacts.length}</div></div>
+    <div class="stat"><div class="stat-label">Companies</div><div class="stat-value purple">${companies.length}</div></div>
+    <div class="stat"><div class="stat-label">Open Deals</div><div class="stat-value yellow">${openDeals.length}</div><div class="stat-sub">$${fmt(pipelineValue)} pipeline</div></div>
+    <div class="stat"><div class="stat-label">Won Deals</div><div class="stat-value green">$${fmt(wonValue)}</div></div>
+    <div class="stat" style="cursor:pointer" onclick="document.querySelector('[data-tab=tasks]').click()"><div class="stat-label">Open Tasks</div><div class="stat-value orange">${openTasks.length}</div><div class="stat-sub">${criticalTasks.length} critical, ${overdueTasks.length} overdue</div></div>
+    <div class="stat"><div class="stat-label">Activities (30d)</div><div class="stat-value blue">${activities.filter(a => daysSince(a.created_at) < 30).length}</div></div>
+  `;
+
+  const stageCounts = {}; const stageValues = {};
+  DEAL_STAGES.forEach(s => { stageCounts[s] = 0; stageValues[s] = 0; });
+  deals.forEach(d => { stageCounts[d.stage] = (stageCounts[d.stage]||0)+1; stageValues[d.stage] = (stageValues[d.stage]||0)+(Number(d.amount)||0); });
+  const maxCount = Math.max(...Object.values(stageCounts), 1);
+  document.getElementById('pipelineBars').innerHTML = DEAL_STAGES.map(s => `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+      <div style="width:110px;font-size:12px;color:var(--text2);text-align:right;">${s}</div>
+      <div style="flex:1;height:28px;background:var(--surface);border-radius:4px;overflow:hidden;position:relative;">
+        <div style="height:100%;width:${(stageCounts[s]/maxCount)*100}%;background:${STAGE_COLORS[s]};opacity:0.3;border-radius:4px;"></div>
+        <span style="position:absolute;left:8px;top:5px;font-size:12px;font-weight:600;">${stageCounts[s]} deals &middot; $${fmt(stageValues[s])}</span>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('recentActivity').innerHTML = activities.slice(0, 10).map(a => `
+    <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;">
+      <span style="color:${typeColor(a.type)}">${typeIcon(a.type)}</span>
+      <div><strong>${esc(a.subject||a.type)}</strong><div style="color:var(--text2)">${timeAgo(a.created_at)}</div></div>
+    </div>
+  `).join('') || '<div style="color:var(--text2);font-size:13px;">No activities yet</div>';
+
+  // Hot tasks on dashboard
+  const hotTasks = openTasks.filter(t => effectivePriority(t) >= 70 || (t.due_date && new Date(t.due_date) < new Date(Date.now() + 3*86400000)))
+    .sort((a,b) => effectivePriority(b) - effectivePriority(a)).slice(0, 10);
+  const hotHtml = document.getElementById('dashHotTasks');
+  if (hotHtml) hotHtml.innerHTML = hotTasks.map(t => {
+    const pri = effectivePriority(t);
+    const priClass = pri >= 90 ? 'priority-critical' : pri >= 70 ? 'priority-high' : 'priority-medium';
+    const daysUntil = t.due_date ? Math.ceil((new Date(t.due_date) - new Date()) / 86400000) : null;
+    const dueTag = daysUntil !== null ? (daysUntil < 0 ? `<span style="color:var(--red);font-size:11px"> ${Math.abs(daysUntil)}d overdue</span>` : daysUntil <= 3 ? `<span style="color:var(--orange);font-size:11px"> ${daysUntil}d left</span>` : '') : '';
+    const catTag = t.category === 'Series A' ? '<span class="cat-badge cat-series-a" style="font-size:10px;margin-left:4px">Series A</span>' : t.category === 'Revenue' ? '<span class="cat-badge cat-revenue" style="font-size:10px;margin-left:4px">Revenue</span>' : '';
+    return `<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);align-items:center;font-size:12px;cursor:pointer" onclick="document.querySelector('[data-tab=tasks]').click()">
+      <span class="priority-bar ${priClass}" style="font-size:10px;width:32px;height:18px;line-height:18px">${pri}</span>
+      <div style="flex:1"><strong>${esc(t.title)}</strong>${catTag}${dueTag}</div>
+      <span style="color:var(--text2);font-size:11px">${esc(t.owner||'')}</span>
+    </div>`;
+  }).join('') || '<div style="color:var(--text2);font-size:13px">No hot tasks</div>';
+}
+
+// ── CONTACTS ──
+function getFilteredContacts() {
+  const search = document.getElementById('contactSearch').value.toLowerCase();
+  const tier = document.getElementById('filterTier').value;
+  const stage = document.getElementById('filterStage').value;
+  const category = document.getElementById('filterCategory').value;
+  const status = document.getElementById('filterStatus').value;
+  return contacts.filter(c => {
+    if (tier && c.tier !== tier) return false;
+    if (stage && c.stage !== stage) return false;
+    if (category && c.category !== category) return false;
+    if (status && c.status !== status) return false;
+    if (search) {
+      const hay = [c.company, c.contact, c.notes, c.email, c.fit_thesis, c.next_action, c.title].filter(Boolean).join(' ').toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+}
+
+function renderContacts() {
+  const active = contacts.filter(c => c.status !== 'Archived');
+  const t1 = active.filter(c => c.tier === 'Tier 1');
+  const engaged = active.filter(c => ['Engaged','Term Sheet / Proposal','Meeting Held'].includes(c.stage));
+  const overdue = active.filter(c => c.last_touch && daysSince(c.last_touch) > 30);
+  document.getElementById('contactStats').innerHTML = `
+    <div class="stat"><div class="stat-label">Pipeline</div><div class="stat-value blue">${active.length}</div></div>
+    <div class="stat"><div class="stat-label">Tier 1</div><div class="stat-value green">${t1.length}</div></div>
+    <div class="stat"><div class="stat-label">Engaged</div><div class="stat-value yellow">${engaged.length}</div></div>
+    <div class="stat"><div class="stat-label">Overdue 30d+</div><div class="stat-value orange">${overdue.length}</div></div>
+  `;
+
+  const filtered = getFilteredContacts();
+  filtered.sort((a, b) => {
+    let va = a[contactSort.col], vb = b[contactSort.col];
+    if (va == null) va = ''; if (vb == null) vb = '';
+    if (contactSort.col === 'priority_score') { va = Number(va)||0; vb = Number(vb)||0; }
+    return va < vb ? -1*contactSort.dir : va > vb ? 1*contactSort.dir : 0;
+  });
+  document.getElementById('contactInfo').textContent = `Showing ${filtered.length} of ${contacts.length} contacts`;
+  document.getElementById('contactTable').innerHTML = filtered.map(c => {
+    const od = c.last_touch && daysSince(c.last_touch) > 30 && c.stage !== 'Passed';
+    return `<tr class="${od?'overdue':''} ${ddRowClass(c)}">
+      <td><strong>${esc(c.company)}</strong></td>
+      <td>${ddBadge(c)}</td>
+      <td>${esc(c.contact)}</td>
+      <td>${esc(c.title)}</td>
+      <td>${esc(c.category)}</td>
+      <td>${c.tier?`<span class="tier-badge ${c.tier==='Tier 1'?'tier-1':c.tier==='Tier 2'?'tier-2':'tier-3'}">${c.tier}</span>`:''}</td>
+      <td><span class="stage-badge" style="background:rgba(59,130,246,0.15);color:var(--accent)">${esc(c.stage)}</span></td>
+      <td><strong>${c.priority_score||''}</strong></td>
+      <td>${c.email?`<a class="link" href="mailto:${esc(c.email)}">${esc(c.email)}</a>`:''}</td>
+      <td class="${od?'due-flag':''}">${c.last_touch||''} ${od?'('+daysSince(c.last_touch)+'d)':''}</td>
+      <td class="editable" onclick="inlineEdit(this,'next_action','${esc(c.id)}')">${esc(c.next_action)}</td>
+      <td class="notes-cell">${esc(c.notes)}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-sm" onclick="openContactModal('${esc(c.id)}')">Edit</button>
+        <button class="btn btn-sm btn-ghost" onclick="openActivityModal(null,'${c._uuid||''}')">+Act</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── COMPANIES ──
+function renderCompanies() {
+  const search = document.getElementById('companySearch').value.toLowerCase();
+  const filtered = companies.filter(c => !search || [c.name,c.industry,c.description].filter(Boolean).join(' ').toLowerCase().includes(search));
+  document.getElementById('companyTable').innerHTML = filtered.map(c => {
+    const cContacts = contacts.filter(x => x.company === c.name).length;
+    const cDeals = deals.filter(d => d.company_id === c.id).length;
+    return `<tr>
+      <td><strong>${esc(c.name)}</strong></td>
+      <td>${esc(c.industry)}</td>
+      <td>${esc(c.size)}</td>
+      <td>${cContacts}</td>
+      <td>${cDeals}</td>
+      <td>${c.website?`<a class="link" href="${esc(c.website)}" target="_blank">${esc(c.website)}</a>`:''}</td>
+      <td>${esc(c.owner)}</td>
+      <td><button class="btn btn-sm" onclick="openCompanyModal('${c.id}')">Edit</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── DEALS PIPELINE ──
+function renderDeals() {
+  const openDeals = deals.filter(d => !d.stage?.includes('Closed'));
+  const wonDeals = deals.filter(d => d.stage === 'Closed Won');
+  const pipelineValue = openDeals.reduce((s,d) => s+(Number(d.amount)||0), 0);
+  const wonValue = wonDeals.reduce((s,d) => s+(Number(d.amount)||0), 0);
+
+  document.getElementById('dealStats').innerHTML = `
+    <div class="stat"><div class="stat-label">Open Pipeline</div><div class="stat-value blue">${openDeals.length} deals</div><div class="stat-sub">$${fmt(pipelineValue)}</div></div>
+    <div class="stat"><div class="stat-label">Won</div><div class="stat-value green">$${fmt(wonValue)}</div><div class="stat-sub">${wonDeals.length} deals</div></div>
+    <div class="stat"><div class="stat-label">Avg Deal Size</div><div class="stat-value yellow">$${fmt(openDeals.length?Math.round(pipelineValue/openDeals.length):0)}</div></div>
+  `;
+
+  document.getElementById('kanbanBoard').innerHTML = DEAL_STAGES.map(stage => {
+    const stageDeals = deals.filter(d => d.stage === stage);
+    const stageValue = stageDeals.reduce((s,d) => s+(Number(d.amount)||0), 0);
+    return `<div class="kanban-col" data-stage="${stage}">
+      <div class="kanban-header">
+        <div><h3 style="color:${STAGE_COLORS[stage]}">${stage}</h3><div class="value">$${fmt(stageValue)}</div></div>
+        <span class="count">${stageDeals.length}</span>
+      </div>
+      <div class="kanban-cards" data-stage="${stage}" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="dropDeal(event,'${stage}')">
+        ${stageDeals.map(d => `
+          <div class="deal-card" draggable="true" ondragstart="dragDeal(event,'${d.id}')" onclick="openDealModal('${d.id}')">
+            <div class="deal-name">${esc(d.name)}</div>
+            <div class="deal-company">${esc(getContactName(d.contact_id))}</div>
+            ${d.amount?`<div class="deal-amount">$${fmt(d.amount)}</div>`:''}
+            <div class="deal-meta">
+              <span>${esc(d.owner||'Unassigned')}</span>
+              ${d.close_date?`<span>${d.close_date}</span>`:''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let dragDealId = null;
+function dragDeal(e, id) { dragDealId = id; e.dataTransfer.effectAllowed = 'move'; }
+async function dropDeal(e, stage) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!dragDealId) return;
+  await fetch('/api/deals', { method: 'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id:dragDealId, stage}) });
+  const d = deals.find(x => x.id === dragDealId);
+  if (d) d.stage = stage;
+  dragDealId = null;
+  renderDeals();
+}
+
+// ── ACTIVITIES ──
+function renderActivities() {
+  const search = document.getElementById('activitySearch').value.toLowerCase();
+  const typeFilter = document.getElementById('filterActivityType').value;
+  let filtered = activities;
+  if (typeFilter) filtered = filtered.filter(a => a.type === typeFilter);
+  if (search) filtered = filtered.filter(a => [a.subject,a.body,a.owner].filter(Boolean).join(' ').toLowerCase().includes(search));
+
+  document.getElementById('activityTimeline').innerHTML = filtered.map(a => `
+    <div class="timeline-item">
+      <div class="timeline-icon ${a.type}">${typeIcon(a.type)}</div>
+      <div class="timeline-content">
+        <div class="subject">${esc(a.subject||a.type)}</div>
+        ${a.body?`<div class="body">${esc(a.body).substring(0,200)}</div>`:''}
+        <div class="meta">${esc(a.owner||'')} &middot; ${timeAgo(a.created_at)} &middot; ${getContactName(a.contact_id)}</div>
+      </div>
+    </div>
+  `).join('') || '<div style="padding:40px;text-align:center;color:var(--text2)">No activities yet. Log your first activity!</div>';
+}
+
+// ── TASKS ──
+let taskGroupView = false;
+
+function toggleTaskView() {
+  taskGroupView = !taskGroupView;
+  document.getElementById('taskViewToggle').textContent = taskGroupView ? 'List View' : 'Group by Assignee';
+  renderTasks();
+}
+
+function getFilteredTasks() {
+  const search = document.getElementById('taskSearch').value.toLowerCase();
+  const cat = document.getElementById('filterTaskCategory').value;
+  const state = document.getElementById('filterTaskState').value;
+  const priFilter = document.getElementById('filterTaskPriority').value;
+  const assignedFilter = document.getElementById('filterTaskAssigned').value;
+  return tasks.filter(t => {
+    if (cat && t.category !== cat) return false;
+    if (state && t.state !== state) return false;
+    if (assignedFilter === '__unassigned' && t.assigned_to) return false;
+    if (assignedFilter && assignedFilter !== '__unassigned' && t.assigned_to !== assignedFilter) return false;
+    if (priFilter) {
+      const p = Number(t.priority) || 0;
+      if (priFilter === '90' && p < 90) return false;
+      if (priFilter === '70' && p < 70) return false;
+      if (priFilter === '50' && (p < 50 || p >= 70)) return false;
+      if (priFilter === '0' && p >= 50) return false;
+    }
+    if (search) {
+      const hay = [t.title, t.description, t.owner, t.assigned_to, t.assigned_email, t.category, t.source, (t.tags||[]).join(' ')].filter(Boolean).join(' ').toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+}
+
+// ── Dynamic Priority Scoring ──
+// Base priority + bonuses for urgency signals
+function effectivePriority(t) {
+  let score = Number(t.priority) || 0;
+  if (t.state === 'Done') return score;
+
+  const now = new Date();
+
+  // +10 for submittal/filing deadlines within 10 days
+  if (t.due_date) {
+    const daysUntil = Math.ceil((new Date(t.due_date) - now) / 86400000);
+    if (daysUntil <= 10 && daysUntil >= 0) score += 10;
+    // +5 more if overdue
+    if (daysUntil < 0) score += 15;
+  }
+
+  // +5 for Series A category (always high priority)
+  if (t.category === 'Series A') score += 5;
+
+  // +5 for Revenue category
+  if (t.category === 'Revenue') score += 3;
+
+  // +3 if task is blocked (needs attention)
+  if (t.state === 'Blocked') score += 3;
+
+  return Math.min(score, 100);
+}
+
+function populateAssigneeFilter() {
+  const assignees = [...new Set(tasks.map(t => t.assigned_to).filter(Boolean))].sort();
+  const sel = document.getElementById('filterTaskAssigned');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All Assignees</option><option value="__unassigned">Unassigned</option>' +
+    assignees.map(a => `<option value="${esc(a)}" ${current===a?'selected':''}>${esc(a)}</option>`).join('');
+}
+
+function renderTasks() {
+  const open = tasks.filter(t => t.state !== 'Done');
+  const critical = open.filter(t => (Number(t.priority)||0) >= 90);
+  const high = open.filter(t => { const p = Number(t.priority)||0; return p >= 70 && p < 90; });
+  const overdue = open.filter(t => t.due_date && new Date(t.due_date) < new Date());
+  const seriesA = open.filter(t => t.category === 'Series A');
+  const revenue = open.filter(t => t.category === 'Revenue');
+
+  document.getElementById('taskStats').innerHTML = `
+    <div class="stat"><div class="stat-label">Open Tasks</div><div class="stat-value blue">${open.length}</div></div>
+    <div class="stat"><div class="stat-label">Critical</div><div class="stat-value" style="color:var(--red)">${critical.length}</div></div>
+    <div class="stat"><div class="stat-label">High Priority</div><div class="stat-value orange">${high.length}</div></div>
+    <div class="stat"><div class="stat-label">Overdue</div><div class="stat-value" style="color:var(--red)">${overdue.length}</div></div>
+    <div class="stat"><div class="stat-label">Series A</div><div class="stat-value purple">${seriesA.length}</div></div>
+    <div class="stat"><div class="stat-label">Revenue</div><div class="stat-value green">${revenue.length}</div></div>
+  `;
+
+  const filtered = getFilteredTasks();
+  filtered.sort((a, b) => {
+    let va, vb;
+    if (taskSort.col === 'priority') {
+      va = effectivePriority(a); vb = effectivePriority(b);
+    } else {
+      va = a[taskSort.col]; vb = b[taskSort.col];
+      if (va == null) va = ''; if (vb == null) vb = '';
+    }
+    if (taskSort.col === 'due_date') {
+      va = va ? new Date(va).getTime() : Infinity;
+      vb = vb ? new Date(vb).getTime() : Infinity;
+    }
+    return va < vb ? -1*taskSort.dir : va > vb ? 1*taskSort.dir : 0;
+  });
+  populateAssigneeFilter();
+  document.getElementById('taskInfo').textContent = `Showing ${filtered.length} of ${tasks.length} tasks`;
+
+  if (taskGroupView) {
+    // Group by assignee
+    const groups = {};
+    filtered.forEach(t => {
+      const key = t.assigned_to || 'Unassigned';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(t);
+    });
+    // Sort groups: assigned first, unassigned last
+    const sortedKeys = Object.keys(groups).sort((a, b) => {
+      if (a === 'Unassigned') return 1; if (b === 'Unassigned') return -1;
+      return a.localeCompare(b);
+    });
+    document.getElementById('taskTable').innerHTML = sortedKeys.map(assignee => {
+      const groupTasks = groups[assignee].sort((a,b) => effectivePriority(b) - effectivePriority(a));
+      const openCount = groupTasks.filter(t => t.state !== 'Done').length;
+      const email = groupTasks.find(t => t.assigned_email)?.assigned_email || '';
+      return `<tr><td colspan="9" style="background:var(--surface2);padding:12px;font-weight:700;font-size:14px;border-bottom:2px solid var(--accent)">
+        ${esc(assignee)} ${email?`<span style="font-weight:400;color:var(--text2);font-size:12px">(${esc(email)})</span>`:''}
+        <span style="font-weight:400;color:var(--text2);font-size:12px;margin-left:8px">${openCount} open</span>
+      </td></tr>` + groupTasks.map(t => renderTaskRow(t)).join('');
+    }).join('');
+  } else {
+    document.getElementById('taskTable').innerHTML = filtered.map(t => renderTaskRow(t)).join('');
+  }
+}
+
+function renderTaskRow(t) {
+  const basePri = Number(t.priority) || 0;
+  const pri = effectivePriority(t);
+  const boost = pri - basePri;
+  const priClass = pri >= 90 ? 'priority-critical' : pri >= 70 ? 'priority-high' : pri >= 50 ? 'priority-medium' : 'priority-low';
+  const boostTip = boost > 0 ? `title="Base: ${basePri} + ${boost} boost (deadline/category)"` : `title="Base: ${basePri}"`;
+  const stateClass = t.state === 'Done' ? 'state-done' : t.state === 'In Progress' ? 'state-progress' : t.state === 'Blocked' ? 'state-blocked' : 'state-todo';
+  const catClass = t.category === 'Series A' ? 'cat-series-a' : t.category === 'Revenue' ? 'cat-revenue' : t.category === 'BD' ? 'cat-bd' : 'cat-ops';
+  const dueStr = t.due_date ? t.due_date.slice(0,10) : '';
+  const daysUntil = t.due_date ? Math.ceil((new Date(t.due_date) - new Date()) / 86400000) : null;
+  const dueClass = daysUntil !== null && t.state !== 'Done' ? (daysUntil < 0 ? 'task-overdue' : daysUntil <= 3 ? 'task-due-soon' : '') : '';
+  const dueLabel = daysUntil !== null && t.state !== 'Done' ? (daysUntil < 0 ? ` (${Math.abs(daysUntil)}d overdue)` : daysUntil === 0 ? ' (TODAY)' : daysUntil <= 3 ? ` (${daysUntil}d)` : '') : '';
+  return `<tr style="${t.state==='Done'?'opacity:0.5':''}">
+    <td><span class="priority-bar ${priClass}" ${boostTip}>${pri}${boost>0?'<span style="font-size:8px;vertical-align:super">+'+boost+'</span>':''}</span></td>
+    <td><div class="task-title">${esc(t.title)}</div>${t.description?`<div class="task-desc">${esc(t.description)}</div>`:''}</td>
+    <td><span class="cat-badge ${catClass}">${esc(t.category||'General')}</span></td>
+    <td>${t.assigned_to?`<strong>${esc(t.assigned_to)}</strong>${t.assigned_email?`<div style="font-size:11px;color:var(--text2)">${esc(t.assigned_email)}</div>`:''}`:'<span style="color:var(--text2)">—</span>'}</td>
+    <td>${esc(t.owner||'')}</td>
+    <td><span class="state-badge ${stateClass}">${esc(t.state)}</span></td>
+    <td class="${dueClass}">${dueStr}${dueLabel}</td>
+    <td style="font-size:11px;color:var(--text2)">${esc(t.source||'')}</td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-sm" onclick="openTaskModal('${t.id}')">Edit</button>
+      ${t.state!=='Done'?`<button class="btn btn-sm btn-ghost" onclick="quickCompleteTask(${t.id})">Done</button>`:''}
+    </td>
+  </tr>`;
+}
+
+function openTaskModal(id) {
+  const t = id ? tasks.find(x => x.id == id) : {};
+  const contactOpts = contacts.map(c => `<option value="${c._uuid||c.id}" ${t.contact_id===(c._uuid||c.id)?'selected':''}>${esc(c.contact)} (${esc(c.company)})</option>`).join('');
+  const dealOpts = deals.map(d => `<option value="${d.id}" ${t.deal_id===d.id?'selected':''}>${esc(d.name)}</option>`).join('');
+  openModal(`
+    <h2>${id?'Edit':'Add'} Task</h2>
+    <div class="form-group"><label>Title</label><input id="fTaskTitle" value="${esc(t.title||'')}"></div>
+    <div class="form-group"><label>Description</label><textarea id="fTaskDesc">${esc(t.description||'')}</textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>Category</label><select id="fTaskCat">
+        <option value="Series A" ${t.category==='Series A'?'selected':''}>Series A</option>
+        <option value="Revenue" ${t.category==='Revenue'?'selected':''}>Revenue</option>
+        <option value="BD" ${t.category==='BD'?'selected':''}>BD</option>
+        <option value="Operations" ${t.category==='Operations'?'selected':''}>Operations</option>
+        <option value="General" ${!t.category||t.category==='General'?'selected':''}>General</option>
+      </select></div>
+      <div class="form-group"><label>Priority (0-100)</label><input id="fTaskPri" type="number" min="0" max="100" value="${t.priority||50}" placeholder="90=Critical, 70=High, 50=Med"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>State</label><select id="fTaskState">
+        <option value="To Do" ${!t.state||t.state==='To Do'?'selected':''}>To Do</option>
+        <option value="In Progress" ${t.state==='In Progress'?'selected':''}>In Progress</option>
+        <option value="Blocked" ${t.state==='Blocked'?'selected':''}>Blocked</option>
+        <option value="Done" ${t.state==='Done'?'selected':''}>Done</option>
+      </select></div>
+      <div class="form-group"><label>Due Date</label><input id="fTaskDue" type="date" value="${t.due_date?t.due_date.slice(0,10):''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Owner</label><input id="fTaskOwner" value="${esc(t.owner||'Jon')}"></div>
+      <div class="form-group"><label>Source</label><input id="fTaskSource" value="${esc(t.source||'')}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Assigned To (Name)</label><input id="fTaskAssigned" value="${esc(t.assigned_to||'')}" placeholder="e.g. Lizi Quinn"></div>
+      <div class="form-group"><label>Assigned Email</label><input id="fTaskAssignedEmail" value="${esc(t.assigned_email||'')}" placeholder="e.g. lquinn@exosaero.com"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Contact</label><select id="fTaskContact"><option value="">--</option>${contactOpts}</select></div>
+      <div class="form-group"><label>Deal</label><select id="fTaskDeal"><option value="">--</option>${dealOpts}</select></div>
+    </div>
+    <div class="form-group"><label>Tags (comma-separated)</label><input id="fTaskTags" value="${(t.tags||[]).join(', ')}"></div>
+    <div class="modal-actions">
+      ${id?`<button class="btn btn-danger" onclick="deleteTask(${id})">Delete</button>`:''}
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTask('${id||''}')">Save</button>
+    </div>
+  `);
+}
+
+async function saveTask(id) {
+  const data = {
+    title: gel('fTaskTitle').value,
+    description: gel('fTaskDesc').value || null,
+    category: gel('fTaskCat').value,
+    priority: Number(gel('fTaskPri').value) || 50,
+    state: gel('fTaskState').value,
+    due_date: gel('fTaskDue').value ? gel('fTaskDue').value + 'T23:59:59Z' : null,
+    owner: gel('fTaskOwner').value,
+    source: gel('fTaskSource').value || null,
+    assigned_to: gel('fTaskAssigned').value || null,
+    assigned_email: gel('fTaskAssignedEmail').value || null,
+    assigned_at: gel('fTaskAssigned').value ? new Date().toISOString() : null,
+    contact_id: gel('fTaskContact').value || null,
+    deal_id: gel('fTaskDeal').value || null,
+    tags: gel('fTaskTags').value ? gel('fTaskTags').value.split(',').map(s=>s.trim()).filter(Boolean) : [],
+  };
+  if (id) { data.id = Number(id); await fetch('/api/tasks', {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); }
+  else { await fetch('/api/tasks', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); }
+  closeModal(); await loadTasks(); renderTasks();
+}
+
+async function deleteTask(id) {
+  if (!confirm('Delete this task?')) return;
+  await fetch('/api/tasks/delete', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id})});
+  closeModal(); await loadTasks(); renderTasks();
+}
+
+async function quickCompleteTask(id) {
+  await fetch('/api/tasks', {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id, state:'Done'})});
+  const t = tasks.find(x => x.id === id); if (t) { t.state = 'Done'; t.completed_at = new Date().toISOString(); }
+  renderTasks(); document.getElementById('taskCount').textContent = tasks.filter(t => t.state !== 'Done').length;
+}
+
+// ── TEMPLATES ──
+function renderTemplates() {
+  document.getElementById('templatesGrid').innerHTML = templates.map(t => `
+    <div class="template-card">
+      <h3>${esc(t.name)}</h3>
+      <div class="template-subject">Subject: ${esc(t.subject)}</div>
+      <div class="template-body">${esc(t.body)}</div>
+      <div class="template-meta">
+        <span>${esc(t.category||'General')}</span>
+        <span>Used ${t.usage_count||0}x</span>
+        <button class="btn btn-sm" onclick="openTemplateModal('${t.id}')">Edit</button>
+        <button class="btn btn-sm" onclick="copyTemplate('${t.id}')">Copy</button>
+      </div>
+    </div>
+  `).join('') || '<div style="padding:40px;text-align:center;color:var(--text2)">No templates yet. Create your first outreach template!</div>';
+}
+
+// ── MODALS ──
+function openModal(html) { document.getElementById('modalContent').innerHTML = html; document.getElementById('modalOverlay').classList.add('active'); }
+function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+function openContactModal(id) {
+  const c = id ? contacts.find(x => x.id === id) : {};
+  openModal(`
+    <h2>${id?'Edit':'Add'} Contact</h2>
+    <div class="form-row"><div class="form-group"><label>Company</label><input id="fCompany" value="${esc(c.company||'')}"></div>
+    <div class="form-group"><label>Contact Name</label><input id="fContact" value="${esc(c.contact||'')}"></div></div>
+    <div class="form-row"><div class="form-group"><label>Title</label><input id="fTitle" value="${esc(c.title||'')}"></div>
+    <div class="form-group"><label>Email</label><input id="fEmail" value="${esc(c.email||'')}"></div></div>
+    <div class="form-row"><div class="form-group"><label>Phone</label><input id="fPhone" value="${esc(c.phone||'')}"></div>
+    <div class="form-group"><label>LinkedIn</label><input id="fLinkedin" value="${esc(c.linkedin||'')}"></div></div>
+    <div class="form-row">
+      <div class="form-group"><label>Category</label><select id="fCategory"><option value="Financial Investor" ${c.category==='Financial Investor'?'selected':''}>Financial Investor</option><option value="Strategic / Corporate" ${c.category==='Strategic / Corporate'?'selected':''}>Strategic / Corporate</option><option value="Intermediary / Banker" ${c.category==='Intermediary / Banker'?'selected':''}>Intermediary / Banker</option><option value="Other / Review" ${c.category==='Other / Review'?'selected':''}>Other / Review</option></select></div>
+      <div class="form-group"><label>Tier</label><select id="fTier"><option value="">--</option><option value="Tier 1" ${c.tier==='Tier 1'?'selected':''}>Tier 1</option><option value="Tier 2" ${c.tier==='Tier 2'?'selected':''}>Tier 2</option><option value="Tier 3" ${c.tier==='Tier 3'?'selected':''}>Tier 3</option></select></div>
+      <div class="form-group"><label>Stage</label><select id="fStage"><option value="Research" ${c.stage==='Research'?'selected':''}>Research</option><option value="Contacted" ${c.stage==='Contacted'?'selected':''}>Contacted</option><option value="Meeting Requested" ${c.stage==='Meeting Requested'?'selected':''}>Meeting Requested</option><option value="Meeting Held" ${c.stage==='Meeting Held'?'selected':''}>Meeting Held</option><option value="Follow Up" ${c.stage==='Follow Up'?'selected':''}>Follow Up</option><option value="Engaged" ${c.stage==='Engaged'?'selected':''}>Engaged</option><option value="Term Sheet / Proposal" ${c.stage==='Term Sheet / Proposal'?'selected':''}>Term Sheet / Proposal</option><option value="Passed" ${c.stage==='Passed'?'selected':''}>Passed</option></select></div>
+    </div>
+    <div class="form-row"><div class="form-group"><label>Priority Score</label><input id="fScore" type="number" value="${c.priority_score||''}"></div>
+    <div class="form-group"><label>Next Action</label><input id="fNextAction" value="${esc(c.next_action||'')}"></div></div>
+    <div class="form-group"><label>Notes</label><textarea id="fNotes">${esc(c.notes||'')}</textarea></div>
+    <div class="modal-actions">
+      ${id?`<button class="btn btn-danger" onclick="deleteContact('${esc(id)}')">Delete</button>`:''}
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveContact('${esc(id||'')}')">Save</button>
+    </div>
+  `);
+}
+
+async function saveContact(id) {
+  const fields = {
+    company: gel('fCompany').value, contact: gel('fContact').value, title: gel('fTitle').value,
+    email: gel('fEmail').value, phone: gel('fPhone').value, linkedin: gel('fLinkedin').value,
+    category: gel('fCategory').value, tier: gel('fTier').value, stage: gel('fStage').value,
+    priority_score: gel('fScore').value ? Number(gel('fScore').value) : null,
+    next_action: gel('fNextAction').value, notes: gel('fNotes').value,
+    status: gel('fStage').value === 'Passed' ? 'Archived' : 'Active',
+  };
+  if (id) {
+    await fetch('/api/crm', { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id, fields}) });
+  } else {
+    await fetch('/api/crm', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(fields) });
+  }
+  closeModal(); await loadContacts(); renderContacts();
+}
+
+async function deleteContact(id) {
+  if (!confirm('Delete this contact?')) return;
+  await fetch('/api/crm/delete', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id}) });
+  closeModal(); await loadContacts(); renderContacts();
+}
+
+function openCompanyModal(id) {
+  const c = id ? companies.find(x => x.id === id) : {};
+  openModal(`
+    <h2>${id?'Edit':'Add'} Company</h2>
+    <div class="form-row"><div class="form-group"><label>Name</label><input id="fCoName" value="${esc(c.name||'')}"></div>
+    <div class="form-group"><label>Industry</label><input id="fCoIndustry" value="${esc(c.industry||'')}"></div></div>
+    <div class="form-row"><div class="form-group"><label>Size</label><select id="fCoSize"><option value="">--</option><option value="1-10" ${c.size==='1-10'?'selected':''}>1-10</option><option value="11-50" ${c.size==='11-50'?'selected':''}>11-50</option><option value="51-200" ${c.size==='51-200'?'selected':''}>51-200</option><option value="201-1000" ${c.size==='201-1000'?'selected':''}>201-1000</option><option value="1000+" ${c.size==='1000+'?'selected':''}>1000+</option></select></div>
+    <div class="form-group"><label>Website</label><input id="fCoWeb" value="${esc(c.website||'')}"></div></div>
+    <div class="form-row"><div class="form-group"><label>Phone</label><input id="fCoPhone" value="${esc(c.phone||'')}"></div>
+    <div class="form-group"><label>Owner</label><input id="fCoOwner" value="${esc(c.owner||'')}"></div></div>
+    <div class="form-group"><label>Description</label><textarea id="fCoDesc">${esc(c.description||'')}</textarea></div>
+    <div class="modal-actions">
+      ${id?`<button class="btn btn-danger" onclick="deleteCompany('${id}')">Delete</button>`:''}
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCompany('${id||''}')">Save</button>
+    </div>
+  `);
+}
+
+async function saveCompany(id) {
+  const data = { name:gel('fCoName').value, industry:gel('fCoIndustry').value, size:gel('fCoSize').value, website:gel('fCoWeb').value, phone:gel('fCoPhone').value, owner:gel('fCoOwner').value, description:gel('fCoDesc').value };
+  if (id) { data.id = id; await fetch('/api/companies', {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); }
+  else { await fetch('/api/companies', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); }
+  closeModal(); await loadCompanies(); renderCompanies();
+}
+
+async function deleteCompany(id) {
+  if (!confirm('Delete this company?')) return;
+  await fetch('/api/companies/delete', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id})});
+  closeModal(); await loadCompanies(); renderCompanies();
+}
+
+function openDealModal(id) {
+  const d = id ? deals.find(x => x.id === id) : {};
+  const contactOpts = contacts.map(c => `<option value="${c._uuid||c.id}" ${d.contact_id===(c._uuid||c.id)?'selected':''}>${esc(c.contact)} (${esc(c.company)})</option>`).join('');
+  openModal(`
+    <h2>${id?'Edit':'Add'} Deal</h2>
+    <div class="form-group"><label>Deal Name</label><input id="fDealName" value="${esc(d.name||'')}"></div>
+    <div class="form-row"><div class="form-group"><label>Amount ($)</label><input id="fDealAmt" type="number" value="${d.amount||''}"></div>
+    <div class="form-group"><label>Stage</label><select id="fDealStage">${DEAL_STAGES.map(s=>`<option value="${s}" ${d.stage===s?'selected':''}>${s}</option>`).join('')}</select></div></div>
+    <div class="form-row"><div class="form-group"><label>Close Date</label><input id="fDealClose" type="date" value="${d.close_date||''}"></div>
+    <div class="form-group"><label>Priority</label><select id="fDealPri"><option value="Low" ${d.priority==='Low'?'selected':''}>Low</option><option value="Medium" ${d.priority==='Medium'||!d.priority?'selected':''}>Medium</option><option value="High" ${d.priority==='High'?'selected':''}>High</option></select></div></div>
+    <div class="form-group"><label>Contact</label><select id="fDealContact"><option value="">-- Select --</option>${contactOpts}</select></div>
+    <div class="form-row"><div class="form-group"><label>Owner</label><input id="fDealOwner" value="${esc(d.owner||'John Quinn')}"></div>
+    <div class="form-group"><label>Source</label><input id="fDealSource" value="${esc(d.source||'')}"></div></div>
+    <div class="form-group"><label>Notes</label><textarea id="fDealNotes">${esc(d.notes||'')}</textarea></div>
+    <div class="modal-actions">
+      ${id?`<button class="btn btn-danger" onclick="deleteDeal('${id}')">Delete</button>`:''}
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveDeal('${id||''}')">Save</button>
+    </div>
+  `);
+}
+
+async function saveDeal(id) {
+  const data = { name:gel('fDealName').value, amount:gel('fDealAmt').value?Number(gel('fDealAmt').value):null, stage:gel('fDealStage').value, close_date:gel('fDealClose').value||null, priority:gel('fDealPri').value, contact_id:gel('fDealContact').value||null, owner:gel('fDealOwner').value, source:gel('fDealSource').value, notes:gel('fDealNotes').value };
+  if (id) { data.id = id; await fetch('/api/deals', {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); }
+  else { await fetch('/api/deals', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); }
+  closeModal(); await loadDeals(); renderDeals();
+}
+
+async function deleteDeal(id) {
+  if (!confirm('Delete this deal?')) return;
+  await fetch('/api/deals/delete', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id})});
+  closeModal(); await loadDeals(); renderDeals();
+}
+
+function openActivityModal(dealId, contactId) {
+  const contactOpts = contacts.map(c => `<option value="${c._uuid||c.id}" ${contactId===(c._uuid||c.id)?'selected':''}>${esc(c.contact)} (${esc(c.company)})</option>`).join('');
+  const dealOpts = deals.map(d => `<option value="${d.id}" ${dealId===d.id?'selected':''}>${esc(d.name)}</option>`).join('');
+  openModal(`
+    <h2>Log Activity</h2>
+    <div class="form-row"><div class="form-group"><label>Type</label><select id="fActType"><option value="email">Email</option><option value="call">Call</option><option value="meeting">Meeting</option><option value="note">Note</option><option value="task">Task</option></select></div>
+    <div class="form-group"><label>Owner</label><input id="fActOwner" value="John Quinn"></div></div>
+    <div class="form-group"><label>Subject</label><input id="fActSubject"></div>
+    <div class="form-group"><label>Details</label><textarea id="fActBody"></textarea></div>
+    <div class="form-row"><div class="form-group"><label>Contact</label><select id="fActContact"><option value="">--</option>${contactOpts}</select></div>
+    <div class="form-group"><label>Deal</label><select id="fActDeal"><option value="">--</option>${dealOpts}</select></div></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveActivity()">Save</button></div>
+  `);
+}
+
+async function saveActivity() {
+  const data = { type:gel('fActType').value, subject:gel('fActSubject').value, body:gel('fActBody').value, owner:gel('fActOwner').value, contact_id:gel('fActContact').value||null, deal_id:gel('fActDeal').value||null, status:'completed' };
+  await fetch('/api/activities', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
+  closeModal(); await loadActivities(); renderActivities();
+}
+
+function openTemplateModal(id) {
+  const t = id ? templates.find(x => x.id === id) : {};
+  openModal(`
+    <h2>${id?'Edit':'New'} Email Template</h2>
+    <div class="form-row"><div class="form-group"><label>Template Name</label><input id="fTplName" value="${esc(t.name||'')}"></div>
+    <div class="form-group"><label>Category</label><input id="fTplCat" value="${esc(t.category||'')}"></div></div>
+    <div class="form-group"><label>Subject Line</label><input id="fTplSubject" value="${esc(t.subject||'')}"></div>
+    <div class="form-group"><label>Body</label><textarea id="fTplBody" style="min-height:150px">${esc(t.body||'')}</textarea></div>
+    <div class="modal-actions">
+      ${id?`<button class="btn btn-danger" onclick="deleteTemplate('${id}')">Delete</button>`:''}
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTemplate('${id||''}')">Save</button>
+    </div>
+  `);
+}
+
+async function saveTemplate(id) {
+  const data = { name:gel('fTplName').value, subject:gel('fTplSubject').value, body:gel('fTplBody').value, category:gel('fTplCat').value };
+  if (id) { data.id = id; await fetch('/api/templates', {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); }
+  else { await fetch('/api/templates', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); }
+  closeModal(); await loadTemplates(); renderTemplates();
+}
+
+async function deleteTemplate(id) {
+  if (!confirm('Delete this template?')) return;
+  await fetch('/api/templates/delete', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id})});
+  closeModal(); await loadTemplates(); renderTemplates();
+}
+
+function copyTemplate(id) {
+  const t = templates.find(x => x.id === id);
+  if (t) { navigator.clipboard.writeText(`Subject: ${t.subject}\n\n${t.body}`); alert('Template copied to clipboard!'); }
+}
+
+// ── Inline Edit ──
+function inlineEdit(el, field, id) {
+  if (el.querySelector('input')) return;
+  const current = el.textContent.trim();
+  const input = document.createElement('input');
+  input.className = 'edit-input'; input.value = current;
+  el.textContent = ''; el.appendChild(input); input.focus(); input.select();
+  const save = async () => {
+    const val = input.value.trim(); el.textContent = val;
+    if (val !== current) {
+      const c = contacts.find(c => c.id === id); if (c) c[field] = val;
+      await fetch('/api/crm', {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id, fields:{[field]:val}})});
+    }
+  };
+  input.addEventListener('blur', save);
+  input.addEventListener('keydown', e => { if (e.key==='Enter') input.blur(); if (e.key==='Escape') el.textContent = current; });
+}
+
+// ── Sorting ──
+document.querySelectorAll('th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (contactSort.col === col) contactSort.dir *= -1;
+    else { contactSort.col = col; contactSort.dir = col === 'priority_score' ? -1 : 1; }
+    renderContacts();
+  });
+});
+
+// ── Filters ──
+['contactSearch','filterTier','filterStage','filterCategory','filterStatus'].forEach(id => {
+  document.getElementById(id).addEventListener(id.includes('Search')?'input':'change', renderContacts);
+});
+document.getElementById('companySearch').addEventListener('input', renderCompanies);
+['activitySearch','filterActivityType'].forEach(id => {
+  document.getElementById(id).addEventListener(id.includes('Search')?'input':'change', renderActivities);
+});
+['taskSearch','filterTaskCategory','filterTaskState','filterTaskPriority','filterTaskAssigned'].forEach(id => {
+  document.getElementById(id).addEventListener(id.includes('Search')?'input':'change', renderTasks);
+});
+document.querySelectorAll('th[data-taskcol]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.taskcol;
+    if (taskSort.col === col) taskSort.dir *= -1;
+    else { taskSort.col = col; taskSort.dir = col === 'priority' ? -1 : 1; }
+    renderTasks();
+  });
+});
+
+// ── CSV Export ──
+function exportCSV() {
+  const data = currentTab === 'contacts' ? getFilteredContacts() : currentTab === 'companies' ? companies : deals;
+  if (!data.length) return;
+  const cols = Object.keys(data[0]).filter(k => !k.startsWith('_'));
+  const rows = data.map(r => cols.map(k => '"'+String(r[k]||'').replace(/"/g,'""')+'"').join(','));
+  const blob = new Blob([[cols.join(','), ...rows].join('\n')], {type:'text/csv'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `exos-${currentTab}.csv`; a.click();
+}
+
+// ── Helpers ──
+function gel(id) { return document.getElementById(id); }
+function esc(v) { if (v==null) return ''; return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function fmt(n) { return Number(n||0).toLocaleString(); }
+function daysSince(d) { if (!d) return 0; return Math.floor((Date.now()-new Date(d).getTime())/86400000); }
+function timeAgo(d) { const m = daysSince(d); if (m===0) return 'today'; if (m===1) return 'yesterday'; if (m<7) return m+'d ago'; if (m<30) return Math.floor(m/7)+'w ago'; return Math.floor(m/30)+'mo ago'; }
+function getContactName(id) { if (!id) return ''; const c = contacts.find(x => (x._uuid||x.id) === id); return c ? `${c.contact} (${c.company})` : ''; }
+function typeIcon(t) { return {email:'\u2709',call:'\u260E',meeting:'\uD83D\uDCC5',note:'\uD83D\uDCDD',task:'\u2611'}[t]||'\u25CF'; }
+function typeColor(t) { return {email:'var(--accent)',call:'var(--green)',meeting:'var(--purple)',note:'var(--yellow)',task:'var(--orange)'}[t]||'var(--text2)'; }
+
+document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target===e.currentTarget) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+
+init();
+
+// Global-search deep link: /crm.html?q=<term> pre-fills the CRM search boxes and filters.
+(function(){
+  var q=new URLSearchParams(location.search).get('q'); if(!q) return;
+  function apply(){
+    ['contactSearch','companySearch','taskSearch','activitySearch'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el){ el.value=q; el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('keyup',{bubbles:true})); }
+    });
+  }
+  apply(); setTimeout(apply,700); // re-apply after async CRM data load
+})();
+</script>
+</body>
+</html>
