@@ -81,14 +81,13 @@ CRITERIA 1 — JOINT CERTIFICATION PROGRAM (JCP)
     data. A copy of the approved DD Form 2345 is provided as Enclosure 1.
 
 CRITERIA 2 — CYBERSECURITY MATURITY MODEL CERTIFICATION (CMMC)
-    Exos is completing a formal CMMC 2.0 Level 2 program under contracted
-    cybersecurity provider Atomus, with compliance metrics and attestation
-    scheduled to be in place in August 2026, ahead of the Alliance's
-    10 November 2026 deadline. Exos's CMMC Level 2 Self-Assessment is provided
-    as Enclosure 2 (Path A). A detailed Level 2 compliance roadmap is available
-    on request. Exos notes the U.S. Department of War release of 13 July 2026
-    suspending the requirement to obtain a CMMC Level 2 C3PAO certification by
-    November 2026.
+    Exos completed its CMMC 2.0 Level 2 self-assessment (self-certification)
+    on 16 August 2026, under contracted cybersecurity provider Atomus, well
+    ahead of the Alliance's 10 November 2026 deadline. The completed CMMC
+    Level 2 Self-Assessment is provided as Enclosure 2 (Path A), with the
+    detailed compliance record available on request. Exos further notes the
+    U.S. Department of War release of 13 July 2026 suspending the requirement
+    to obtain a CMMC Level 2 C3PAO certification by November 2026.
 
 2.0  Technical Competency (Part 2)
 ================================================================================
