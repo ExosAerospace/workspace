@@ -53,12 +53,17 @@ def sam_open_solicitations(today):
     to = today.strftime("%m/%d/%Y")
     terms = ["reusable launch", "suborbital", "spaceport", "rotating detonation",
              "responsive space launch", "launch services", "launch site"]
-    queries = ["&q=" + urllib.parse.quote(t) for t in terms]
-    queries += ["&ncode=336414"]  # Guided Missile & Space Vehicle Manufacturing
+    # Use title= (targeted title-substring match), NOT q=. Verified live 2026-08-19:
+    # &q=<term> returns ~30-38k loosely/unmatched records (mowers, rifle clips) incl.
+    # Award Notices; &title=<term> actually filters on the title. ptype restricts to
+    # solicitation-type notices (o=Solicitation, p=Presol, k=Combined, r=Sources Sought),
+    # excluding Award Notices/Justifications.
+    queries = ["&title=" + urllib.parse.quote(t) for t in terms]
+    queries += ["&ncode=336414"]  # NAICS: Guided Missile & Space Vehicle Manufacturing
     seen = {}
     for qp in queries:
         url = ("https://api.sam.gov/opportunities/v2/search?api_key=" + key +
-               qp + "&postedFrom=" + frm + "&postedTo=" + to + "&limit=50")
+               qp + "&ptype=o,p,k,r&postedFrom=" + frm + "&postedTo=" + to + "&limit=50")
         try:
             with urllib.request.urlopen(urllib.request.Request(url), timeout=20) as r:
                 data = json.load(r)
