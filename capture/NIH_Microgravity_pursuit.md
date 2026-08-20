@@ -1,5 +1,5 @@
 # PURSUIT TRACKER — NIH Microgravity Biomedical (Capture Agent state file)
-*Single source of truth for this pursuit. The Capture Agent reads this each run, advances the next open action, and updates State + Decision Log. Last updated: 2026-08-18.*
+*Single source of truth for this pursuit. The Capture Agent reads this each run, advances the next open action, and updates State + Decision Log. Last updated: 2026-08-20.*
 
 ## Objective
 Win NIH-relevant microgravity funding/revenue using BLK3 as the SUBORBITAL microgravity platform. Primary near-term = **NIH STTR (PA-27-102), deadline Sep 8 2026** (Sep 5 falls on Saturday; NIH moved to Sep 8), teamed with a biomedical PI (Exos = platform). **As of 2026-08-18 (Jon) the STTR is a DUAL-INSTITUTION team: Dr. Ed Kelly (UW) as biomedical science anchor + Prof. Steven Collicott (Purdue AAE) as suborbital-methods partner — two institutions supporting one PA-27-102 application (one as the ≥30% research-institution-of-record, the other via subaward). Kelly is RESTORED, not superseded.** Parallel = **sell BLK3 screening slots** to NIH/NCATS/TraCe MPS-funded researchers. Adjacent = **NASA ROSBio Appendix D** (suborbital biology). Win = an NIH STTR award and/or booked microgravity payload slots.
@@ -1063,11 +1063,11 @@ priority: 95
 body:
 Hello Prof. Park,
 
-Thank you for connecting with us through Prof. Collicott. I wanted to follow up quickly and see if you have 30 minutes available this week for a call.
+Thank you for connecting with us through Prof. Collicott. I wanted to follow up quickly and see if you have 30 minutes available for a call this week or early next week.
 
 I would like to walk you through the BLK3 platform and how we envision the STTR collaboration working — specifically how your lung organoid-on-chip work fits the onset-kinetics framing we're developing. I also want to make sure you have the full picture on the September 8 deadline and the Purdue Sponsored Programs timeline, so we can move quickly if there is a fit.
 
-I am flexible on timing. Would Tuesday or Wednesday afternoon work for you? Happy to accommodate your schedule.
+I am flexible on timing. Happy to accommodate your schedule — please let me know what works.
 
 Looking forward to connecting.
 
@@ -1094,3 +1094,67 @@ Fly Prof. Park's stem-cell-derived lung organoid-on-chip payload on BLK3 and cha
 - **Purdue / Park** = research-institution-of-record, ≥30%; biomedical science lead (Aim 2)
 - **Purdue / Collicott** = uncompensated advisor (no separate subaward needed; cost-effective structure)
 - **UW / Kelly** (if positive reply received): subaward, ≤30%; Aim 2 parallel data point or expanded Aim 3 screening pipeline. Kelly's involvement would elevate the submission but is not required for Sep 8 if Park commits alone.
+
+---
+
+| 2026-08-20 04:45 CDT | **STTR Sep 8 DEADLINE: 19 DAYS. PURDUE SPS GATE: ~Aug 26–27 (6–7 days).** IMAP scan: NO PI replies visible in Proton (Kelly's reply still Outlook-only; M365 blindspot). No new NIH NOSI for space biology/microgravity. NCATS Tissue Chips 3.0 RFA: not released (last NCATS page update Apr 22, 2026; TC-in-Space 2.0 awardees still executing). ROSES-2026: still NOT released as NNH26ZDA001N — ROSES-25 confirmed still active (corrections as of Aug 4, 2026; last Table 2 amendment July 27, 2026); no ROSBio/BPS suborbital appendix. **State of play:** Park intro sent 2026-08-18 (2 days ago); call-schedule READY-ACTION (key: nih-microgravity-park-call-schedule) dispatched 8/19 with stale "Tuesday/Wednesday" timing — body UPDATED this run to "this week or early next week" and re-queued for dispatch. Park reply-watch only — too soon to chase (intro only 2 days old). **This run's advance:** call-prep brief READY-ACTION produced (key: nih-microgravity-park-call-prep) — Jon-facing, covers Park background, what to achieve on the call, and the institutional clock reality. **Critical path:** Jon must send call-schedule email TODAY (Thursday Aug 20) to secure a call by Friday Aug 22 or Monday Aug 25 at the very latest — if Park commits on Monday, SPS has exactly 5 biz days to route before Sep 8. One day of delay loses a day of runway. Kelly track unchanged — forward-to-exosmc READY-ACTION still in Jon's queue; parallel path still alive. BD sell-slot track (Wu/He/Sethu/Sharma/Zhang): reply-watch only, no new actions. |
+
+<!-- READY-ACTION
+key: nih-microgravity-park-call-prep
+task_title: [NIH-MG] Call prep: Prof. Estelle Park (Purdue Weldon BME) — STTR partnership
+to: jquinn@exosaero.com
+subject: [NIH-MG] Call prep: Prof. Park (Purdue) — what to cover + what to walk away with
+category: BD
+priority: 90
+body:
+Jon,
+
+Quick prep brief for your call with Prof. Estelle (Sunghee) Park this week. The call-schedule email is in your queue — send it today so you can get on her calendar by Friday or Monday.
+
+---
+
+WHO SHE IS
+
+- Assistant Professor, Weldon School of Biomedical Engineering, Purdue
+- PhD Bioengineering, University of Pennsylvania under Dan Huh — the researcher who invented lung-on-a-chip (Nature 2010). She is methodologically credentialed at the highest level.
+- Research focus: stem-cell-derived lung organoids-on-a-chip, intestinal organoids-on-chip, retina organoids-on-chip
+- Collicott intro = warm path (she took the intro through him); she is not a cold contact
+- Not in our failed-DD registry; no flags
+
+WHY SHE IS A STRONG FIT
+
+- Her lung organoid chip work maps directly onto BLK3's onset-kinetics niche: alveolar epithelial response in the first 0-240 seconds of microgravity is a dataset nobody has — ISS cannot generate it (launch vibration + transit delay obscure early µg response)
+- Y. Shrike Zhang (BWH/Harvard) holds an active NCATS Tissue Chips 2.0 award for aging alveolar lung in microgravity — NIH reviewers already know this science area, which validates Park's framing
+- As Purdue BME with Collicott as advisor, the two-person team inside one institution is a clean STTR structure (Park = RI-of-record ≥30%, Exos = SBC ≥40%, Collicott = uncompensated advisor)
+
+WHAT TO COVER ON THE CALL (suggested order)
+
+1. One-minute BLK3 platform intro: 120 km altitude, 3-4 min recoverable microgravity, FAA-licensed, March 2027 flight, full payload recovery
+2. The niche we fill: onset kinetics in the first seconds-to-minutes of µg — window ISS cannot provide due to transit delays. "Screen on BLK3, fly the winners to ISS."
+3. Her role in the STTR: biomedical PI / research-institution-of-record. She drives Aim 2 (the lung organoid onset-kinetics science). Exos does the platform (Aim 1). Collicott/Purdue covers suborbital experiment methods as uncompensated advisor.
+4. Budget framing: Phase I STTR ~$314-323K total over 12 months. Park/Purdue share ~$100-120K. She needs to be comfortable with that budget for her scope before we loop in Purdue SPS.
+5. Institutional routing reality (be direct): Purdue Sponsored Programs needs ~5 business days to route. Sep 8 is the NIH deadline. For SPS to have time, she needs to formally commit and engage SPS no later than August 26-27. This week's call IS the decision call.
+6. NIH research security training: as a Co-I/PI spending ≥10% time, she must certify completion before submission (NSF modules, a few hours; effective Aug 5). Flag early, not as a blocker — she likely has the institutional infrastructure for this.
+
+WHAT TO WALK AWAY WITH FROM THE CALL
+
+A) Her interest level: positive/neutral/negative (determines whether we pursue Sep 8 or stand down to Jan 5, 2027)
+B) If positive: her name for Purdue SPS (or her SPS grants contact name), so you can confirm routing timeline
+C) Her Aim 2 scope comfort: does she want to define the experiment or follow our Aim 2 draft?
+D) Budget direction: is $100-120K for her lab's scope workable?
+E) Her availability for rapid drafting (next 2 weeks): can she dedicate time to proposal review given the Sep 8 clock?
+
+IF KELLY'S OUTLOOK REPLY IS POSITIVE (parallel track)
+
+If you forward Kelly's reply (edkelly@uw.edu) from Outlook to exosmc@proton.me, I read it same-day and can integrate Kelly as a subaward partner on the UW kidney-chip science. Park = primary RI-of-record (≥30%), Kelly = subaward (within remaining ≤30%), Exos = SBC (≥40%). This structure is fully compliant and would give the proposal two ISS-caliber biomedical PIs — a stronger submission. But Park alone is sufficient for Sep 8 if Kelly is negative or unavailable.
+
+---
+
+Key dates (do not lose these):
+- Park call: by Friday Aug 22 or Monday Aug 25 (absolute latest)
+- Park commitment to SPS: by Aug 26-27 EOD
+- Purdue SPS routing: Aug 27 - Sep 1
+- NIH Sep 8 STTR PA-27-102 deadline
+
+John Quinn / Exo
+END-READY-ACTION -->
