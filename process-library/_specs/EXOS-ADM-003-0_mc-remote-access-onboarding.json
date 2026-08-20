@@ -1,0 +1,64 @@
+{
+  "title": "Mission Control Remote Access Onboarding Procedure",
+  "doc_no": "EXOS-ADM-003-0",
+  "area": "Administrative",
+  "area_id": "11-administrative",
+  "owner": "IT Administrator / Exo",
+  "rev": "0",
+  "status": "Approved",
+  "intl_release": "Yes",
+  "reference_docs": "Exos Mission Control (https://mc.exosaero.space); Cloudflare Zero Trust / Access (team soft-hill-c334); Mission Control Admin > Users.",
+  "remarks": "Mission Control is outside CMMC / Atomus scope and contains no CUI, ITAR, or EAR-controlled data. Remote access uses Jon Quinn's independent Cloudflare account, not the Atomus/CMMC tenant.",
+  "objective": "establish a consistent, secure method for provisioning and using remote access to the Exos Mission Control dashboard from approved devices, including personal / non-Atomus assets such as an iPad or home computer.",
+  "overview": "Remote access to Mission Control is protected by two independent login layers. Layer 1 is the Cloudflare Access gate at https://mc.exosaero.space, which admits only approved email addresses using an emailed one-time PIN (no password). Layer 2 is Mission Control's own application login (email + password) which controls what the user sees inside the dashboard. Because the service runs on an independent Cloudflare account and domain, it is reachable from any device with a browser and does not require the Atomus/CMMC network. This procedure covers granting access, the correct login email for each layer, using the dashboard from a non-Atomus asset, using it from an Atomus-managed device, and removing access.",
+  "tasks": [
+    {
+      "name": "Task 1 - Grant a new user remote access (administrator)",
+      "steps": [
+        "Confirm the person is approved for Mission Control access; record their email address and the Mission Control role they should have.",
+        "In Cloudflare Zero Trust (one.dash.cloudflare.com, team soft-hill-c334), open Access > Applications and select the application named mc.",
+        "Open the Policies tab, select the policy Mission Control - approved users, and under Include > Emails add the user's email address; click Save.",
+        "For a user whose email is on Microsoft 365 (@exosaero.com), also collect a non-Microsoft address (personal or Proton) they can receive the one-time PIN at, and add that address as well, because M365 filtering may quarantine the code.",
+        "In Mission Control (Admin > Users), create the user's account with their email, name, and role; set an initial password or have the user set one on first login.",
+        "Notify the user that access is provisioned and send them the Using Mission Control Remotely instructions (Task 3)."
+      ]
+    },
+    {
+      "name": "Task 2 - Understand the two login layers and which email to use",
+      "steps": [
+        "Recognize that remote access has two separate layers, each with its own login prompt.",
+        "Layer 1 - Cloudflare Access gate: enter the approved email address that is on the policy; a one-time PIN is emailed to that inbox; enter the PIN. No password is used at this layer.",
+        "If the PIN does not arrive within a few minutes at an @exosaero.com address, check the Junk folder and Microsoft 365 Quarantine, or use the approved non-Microsoft address for reliable delivery.",
+        "Layer 2 - Mission Control application login (screen branded Exos Mission Control): enter your Mission Control account email (normally your @exosaero.com address) and your Mission Control password.",
+        "Note that the two layers may use different email addresses by design; this is expected."
+      ]
+    },
+    {
+      "name": "Task 3 - Access Mission Control from a non-Atomus asset (iPad, home computer, phone)",
+      "steps": [
+        "On the personal / non-Atomus device, open a web browser and go to https://mc.exosaero.space.",
+        "At the Cloudflare Access screen, enter your approved email address, then enter the one-time PIN sent to that inbox.",
+        "At the Exos Mission Control login screen, enter your Mission Control account email and password.",
+        "Confirm the dashboard loads. If you are prompted for a PIN again after about 24 hours, repeat the one-time PIN step; access sessions expire for security.",
+        "Do not save or forward the one-time PIN, and treat your Mission Control password like any company credential; do not share it."
+      ]
+    },
+    {
+      "name": "Task 4 - Access from an Atomus-managed device",
+      "steps": [
+        "Understand that Atomus policy requires managed devices to reach Mission Control through Cloudflare; the managed device routes automatically through the Atomus tunnel.",
+        "Open https://mc.exosaero.space and complete the same two-layer login described in Task 3.",
+        "If the browser shows This content is blocked by your organization (Microsoft Defender SmartScreen), the new domain is being filtered as a newly registered domain; request that Atomus allowlist mc.exosaero.space on managed devices.",
+        "After Atomus allowlists the domain, retry the two-layer login."
+      ]
+    },
+    {
+      "name": "Task 5 - Remove a user's remote access (offboarding)",
+      "steps": [
+        "In Cloudflare Zero Trust > Access > Applications > mc > policy Mission Control - approved users, remove the user's email address(es) from Include > Emails; click Save.",
+        "In Mission Control (Admin > Users), deactivate or remove the user's Mission Control account.",
+        "Verify from an external device that the removed user can no longer reach the dashboard."
+      ]
+    }
+  ]
+}
