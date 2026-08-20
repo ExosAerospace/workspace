@@ -1076,22 +1076,6 @@
     "11-administrative/EXOS-ADM-003-0_Mission_Control_Remote_Access_Onboarding_Procedure.docx"
    ],
    "file_count": 1
-  },
-  {
-   "area": "Administrative",
-   "area_id": "11-administrative",
-   "procedure": "Unified Carrier Registration (UCR) Annual Renewal",
-   "doc_no": "EXOS-ADM-004-0",
-   "rev": "0",
-   "status": "In Review",
-   "intl_release": "Yes",
-   "ack_required": false,
-   "owner": "Steve Norsworthy / Operations",
-   "remarks": "[HELD - pending Steve Norsworthy review; not on Procedures Master List until review complete] Registration period opens October 1; renewal due December 30 annually. Annual fee is set by the UCR program and varies (2020: $60.62; 2023: $42.22; 2024: $38.10; 2025: $47.37). Exos is a Private Motor Carrier (not For Hire). Review/update the MCS-150 every other year.",
-   "files": [
-    "11-administrative/EXOS-ADM-004-0_Unified_Carrier_Registration_(UCR)_Annual_Renewal.docx"
-   ],
-   "file_count": 1
   }
  ]
 }
