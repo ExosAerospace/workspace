@@ -1,0 +1,43 @@
+{
+  "title": "Unified Carrier Registration (UCR) Annual Renewal",
+  "doc_no": "EXOS-ADM-004-0",
+  "area": "Administrative",
+  "area_id": "11-administrative",
+  "owner": "Steve Norsworthy / Operations",
+  "rev": "0",
+  "status": "Approved",
+  "intl_release": "Yes",
+  "reference_docs": "USDOT #3020432; www.ucr.gov; MCS-150 (Motor Carrier Identification Report); Unified Carrier Registration program",
+  "remarks": "Registration period opens October 1; renewal due December 30 annually. Annual fee is set by the UCR program and varies (2020: $60.62; 2023: $42.22; 2024: $38.10; 2025: $47.37). Exos is a Private Motor Carrier (not For Hire). Review/update the MCS-150 every other year.",
+  "objective": "renew Exos Aerospace's Unified Carrier Registration (UCR) annually so the company's USDOT registration remains active and in compliance",
+  "overview": "UCR is an annual federal registration tied to the company USDOT number. The registration period opens October 1 and the renewal is due by December 30 each year. The annual fee is set by the UCR program and varies year to year (2020: $60.62; 2023: $42.22; 2024: $38.10; 2025: $47.37). Exos is a Private Motor Carrier (not a For Hire carrier). Key reference data: Website www.ucr.gov; USDOT Number 3020432; Due December 30 annually (period opens October 1); Carrier type Private Motor Carrier; MCS-150 reviewed and updated every other year (biennially).",
+  "tasks": [
+    {
+      "name": "Task 1 - Confirm timing and fee",
+      "steps": [
+        "Confirm the registration window is open (opens October 1).",
+        "Note the renewal deadline: December 30.",
+        "Confirm the current-year fee on the UCR site before paying."
+      ]
+    },
+    {
+      "name": "Task 2 - Access the UCR system",
+      "steps": [
+        "Go to www.ucr.gov.",
+        "Enter the USDOT number 3020432.",
+        "Re-enter the USDOT number when prompted a second time.",
+        "Open and review the Privacy and Terms and Conditions links (required to proceed)."
+      ]
+    },
+    {
+      "name": "Task 3 - Renew the registration",
+      "steps": [
+        "Proceed to the page listing all previous registrations.",
+        "Select the current year and begin the renewal.",
+        "Review the MCS-150 and update if due (review every other year).",
+        "When asked for carrier type, select Private Motor Carrier (Exos is not a For Hire carrier).",
+        "Pay the fee and confirm the registration is complete."
+      ]
+    }
+  ]
+}
