@@ -1,8 +1,8 @@
 {
  "meta": {
-  "title": "Exos Process & Procedures — Master Register",
+  "title": "Exos Process & Procedures \u2014 Master Register",
   "updated": "2026-08-20",
-  "source": "Lizi turnover → Exo (MC management); schema per Exos Procedures Master List",
+  "source": "Lizi turnover \u2192 Exo (MC management); schema per Exos Procedures Master List",
   "template": "Exos-US Procedure Template",
   "doc_control": "STATUS on each doc; records in NetSuite + Exos Work Management System (MC/ERP)",
   "areas": [
@@ -43,7 +43,7 @@
    "area_id": "01-quality-as9100",
    "procedure": "Procedures Master List",
    "doc_no": "MASTER",
-   "rev": "—",
+   "rev": "\u2014",
    "status": "Active",
    "intl_release": "Yes",
    "ack_required": false,
@@ -59,7 +59,7 @@
    "area_id": "01-quality-as9100",
    "procedure": "Procedures List",
    "doc_no": "LIST",
-   "rev": "—",
+   "rev": "\u2014",
    "status": "Active",
    "intl_release": "No",
    "ack_required": false,
@@ -89,7 +89,7 @@
   {
    "area": "Quality & Document Control (AS9100)",
    "area_id": "01-quality-as9100",
-   "procedure": "After Action Review — Procedure Template",
+   "procedure": "After Action Review \u2014 Procedure Template",
    "doc_no": "AAR-TMPL",
    "rev": "1",
    "status": "Approved",
@@ -105,7 +105,7 @@
   {
    "area": "Quality & Document Control (AS9100)",
    "area_id": "01-quality-as9100",
-   "procedure": "After Action Review — AAR-001 (record)",
+   "procedure": "After Action Review \u2014 AAR-001 (record)",
    "doc_no": "AAR-001",
    "rev": "2019-06-29",
    "status": "Record",
@@ -128,7 +128,7 @@
    "intl_release": "Yes",
    "ack_required": false,
    "owner": "Exo (Lizi advising)",
-   "remarks": "The add→approve→record workflow itself — awaiting CEO approval",
+   "remarks": "The add\u2192approve\u2192record workflow itself \u2014 awaiting CEO approval",
    "files": [
     "01-quality-as9100/EXOS-US-QMS-001_Process_and_Procedure_Control.docx"
    ],
@@ -343,7 +343,7 @@
   {
    "area": "Safety / EHS",
    "area_id": "06-safety-ehs",
-   "procedure": "Workplace Safety — Annual Training",
+   "procedure": "Workplace Safety \u2014 Annual Training",
    "doc_no": "SAFE-ANNUAL",
    "rev": "2024",
    "status": "Training (review)",
@@ -452,7 +452,7 @@
    "intl_release": "No",
    "ack_required": true,
    "owner": "Exo (Lizi advising)",
-   "remarks": "Flagged by Jon — update the 2024 version",
+   "remarks": "Flagged by Jon \u2014 update the 2024 version",
    "files": [
     "07-hr-compliance-training/Payday_Employee_Acknowledgment_Form.docx",
     "07-hr-compliance-training/Texas_Payday_Law_Case_Studies.docx",
@@ -497,7 +497,7 @@
   {
    "area": "Security / CUI",
    "area_id": "08-security-cui",
-   "procedure": "CUI NDA — DFARS/CFR v1",
+   "procedure": "CUI NDA \u2014 DFARS/CFR v1",
    "doc_no": "SEC-CUI-NDA",
    "rev": "1",
    "status": "Active",
@@ -531,12 +531,12 @@
    "area_id": "10-culture",
    "procedure": "Leroy Jethro Gibbs' Rules (fun)",
    "doc_no": "FUN",
-   "rev": "—",
+   "rev": "\u2014",
    "status": "Uncontrolled",
    "intl_release": "No",
    "ack_required": false,
    "owner": "Exo (Lizi advising)",
-   "remarks": "Morale/humor — not a controlled procedure",
+   "remarks": "Morale/humor \u2014 not a controlled procedure",
    "files": [
     "10-culture/Leroy_Jethro_Gibbs_rules.docx"
    ],
@@ -563,7 +563,7 @@
    "area_id": "99-reference",
    "procedure": "Procurement benchmarks (Coupa/Ardent/IDC)",
    "doc_no": "REF-PROC",
-   "rev": "—",
+   "rev": "\u2014",
    "status": "Reference",
    "intl_release": "No",
    "ack_required": false,
@@ -581,7 +581,7 @@
    "area_id": "99-reference",
    "procedure": "Sample Purchasing manuals (KU/NYU)",
    "doc_no": "REF-PURMAN",
-   "rev": "—",
+   "rev": "\u2014",
    "status": "Reference",
    "intl_release": "No",
    "ack_required": false,
@@ -619,13 +619,13 @@
    "intl_release": "Yes",
    "ack_required": false,
    "owner": "Kyle Ballard (Finance) / Exo",
-   "remarks": "Employee expense report template — download, complete, and submit per Finance process (travel/reimbursable expenses).",
+   "remarks": "Employee expense report template \u2014 download, complete, and submit per Finance process (travel/reimbursable expenses).",
    "files": [
     "11-administrative/Exos_Expense_Report_Template_2026.xlsx"
    ],
    "file_count": 1,
    "apply_link": "/expenses.html",
-   "apply_label": "💵 Submit an expense report"
+   "apply_label": "\ud83d\udcb5 Submit an expense report"
   },
   {
    "area": "Security / CUI",
@@ -637,7 +637,7 @@
    "intl_release": "N/A",
    "ack_required": true,
    "owner": "Lizi Quinn / Exo",
-   "remarks": "EXOS IT-001 (DRAFT for Lizi review). ONE-TOUCH provisioning: every new Win11 Pro device converges to the Exos Standard Endpoint base image via Windows Autopilot + Intune — power on, one sign-in, done, no manual config. Base image auto-installs BitLocker+LAPS, Defender, CMMC/CIS baseline, the Cloudflare One client enrolled to exosaero Zero Trust (so MC is reachable), and the full Atomus CMMC 2.0 suite. Includes off-network LAPS recovery, offboarding, and US/GCC-High vs foreign-scope boundary.",
+   "remarks": "EXOS IT-001 (DRAFT for Lizi review). ONE-TOUCH provisioning: every new Win11 Pro device converges to the Exos Standard Endpoint base image via Windows Autopilot + Intune \u2014 power on, one sign-in, done, no manual config. Base image auto-installs BitLocker+LAPS, Defender, CMMC/CIS baseline, the Cloudflare One client enrolled to exosaero Zero Trust (so MC is reachable), and the full Atomus CMMC 2.0 suite. Includes off-network LAPS recovery, offboarding, and US/GCC-High vs foreign-scope boundary.",
    "files": [
     "08-security-cui/IT-001-0_New_Device_Provisioning_and_Endpoint_Onboarding.docx"
    ],
@@ -1083,11 +1083,11 @@
    "procedure": "Unified Carrier Registration (UCR) Annual Renewal",
    "doc_no": "EXOS-ADM-004-0",
    "rev": "0",
-   "status": "Approved",
+   "status": "In Review",
    "intl_release": "Yes",
    "ack_required": false,
    "owner": "Steve Norsworthy / Operations",
-   "remarks": "Registration period opens October 1; renewal due December 30 annually. Annual fee is set by the UCR program and varies (2020: $60.62; 2023: $42.22; 2024: $38.10; 2025: $47.37). Exos is a Private Motor Carrier (not For Hire). Review/update the MCS-150 every other year.",
+   "remarks": "[HELD - pending Steve Norsworthy review; not on Procedures Master List until review complete] Registration period opens October 1; renewal due December 30 annually. Annual fee is set by the UCR program and varies (2020: $60.62; 2023: $42.22; 2024: $38.10; 2025: $47.37). Exos is a Private Motor Carrier (not For Hire). Review/update the MCS-150 every other year.",
    "files": [
     "11-administrative/EXOS-ADM-004-0_Unified_Carrier_Registration_(UCR)_Annual_Renewal.docx"
    ],
