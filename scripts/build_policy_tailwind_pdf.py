@@ -7,8 +7,10 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
 
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from exos_letterhead import stationery, MARGINS   # LOCKED letterhead placement
 OUT="data-room/Exos_SeriesA/_CANONICAL/Exos_Policy_Tailwind_NSTP_2026-08-21.pdf"
-HEADER="/tmp/lh_x/word/media/image1.png"; FOOTER="/tmp/lh_x/word/media/image2.png"
 NAVY=HexColor("#0A3D7C"); DARK=HexColor("#1A1A1A"); GREY=HexColor("#555555")
 PW,PH=letter
 ss=getSampleStyleSheet()
@@ -26,13 +28,7 @@ cellH=ParagraphStyle("ch",parent=ss["Normal"],fontSize=9,textColor=HexColor("#FF
 E=[]
 def P(t,st=body): E.append(Paragraph(t,st))
 def B(t): E.append(Paragraph("•&nbsp;&nbsp;"+t,bullet))
-def deco(c,d):
-    cw=PW-1.0*inch
-    hh=cw*(542.0/2625.0); c.drawImage(HEADER,0.5*inch,PH-0.45*inch-hh,width=cw,height=hh,mask='auto')
-    fh=cw*(431.0/2625.0); c.drawImage(FOOTER,0.5*inch,0.35*inch,width=cw,height=fh,mask='auto')
-    c.setFont("Helvetica",7.5); c.setFillColor(GREY)
-    c.drawRightString(PW-0.6*inch,0.28*inch,"Proprietary — Unclassified   |   Page %d"%d.page)
-doc=SimpleDocTemplate(OUT,pagesize=letter,leftMargin=0.85*inch,rightMargin=0.85*inch,topMargin=1.7*inch,bottomMargin=1.35*inch)
+doc=SimpleDocTemplate(OUT,pagesize=letter,**MARGINS)
 
 P("Exos Aerospace &times; National Space Transportation Policy",title)
 P("Alignment Brief — the &ldquo;Golden Age of Space Transportation&rdquo; policy and why it accrues to Exos",sub)
@@ -77,5 +73,5 @@ P("A national policy targeting 1,000+ launches and reentries per year by 2030 si
 
 P("Directional; reflects public policy reporting as of August 21, 2026 and Exos program status. Exos has not to date performed direct RDRE hardware development. BLK3 received its FAA launch license in March 2026 and is preparing for flight; it has not flown commercially. Proprietary — Unclassified. Not investment advice.",note)
 
-doc.build(E,onFirstPage=deco,onLaterPages=deco)
+doc.build(E,onFirstPage=stationery,onLaterPages=stationery)
 print("BUILT",OUT)
