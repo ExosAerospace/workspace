@@ -149,6 +149,25 @@ SAMPLE = [
 ]
 
 def ingest(args):
+    if "--names-file" in args:
+        # Screen an explicit supplier list (one name per line) — e.g. BOM suppliers — bypassing
+        # QuickBooks ingest. Optional "name\tspend" tab-separated for concentration analysis.
+        p = args[args.index("--names-file") + 1]
+        sup = []; total = 0
+        for line in open(p):
+            line = line.strip()
+            if not line:
+                continue
+            parts = line.split("\t")
+            name = parts[0].strip()
+            spend = 0
+            try:
+                spend = float(parts[1]) if len(parts) > 1 else 0
+            except Exception:
+                spend = 0
+            sup.append({"name": name, "id": slug(name), "qb_id": None, "country": "", "spend_365": spend})
+            total += spend
+        return sup, total, "bom"
     if "--sample" in args:
         return [dict(s, id=slug(s["name"]), qb_id=None) for s in SAMPLE], sum(s["spend_365"] for s in SAMPLE), "sample"
     try:
