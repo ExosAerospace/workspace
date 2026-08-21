@@ -1,0 +1,70 @@
+{
+  "title": "ITZ Container Receiving, Offload & Leveling",
+  "doc_no": "EXOS-ITZ-001-0",
+  "area": "Ground Operations",
+  "area_id": "02-ground-operations",
+  "owner": "Ground Operations / Exo",
+  "rev": "0",
+  "status": "Draft",
+  "intl_release": "Yes",
+  "reference_docs": "DHS CRADA [ref]; Butte (Bert Mooney Airport) ITZ MOA; EXOS-ITZ-002 (Security Monitoring); EXOS-ITZ-003 (Payload Operations); OSHA 29 CFR 1926 Subpart CC (cranes/rigging); OSHA 29 CFR 1910.178 (powered industrial trucks / forklifts).",
+  "remarks": "DRAFT for review. Offload may be performed by a crane, a boom truck, OR a forklift with extended forks - these are equipment OPTIONS selected by weight/access; the forklift is an option, not a replacement for a crane or boom truck. The container is self-contained and requires NO external power. Container: GSS Global Secure Container (Secure Hybrid Composite Intermodal Container, ISO-1496/1 / CSC Annex II, 20 ft). Empty/tare weight is LIGHTER than the ~4,800-5,000 lb (~2,180-2,270 kg) steel-equivalent 20 ft container (composite construction); confirm exact tare on the CSC plate / with GSS. Size all offload equipment to the LOADED GROSS weight.",
+  "objective": "establish the controlled process for receiving the GSS Global Secure ITZ container at Bert Mooney Airport (Butte, MT), safely offloading it from the delivery truck by the selected method (crane, boom truck, or forklift with extended forks), and siting and leveling it for operation.",
+  "overview": "This procedure governs container receipt from truck arrival at the Airport through a level, secured container ready for security activation and payload operations. The container is a composite GSS Global Secure Container and requires no external power. It covers pre-arrival planning, delivery inspection, offload by the selected method, siting and leveling, connectivity confirmation, and handover.",
+  "tasks": [
+    {
+      "name": "Task 1 - Pre-arrival planning and site preparation",
+      "steps": [
+        "Confirm the approved container location/pad with the Airport and verify surface bearing capacity for both the offload equipment and the set container.",
+        "Select the offload method for this delivery - crane, boom truck, or forklift with extended forks - based on container gross weight and site access.",
+        "Develop and approve the offload plan for the selected method: equipment rated at or above the LOADED GROSS weight, and a certified operator (crane/rigging per OSHA 1926 Subpart CC; forklift per OSHA 1910.178).",
+        "Confirm the GSS container tare (CSC plate) and estimated gross weight for equipment sizing; confirm lift points / fork pockets.",
+        "Confirm permits, escorts, Airport airside access, timing; stage leveling equipment (jacks, cribbing, shims, precision level) and PPE; establish the exclusion zone and comms."
+      ]
+    },
+    {
+      "name": "Task 2 - Delivery receipt and inspection",
+      "steps": [
+        "Verify the delivered container against the shipping manifest / bill of lading.",
+        "Inspect exterior, doors, and any seals for damage or tampering; photograph condition.",
+        "Record any exceptions and notify the shipper before offload.",
+        "Confirm container weight and fork-pocket / base-lift points against the offload plan."
+      ]
+    },
+    {
+      "name": "Task 3 - Offload from truck (crane, boom truck, or forklift with extended forks)",
+      "steps": [
+        "Confirm the selected offload equipment is rated at/above the loaded gross weight and the operator is certified for that equipment.",
+        "For a crane or boom truck: rig to the designated lift points with rated slings/spreader; for a forklift: fully engage extended forks under the base/fork pockets - confirming fork length/spacing.",
+        "Establish and clear the exclusion zone; brief all personnel; use tag lines and/or a spotter; perform a slight test lift to confirm balance.",
+        "Lift the container clear of the truck and set it gently on the prepared pad. Never work or stand under a suspended load."
+      ]
+    },
+    {
+      "name": "Task 4 - Siting and leveling",
+      "steps": [
+        "Position the container on the pad per the approved layout and access needs.",
+        "Level the container within tolerance using leveling jacks and shims; verify with a precision level on two axes.",
+        "Anchor/secure the container per site and wind requirements.",
+        "Confirm door operation and clearances after leveling."
+      ]
+    },
+    {
+      "name": "Task 5 - Connectivity confirmation (no external power required)",
+      "steps": [
+        "Confirm the container requires no external power connection (self-contained).",
+        "Confirm the security monitoring system operates on its self-contained power (battery/solar) and communications (e.g., cellular) per EXOS-ITZ-002.",
+        "Verify any passive environmental provisions (ventilation) as applicable."
+      ]
+    },
+    {
+      "name": "Task 6 - Post-set inspection and handover",
+      "steps": [
+        "Verify level, anchoring, and door operation.",
+        "Confirm the security monitoring system is active on its self-contained power per EXOS-ITZ-002.",
+        "Complete the receiving record (condition, photos, exceptions) and hand over to Payload Operations (EXOS-ITZ-003).",
+        "Log the forklift, labor, and equipment used for the activity support-cost schedule."
+      ]
+    }
+  ]
+}

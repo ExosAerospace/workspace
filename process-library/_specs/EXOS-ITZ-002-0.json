@@ -1,0 +1,66 @@
+{
+  "title": "ITZ Container Security Monitoring System",
+  "doc_no": "EXOS-ITZ-002-0",
+  "area": "Ground Operations",
+  "area_id": "02-ground-operations",
+  "owner": "Steve Norsworthy / Security",
+  "rev": "0",
+  "status": "Draft",
+  "intl_release": "Yes",
+  "reference_docs": "DHS CRADA [ref]; Butte ITZ MOA; EXOS-ITZ-001; EXOS-ITZ-003; ITZ Technology Control Plan (TCP); ITAR 22 CFR 120-130; EAR 15 CFR 730-774; CMMC 2.0 / NIST SP 800-171 (as applicable); Global Secure Shipping (GSS) training materials.",
+  "remarks": "DRAFT FRAMEWORK - system-specific detail (sensors, CCTV/monitoring, alarm response, comms) TO BE PROVIDED BY STEVE NORSWORTHY (target next week). DESIGN CONSTRAINT: the pad has NO facility power - the monitoring system must be SELF-POWERED (battery/solar) with cellular uplink and adequate battery-backup runtime. Security-software training delivered by Global Secure Shipping. Access is governed by the ITZ Technology Control Plan (TCP); handling of controlled payloads is limited to U.S. persons under NDA/TCP.",
+  "objective": "define the operation, monitoring, maintenance, and response for the ITZ container's physical and electronic security monitoring system, ensuring tamper-evident, access-controlled custody of international payloads.",
+  "overview": "This procedure frames how the GSS Global Secure ITZ container is secured and monitored end to end. The system must operate self-powered (battery/solar, cellular uplink) because the pad has no facility power. Detailed configuration is supplied by Security (Steve Norsworthy); operators are trained on the security software by Global Secure Shipping. Access follows a tiered authorization model under the ITZ Technology Control Plan.",
+  "tasks": [
+    {
+      "name": "Task 1 - System description and components (self-powered)",
+      "steps": [
+        "[Steve to detail] Document monitoring components: six-sided intrusion/hole detection, door-opening detection, CCTV, access control, environmental sensors, and two-way/cellular communications.",
+        "DESIGN CONSTRAINT: system is SELF-POWERED (battery and/or solar) with a defined battery-backup runtime and cellular uplink - no facility power at the pad.",
+        "Record system make/model, software, and version."
+      ]
+    },
+    {
+      "name": "Task 2 - Access control and authorization (tiered, per Technology Control Plan)",
+      "steps": [
+        "Maintain the authorized-access list under the ITZ Technology Control Plan (TCP), applying least-privilege and logging every entry/exit (who, when, purpose).",
+        "Tier 1 - Exos operators: full container operations and payload handling; U.S. persons, trained, under the TCP.",
+        "Tier 2 - Host partner (Edgar Johansson + designated Montana Spaceport team): trained on access operation (Exos-supported; GSS security-software training), facility/container access; handling of controlled payloads only if U.S. persons under NDA + TCP, otherwise host/logistics support only.",
+        "Tier 3 - Emergency/security response (Butte airport security forces / local law enforcement): physical / break-glass emergency access only, logged - no payload handling.",
+        "[Steve to detail] Credential issuance/revocation; control foreign-person access per export-control (deemed-export) requirements."
+      ]
+    },
+    {
+      "name": "Task 3 - Monitoring and alarm response",
+      "steps": [
+        "[Steve to detail] Define normal monitoring, alerting thresholds, and the monitoring station/uplink.",
+        "[Steve to detail] Define alarm response and escalation (who is notified, response times, law-enforcement/Airport coordination).",
+        "Record all alarms and dispositions."
+      ]
+    },
+    {
+      "name": "Task 4 - Tamper-evidence, seals, and chain-of-custody",
+      "steps": [
+        "Apply and record numbered tamper-evident seals on the container and payload enclosures.",
+        "Verify seal integrity at each custody transfer; document breaks and causes.",
+        "Maintain the chain-of-custody log consistent with EXOS-ITZ-003."
+      ]
+    },
+    {
+      "name": "Task 5 - Logging, review, and audit",
+      "steps": [
+        "Retain access, alarm, and video logs per the records schedule.",
+        "Perform periodic review/audit of logs and system health.",
+        "Report anomalies to the Security owner."
+      ]
+    },
+    {
+      "name": "Task 6 - Training and maintenance",
+      "steps": [
+        "Complete security software training delivered by Global Secure Shipping before operating the system; retain training records.",
+        "[Steve to detail] Preventive maintenance, calibration, and test schedule for sensors/CCTV.",
+        "Verify the system after any container move or power event (see EXOS-ITZ-001)."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "title": "ITZ Payload Operations - Inbound Receipt, Outbound Dispatch, and Return",
+  "doc_no": "EXOS-ITZ-003-0",
+  "area": "Payload",
+  "area_id": "03-payload",
+  "owner": "Payload Operations / Exo",
+  "rev": "0",
+  "status": "Draft",
+  "intl_release": "Yes",
+  "reference_docs": "DHS CRADA [ref]; Butte ITZ MOA; ITAR 22 CFR 120-130; EAR 15 CFR 730-774; CBP / Foreign-Trade Zone regulations (19 CFR Part 146); EXOS-ITZ-001; EXOS-ITZ-002. Empowered Official: John Quinn; ITAR reviewer: Denise Shirey.",
+  "remarks": "DRAFT for review. Legal framework = customs/FTZ + U.S. export control. Support-cost schedule for payload-handling activities included in Task 6 (rates [TBD]). No controlled technical data handled outside authorized channels.",
+  "objective": "establish the controlled process for receiving international payloads into the ITZ container, dispatching (loading out) payloads, and processing final returns, in compliance with customs / Foreign-Trade Zone and U.S. export-control (ITAR / EAR) requirements.",
+  "overview": "This procedure governs the payload lifecycle at the ITZ container: pre-receipt compliance screening, inbound receipt and custody, in-container handling, outbound dispatch, and final return, with the legal framework and support-cost accounting for each activity.",
+  "tasks": [
+    {
+      "name": "Task 1 - Pre-receipt authorization and compliance screen",
+      "steps": [
+        "Screen the payload, consignor, and parties against ITAR/EAR and denied/sanctioned-party lists; document the export jurisdiction/classification.",
+        "Confirm customs/FTZ entry treatment and required CBP documentation (19 CFR 146).",
+        "Verify any required DDTC authorization/license and confirm conformance with the DHS CRADA.",
+        "Control and screen foreign-person access for the specific payload (deemed-export check)."
+      ]
+    },
+    {
+      "name": "Task 2 - Inbound payload receipt into the container",
+      "steps": [
+        "Verify the inbound consignment against the manifest; conduct customs-supervised entry as required.",
+        "Inspect condition and seals; photograph and record exceptions.",
+        "Enter the payload into the chain-of-custody log and apply tamper-evident seals (EXOS-ITZ-002).",
+        "Place into secure, monitored storage within the container."
+      ]
+    },
+    {
+      "name": "Task 3 - In-container handling and staging",
+      "steps": [
+        "Handle payloads per customer and hazard requirements; maintain environmental conditions.",
+        "Restrict access to authorized, trained personnel; log all handling.",
+        "Stage for outbound movement per schedule."
+      ]
+    },
+    {
+      "name": "Task 4 - Outbound dispatch (loading payloads out)",
+      "steps": [
+        "Confirm outbound authorization and export documentation/license as applicable.",
+        "Package, seal, and label per requirements; update the chain-of-custody log.",
+        "Complete customs/FTZ documentation for removal.",
+        "Hand off to the carrier and record the transfer and seal numbers."
+      ]
+    },
+    {
+      "name": "Task 5 - Final return processing",
+      "steps": [
+        "Receive the returned payload; verify condition, seals, and disposition against records.",
+        "Reconcile customs/FTZ status for the return; complete required documentation.",
+        "Release/return to the customer or dispose per instructions; close the chain-of-custody record."
+      ]
+    },
+    {
+      "name": "Task 6 - Records, legal framework, and support-cost accounting",
+      "steps": [
+        "Retain customs, export-control, custody, and handling records per the records schedule.",
+        "Confirm the activity complied with the customs/FTZ and ITAR/EAR framework; note any exceptions to the Empowered Official.",
+        "Record support-cost items for the activity - e.g., crane/rigging and receiving labor, security monitoring, payload handling/staging, customs broker/FTZ fees, storage, and consumables - to the ITZ support-cost schedule (rates [TBD])."
+      ]
+    }
+  ]
+}
