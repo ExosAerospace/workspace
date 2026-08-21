@@ -202,6 +202,24 @@ def exchange_code(redirect_url_or_code, redirect_uri=None, env=None, expected_st
     except OSError: pass
     return {"realm": d.get("qb_realm_id"), "refresh_saved": True, "expires_in": tok.get("expires_in")}
 
+def preferences(env=None):
+    """Company feature/preference flags (Preferences entity — available on every QBO tier).
+    Source of truth for version/tier-specific features that can appear or disappear when a
+    user changes their QuickBooks Online plan."""
+    return (query("SELECT * FROM Preferences").get("Preferences") or [{}])[0]
+
+def feature_enabled(flag_path, env=None, prefs=None):
+    """Dotted lookup into Preferences, e.g. 'VendorAndPurchasesPrefs.TrackingByCustomer' or
+    'AccountingInfoPrefs.ClassTrackingPerTxn'. Returns None when the branch is absent — i.e.
+    the feature isn't present in the user's current plan — so callers can degrade gracefully
+    instead of erroring on a tier-specific entity."""
+    node = prefs if prefs is not None else preferences(env)
+    for part in flag_path.split("."):
+        if not isinstance(node, dict):
+            return None
+        node = node.get(part)
+    return node
+
 if __name__ == "__main__":
     try:
         vs = list_vendors()
