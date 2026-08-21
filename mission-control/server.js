@@ -281,6 +281,17 @@ function ensurePdfRendition(storedName) {
   return null;
 }
 
+// Build an RFC 6266 / 5987-safe Content-Disposition value. A raw non-ASCII byte (e.g. an em-dash
+// "—" in a document's filename) in an HTTP header throws ERR_INVALID_CHAR, and — uncaught in a
+// request handler — crashes the ENTIRE server process (root cause of the /viewpdf crash-loop that
+// looked like a restart storm). ASCII-only `filename="..."` fallback + UTF-8 `filename*` for the
+// real name.
+function safeContentDisposition(name, disposition) {
+  const raw = String(name == null ? 'file' : name);
+  const ascii = raw.replace(/[^\x20-\x7e]/g, '_').replace(/["\\]/g, '');
+  return `${disposition || 'inline'}; filename="${ascii}"; filename*=UTF-8''${encodeURIComponent(raw)}`;
+}
+
 // Simple multipart parser for file uploads
 function parseMultipart(req) {
   return new Promise((resolve, reject) => {
@@ -1160,7 +1171,7 @@ const server = http.createServer((req, res) => {
     const size = fs.statSync(file).size;
     const range = req.headers.range;
     const headers = { 'Content-Type': 'application/gzip', 'Accept-Ranges': 'bytes',
-      'Content-Disposition': `attachment; filename="${path.basename(file).replace(/"/g, '')}"` };
+      'Content-Disposition': safeContentDisposition(path.basename(file), 'attachment') };
     let stream;
     if (range) {
       const m = /bytes=(\d+)-(\d*)/.exec(range) || [];
@@ -1658,7 +1669,7 @@ const server = http.createServer((req, res) => {
       '.doc': 'application/msword', '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
       '.md': 'text/markdown; charset=utf-8', '.txt': 'text/plain; charset=utf-8' }[ext] || 'application/octet-stream';
-    res.writeHead(200, { 'Content-Type': ct, 'Content-Disposition': 'inline; filename="' + path.basename(full).replace(/"/g, '') + '"' });
+    res.writeHead(200, { 'Content-Type': ct, 'Content-Disposition': safeContentDisposition(path.basename(full), 'inline') });
     fs.createReadStream(full).pipe(res); return;
   }
 
@@ -3063,12 +3074,12 @@ const server = http.createServer((req, res) => {
     if (pdfPath) {
       res.writeHead(200, {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `inline; filename="${origBase}.pdf"`,
+        'Content-Disposition': safeContentDisposition(origBase + '.pdf', 'inline'),
       });
       res.end(fs.readFileSync(pdfPath));
     } else {
       // Conversion not possible — serve original inline as a fallback.
-      res.writeHead(200, { 'Content-Type': 'application/octet-stream', 'Content-Disposition': `inline; filename="${fileName}"` });
+      res.writeHead(200, { 'Content-Type': 'application/octet-stream', 'Content-Disposition': safeContentDisposition(fileName, 'inline') });
       res.end(fs.readFileSync(filePath));
     }
     return;
@@ -3095,7 +3106,7 @@ const server = http.createServer((req, res) => {
       const origName = meta ? meta.filename : fileName;
       res.writeHead(200, {
         'Content-Type': mimeTypes[ext] || 'application/octet-stream',
-        'Content-Disposition': `inline; filename="${origName}"`,
+        'Content-Disposition': safeContentDisposition(origName, 'inline'),
       });
       res.end(fs.readFileSync(filePath));
     } else {
@@ -3708,4 +3719,15 @@ server.on('error', (err) => {
     process.exit(1);
   }
 });
+
+// Resilience guard: a throw inside a single request handler (e.g. a bad header value from one
+// document's filename) must NOT crash the whole server for everyone and trigger a launchd
+// crash-loop. Log it loudly and stay up; the one offending request fails, the service survives.
+process.on('uncaughtException', (err) => {
+  console.error(`[${_ts()}] uncaughtException (server stays up):`, err && err.stack || err);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error(`[${_ts()}] unhandledRejection (server stays up):`, reason);
+});
+
 startListen();
