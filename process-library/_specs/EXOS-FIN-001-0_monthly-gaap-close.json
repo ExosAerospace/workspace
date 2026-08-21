@@ -1,0 +1,47 @@
+{
+  "title": "Monthly GAAP Close & Financial Verification",
+  "doc_no": "EXOS-FIN-001-0",
+  "area": "Finance & Accounting",
+  "area_id": "12-finance-accounting",
+  "owner": "Kyle Ballard (CFO / Finance)",
+  "rev": "0",
+  "status": "Draft",
+  "intl_release": "No",
+  "reference_docs": "QuickBooks Online (general ledger / system of record); ASC 606 (revenue recognition); ASC 842 (leases, if applicable); Exos cap table; lender / loan statements; EXOS-ADM-002 Expense Report Submission.",
+  "objective": "establish the standard monthly close so Exos's books are maintained on a GAAP (accrual) basis, reconciled, and verifiable for management and investor due diligence.",
+  "overview": "QuickBooks Online is the single general ledger and system of record; this close is performed in QBO on the accrual basis and the period is LOCKED when complete. Mission Control provides read-only verification (automated tie-outs and exception flags) on top of QBO - it is not a second ledger. Target close: within 10 business days of month-end.",
+  "tasks": [
+    {"name": "1. Cutoff & Transaction Completeness", "steps": [
+      "Confirm all vendor bills (AP), customer invoices (AR), Divvy / credit-card charges, and expense reports for the period are entered.",
+      "Confirm payroll for the period is fully recorded, including employer taxes and benefits.",
+      "Verify transaction cutoff: revenues and expenses are booked in the period earned / incurred (accrual), not when cash moved.",
+      "Categorize and clear all uncategorized and undeposited-funds transactions."]},
+    {"name": "2. Cash Reconciliations", "steps": [
+      "Reconcile every bank account in QBO to the bank statement; investigate and clear reconciling items.",
+      "Reconcile every credit card (Divvy) and confirm all receipts are captured.",
+      "Confirm ending book cash ties to the bank balances."]},
+    {"name": "3. Balance Sheet Reconciliations", "steps": [
+      "AR: tie the aging to the GL; reserve or write off uncollectible balances.",
+      "AP: tie the aging to the GL; confirm no missing or duplicate liabilities.",
+      "Prepaid expenses: update the schedule and record the period amortization.",
+      "Fixed assets: record additions / disposals and the monthly depreciation entry.",
+      "Accrued liabilities: accrue payroll, PTO, interest, and known unbilled costs.",
+      "Debt / notes: tie principal to lender statements and record accrued interest.",
+      "Equity: reconcile to the cap table (SAFEs / convertibles, common / preferred, option pool)."]},
+    {"name": "4. Revenue Recognition (ASC 606)", "steps": [
+      "Review active contracts; identify the performance obligations and milestones.",
+      "Recognize revenue for obligations satisfied in the period; defer the remainder.",
+      "Roll forward deferred revenue / contract liabilities and confirm the balance.",
+      "Flag any launch-service or milestone payments requiring judgment for CFO review."]},
+    {"name": "5. Review & Analytical Verification", "steps": [
+      "Generate the P&L, Balance Sheet, and Statement of Cash Flows on the accrual basis.",
+      "Run month-over-month and budget-vs-actual variance (flux) analysis on material accounts; document the explanations.",
+      "Confirm the trial balance is in balance and every reconciliation is complete and signed off."]},
+    {"name": "6. Close, Sign-off & Distribution", "steps": [
+      "CFO reviews and approves the completed close.",
+      "Lock the period in QuickBooks Online so history cannot change.",
+      "Publish the monthly financial statements to the Series A data room / investor reporting.",
+      "Record completion; log any exceptions and corrective actions to carry into the next close."]}
+  ],
+  "remarks": "GAAP close performed in QBO (accrual). Target: 10 business days post month-end. Mission Control runs read-only verification (tie-outs / exception flags) on the QBO Reports API feed - not a second ledger. For investor-grade assurance, layer a CPA review (SSARS 21) on top; upgrade to a full audit only if a lead investor requires it."
+}
