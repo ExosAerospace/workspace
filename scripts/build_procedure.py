@@ -89,7 +89,7 @@ def build_docx(spec, out_docx):
     hp = sec.header.paragraphs[0]; hp.alignment = WD_ALIGN_PARAGRAPH.CENTER
     hp.paragraph_format.space_after = Pt(2)
     if os.path.exists(HEAD_IMG):
-        hp.add_run().add_picture(HEAD_IMG, width=Inches(6.7))
+        hp.add_run().add_picture(HEAD_IMG, width=Inches(5.0))
 
     # ── Letterhead FOOTER (branding) + controlled-doc line + page number ──
     fp = sec.footer.paragraphs[0]; fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -101,7 +101,7 @@ def build_docx(spec, out_docx):
     if os.path.exists(FOOT_IMG):
         fimg = sec.footer.add_paragraph(); fimg.alignment = WD_ALIGN_PARAGRAPH.CENTER
         fimg.paragraph_format.space_before = Pt(3); fimg.paragraph_format.space_after = Pt(0)
-        fimg.add_run().add_picture(FOOT_IMG, width=Inches(6.7))
+        fimg.add_run().add_picture(FOOT_IMG, width=Inches(5.0))
 
     # ── Document-control block (top-right) ──
     for i, (lbl, val) in enumerate([("DOC NO", spec.get("doc_no", "")),

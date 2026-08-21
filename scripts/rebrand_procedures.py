@@ -46,13 +46,13 @@ def rebrand(path):
         _clear_hf(hdr)
         hp = hdr.paragraphs[0]; hp.alignment = WD_ALIGN_PARAGRAPH.CENTER
         if os.path.exists(HEAD_IMG):
-            hp.add_run().add_picture(HEAD_IMG, width=Inches(6.7))
+            hp.add_run().add_picture(HEAD_IMG, width=Inches(5.0))
         # Footer banner
         ftr = sec.footer; ftr.is_linked_to_previous = False
         _clear_hf(ftr)
         fp = ftr.paragraphs[0]; fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
         if os.path.exists(FOOT_IMG):
-            fp.add_run().add_picture(FOOT_IMG, width=Inches(6.7))
+            fp.add_run().add_picture(FOOT_IMG, width=Inches(5.0))
     doc.save(path)
 
 
@@ -67,7 +67,12 @@ def main():
         if not os.path.isfile(path):
             print("SKIP (missing):", path); continue
         try:
-            shutil.copy(path, f"{path}.prebrand-{stamp}")
+            # Back up only the TRUE original: never overwrite an existing backup with an
+            # already-rebranded copy (so re-runs — e.g. to resize the banner — stay reversible).
+            bk = f"{path}.prebrand-{stamp}"
+            if not os.path.exists(bk) and not any(
+                    os.path.exists(f"{path}.prebrand-{d}") for d in [stamp]):
+                shutil.copy(path, bk)
             rebrand(path)
             ok += 1
             print("REBRANDED:", os.path.relpath(path, WS))
