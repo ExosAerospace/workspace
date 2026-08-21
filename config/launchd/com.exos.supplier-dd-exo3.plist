@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Supplier-Diligence-exo3 nightly run. Install:
+       cp config/launchd/com.exos.supplier-dd-exo3.plist ~/Library/LaunchAgents/
+       launchctl load ~/Library/LaunchAgents/com.exos.supplier-dd-exo3.plist
+     Requires qb_* creds in secrets.json to hit live QuickBooks. -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.exos.supplier-dd-exo3</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/exomac/.openclaw/workspace/scripts/supplier_dd_exo3.py</string>
+    <string>--now</string>
+  </array>
+  <key>WorkingDirectory</key><string>/Users/exomac/.openclaw/workspace</string>
+  <key>StartCalendarInterval</key>
+  <dict><key>Hour</key><integer>1</integer><key>Minute</key><integer>15</integer></dict>
+  <key>RunAtLoad</key><false/>
+  <key>StandardOutPath</key><string>/Users/exomac/.openclaw/workspace/logs/supplier-dd-exo3.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/exomac/.openclaw/workspace/logs/supplier-dd-exo3.err.log</string>
+</dict>
+</plist>
