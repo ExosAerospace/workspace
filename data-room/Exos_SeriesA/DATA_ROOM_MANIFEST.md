@@ -12,7 +12,8 @@
 |---|---|---|---|---|
 | Financial model | `EXOS_Financial_Model_Full_Revenue_FIXED_v9_409Afinal.xlsx` | v9 · Jun 19 2026 · 10-yr | DCF $252.0M / concluded equity **$169.7M** | Jon / Kyle |
 | 409A valuation | `EXOS_409A_Eqvista_2026-03-31_CURRENT.pdf` | Eqvista · dated 06/10/2026, as-of 03/31/2026 | **$8.66/sh**, $169.7M equity, DLOM 36.51% | Jon |
-| Pitch deck | `Exos_SeriesA_PitchDeck_2026-07.pptx` (+ `_NDA` variant for NDA'd viewers) | July 2026 | ⚠ must pass P1 reconciliation before room reopens | Jon |
+| Pitch deck | `Exos_SeriesA_PitchDeck_FULL_2026-08-16_CORRECTED.pptx` | Aug 16 2026 · **policy-tailwind slide added Aug 21 2026** (slide 18, after "Why Now") | ⚠ must pass P1 reconciliation before room reopens; hold to $169.7M valuation of record | Jon |
+| Policy tailwind brief | `Exos_Policy_Tailwind_NSTP_2026-08-21.pdf` | Aug 21 2026 | National Space Transportation Policy ("Golden Age") → Exos alignment; **no valuation stated** (room-safe) | Jon / Exo |
 | Cap table | `Exos_Capitalization_Table.xlsx` | confirm current dated version | — | Kyle |
 
 **Single valuation of record:** **$169.7M equity value** (Eqvista 03/31/2026 409A). This is the only headline number that appears in the room. The DCF / market-approach / comps figures live *inside the model only*, tied together by a reconciliation tab (built in P1) — never shown side-by-side unbridged.
@@ -64,6 +65,7 @@ Do not share the room until every box is true:
 
 ## Status
 - **P0 (this doc):** DONE — canonical set staged in `_CANONICAL/`, superseded staged in `_ARCHIVE_Superseded/`, manifest published. Execute the same keep/archive split inside the Peony room.
+- **2026-08-21 policy update:** added policy-tailwind slide to the canonical pitch deck (slide 18) + new `Exos_Policy_Tailwind_NSTP_2026-08-21.pdf`. **To sync to the Peony room:** upload the updated deck + the policy brief. Deck backup at `.backups/`. NOTE: `_CANONICAL/` currently holds TWO decks (Pitch FULL Aug-16 + Strategic Aug-13) — the one-canonical-deck rule wants one; confirm whether to archive the Strategic deck or mirror the policy slide into it.
 - **P1–P4:** blocked on Jon decisions #1 (fairness opinion), #2 (listing path), #3 (raise size). See task 1859.
 
 ---
