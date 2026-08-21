@@ -29,12 +29,49 @@ def _need(d):
 def _base(env):
     return "https://sandbox-quickbooks.api.intuit.com" if env == "sandbox" else "https://quickbooks.api.intuit.com"
 
+# Intuit OpenID Connect discovery documents — the authoritative source of the current
+# OAuth2 endpoints. We fetch these at runtime (cached per-process) so we always use the
+# latest authorization/token/revocation endpoints Intuit publishes, and fall back to the
+# documented canonical URLs if discovery is briefly unreachable.
+_DISCOVERY_URL = {
+    "production": "https://developer.api.intuit.com/.well-known/openid_configuration",
+    "sandbox":    "https://developer.api.intuit.com/.well-known/openid_sandbox_configuration",
+}
+_DISCOVERY_FALLBACK = {
+    "authorization_endpoint": "https://appcenter.intuit.com/connect/oauth2",
+    "token_endpoint":         "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer",
+    "revocation_endpoint":    "https://developer.api.intuit.com/v2/oauth2/tokens/revoke",
+    "userinfo_endpoint":      "https://accounts.platform.intuit.com/v1/openid_connect/userinfo",
+}
+_discovery_cache = {}
+
+def discovery(env=None):
+    """Return Intuit's OAuth2 endpoint map from the OpenID discovery document (cached)."""
+    env = env or "production"
+    if env in _discovery_cache:
+        return _discovery_cache[env]
+    doc = dict(_DISCOVERY_FALLBACK)
+    try:
+        url = _DISCOVERY_URL.get(env, _DISCOVERY_URL["production"])
+        req = urllib.request.Request(url, headers={"Accept": "application/json"})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            live = json.load(r)
+        for k in _DISCOVERY_FALLBACK:
+            if live.get(k):
+                doc[k] = live[k]
+    except Exception:
+        pass  # fall back to documented canonical endpoints
+    _discovery_cache[env] = doc
+    return doc
+
 def get_access_token():
     """Refresh + return a bearer access token; persists the rotated refresh_token."""
     d = _sec(); _need(d)
+    env = d.get("qb_env", "production")
+    token_endpoint = discovery(env)["token_endpoint"]
     basic = base64.b64encode(f"{d['qb_client_id']}:{d['qb_client_secret']}".encode()).decode()
     body = urllib.parse.urlencode({"grant_type":"refresh_token","refresh_token":d["qb_refresh_token"]}).encode()
-    req = urllib.request.Request("https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer", data=body,
+    req = urllib.request.Request(token_endpoint, data=body,
         headers={"Authorization":f"Basic {basic}","Content-Type":"application/x-www-form-urlencoded","Accept":"application/json"})
     with urllib.request.urlopen(req, timeout=30) as r:
         tok = json.load(r)
