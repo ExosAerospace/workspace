@@ -46,7 +46,7 @@
   </div>
   <div class="flow">
     <b>How anyone adds a process or procedure</b> — submit against the Exos-US Procedure Template; it routes to John Quinn for approval; on approval it's recorded here with a doc number and revision.
-    <div class="steps"><span class="step">1 · Submit (Procedure Template)</span><span class="arw">→</span><span class="step">2 · Routes to Jon (Decisions matrix)</span><span class="arw">→</span><span class="step">3 · Approved → recorded on master list (doc # + rev)</span><span class="arw">→</span><span class="step">4 · Records in NetSuite / Exos Work Mgmt</span></div>
+    <div class="steps"><span class="step">1 · Submit (Procedure Template)</span><span class="arw">→</span><span class="step">2 · Routes to Jon (Decisions matrix)</span><span class="arw">→</span><span class="step">3 · Approved → recorded on master list (doc # + rev)</span><span class="arw">→</span><span class="step">4 · Records in Mission Control (Exos Work Mgmt)</span></div>
   </div>
   <div class="summary" id="summary"></div>
   <div id="content"></div>
@@ -57,10 +57,10 @@
 {
  "meta": {
   "title": "Exos Process & Procedures — Master Register",
-  "updated": "2026-08-20",
+  "updated": "2026-08-21",
   "source": "Lizi turnover → Exo (MC management); schema per Exos Procedures Master List",
   "template": "Exos-US Procedure Template",
-  "doc_control": "STATUS on each doc; records in NetSuite + Exos Work Management System (MC/ERP)",
+  "doc_control": "STATUS on each doc; records in the Exos Work Management System (Mission Control / ERP)",
   "areas": [
    "Quality & Document Control (AS9100)",
    "Ground Operations (Greenville)",
@@ -74,7 +74,9 @@
    "Records & Schedules",
    "Culture (uncontrolled)",
    "Reference (external benchmarks)",
-   "Administrative"
+   "Administrative",
+   "Ground Operations",
+   "Finance & Accounting"
   ]
  },
  "register": [
@@ -1086,18 +1088,82 @@
    "file_count": 1
   },
   {
-   "area": "CMMC 2.0",
-   "area_id": "cmmc-2.0",
-   "procedure": "Cyber Disaster Response & Recovery Plan",
-   "doc_no": "PLAN-DR",
+   "area": "Administrative",
+   "area_id": "11-administrative",
+   "procedure": "Mission Control Remote Access Onboarding Procedure",
+   "doc_no": "EXOS-ADM-003-0",
+   "rev": "0",
+   "status": "Approved",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "IT Administrator / Exo",
+   "remarks": "Mission Control is outside CMMC / Atomus scope and contains no CUI, ITAR, or EAR-controlled data. Remote access uses Jon Quinn's independent Cloudflare account, not the Atomus/CMMC tenant.",
+   "files": [
+    "11-administrative/EXOS-ADM-003-0_Mission_Control_Remote_Access_Onboarding_Procedure.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Administrative",
+   "area_id": "11-administrative",
+   "procedure": "Unified Carrier Registration (UCR) Annual Renewal",
+   "doc_no": "EXOS-ADM-004-0",
+   "rev": "0",
+   "status": "In Review",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Steve Norsworthy / Operations",
+   "remarks": "Registration period opens October 1; renewal due December 30 annually. Annual fee is set by the UCR program and varies (2020: $60.62; 2023: $42.22; 2024: $38.10; 2025: $47.37). Exos is a Private Motor Carrier (not For Hire). Review/update the MCS-150 every other year.",
+   "files": [
+    "11-administrative/EXOS-ADM-004-0_Unified_Carrier_Registration_(UCR)_Annual_Renewal.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Ground Operations",
+   "area_id": "02-ground-operations",
+   "procedure": "ITZ Container Receiving, Offload & Leveling",
+   "doc_no": "EXOS-ITZ-001-0",
    "rev": "0",
    "status": "Draft",
-   "intl_release": "No",
+   "intl_release": "Yes",
    "ack_required": false,
-   "owner": "Security Admin / Exo (Company Admin approves)",
-   "remarks": "Recovery/continuity half of the CMMC program: how Exos restores Mission Control, the ERP, and CUI-adjacent systems after a cyber event or hardware loss. Pairs with PLAN-IR (detect/contain) and NIST SP 800-171 3.8.9 (backup) / DFARS 7012.",
+   "owner": "Ground Operations / Exo",
+   "remarks": "DRAFT for review. Offload may be performed by a crane, a boom truck, OR a forklift with extended forks - these are equipment OPTIONS selected by weight/access; the forklift is an option, not a replacement for a crane or boom truck. The container is self-contained and requires NO external power. Container: GSS Global Secure Container (Secure Hybrid Composite Intermodal Container, ISO-1496/1 / CSC Annex II, 20 ft). Empty/tare weight is LIGHTER than the ~4,800-5,000 lb (~2,180-2,270 kg) steel-equivalent 20 ft container (composite construction); confirm exact tare on the CSC plate / with GSS. Size all offload equipment to the LOADED GROSS weight.",
    "files": [
-    "cmmc-2.0/PLAN-DR_Cyber_Disaster_Response_&_Recovery_Plan.docx"
+    "02-ground-operations/EXOS-ITZ-001-0_ITZ_Container_Receiving,_Offload_&_Leveling.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Ground Operations",
+   "area_id": "02-ground-operations",
+   "procedure": "ITZ Container Security Monitoring System",
+   "doc_no": "EXOS-ITZ-002-0",
+   "rev": "0",
+   "status": "Draft",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Steve Norsworthy / Security",
+   "remarks": "DRAFT FRAMEWORK - system-specific detail (sensors, CCTV/monitoring, alarm response, comms) TO BE PROVIDED BY STEVE NORSWORTHY (target next week). DESIGN CONSTRAINT: the pad has NO facility power - the monitoring system must be SELF-POWERED (battery/solar) with cellular uplink and adequate battery-backup runtime. Security-software training delivered by Global Secure Shipping. Access is governed by the ITZ Technology Control Plan (TCP); handling of controlled payloads is limited to U.S. persons under NDA/TCP.",
+   "files": [
+    "02-ground-operations/EXOS-ITZ-002-0_ITZ_Container_Security_Monitoring_System.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Payload",
+   "area_id": "03-payload",
+   "procedure": "ITZ Payload Operations - Inbound Receipt, Outbound Dispatch, and Return",
+   "doc_no": "EXOS-ITZ-003-0",
+   "rev": "0",
+   "status": "Draft",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Payload Operations / Exo",
+   "remarks": "DRAFT for review. Legal framework = customs/FTZ + U.S. export control. Support-cost schedule for payload-handling activities included in Task 6 (rates [TBD]). No controlled technical data handled outside authorized channels.",
+   "files": [
+    "03-payload/EXOS-ITZ-003-0_ITZ_Payload_Operations_-_Inbound_Receipt,_Outbound_Dispatch,_and_Return.docx"
    ],
    "file_count": 1
   },
@@ -1118,18 +1184,34 @@
    "file_count": 1
   },
   {
-   "area": "Administrative",
-   "area_id": "11-administrative",
-   "procedure": "Mission Control Remote Access Onboarding Procedure",
-   "doc_no": "EXOS-ADM-003-0",
+   "area": "CMMC 2.0",
+   "area_id": "cmmc-2.0",
+   "procedure": "Cyber Disaster Response & Recovery Plan",
+   "doc_no": "PLAN-DR",
    "rev": "0",
-   "status": "Approved",
-   "intl_release": "Yes",
+   "status": "Draft",
+   "intl_release": "No",
    "ack_required": false,
-   "owner": "IT Administrator / Exo",
-   "remarks": "Mission Control is outside CMMC / Atomus scope and contains no CUI, ITAR, or EAR-controlled data. Remote access uses Jon Quinn's independent Cloudflare account, not the Atomus/CMMC tenant.",
+   "owner": "Security Admin / Exo (Company Admin approves)",
+   "remarks": "Recovery/continuity half of the CMMC program: how Exos restores Mission Control, the ERP, and CUI-adjacent systems after a cyber event or hardware loss. Pairs with PLAN-IR (detect/contain) and NIST SP 800-171 3.8.9 (backup) / DFARS 7012.",
    "files": [
-    "11-administrative/EXOS-ADM-003-0_Mission_Control_Remote_Access_Onboarding_Procedure.docx"
+    "cmmc-2.0/PLAN-DR_Cyber_Disaster_Response_&_Recovery_Plan.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Finance & Accounting",
+   "area_id": "12-finance-accounting",
+   "procedure": "Monthly GAAP Close & Financial Verification",
+   "doc_no": "EXOS-FIN-001-0",
+   "rev": "0",
+   "status": "Draft",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Kyle Ballard (CFO / Finance)",
+   "remarks": "GAAP close performed in QBO (accrual). Target: 10 business days post month-end. Mission Control runs read-only verification (tie-outs / exception flags) on the QBO Reports API feed - not a second ledger. For investor-grade assurance, layer a CPA review (SSARS 21) on top; upgrade to a full audit only if a lead investor requires it.",
+   "files": [
+    "12-finance-accounting/EXOS-FIN-001-0_Monthly_GAAP_Close_&_Financial_Verification.docx"
    ],
    "file_count": 1
   }
