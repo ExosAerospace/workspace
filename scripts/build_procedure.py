@@ -3,7 +3,7 @@
 
 Every new procedure MUST be created through this script so it is always:
   1. Built on the Exos-US house Procedure Template format (SAFETY/ENVIRONMENTAL,
-     OBJECTIVE, OVERVIEW, Tasks w/ verify-checkboxes, NetSuite + Exos WMS completion,
+     OBJECTIVE, OVERVIEW, Tasks w/ verify-checkboxes, Exos WMS (Mission Control) completion,
      controlled footer with doc no / date / status).
   2. Added as a row to the Procedures Master List
      (process-library/01-quality-as9100/Exos_Aerospace_Procedures_Master_List.xlsx).
@@ -27,39 +27,154 @@ def esc(s):
     return str(s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
+from docx import Document
+from docx.shared import Pt, RGBColor, Inches
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
+
+# Exos house palette (matched to the Series A deck / brand): deep navy + a red rule accent.
+NAVY = RGBColor(0x0b, 0x2a, 0x4a)
+DARK = RGBColor(0x1c, 0x1c, 0x1c)
+GREY = RGBColor(0x60, 0x6a, 0x78)
+RED  = RGBColor(0xc8, 0x10, 0x2e)
+BODY_FONT = "Calibri"
+HEAD_IMG = os.path.join(WS, "mission-control", "brand-assets", "exos-letterhead-header.png")
+FOOT_IMG = os.path.join(WS, "mission-control", "brand-assets", "exos-letterhead-footer.png")
+
+
+def _run(p, text, size=11, bold=False, italic=False, color=DARK, font=BODY_FONT, caps=False):
+    r = p.add_run(text.upper() if caps else text)
+    r.font.name = font; r.font.size = Pt(size); r.font.bold = bold; r.font.italic = italic
+    r.font.color.rgb = color
+    return r
+
+
+def _bottom_rule(p, color="c8102e", size=6):
+    """Thin colored rule under a heading paragraph — the branded section divider."""
+    pPr = p._p.get_or_add_pPr()
+    pbdr = OxmlElement("w:pBdr"); b = OxmlElement("w:bottom")
+    b.set(qn("w:val"), "single"); b.set(qn("w:sz"), str(size))
+    b.set(qn("w:space"), "3"); b.set(qn("w:color"), color)
+    pbdr.append(b); pPr.append(pbdr)
+
+
+def _page_field(p):
+    """Insert a live PAGE number field."""
+    for txt, kind in [("begin", "w:fldCharType"), ("PAGE", None), ("end", "w:fldCharType")]:
+        if kind:
+            fld = OxmlElement("w:fldChar"); fld.set(qn(kind), txt)
+            r = p.add_run(); r._r.append(fld)
+        else:
+            it = OxmlElement("w:instrText"); it.set(qn("xml:space"), "preserve"); it.text = " PAGE "
+            r = p.add_run(); r.font.size = Pt(8); r.font.color.rgb = GREY; r.font.name = BODY_FONT; r._r.append(it)
+
+
 def build_docx(spec, out_docx):
-    """Render the procedure in the house template format via HTML -> docx (textutil)."""
+    """Render the procedure on the Exos house template with letterhead branding and clean,
+    consistent typography (python-docx)."""
     today = spec.get("issued", datetime.date.today().strftime("%m/%d/%Y"))
-    tasks_html = ""
+    doc = Document()
+
+    # Base style + page geometry
+    normal = doc.styles["Normal"]
+    normal.font.name = BODY_FONT; normal.font.size = Pt(10.5); normal.font.color.rgb = DARK
+    normal.paragraph_format.space_after = Pt(6); normal.paragraph_format.line_spacing = 1.08
+    sec = doc.sections[0]
+    sec.top_margin = Inches(0.5); sec.bottom_margin = Inches(0.55)
+    sec.left_margin = Inches(0.9); sec.right_margin = Inches(0.9)
+    sec.header_distance = Inches(0.3); sec.footer_distance = Inches(0.25)
+
+    # ── Letterhead HEADER (branding) ──
+    hp = sec.header.paragraphs[0]; hp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    hp.paragraph_format.space_after = Pt(2)
+    if os.path.exists(HEAD_IMG):
+        hp.add_run().add_picture(HEAD_IMG, width=Inches(6.7))
+
+    # ── Letterhead FOOTER (branding) + controlled-doc line + page number ──
+    fp = sec.footer.paragraphs[0]; fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    fp.paragraph_format.space_after = Pt(0)
+    ctl = (f"{spec.get('doc_no')} Rev {spec.get('rev','0')}  ·  Controlled copy — valid for today's date only  "
+           f"·  Process & Procedure Control per EXOS-US-QMS-001  ·  Page ")
+    _run(fp, ctl, size=8, color=GREY)
+    _page_field(fp)
+    if os.path.exists(FOOT_IMG):
+        fimg = sec.footer.add_paragraph(); fimg.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        fimg.paragraph_format.space_before = Pt(3); fimg.paragraph_format.space_after = Pt(0)
+        fimg.add_run().add_picture(FOOT_IMG, width=Inches(6.7))
+
+    # ── Document-control block (top-right) ──
+    for i, (lbl, val) in enumerate([("DOC NO", spec.get("doc_no", "")),
+                                     ("DATE", today),
+                                     ("STATUS", str(spec.get("status", "PENDING APPROVAL")).upper())]):
+        p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        p.paragraph_format.space_after = Pt(0); p.paragraph_format.space_before = Pt(0)
+        _run(p, f"{lbl}:  ", size=9, bold=True, color=NAVY)
+        _run(p, str(val), size=9, color=DARK)
+
+    # ── Title ──
+    t = doc.add_paragraph(); t.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    t.paragraph_format.space_before = Pt(6); t.paragraph_format.space_after = Pt(2)
+    _run(t, spec.get("title", ""), size=17, bold=True, color=NAVY)
+    _bottom_rule(t, color="0b2a4a", size=8)
+
+    # ── Sign-off line ──
+    so = doc.add_paragraph(); so.paragraph_format.space_before = Pt(8); so.paragraph_format.space_after = Pt(10)
+    _run(so, "Equipment / System No ", size=10, color=DARK)
+    _run(so, "___________________", size=10, color=GREY)
+    _run(so, "     Date ", size=10, color=DARK); _run(so, "_____________", size=10, color=GREY)
+    _run(so, "     Performed by ", size=10, color=DARK); _run(so, "______________________________", size=10, color=GREY)
+
+    def section(label):
+        p = doc.add_paragraph(); p.paragraph_format.space_before = Pt(10); p.paragraph_format.space_after = Pt(4)
+        p.paragraph_format.keep_with_next = True
+        _run(p, label, size=12, bold=True, color=NAVY, caps=True)
+        _bottom_rule(p, color="c8102e", size=6)
+
+    def body(text):
+        p = doc.add_paragraph(); p.paragraph_format.space_after = Pt(6)
+        _run(p, text, size=10.5, color=DARK)
+
+    def step(text):
+        p = doc.add_paragraph(); p.paragraph_format.left_indent = Inches(0.25)
+        p.paragraph_format.space_after = Pt(3)
+        _run(p, "☐  ", size=12, color=NAVY)   # ☐ ballot box
+        _run(p, text, size=10.5, color=DARK)
+
+    section("Safety / Environmental")
+    body("Verify that all personnel who will be involved with this activity are familiar with this procedure, "
+         "any risks or hazards that may be encountered, possess the required safety equipment, and are familiar "
+         "with the site safety and environmental policies.")
+
+    section("Objective")
+    body("The purpose of this procedure is to " + str(spec.get("objective", "")).strip())
+
+    section("Overview")
+    body(str(spec.get("overview",
+        "It is necessary for the personnel involved in executing this procedure to possess a thorough working "
+        "knowledge of the systems under their jurisdiction. Good communication between the personnel involved "
+        "minimizes the potential for unforeseen problems. Any change in status or condition must be recognized, "
+        "verified, and monitored by the Procedure lead or their direct report, and corrective action taken to "
+        "resolve any abnormal conditions.")))
+
+    section("Procedure")
     for t in spec.get("tasks", []):
-        tasks_html += f"<h3>{esc(t.get('name'))}</h3>"
+        tp = doc.add_paragraph(); tp.paragraph_format.space_before = Pt(7); tp.paragraph_format.space_after = Pt(3)
+        tp.paragraph_format.keep_with_next = True
+        _run(tp, str(t.get("name", "")), size=11, bold=True, color=NAVY)
         for s in t.get("steps", []):
-            tasks_html += f"<p style='margin:2px 0'>_____ {esc(s)}</p>"
-    html = f"""<!doctype html><html><head><meta charset="utf-8"></head><body style="font-family:Arial,sans-serif;font-size:11pt;color:#000">
-<table width="100%"><tr>
-<td style="font-weight:bold">EXOS AEROSPACE SYSTEMS &amp; TECHNOLOGIES, INC.</td>
-<td style="text-align:right">{esc(spec.get('doc_no'))}<br>DATE: {esc(today)}<br>STATUS: {esc(spec.get('status','PENDING APPROVAL')).upper()}</td>
-</tr></table>
-<h1 style="font-size:15pt;text-align:center">{esc(spec.get('title'))}</h1>
-<p>EQUIPMENT / SYSTEM NO ___________ &nbsp; Date _________ &nbsp; Performed by _______________________</p>
-<h2>SAFETY / ENVIRONMENTAL</h2>
-<p>Verify that all personnel that will be involved with this activity are familiar with this procedure, any risks or hazards that may be encountered, possess the required safety equipment, and are familiar with the site safety and environmental policies.</p>
-<h2>OBJECTIVE</h2>
-<p>The purpose of this procedure is to {esc(spec.get('objective',''))}</p>
-<h2>OVERVIEW</h2>
-<p>{esc(spec.get('overview','It is necessary for the personnel involved in executing this procedure to possess a thorough working knowledge of the systems under their jurisdiction. Good communication between the personnel involved minimizes the potential for unforeseen problems. Any change in status or condition must be recognized, verified, and monitored by the Procedure lead or their direct report, and corrective action taken to resolve any abnormal conditions.'))}</p>
-<h2>PROCEDURE</h2>
-{tasks_html}
-<h3>Completion</h3>
-<p style="margin:2px 0">_____ Record completion of the activity in NetSuite.</p>
-<p style="margin:2px 0">_____ Complete the job in the Exos Work Management System (Mission Control).</p>
-<hr>
-<p style="font-size:8pt;color:#555">This is a copy of the procedure. Valid for today's date only. Owner: {esc(spec.get('owner',''))} · Reference documents: {esc(spec.get('reference_docs','NA'))} · {esc(spec.get('doc_no'))} Rev {esc(spec.get('rev','0'))} · Process &amp; Procedure Control per EXOS-US-QMS-001.</p>
-</body></html>"""
-    tmp = out_docx + ".html"
-    open(tmp, "w", encoding="utf-8").write(html)
-    subprocess.run(["textutil", "-convert", "docx", "-output", out_docx, tmp], check=True)
-    os.remove(tmp)
+            step(s)
+
+    cp = doc.add_paragraph(); cp.paragraph_format.space_before = Pt(7); cp.paragraph_format.space_after = Pt(3)
+    _run(cp, "Completion", size=11, bold=True, color=NAVY)
+    step("Record completion of the activity in the Exos Work Management System (Mission Control).")
+
+    # Owner / reference footer line (in-body, small)
+    meta = doc.add_paragraph(); meta.paragraph_format.space_before = Pt(12)
+    _run(meta, f"Owner: {spec.get('owner','')}   ·   Reference documents: {spec.get('reference_docs','NA')}",
+         size=8.5, italic=True, color=GREY)
+
+    doc.save(out_docx)
 
 
 def update_master(spec):
