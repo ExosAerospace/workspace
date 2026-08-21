@@ -39,20 +39,22 @@ def rebrand(path):
     if not normal.font.size:
         normal.font.size = Pt(10.5)
     for sec in doc.sections:
-        sec.top_margin = Inches(0.5); sec.bottom_margin = Inches(0.55)
-        sec.header_distance = Inches(0.3); sec.footer_distance = Inches(0.25)
-        # Header banner
-        hdr = sec.header; hdr.is_linked_to_previous = False
-        _clear_hf(hdr)
-        hp = hdr.paragraphs[0]; hp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        if os.path.exists(HEAD_IMG):
-            hp.add_run().add_picture(HEAD_IMG, width=Inches(5.0))
-        # Footer banner
-        ftr = sec.footer; ftr.is_linked_to_previous = False
-        _clear_hf(ftr)
-        fp = ftr.paragraphs[0]; fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        if os.path.exists(FOOT_IMG):
-            fp.add_run().add_picture(FOOT_IMG, width=Inches(5.0))
+        sec.top_margin = Inches(0.6); sec.bottom_margin = Inches(0.6)
+        # Strip any letterhead we may have previously put in the Word header/footer — those sit in
+        # the margin (bleed off the page) and are dropped by the docx->pdf converter MC uses.
+        _clear_hf(sec.header); _clear_hf(sec.footer)
+
+    # Banner in the BODY (top + bottom) so it renders cleanly in Word, Preview, AND Mission Control.
+    if os.path.exists(HEAD_IMG):
+        first = doc.paragraphs[0] if doc.paragraphs else doc.add_paragraph()
+        bp = first.insert_paragraph_before()
+        bp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        bp.paragraph_format.space_after = Pt(6)
+        bp.add_run().add_picture(HEAD_IMG, width=Inches(5.0))
+    if os.path.exists(FOOT_IMG):
+        fb = doc.add_paragraph(); fb.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        fb.paragraph_format.space_before = Pt(10)
+        fb.add_run().add_picture(FOOT_IMG, width=Inches(5.0))
     doc.save(path)
 
 
@@ -67,12 +69,14 @@ def main():
         if not os.path.isfile(path):
             print("SKIP (missing):", path); continue
         try:
-            # Back up only the TRUE original: never overwrite an existing backup with an
-            # already-rebranded copy (so re-runs — e.g. to resize the banner — stay reversible).
-            bk = f"{path}.prebrand-{stamp}"
-            if not os.path.exists(bk) and not any(
-                    os.path.exists(f"{path}.prebrand-{d}") for d in [stamp]):
-                shutil.copy(path, bk)
+            # Preserve the TRUE original as a backup, and always rebrand FROM that original so
+            # re-runs (e.g. resizing or repositioning the banner) never accumulate banners.
+            import glob as _glob
+            existing = sorted(_glob.glob(f"{path}.prebrand-*"))
+            if existing:
+                shutil.copy(existing[0], path)          # restore pristine original, then rebrand fresh
+            else:
+                shutil.copy(path, f"{path}.prebrand-{stamp}")
             rebrand(path)
             ok += 1
             print("REBRANDED:", os.path.relpath(path, WS))

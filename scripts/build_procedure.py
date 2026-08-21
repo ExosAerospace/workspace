@@ -81,27 +81,17 @@ def build_docx(spec, out_docx):
     normal.font.name = BODY_FONT; normal.font.size = Pt(10.5); normal.font.color.rgb = DARK
     normal.paragraph_format.space_after = Pt(6); normal.paragraph_format.line_spacing = 1.08
     sec = doc.sections[0]
-    sec.top_margin = Inches(0.5); sec.bottom_margin = Inches(0.55)
+    sec.top_margin = Inches(0.6); sec.bottom_margin = Inches(0.6)
     sec.left_margin = Inches(0.9); sec.right_margin = Inches(0.9)
-    sec.header_distance = Inches(0.3); sec.footer_distance = Inches(0.25)
 
-    # ── Letterhead HEADER (branding) ──
-    hp = sec.header.paragraphs[0]; hp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    hp.paragraph_format.space_after = Pt(2)
+    # ── Letterhead HEADER banner — placed in the BODY (top), not the Word header ──
+    # Word headers/footers sit in the margin (bleed off the page edge) AND are dropped entirely by
+    # the docx->pdf converter Mission Control uses (textutil). In the body it renders cleanly and
+    # consistently in Word, Preview, and MC.
     if os.path.exists(HEAD_IMG):
-        hp.add_run().add_picture(HEAD_IMG, width=Inches(5.0))
-
-    # ── Letterhead FOOTER (branding) + controlled-doc line + page number ──
-    fp = sec.footer.paragraphs[0]; fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    fp.paragraph_format.space_after = Pt(0)
-    ctl = (f"{spec.get('doc_no')} Rev {spec.get('rev','0')}  ·  Controlled copy — valid for today's date only  "
-           f"·  Process & Procedure Control per EXOS-US-QMS-001  ·  Page ")
-    _run(fp, ctl, size=8, color=GREY)
-    _page_field(fp)
-    if os.path.exists(FOOT_IMG):
-        fimg = sec.footer.add_paragraph(); fimg.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        fimg.paragraph_format.space_before = Pt(3); fimg.paragraph_format.space_after = Pt(0)
-        fimg.add_run().add_picture(FOOT_IMG, width=Inches(5.0))
+        bp = doc.add_paragraph(); bp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        bp.paragraph_format.space_after = Pt(6)
+        bp.add_run().add_picture(HEAD_IMG, width=Inches(5.0))
 
     # ── Document-control block (top-right) ──
     for i, (lbl, val) in enumerate([("DOC NO", spec.get("doc_no", "")),
@@ -173,6 +163,16 @@ def build_docx(spec, out_docx):
     meta = doc.add_paragraph(); meta.paragraph_format.space_before = Pt(12)
     _run(meta, f"Owner: {spec.get('owner','')}   ·   Reference documents: {spec.get('reference_docs','NA')}",
          size=8.5, italic=True, color=GREY)
+
+    # ── Controlled-doc line + letterhead FOOTER banner (in the BODY, bottom) ──
+    ctl = (f"{spec.get('doc_no')} Rev {spec.get('rev','0')}  ·  Controlled copy — valid for today's date only  "
+           f"·  Process & Procedure Control per EXOS-US-QMS-001")
+    cline = doc.add_paragraph(); cline.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    cline.paragraph_format.space_before = Pt(8); cline.paragraph_format.space_after = Pt(2)
+    _run(cline, ctl, size=8, color=GREY)
+    if os.path.exists(FOOT_IMG):
+        fb = doc.add_paragraph(); fb.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        fb.add_run().add_picture(FOOT_IMG, width=Inches(5.0))
 
     doc.save(out_docx)
 
