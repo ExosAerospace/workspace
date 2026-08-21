@@ -1724,3 +1724,69 @@ Three sentences. Direct. No context required. $250K from Morfin closes 28% of th
 
 Exo | Capital Bridge Agent
 END-READY-ACTION -->
+- **SENT CONFIRMED (auto): sharris@midlandtxedc.com** on 2026-07-24 12:33 — subject "Re: [READY TO SEND] Exos -> Sara Harris (MDC): West Texas Corridor anchor -- send before Jul 31". Nudge-to-send STOPPED; reply-watch only.
+- **SENT CONFIRMED (auto): john.canipe@txspacecommission.gov** on 2026-08-18 23:54 — subject "=?utf-8?q?Fw:_[READY_TO_SEND]_[SEND_TODAY_=E2=80=94_Dedup_Cleared]_Exos_W?= =?utf-8?q?est_TX_Corridor_Anchor_=E2=80=94_Sara_Harris_(MDC)?=". Nudge-to-send STOPPED; reply-watch only.
+
+| 2026-08-21 (01:00) | **Pipeline stable in reply-watch mode. No new SENT CONFIRMs since StarCatcher/Rush (Aug 11 — 10 days quiet, expected: follow-up backlog exhausted, no new dispatches since then). Capital: $134,429 confirmed (504 base) + entX payments received (exact TBD — Jon must confirm against executed LSA). True gap unknown. 30 sends on reply-watch; 0 kg booked by non-entX customer. Morfin LinkedIn DM v2 dispatched Aug 19 (05:00) — in inbox, $250K, cold 504 open. HELIOTECH Aug 31 = NOW 10 DAYS OUT — registration still unconfirmed; this is the highest-density payload-buyer room before Flight 2. This run: HELIOTECH Conference Brief (1-pager, print-ready) drafted and dispatched to Jon inbox — brings BLK3 specs, pricing, and heritage in heliophysics-buyer framing for conference use. This is the only material autonomous action available this run; everything else awaits Jon to confirm entX total, send Morfin DM, or register HELIOTECH. AT/Reditus + Aug 3 Ravee/Lux/UTHR still pending Jon email verify. SPARK + SpaceLiinTech export screens still pending Denise Shirey. Issue #7 investor update still awaiting Jon review/send to Mitchell.** | **Jon: (1) Confirm entX contract total vs. executed LSA → single action that unlocks true raised/gap. (2) HELIOTECH Aug 31 — register TODAY at hesto.jhuapl.edu (10 days, closes fast); HELIOTECH brief in inbox. (3) Morfin LinkedIn v2 — $250K, 3 sentences, in inbox; send it. (4) Issue #7 investor update — review + forward to Mitchell. (5) AT/Reditus (stef@reditus.space) + Ravee/Shah (pshah@ravee.space) + Lux Aeterna/Taylor (btaylor@luxaeterna.space) + UTHR/Rothblatt (mrothblatt@unither.com) — verify emails and send all 4 (10 min). (6) Any warm reply from 30-send wave → forward to Exo, LSA draft in 24h.** |
+
+| 2026-08-21 (05:00) | **Status unchanged from 01:00 (Jon asleep). No new SENT CONFIRMs. Pipeline stable in reply-watch mode.** Capital: $134,429 confirmed (504 base) + entX payments received (exact TBD — LSA total confirm still needed). True gap unknown. 30 sends on reply-watch; 0 kg booked by non-entX customer. HELIOTECH Conference Brief dispatched at 01:00 (Jon inbox). Morfin LI DM v2 in inbox. HELIOTECH Aug 31 = 10 days, unconfirmed registered. No new autonomous drafts or READY-ACTIONs this run — all queues current. | **Jon: (1) Confirm entX LSA total → true raised/gap. (2) Register HELIOTECH Aug 31 at hesto.jhuapl.edu — 10 days; brief in inbox. (3) Morfin LI v2 — $250K, 3 sentences, send it. (4) Issue #7 → Mitchell. (5) AT/Reditus + Ravee/Lux/UTHR — verify 4 emails, send.** |
+
+<!-- READY-ACTION
+key: capital-bridge-heliotech-conference-brief-v1
+task_title: HELIOTECH Aug 31 — Conference Brief (print + bring); register hesto.jhuapl.edu TODAY
+to: jquinn@exosaero.com
+subject: [ACTION] HELIOTECH Aug 31 — 10 days: register + print this one-pager to bring
+category: BD
+priority: 88
+body:
+Jon,
+
+HELIOTECH Symposium (NASA Heliophysics Technology and Instrument Development for Science) opens in 10 days — Aug 31–Sep 4 at JHU Applied Physics Lab, Laurel MD.
+
+Register now: https://hesto.jhuapl.edu
+(Abstract submission is closed; attendee registration is still open. Estimated cost ~$500–700 + travel/hotel.)
+
+WHY THIS ROOM: NASA heliophysics instrument teams are the most mission-ready suborbital buyers in the program. They fund sounding rocket campaigns routinely, lost Zero-G last year, and are actively seeking recovered-payload platforms for instrument qualification and science screening. BLK3 is the altitude-capable answer. One conversation here = LSA-ready.
+
+PRINT THIS AND BRING IT:
+
+──────────────────────────────────────────────
+EXOS AEROSPACE — BLK3 SUBORBITAL PLATFORM
+One of only three FAA-licensed reusable rocket launch providers in the US
+──────────────────────────────────────────────
+
+VEHICLE: BLK3 PSRLV (Precision Suborbital Reusable Launch Vehicle)
+  • >100 km altitude (above Kármán line)
+  • 135 kg recoverable payload bay
+  • 3–4 minutes of continuous microgravity
+  • Powered vertical landing + 2-day vehicle turnaround
+  • FAA launch license: March 2026
+
+FIRST COMMERCIAL FLIGHT: Q1 2027 | Spaceport America, NM
+PRICING: $7,500/kg | 50% at booking / 40% at T-90 days / 10% post-flight
+
+HERITAGE: Same vehicle line as SARGE — 4 reuse flights demonstrated (2018–2019).
+Prior customers: Mayo Clinic (cancer biology), Purdue, UCF/NASA REDDI, SpaceKids India.
+
+WHY SUBORBITAL BEFORE YOUR NEXT SOUNDING ROCKET OR ISS CAMPAIGN?
+  • Real space environment: thermal cycling, radiation, vacuum — hardware returned same day
+  • 10–100× faster iteration than orbital campaigns
+  • FAA-licensed: flight heritage that counts for proposals and publications
+  • Recovered hardware: post-flight inspection, iteration, re-fly on same vehicle
+
+OPEN CAPACITY NOW — Flight 2 booking in progress. First deposit secures slot.
+
+Contact: John Quinn, Cofounder & CEO
+jquinn@exosaero.com | 972-740-8355 | www.exosaero.com
+──────────────────────────────────────────────
+
+TALKING POINTS:
+• Lead with: "We lost Zero-G last year — BLK3 is the altitude-capable recovered-payload answer for your instrument teams."
+• For sounding rocket customers: "Same science, 10× the microgravity duration, hardware back in days, and you own the data."
+• For ISS pipeline teams: "Iterate on suborbital, arrive at ISS with characterized hardware. Faster publications, stronger proposals."
+• On HELIOTECH specifically: every PI in that room who has an instrument in development has a qualification gap BLK3 closes.
+
+POST-CONFERENCE: Forward any warm contacts to Exo and LSA draft comes back within 24h.
+
+Exo | Capital Bridge Agent
+END-READY-ACTION -->
