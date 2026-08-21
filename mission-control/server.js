@@ -254,6 +254,10 @@ const PDF_CACHE_DIR = path.join(UPLOADS_DIR, '.pdfcache');
 const CHROME_BIN = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const OPENCLAW_BIN = '/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw';
 const PDF_CONVERTIBLE = ['.docx', '.doc'];
+// docx -> HTML with EMBEDDED images (via mammoth). macOS `textutil` drops all embedded images
+// (letterhead banners, diagrams, photos) from previews; mammoth keeps them. Kept as the primary
+// path with a textutil fallback (mammoth is .docx-only / may be absent).
+const DOCX2HTML = path.join(__dirname, '..', 'scripts', 'docx2html.py');
 function ensurePdfRendition(storedName) {
   const ext = path.extname(storedName).toLowerCase();
   if (!PDF_CONVERTIBLE.includes(ext)) return null;
@@ -268,7 +272,13 @@ function ensurePdfRendition(storedName) {
   } catch {}
   const tmpHtml = path.join(PDF_CACHE_DIR, storedName + '.html');
   try {
-    execFileSync('textutil', ['-convert', 'html', '-output', tmpHtml, src], { timeout: 30000, stdio: 'ignore' });
+    // Primary: mammoth (embeds images). Fallback: textutil (text only) for .doc or if mammoth fails.
+    try {
+      execFileSync('/usr/bin/python3', [DOCX2HTML, src, tmpHtml], { timeout: 60000, stdio: 'ignore' });
+      if (!(fs.existsSync(tmpHtml) && fs.statSync(tmpHtml).size > 0)) throw new Error('empty html');
+    } catch (mErr) {
+      execFileSync('textutil', ['-convert', 'html', '-output', tmpHtml, src], { timeout: 30000, stdio: 'ignore' });
+    }
     execFileSync(CHROME_BIN, ['--headless=new', '--disable-gpu', '--no-sandbox',
       '--no-pdf-header-footer', `--print-to-pdf=${pdfPath}`, 'file://' + tmpHtml],
       { timeout: 60000, stdio: 'ignore' });
