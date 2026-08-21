@@ -13,7 +13,7 @@
 | Financial model | `EXOS_Financial_Model_Full_Revenue_FIXED_v9_409Afinal.xlsx` | v9 · Jun 19 2026 · 10-yr | DCF $252.0M / concluded equity **$169.7M** | Jon / Kyle |
 | 409A valuation | `EXOS_409A_Eqvista_2026-03-31_CURRENT.pdf` | Eqvista · dated 06/10/2026, as-of 03/31/2026 | **$8.66/sh**, $169.7M equity, DLOM 36.51% | Jon |
 | Pitch deck | `Exos_SeriesA_PitchDeck_FULL_2026-08-16_CORRECTED.pptx` | Aug 16 2026 · **policy-tailwind slide added Aug 21 2026** (slide 18, after "Why Now") | ⚠ must pass P1 reconciliation before room reopens; hold to $169.7M valuation of record | Jon |
-| Policy tailwind brief | `Exos_Policy_Tailwind_NSTP_2026-08-21.pdf` | Aug 21 2026 | National Space Transportation Policy ("Golden Age") → Exos alignment; **no valuation stated** (room-safe) | Jon / Exo |
+| Policy tailwind brief | `Exos_Policy_Tailwind_NSTP_2026-08-21.pdf` (+ editable `.docx` twin) | Aug 21 2026 · **on Exos PRIMARY letterhead** | National Space Transportation Policy ("Golden Age") → Exos alignment; **no valuation stated** (room-safe) | Jon / Exo |
 | Cap table | `Exos_Capitalization_Table.xlsx` | confirm current dated version | — | Kyle |
 
 **Single valuation of record:** **$169.7M equity value** (Eqvista 03/31/2026 409A). This is the only headline number that appears in the room. The DCF / market-approach / comps figures live *inside the model only*, tied together by a reconciliation tab (built in P1) — never shown side-by-side unbridged.
