@@ -1,5 +1,6 @@
 {
-  "_note": "Operational-Finance restricted view. Explicit email allowlist — default deny. Enforced server-side in server.js for /finance.html + /api/operational-finance, independent of MC role. Only these emails see cash/burn/runway.",
+  "_note": "Operational-Finance restricted view. Explicit email allowlist — default deny. Enforced server-side in server.js for /finance.html + /api/operational-finance + /api/capital-bridge, independent of MC role. Only these emails see cash/burn/runway AND the 504 capital-bridge raise.",
+  "commitment_trigger_days": 7,
   "allow": [
     "jquinn@exosaero.com",
     "lquinn@exosaero.com",

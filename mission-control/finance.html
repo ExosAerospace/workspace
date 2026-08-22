@@ -35,6 +35,7 @@
 <div class="wrap">
   <div style="margin-bottom:16px"><a href="/">← Mission Control</a></div>
   <div id="content"><div class="asof">Loading live from QuickBooks…</div></div>
+  <div id="capital" style="margin-top:28px"></div>
   <div class="foot" id="foot"></div>
 </div>
 <script>
@@ -70,6 +71,42 @@ async function load(){
     (d.thresholds&&d.thresholds.cash||0).toLocaleString()+' / runway '+(d.thresholds&&d.thresholds.runway_months||0)+' mo · '+
     'Scope: Exos only (Scorpius on separate books). Generated '+(d.generated||'').replace('T',' ');
 }
+async function loadCapital(){
+  let r; try{ r=await fetch('/api/capital-bridge',{credentials:'same-origin'}); }catch(e){ return; }
+  if(!r.ok) return;
+  const c=await r.json(); if(!c.target) return;
+  const dsc=c.days_since_commitment, th=c.threshold_days;
+  const cls = dsc==null?'good':(dsc>=th*2?'bad':(dsc>=th?'warn':'good'));
+  let h='';
+  h+='<div class="row"><h3>💰 504 Capital Bridge — '+(c.program||'PO10 raise')+'</h3>';
+  // progress
+  h+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">'+
+     '<div style="font-size:26px;font-weight:700" class="cy">'+money(c.received)+'</div>'+
+     '<div class="sub" style="color:var(--text2)">of '+money(c.target)+' target · '+c.pct+'%</div></div>';
+  h+='<div style="height:10px;background:#0a1628;border-radius:6px;overflow:hidden;border:1px solid var(--border)">'+
+     '<div style="height:100%;width:'+Math.min(100,c.pct)+'%;background:var(--cyan)"></div></div>';
+  // trigger tiles
+  h+='<div class="grid" style="margin-top:16px">';
+  h+='<div class="card" style="border-color:'+(dsc>=th?'var(--amber)':'var(--border)')+'"><div class="label">Days since last commitment</div>'+
+     '<div class="val '+cls+'">'+(dsc==null?'—':dsc)+'</div><div class="sub">last: '+(c.last_commitment||'—')+(c.last_commitment_who?' · '+c.last_commitment_who:'')+'</div></div>';
+  h+='<div class="card"><div class="label">Days since cash received</div><div class="val">'+(c.days_since_received==null?'—':c.days_since_received)+'</div><div class="sub">last funds: '+(c.last_received||'—')+'</div></div>';
+  h+='<div class="card"><div class="label">Signed packets pending</div><div class="val">'+(c.pending_count||0)+'</div><div class="sub">executed · funds not yet received</div></div>';
+  h+='</div>';
+  // David outreach trigger banner
+  if(c.trigger){
+    h+='<div class="alert" style="background:rgba(255,184,0,.12);border-color:var(--amber);color:#ffe9b0;margin-top:16px">'+
+       '🔔 <b>'+dsc+' days</b> since our last commitment (threshold '+th+'). <b>Action — David:</b> send the next round of investor follow-ups & outreach to move PO10 toward the $1M target.</div>';
+  }
+  // recent commitments
+  if(c.recent&&c.recent.length){
+    h+='<div style="margin-top:14px"><h3 style="font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Recent commitments</h3><table>';
+    c.recent.forEach(function(e){ h+='<tr><td>'+(e.date||'')+' · '+(e.investor||'?')+'</td><td>'+(typeof e.amount==='number'?money(e.amount):'—')+'</td></tr>'; });
+    h+='</table></div>';
+  }
+  h+='</div>';
+  document.getElementById('capital').innerHTML=h;
+}
 load();
+loadCapital();
 </script>
 </body></html>

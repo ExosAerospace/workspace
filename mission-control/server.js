@@ -1250,7 +1250,7 @@ const server = http.createServer((req, res) => {
   // user is blocked regardless of admin/manager role (mirrors the /api/commissions allowlist).
   {
     const fp = req.url.split('?')[0];
-    if (fp === '/finance' || fp === '/finance.html' || fp === '/api/operational-finance') {
+    if (fp === '/finance' || fp === '/finance.html' || fp === '/api/operational-finance' || fp === '/api/capital-bridge') {
       let allow = [];
       try { allow = (JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'finance-access.json'))).allow || []); } catch (e) {}
       const allowSet = new Set(allow.map(x => String(x).toLowerCase()));
@@ -1263,6 +1263,40 @@ const server = http.createServer((req, res) => {
       if (fp === '/api/operational-finance') {
         try { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(fs.readFileSync(path.join(__dirname, 'data', 'operational-finance.json'))); }
         catch (e) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{}'); }
+        return;
+      }
+      if (fp === '/api/capital-bridge') {
+        // 504 Reg D / PO10 raise status + "days since last commitment" (David's outreach trigger).
+        try {
+          const led = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'capital_bridge_ledger.json')));
+          const target = led.target || 0, base = led.baseline_amount || 0;
+          const entries = (led.entries || []).filter(e => e && typeof e === 'object');
+          let logged = 0; entries.forEach(e => { if (typeof e.amount === 'number') logged += e.amount; });
+          const received = base + logged;
+          const parse = s => { const d = Date.parse(s); return isNaN(d) ? null : d; };
+          const pend = (led.pending_packets || []).filter(p => p && typeof p === 'object');
+          const commit = [];
+          entries.forEach(e => ['date', 'signed_date'].forEach(k => { const d = parse(e[k]); if (d) commit.push({ t: d, who: e.investor || '?' }); }));
+          pend.forEach(p => ['signed_date', 'date'].forEach(k => { const d = parse(p[k]); if (d) commit.push({ t: d, who: p.investor || '?' }); }));
+          commit.sort((a, b) => a.t - b.t);
+          const recvDates = entries.map(e => parse(e.date)).filter(Boolean);
+          const now = Date.now(), DAY = 86400000;
+          const lastRecv = recvDates.length ? Math.max(...recvDates) : null;
+          const lastCommit = commit.length ? commit[commit.length - 1] : null;
+          const dSinceCommit = lastCommit ? Math.floor((now - lastCommit.t) / DAY) : null;
+          const dSinceRecv = lastRecv ? Math.floor((now - lastRecv) / DAY) : null;
+          let THRESH = 7; try { THRESH = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'finance-access.json'))).commitment_trigger_days || 7; } catch (e) {}
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            program: led.program, target, received, pct: target ? Math.round(received / target * 100) : 0,
+            pending_count: pend.length,
+            last_received: lastRecv ? new Date(lastRecv).toISOString().slice(0, 10) : null, days_since_received: dSinceRecv,
+            last_commitment: lastCommit ? new Date(lastCommit.t).toISOString().slice(0, 10) : null,
+            last_commitment_who: lastCommit ? lastCommit.who : null, days_since_commitment: dSinceCommit,
+            threshold_days: THRESH, trigger: (dSinceCommit != null && dSinceCommit >= THRESH),
+            recent: entries.slice(-6).reverse().map(e => ({ date: e.date, investor: e.investor, amount: e.amount }))
+          }));
+        } catch (e) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{}'); }
         return;
       }
       // /finance.html → authorized; fall through to the static file server
