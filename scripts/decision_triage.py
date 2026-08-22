@@ -200,6 +200,18 @@ def main():
 
     arr.append(digest)
     save(raw, arr)
+
+    # Wire payload-sales delegations into the UTD capstone TASK queue (Jon 2026-08-21 "wire it").
+    # Routing the decision alone is inert for the students (early_adopter = tasks board only,
+    # scoped to category "Payload Sales"); payload_task_spawn.py turns each into a Supabase task
+    # in that category. Idempotent + notifier-silent. Runs only when the standing rule is active.
+    if standing:
+        try:
+            subprocess.Popen([sys.executable, os.path.join(WS, "scripts", "payload_task_spawn.py")],
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception:
+            pass
+
     remaining = sum(1 for d in arr if is_open(d))
     tag = ("auto-delegated (payload→UTD, BLK3→Lizi)" if standing else "batched")
     print(f"\n✓ {tag}: {len(routine)} routine items. Open decisions now: {remaining} "
