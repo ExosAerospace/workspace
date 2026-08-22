@@ -23,6 +23,26 @@ JON = "1501632195163590739"
 APPLY = "--apply" in sys.argv
 BATCH_ID = "D-ROUTINE-BATCH"
 
+# Standing delegation rule (Jon 2026-08-21): routine outreach is NOT Jon's to approve. Split it:
+#   payload sales  -> UTD EXO3 Payload Capstone (Exos gate: Lizi)
+#   BLK3 sales     -> Lizi Quinn
+# Applied to EVERY newly-batched item automatically so it never re-nags Jon.
+ROUTE_PAYLOAD = ("UTD EXO3 Payload Capstone", "EdwinVanDerVlist@utdallas.edu")
+ROUTE_BLK3 = ("Lizi Quinn", "Lquinn@exosaero.com")
+DEFAULT_ROUTING = {"payload": list(ROUTE_PAYLOAD), "blk3": list(ROUTE_BLK3)}
+BLK3_SALES = re.compile(r"wet.?lease|flight[-\s]?2?\s*(fund|recap|sponsor|paths)|"
+                        r"(fund|sponsor|recap).{0,20}(blk3|flight)|sell\s+(the\s+)?flight|"
+                        r"vehicle\s+sale|flight\s+opportunit|charter|dedicated\s+flight", re.I)
+
+
+def route_for(d, rule):
+    """Classify a batched item and return (owner_label, owner_email, human_tag)."""
+    blob = (d.get("title", "") + " " + d.get("question", "") + " " + d.get("proposedAction", ""))
+    if BLK3_SALES.search(blob):
+        who = rule.get("blk3", list(ROUTE_BLK3)); return who[0], who[1], "BLK3 sales → Lizi"
+    who = rule.get("payload", list(ROUTE_PAYLOAD)); return who[0], who[1], "Payload sales → UTD (Exos gate: Lizi)"
+
+
 # These are the auto-outreach engines whose per-email "Send:" approvals flood the inbox.
 OUTREACH_ENGINES = {"Opportunity Engine", "De-Risk Orbital Engine", "BLK3 Payload Sales Engine"}
 # Consequence is about the RECIPIENT and the decision TYPE — not keywords in an outreach pitch.
@@ -108,74 +128,87 @@ def main():
         return
 
     today = datetime.date.today().isoformat()
-    for d in routine:
-        d["status"] = "superseded"
-        d["note"] = (d.get("note") or "") + f" [auto-batched routine {today}]"
-        d["batched"] = True
-
-    # (Re)build the single batch digest listing what was set aside.
-    # Preserve Jon's prior disposition: once he has answered the digest, DON'T reset it to open
-    # every run (that was making him re-answer the same card daily). Only re-open when genuinely
-    # NEW routine items appear beyond the count he already dispositioned.
-    prev = next((d for d in arr if d.get("id") == BATCH_ID), None)
-    arr = [d for d in arr if d.get("id") != BATCH_ID]
-    lines = [f"• {d.get('id')} — {(d.get('title') or '').replace('Send: ','')[:70]}" for d in routine[:40]]
-    extra = f"\n…+{len(routine)-40} more" if len(routine) > 40 else ""
     now = datetime.datetime.now().isoformat(timespec="seconds")
-    digest = {
-        "id": BATCH_ID, "created": (prev.get("created") if prev else now), "updated": now,
-        "source": "Decision Triage",
-        "title": f"📬 {len(routine)} routine outreach/archive items set aside (review or release)",
-        "question": f"{len(routine)} low-consequence items (commercial outreach + low-value archives) were "
-                    f"batched out of your main inbox. Open any to handle, or bulk-release.",
-        "context": "Kept OUT of your CEO queue so only consequential decisions (gov/investor/contract/ITAR) "
-                   "remain. Items:\n" + "\n".join(lines) + extra,
-        "proposedAction": "These are Lizi/BD-domain outreach approvals. Options: 'Delegate to Lizi' routes the batch "
-                          "to her; 'Release all' sends the staged drafts; 'Leave batched' keeps them parked.",
-        "type": "choice", "options": ["Delegate to Lizi", "Release all", "Leave batched"],
-        "priority": "med", "status": "open", "answer": None,
-        "assignedTo": "jquinn@exosaero.com", "dedupeKey": "routine-batch",
-        "batched_count": len(routine),
-    }
+
+    # Carry Jon's standing disposition forward. Once he has dispositioned this batch (standing=True
+    # or an answer on record) it becomes a PERSISTENT RULE: every newly-batched item is routed
+    # automatically and the digest never resurfaces to him. That is the whole point — he answered
+    # once ("payload sales -> UTD, BLK3 sales -> Lizi"); we apply it every run, not re-ask daily.
+    prev = next((d for d in arr if d.get("id") == BATCH_ID), None)
     prev_ans = (prev or {}).get("answer")
     prev_count = (prev or {}).get("batched_count", 0) or 0
-    surfaced_open = True
-    # Ping only when the batch is genuinely new or has grown — not every 30-min run it sits open.
-    if prev is None:
-        should_ping = True                                   # first time
-    elif prev_ans:
-        # STANDING DISPOSITION: once Jon answers this batch, treat it as a persistent rule.
-        # New routine items inherit that disposition automatically — never re-ask, never re-nag,
-        # even as the batch grows daily. (Prior behavior wiped his answer on any growth.)
+    standing = bool(prev and (prev.get("standing") or prev_ans))
+    routing = (prev or {}).get("routing_rule") or DEFAULT_ROUTING
+
+    np = nb = 0
+    for d in routine:
+        d["batched"] = True
+        d["note"] = (d.get("note") or "") + f" [auto-batched routine {today}]"
+        if standing:
+            owner, email, tag = route_for(d, routing)
+            d["status"] = "delegated"; d["assignedTo"] = email
+            d["owner"] = owner; d["delegatedTo"] = owner; d["delegation"] = tag
+            nb += 1 if tag.startswith("BLK3") else 0
+            np += 0 if tag.startswith("BLK3") else 1
+        else:
+            d["status"] = "superseded"
+
+    arr = [d for d in arr if d.get("id") != BATCH_ID]
+    grew = len(routine) > prev_count
+    lines = [f"• {d.get('id')} — {(d.get('title') or '').replace('Send: ','')[:70]}" for d in routine[:40]]
+    extra = f"\n…+{len(routine)-40} more" if len(routine) > 40 else ""
+
+    if standing:
+        # Answered + off Jon's board. Do NOT bump `updated` unless the batch actually grew, so the
+        # card stops re-sorting to the top of his board every 30-min run (that made it feel daily).
+        digest = {
+            "id": BATCH_ID, "created": (prev.get("created") if prev else now),
+            "updated": (now if grew else prev.get("updated", now)),
+            "source": "Decision Triage",
+            "title": "📬 Routine outreach auto-delegated (payload → UTD, BLK3 → Lizi) — standing rule",
+            "question": f"{len(routine)} routine outreach items are auto-routed per your standing rule "
+                        f"(payload sales → UTD capstone; BLK3 sales → Lizi). No action needed.",
+            "context": "Routed automatically every run — NOT in your CEO queue. Items:\n" + "\n".join(lines) + extra,
+            "proposedAction": "Standing rule in effect. To change routing, answer this card again.",
+            "type": "choice", "options": ["Keep rule", "Route all to Lizi", "Route all to UTD", "Send back to me"],
+            "priority": "low", "status": "answered",
+            "answer": prev_ans or "Delegate: payload sales → UTD; BLK3 sales → Lizi",
+            "answeredAt": (prev or {}).get("answeredAt") or today,
+            "answeredBy": (prev or {}).get("answeredBy") or "Jon",
+            "assignedTo": ROUTE_BLK3[1],           # Lizi (capstone Exos gate) — OFF Jon's board
+            "dedupeKey": "routine-batch", "batched_count": len(routine),
+            "standing": True, "routing_rule": routing,
+            "note": f"Standing rule applied {today}: {np} payload → UTD, {nb} BLK3 → Lizi. "
+                    f"Auto-applied every run; not resurfaced to Jon.",
+        }
         should_ping = False
     else:
-        should_ping = len(routine) > prev_count              # still open + unanswered, only if it grew
-    if prev and prev_ans:
-        # Honor his standing answer permanently: keep it OUT of his open inbox, carry the
-        # answer/assignment forward, and auto-apply it to any newly-batched items.
-        digest["assignedTo"] = prev.get("assignedTo", digest["assignedTo"])
-        digest.update(status=prev.get("status", "answered"), answer=prev_ans,
-                      answeredAt=prev.get("answeredAt"), answeredBy=prev.get("answeredBy"))
-        surfaced_open = False
-        if len(routine) > prev_count:
-            # Log the delta silently; do not resurface as an open decision.
-            digest["note"] = (f"{len(routine) - prev_count} new routine items since you set "
-                              f"'{prev_ans}' on {(prev.get('answeredAt') or '')[:10]} — "
-                              f"auto-applied per your standing disposition.")
-        else:
-            digest["note"] = prev.get("note", "")
+        # First time / not yet dispositioned — surface once and ping so Jon can set the rule.
+        digest = {
+            "id": BATCH_ID, "created": (prev.get("created") if prev else now), "updated": now,
+            "source": "Decision Triage",
+            "title": f"📬 {len(routine)} routine outreach/archive items set aside (review or release)",
+            "question": f"{len(routine)} low-consequence outreach items were batched out of your main inbox.",
+            "context": "Kept OUT of your CEO queue so only consequential decisions remain. Items:\n" + "\n".join(lines) + extra,
+            "proposedAction": "Set a standing rule: 'Delegate split' routes payload sales → UTD and BLK3 sales → Lizi.",
+            "type": "choice", "options": ["Delegate split (payload→UTD, BLK3→Lizi)", "Delegate to Lizi", "Leave batched"],
+            "priority": "med", "status": "open", "answer": None,
+            "assignedTo": "jquinn@exosaero.com", "dedupeKey": "routine-batch",
+            "batched_count": len(routine),
+        }
+        should_ping = (prev is None) or grew
+
     arr.append(digest)
     save(raw, arr)
     remaining = sum(1 for d in arr if is_open(d))
-    print(f"\n✓ batched {len(routine)} routine items into {BATCH_ID}. Open decisions now: {remaining} "
-          f"({len(kept)} consequential + 1 batch digest).")
+    tag = ("auto-delegated (payload→UTD, BLK3→Lizi)" if standing else "batched")
+    print(f"\n✓ {tag}: {len(routine)} routine items. Open decisions now: {remaining} "
+          f"({len(kept)} consequential{'' if standing else ' + 1 batch digest'}).")
     if APPLY and should_ping:
-        # Only ping when the batch actually needs Jon (first time, or new items since he answered).
-        # Once he's dispositioned it and nothing new arrived, stay silent — no daily re-nag.
         try:
             subprocess.run([OPENCLAW, "message", "send", "--channel", "discord", "--target", JON, "-m",
-                            f"🧹 **Decisions triaged** — batched {len(routine)} routine outreach/archive items out of your inbox. "
-                            f"You now have **{remaining}** open ({len(kept)} consequential + 1 batch). Open '{BATCH_ID}' to review or delegate the batch to Lizi."],
+                            f"🧹 **Decisions triaged** — {len(routine)} routine outreach items batched out of your inbox. "
+                            f"You have **{remaining}** open ({len(kept)} consequential + 1 batch). Set the standing rule on '{BATCH_ID}'."],
                            timeout=60, capture_output=True)
         except Exception:
             pass
