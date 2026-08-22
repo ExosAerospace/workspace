@@ -56,6 +56,21 @@ CONSEQ_HARD = re.compile(r"\bFUND-\d|\brofr\b|term\s?sheet|cap\s?table|acquisiti
                          r"investor\s+(?:commit|term|round)|capital\s+raise|"
                          r"\bitar\b|export.?control|\bddtc\b|\bear99\b|foreign\s+nation|\bcui\b", re.I)
 ROUTINE_TITLE = re.compile(r"^\s*(send:|archive\b|get jon|capture jon|.*\b(debrief|readout)\b)", re.I)
+# NEVER batch/delegate these — they are consequential (investor/capital, gov programs, Scorpius
+# strategic, propulsion tech) OR they need Jon's authority, and MUST NOT land in the UTD student
+# sandbox (scoped to Payload Sales; investor/409A/gov material is explicitly walled off there).
+# Scanned against the FULL decision text, not just the title. (Fix 2026-08-22: a Senator SEARF
+# request, the OSC loan, NASA M-STAR, Lockheed/Euronext Series A sends, and Scorpius Type-5 all
+# leaked into the batch because CONSEQ_HARD only looked at title+relatedItem.)
+CONSEQ_KEEP = re.compile(
+    r"series\s*a\b|\b409a\b|data\s*room|\binvestor\b|capital\s+raise|strategic\s+(investment|fit|discussion)|"
+    r"euronext|\bIPO\b|\bPIPE\b|diligence|"
+    r"\bSen\.\s|\bsenat|congress|SEARF|\bOSC\b|TACFI|STRATFI|\bSBIR\b|\bSTTR\b|M-?STAR|fly-?in|"
+    r"\bRDE\b|\bRDRE\b|type-?5|export|\bitar\b|\bhold\b|"
+    r"get jon|jon approves|request\s+jon|approval\s+to\s+send|go\s+or\s+hold|jon'?s\s+(go|debrief|readout|inline|approval)|"
+    r"go/?no-?go|discount\s+authoriz|decision\s+brief|authorize\s+send|capability\s+package|"
+    r"confirm\s+(with\s+jon|whether)|which\s+.*proposal|submission\s+confirmation|portal\s+closes|"
+    r"selects\s+the\s+routing|decide\s+the\s+.*route", re.I)
 # Speculative "does a warm/known contact or intro path EXIST?" fishing (Jon 2026-07-31: don't ask
 # maybe's). Always parked — overrides the gov-agency keep, since the gov mention is inside a
 # hypothetical-relationship ask, not a real gov send.
@@ -78,8 +93,12 @@ def is_routine(d):
     # Speculative warm-intro "maybe" asks are ALWAYS parked (even if they name a gov agency).
     if SPECULATIVE.search(q):
         return True
+    # never batch anything consequential/confidential or needing Jon's authority — scan FULL text,
+    # not just the title (investor/gov/Scorpius/authority items must stay with Jon, never delegate).
+    if CONSEQ_KEEP.search(q):
+        return False
     # never batch anything with a gov/.mil recipient/agency or a hard investor/contract/legal signal
-    if CONSEQ_RECIPIENT.search(title + " " + recipient_text(d)) or CONSEQ_HARD.search(title + " " + (d.get("relatedItem") or "")):
+    if CONSEQ_RECIPIENT.search(title + " " + recipient_text(d)) or CONSEQ_HARD.search(q + " " + (d.get("relatedItem") or "")):
         return False
     return d.get("source") in OUTREACH_ENGINES or bool(ROUTINE_TITLE.search(title))
 
