@@ -108,14 +108,14 @@
   },
   {
    "name": "Southwest Composite Works",
-   "role": "Composite structures / fabrication",
+   "role": "Composite structures / fabrication \u2014 ACQUISITION TARGET",
    "capabilities": "Composite fabrication & tooling \u2014 hand layup, bonded structures, skins/brackets; airframe & secondary composite structures; fabrication second-source",
    "scopes": [
     "Composite structures & skins",
     "Tooling & bonded assemblies",
     "Fabrication second-source / overflow"
    ],
-   "status": "Bench \u2014 DD cleared (deep-dive 8/21): SAM-active small biz, CAGE 7ATR9, ITAR-compliant; verify AS9100 before FFP flight scope",
+   "status": "Acquisition target \u2014 Jon in discussion with John Groth (founder); deep-DD cleared (SAM-active, CAGE 7ATR9, ITAR); verify AS9100",
    "contact": "John Groth (Founder/President/CEO) \u2014 john@swcompositeworks.com"
   }
  ],
