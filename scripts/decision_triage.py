@@ -144,21 +144,26 @@ def main():
     if prev is None:
         should_ping = True                                   # first time
     elif prev_ans:
-        should_ping = len(routine) > prev_count              # answered, but new items arrived
+        # STANDING DISPOSITION: once Jon answers this batch, treat it as a persistent rule.
+        # New routine items inherit that disposition automatically — never re-ask, never re-nag,
+        # even as the batch grows daily. (Prior behavior wiped his answer on any growth.)
+        should_ping = False
     else:
         should_ping = len(routine) > prev_count              # still open + unanswered, only if it grew
     if prev and prev_ans:
-        # Carry forward his assignment (e.g. delegated to Lizi) either way.
+        # Honor his standing answer permanently: keep it OUT of his open inbox, carry the
+        # answer/assignment forward, and auto-apply it to any newly-batched items.
         digest["assignedTo"] = prev.get("assignedTo", digest["assignedTo"])
-        if len(routine) <= prev_count:
-            # Nothing materially new — honor his answer, keep it OUT of his open inbox.
-            digest.update(status=prev.get("status", "answered"), answer=prev_ans,
-                          answeredAt=prev.get("answeredAt"), answeredBy=prev.get("answeredBy"),
-                          note=prev.get("note", ""))
-            surfaced_open = False
+        digest.update(status=prev.get("status", "answered"), answer=prev_ans,
+                      answeredAt=prev.get("answeredAt"), answeredBy=prev.get("answeredBy"))
+        surfaced_open = False
+        if len(routine) > prev_count:
+            # Log the delta silently; do not resurface as an open decision.
+            digest["note"] = (f"{len(routine) - prev_count} new routine items since you set "
+                              f"'{prev_ans}' on {(prev.get('answeredAt') or '')[:10]} — "
+                              f"auto-applied per your standing disposition.")
         else:
-            # Genuinely new routine items beyond what he dispositioned — surface the delta.
-            digest["note"] = f"{len(routine)-prev_count} new since you last dispositioned this batch."
+            digest["note"] = prev.get("note", "")
     arr.append(digest)
     save(raw, arr)
     remaining = sum(1 for d in arr if is_open(d))
