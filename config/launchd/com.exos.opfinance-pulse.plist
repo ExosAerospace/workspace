@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Operational-Finance-exo3 WEEKLY founder pulse (Mondays 07:30 CT). Install:
+       cp config/launchd/com.exos.opfinance-pulse.plist ~/Library/LaunchAgents/
+       launchctl load ~/Library/LaunchAgents/com.exos.opfinance-pulse.plist -->
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.exos.opfinance-pulse</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/exomac/.openclaw/workspace/scripts/operational_finance_exo3.py</string>
+    <string>--pulse</string>
+  </array>
+  <key>WorkingDirectory</key><string>/Users/exomac/.openclaw/workspace</string>
+  <key>StartCalendarInterval</key>
+  <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>7</integer><key>Minute</key><integer>30</integer></dict>
+  <key>RunAtLoad</key><false/>
+  <key>StandardOutPath</key><string>/Users/exomac/.openclaw/workspace/logs/opfinance-pulse.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/exomac/.openclaw/workspace/logs/opfinance-pulse.err.log</string>
+</dict></plist>

@@ -1,0 +1,10 @@
+{
+  "_note": "Operational-Finance restricted view. Explicit email allowlist — default deny. Enforced server-side in server.js for /finance.html + /api/operational-finance, independent of MC role. Only these emails see cash/burn/runway.",
+  "allow": [
+    "jquinn@exosaero.com",
+    "lquinn@exosaero.com",
+    "nmilburn@exosaero.com",
+    "kballard@exosaero.com",
+    "dmitchell@exosaero.com"
+  ]
+}

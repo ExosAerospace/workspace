@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Operational-Finance-exo3 DAILY light threshold check (07:00 CT); sends ONLY on breach. -->
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.exos.opfinance-alerts</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/exomac/.openclaw/workspace/scripts/operational_finance_exo3.py</string>
+    <string>--alerts-only</string>
+  </array>
+  <key>WorkingDirectory</key><string>/Users/exomac/.openclaw/workspace</string>
+  <key>StartCalendarInterval</key>
+  <dict><key>Hour</key><integer>7</integer><key>Minute</key><integer>0</integer></dict>
+  <key>RunAtLoad</key><false/>
+  <key>StandardOutPath</key><string>/Users/exomac/.openclaw/workspace/logs/opfinance-alerts.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/exomac/.openclaw/workspace/logs/opfinance-alerts.err.log</string>
+</dict></plist>

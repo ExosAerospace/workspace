@@ -1244,6 +1244,31 @@ const server = http.createServer((req, res) => {
     }
   }
 
+  // ── OPERATIONAL FINANCE (restricted financial view): explicit email allowlist, NOT role ──
+  // Cash / burn / runway from QuickBooks (Operational-Finance-exo3). Sensitive → DEFAULT DENY.
+  // Only emails in data/finance-access.json may load /finance.html or hit the API; every other
+  // user is blocked regardless of admin/manager role (mirrors the /api/commissions allowlist).
+  {
+    const fp = req.url.split('?')[0];
+    if (fp === '/finance' || fp === '/finance.html' || fp === '/api/operational-finance') {
+      let allow = [];
+      try { allow = (JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'finance-access.json'))).allow || []); } catch (e) {}
+      const allowSet = new Set(allow.map(x => String(x).toLowerCase()));
+      const femail = (session && session.email || '').toLowerCase();
+      if (!femail || !allowSet.has(femail)) {
+        if (fp.startsWith('/api/')) { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Forbidden — restricted financial view' })); }
+        else { res.writeHead(302, { 'Location': '/' }); res.end(); }
+        return;
+      }
+      if (fp === '/api/operational-finance') {
+        try { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(fs.readFileSync(path.join(__dirname, 'data', 'operational-finance.json'))); }
+        catch (e) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{}'); }
+        return;
+      }
+      // /finance.html → authorized; fall through to the static file server
+    }
+  }
+
   // early_adopter role: strict sandbox — tasks board only, no CRM/deals/admin/docusign.
   // Task DATA is further scoped to the user's `project` (category) below. Uploads/viewpdf are
   // BLOCKED for this role: uploads are NOT project-scoped, so allowing them would leak every
