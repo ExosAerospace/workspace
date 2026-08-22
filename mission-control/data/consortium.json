@@ -105,6 +105,18 @@
    ],
    "status": "Developing",
    "contact": "Rich Carter"
+  },
+  {
+   "name": "Southwest Composite Works",
+   "role": "Composite structures / fabrication",
+   "capabilities": "Composite fabrication & tooling \u2014 hand layup, bonded structures, skins/brackets; airframe & secondary composite structures; fabrication second-source",
+   "scopes": [
+    "Composite structures & skins",
+    "Tooling & bonded assemblies",
+    "Fabrication second-source / overflow"
+   ],
+   "status": "Bench \u2014 DD caution (8/19)",
+   "contact": "John Groth (Founder/President/CEO) \u2014 john@swcompositeworks.com"
   }
  ],
  "pursuits": [
