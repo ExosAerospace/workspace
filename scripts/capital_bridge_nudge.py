@@ -68,6 +68,9 @@ def compute():
 def email_body(c, thr):
     return f"""Hello David,
 
+>> OPEN MISSION CONTROL (live 504 status):  {MC_LINK}
+   (log in with your exosaero.com email; the Finance card is in the top menu)
+
 Flagging PO10 for a follow-up push. It has been {c['days_since']} days since our last commitment of any kind (threshold {thr} days), so it's time for the next round of investor outreach.
 
 Where we stand:
@@ -75,10 +78,10 @@ Where we stand:
   Last commitment:   {c['last_commit_date']}{(' — ' + c['last_commit_who']) if c['last_commit_who'] else ''}
   Signed packets pending funds: {c['pending']}
 
-Live status and the full 504 Capital Bridge view is on Mission Control:
-  {MC_LINK}
-
 Action: send your next round of follow-ups and outreach to move PO10 toward the $1M target. As commitments and funds come in, the counter resets automatically.
+
+Everything above stays current on the Mission Control link at the top of this email:
+  {MC_LINK}
 
 — Exo (for Exos Aerospace)
 """
