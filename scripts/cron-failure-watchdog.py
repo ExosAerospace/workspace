@@ -81,14 +81,23 @@ def get_jobs():
 
 
 def post_discord(text):
+    # Durable delivery: spool-to-disk-then-send so a flaked send can't drop
+    # an alert. delivery-sweeper.py retries anything left in outbox/pending.
     try:
-        subprocess.run(
-            [OPENCLAW, "message", "send", "--channel", "discord",
-             "--target", DISCORD_CHANNEL, "-m", text],
-            capture_output=True, text=True, timeout=60,
-        )
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from deliver import deliver
+        deliver(text, target=DISCORD_CHANNEL, source="cron-failure-watchdog")
     except Exception as e:
-        logline(f"WARN: discord post failed: {e}")
+        # last-resort fallback to the old direct path; never crash the cron
+        logline(f"WARN: durable deliver failed, direct-sending: {e}")
+        try:
+            subprocess.run(
+                [OPENCLAW, "message", "send", "--channel", "discord",
+                 "--target", DISCORD_CHANNEL, "-m", text],
+                capture_output=True, text=True, timeout=60,
+            )
+        except Exception as e2:
+            logline(f"WARN: discord post failed: {e2}")
 
 
 def task_id_for(job_id):
