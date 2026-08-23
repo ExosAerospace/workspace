@@ -100,8 +100,61 @@ def _prune_sent():
             pass
 
 
+DROP = os.path.join(D.OUTBOX, "drop")
+DROP_SETTLE_SECS = 3  # skip files written in the last few secs (avoid partial reads)
+
+
+def process_drops():
+    """Deliver agent-written report drops durably.
+
+    An agentTurn cron with file_write but no shell can't call deliver.py.
+    Instead it writes a plain report to outbox/drop/<name>.md whose first line
+    may be `TARGET: <target>` (and optionally `SOURCE: <name>`), a blank line,
+    then the body. We hand the body to deliver.deliver() (which spools-then-
+    sends, so it's durable the instant we call it) and remove the drop file.
+    """
+    import time
+    os.makedirs(DROP, exist_ok=True)
+    picked = 0
+    for path in sorted(glob.glob(os.path.join(DROP, "*.md")) +
+                       glob.glob(os.path.join(DROP, "*.txt"))):
+        try:
+            if time.time() - os.path.getmtime(path) < DROP_SETTLE_SECS:
+                continue  # still being written
+            raw = open(path).read()
+        except Exception:
+            continue
+        target, source, body = D.DEFAULT_TARGET, "capture-drop", raw
+        # parse optional leading headers up to the first blank line
+        head, _, rest = raw.partition("\n\n")
+        if any(head.startswith(k) for k in ("TARGET:", "SOURCE:")):
+            for line in head.splitlines():
+                if line.startswith("TARGET:"):
+                    target = line.split(":", 1)[1].strip() or target
+                elif line.startswith("SOURCE:"):
+                    source = line.split(":", 1)[1].strip() or source
+            body = rest
+        body = (body or "").strip()
+        if not body:
+            # nothing deliverable — set aside so we don't spin on it
+            try:
+                os.replace(path, os.path.join(D.FAILED, os.path.basename(path)))
+            except Exception:
+                pass
+            continue
+        D.deliver(body, target=target, source=source)  # durable from here
+        try:
+            os.remove(path)
+        except Exception:
+            pass
+        picked += 1
+        D._log(f"DROP delivered [{source}] -> {target} ({len(body)} chars)")
+    return picked
+
+
 def main():
     try:
+        process_drops()  # ingest agent report drops first, then drain the spool
         sweep()
     except Exception as e:
         D._log(f"SWEEP fatal (ignored): {type(e).__name__}: {e}")
