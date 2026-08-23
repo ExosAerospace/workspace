@@ -34,6 +34,7 @@ except Exception:
 # --- /governance ---
 
 import imaplib, email, json, os, sys, shutil, subprocess, re
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from datetime import datetime, timezone
 from email.header import decode_header
 from email.utils import parseaddr

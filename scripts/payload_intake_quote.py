@@ -13,6 +13,7 @@ Run:  python3 scripts/payload_intake_quote.py            # dry-run (parse + show
       python3 scripts/payload_intake_quote.py --apply    # process + post Decisions
 """
 import imaplib, email, os, re, sys, json, subprocess, datetime
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from email.utils import getaddresses, parsedate_to_datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

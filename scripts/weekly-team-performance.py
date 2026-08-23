@@ -24,6 +24,7 @@ except Exception:
 # --- end shim ---
 
 import json, os, sys, subprocess, urllib.request, re
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from datetime import datetime, timezone, timedelta
 from email.message import EmailMessage
 

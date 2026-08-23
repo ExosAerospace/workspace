@@ -15,6 +15,7 @@ Run:  python3 scripts/decision_triage.py            # dry-run (show what it woul
       python3 scripts/decision_triage.py --apply
 """
 import os, re, sys, json, datetime, subprocess
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 DEC = os.path.join(WS, "mission-control", "data", "decisions.json")

@@ -14,6 +14,7 @@ Run:  python3 scripts/entity_dedupe.py            # dry-run
       python3 scripts/entity_dedupe.py --apply
 """
 import os, sys, json, re, datetime, subprocess, urllib.request
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from collections import defaultdict
 
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"

@@ -22,6 +22,7 @@ import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirn
 import supabase_util as _sbu; _sbu.install()
 # --- end shim ---
 import json, os, re, subprocess, time, hashlib, urllib.request
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from datetime import datetime, timezone, date, timedelta
 
 WS = "/Users/exomac/.openclaw/workspace"

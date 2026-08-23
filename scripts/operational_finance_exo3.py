@@ -20,6 +20,7 @@ Thresholds (env-overridable): OPFIN_CASH_ALERT (default $250k), OPFIN_RUNWAY_ALE
 Writes mission-control/data/operational-finance.json for Mission Control surfacing.
 """
 import os, sys, json, subprocess, datetime, urllib.request, urllib.parse
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 sys.path.insert(0, os.path.join(WS, "scripts"))

@@ -6,6 +6,7 @@ On that day it: (1) drafts this month's "what Exo automated" segment from the gi
 Run by launchd every Thursday; self-gates to the last Thursday. Use --force to test.
 """
 import os, sys, subprocess, datetime, re
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from email.message import EmailMessage
 try:
     import itar_ear_screen as ee   # public-safety screen before anything can reach the investor report

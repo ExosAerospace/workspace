@@ -24,6 +24,7 @@ Opt-in per task: tag it `deadline-watch` and add a block to its description:
 Daily via launchd com.exos.deadline-watch. Fail-safe: any error leaves dates untouched.
 """
 import os, sys, re, json, subprocess, urllib.request, urllib.parse
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
     import supabase_util; supabase_util.install()

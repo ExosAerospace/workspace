@@ -14,6 +14,7 @@ Run:  python3 scripts/warm-followup-cadence.py            # dry-run
       python3 scripts/warm-followup-cadence.py --apply
 """
 import os, sys, json, re, datetime, subprocess, urllib.request
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
 K = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"

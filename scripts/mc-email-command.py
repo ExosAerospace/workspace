@@ -36,6 +36,7 @@ except Exception:
 # --- /governance ---
 
 import imaplib, email, json, os, re, sys, subprocess, tempfile, fcntl, hashlib, html as _html, mimetypes
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from email.utils import getaddresses, parsedate_to_datetime
 from email.message import EmailMessage
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -85,6 +86,12 @@ ENVELOPE = (
     "team recognizes them next time: run `python3 scripts/failed_dd.py add --firm \"<firm>\" --domain "
     "<domain> --email <email> --person \"<name>\" --reason \"<one-line why>\"`. That registry is checked "
     "automatically on all inbound, so the team never has to forward these to Jon again.\n\n"
+    "ALWAYS LOG EVERY COMPANY DD IN MISSION CONTROL (so the whole team can see the DD is already done and "
+    "nobody repeats it): after ANY due-diligence on a company — pass, caution, OR fail — run "
+    "`python3 scripts/log_dd.py --firm \"<firm>\" --domain <domain> --person \"<name>\" --email <email> "
+    "--verdict <pass|caution|fail> --requester \"{first_name}\" --summary \"<one-line verdict>\" "
+    "--next \"<recommended next step>\"`. This writes a visible dossier at /dossier.html. Do this for every "
+    "DD; when the verdict is do-not-engage, ALSO add the failed_dd.py registry entry above.\n\n"
     "OPPORTUNITY SCREEN / STAY SILENT WHEN THERE IS NOTHING: if the request is just to check whether an "
     "email contains an opportunity for Exos or Scorpius (or whether anything in it is actionable) and the "
     "answer is NO, reply with EXACTLY `NO_ACTION` and nothing else — do NOT create a task, do NOT draft "
@@ -404,6 +411,9 @@ def main():
 
         # Backup export-control screen: HOLD (never run) anything tripping ITAR/EAR/CUI markers,
         # controlled CAD/engineering artifacts, technical data beyond the cleared guide, or the LLM layer.
+        # Exception: internal-only mail (all recipients are @exosaero.com) is US-person-to-US-person
+        # and is NOT an export — quarantine_and_alert returns False in that case. Only skip processing
+        # when the hold was actually placed (returned True); allow internal mail through.
         ee_hits = ee.deep_hits(subject + "\n" + body + "\n" + " ".join(ee.attachment_names(msg)))
         if ee_hits:
             _recips = []
@@ -412,10 +422,14 @@ def main():
                     for _n2, _a in getaddresses([_v]):
                         if _a:
                             _recips.append(_a.lower())
-            ee.quarantine_and_alert(mid, sender, subject, ee_hits, "command", body, recipients=_recips)
-            log(f"[held:export-control] mid={mid} subj={subject!r} hits={ee_hits}")
-            processed += 1
-            continue
+            actually_held = ee.quarantine_and_alert(mid, sender, subject, ee_hits, "command", body, recipients=_recips)
+            if actually_held:
+                log(f"[held:export-control] mid={mid} subj={subject!r} hits={ee_hits}")
+                processed += 1
+                continue
+            # Internal-only: screener flagged content but correctly exempted from hold.
+            # Log the flag and continue processing normally.
+            log(f"[export-control:internal-exempt] mid={mid} subj={subject!r} hits={ee_hits}")
 
         first_line = next((ln.strip() for ln in body.splitlines() if ln.strip()), "")
         domain_auth = sender_authenticated(msg, sender_domain)
@@ -510,14 +524,13 @@ def main():
                     atts = collect_reply_attachments(reply, instruction)
                     discord(f"✅ Email-command done for {sender_name} — {subject}\n\n{reply[:1500]}"
                             + (f"\n\n📎 attached: {', '.join(os.path.basename(a) for a in atts)}" if atts else ""))
-                    # Only email the requester when there's an actual deliverable to hand over (a document).
-                    # A summary-only reply is already posted to Discord above, so emailing it too just doubles
-                    # the inbox — skip it. (When a document IS produced, the email carries it, in hand.)
-                    if atts:
-                        email_requester(sender, subject, instruction, reply, attachments=atts)
-                        _how = f"discord+emailed; attached {len(atts)} file(s)"
-                    else:
-                        _how = "discord-only (summary; no redundant email)"
+                    # ALWAYS reply to the requester on the channel THEY used (email). The Discord post above
+                    # goes to Jon's ops channel, NOT the requester — so a summary-only answer would never reach
+                    # them otherwise. (This silently dropped Phil's Grant Engine DD, 2026-08-18: rc=0 but the
+                    # only delivery was "discord-only", which Phil, an email user, never saw.)
+                    email_requester(sender, subject, instruction, reply, attachments=atts)
+                    _how = (f"discord+emailed requester; attached {len(atts)} file(s)" if atts
+                            else "discord+emailed requester (summary)")
                     log(f"[agent] done rc=0 mid={mid}; {_how} {sender}")
         except Exception as e:
             log(f"[agent] run failed: {e}")

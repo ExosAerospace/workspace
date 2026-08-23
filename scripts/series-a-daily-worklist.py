@@ -9,6 +9,7 @@ Run:  python3 scripts/series-a-daily-worklist.py            # print
       python3 scripts/series-a-daily-worklist.py --send     # DM Jon
 """
 import os, sys, json, datetime, subprocess
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 CRM = os.path.join(WS, "mission-control", "data", "crm.json")

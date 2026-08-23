@@ -21,6 +21,7 @@ import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirn
 import supabase_util as _sbu; _sbu.install()
 # --- end shim ---
 import imaplib, email, json, os, re, sys, time, shutil, subprocess, urllib.request, urllib.parse
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from email.header import decode_header
 from email.utils import getaddresses, parsedate_to_datetime
 from datetime import datetime, timedelta, timezone, date

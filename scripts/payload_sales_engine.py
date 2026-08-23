@@ -36,6 +36,7 @@ import json
 import shutil
 import datetime
 import subprocess
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 import argparse
 import urllib.request
 

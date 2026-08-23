@@ -22,6 +22,7 @@ digest. A future v2 can add local-Ollama reasoning to auto-advance reversible it
 Run: python3 scripts/overnight_resolver.py [--dry-run]
 """
 import os, sys, json, ssl, shutil, subprocess, urllib.request
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from datetime import datetime, timezone, timedelta
 
 WS = "/Users/exomac/.openclaw/workspace"
@@ -36,7 +37,7 @@ DRY = "--dry-run" in sys.argv
 APPLY = "--apply" in sys.argv  # v2: actually mutate the board (auto-close + false-overdue fix)
 
 OLLAMA = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "gemma4:e4b"  # small/fast; the task is a 3-way DONE/CANCELLED/LEAVE classification
+OLLAMA_MODEL = "gemma4:e4b"  # reasoning target is exos-glimmer (installed/running) but its raw /api/generate leaks agentic-channel tokens; keep gemma until Glimmer chat-template is tuned
 AUTO_CAP = 12                 # hard cap on autonomous board changes per run
 NO_DEADLINE_MARKERS = ("no firm deadline", "rolling", "open call", "open-call", "confirm-with-organizer",
                        "no hard deadline", "no set deadline", "deadline tbd", "rolling deadline")

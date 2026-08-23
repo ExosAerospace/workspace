@@ -26,6 +26,7 @@ which is safe. Import and use:
         # ...skip processing this email...
 """
 import json, os, re, subprocess, time, hashlib, urllib.request, sys as _sys
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
     from proton_aliases import is_self as _is_self   # @exosaero.com + Jon/ops aliases => internal

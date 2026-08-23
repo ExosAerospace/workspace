@@ -21,6 +21,7 @@ Fail-soft: if Ollama is down, it still archives + DMs the raw transcript flagged
 manual processing.
 """
 import imaplib, email, json, os, re, glob, shutil, subprocess, urllib.request
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from datetime import datetime, timezone
 from email.header import decode_header
 

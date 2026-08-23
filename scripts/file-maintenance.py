@@ -6,6 +6,7 @@ are non-empty, and pings Discord ONLY if something needs attention (else stays q
 Run by launchd (com.exos.file-maintenance), Sundays 04:30.
 """
 import os, time, subprocess, glob
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 LOGS = os.path.join(WS, "logs")

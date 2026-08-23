@@ -7,6 +7,7 @@ DAILY BURNDOWN — runs off-hours (low utilization). Two jobs:
 Deterministic + safe (only closes clear noise); heavier resolution stays with the Overnight Resolver.
 """
 import os, json, re, datetime, subprocess, urllib.request
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
 K = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"

@@ -8,6 +8,7 @@ Run:  python3 scripts/weekly-meeting-prep.py            # gated (only the day be
       python3 scripts/weekly-meeting-prep.py --force    # test now
 """
 import os, sys, json, datetime, urllib.request, subprocess
+import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 K = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
@@ -106,6 +107,15 @@ def main():
                        input=m.as_bytes(), check=True, timeout=60)
     except Exception as e:
         print("email failed:", e)
+    # also email the agenda to Lizi (attendee) the day before — requested 2026-08-18
+    lbody = f"Hello Lizi,\n\nTomorrow ({meeting_day:%A, %b %d}) is the weekly team meeting (10:00 CT). Agenda:\n\n{agenda}\n\n— Exo"
+    lm = EmailMessage(); lm["From"] = "Exo <jquinnexo@pm.me>"; lm["To"] = "lquinn@exosaero.com"
+    lm["Subject"] = f"Tomorrow: Weekly Team Meeting agenda ({meeting_day:%b %d})"; lm.set_content(lbody)
+    try:
+        subprocess.run(["/opt/homebrew/bin/msmtp", "-a", "protonmail", "lquinn@exosaero.com"],
+                       input=lm.as_bytes(), check=True, timeout=60)
+    except Exception as e:
+        print("lizi email failed:", e)
     try:
         subprocess.run([OPENCLAW, "message", "send", "--channel", "discord", "--target", JON, "-m",
                         f"📅 **Weekly Team Meeting — tomorrow ({meeting_day:%a %b %d}) 10:00 CT**\nAgenda emailed. Steve · Phil · John · Lizi."],
