@@ -1061,7 +1061,9 @@ function updateCategoryFilter() {
 
 // ── FILTER ──
 function getFilteredTasks() {
-  let filtered = [...tasks];
+  // Cancelled tasks are dead — never render them on the board (dedup-by-cancel
+  // should actually remove clutter). Done stays visible via its own filter.
+  let filtered = tasks.filter(t => t.state !== 'Cancelled');
   const q = document.getElementById('searchBox').value.toLowerCase();
   if (q) filtered = filtered.filter(t =>
     (t.title || '').toLowerCase().includes(q) ||
