@@ -1,5 +1,5 @@
 # PURSUIT TRACKER — NIH Microgravity Biomedical (Capture Agent state file)
-*Single source of truth for this pursuit. The Capture Agent reads this each run, advances the next open action, and updates State + Decision Log. Last updated: 2026-08-20.*
+*Single source of truth for this pursuit. The Capture Agent reads this each run, advances the next open action, and updates State + Decision Log. Last updated: 2026-08-25.*
 
 ## Objective
 Win NIH-relevant microgravity funding/revenue using BLK3 as the SUBORBITAL microgravity platform. Primary near-term = **NIH STTR (PA-27-102), deadline Sep 8 2026** (Sep 5 falls on Saturday; NIH moved to Sep 8), teamed with a biomedical PI (Exos = platform). **As of 2026-08-18 (Jon) the STTR is a DUAL-INSTITUTION team: Dr. Ed Kelly (UW) as biomedical science anchor + Prof. Steven Collicott (Purdue AAE) as suborbital-methods partner — two institutions supporting one PA-27-102 application (one as the ≥30% research-institution-of-record, the other via subaward). Kelly is RESTORED, not superseded.** Parallel = **sell BLK3 screening slots** to NIH/NCATS/TraCe MPS-funded researchers. Adjacent = **NASA ROSBio Appendix D** (suborbital biology). Win = an NIH STTR award and/or booked microgravity payload slots.
@@ -12,6 +12,8 @@ Win NIH-relevant microgravity funding/revenue using BLK3 as the SUBORBITAL micro
 > - **RESTORED (was killed 8/17): the Kelly reply-retrieval action.** Kelly already replied but it is stuck in Jon's Outlook / GCC High (M365 blindspot — invisible to Exo). **Single most important action: Jon forwards Kelly's reply to exosmc@proton.me** so Exo can read it and advance the dual-institution teaming.
 > - **Clock:** Sep 8 STTR. TWO routing clocks now — UW (~5–7 biz days) + Purdue SPS (~5 biz days); BOTH institutions must route, so the LATER one governs → both PIs need commitment by **~Aug 26–27** to make Sep 8. Tight but live, not dead.
 > - Next agent actions: (1) advance Kelly reply-retrieval (Jon-forward to exosmc@proton.me) — RESTORED; (2) keep the Purdue/Collicott methods + optional Weldon BME co-PI confirmation; (3) draft the dual-institution teaming framing (roles + %-split + which RI is of-record) for Jon's review. Reply-watch on the other PIs continues.
+> - ✅ **2026-08-24 16:51 CDT — JON ANSWERED DECISION D-7281669: "Yes — forward Kelly now."** Jon approved re-engaging Kelly directly (proposedAction: Exo drafts the intro/forward, delivers to inbox to send). As of this run (2026-08-25), no evidence that draft was produced or sent — Proton inbox scan (Sent/All Mail, all folders, since 8/21) shows zero Kelly/UW correspondence and zero Park/Purdue correspondence. **This run: drafted and dispatched the Kelly re-engagement email as a READY-ACTION** (key: nih-microgravity-kelly-reengage-0825), now CC'ing exosmc@proton.me on the ask itself so any reply lands somewhere Exo can read it (fixes the recurring BCC/Outlook blind spot going forward, per the standing-fix recommendation below).
+> - ⚠️ **PARK TRACK STATUS UNKNOWN — SPS gate is essentially NOW.** Per the 8/18 framing, both UW and Purdue SPS need ~5–7 business days to route and BOTH PIs needed to commit by ~Aug 26–27 for Sep 8 to be reachable. Today is 2026-08-25 (Tuesday) — the absolute last practical day for either commitment. No email trace exists of the Park call (schedule/prep READY-ACTIONs sat in Jon's inbox 8/19–20; call may have happened by phone, which wouldn't show in IMAP — status genuinely unknown from here). **Dispatched an urgent status-check READY-ACTION** (key: nih-microgravity-park-status-check-0825) asking Jon directly whether the Park call happened and what her answer was.
 
 **Stage 1 of 6 — Partner lock (Sep 8 STTR gate). THREE LIVE PI PATHS as of 2026-07-24 (Jon confirmed sends "DONE"):**
 - **Vunjak-Novakovic (Columbia) + Kelly (UW) + NIH SEED office** — reply-chases SENT 2026-07-24 (Jon confirmed). Now in reply-watch; do NOT re-nudge before ~1 week.
@@ -1097,6 +1099,7 @@ Fly Prof. Park's stem-cell-derived lung organoid-on-chip payload on BLK3 and cha
 
 ---
 
+| 2026-08-21 04:45 CDT | **STTR Sep 8 DEADLINE: 18 DAYS. PURDUE SPS GATE: ~Aug 26–27 (5–6 days).** No new NIH NOSI for space biology/microgravity. PA-27-102 confirmed still Open on sbir.gov. NCATS TC-in-Space page still showing last update Apr 22, 2026 — no TC 3.0 RFA released. ROSES-2026: still no NNH26ZDA001N ROSBio/BPS suborbital appendix found. State unchanged from 8/20: Park intro was sent 8/18; call-schedule READY-ACTION (key: nih-microgravity-park-call-schedule) and call-prep READY-ACTION (key: nih-microgravity-park-call-prep) were dispatched 8/19–20 and are in Jon's inbox. **CRITICAL PATH: Park must commit by Aug 26–27 for Purdue SPS to route before Sep 8. Jon must schedule the call TODAY.** No Park reply visible yet (only 3 days since intro — too soon to chase). No new READY-ACTION dispatched this run (call-schedule and call-prep already in Jon's queue; re-dispatch would be redundant). Kelly track: reply still Outlook-only. BD sell-slot track: reply-watch only. No new external actions taken. |
 | 2026-08-20 04:45 CDT | **STTR Sep 8 DEADLINE: 19 DAYS. PURDUE SPS GATE: ~Aug 26–27 (6–7 days).** IMAP scan: NO PI replies visible in Proton (Kelly's reply still Outlook-only; M365 blindspot). No new NIH NOSI for space biology/microgravity. NCATS Tissue Chips 3.0 RFA: not released (last NCATS page update Apr 22, 2026; TC-in-Space 2.0 awardees still executing). ROSES-2026: still NOT released as NNH26ZDA001N — ROSES-25 confirmed still active (corrections as of Aug 4, 2026; last Table 2 amendment July 27, 2026); no ROSBio/BPS suborbital appendix. **State of play:** Park intro sent 2026-08-18 (2 days ago); call-schedule READY-ACTION (key: nih-microgravity-park-call-schedule) dispatched 8/19 with stale "Tuesday/Wednesday" timing — body UPDATED this run to "this week or early next week" and re-queued for dispatch. Park reply-watch only — too soon to chase (intro only 2 days old). **This run's advance:** call-prep brief READY-ACTION produced (key: nih-microgravity-park-call-prep) — Jon-facing, covers Park background, what to achieve on the call, and the institutional clock reality. **Critical path:** Jon must send call-schedule email TODAY (Thursday Aug 20) to secure a call by Friday Aug 22 or Monday Aug 25 at the very latest — if Park commits on Monday, SPS has exactly 5 biz days to route before Sep 8. One day of delay loses a day of runway. Kelly track unchanged — forward-to-exosmc READY-ACTION still in Jon's queue; parallel path still alive. BD sell-slot track (Wu/He/Sethu/Sharma/Zhang): reply-watch only, no new actions. |
 
 <!-- READY-ACTION
@@ -1158,3 +1161,69 @@ Key dates (do not lose these):
 
 John Quinn / Exo
 END-READY-ACTION -->
+
+| 2026-08-25 04:45 CDT | **STTR Sep 8 DEADLINE: 14 DAYS. COMMITMENT WINDOW: TODAY IS THE LAST PRACTICAL DAY (per 8/18 framing, ~Aug 26-27 was the outer edge for both UW and Purdue SPS to route in time).** No new NIH NOSI for space biology/microgravity. PA-27-102 still Open on sbir.gov (unchanged). NCATS TC-in-Space page still last updated Apr 22, 2026 — no TC 3.0 RFA. ROSES-2026 (NNH26ZDA001N) still NOT released; ROSES-25 remains the active solicitation (amendments through Jul 27, corrections through Aug 4) — no ROSBio/BPS suborbital appendix has appeared. **Gap found:** Jon answered Decision D-7281669 "Yes — forward Kelly now" on 2026-08-24 16:51 CDT, but a full Proton IMAP scan (all folders, since 8/21) found zero follow-through — no Kelly draft sent, no Park/Purdue correspondence either. Both tracks have been silent for a week while the clock ran out. **This run's advance:** (1) drafted a ready-to-send direct re-engagement email to Dr. Kelly (edkelly@uw.edu, CC exosmc@proton.me) dispatched as READY-ACTION nih-microgravity-kelly-reengage-0825 — this both acts on Jon's 8/24 approval and fixes the BCC-blindspot going forward; (2) dispatched an urgent status-check READY-ACTION (nih-microgravity-park-status-check-0825) since Park's call cannot be verified by email (may have occurred by phone) and her answer determines whether the Sep 8 window is still alive. **If neither PI commits today, recommend standing down Sep 8 and retargeting the Jan 5, 2027 STTR cycle** — flagged to Jon in the status-check ask rather than decided unilaterally. Sell-slot BD track (Wu/He/Sethu/Sharma/Zhang) unchanged, reply-watch only. |
+
+<!-- READY-ACTION
+key: nih-microgravity-kelly-reengage-0825
+task_title: [NIH-MG] Direct re-engagement to Dr. Kelly (UW) — per your Aug 24 approval, last-day commitment window
+to: jquinn@exosaero.com
+subject: [READY TO SEND] [NIH-MG] Re-engage Dr. Kelly directly — today is the last practical commitment day
+category: BD
+priority: 95
+body:
+Jon,
+
+You answered "yes, forward Kelly now" on 8/24, but I don't see any draft or send since then, and I haven't found Kelly's original reply in any Proton folder (it's still stuck in Outlook). Rather than wait on that forward again, here's a direct email to Kelly you can send from Outlook right now. It re-opens the thread, confirms we want him in on the STTR alongside the Purdue track, and CCs exosmc@proton.me so his reply lands somewhere I can actually read it.
+
+Today is effectively the last practical day for either PI (Kelly or Park) to commit and still let their university route the paperwork before the Sep 8 deadline. If this doesn't move today, recommend we talk about standing down to the Jan 5, 2027 cycle.
+
+---
+
+To: edkelly@uw.edu
+Cc: exosmc@proton.me
+Subject: Following up, ready to move forward on the STTR
+
+Hello Dr. Kelly,
+
+I wanted to follow up and confirm where things stand. We are moving ahead on the NIH STTR (PA-27-102, deadline September 8) and would like you to anchor the biomedical science as the UW partner. In parallel we have opened a track with a Purdue Weldon BME lab on suborbital experiment methods, the two are complementary, not competing, so there is room for both institutions if you are still interested.
+
+The timing is tight. University routing on both sides needs about a week, so we need commitments locked today or tomorrow at the latest to make the September 8 deadline.
+
+Could we get 20 minutes today or tomorrow to confirm your interest and next steps on the UW side? If it is easier, feel free to loop exosmc@proton.me in on any reply so nothing gets lost on my end this time.
+
+Thank you,
+John Quinn
+Cofounder and CEO
+
+---
+
+Two-minute copy-paste. Send whenever you get this, every hour matters at this point.
+
+John Quinn / Exo
+END-READY-ACTION -->
+
+<!-- READY-ACTION
+key: nih-microgravity-park-status-check-0825
+task_title: [NIH-MG] URGENT: did the Park call happen? Sep 8 window closes today/tomorrow
+to: jquinn@exosaero.com
+subject: [URGENT] [NIH-MG] Park status check — SPS routing gate is today/tomorrow
+category: BD
+priority: 95
+body:
+Jon,
+
+Quick status check, this determines whether Sep 8 is still reachable. The call-schedule and call-prep drafts for Prof. Estelle Park (Purdue) went to your inbox 8/19-20, targeting a call by Friday 8/22 or Monday 8/25. I can't see phone calls, only email, so I have no way to confirm whether that call happened or what she said.
+
+Per the 8/18 timing math, both UW (Kelly) and Purdue (Park) needed a committed PI today or tomorrow at the latest for their sponsored-programs office to route in time for Sep 8.
+
+Three quick questions:
+1. Did the Park call happen? What was her answer?
+2. Is she willing to be research-institution-of-record and engage Purdue SPS this week?
+3. If both Kelly and Park are still open, do you want me to stand down Sep 8 and retarget the Jan 5, 2027 STTR cycle instead, so we're not burning more runway chasing a deadline that's already effectively closed?
+
+I'd rather get a clear answer now than keep circling this one.
+
+John Quinn / Exo
+END-READY-ACTION -->
+
