@@ -84,11 +84,17 @@ Exos acts as **prime integrator**, holding the contract and systems-integration 
 
 ---
 
-## 8. Rough order-of-magnitude cost approach (informational, per RFI)
+## 8. Program scope & rough order-of-magnitude (informational, per RFI)
 
-- **Non-recurring:** ~**$2.0M** to develop the threat-representative variant (trajectory modification + liquid-signature characterization) — **non-dilutive** to MDA's operational budget.
-- **Recurring:** **$1.5M per vehicle**, reusable across **20–25 flights**, plus per-sortie range/refurbishment service. Net effect: **an order-of-magnitude lower cost per threat presentation** than expendable targets, with liquid-signature fidelity they cannot provide.
-- *(Firm pricing/margin pending Exos internal build and refurbishment cost inputs; provided here only as informational market-research ROM.)*
+Exos proposes a **~$75M, ~3-year program** to stand up a reusable SCUD-family target line **from BLK3 (SCUD-class SRBM) to BLK4 (No-Dong/Shahab-class IRBM, COTS Firefly Reaver)**:
+
+- **Phase 1 — BLK3 SCUD-class SRBM target: ~$18M** (threat-representative trajectory mod + liquid-signature characterization + storable-propellant fidelity + initial reusable vehicle fleet + mobile range ops).
+- **Phase 2 — BLK4 No-Dong/Shahab IRBM-class target: ~$34M** (BLK4 vehicle development, COTS Reaver integration, IRBM kinematics/signature, fleet + tooling).
+- **Cross-program — operations, signature augmentation, tooling, SE/PM, ITAR-CMMC, reserve: ~$23M.**
+
+**Unit economics inside the program:** ~**$2.0M** non-recurring per threat-representative variant; **$1.5M/vehicle** reusable across **20–25 flights** + per-sortie service — an **order-of-magnitude lower cost per threat presentation** than expendable targets, with liquid-signature fidelity solids cannot provide.
+
+*(Allocations are an informational market-research ROM to a $75M program topline; firm pricing/margin pending Exos internal BLK3/BLK4 build and refurbishment cost inputs.)*
 
 ---
 

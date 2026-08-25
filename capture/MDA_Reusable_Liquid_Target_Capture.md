@@ -77,6 +77,35 @@ Most interceptor/sensor test events **do not destroy the target**: seeker charac
 
 ---
 
+## 4A. Program framing — a **$75M, BLK3 → BLK4** target program
+
+Present to MDA as a **~$75M, ~3-year program** that stands up a **reusable SCUD-family target line**, progressing from the short-range **SCUD-class (BLK3)** to the intermediate-range **No-Dong / Shahab-class (BLK4, COTS Reaver)**. Notional allocation to the $75M topline (WBS to firm with Exos cost inputs):
+
+**Phase 1 — BLK3 SCUD-class SRBM target — $18M**
+- Threat-representative trajectory mod + liquid-signature characterization — $4M
+- Storable-propellant signature-fidelity development (closes the SCUD nitric-acid gap) — $4M
+- Reusable target vehicles (4 + spares) — $7M
+- Mobile range-ops kit + integration — $3M
+
+**Phase 2 — BLK4 No-Dong/Shahab IRBM-class target — $34M**
+- BLK4 vehicle development (airframe / structures / avionics) — $14M
+- COTS **Firefly Reaver** engine integration + procurement — $6M
+- IRBM trajectory / kinematics + higher-fidelity signature — $5M
+- BLK4 fleet build + tooling — $9M
+
+**Cross-program — operations, signature, PM, reserve — $23M**
+- Signature-augmentation / seeker-representation partner scopes — $5M
+- Manufacturing tooling + domestic second-source bench — $4M
+- Multi-year range operations & sustainment — $6M
+- Systems engineering / PM / ITAR-CMMC compliance — $4M
+- Program reserve / integrator contingency — $4M
+
+**Total: $75M.**
+
+**The strategic kicker — a non-dilutive path to BLK4.** This program **pays Exos to build BLK4** — the exact next-gen vehicle behind the Series A / STRATFI narrative. MDA target dollars fund a vehicle Exos intends to build anyway, and the reusable-target line then throws off recurring revenue on top. The $2M trajectory-mod and $1.5M/vehicle unit economics (§4) sit **inside** this program as line items, not the whole story. *(Allocations illustrative to Jon's $75M topline; firm with real BLK3/BLK4 build cost.)*
+
+---
+
 ## 5. Path to capture (Exos as prime, direct)
 
 1. **IS&T / Advanced Capability Concepts white paper** (fastest touch): *"Reusable liquid-signature threat-representative target for MDS sensor/interceptor test."* Anchor on the threat thesis (§1). *(Exo drafts; .mil submission needs Jon.)*
