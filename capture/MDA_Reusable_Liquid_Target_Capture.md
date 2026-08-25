@@ -41,15 +41,19 @@ Exos should go **directly to MDA** as the **prime** of a **reusable, liquid-fuel
 
 ## 3. Honest capability tiering (so MDA's signature people trust the pitch)
 
-| Tier | What it represents | BLK3 status |
+**Range-class progression (per JQ, 2026-08-24):** BLK3 is honestly an **extremely short-range** vehicle in MDA's book — the **short-range (SRBM-class) test target** that proves the reusable liquid-signature model **now**. **BLK4 is the intermediate-range (IRBM-class) growth tier** — previously proposed around the **flight-proven Firefly Reaver engine (COTS)** — which reaches the **IRBM tier of MDA's own target RFI** (§5). ICBM-class is roadmap/beyond.
+
+| Tier | What it represents | Status |
 |---|---|---|
 | **Liquid boost/ascent signature** | Liquid-plume IR/optical signature vs. solid | **Now** — BLK3's core differentiator |
-| **SRBM / MRBM-class kinematics** | Lofted/ballistic trajectory, apogee, reentry profile | **Now, with the $2M trajectory mod** |
+| **Short-range (SRBM-class) target** | Lofted/ballistic SR kinematics + liquid signature | **Now (BLK3)**, with the $2M trajectory mod |
 | **Signature tuned to a specific threat set** | Exact spectral match (propellant/additive/plume seeding) | **Tunable** — storable-propellant path improves this |
-| **Full ICBM-class reentry velocity/heating** | Intercontinental terminal energy | **Roadmap** — scales with BLK4 / orbital-class; do not claim on BLK3 |
-| **RV separation / penaids / countermeasures** | Complex/maneuvering threat presentation | **Roadmap** — added subsystems |
+| **Intermediate-range (IRBM-class) target** | IRBM kinematics/energy — the MDA TC RFI's tier | **Growth (BLK4)** — COTS design around Firefly Reaver engine |
+| **ICBM-class reentry / RV separation / penaids** | Intercontinental terminal energy, complex threats | **Roadmap/beyond** — do not claim today |
 
-**The claim to make:** *"Liquid-signature threat representation, boost-through-midcourse, SRBM/MRBM-class today — tunable to the threat set, with a funded propulsion roadmap toward higher tiers."* **Not** "identical to a SCUD," **not** "ICBM reentry today." That honesty is what makes it credible to their signature analysts.
+**The claim to make:** *"A reusable, liquid-signature target family — short-range today (BLK3), intermediate-range (IRBM) next (BLK4, COTS/Reaver), built entirely from commercial off-the-shelf components — tunable to the threat set."* **Not** "identical to a SCUD," **not** "ICBM today." That honesty is what makes it credible to MDA's signature analysts.
+
+**COTS is the low-cost/low-risk story:** the entire design — including BLK4's flight-proven **Firefly Reaver** engine — is **commercial off-the-shelf.** No bespoke propulsion development on the target's critical path (RDRE stays a separate propulsion-signature roadmap element, not the target's engine). COTS = affordable, fast, low technical risk, domestic supply — exactly MDA's low-cost mandate.
 
 ---
 
