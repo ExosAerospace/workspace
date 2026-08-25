@@ -23,9 +23,17 @@ META = os.path.join(UPLOADS, "_meta.json")
 
 
 def slug(s):
+    """Canonical document key: strip trailing version/date/draft tokens in ANY
+    order so every revision of a doc maps to the SAME key (and thus chains as
+    versions). A version number must be separator-led (e.g. _v0.1, -3), so
+    embedded names like BLK3/RDRE are never mangled."""
     s = os.path.splitext(os.path.basename(s))[0].lower()
-    s = re.sub(r'[\s_]*v?\d+(\.\d+)?$', '', s)           # trailing version tokens
-    s = re.sub(r'[\s_-]*\d{4}-\d{2}-\d{2}$', '', s)      # trailing dates
+    prev = None
+    while prev != s:                                     # peel trailing tokens, any order
+        prev = s
+        s = re.sub(r'[\s_.\-]+v?\d+(\.\d+)*$', '', s)    # trailing version: _v0.1, -v2, _3 (BLK3-safe)
+        s = re.sub(r'[\s_.\-]*\(?\d{4}-\d{2}-\d{2}\)?$', '', s)  # trailing ISO date (opt parens)
+        s = re.sub(r'[\s_.\-]+draft$', '', s)            # trailing 'draft'
     s = re.sub(r'[^a-z0-9]+', '-', s).strip('-')
     return s or "document"
 
