@@ -15,10 +15,12 @@
 
 Exos Aerospace offers MDA Targets & Countermeasures a **new class of target vehicle**: an **affordable, reusable, liquid-propulsion, threat-representative** platform built **entirely from commercial off-the-shelf (COTS) components.** Exos is **one of only three FAA-licensed reusable rocket launch providers in the United States**, operates on **minimal, mobile infrastructure**, and — critically for target fidelity — flies on **liquid propulsion**, giving a plume and signature **representative of the liquid-fueled threats now proliferating worldwide**, which solid-motor targets cannot reproduce.
 
-Exos proposes a **range-class progression**:
-- **Today — BLK3 (short-range / SRBM-class):** a reusable liquid-signature **test target**, FAA-licensed and available near-term, that proves the model at low cost.
-- **Growth — BLK4 (intermediate-range / IRBM-class):** the tier of interest in this RFI, previously designed around the **flight-proven Firefly Reaver engine (COTS)** — no bespoke propulsion development on the critical path.
+Exos proposes a **SCUD-family, liquid-threat-representative range-class progression** — modeled on the most widely proliferated liquid ballistic-missile family (SCUD and its scaled derivatives, No-Dong / Shahab):
+- **Today — BLK3 (short-range / SRBM-class, "SCUD-class"):** a reusable liquid-signature **test target** representative of the SCUD short-range liquid threat, FAA-licensed and available near-term, that proves the model at low cost.
+- **Growth — BLK4 (intermediate-range / IRBM-class, SCUD-derivative / No-Dong / Shahab-class):** the tier of interest in this RFI, previously designed around the **flight-proven Firefly Reaver engine (COTS)** — no bespoke propulsion development on the critical path.
 - **ICBM-class:** identified honestly as a **roadmap** objective beyond current hardware — not claimed today.
+
+*(Signature fidelity note: BLK3 is representative of the SCUD **liquid class**; exact spectral match to a specific SCUD variant is tunable via the storable-propellant path — we claim "SCUD-class, tunable," never "identical.")*
 
 The differentiators MDA cannot buy from the expendable-solid incumbent base: **reusability** (20–25 flights per vehicle → order-of-magnitude lower cost per threat presentation), **liquid-threat signature fidelity**, **all-COTS affordability and schedule**, and **domestic, minimal-infrastructure, high-cadence** operations.
 

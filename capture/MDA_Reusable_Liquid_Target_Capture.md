@@ -46,9 +46,9 @@ Exos should go **directly to MDA** as the **prime** of a **reusable, liquid-fuel
 | Tier | What it represents | Status |
 |---|---|---|
 | **Liquid boost/ascent signature** | Liquid-plume IR/optical signature vs. solid | **Now** — BLK3's core differentiator |
-| **Short-range (SRBM-class) target** | Lofted/ballistic SR kinematics + liquid signature | **Now (BLK3)**, with the $2M trajectory mod |
-| **Signature tuned to a specific threat set** | Exact spectral match (propellant/additive/plume seeding) | **Tunable** — storable-propellant path improves this |
-| **Intermediate-range (IRBM-class) target** | IRBM kinematics/energy — the MDA TC RFI's tier | **Growth (BLK4)** — COTS design around Firefly Reaver engine |
+| **Short-range (SRBM, "SCUD-class") target** | SCUD short-range liquid threat — kinematics + liquid signature | **Now (BLK3)**, with the $2M trajectory mod |
+| **Signature tuned to a specific threat set** | Exact spectral match to a SCUD variant (propellant/additive/plume seeding) | **Tunable** — storable-propellant path improves this |
+| **Intermediate-range (IRBM, SCUD-derivative / No-Dong / Shahab-class) target** | IRBM kinematics/energy — the MDA TC RFI's tier | **Growth (BLK4)** — COTS design around Firefly Reaver engine |
 | **ICBM-class reentry / RV separation / penaids** | Intercontinental terminal energy, complex threats | **Roadmap/beyond** — do not claim today |
 
 **The claim to make:** *"A reusable, liquid-signature target family — short-range today (BLK3), intermediate-range (IRBM) next (BLK4, COTS/Reaver), built entirely from commercial off-the-shelf components — tunable to the threat set."* **Not** "identical to a SCUD," **not** "ICBM today." That honesty is what makes it credible to MDA's signature analysts.
