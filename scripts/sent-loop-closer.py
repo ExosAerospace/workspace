@@ -299,12 +299,9 @@ def main():
     else:
         print("No new sends this cycle (incremental fast path). Registry + payload gate still refreshed below.")
 
-    print("\n--- MATCHES against tracked targets (these clear nudges) ---")
-    if registry:
-        for r, v in sorted(registry.items()):
-            print(f"  ✅ {r}  sent {v['sent_date']}  -> {', '.join(v['trackers'])}")
-    else:
-        print("  (no self-send recipients matched a tracked target)")
+    # NOTE: do NOT dump the full registry every run — this cron fires often and the
+    # per-entry echo grew the launchd log to 200+ MB. Print a one-line summary instead.
+    print(f"\n--- Registry: {len(registry)} self-send recipients tracked (full per-entry dump suppressed to prevent log bloat) ---")
 
     print("\n--- Trackers annotated THIS run ---")
     for tracker, r, d in cleared:
