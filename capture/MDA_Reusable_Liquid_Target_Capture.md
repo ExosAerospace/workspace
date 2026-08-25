@@ -102,6 +102,8 @@ Present to MDA as a **~$75M, ~3-year program** that stands up a **reusable SCUD-
 
 **Total: $75M.**
 
+**Recovery is a funded R&D sub-phase — honest attrition (per JQ):** recovering a vehicle **on a ballistic reentry trajectory** is genuine, unsolved-in-this-class development. Plan for **3–5 vehicles expended before the first successful recovery** (grounded: LandSpace Zhuque-3 failed its Dec-2025 recovery before succeeding Aug-2026; the US had no recoverable ballistic/hypersonic vehicle between the X-15 and Stratolaunch). This is fundable — MDA understands flight-test attrition — and the expended early units **still deliver value as expendable threat targets** during the recovery campaign. **US uniqueness:** no other US provider flies a **ballistic, liquid-signature threat profile *and* has a path to recover on that trajectory** — Stratolaunch recovers but flies a winged hypersonic *glide* (wrong regime); Rocket Lab HASTE flies ballistic but is *expendable*; Blue Origin recovers a *fixed vertical hop* (not threat-representative). Full analysis: `RD_Liquid_Threat_Landscape_and_Recovery.md`.
+
 **The strategic kicker — a non-dilutive path to BLK4.** This program **pays Exos to build BLK4** — the exact next-gen vehicle behind the Series A / STRATFI narrative. MDA target dollars fund a vehicle Exos intends to build anyway, and the reusable-target line then throws off recurring revenue on top. The $2M trajectory-mod and $1.5M/vehicle unit economics (§4) sit **inside** this program as line items, not the whole story. *(Allocations illustrative to Jon's $75M topline; firm with real BLK3/BLK4 build cost.)*
 
 ---
