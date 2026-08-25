@@ -113,7 +113,7 @@ def load():
 def save(raw, arr):
     # arr is the authoritative (possibly reassigned) list — write IT, not the stale raw list.
     out = arr if isinstance(raw, list) else {**raw, "decisions": arr}
-    tmp = DEC + ".tmp"
+    tmp = DEC + f".tmp.{os.getpid()}"  # per-process temp: avoid concurrent-writer race on shared .tmp
     with open(tmp, "w") as f:
         json.dump(out, f, indent=2)
     os.replace(tmp, DEC)

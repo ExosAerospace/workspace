@@ -228,7 +228,7 @@ def close_decision(did, note):
         if str(d.get("id")) == str(did):
             d["status"] = "answered"; d["answer"] = "Auto-delivered to owner's inbox (ready to send)"
             d["note"] = (d.get("note") or "") + f" [{note}]"; d["answeredAt"] = now; d["answeredBy"] = "auto-deliver"
-    tmp = DEC + ".tmp"
+    tmp = DEC + f".tmp.{os.getpid()}"  # per-process temp: avoid concurrent-writer race on shared .tmp
     with open(tmp, "w") as f:
         json.dump(arr if isinstance(raw, list) else {**raw, "decisions": arr}, f, indent=2)
     os.replace(tmp, DEC)

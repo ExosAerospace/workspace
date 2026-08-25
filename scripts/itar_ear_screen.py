@@ -303,7 +303,7 @@ def _create_hold_decision(message_id, sender, subject, hits, body=""):
         "status": "open", "answer": None, "note": "", "answeredAt": None,
         "assignedTo": who, "approver": who,
     })
-    tmp = DECISIONS_FILE + ".tmp"
+    tmp = DECISIONS_FILE + f".tmp.{os.getpid()}"  # per-process temp: avoid concurrent-writer race on shared .tmp
     json.dump(arr, open(tmp, "w"), indent=2)
     os.replace(tmp, DECISIONS_FILE)
 
