@@ -8,12 +8,12 @@ with manual worklist edits applied), picks the top targets weighted toward Tier 
 Run:  python3 scripts/series-a-daily-worklist.py            # print
       python3 scripts/series-a-daily-worklist.py --send     # DM Jon
 """
-import os, sys, json, re, datetime, subprocess
+import os, sys, json, datetime, subprocess
 import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
+import dd_screen  # shared DD gate (CRM engine verdicts + do-not-engage blocklist)
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 CRM = os.path.join(WS, "mission-control", "data", "crm.json")
-DD_REGISTRY = os.path.join(WS, "mission-control", "data", "dd-registry.json")
 OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
 JON = "1501632195163590739"
 TOPN = 10
@@ -27,35 +27,6 @@ def days_since(lt):
         return None
 
 
-def _norm(s):
-    """Normalize a firm name for matching: lowercase, punctuation->space, collapse spaces.
-    Kept deliberately light so distinct firms stay distinct (e.g. 'Craft Capital' != 'Craft Ventures')."""
-    s = re.sub(r"[^a-z0-9]+", " ", (s or "").lower())
-    return re.sub(r"\s+", " ", s).strip()
-
-
-def load_dd_verdicts():
-    """Map normalized firm name -> worst DD verdict from the nightly CRM DD engine
-    (mission-control/data/dd-registry.json, keyed by domain, each carrying company+verdict).
-    Returns {} if the registry is missing/unreadable so the worklist still runs."""
-    try:
-        reg = json.load(open(DD_REGISTRY))
-    except Exception:
-        return {}
-    rank = {"fail": 3, "caution": 2, "pass": 1}
-    out = {}
-    for v in (reg.values() if isinstance(reg, dict) else reg):
-        if not isinstance(v, dict):
-            continue
-        name = _norm(v.get("company"))
-        verd = str(v.get("verdict") or "").strip().lower()
-        if not name or verd not in rank:
-            continue
-        if name not in out or rank[verd] > rank[out[name]]:
-            out[name] = verd
-    return out
-
-
 def main():
     try:
         data = json.load(open(CRM))
@@ -67,17 +38,16 @@ def main():
                 if (c.get("tier") or "") not in ("Not a Fit",)
                 and "BOUNCED" not in [str(f).upper() for f in (c.get("flags") or [])]]
 
-    # DD PRE-SCREEN: delist any firm the nightly CRM DD engine marked 'fail'; flag 'caution'.
-    verdicts = load_dd_verdicts()
+    # DD PRE-SCREEN (shared gate): delist any firm that FAILED DD — either the nightly
+    # CRM DD engine marked it 'fail' OR it's on the hand-curated do-not-engage blocklist.
+    # 'caution' firms are kept but flagged for human review before contact.
+    crm_ok = bool(dd_screen.crm_verdicts())
 
     def dd_of(c):
-        return verdicts.get(_norm(c.get("firm")), "")
+        return dd_screen.verdict_for(firm=c.get("firm"))
 
-    if verdicts:
-        delisted = [c for c in eligible if dd_of(c) == "fail"]
-        live = [c for c in eligible if dd_of(c) != "fail"]
-    else:
-        delisted, live = [], eligible  # registry unavailable -> no filtering, but say so below
+    delisted = [c for c in eligible if dd_of(c) == "fail"]
+    live = [c for c in eligible if dd_of(c) != "fail"]
 
     live.sort(key=lambda c: -(c.get("score") or 0))
     top = live[:TOPN]
@@ -98,14 +68,14 @@ def main():
               f"({len(live)} DD-clean firms · {hp} high-priority · {overdue} overdue for follow-up)")
 
     # Pre-screen transparency line — never silently drop firms.
-    if not verdicts:
-        screen = "🛡️ DD pre-screen: ⚠️ registry unavailable — could not screen (showing unscreened list)"
-    elif delisted:
+    if delisted:
         names = ", ".join(c.get("firm") for c in delisted[:12])
         more = f" (+{len(delisted) - 12} more)" if len(delisted) > 12 else ""
         screen = f"🛡️ DD pre-screen: delisted {len(delisted)} failed-DD firm(s) — {names}{more}"
     else:
         screen = "🛡️ DD pre-screen: 0 failed-DD firms in pool ✅"
+    if not crm_ok:
+        screen += "\n⚠️ CRM DD engine registry unreadable — screened against do-not-engage blocklist only (partial)."
 
     body = header + "\n" + screen + "\n" + "\n".join(lines) + \
         "\n\nOpen the Series A CRM tab to work them: click a firm → set next action + mark touched."
