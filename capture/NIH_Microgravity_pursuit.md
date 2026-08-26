@@ -1,10 +1,22 @@
 # PURSUIT TRACKER — NIH Microgravity Biomedical (Capture Agent state file)
-*Single source of truth for this pursuit. The Capture Agent reads this each run, advances the next open action, and updates State + Decision Log. Last updated: 2026-08-25.*
+*Single source of truth for this pursuit. The Capture Agent reads this each run, advances the next open action, and updates State + Decision Log. Last updated: 2026-08-26.*
 
 ## Objective
 Win NIH-relevant microgravity funding/revenue using BLK3 as the SUBORBITAL microgravity platform. Primary near-term = **NIH STTR (PA-27-102), deadline Sep 8 2026** (Sep 5 falls on Saturday; NIH moved to Sep 8), teamed with a biomedical PI (Exos = platform). **As of 2026-08-18 (Jon) the STTR is a DUAL-INSTITUTION team: Dr. Ed Kelly (UW) as biomedical science anchor + Prof. Steven Collicott (Purdue AAE) as suborbital-methods partner — two institutions supporting one PA-27-102 application (one as the ≥30% research-institution-of-record, the other via subaward). Kelly is RESTORED, not superseded.** Parallel = **sell BLK3 screening slots** to NIH/NCATS/TraCe MPS-funded researchers. Adjacent = **NASA ROSBio Appendix D** (suborbital biology). Win = an NIH STTR award and/or booked microgravity payload slots.
 
 ## Current stage
+> 🟡 **2026-08-26 04:45 CDT — NO MOVEMENT SINCE LAST NIGHT; TODAY IS GO/NO-GO DAY.** Checked MC decisions/tasks for any action on the two 8/25 urgent items (Kelly re-engage send, Park status check) — no new decision recorded, no evidence either was sent (last decision on file is still D-7281669, answered 8/24). The Exos-org eRA Commons registration question (flagged 8/25 21:17, Binding Constraint #1) also remains unanswered — no Decision card existed for it yet, so one is dispatched this run (see READY-ACTION below). External scan (2 searches): confirmed PA-27-102 due date is genuinely Sep 5/8 2026 (grants.gov, matches tracker); no NCATS Tissue Chips in Space 3.0 solicitation posted yet (still only 2.0, awarded Feb); no active 2026 NASA ROSBio Appendix D/E (suborbital/parabolic bio) solicitation found on NSPIRES — nothing to act on there. **Per the tracker's own 8/25 math, yesterday was already "the last practical day" for Kelly/Park to commit and start university routing — that day has now passed with no confirmed action.** Not calling it dead yet (routing offices open this morning, still time before EOD), but this run escalates to a single clear go/no-go ask rather than a third separate nag.
+
+> 🟢 **2026-08-25 21:17 CDT — eRA COMMONS ACCESS CONNECTED (Jon).** Jon confirmed the Login.gov→NIH connection notice ("You connected your account to NIH," 9:17 PM CDT) was for **eRA Commons account access for the NIH proposal.** This directly advances **Binding Constraint #1** (the flagged #1 deadline risk). **Scope check — do NOT overstate:** a Login.gov→NIH link establishes an *individual* eRA Commons account/credential; the long-pole risk is the **Exos SBC org-level eRA Commons registration** (SO/AO institutional registration, historically days-to-2+ weeks). Open question for Jon: is the Exos *organization* registered in eRA Commons (with a Signing Official), or only Jon's personal account? If org reg is done → the #1 registration risk is effectively retired and Sep 8 stays live on registrations. If only individual → still need org reg started immediately. Also confirm SBA Company Registry + Grants.gov (SAM.gov already have). **Not gating the science — this is the plumbing that lets us actually submit.**
+
+> 🟢 **2026-08-25 — KELLY SAID YES (Jon). PARTNER-LOCK GATE (Stage 1) PASSED.** Dr. Edward Kelly (UW) confirmed as the biomedical science anchor / RI-of-record for the PA-27-102 STTR. This is the make-or-break gate — now cleared. **Mode switches from "chase a PI" to "sprint a compliant STTR to Sep 8."**
+> **Binding constraints to Sep 8 (in priority order — these, not the science, decide if we make it):**
+> 1. **⚠️ #1 RISK — Exos SBC federal registrations.** STTR requires the small business registered in **SAM.gov (have it) + SBA Company Registry + eRA Commons + Grants.gov.** **eRA Commons org registration can take days-to-2+ weeks** — if Exos isn't already registered, this ALONE can miss Sep 8. **VERIFY TODAY.**
+> 2. **Institutional sponsored-programs routing** — UW OSP (~5–7 biz days) + Purdue SPS (~5 biz days) run in parallel but the LATER governs. Kelly must open UW OSP routing **now**; Collicott opens Purdue subaward routing **now**. Commit-by ~Aug 26–27 was the line; today (Aug 25) both must start.
+> 3. **PD/PI decision** — STTR PI may sit at the SBC (Exos) OR the RI (UW). Decide who is PD/PI (Kelly is a strong PI given his NIH/ISS track record; or Exos-side PI with Kelly as co-I).
+> 4. **Structure (confirmed):** Exos (SBC) ≥40% · UW/Kelly (RI-of-record) ≥30% · Purdue/Collicott subaward ≤30%.
+> Next actions: (a) verify Exos eRA Commons/SBA/Grants.gov registration status — TODAY; (b) draft Kelly teaming-confirmation email that triggers UW OSP routing; (c) scope specific aims (Kelly kidney-chip MPS + BLK3 onset-kinetics); (d) budget skeleton to the 40/30/30 split. **Honest call: Sep 8 is achievable only if registrations are already done and routing starts today — otherwise the realistic target is the next cycle (~Jan 2027). Flagging so we don't burn the team on an unmakeable deadline.**
+
 > ✅ **2026-08-18 — JON DIRECTIVE (SUPERSEDES the 8/17 either/or pivot): "Restore the Ed Kelly framing and leverage Purdue capability as well — two can support the same effort."**
 > **DUAL-INSTITUTION STTR. Kelly (UW) is RESTORED. Kelly and Collicott/Purdue are COMPLEMENTARY partners on ONE PA-27-102 application — not either/or. Do NOT emit any "pick one / suspend the other" decisions.**
 > - **Roles:** **Dr. Edward Kelly (UW)** = biomedical science anchor (kidney chip / NCATS TraCe MPS kidney center 1U2CTR004867 / ISS Tissue Chips heritage) — fills the NIH biomedical-lead requirement that Collicott (AAE) cannot. **Prof. Steven Collicott (Purdue AAE)** = suborbital microgravity experiment design/methods + already-COMMITTED Exos partner (SACSS LOS in hand, "onboard" 7/27). **Exos** = SBC / flight platform / payload integration.
@@ -1199,6 +1211,29 @@ Cofounder and CEO
 ---
 
 Two-minute copy-paste. Send whenever you get this, every hour matters at this point.
+
+John Quinn / Exo
+END-READY-ACTION -->
+
+<!-- READY-ACTION
+key: nih-microgravity-goNoGo-registrations-0826
+task_title: [NIH-MG] Go/no-go on Sep 8 — eRA Commons org registration + Kelly/Park status, one answer needed
+to: jquinn@exosaero.com
+subject: [DECISION NEEDED] [NIH-MG] Go/no-go on Sep 8 — one answer covers it
+category: BD
+priority: 95
+body:
+Jon,
+
+Combining two open threads into one ask so this doesn't feel like a third separate nag.
+
+1. eRA Commons registration: is Exos (the organization, not just your individual Login.gov link) registered in eRA Commons with a Signing Official, or only your personal account? If org-level isn't done, that alone can miss Sep 8 regardless of PI status — it's a days-to-2-week process.
+
+2. Kelly/Park: did the Kelly re-engagement email go out, and did the Park status call happen? Both PIs' university routing offices need to start this week for Sep 8 to be reachable.
+
+I checked overnight, nothing moved on either front as of this morning. Yesterday (8/25) was the date we flagged as the last practical day for PI routing to start. I'm not calling Sep 8 dead yet since routing offices open this morning, but if I don't hear a clear answer on both by end of day today, my recommendation is to stand down and retarget the Jan 5, 2027 STTR cycle so we're not burning more runway chasing a window that's already closed.
+
+No external searching turned up anything new to act on in the meantime (no NCATS Tissue Chips 3.0 release yet, no live NASA ROSBio suborbital solicitation).
 
 John Quinn / Exo
 END-READY-ACTION -->
