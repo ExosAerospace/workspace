@@ -80,6 +80,31 @@ SPECULATIVE = re.compile(
     r".{0,40}?(?:contact|intro|introduction|relationship|connection|path|lead)|"
     r"\bdo we (?:have|know)\b|is there a (?:warm|known)|can .{0,30}? intro\b|ask jon (?:to confirm|whether)", re.I)
 
+# Meta-redundant + info-capture pruning (Jon 2026-08-26, "reduce the human review cue"). A decision
+# whose ACTION is merely to route/deliver/brief/email something TO Jon for approval is not a decision
+# — it's Exo asking permission to do the delivery Jon already directed. And a meeting-debrief/readout
+# ask is info-capture, not a CHOICE. Both get batched OUT of the CEO gate (reversible: superseded).
+# GUARDED by TRUE_CONSEQ below: real gov/investor/contract/ITAR/Scorpius asks are NEVER pruned here,
+# and SEND items (external approvals Jon explicitly keeps) never match these patterns.
+META_REDUNDANT = re.compile(
+    r"(?:email|e-?mail|route|deliver|send|surface|forward|escalate|present|bring|package)\b"
+    r".{0,70}?\b(?:jon|john)\b"
+    r".{0,90}?(?:for (?:his |your )?(?:approval|go|review|sign-?off|go/?no-?go|decision)|"
+    r"requesting (?:his |your )?(?:go|approval|go/?no-?go|sign-?off)|to (?:approve|review|decide|sign))|"
+    r"deliver (?:a |an )?.{0,40}?(?:brief|memo|summary|readout|package) to (?:jon|john)|"
+    r"get (?:jon|john)'?s? (?:go|approval|sign-?off|go/?no-?go)\b", re.I)
+DEBRIEF_INFO = re.compile(
+    r"(?:get|capture|obtain)\s+jon'?s?\s+.{0,30}?(?:debrief|readout|inline debrief|structured debrief)\b|"
+    r"\bsix-question debrief\b|debrief\s+of\s+the\s+.{0,30}?meeting", re.I)
+# "TRUE" consequence — the real stuff that must stay with Jon (no meta phrasing that overlaps the
+# above). Deliberately narrower than CONSEQ_KEEP so meta-wrappers don't self-protect.
+TRUE_CONSEQ = re.compile(
+    r"\.gov\b|\.mil\b|\bafrl\b|\bdarpa\b|\bonr\b|space\s?force|air\s?force|\bnro\b|\bmda\b|spacewerx|"
+    r"\bnasa\b|\bsbir\b|\bsttr\b|tacfi|stratfi|\bosc\b|searf|senat|congress|"
+    r"series\s*a|\binvestor\b|capital\s+raise|term\s?sheet|\b409a\b|data\s*room|euronext|"
+    r"\bmnda\b|\bnda\b|counsel|contract|\bloi\b|\bitar\b|export.?control|\bddtc\b|"
+    r"\brdre\b|\brde\b|type-?5|scorpius|rofr|\bcui\b|wire\s?transfer", re.I)
+
 
 def recipient_text(d):
     q = (d.get("question") or "") + " " + (d.get("proposedAction") or "")[:200]
@@ -93,6 +118,12 @@ def is_routine(d):
     q = title + " " + (d.get("question") or "") + " " + (d.get("proposedAction") or "")
     # Speculative warm-intro "maybe" asks are ALWAYS parked (even if they name a gov agency).
     if SPECULATIVE.search(q):
+        return True
+    # Meta-redundant "route/deliver/brief to Jon for approval" wrappers and meeting-debrief info-
+    # capture asks are not CEO choices — park them (reversible) UNLESS they carry a true consequence
+    # signal or are an external SEND (which Jon explicitly keeps approving).
+    is_send = bool(ROUTINE_TITLE.search(title) is None and re.search(r"send this email to|^\s*send:", q, re.I))
+    if (META_REDUNDANT.search(q) or DEBRIEF_INFO.search(q)) and not TRUE_CONSEQ.search(q) and not is_send:
         return True
     # never batch anything consequential/confidential or needing Jon's authority — scan FULL text,
     # not just the title (investor/gov/Scorpius/authority items must stay with Jon, never delegate).

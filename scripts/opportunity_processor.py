@@ -473,6 +473,35 @@ def route_to_mc(opp, res, draft_path):
                                "Not a decision — Jon provides a warm intro at submission time only if actually needed."],
                 "body": f"{ns}\n\nParked rather than asked. Sourcing unconfirmed."})
             return
+        # Meta-redundant suppression (Jon 2026-08-26, "reduce the human review cue"): a decision whose
+        # ACTION is merely to route/deliver/brief/email something TO Jon for his approval is not a
+        # decision — it's Exo asking permission to do the internal delivery Jon already directed.
+        # Strip the wrapper: do the work (file to the task feed) instead of consuming a CEO decision.
+        # GUARDED — never fires on gov/.mil/investor/contract/ITAR/consequential asks (those still
+        # need Jon), and never on an external SEND (route==SEND handles those; Jon keeps send-approval).
+        _META_REDUNDANT = re.compile(
+            r"(?:email|e-?mail|route|deliver|send|surface|forward|escalate|present|bring|package)\b"
+            r".{0,70}?\b(?:jon|john)\b"
+            r".{0,90}?(?:for (?:his |your )?(?:approval|go|review|sign-?off|go/?no-?go|decision)|"
+            r"requesting (?:his |your )?(?:go|approval|go/?no-?go|sign-?off)|"
+            r"to (?:approve|review|decide|sign))|"
+            r"deliver (?:a |an )?.{0,40}?(?:brief|memo|summary|readout|package) to (?:jon|john)|"
+            r"get (?:jon|john)'?s? (?:go|approval|sign-?off|go/?no-?go)\b", re.I)
+        _CONSEQ_KEEP = re.compile(
+            r"\.gov\b|\.mil\b|\bafrl\b|\bdarpa\b|\bonr\b|space\s?force|air\s?force|\bnro\b|\bmda\b|"
+            r"spacewerx|\bnasa\b|\bsbir\b|\bsttr\b|tacfi|stratfi|\bosc\b|searf|"
+            r"series\s*a|\binvestor\b|capital\s+raise|term\s?sheet|\b409a\b|\bmnda\b|\bnda\b|counsel|"
+            r"\bitar\b|export.?control|\bddtc\b|\brdre\b|\brde\b|type-?5|scorpius|rofr|\bcui\b", re.I)
+        _blob_mr = f"{ns} {opp.get('title','')} {res.get('blockers','') or ''} {res.get('deliverable',{}) if isinstance(res.get('deliverable'),str) else ''}"
+        if _META_REDUNDANT.search(ns) and not _CONSEQ_KEEP.search(_blob_mr):
+            mc_post("/api/research/ingest", {
+                "id": f"opp-metadeliver-{rel}", "title": f"Action (auto, no CEO gate): {opp.get('title','')[:100]}",
+                "date": TODAY, "due": due, "category": "BD Intel", "source": "Opportunity Engine",
+                "highlights": [f"**Next step:** {ns[:180]}",
+                               "Meta-ask suppressed — Exo performs the internal delivery Jon already directed; "
+                               "no CEO decision consumed. Any resulting external send still surfaces its own send-approval."],
+                "body": f"{ns}\n\nOwner: {res.get('owner','Exo')}\nDraft: {draft_path or 'n/a'}"})
+            return
         _ingest_decision({
             "dedupeKey": f"opp-dec-{rel}",
             "title": f"{opp.get('id')}: {res.get('next_step','')[:80]}",
