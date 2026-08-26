@@ -15,7 +15,7 @@ import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirn
 import supabase_util as _sbu; _sbu.install()
 # --- end shim ---
 import os, sys, json, ssl, hashlib, smtplib, urllib.request, urllib.parse
-from datetime import datetime
+from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -23,6 +23,10 @@ WS = os.path.expanduser("~/.openclaw/workspace")
 SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
 STATE = os.path.join(WS, "logs", "ready-actions-dispatched.json")
 LOG = os.path.join(WS, "logs", "ready-action.log")
+# Sent registry (built by sent-loop-closer.py from Jon's BCC'd Proton copies): recipients he
+# has ALREADY emailed from Outlook. A ready-to-send whose recipient is here is redundant —
+# don't hand Jon a "ready to send" for mail he already sent ("many already sent" complaint).
+SENT_REGISTRY = os.path.join(WS, "logs", "outreach-sent-registry.json")
 
 # Email (Proton bridge, same as the other senders)
 SMTP_HOST, SMTP_PORT = "127.0.0.1", 1025
@@ -126,17 +130,99 @@ def scrub_durations(text):
     return text
 
 
+# Per-key cooldown (2026-08-10 flood fix). Content-hash dedup alone is defeated by variant
+# churn: the SAME pursuit re-emails whenever a cron model rewords the copy (v1/v2/v3
+# escalation series — the NIH-MG RFI went out ~5x this way, each reworded, each slipping the
+# hash). Once a key has emailed Jon, it may NOT email again for COOLDOWN_DAYS regardless of
+# how the copy changes. We deliberately do NOT store the new hash while suppressing, so after
+# the window the latest copy goes out exactly once. Net: at most one email per key per window,
+# always the freshest content. A brand-new key (no prev) is never gated. MC task is untouched.
+COOLDOWN_DAYS = float(os.environ.get("READY_ACTION_COOLDOWN_DAYS", "4"))
+
+_RA_EMAIL_RE = _re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+_RA_INTERNAL = _re.compile(r"(exosaero\.com|jquinnexo@|@pm\.me|@proton\.me|noreply|no-reply)", _re.I)
+# Gov / manual-send ready-to-sends route TO Jon (to: jquinn@exosaero.com) and carry the REAL
+# external recipient inside the body, under a "SEND TO:" header block ("To: andrew.nelson@...").
+# Checking only the `to:` field matched Jon's own (internal) address, so the already-sent guard
+# NEVER fired for these — they re-nagged forever no matter how many times Jon actually sent them
+# (Nelson/Utah flood, 2026-08-26). Pull the true "To:" recipient out of the body so the registry
+# match works for the manual-send class too.
+_RA_BODY_TO_RE = _re.compile(r"^\s*to\s*:\s*(.+)$", _re.I | _re.M)
+
+def _body_primary_recipients(body):
+    """External 'To:' recipients declared inside a ready-to-send body's SEND TO block."""
+    out = []
+    if not body:
+        return out
+    for line in _RA_BODY_TO_RE.findall(body):
+        for e in _RA_EMAIL_RE.findall(line):
+            el = e.lower()
+            if not _RA_INTERNAL.search(el):
+                out.append(el)
+    return out
+
+def _already_sent_recipient(to_line, body=""):
+    """Return the first real recipient Jon has already emailed, else None. Checks the `to:`
+    field AND the body's SEND TO block (gov/manual-send items address Jon, recipient in body).
+    Disabled by env READY_ACTION_SKIP_SENT=0."""
+    if os.environ.get("READY_ACTION_SKIP_SENT", "1") == "0":
+        return None
+    try:
+        reg = {k.lower() for k in json.load(open(SENT_REGISTRY)).keys()}
+    except Exception:
+        return None
+    cands = [e.lower() for e in _RA_EMAIL_RE.findall(to_line or "")]
+    cands += _body_primary_recipients(body)
+    for el in cands:
+        if not _RA_INTERNAL.search(el) and el in reg:
+            return el
+    return None
+
+
+def _emailed_recently(prev):
+    if not prev or not prev.get("emailed_at"):
+        return False
+    try:
+        last = datetime.strptime(prev["emailed_at"], "%Y-%m-%d %H:%M")
+    except Exception:
+        return False
+    return (datetime.now() - last) < timedelta(days=COOLDOWN_DAYS)
+
+
 def deliver(key, subject, body, to_line="", cc_line="", task_title=None,
-            category="BD", priority=75, do_email=True, do_mc=True):
+            category="BD", priority=75, do_email=True, do_mc=True, owner="Jon"):
     """Idempotent: emails Jon the ready-to-send + opens an MC task. Re-running with the
-    same key+content is a no-op. Changed content re-delivers. Returns a result dict.
-    Aging day-counters are stripped before hashing so a stale item never re-nags on age."""
+    same key+content is a no-op. Changed content re-delivers, but at most once per
+    COOLDOWN_DAYS per key (variant-churn guard). Returns a result dict. Aging day-counters
+    are stripped before hashing so a stale item never re-nags on age."""
     subject = scrub_durations(subject); body = scrub_durations(body); task_title = scrub_durations(task_title)
+    # Normalize versioned/escalation keys onto ONE pursuit key. Generators emit -v2/-v3/-v4
+    # (firefly-clps v1..v4, ravee-...-val v1..v2, entx-...-nudge v1..v2) — each was a distinct
+    # key, so each re-emailed AND opened a new MC task. Collapsing to the base means all versions
+    # share one cooldown slot and REUSE the first version's task_id (no new task per version).
+    key = _re.sub(r"(?:[-_]v\d+)+$", "", key)
     st = _load_state()
     h = hashlib.sha256(_dedup_norm(subject, body, to_line, task_title).encode()).hexdigest()[:16]
     prev = st.get(key)
     if prev and prev.get("hash") == h:
         return {"key": key, "skipped": True, "task_id": prev.get("task_id")}
+    # Jon already sent this outreach from Outlook (registry match on recipient): don't hand him a
+    # redundant ready-to-send, no matter how the copy is reworded. Checked on every call so a
+    # versioned/escalation variant can't slip past. Toggle with READY_ACTION_SKIP_SENT=0.
+    if do_email:
+        already = _already_sent_recipient(to_line, body)
+        if already:
+            _log(f"skip ready-to-send ({key}); Jon already sent to {already}")
+            st[key] = {"hash": h, "task_id": prev.get("task_id") if prev else None,
+                       "emailed_at": prev.get("emailed_at") if prev else None,
+                       "skipped_already_sent": already}
+            _save_state(st)
+            return {"key": key, "skipped": True, "reason": "already-sent", "recipient": already}
+    # Content changed but we already emailed this key inside the cooldown window: suppress the
+    # re-send (do NOT persist the new hash, so the latest copy still goes out once cooldown ends).
+    if prev and do_email and _emailed_recently(prev):
+        _log(f"cooldown-suppressed re-send ({key}); {COOLDOWN_DAYS}d window not elapsed")
+        return {"key": key, "skipped": True, "reason": "cooldown", "task_id": prev.get("task_id")}
 
     # Compose the inbox email: recipients header block + the ready-to-send body
     hdr = ""
@@ -158,7 +244,7 @@ def deliver(key, subject, body, to_line="", cc_line="", task_title=None,
     if do_mc and not task_id:
         desc = (f"Ready-to-send delivered to Jon's inbox {datetime.now():%Y-%m-%d %H:%M}.\n\n"
                 + hdr + "\n" + body[:1500])
-        task_id = create_task(task_title or subject, desc, category=category, priority=priority)
+        task_id = create_task(task_title or subject, desc, category=category, priority=priority, owner=owner)
 
     st[key] = {"hash": h, "task_id": task_id, "emailed_at": f"{datetime.now():%Y-%m-%d %H:%M}"}
     _save_state(st)
