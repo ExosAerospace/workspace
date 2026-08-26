@@ -1,5 +1,5 @@
 # NCE — BLK3 BUILD via National Charter Enterprise (NCE Agent state file)
-*Single source of truth. NCE Agent reads + updates each run. Last updated: 2026-08-21.*
+*Single source of truth. NCE Agent reads + updates each run. Last updated: 2026-08-26.*
 
 ## Model
 National Charter Enterprise = leverage state/national/allied-nation economic-development funds to pay for standing up rocket manufacturing/launch capability in their jurisdiction (jobs + economic growth for them; built vehicles + facilities for Exos). Montana spaceport dev work is the template.
@@ -901,3 +901,52 @@ END-READY-ACTION -->
 | 2026-08-21 | **MONTANA: NO NEW DEVELOPMENTS.** No Gianforte, Edgar, or MT spaceport news. Janicki $830M construction ongoing (groundbreaking July 10). Waiting on Edgar / POA + Governor Signing Agreement. Not nagging. | WAITING — NO NAG |
 | 2026-08-21 | **NM LEDA: STILL PENDING JON AUTH.** ASA Annual Meeting wrapped Aug 17-20 (Albuquerque). Post-event attendee list may surface NM EDD contacts — monitoring. Spaceport America Open House Sept 26 (9AM-1PM, T or C) = natural follow-on meeting if LEDA filed before September. Jon's go still needed. | PENDING JON AUTH |
 | 2026-08-21 | **⭐ BEST-LEVERAGE: (1) 🚨 MDC Sara Harris — escalated to URGENT; AST SpaceMobile 400k sqft anchor confirms corridor operator slots are closing; Jon sends to sharris@midlandtxedc.com today. (2) Utah — auto follow-up dispatches Aug 22-23 (post-meeting); no action needed now. (3) NM LEDA — Jon authorizes before September for SA Open House Sept 26 follow-through. (4) Montana — stable, waiting Edgar.** | PRIORITY |
+
+## DECISION LOG — 2026-08-26 (catching up 5-day cron gap since 8/21)
+
+| 2026-08-26 | **✅ MDC SARA HARRIS — CONFIRMED SENT.** Outreach registry (scanned 8/25 16:16) shows sharris@midlandtxedc.com received the corridor anchor pitch on **2026-08-18 23:54** — same send that reached John Canipe (TSC), just not detected until this week's registry scan (the earlier "unconfirmed" status was a detection lag, not a non-send). Exos is now on record with MDC as the FAA-licensed VTVL anchor candidate for the West Texas Aerospace Corridor, ahead of AST SpaceMobile/Starfighters closing out remaining operator slots. No consultant selection announcement found as of 8/26 — window still open, but Exos's positioning ask is now in front of the decision-maker. | ✅ RESOLVED — WAS THE #1 OPEN ITEM |
+| 2026-08-26 | **⚡ UTAH POST-MEETING FOLLOW-UP TO NELSON — NOT SENT, NOW 3+ DAYS OVERDUE.** Aug 21 committee meeting happened as scheduled (Delta/Green River remain tied co-finalists at score 60, per confirmed pre-meeting coverage). The queued post-meeting READY-ACTION (key `utah-nelson-post-aug21-followup`, delivered to Jon's inbox 8/19, meant to go out within 48hrs of the meeting = by 8/23) has **no send confirmation** in the outreach registry. No media recap of the meeting's outcome found yet (Sept 30 final report is still the hard lock date). This is now the single most time-sensitive open NCE item — every day past 8/23 shrinks the window to get Exos's written Delta/Green River operator data into Nelson's Sept 30 final report. Re-dispatching below with a fresh key so it isn't lost. | ⚡ SEND TODAY — 3+ DAYS OVERDUE |
+| 2026-08-26 | **MDC CORRIDOR: STILL NO CONSULTANT SELECTION ANNOUNCED.** Searched MDC/MRT/Golden Shovel coverage through 8/26 — no announcement. RFP closed July 31; window is 26+ days past the "early August" target with no public vote yet. Nothing further to do until MDC board acts (per Sara Harris's own confirmation to MRT that any vendor agreement returns to the board for a public vote) — Exos's positioning is filed; this is now a watch item, not an open send. | WATCH — NO ACTION NEEDED |
+| 2026-08-26 | **MONTANA: NO NEW DEVELOPMENTS.** No Gianforte, Edgar, or MT spaceport news found this search. Janicki $830M construction ongoing since July 10 groundbreaking. POA v2 + Governor Signing Agreement remain unexecuted and the ball is still with Edgar. Not nagging — flagging only because this is now 5+ weeks stalled with no visible movement; may be worth Jon proactively pinging Edgar for a status check rather than waiting on him. | STALLED — CONSIDER PROACTIVE PING |
+| 2026-08-26 | **NM LEDA: STILL PENDING JON AUTH.** Draft ready (Sierra County co-applicant, corrected). Spaceport America 20th Anniversary Open House is Sept 26 — filing before then creates a natural in-person follow-on with NM EDD/Sierra County contacts. No new NM-specific news this cycle. | PENDING JON AUTH |
+| 2026-08-26 | **⭐ BEST-LEVERAGE MOVE: Utah Nelson post-meeting follow-up — Jon sends today.** This is the only genuinely time-critical item (Sept 30 final report lock date, already 3 days past the ideal 48hr-post-meeting window). MDC Sara Harris item is resolved. NM LEDA and Montana are stable/waiting, not urgent this week.** | PRIORITY |
+
+<!-- READY-ACTION
+key: utah-nelson-post-aug21-followup-redispatch-aug26
+task_title: [SEND TODAY — 3 days overdue] Exos → Andrew Nelson — Written Operator Data Package for Utah Final Report
+to: jquinn@exosaero.com
+subject: [SEND TODAY] Exos → Andrew Nelson — Utah Spaceport Written Data Package (Sept 30 report deadline)
+category: BD
+priority: 90
+body:
+CONTEXT: Utah's Spaceport Exploration Committee met Aug 21 as scheduled. This follow-up was queued to send within 48hrs (by Aug 23) but has no send confirmation as of Aug 26 — it's now 3+ days overdue. Final report to the Legislature is due Sept 30; every day this sits unsent is a day closer to that record closing without Exos's operator data in it.
+
+SEND TO:
+  To: andrew.nelson@rsandh.com
+  Cc: ann.millner@le.utah.gov; cbraceras@utah.gov
+  Subject: Following Up — Exos Aerospace Operator Data for Utah Spaceport Final Report
+
+---
+
+Hello Andrew,
+
+Thank you for the work you presented to the committee on the 21st. I wanted to follow through on my offer to provide operator-level data for your final report, due September 30.
+
+Attached is a brief Exos operator data package for the Utah analysis, including:
+
+- BLK3 vehicle specifications (100+ km altitude, 135 kg payload, 2-day turnaround, 4g boost) — applicable to Delta and Green River Use Case 5 (VTVL suborbital) scenarios
+- Workforce and infrastructure requirements for a suborbital launch operation at a greenfield inland site
+- Federal program revenue: NASA Flight Opportunities + DoD pipeline; $50M+ total federal program value
+- Economic anchoring model: launch cadence, local supply chain, STEM/trades workforce pipeline
+
+Exos is one of only three FAA-licensed reusable suborbital launch companies in the United States and the only one currently offering commercial payload services. We would be glad to supplement this data with a call or additional detail before your September 30 submission.
+
+We believe Utah's spaceport program is one of the most credible in the country, and we want to be on the record as a committed, licensed operator.
+
+Sincerely,
+
+John Quinn
+Cofounder & CEO, Exos Aerospace Systems & Technologies, Inc.
+jquinn@exosaero.com | +1-972-740-8355
+www.exosaero.com
+END-READY-ACTION -->
