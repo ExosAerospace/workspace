@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "email": "jquinn@exosaero.com",
+    "name": "John Quinn",
+    "role": "admin",
+    "password_hash": "883d6d547712f8cbc1f7fb11a38ae076a9263e5f4454b26920b8dbfc37462b822fb356c6982da88a3620f3870751f62018c79eaf6d21fdb2274d3d78df2d6737",
+    "password_salt": "e0c32f64bcf4e13ff845bd422c1d6e18e753579f9479b099f4591b6082c003b8",
+    "created_at": "2026-05-14T22:00:00Z",
+    "active": true,
+    "last_login": "2026-08-26T13:00:01.223Z",
+    "password_set_at": "2026-07-16T12:25:33.813Z"
+  },
+  {
+    "id": 2,
+    "email": "lquinn@exosaero.com",
+    "name": "Lizi Quinn",
+    "role": "admin",
+    "password_hash": "a39597f2ce006945b3ac0973d9f22efab3c17264ab4e0f2d9ed135693d2d624ade7bea47862d241fceb4173badec811cde893667a11aea67d15d1333e1df0da3",
+    "password_salt": "4b9e0fbcddd5504e4eb85a297dcef66d5ed9a5da24d5f39fd9221090b4948424",
+    "created_at": "2026-05-19T12:49:53.510Z",
+    "active": true,
+    "password_set_at": "2026-07-15T13:54:20.444Z",
+    "last_login": "2026-08-26T19:32:22.181Z"
+  },
+  {
+    "id": 3,
+    "email": "snorsworthy@exosaero.com",
+    "name": "Steve Norsworthy",
+    "role": "manager",
+    "password_hash": "25a8806b4240969985e77c873d722359b52dc6c0c8fd79cfbb4ba60cfd5c286c37a6da6048062df875736b2d7f10296efd9f5085a555f7206f01f2f254778961",
+    "password_salt": "f59587590555f19f0d4ae297101d37c8ce88ff5ad675a60522f873bd750e6056",
+    "created_at": "2026-06-26T21:15:00Z",
+    "active": true,
+    "last_login": "2026-08-26T13:39:35.657Z",
+    "password_set_at": "2026-07-22T15:48:59.543Z"
+  },
+  {
+    "id": 4,
+    "email": "peaton@exosaero.com",
+    "name": "Phil Eaton",
+    "role": "manager",
+    "password_hash": "6f341d4a8e6d1563b0444bb29d2a88e3a0063b673ddf2eb0459db655fb1b158370a71156d7d6cd37adb51ab7dbf8621eb1a83166cb3974859317f64925692a88",
+    "password_salt": "017e028a4c77a012a7e0a14ce36bd75397f156108bde3882b53b0da7af456f0a",
+    "created_at": "2026-06-26T21:15:00Z",
+    "active": true,
+    "last_login": "2026-08-24T13:49:57.153Z",
+    "password_set_at": "2026-07-16T17:28:40.121Z"
+  },
+  {
+    "id": 5,
+    "email": "nmilburn@exosaero.com",
+    "name": "Neil Milburn",
+    "role": "manager",
+    "password_hash": "ca83d1c957d0279fdfe31c9d0a4d3f65bfd4d8259d16a616c5d76c5510542710e71a0b18a1b2c35c521ff3fbfd0a88e9ffe13e9f528ab6f317da57d7871b3c3e",
+    "password_salt": "441e2acbc1b75c979b7319feb6cfd123d605bb26bc213691d2feb193a1dbfa5c",
+    "created_at": "2026-06-26T21:15:00Z",
+    "active": true,
+    "last_login": "2026-08-25T14:38:18.582Z",
+    "password_set_at": "2026-07-15T13:31:31.924Z"
+  },
+  {
+    "id": 6,
+    "email": "mtalley@exosaero.com",
+    "name": "Mike Talley",
+    "role": "manager",
+    "password_hash": "6d878ca08a0310bdc6e99b67444f16600ac7d79c8c667c3b5940f7cb39d0ce6092758d609b1fcd4b0e13eab0a3a1da849c5e33f62b48b67f23d1c51effd5deec",
+    "password_salt": "d034333fa5c22bc172e62d1b1e20e1bf53ed5b585d0f2c0cf14161626801a287",
+    "created_at": "2026-06-26T21:15:00Z",
+    "active": true,
+    "last_login": "2026-08-24T12:18:35.068Z",
+    "password_set_at": "2026-07-15T12:42:04.184Z"
+  },
+  {
+    "id": 7,
+    "email": "rblink@exosaero.com",
+    "name": "Russ Blink",
+    "role": "manager",
+    "password_hash": "5db97e95b46eabf7c67a7d353ae53173c5026a1303a5214c136ff07a7f5f35252e59254da99cdbac5b9fa0a2739dd9e2c8ea438698305b771d854030da9aef62",
+    "password_salt": "35eed264e92e38a4412d6481cc80243701f10af7842e344dd6b8538790e4f2d4",
+    "created_at": "2026-06-26T21:15:00Z",
+    "active": true,
+    "last_login": "2026-07-15T12:23:59.519Z"
+  },
+  {
+    "id": 9,
+    "email": "kballard@exosaero.com",
+    "name": "Kyle Ballard",
+    "role": "manager",
+    "password_hash": "2963e962922d21e7af67a36af9d2f793ddad516fd50d8190f1d79e84e3f3726273c45993f855ef644d0a7024e09516dd00d8eb98884959c0bf938c6df223600a",
+    "password_salt": "6a989e762682f034f0a25fb51d0abebe39ddd43218db0b4b8e2ebd14af05d9c0",
+    "created_at": "2026-06-26T21:15:00Z",
+    "active": true,
+    "last_login": "2026-08-26T13:53:29.733Z"
+  },
+  {
+    "id": 10,
+    "email": "toshihisa@exosaero.com",
+    "name": "Toshihisa Kumazawa",
+    "role": "member",
+    "password_hash": "8858ffda1b8b55d9f80580d734aeafcbaf8bb282b85433dfdd10a88814b222a8d3c1ba2381b57b639814bc3636aed9b02c9b4375cd2e663b791aae425fa7ef8d",
+    "password_salt": "b6d5847d217e06e93cd8cce08ff506cd091552ba04b2b4c99fa83427a2c4aa77",
+    "created_at": "2026-08-12T12:40:00.000Z",
+    "active": true,
+    "last_login": null,
+    "title": "International Business Development Agent — Japan/Asia",
+    "project": null,
+    "crm_region": "Non-CONUS"
+  },
+  {
+    "id": 8,
+    "email": "dmitchell@exosaero.com",
+    "name": "David Mitchell",
+    "role": "member",
+    "password_hash": "5b4f7d0aa4c13e887598a4236e2c9bff027362d58b15c9e9e6c91e11dd8f95f919db2bf0f357a5a40f642e5ea26d7f3ff5a3ca691d50a5e026321a0b885c7bc6",
+    "password_salt": "0014f505927e9c643e33e81ca28a042614adf9b489f50294c5691ce6547794e6",
+    "active": true,
+    "created_at": "2026-08-22T15:52:44Z",
+    "restored": "2026-08-22 (direct MC portal, off CMMC/M365 path; finance-allowlisted)"
+  },
+  {
+    "id": 11,
+    "name": "Victor Castilleja",
+    "email": "vcastilleja@exosaero.com",
+    "role": "member",
+    "active": true,
+    "created_at": "2026-08-26T13:13:43Z",
+    "last_login": "2026-08-26T18:46:01.705Z",
+    "password_hash": "48ac3213291482d49d2137bbb5eccf50f3bb5a76c04a2ef744259e39db49771c6691e3cac4e8bb4aeacc352a520e8e02db9c8267b33095522469c7cb978f7401",
+    "password_salt": "2f3764fedb80b45b5f415ff25dbe53435a35bd9b3a51af7c5d52b8cbdd557f26",
+    "password_set_at": "2026-08-26T13:42:32.863Z"
+  },
+  {
+    "id": 12,
+    "email": "megawattcontrols@gmail.com",
+    "name": "John Quinn (Megawatt Control Solutions)",
+    "role": "admin",
+    "active": true,
+    "created_at": "2026-08-26T00:00:00Z",
+    "note": "John Quinn's other-company (Megawatt Control Solutions) email; source of the original ExO 3.0 engagement. Accepted as an authorized @Exobot sender 2026-08-26 per Jon. Email-command auth still requires a gmail DMARC/DKIM pass, so spoofing this address is still rejected."
+  }
+]
