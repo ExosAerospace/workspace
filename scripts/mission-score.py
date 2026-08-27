@@ -41,6 +41,13 @@ SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
 
 WEIGHTS = {"strategic": 30, "value": 25, "urgency": 25, "signal": 15, "aging": 10}
 
+# Near-due floor (Jon 2026-08-27): an imminent, not-Done commitment must surface regardless of
+# $ value — event deliverables, travel, registration can't sink to the bottom. Applies in the
+# actionable window (due within the next 5 days, or up to 7 days overdue). A `pin:` override still
+# wins, and genuinely high-value strategic work (70-100) still ranks above the floor.
+NEAR_DUE_FLOOR = 60
+NEAR_DUE_MIN, NEAR_DUE_MAX = -7, 5   # days_to_due window the floor applies to
+
 # Strategic decision layer (Jon 2026-07-21): each task is scored on how well it ladders to its
 # OWNER's North Star — CEO/Jon → Series A, everyone else → Revenue, Neil → Part 450.
 _NS_PATH = os.path.join(WS, "mission-control", "data", "north-stars.json")
@@ -252,6 +259,10 @@ def main():
         blk = blocked_by(t["id"])
         factor = 0.45 if blk else 1.0
         computed = round(min(100, raw) * factor)
+        # Near-due floor: imminent not-Done commitments surface regardless of $ value.
+        near_due = days is not None and NEAR_DUE_MIN <= days <= NEAR_DUE_MAX
+        if near_due:
+            computed = max(computed, NEAR_DUE_FLOOR)
         # Manual override: a `pin:<N>` tag hard-sets the score, beating the computed value
         # (and the blocker downgrade). Explicit human intent wins. The computed score is kept
         # in the breakdown so we can show "pinned to 95 (would compute 58)".
@@ -265,6 +276,7 @@ def main():
             "blocked_by": blk, "days_to_due": days,
             "breakdown": {"strategic": strategic, "value": val, "urgency": urg,
                           "signal": sig, "aging": age, "label_floor": round(label_floor, 1),
+                          "near_due_floor": NEAR_DUE_FLOOR if near_due else 0,
                           "blocker_factor": factor},
         }
     ranked = sorted(scores.items(), key=lambda kv: -kv[1]["score"])
