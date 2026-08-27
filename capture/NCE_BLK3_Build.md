@@ -112,15 +112,15 @@ Utah's Spaceport Exploration Committee (created under SB 62, 2025 session; $1M s
 - Committee needs industry input NOW — before October public presentation locks in site and business model
 - NCE play: Exos positions as the anchor tenant/launch operator for Utah's chosen site → state invests in infrastructure + manufacturing (BLK3 build line), Exos provides launch license, operations, and jobs
 
-### Status: UNWORKED — HIGH POTENTIAL
-- No Exos contact with Utah Spaceport Exploration Committee
-- October 2026 presentation = DEADLINE to be in the conversation before site selection hardens
-- Fastest entry point: submit comment/LOI to UDOT process; engage Sen. Millner's office
+### Status (updated 2026-08-27): EXOS IS ON RECORD — WATCH THROUGH NOV 2026
+- LOI sent to Millner + Braceras (7/23); follow-up (8/10); Nelson (RS&H) outreach (7/28); final-touch to Nelson+Millner+Braceras (8/17, confirmed sent 8/26 11:31); post-Aug21-meeting written data package to Nelson+Millner+Braceras — **CONFIRMED SENT 2026-08-26 11:31** (registry-verified). Exos remains the only known operator LOI on file.
+- **Aug 21 committee meeting outcome (confirmed via TechBuzz News):** Delta and Green River remain the two finalists (RS&H narrowed from 7 sites). **Timeline updated: next committee meeting Sept 22, 2026; final study presentation October 2026; Legislature report November 2026** (supersedes earlier "Sept 30 final report" tracking — push all follow-on dates back accordingly).
+- **New strategic nugget from Aug 21 session:** the committee is now exploring pursuing a **reentry license before a launch license**, which could cut Utah's path to spaceport operation by more than a year. Relevant to Exos: Exos already holds FAA licensing expertise across both license types — worth a targeted note (post-Sept 22) offering Exos's licensing-pathway experience as free technical input to the committee, distinct from the operator-LOI angle. Flagging as a new angle, not yet drafted.
+- No reply yet from Millner/Braceras/Nelson to any of the four outreaches. Next natural touchpoint: Sept 22 committee meeting.
 
-### Next actions (Exo drafting; Jon executes)
-1. **[Exo to draft]** One-page LOI to UDOT Spaceport Exploration Committee: Exos as FAA-licensed anchor tenant for Delta or Green River site; include BLK3 specs + NASA pipeline + jobs model
-2. **[Jon decision]** Which candidate site fits better for Exos operations (Delta vs Green River)? Both are inland/rural — routing question for Montana precedent
-3. **[Exo to research]** Who to contact: UDOT RFP lead + Sen. Ann Millner's office
+### Next actions
+1. **[Exo to draft, ahead of Sept 22]** Short note offering Exos's dual-license (launch + reentry) technical experience to inform the reentry-first pathway question — a lower-pressure, higher-credibility angle than another operator pitch.
+2. **[Jon]** No action needed until Sept 22 meeting outcome known; watch item until then.
 
 ---
 
@@ -229,7 +229,7 @@ The Concho Valley Council of Governments (CVCOG) — 14-county region around San
 | Concho Valley Operator LOI + Garza talking points | `drafts/Concho_Valley_NCE_Operator_LOI.md` | DRAFTED 7/6 — Route through Garza post-panel; follow-up draft in PostPanel_Norman_Garza_TSC_FollowUp.md |
 | Post-panel follow-up to Rich Carter (Albers) | `drafts/PostPanel_Rich_Carter_Albers_FollowUp.md` | DRAFTED 7/16 — Jon sends based on panel outcome |
 | Post-panel follow-up to Norman Garza (TSC) | `drafts/PostPanel_Norman_Garza_TSC_FollowUp.md` | DRAFTED 7/16 — 2 variants: A if CVCOG intro made, B if no sidebar; Jon selects correct variant |
-| **Utah Spaceport LOI — URGENT** | `drafts/Utah_Spaceport_LOI_Draft.md` | **SEND THIS WEEK** — Aug 21 committee meeting is 31 days out; final report due Sept 30. Must land before conclusions lock. |
+| Utah Spaceport LOI + 3 follow-ups | `drafts/Utah_Spaceport_LOI_Draft.md` | **DONE — fully sent.** LOI (7/23) → follow-up (8/10) → Nelson outreach (7/28) → final-touch (8/17, confirmed sent 8/26) → post-Aug21 data package (confirmed sent 8/26 11:31). Exos is on record; watch for Sept 22 committee meeting outcome. |
 | SEARF Direct Award — Updated Package | `drafts/SEARF_SUBMISSION_PACKAGE_2026-07-17/` (12-file package with LOS from Cornyn, Cruz, Hall, Money, Self, AG Paxton, TACFI letter, financials) | Status unclear — original June 2 request submitted; TSC unresponsive since June 17. Package ready. Jon confirms if re-submitted or pending. |
 
 ---
@@ -314,6 +314,7 @@ The Concho Valley Council of Governments (CVCOG) — 14-county region around San
 NEVER send external/gov/international contact autonomously — DRAFT and route to Jon. BLK3 is FAA-licensed but NOT yet flown commercially.
 
 ## AUTO SENT-CONFIRMATIONS (loop-closer)
+- **SENT CONFIRMED (manual): andrew.nelson@rsandh.com** on 2026-08-25 — Jon confirmed 8/26 he sent the Utah operator-data package to Andrew. Nudge-to-send STOPPED for all Nelson keys (post-aug21, redispatch-aug26, and any future re-key); reply-watch only. Do NOT mint a fresh key to "re-dispatch" this.
 *Written by scripts/sent-loop-closer.py from Jon's BCC'd Proton copies. If a target appears here, Jon ALREADY SENT it from Outlook — do NOT nudge to send it again; switch to reply-watch.*
 - **SENT CONFIRMED (auto): edgar@montanaspaceport.com** on 2026-05-22 01:51 — subject "Montana Spaceport and Exos Aerospace". Nudge-to-send STOPPED; reply-watch only.
 
@@ -950,3 +951,16 @@ Cofounder & CEO, Exos Aerospace Systems & Technologies, Inc.
 jquinn@exosaero.com | +1-972-740-8355
 www.exosaero.com
 END-READY-ACTION -->
+
+## DECISION LOG — 2026-08-27
+
+| 2026-08-27 | **✅ UTAH NELSON FOLLOW-UP — CONFIRMED SENT.** Registry (`logs/outreach-sent-registry.json`) confirms the post-Aug21 data package went to andrew.nelson@rsandh.com + ann.millner@le.utah.gov + cbraceras@utah.gov on **2026-08-26 11:31** — the item flagged "3+ days overdue" in the prior run is resolved; it went out same-day. Exos remains the only known operator LOI on file for the Utah process. | ✅ RESOLVED |
+| 2026-08-27 | **UTAH TIMELINE CORRECTION (via TechBuzz News coverage of the actual Aug 21 meeting):** Next committee meeting is **Sept 22, 2026**, final study presentation **October 2026**, Legislature report **November 2026** — later than the "Sept 30 final report" date this tracker had been running against. Delta and Green River confirmed as the two finalists. New angle surfaced at the meeting: the committee is weighing pursuing a **reentry license before a launch license** to cut over a year off the path to operation — Exos, as a dual-license-experienced FAA operator, could offer technical input on that question as a lower-pressure follow-on touch ahead of Sept 22 (not yet drafted). | INTEL — NEW ANGLE, WATCH TO SEPT 22 |
+| 2026-08-27 | **⚠️ TSC SEARF — CONFLICTING STATUS, NEEDS GARZA VERIFICATION.** A third-party grant database (AusGrant, program ID TX-TxED-2026-114) lists SEARF as **currently OPEN, deadline October 1, 2026, $500K-$10M range**, applied via tsc.texas.gov. This contradicts the 8/18 tracker note that the Texas Space Summit (and the next SEARF round tied to it) was "postponed to 2027" and SEARF was "not accepting applications." TSC's own site confirms $150M of the $450M total legislative authorization is committed to date — leaving ~$300M potentially available, consistent with a live Oct 1 window. This is a real, near-term ask window if accurate ($500K-$10M, no operator has claimed the Concho Valley/CVCOG or Midland-corridor launch-operator slot). **Do not submit blind — have Jon or Garza confirm directly with TSC whether an Oct 1, 2026 SEARF cycle is actually open before drafting an application.** If confirmed, this is the highest-leverage NCE action available right now — bigger and faster than the state econ-dev grant tracks. | ⚡ VERIFY WITH GARZA — POSSIBLE HIGH-VALUE WINDOW |
+| 2026-08-27 | **BORDERPLEX $19.7M SEARF CLARIFIED — NOT the same as the $800K corridor-plan grant.** Confirmed via KTSM/KFOX/TSC press release: the Borderplex Alliance's $19.7M SEARF award funds a separate "Space Innovation Hub" in downtown El Paso — distinct from the $800K SEARF award El Paso County received to fund the West Texas Aerospace Corridor Master Plan RFP (the MDC/Sara Harris process this tracker has been following). Two separate Borderplex-adjacent SEARF awards, not one growing to $19.7M. No change to the Midland corridor consultant-selection watch status — still no announcement as of 8/27. | TRACKER CLARIFICATION — NO ACTION |
+| 2026-08-27 | **MDC CORRIDOR: NO CHANGE.** No consultant selection announced. Sara Harris + Canipe both confirmed reached (8/18). Watch item — MDC board must vote publicly per Harris's own statement, so no risk of a silent decision. | WATCH — NO ACTION |
+| 2026-08-27 | **MONTANA: NO CHANGE, NOW 6+ WEEKS STALLED.** No Gianforte, Edgar, or MT spaceport news this cycle. POA v2 + Governor Signing Agreement remain unexecuted. Repeating prior flag: this has been "waiting on Edgar" since mid-July with zero visible movement — worth a direct Jon→Edgar status ping rather than continuing to wait passively. | STALLED 6+ WEEKS — CONSIDER PROACTIVE PING |
+| 2026-08-27 | **NM LEDA: NO CHANGE — STILL PENDING JON AUTH.** Draft ready (Sierra County co-applicant, corrected). Spaceport America 20th Anniversary Open House is Sept 26 — filing before then sets up an in-person NM EDD/Sierra County follow-on. | PENDING JON AUTH |
+| 2026-08-27 | **⭐ BEST-LEVERAGE THIS RUN: verify the TSC SEARF Oct 1, 2026 window with Garza.** If real, it's a $500K-$10M ask with no competing operator claim on the launch-operator category — bigger and faster than any single econ-dev track currently open. Secondary: Utah is now a pure watch item until Sept 22; Montana ping to Edgar is overdue; NM LEDA just needs Jon's go. | PRIORITY |
+
+*Last updated: 2026-08-27.*
