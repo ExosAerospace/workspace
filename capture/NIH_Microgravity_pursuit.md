@@ -1,10 +1,11 @@
 # PURSUIT TRACKER — NIH Microgravity Biomedical (Capture Agent state file)
-*Single source of truth for this pursuit. The Capture Agent reads this each run, advances the next open action, and updates State + Decision Log. Last updated: 2026-08-26.*
+*Single source of truth for this pursuit. The Capture Agent reads this each run, advances the next open action, and updates State + Decision Log. Last updated: 2026-08-28.*
 
 ## Objective
 Win NIH-relevant microgravity funding/revenue using BLK3 as the SUBORBITAL microgravity platform. Primary near-term = **NIH STTR (PA-27-102), deadline Sep 8 2026** (Sep 5 falls on Saturday; NIH moved to Sep 8), teamed with a biomedical PI (Exos = platform). **As of 2026-08-18 (Jon) the STTR is a DUAL-INSTITUTION team: Dr. Ed Kelly (UW) as biomedical science anchor + Prof. Steven Collicott (Purdue AAE) as suborbital-methods partner — two institutions supporting one PA-27-102 application (one as the ≥30% research-institution-of-record, the other via subaward). Kelly is RESTORED, not superseded.** Parallel = **sell BLK3 screening slots** to NIH/NCATS/TraCe MPS-funded researchers. Adjacent = **NASA ROSBio Appendix D** (suborbital biology). Win = an NIH STTR award and/or booked microgravity payload slots.
 
 ## Current stage
+> 🔴 **2026-08-28 04:45 CDT — GAP FOUND: the 8/26 16:30 "ALIGNED" writeups (Jon-approved) have no confirmed external send, and today is effectively the last day they can go out and still clear Sep 8 on routing math.** Full IMAP scan (All Mail + Spam, all folders, since 8/26) found ZERO messages since **2026-08-26 16:30 CDT** on this pursuit — not even internal Exo/Jon chatter. That 16:30 email (from Exo, "per your approval") confirms Jon approved three finalized writeup docs the same afternoon: (1) `NIH_STTR_UW_Kelly_Writeup.docx` — forward to Dr. Kelly, frames UW as lead RI; (2) `NIH_STTR_Purdue_Subaward_Writeup.docx` — forward to Collicott, Purdue as subaward; (3) `NIH_STTR_Purdue_Park_CoI_Intro.docx` — optional Park co-I intro. The email states explicitly: **"forwarding 1 and 2 today is what starts UW OSP and Purdue SPS routing for Sep 8."** No record exists in Proton (or in this tracker, until now) that Jon actually forwarded #1 or #2 to Kelly/Collicott — this was never previously flagged as its own open item; prior entries tracked the eRA org-reg approval but not this forward. **Two possibilities: (a) Jon sent them from Outlook, invisible to Proton IMAP unless CC'd — the same blind spot flagged repeatedly on this pursuit; or (b) they never went out.** Either way this is now the most time-critical unknown: routing needs 5–7 business days, Sep 7 is Labor Day (federal holiday, offices closed), and Sep 8 is the deadline — if the forwards haven't gone out yet, today (Fri 8/28) is the last day that leaves any real runway (5 business days: 8/31–9/4) before the holiday-shortened final stretch. Dispatched an urgent status-check READY-ACTION this run (key: nih-microgravity-aligned-writeups-status-0828) rather than assuming either way. **eRA Commons org-reg approval:** still no notice either way; escalation threshold (~Sep 2, call 866-504-9552) unchanged, not yet due. **External scan (2 searches, per budget):** no NCATS Tissue Chips in Space 3.0 solicitation (NCATS space page still last-updated Apr 22 2026); ROSES-2026 still not released (ROSES-25 remains the active NASA solicitation, amendments through Jul 27) — no ROSBio Appendix D/E. Nothing new to act on there.
 > 🟢 **2026-08-27 04:45 CDT — Kelly-lab assay/effect-size specifics DROPPED INTO AIM 2 (research task, no Jon input needed for this step).** Researched Dr. Kelly's actual published ISS PT-MPS flight record (public lit, not yet in the tracker) and folded real specifics into `drafts/Exos_NIH_STTR_PA-27-102_ResearchPlan_DRAFT_2026-08-26.docx` (regenerated via `scripts/build_nih_sttr_proposal_docx.py`): the Kelly lab has flown the proximal-tubule MPS to ISS **twice** — CRS-17 (vitamin D metabolism + proteinuric response) and CRS-22 (calcium-oxalate microcrystal nephrolithiasis model) — and their own published result (Lidberg et al., *npj Microgravity* 2024, cited 10x) found **no significant change in PTEC vitamin-D metabolism or a unique serum response under sustained ISS microgravity.** That null result on *chronic* exposure is a genuinely strong, honest hook for BLK3: it leaves the **acute onset window (0–240s, obscured by ISS transit time)** as an open question Kelly's own ISS data can't answer — exactly what Aim 2's staged-timepoint suborbital design tests. Added this to both the Innovation ("Distinct from prior art") section and Aim 2's assay-panel/power-analysis bullets, with the ISS flight names (CRS-17/CRS-22) and the vitamin-D bioactivation pathway (25(OH)D3→1,25(OH)2D3) as concrete, citable specifics — replacing the prior vague "benchmark against the lab's existing ISS datasets" placeholder. **This was the one open item in the doc that didn't require waiting on Jon** (PD/PI decision, NIBIB SEED concurrence, and routing were always Jon/Kelly/Collicott-gated). Doc is otherwise unchanged from the 8/26 version Jon is reviewing.
 > — **External scan (2 searches, per budget):** No NCATS Tissue Chips in Space 3.0 solicitation posted yet (NCATS space page last updated Apr 22 2026, still describes the closed 2.0 program). No new NASA ROSBio Appendix D/E found. Nothing new to act on there — same as 8/26 finding, re-confirmed.
 > — **Email/MC scan: NO movement since Jon's 8/26 15:47 reply.** No eRA Commons org-registration approval notice from NIH. No reply from Kelly (UW), Park (Purdue), or any @nih.gov/@uw.edu/@purdue.edu sender in the inbox since 8/26. No new MC decision recorded on this pursuit. **The org-reg approval clock is the only thing actually gating Sep 8 right now, and it's entirely on NIH's side** — per the 8/26 06:41 entry, escalate-to-Jon threshold is ~Sep 2 (call eRA Commons Help Desk 866-504-9552) if no approval lands by then. Today is day 1 of that watch window.
@@ -1268,6 +1269,31 @@ Three quick questions:
 3. If both Kelly and Park are still open, do you want me to stand down Sep 8 and retarget the Jan 5, 2027 STTR cycle instead, so we're not burning more runway chasing a deadline that's already effectively closed?
 
 I'd rather get a clear answer now than keep circling this one.
+
+John Quinn / Exo
+END-READY-ACTION -->
+
+<!-- READY-ACTION
+key: nih-microgravity-aligned-writeups-status-0828
+task_title: [NIH-MG] URGENT status check — did the UW/Purdue writeups from 8/26 4:30pm go out?
+to: jquinn@exosaero.com
+subject: [URGENT] [NIH-MG] Did the Kelly/Collicott writeups go out? Today is the last real day before Sep 8
+category: BD
+priority: 95
+body:
+Jon,
+
+Going back through everything since 8/26, I found something that should have been flagged sooner and wasn't.
+
+At 4:30pm on 8/26 I sent you three finalized writeup docs after you approved the aligned dual-institution structure: NIH_STTR_UW_Kelly_Writeup.docx (forward to Dr. Kelly), NIH_STTR_Purdue_Subaward_Writeup.docx (forward to Collicott), and an optional Park co-I intro. That email said forwarding the first two is literally what starts UW OSP and Purdue SPS routing for Sep 8.
+
+I have no record in Proton that either one actually went to Kelly or Collicott, and nothing at all has moved on this pursuit since that 4:30pm email, over 36 hours of total silence. You may well have sent them from Outlook, which I can't see unless it's CC'd to exosmc@proton.me, so I'm asking rather than assuming.
+
+Two questions:
+1. Did you forward the UW writeup to Kelly and the Purdue writeup to Collicott? If yes, roughly when, so I can gauge the routing clock?
+2. If not yet, can you send both today? Sep 7 is Labor Day, offices will be closed, so today is the last day that leaves close to a full week of runway before Sep 8.
+
+Separately, still no word from NIH on the eRA Commons org-registration approval. That one isn't due for escalation until around Sep 2, so no action needed there yet, just tracking.
 
 John Quinn / Exo
 END-READY-ACTION -->
