@@ -1,0 +1,73 @@
+{
+  "title": "Business Travel and Company Card Procedure",
+  "doc_no": "EXOS-ADM-005-0",
+  "area": "Administrative",
+  "area_id": "11-administrative",
+  "owner": "Operations / Exo",
+  "rev": "0",
+  "status": "Draft",
+  "intl_release": "Yes",
+  "reference_docs": "BILL Divvy Card Visa Signature Business — Guide to Benefits; EXOS-ADM-002 Expense Report Submission Procedure; current IRS standard mileage rate",
+  "remarks": "Covers U.S. and international business travel and proper use of the company BILL Divvy Card (Visa Signature Business), including card benefits, receipts, and compliance. Posted as Draft pending process-owner approval.",
+  "objective": "establish the standard requirements for Exos employees planning, booking, and expensing business travel — domestic and international — and for the proper use of the company BILL Divvy Card (Visa Signature Business), so that travel is booked cost-effectively, card benefits are used, receipts are captured, and all spend is compliant",
+  "overview": "This procedure applies to all Exos employees who travel for business or use the company card. The company card is the BILL Divvy Card (Visa Signature Business), whose spend syncs to QuickBooks. It is a corporate charge card — not a debit card — and does not support ATM withdrawals or cash advances. The card is accepted in 250+ countries wherever Visa is accepted and carries travel benefits (rental collision coverage, travel accident insurance, emergency assistance, lost-luggage reimbursement, concierge, and roadside assistance) that employees are expected to use. Always pay in local currency abroad, capture receipts at the point of sale, and keep all spend business-only and export/OFAC compliant.",
+  "tasks": [
+    {
+      "name": "Task 1 - Plan and Authorize the Trip",
+      "steps": [
+        "Confirm the business purpose of the travel and obtain supervisor approval per company policy.",
+        "Notify the company card administrator of your travel dates and destinations so international charges are not blocked as suspected fraud.",
+        "Confirm your card budget is sufficient for the trip; request a budget increase or a trip-specific virtual card from the administrator if needed.",
+        "If card controls restrict merchant categories or countries, request that the destination country and the lodging, airline, and restaurant categories be enabled.",
+        "Save the card benefit phone numbers listed in Task 6 in your phone before departure."
+      ]
+    },
+    {
+      "name": "Task 2 - Use the Company Card Correctly",
+      "steps": [
+        "Use the BILL Divvy Card (Visa Signature Business) for business travel expenses: airfare, lodging, conference fees, meals, rental cars, and ground transport.",
+        "Do not use the card to obtain cash; it is a charge card, not a debit card, and does not permit ATM withdrawals or cash advances. Use a personal method for cash needs and expense them.",
+        "At foreign payment terminals, always select LOCAL currency and decline Dynamic Currency Conversion (the 'pay in USD?' option), which adds a hidden markup of roughly 3 to 12 percent.",
+        "Add the card to Apple Pay or Google Pay for contactless payment and as a backup if the physical card is lost.",
+        "Do not use the card for personal expenses or in OFAC-sanctioned jurisdictions; clear travel to sensitive destinations with the office and export-control review first."
+      ]
+    },
+    {
+      "name": "Task 3 - Book Travel to Capture Card Benefits",
+      "steps": [
+        "Charge the entire airline or rail (Common Carrier) fare to the card; this automatically activates up to $250,000 in travel accident (AD&D) coverage.",
+        "For rental cars, charge the entire rental to the card AND decline the rental company's collision damage waiver (CDW/LDW); the card then provides PRIMARY collision and theft coverage for business rentals up to the vehicle's actual cash value.",
+        "Note the rental coverage limits: 31 consecutive days maximum; not available in Israel, Jamaica, the Republic of Ireland, or Northern Ireland; exotic cars, trucks, and large vans are excluded.",
+        "Keep business items (laptops, samples, documents) in your carry-on; the card's lost-luggage reimbursement excludes business items.",
+        "Retain all travel receipts and itineraries in case a benefit claim is required."
+      ]
+    },
+    {
+      "name": "Task 4 - International Travel Considerations",
+      "steps": [
+        "Confirm the card is usable at your destination (accepted in 250+ countries and territories wherever Visa is accepted).",
+        "Before departure, use the Travel and Emergency Assistance line for pre-trip information such as ATM locations, currency, required visas, and immunizations: 1-800-992-6029 in the U.S., or call collect +1-804-673-1675 outside the U.S.",
+        "Carry a personal payment method for cash-only situations and expense any necessary cash outlays with receipts.",
+        "Confirm the trip has been screened against Exos export-control and OFAC requirements for the destination before departure."
+      ]
+    },
+    {
+      "name": "Task 5 - Capture Receipts and Submit Expenses",
+      "steps": [
+        "Capture each receipt in the BILL app at the point of sale and record the business purpose; card charges sync to QuickBooks automatically.",
+        "Local-currency receipts are acceptable; the platform converts amounts to USD.",
+        "Submit any non-card expenses and mileage through the Mission Control expense form; mileage is reimbursed at the current IRS standard rate (see EXOS-ADM-002).",
+        "Reconcile all trip charges promptly after returning."
+      ]
+    },
+    {
+      "name": "Task 6 - Handle Lost Cards and Travel Emergencies",
+      "steps": [
+        "If the card is lost or compromised, freeze it immediately in the BILL app and notify the card administrator; request a new virtual card so you are not stranded abroad.",
+        "For travel emergencies (medical, legal, transportation, translation, prescription assistance): 1-800-992-6029 in the U.S., or call collect +1-804-673-1675 outside the U.S.",
+        "For rental-car incidents or coverage questions: 1-800-348-8472, or call collect +1-804-673-1164 outside the U.S.",
+        "For concierge and booking assistance: 800-953-7392, or +1-630-350-4551 outside the U.S. For roadside assistance (tow, jump-start, tire, lockout, fuel): 1-800-847-2869 (pay-per-use)."
+      ]
+    }
+  ]
+}
