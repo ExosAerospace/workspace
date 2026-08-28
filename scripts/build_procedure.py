@@ -91,7 +91,7 @@ def build_docx(spec, out_docx):
     # ("header and footer screwed up"). Word header/footer sit in the margin band (top_margin 1.2"
     # / bottom_margin 1.0" give them room) and repeat automatically. Banner width 3.3" -> ~0.68" tall.
     if os.path.exists(HEAD_IMG):
-        hp = sec.header.paragraphs[0]; hp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        hp = sec.header.paragraphs[0]; hp.alignment = WD_ALIGN_PARAGRAPH.LEFT
         hp.paragraph_format.space_after = Pt(0)
         hp.add_run().add_picture(HEAD_IMG, width=Inches(3.3))
 
@@ -172,12 +172,12 @@ def build_docx(spec, out_docx):
     ctl = (f"{spec.get('doc_no')} Rev {spec.get('rev','0')}  ·  Controlled copy — valid for today's date only  "
            f"·  Process & Procedure Control per EXOS-US-QMS-001")
     if os.path.exists(FOOT_IMG):
-        fp = sec.footer.paragraphs[0]; fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        fp = sec.footer.paragraphs[0]; fp.alignment = WD_ALIGN_PARAGRAPH.RIGHT
         fp.paragraph_format.space_after = Pt(1)
         fp.add_run().add_picture(FOOT_IMG, width=Inches(3.3))
-        cl = sec.footer.add_paragraph(); cl.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        cl = sec.footer.add_paragraph(); cl.alignment = WD_ALIGN_PARAGRAPH.LEFT
     else:
-        cl = sec.footer.paragraphs[0]; cl.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        cl = sec.footer.paragraphs[0]; cl.alignment = WD_ALIGN_PARAGRAPH.LEFT
     cl.paragraph_format.space_after = Pt(0)
     _run(cl, ctl, size=7.5, color=GREY)
 
