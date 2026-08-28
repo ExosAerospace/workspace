@@ -5,10 +5,10 @@
   "area_id": "04-procurement",
   "owner": "Empowered Official / Exo",
   "rev": "0",
-  "status": "Draft",
+  "status": "Approved",
   "intl_release": "Yes",
   "reference_docs": "ITAR, 22 CFR Parts 120-130 (incl. USML 22 CFR 121, DDTC registration 22 CFR 122, recordkeeping 22 CFR 122.5, debarred parties 22 CFR 127.7, U.S. person 22 CFR 120.62); EAR, 15 CFR Parts 730-774 (CCL/ECCN, Denied Persons/Entity List, deemed exports); OFAC SDN and SAM exclusions; Exos Supplier Due Diligence engine and Mission Control supplier DD registry; Exos export-screen / controlled-artifact release path (itar_ear_screen)",
-  "remarks": "Governs any request to have a supplier fabricate, machine, build, or process a rocket part from Exos-furnished technical data. U.S.-domiciled suppliers ONLY, restricted to suppliers already in Mission Control that have CLEARED Exos due diligence, and gated behind an Empowered Official release authorization. This procedure is an administrative compliance document and contains no defense-article technical data. Posted as Draft pending Empowered Official / export-counsel review before adoption.",
+  "remarks": "Governs any request to have a supplier fabricate, machine, build, or process a rocket part from Exos-furnished technical data. U.S.-domiciled suppliers ONLY, restricted to suppliers already in Mission Control that have CLEARED Exos due diligence, and gated behind an Empowered Official release authorization. This procedure is an administrative compliance document and contains no defense-article technical data. Users should ask Exobot for clarification or assistance if needed and escalate to a manager for additional support once all items are completed. Approved by John Quinn (CEO), 2026-08-28.",
   "objective": "establish the standard, repeatable steps Exos follows to request a supplier to manufacture a rocket part while remaining fully compliant with the International Traffic in Arms Regulations (ITAR, 22 CFR 120-130) and the Export Administration Regulations (EAR, 15 CFR 730-774), so that the part is made only by a U.S.-domiciled supplier that is already recorded in Mission Control and has cleared Exos supplier due diligence, and so that no controlled technical data is released without an Empowered Official authorization",
   "overview": "Exos rocket parts and their technical data (drawings, CAD models, specifications, dimensions, materials, and processes) are frequently ITAR-controlled defense articles and technical data (for example USML Category IV launch-vehicle components or Category XV spacecraft components) or are controlled under the EAR. Releasing that technical data to a supplier - even a domestic one - can be an export or a deemed export if a foreign person accesses it. Accordingly, every supplier manufacturing request is gated behind four controls: (1) an export jurisdiction and classification determination for both the part and the technical data; (2) a requirement that the supplier be U.S.-domiciled, already in Mission Control, and cleared through Exos due diligence; (3) technical-data marking, minimization, and access control; and (4) written Empowered Official authorization before any controlled technical data is released or any purchase order is issued. This procedure applies to any request to have a supplier fabricate, machine, build, or process a rocket part or component from Exos-furnished technical data. It does not authorize foreign suppliers, foreign places of performance, or foreign-person access - any of those stops the process and routes to the Empowered Official. If a vendor is not already in Mission Control, the requestor must add the company to the CRM and have Exobot complete due diligence before anything is sent to the vendor, and a signed NDA is required before any drawings or specifications are released.",
   "tasks": [
@@ -68,6 +68,13 @@
         "Log the transaction in Mission Control against both the supplier and the part so the controlled release is auditable.",
         "Retain the complete export-control record - classification, DD clearance, agreements, attestations, authorization, purchase order, and transmittal log - for a minimum of five (5) years per ITAR 22 CFR 122.5 (and per EAR recordkeeping where applicable).",
         "On receipt, verify the part against specification, close the request, and report any compliance deviation to the Empowered Official immediately."
+      ]
+    },
+    {
+      "name": "Task 7 - Get Clarification and Escalate",
+      "steps": [
+        "At any point in this procedure, ask Exobot for clarification or assistance if a step is unclear or you need help - for example with export classification, a vendor's due diligence status, technical-data markings, or assembling the release package.",
+        "Once all items in this procedure are completed, escalate to your manager for additional support and final review."
       ]
     }
   ]

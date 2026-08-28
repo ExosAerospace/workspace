@@ -1181,11 +1181,11 @@
    "procedure": "ITAR/EAR-Compliant Supplier Manufacturing Request Procedure",
    "doc_no": "EXOS-EXP-001-0",
    "rev": "0",
-   "status": "Draft",
+   "status": "Approved",
    "intl_release": "Yes",
    "ack_required": false,
    "owner": "Empowered Official / Exo",
-   "remarks": "Governs any request to have a supplier fabricate, machine, build, or process a rocket part from Exos-furnished technical data. U.S.-domiciled suppliers ONLY, restricted to suppliers already in Mission Control that have CLEARED Exos due diligence, and gated behind an Empowered Official release authorization. This procedure is an administrative compliance document and contains no defense-article technical data. Posted as Draft pending Empowered Official / export-counsel review before adoption.",
+   "remarks": "Governs any request to have a supplier fabricate, machine, build, or process a rocket part from Exos-furnished technical data. U.S.-domiciled suppliers ONLY, restricted to suppliers already in Mission Control that have CLEARED Exos due diligence, and gated behind an Empowered Official release authorization. This procedure is an administrative compliance document and contains no defense-article technical data. Users should ask Exobot for clarification or assistance if needed and escalate to a manager for additional support once all items are completed. Approved by John Quinn (CEO), 2026-08-28.",
    "files": [
     "04-procurement/EXOS-EXP-001-0_ITAR-EAR-Compliant_Supplier_Manufacturing_Request_Procedure.docx"
    ],
