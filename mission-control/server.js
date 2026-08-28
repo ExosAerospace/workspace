@@ -492,6 +492,28 @@ function toFrontend(row) {
   };
 }
 
+// Region classification for the Non-CONUS (international) CRM segment. Computed at serve-time so it
+// survives CRM regeneration. A contact is Non-CONUS if explicitly tagged 'non-conus'/'international'
+// (tag one to force-include an international company), else by email ccTLD / country keyword / phone
+// country code. Used to scope users (e.g. Toshi -> Non-CONUS) and to power the CRM region filter.
+const NONCONUS_CCTLD = new Set(['jp','au','uk','gb','ca','de','fr','it','es','nl','se','no','fi','dk','ch','at','be','ie','in','sg','kr','cn','hk','tw','nz','br','mx','ae','il','za','pl','cz','pt','gr','lu','eu']);
+const NONCONUS_KW = /japan|tokyo|hokkaido|hospo|space cotan|kumazawa|australia|eucla|space angel|torino|italia|\bitaly\b|euronext dublin|\bdublin\b|\bireland\b|united kingdom|\buk\b|\blondon\b|\bcanada\b|\bgermany\b|munich|\bfrance\b|cailabs|\bparis\b|\bindia\b|singapore|\bkorea\b|seoul|kolon|taiwan|new zealand|netherlands|switzerland|\bisrael\b|\buae\b|dubai|\bbrazil\b|\bmexico\b|\bspain\b|\bsweden\b|\bnorway\b/i;
+function crmRegion(r) {
+  const tags = (r.tags || []).map(t => String(t).toLowerCase().trim());
+  if (tags.some(t => t === 'non-conus' || t === 'international' || t === 'intl')) return 'Non-CONUS';
+  if (tags.some(t => t === 'conus' || t === 'domestic')) return 'CONUS';
+  const email = String(r.email || '').toLowerCase();
+  const m = email.match(/@[\w.-]+\.([a-z]{2})$/);
+  if (m && NONCONUS_CCTLD.has(m[1])) return 'Non-CONUS';
+  const blob = [r.company, r.contact, r.notes, r.title, r.category].join(' ').toLowerCase();
+  if (NONCONUS_KW.test(blob)) return 'Non-CONUS';
+  const pd = String(r.phone || '').replace(/[^\d+]/g, '');
+  if (pd.startsWith('+') && !pd.startsWith('+1') && pd.length >= 8) return 'Non-CONUS';
+  if (pd.startsWith('+1')) return 'CONUS';
+  if (email.endsWith('.gov') || email.endsWith('.mil')) return 'CONUS';
+  return 'Unknown';
+}
+
 // Map frontend fields → Supabase columns
 function toSupabase(fields) {
   const map = {};
@@ -2164,7 +2186,7 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify({ error: 'Read-only access — contact an admin to modify contacts' }));
     return;
   }
-  if (req.url === '/api/crm' && req.method === 'GET') {
+  if (req.url.split('?')[0] === '/api/crm' && req.method === 'GET') {
     // Supabase caps at 1000 per request, so paginate
     async function fetchAllContacts() {
       const all = [];
@@ -2182,8 +2204,16 @@ const server = http.createServer((req, res) => {
     }
     fetchAllContacts()
       .then(data => {
+        // Attach region; scope the result. A user with crm_region set (e.g. Toshi = Non-CONUS) is
+        // FORCED to that segment; anyone else may filter with ?region=Non-CONUS|CONUS.
+        const meU = (loadUsers().find(u => session && (u.id === session.userId
+          || (session.email && (u.email || '').toLowerCase() === session.email.toLowerCase()))) || {});
+        const q = new URL(req.url, 'http://localhost').searchParams.get('region');
+        const want = meU.crm_region || (q && q.toLowerCase() !== 'all' ? q : null);
+        let rows = data.map(toFrontend).map(r => ({ ...r, region: crmRegion(r) }));
+        if (want) rows = rows.filter(r => (r.region || '').toLowerCase() === want.toLowerCase());
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(data.map(toFrontend)));
+        res.end(JSON.stringify(rows));
       })
       .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
     return;

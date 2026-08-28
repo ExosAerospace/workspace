@@ -47,6 +47,19 @@
   </div>
 
   <div class="card" style="border-left-color:var(--accent)">
+    <h2>🔐 Your access — what you'll see</h2>
+    <p class="big">Mission Control shows different things to different people based on your role. <b>If a menu, page, or record isn't visible to you, that's your access level by design — not a bug.</b> Ask an admin if your role needs to change.</p>
+    <ul class="big">
+      <li><b>Admin</b> — everything, plus user and system settings.</li>
+      <li><b>Manager</b> — the full board, CRM, deals, and reports.</li>
+      <li><b>Member</b> — the task board, CRM, contacts, relationship dossiers, and the Procedures library. Deals, financials, and admin settings are hidden.</li>
+      <li><b>Early adopter</b> — a focused preview: the task board for one assigned project only (no CRM, deals, or documents).</li>
+    </ul>
+    <p class="big"><b>Scoped views.</b> Some accounts are also scoped to a segment of the data. For example, an international account sees only <b>Non-CONUS (international)</b> contacts in the CRM — domestic contacts are filtered out. That narrowing is intentional. In the CRM you can use the <b>Region</b> filter (All / Non-CONUS / CONUS) to switch between segments if your role allows it, and a contact can be added to the international segment by tagging it <code>non-conus</code>.</p>
+    <p class="big"><b>Always walled off for everyone:</b> CUI and ITAR-controlled material never lives in Mission Control — it stays in the secure GCC High / SharePoint environment. Feed reports in by emailing them to <code>exosmc@proton.me</code>; controlled content is screened out automatically.</p>
+  </div>
+
+  <div class="card" style="border-left-color:var(--accent)">
     <h2>✨ What's new (from your feedback — July 2026)</h2>
     <p class="big">The July team-review recommendations are live:</p>
     <ul class="big">
@@ -88,6 +101,11 @@
           <td><b>Draft a reply</b></td>
           <td>Forward the email with <code>@Exobot draft a reply for my review</code></td>
           <td>Writes a draft and puts it on <b>your</b> Decisions tab; on approval it emails the ready message to <b>your</b> inbox to send.</td>
+        </tr>
+        <tr>
+          <td><b>Prep for a meeting</b></td>
+          <td><code>@Exobot meeting prep for [meeting/call] — [who's attending]</code></td>
+          <td>Researches the full thread, then emails you (and the attendees) a walk-in-ready brief in the standard format: <b>Background — How We Got Here</b>, <b>Open Questions</b>, <b>Key Constraints</b>, a <b>timed Agenda</b>, an <b>After-the-Meeting</b> checklist, and <b>Key Contacts</b>.</td>
         </tr>
         <tr>
           <td><b>Research something</b></td>

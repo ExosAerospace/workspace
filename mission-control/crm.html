@@ -214,6 +214,7 @@ tr.dd-fail { outline: 2px solid #ff2d2d; outline-offset: -2px; box-shadow: 0 0 8
     <select class="filter-select" id="filterStage"><option value="">All Stages</option><option value="Engaged">Engaged</option><option value="Term Sheet / Proposal">Term Sheet</option><option value="Meeting Held">Meeting Held</option><option value="Meeting Requested">Meeting Requested</option><option value="Follow Up">Follow Up</option><option value="Contacted">Contacted</option><option value="Research">Research</option><option value="Passed">Passed</option></select>
     <select class="filter-select" id="filterCategory"><option value="">All Types</option><option value="Financial Investor">Financial Investor</option><option value="Strategic / Corporate">Strategic / Corporate</option><option value="Intermediary / Banker">Intermediary / Banker</option><option value="Other / Review">Other / Review</option></select>
     <select class="filter-select" id="filterStatus"><option value="">All Status</option><option value="Active">Active</option><option value="Archived">Archived</option></select>
+    <select class="filter-select" id="filterRegion" title="Non-CONUS = international. Tag a contact 'non-conus' to include it."><option value="">All Regions</option><option value="Non-CONUS">Non-CONUS (Intl)</option><option value="CONUS">CONUS (US)</option><option value="Unknown">Unclassified</option></select>
   </div>
   <div class="stats-bar" id="contactStats"></div>
   <div class="count-info" id="contactInfo"></div>
@@ -457,11 +458,13 @@ function getFilteredContacts() {
   const stage = document.getElementById('filterStage').value;
   const category = document.getElementById('filterCategory').value;
   const status = document.getElementById('filterStatus').value;
+  const region = (document.getElementById('filterRegion') || {}).value || '';
   return contacts.filter(c => {
     if (tier && c.tier !== tier) return false;
     if (stage && c.stage !== stage) return false;
     if (category && c.category !== category) return false;
     if (status && c.status !== status) return false;
+    if (region && (c.region || '') !== region) return false;
     if (search) {
       const hay = [c.company, c.contact, c.notes, c.email, c.fit_thesis, c.next_action, c.title].filter(Boolean).join(' ').toLowerCase();
       if (!hay.includes(search)) return false;
@@ -1068,7 +1071,7 @@ document.querySelectorAll('th[data-col]').forEach(th => {
 });
 
 // ── Filters ──
-['contactSearch','filterTier','filterStage','filterCategory','filterStatus'].forEach(id => {
+['contactSearch','filterTier','filterStage','filterCategory','filterStatus','filterRegion'].forEach(id => {
   document.getElementById(id).addEventListener(id.includes('Search')?'input':'change', renderContacts);
 });
 document.getElementById('companySearch').addEventListener('input', renderCompanies);
