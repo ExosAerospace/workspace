@@ -108,25 +108,43 @@ def crons():
 
 
 def pipeline_value():
-    """Sum the first $-amount on each LIVE opportunity. Honest: opportunity
-    'value' is free text, so this is 'parseable identified pipeline', not GAAP."""
+    """Sum the identified $-amount on each LIVE opportunity. Honest: opportunity
+    'value' is free text, so this is 'parseable identified pipeline', not GAAP.
+    A won/booked deal can carry an explicit numeric contract_value (preferred,
+    exact) plus payload_value / amount_received and a payload_buyer flag. For
+    free-text-only opps we keep the conservative bare-number parse — deliberately
+    NOT honoring K/M/B suffixes there, because the corpus mixes market-size
+    mentions ('$6B program', '$20T') that would otherwise inflate the total."""
     d = _load(OPPS, [])
     items = d if isinstance(d, list) else d.get("opportunities", d.get("items", []))
     total, priced, payload_buyers = 0, 0, 0
+    payload_value, payload_received = 0, 0
     for x in items:
         status = (x.get("status") or "").upper()
         if any(k in status for k in DEAD):
             continue
-        if str(x.get("id", "")).startswith("PAY-"):
+        is_payload = str(x.get("id", "")).startswith("PAY-") or bool(
+            x.get("payload_buyer"))
+        if is_payload:
             payload_buyers += 1
-        m = re.search(r"\$([\d,]+(?:\.\d+)?)", str(x.get("value") or ""))
-        if m:
-            try:
-                total += float(m.group(1).replace(",", ""))
-                priced += 1
-            except Exception:
-                pass
+        # Explicit numeric contract_value wins (exact); else legacy free-text parse.
+        cv = x.get("contract_value")
+        if cv is not None:
+            val = float(cv)
+        else:
+            m = re.search(r"\$([\d,]+(?:\.\d+)?)", str(x.get("value") or ""))
+            val = float(m.group(1).replace(",", "")) if m else None
+        if val:
+            total += val
+            priced += 1
+        # Booked payload value = only deals explicitly tagged payload_value
+        # (set when a payload contract is won), not prospective pipeline.
+        if x.get("payload_value") is not None:
+            payload_value += float(x.get("payload_value"))
+        if x.get("amount_received") is not None:
+            payload_received += float(x.get("amount_received"))
     return {"total": total, "priced": priced, "payload_buyers": payload_buyers,
+            "payload_value": payload_value, "payload_received": payload_received,
             "opps_live": sum(1 for x in items
                              if not any(k in (x.get("status") or "").upper() for k in DEAD))}
 
@@ -135,13 +153,18 @@ def decisions_summary():
     d = _load(DECISIONS, [])
     items = d if isinstance(d, list) else d.get("decisions", [])
     open_items = [x for x in items if x.get("status") in ("open", "pending")]
-    by_source = {}
+    by_source, by_owner = {}, {}
     for x in open_items:
         s = x.get("source") or "—"
         by_source[s] = by_source.get(s, 0) + 1
+        # legacy/unassigned decisions default to Jon (the original "Needs Jon" queue)
+        o = x.get("assignedTo") or "jquinn@exosaero.com"
+        by_owner[o] = by_owner.get(o, 0) + 1
     top = sorted(by_source.items(), key=lambda kv: -kv[1])[:8]
+    owners = sorted(by_owner.items(), key=lambda kv: -kv[1])
     return {"open": len(open_items),
-            "by_source": [{"source": s, "open": n} for s, n in top]}
+            "by_source": [{"source": s, "open": n} for s, n in top],
+            "by_owner": [{"owner": o, "open": n} for o, n in owners]}
 
 
 def drafts_staged():
@@ -188,6 +211,8 @@ def build():
         "pipeline_priced": pv["priced"],
         "opps_live": pv["opps_live"],
         "payload_buyers": pv["payload_buyers"],
+        "payload_value": pv["payload_value"],
+        "payload_received": pv["payload_received"],
         "drafts_staged": drafts_staged(),
         "agents_logged": agents_logged(),
     }

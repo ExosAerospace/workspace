@@ -44,7 +44,7 @@
   <div class="kpis" id="kpis"></div>
   <h2>Governance classes <span class="muted" style="font-weight:400">— autonomy, delegation, Quiet-Drift eval</span></h2>
   <div id="classes"></div>
-  <h2>Awaiting you <span class="muted" style="font-weight:400">— open Decisions by source</span></h2>
+  <h2>Open Decisions <span class="muted" style="font-weight:400">— fleet-wide, by owner &amp; source</span></h2>
   <div id="decisions"></div>
   <h2>Scheduled jobs <span class="muted" style="font-weight:400">— last run / next run</span></h2>
   <div id="crons"></div>
@@ -67,9 +67,10 @@ fetch('/data/fleet.json?t='+Date.now()).then(r=>r.json()).then(d=>{
   const kpi=(n,l,cls='')=>`<div class="kpi ${cls}"><div class="n">${n}</div><div class="l">${l}</div></div>`;
   $('kpis').innerHTML =
     kpi(`${k.agents_green}<span style="font-size:14px;color:var(--muted)"> / ${k.classes_total}</span>`,'Agents healthy (GREEN)', k.agents_red? 'bad':k.agents_amber?'warn':'good')+
-    kpi(k.open_decisions,'Open decisions (awaiting you)', k.open_decisions>50?'warn':'')+
+    kpi(k.open_decisions,'Open decisions (fleet-wide)', k.open_decisions>50?'warn':'')+
     kpi(fmtMoney(k.pipeline_value),`Pipeline (parsed, ${k.pipeline_priced} priced / ${k.opps_live} live)`)+
     kpi(k.payload_buyers,'BLK3 payload buyers')+
+    kpi(fmtMoney(k.payload_value||0),`Payload value booked${k.payload_received?` · ${fmtMoney(k.payload_received)} received`:''}`)+
     kpi(k.drafts_staged,'Outreach drafts staged')+
     kpi(`${k.crons_total}`,`Scheduled jobs${k.crons_error?` · ${k.crons_error} error`:''}${k.crons_disabled?` · ${k.crons_disabled} off`:''}`, k.crons_error?'bad':'good')+
     (k.agents_logged!=null?kpi(k.agents_logged,'Agents on the correlation-log substrate'):'');
@@ -86,9 +87,15 @@ fetch('/data/fleet.json?t='+Date.now()).then(r=>r.json()).then(d=>{
       <td class="muted">${c.last_event?rel(Date.parse(c.last_event)):'—'}</td>
     </tr>`).join('')+`</table>`;
 
-  $('decisions').innerHTML = `<table><tr><th>Source</th><th>Open</th></tr>`+
+  const owners = d.decisions.by_owner || [];
+  const shortOwner = o => String(o||'').replace(/@exosaero\.com$/,'');
+  $('decisions').innerHTML =
+    `<table><tr><th>Owner (assigned to)</th><th>Open</th></tr>`+
+    (owners.length?owners.map(o=>`<tr><td>${esc(shortOwner(o.owner))}</td><td>${o.open}</td></tr>`).join('')
+      :`<tr><td class="muted" colspan="2">No open decisions.</td></tr>`)+`</table>`+
+    `<table style="margin-top:10px"><tr><th>Source</th><th>Open</th></tr>`+
     (d.decisions.by_source.length?d.decisions.by_source.map(s=>`<tr><td>${esc(s.source)}</td><td>${s.open}</td></tr>`).join('')
-      :`<tr><td class="muted" colspan="2">Nothing awaiting you.</td></tr>`)+`</table>`;
+      :`<tr><td class="muted" colspan="2">—</td></tr>`)+`</table>`;
 
   $('crons').innerHTML = `<table><tr><th>Job</th><th>Status</th><th>Last run</th><th>Next run</th><th>Model</th></tr>`+
     d.crons.map(c=>`<tr>

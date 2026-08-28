@@ -86,6 +86,7 @@
     <div class="tabs">
       <button class="tab active" data-tab="open" onclick="setTab('open')">Open</button>
       <button class="tab" data-tab="answered" onclick="setTab('answered')">Answered</button>
+      <button class="tab" id="scopeToggle" onclick="toggleScope()" title="Admin: show open decisions for ALL owners (Phil, Neil, everyone), not just yours" style="margin-left:10px">👥 All owners</button>
     </div>
     <a class="home" href="/">← Mission Control</a>
   </div>
@@ -104,7 +105,9 @@
 </div>
 <div id="submittals" style="margin-top:22px"></div>
 <script>
-let tab='open', data=[], picks={}, searchQuery=''; // picks[id]={answer,note}
+let tab='open', data=[], picks={}, searchQuery='', scopeAll=false; // picks[id]={answer,note}
+function toggleScope(){scopeAll=!scopeAll;const b=document.getElementById('scopeToggle');if(b)b.classList.toggle('active',scopeAll);load();}
+function ownerTag(d){return scopeAll?(' · 👤 '+esc(String(d.assignedTo||'jquinn@exosaero.com').replace(/@exosaero\.com$/,''))):'';}
 function attachHtml(d){
   const list=(d.attachments||[]).map(a=>`<a href="${a.url}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--accent);text-decoration:none;background:#0a1830;border:1px solid var(--line);border-radius:7px;padding:5px 9px;margin:4px 6px 0 0">📎 ${esc(a.filename)}</a>`).join('');
   return list?`<div style="margin-top:10px">${list}</div>`:'';
@@ -125,7 +128,7 @@ function setTab(t){tab=t;document.querySelectorAll('.tab').forEach(b=>b.classLis
 async function load(){
   // Load every status once so tab switches and (critically) ID/keyword search work across
   // open AND answered — a tracking id must stay findable after the decision is answered.
-  const r=await fetch('/api/decisions?status=all',{credentials:'same-origin'});
+  const r=await fetch('/api/decisions?status=all'+(scopeAll?'&scope=all':''),{credentials:'same-origin'});
   if(r.status===401||r.status===302){document.getElementById('list').innerHTML='<div class="empty">Please <a href="/login" style="color:var(--accent)">log in</a> to view decisions.</div>';return;}
   data=await r.json(); picks={};
   // Deep-link: decisions.html?focus=D-110 pre-fills the search so a jumped-to id lands filtered.
@@ -159,7 +162,7 @@ function card(d){
   if(d.status==='answered'){
     return `<div class="card answered ${pr}">
       <div class="row1"><div><p class="title">${esc(d.title)}</p>
-      <div class="meta">${d.id}${d.relatedItem?' · <a href="opportunities.html?focus='+encodeURIComponent(d.relatedItem)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(d.relatedItem)+'</a>':''} · ${esc(d.source||'')}</div></div></div>
+      <div class="meta">${d.id}${d.relatedItem?' · <a href="opportunities.html?focus='+encodeURIComponent(d.relatedItem)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(d.relatedItem)+'</a>':''} · ${esc(d.source||'')}${ownerTag(d)}</div></div></div>
       <div class="q">${esc(d.question)}</div>
       <div class="answered-box">✅ ${esc(d.answer||'(noted)')}${d.note?' — '+esc(d.note):''}<div class="meta">answered ${d.answeredAt?esc(new Date(d.answeredAt).toLocaleString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})+' CT'):''} by ${esc(d.answeredBy||'Jon')}</div></div>
       ${attachHtml(d)}${emailHtml(d)}
@@ -168,7 +171,7 @@ function card(d){
   const opts=(d.options&&d.options.length?d.options:['Yes','No']);
   return `<div class="card ${pr}">
     <div class="row1"><div><p class="title">${esc(d.title)}<span class="pill ${pr}">${pr}</span></p>
-    <div class="meta">${d.id}${d.relatedItem?' · <a href="opportunities.html?focus='+encodeURIComponent(d.relatedItem)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(d.relatedItem)+'</a>':''} · ${esc(d.source||'')}</div></div></div>
+    <div class="meta">${d.id}${d.relatedItem?' · <a href="opportunities.html?focus='+encodeURIComponent(d.relatedItem)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(d.relatedItem)+'</a>':''} · ${esc(d.source||'')}${ownerTag(d)}</div></div></div>
     <div class="q"><b>${esc(d.question)}</b></div>
     ${d.context?`<div class="ctx">${esc(d.context)}</div>`:''}
     ${d.proposedAction?`<div class="prop">▸ ${esc(d.proposedAction)}</div>`:''}
