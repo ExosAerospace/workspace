@@ -1793,3 +1793,45 @@ Exo | Capital Bridge Agent
 END-READY-ACTION -->
 
 | 2026-08-26 (01:00) | **No material change since Aug 25 (15:25). Ran capital_bridge_funds.py (--since-days 2) + manual inbox keyword scan (entX/HELIOTECH/Morfin/Siroky/Webb/Gavrila/504/wire) covering the last 24h — zero new wires, zero new SENT CONFIRMs, zero replies on entX/Morfin/HELIOTECH.** Confirmed total unchanged: **$148,579 of $1,000,000 (13 logged PO10 receipts) / $851,421 gap.** The only inbox hit was a re-forward of the already-logged Siroky $2,800 wire (dedupes clean, no double-count). Follow-up backlog remains exhausted; no new autonomous drafts needed this run. **HELIOTECH Aug 31 is now 5 DAYS OUT and still shows unregistered** — hardest deadline in the tracker, highest-density payload-buyer room before Flight 2. entX LSA total confirm (10 days open) and the Neil/Siroky trust-name confirm remain the two oldest open Jon items. | **Jon: (1) 🔴 HELIOTECH Aug 31 — 5 days, still unregistered (hesto.jhuapl.edu); brief already in your inbox since Aug 21. (2) Confirm entX LSA total vs. executed contract — 10 days open, still the one item that fixes the true raised/gap figure. (3) One-line confirm: does "ORG REV 1804 TRUST" tie to Steven Siroky's subscription (Neil's question)? Everything else (Morfin DM, AT/Reditus, Ravee/Lux/UTHR, Webb/Gavrila nudges) is unchanged from Aug 25 and already in your inbox — no new nags this run.** |
+| 2026-08-27 (01:00) | **No material change since Aug 26 (01:00). Ran capital_bridge_funds.py (--since-days 2) + manual inbox keyword scan (entX/OPP-007/HELIOTECH/Morfin/IronGate/Siroky/Webb/Gavrila/Colwell/UCF) covering the last 3 days — zero new wires, zero new SENT CONFIRMs.** Confirmed total unchanged: **$148,579 of $1,000,000 (13 logged PO10 receipts) / $851,421 gap.** Only inbound hit on the entX subject line was Neil's Aug 24 tangent thread re: West TX/Blue Origin launch-site speculation (not an LSA total confirm — reusing the old subject line again, no new information). Checked sent-confirm registry across the full tracker: AT/Reditus, Ravee/Shah, Lux Aeterna/Taylor, UTHR/Rothblatt, and Morfin's LinkedIn DM v2 all remain unsent by Jon (no auto-confirms logged for any of them). Follow-up backlog remains exhausted; no new autonomous drafts needed. **HELIOTECH Aug 31 is now 4 DAYS OUT and still shows unregistered** — this is the hardest deadline in the tracker and the highest-density payload-buyer room before Flight 2; after today there isn't enough runway left for normal-lead-time travel booking. entX LSA total confirm (11 days open) and the Neil/Siroky trust-name confirm remain the two oldest open Jon items, alongside Gavrila ($16,800, at_risk/bank issue) and Webb ($18,200, 17 days awaiting funds). | **Jon: (1) 🔴 HELIOTECH Aug 31 — 4 DAYS, still unregistered (hesto.jhuapl.edu); this is now the single highest-urgency item — brief has been in your inbox since Aug 21. (2) Confirm entX LSA total vs. executed contract — 11 days open, unlocks the true raised/gap figure. (3) Morfin LinkedIn DM v2 — $250K, 3 sentences, in inbox since Aug 19, unsent. (4) One-line confirm: does "ORG REV 1804 TRUST" tie to Steven Siroky's subscription? (5) AT/Reditus + Ravee/Lux/UTHR (4 emails, verify + send) and Gavrila/Webb nudges — all unchanged, in inbox, no new nags added this run.** |
+| 2026-08-28 (01:00) | **CORRECTION + MAJOR NEW FIND. HELIOTECH registration nag was STALE/WRONG — Jon confirmed registered as of his own Aug 17 email to NASA's Danielle McCulloch ("I am registered and will be up from Texas to attend the event"); retracting all prior "still unregistered" flags, no more nags on this.** Ran capital_bridge_funds.py (--since-days 3, clean) + inbox keyword scan (entX/HELIOTECH/Morfin/Siroky/Webb/Gavrila/SEARF/TRISH/Mu-g/Ravee/Lux/UTHR/Garza/Vast/ISS-NL) — zero new wires, zero new SENT CONFIRMs. Confirmed total unchanged: **$148,579 of $1,000,000 / $851,421 gap.** **The real news: a live, previously-untracked Engine B lead surfaced in the inbox — Joshua Wolk, Program Manager for JHU APL's Targets program (runs Project BLAST, the MDA-funded "Budget Launch of Affordable Suborbital Targets" effort; APL/MDA press release Feb 2026 confirms BLAST already flew the first missile-defense target payload on a commercially-operated launch vehicle — exactly BLK3's positioning).** Thread: Lizi sent Wolk a full-bay pitch (135 kg, $1,012,500, March 2027 Flight 2) on Jon's behalf Aug 26; Wolk replied same day ("would love to chat," not attending HELIOTECH, free Wed Sept 2 or Thu Sept 3 after 3pm); Jon replied Aug 27 pushing to "next week" and angling for the APL facility tour Wed Sept 2, confirming he wants "a virtual call at least" — but **no specific day/time has been locked yet.** This is the most advanced, highest-value (full bay = $506K at booking under the 50/40/10 terms), best-aligned (active MDA budget, APL institutional credibility, non-dilutive revenue) lead anywhere in the Engine B pipeline — ahead of every cold draft in this tracker. Call-prep brief dispatched to Jon's inbox this run (READY-ACTION below) so he walks into the Wolk call with APL/BLAST background, open questions, and an agenda instead of a cold pitch repeat. | **Jon: (1) 🎯 TOP PRIORITY — lock a specific day/time with Joshua Wolk (Thu Sept 3 after 3pm is likely cleanest since you're angling for the Wed Sept 2 APL tour) — this is a live $1.01M full-bay conversation with the APL/MDA Targets program, further along than anything else in the pipeline. Call-prep brief in your inbox. (2) HELIOTECH is handled — you're registered, no action needed, dropping this nag permanently. (3) Unchanged, still open, no new nags: entX LSA total confirm (12 days), Morfin LI DM v2 ($250K, in inbox since Aug 19), Siroky "ORG REV 1804 TRUST" one-line confirm, AT/Reditus + Ravee/Lux/UTHR (4 emails), Gavrila/Webb nudges.** |
+
+<!-- READY-ACTION
+key: capital-bridge-wolk-jhuapl-blast-callprep-v1
+task_title: PREP: Joshua Wolk (JHU APL / MDA BLAST) call — lock Wed 9/2 or Thu 9/3 PM
+to: jquinn@exosaero.com
+subject: [PREP] Wolk/APL BLAST call — background + agenda before you lock the time
+category: BD
+priority: 92
+body:
+Jon,
+
+This is the best Engine B lead in the pipeline right now — better than any of the cold payload drafts — because it's inbound-warm, institutionally credible, and tied to an active funded government program. Worth 15 minutes of prep before you confirm a time with Wolk.
+
+WHO: Joshua Wolk, Program Manager, JHU APL Targets program. He runs Project BLAST (Budget Launch of Affordable Suborbital Targets), an MDA-funded effort. Per APL's own Feb 2026 release, BLAST already flew the first missile-defense target payload on a commercially-operated launch vehicle — APL is explicitly in the business of "hitching a ride" on commercial suborbital rather than building bespoke targets, and is actively preparing follow-on concepts. That is precisely BLK3's lane.
+
+WHERE THIS STANDS: Lizi sent Wolk the full-bay pitch (135 kg / $1,012,500 / March 2027 Flight 2) Aug 26. Wolk replied same day: open to a call, not attending HELIOTECH, free Wed Sept 2 or Thu Sept 3 after 3pm. You replied Aug 27 sliding to "next week" and floating the Wed APL tour — but no day/time is locked yet. Recommend Thu Sept 3 after 3pm so it doesn't collide with the tour.
+
+OPEN QUESTIONS TO ASK HIM:
+- Is this inquiry for a BLAST follow-on target flight specifically, or a new/different Targets-program need?
+- What test article class and mass are they sizing for — does 135 kg full-bay fit, or do they need a partial slot on a faster timeline than March 2027?
+- Who owns budget authority — is this an MDA task order APL executes, or does APL need a new contract vehicle to buy commercial launch?
+- Timeline: does March 2027 work for their test campaign, or do they need something sooner (in which case flag Flight-3-via-oversell as the accelerant)?
+
+CONSTRAINTS TO HOLD (per standing guardrails — do not overclaim on this call):
+- BLK3 is FAA-licensed (March 2026) but has not yet flown commercially; first commercial flight is Flight 1, early 2027, Flight 2 (this bay) shortly after.
+- Frame as test-article carrier / flight-test infrastructure — Exos primes the flight-test and qualification role, never positions as building or owning a weapon system.
+- Single-airframe risk is real; Airframe #2 is a stated use-of-proceeds priority if it comes up in a resilience/schedule-assurance question.
+- Scorpius TRL-9 cryo tank heritage is a legitimate secondary asset to mention if thermal/cryo protection for reentry-relevant articles comes up.
+
+SUGGESTED AGENDA (30 min):
+1. BLAST program overview from Wolk's side (5 min)
+2. BLK3 capability walkthrough — bay dims, g-loads, recovery, turnaround, FAA license status (10 min)
+3. Fit check — test article mass/class, timeline, budget path (10 min)
+4. Next step — LOI/quote for a full or partial bay slot, or a follow-up technical call (5 min)
+
+Reply "send" if you want a one-page leave-behind built for this call, same format as the HELIOTECH brief.
+
+Exo | Capital Bridge Agent
+END-READY-ACTION -->
+
