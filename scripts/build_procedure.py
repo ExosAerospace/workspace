@@ -81,17 +81,19 @@ def build_docx(spec, out_docx):
     normal.font.name = BODY_FONT; normal.font.size = Pt(10.5); normal.font.color.rgb = DARK
     normal.paragraph_format.space_after = Pt(6); normal.paragraph_format.line_spacing = 1.08
     sec = doc.sections[0]
-    sec.top_margin = Inches(0.6); sec.bottom_margin = Inches(0.6)
+    sec.top_margin = Inches(1.2); sec.bottom_margin = Inches(1.0)
     sec.left_margin = Inches(0.9); sec.right_margin = Inches(0.9)
+    sec.header_distance = Inches(0.4); sec.footer_distance = Inches(0.3)
 
-    # ── Letterhead HEADER banner — placed in the BODY (top), not the Word header ──
-    # Word headers/footers sit in the margin (bleed off the page edge) AND are dropped entirely by
-    # the docx->pdf converter Mission Control uses (textutil). In the body it renders cleanly and
-    # consistently in Word, Preview, and MC.
+    # ── LETTERHEAD LOCK — header banner in the REAL Word header so it REPEATS on every page ──
+    # DO NOT move this back into the document body. Body placement branded only page 1, left every
+    # continuation page bare, and floated the footer logo wherever the text happened to end
+    # ("header and footer screwed up"). Word header/footer sit in the margin band (top_margin 1.2"
+    # / bottom_margin 1.0" give them room) and repeat automatically. Banner width 3.3" -> ~0.68" tall.
     if os.path.exists(HEAD_IMG):
-        bp = doc.add_paragraph(); bp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        bp.paragraph_format.space_after = Pt(6)
-        bp.add_run().add_picture(HEAD_IMG, width=Inches(5.0))
+        hp = sec.header.paragraphs[0]; hp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        hp.paragraph_format.space_after = Pt(0)
+        hp.add_run().add_picture(HEAD_IMG, width=Inches(3.3))
 
     # ── Document-control block (top-right) ──
     for i, (lbl, val) in enumerate([("DOC NO", spec.get("doc_no", "")),
@@ -164,15 +166,20 @@ def build_docx(spec, out_docx):
     _run(meta, f"Owner: {spec.get('owner','')}   ·   Reference documents: {spec.get('reference_docs','NA')}",
          size=8.5, italic=True, color=GREY)
 
-    # ── Controlled-doc line + letterhead FOOTER banner (in the BODY, bottom) ──
+    # ── LETTERHEAD LOCK — footer banner + controlled-doc line in the REAL Word footer (repeats) ──
+    # DO NOT move this into the body. Lives in the footer margin band so it appears once per page,
+    # bottom-anchored, on every page.
     ctl = (f"{spec.get('doc_no')} Rev {spec.get('rev','0')}  ·  Controlled copy — valid for today's date only  "
            f"·  Process & Procedure Control per EXOS-US-QMS-001")
-    cline = doc.add_paragraph(); cline.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    cline.paragraph_format.space_before = Pt(8); cline.paragraph_format.space_after = Pt(2)
-    _run(cline, ctl, size=8, color=GREY)
     if os.path.exists(FOOT_IMG):
-        fb = doc.add_paragraph(); fb.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        fb.add_run().add_picture(FOOT_IMG, width=Inches(5.0))
+        fp = sec.footer.paragraphs[0]; fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        fp.paragraph_format.space_after = Pt(1)
+        fp.add_run().add_picture(FOOT_IMG, width=Inches(3.3))
+        cl = sec.footer.add_paragraph(); cl.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    else:
+        cl = sec.footer.paragraphs[0]; cl.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    cl.paragraph_format.space_after = Pt(0)
+    _run(cl, ctl, size=7.5, color=GREY)
 
     doc.save(out_docx)
 
