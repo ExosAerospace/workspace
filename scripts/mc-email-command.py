@@ -127,6 +127,20 @@ def save_state(seen_list, fails=None):
     os.replace(tmp, STATE)
 
 
+def _clean_cut(text, limit=1600):
+    """Trim text to <= limit at a clean boundary (paragraph > line > sentence > word) so a Discord
+    notification never cuts mid-word like reply[:N] did. Returns (trimmed_text, was_truncated)."""
+    text = text or ""
+    if len(text) <= limit:
+        return text, False
+    cut = text[:limit]
+    for sep in ("\n\n", "\n", ". ", " "):
+        i = cut.rfind(sep)
+        if i > limit * 0.5:
+            return cut[:i].rstrip(), True
+    return cut.rstrip(), True
+
+
 def load_users_map():
     """(allowed sender emails, email->name). Any active Mission Control user can direct @Exobot."""
     u = load_json(USERS_FILE, [])
@@ -522,7 +536,9 @@ def main():
                     log(f"[agent] NO_ACTION mid={mid} — nothing actionable; silent (no task/reply/discord)")
                 else:
                     atts = collect_reply_attachments(reply, instruction)
-                    discord(f"✅ Email-command done for {sender_name} — {subject}\n\n{reply[:1500]}"
+                    _summary, _cut = _clean_cut(reply, 1600)
+                    discord(f"✅ Email-command done for {sender_name} — {subject}\n\n{_summary}"
+                            + ("\n\n📧 Full reply sent to your inbox — trimmed here to keep the channel clean." if _cut else "")
                             + (f"\n\n📎 attached: {', '.join(os.path.basename(a) for a in atts)}" if atts else ""))
                     # ALWAYS reply to the requester on the channel THEY used (email). The Discord post above
                     # goes to Jon's ops channel, NOT the requester — so a summary-only answer would never reach
