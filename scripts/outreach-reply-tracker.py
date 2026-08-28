@@ -159,6 +159,56 @@ def strip_quoted(body):
     return "\n".join(out).strip() or body
 
 
+# Jon forwards PI / counterparty replies from Outlook (From: internal, subject "Fw:"), with the
+# real reply embedded in the body. Pull the embedded external sender + their message so the outcome
+# isn't lost as "just our own outbound." (Fixes the NIH-MG "Park reply missed because it was a
+# forward from jquinn@exosaero.com" gap, 2026-08-28.)
+FWD_FROM = re.compile(r'From:\s*(.+?)\s*<\s*([^>\s]+@[^>\s]+)\s*>', re.I)
+
+def _full_text(msg):
+    """Plain body if present, else HTML stripped to text — Outlook forwards put the embedded
+    reply header only in the HTML part, which body_text() (plain-only) misses."""
+    plain = html = ""
+    for p in msg.walk():
+        ct = p.get_content_type()
+        try:
+            payload = p.get_payload(decode=True).decode(errors="replace")
+        except Exception:
+            continue
+        if ct == "text/plain":
+            plain += payload
+        elif ct == "text/html":
+            html += payload
+    t = re.sub(r'(?is)<(script|style)[^>]*>.*?</\1>', ' ', html)
+    t = re.sub(r'(?i)<br\s*/?>|</p>|</div>|</tr>', '\n', t)
+    t = re.sub(r'<[^>]+>', ' ', t)
+    import html as _h
+    t = re.sub(r'[ \t]+', ' ', _h.unescape(t))
+    # Outlook forwards may split the embedded reply header/text across plain+HTML — search both.
+    return (plain + "\n" + t) if plain.strip() else t
+
+def forwarded_reply(subj, msg):
+    body = _full_text(msg)
+    is_fwd = re.match(r'^\s*(fw|fwd)\s*:', subj, re.I) or \
+        re.search(r'-+\s*Forwarded message', body or "", re.I)
+    if not is_fwd:
+        return None
+    # first EMBEDDED external sender (skip our own internal From lines in the quoted chain)
+    for m in FWD_FROM.finditer(body):
+        name, addr = m.group(1).strip().strip('"'), m.group(2).strip().lower()
+        dom = addr.split("@")[-1]
+        if dom in INTERNAL_DOMAINS or not real_person(addr, name):
+            continue
+        lines = body[m.end():].splitlines()
+        j = 0
+        while j < len(lines) and (not lines[j].strip() or
+              re.match(r'^\s*(Sent|To|Cc|Subject|Date|Reply-To|Importance)\s*:', lines[j], re.I)):
+            j += 1
+        reply = strip_quoted("\n".join(lines[j:]).strip())
+        return addr, name, re.sub(r'\n{2,}', '\n', reply).strip()
+    return None
+
+
 def classify(text):
     if NEG.search(text):
         return ("negative", "🔴", "Log as declined; no further outreach unless re-engaged")
@@ -205,23 +255,31 @@ def main():
         rcpts = " ".join(str(msg.get(h, "")) for h in ("To", "Cc", "Delivered-To", "X-Original-To")).lower()
         looped = "info@exosaero.com" in rcpts
         is_reply = bool(msg.get("In-Reply-To") or msg.get("References")) or \
-            re.match(r'^\s*(re|aw|antw|res)\s*:', subj, re.I) is not None
+            re.match(r'^\s*(re|aw|antw|res|fw|fwd)\s*:', subj, re.I) is not None
         if not is_reply:
             continue  # fresh sends / non-replies are lead-capture's job, not outcome tracking
         dom = faddr.split("@")[-1] if "@" in faddr else ""
-        # our own outbound reply copy (internal sender) → just a send-confirmation, not an outcome
+        body = body_text(msg)
+        fwd_reply = None
+        # Internal sender is normally just our own outbound copy. EXCEPTION: Jon forwards a PI /
+        # counterparty reply from Outlook — pull the embedded external sender + their text.
         if dom in INTERNAL_DOMAINS:
-            sends += 1
-            continue
+            fr = forwarded_reply(subj, msg)
+            if fr:
+                faddr, fname, fwd_reply = fr
+                dom = faddr.split("@")[-1]
+                log(f"forwarded reply detected: {faddr} (fwd by {frm[0][1] if frm else '?'})")
+            else:
+                sends += 1
+                continue
         # drop automated/marketing "Re:" noise and auto-replies / bounces / OOO
         if not real_person(faddr, fname) or AUTO_SUBJ.match(subj) or \
            "auto-replied" in str(msg.get("Auto-Submitted", "")).lower():
             continue
-        body = body_text(msg)
         if ee.screen(subj + "\n" + body[:2500] + "\n" + faddr):
             log(f"HELD (export-control) reply skip: {faddr}")
             continue
-        new = strip_quoted(body)
+        new = fwd_reply if fwd_reply else strip_quoted(body)
         sentiment, emoji, rec_action = classify(subj + "\n" + new)
         try:
             dt = parsedate_to_datetime(msg.get("Date")).date().isoformat()
