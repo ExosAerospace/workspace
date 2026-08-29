@@ -254,6 +254,35 @@ const PDF_CACHE_DIR = path.join(UPLOADS_DIR, '.pdfcache');
 const CHROME_BIN = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const OPENCLAW_BIN = '/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw';
 const PDF_CONVERTIBLE = ['.docx', '.doc'];
+
+// ── Exobot chat: async job store so answers survive page navigation ──
+// The global chat widget (exobot-widget.js) POSTs a question, gets a jobId back
+// immediately, then polls /api/chat/result. The agent runs in the background here
+// keyed by jobId; the reply lands whatever page the user is on. Jobs are per-user
+// (email-scoped) and expire after ~20 min to bound memory.
+const chatJobs = new Map();  // jobId -> { email, status:'pending'|'done', reply, ts }
+function chatJobsGC() {
+  const cutoff = Date.now() - 20 * 60 * 1000;
+  for (const [id, j] of chatJobs) if (j.ts < cutoff) chatJobs.delete(id);
+}
+function runExobotChat(jobId, email, msg) {
+  const slug = (email || 'anon').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+  const skey = 'agent:main:mcchat-' + slug;
+  const tagged = `[Mission Control chat · ${email || 'user'}] ${msg}`;
+  const { execFile } = require('child_process');
+  const childEnv = { ...process.env, PATH: '/opt/homebrew/bin:' + (process.env.PATH || '/usr/bin:/bin') };
+  execFile(OPENCLAW_BIN, ['agent', '--session-key', skey, '-m', tagged, '--json', '--timeout', '150'],
+    { timeout: 165000, maxBuffer: 16 * 1024 * 1024, env: childEnv }, (err, stdout) => {
+      let reply = '';
+      try {
+        const j = JSON.parse(stdout);
+        reply = (j.result && Array.isArray(j.result.payloads) ? j.result.payloads.map(p => p && p.text).filter(Boolean).join('\n') : '')
+          || (j.result && j.result.meta && j.result.meta.finalAssistantVisibleText) || '';
+      } catch {}
+      if (!reply) reply = err ? 'Exobot timed out or errored on that one — try again or use the email lane.' : 'No reply.';
+      chatJobs.set(jobId, { email, status: 'done', reply, ts: Date.now() });
+    });
+}
 // docx -> HTML with EMBEDDED images (via mammoth). macOS `textutil` drops all embedded images
 // (letterhead banners, diagrams, photos) from previews; mammoth keeps them. Kept as the primary
 // path with a textutil fallback (mammoth is .docx-only / may be absent).
@@ -3629,29 +3658,28 @@ const server = http.createServer((req, res) => {
       try { msg = (JSON.parse(body || '{}').message || '').toString().trim(); } catch {}
       if (!msg) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'empty message' })); return; }
       if (msg.length > 4000) msg = msg.slice(0, 4000);
-      const slug = (session.email || 'anon').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
-      const skey = 'agent:main:mcchat-' + slug;
-      // Tag the message with who's asking so Exobot has the user context.
-      const tagged = `[Mission Control chat · ${session.email || 'user'}] ${msg}`;
-      const { execFile } = require('child_process');
-      // openclaw is a `#!/usr/bin/env node` script and REQUIRES a compliant node (>=22.22.3 <23
-      // or >=24.15). The server itself runs on node 24.14.0 (too old for openclaw), so prepend a
-      // compliant node (homebrew v22.23.2) to PATH or the agent call fails silently (no JSON).
-      const NODE_BIN = '/opt/homebrew/bin';
-      const childEnv = { ...process.env, PATH: NODE_BIN + ':' + (process.env.PATH || '/usr/bin:/bin') };
-      execFile(OPENCLAW_BIN, ['agent', '--session-key', skey, '-m', tagged, '--json', '--timeout', '150'],
-        { timeout: 165000, maxBuffer: 16 * 1024 * 1024, env: childEnv }, (err, stdout) => {
-          let reply = '';
-          try {
-            const j = JSON.parse(stdout);
-            reply = (j.result && Array.isArray(j.result.payloads) ? j.result.payloads.map(p => p && p.text).filter(Boolean).join('\n') : '')
-              || (j.result && j.result.meta && j.result.meta.finalAssistantVisibleText) || '';
-          } catch {}
-          if (!reply) reply = err ? 'Exobot timed out or errored on that one — try again or use the email lane.' : 'No reply.';
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ reply, session: skey }));
-        });
+      // Async: create a background job, return its id immediately. The widget polls
+      // /api/chat/result, so the answer survives navigating to another page.
+      chatJobsGC();
+      const jobId = crypto.randomBytes(12).toString('hex');
+      chatJobs.set(jobId, { email: session.email || 'user', status: 'pending', reply: '', ts: Date.now() });
+      runExobotChat(jobId, session.email || 'user', msg);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ jobId }));
     });
+    return;
+  }
+
+  // Async chat result poll — returns the reply once the background job finishes.
+  if (req.url.split('?')[0] === '/api/chat/result' && req.method === 'GET') {
+    const session = getSession(req);
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    const id = new URL(req.url, 'http://localhost').searchParams.get('id') || '';
+    const job = chatJobs.get(id);
+    if (!job || job.email !== (session.email || 'user')) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ status: 'unknown' })); return; }
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: job.status, reply: job.reply }));
+    // leave the job in place (GC clears it after 20 min) so multiple tabs all get the reply
     return;
   }
 
@@ -3747,8 +3775,22 @@ const server = http.createServer((req, res) => {
     const extMap = { '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.json': 'application/json' };
     if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
       const ext = path.extname(filePath);
-      res.writeHead(200, { 'Content-Type': extMap[ext] || 'text/plain' });
-      res.end(fs.readFileSync(filePath));
+      // Auto-inject the global Exobot chat widget into every real MC page (except the
+      // public/sandbox pages) so the conversation persists across navigation.
+      const NO_WIDGET = ['login.html', 'set-password.html', 'sign.html', 'docusign.html', 'welcome.html', 'exobot-widget.js'];
+      const base = path.basename(filePath);
+      if (ext === '.html' && !NO_WIDGET.includes(base)) {
+        let html = fs.readFileSync(filePath, 'utf-8');
+        if (html.indexOf('/exobot-widget.js') === -1) {
+          const tag = '<script src="/exobot-widget.js" defer></script>';
+          html = html.indexOf('</body>') !== -1 ? html.replace('</body>', tag + '\n</body>') : html + tag;
+        }
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(html);
+      } else {
+        res.writeHead(200, { 'Content-Type': extMap[ext] || 'text/plain' });
+        res.end(fs.readFileSync(filePath));
+      }
     } else {
       res.writeHead(404);
       res.end('Not Found');
