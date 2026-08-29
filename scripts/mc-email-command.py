@@ -151,6 +151,7 @@ def load_users_map():
         if em and x.get("active", True):
             allowed.add(em); names[em] = x.get("name") or em
     allowed.add("jquinn@exosaero.com")
+    allowed.add("jquinnexo@pm.me")   # Jon's Proton / Exobot account (internal, trusted)
     return allowed, names
 
 
@@ -455,7 +456,12 @@ def main():
             reasons.append(f"sender {sender or '?'} is not a Mission Control user")
         if domain_auth == "fail":
             reasons.append("sender domain failed DMARC/DKIM (spoofed)")
-        if domain_auth != "pass" and not passphrase_ok:
+        # Jon's Proton / Exobot account (jquinnexo@pm.me) is internal & trusted: accept it without
+        # an exosaero.com DMARC pass, but ONLY when there is no explicit DMARC/DKIM FAIL (an external
+        # forgery of jquinnexo@pm.me gets dmarc=fail at Proton inbound and is still rejected above).
+        TRUSTED_INTERNAL = {"jquinnexo@pm.me"}
+        proton_trusted = sender in TRUSTED_INTERNAL and domain_auth != "fail"
+        if domain_auth != "pass" and not passphrase_ok and not proton_trusted:
             reasons.append("unverified: needs a DMARC-passing exosaero.com send, or the passphrase on line 1")
 
         if reasons:
