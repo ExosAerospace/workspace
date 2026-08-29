@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exos × UTD EXO3 Payload Capstone — Progress Tracker</title>
+<style>
+:root{
+  --ink:#10203a;--ink2:#2c3e5c;--muted:#5a6c86;--faint:#8a99b0;
+  --paper:#f4f7fb;--card:#ffffff;--line:#dbe4f0;--line2:#eef2f8;
+  --navy:#123a6b;--navy2:#1c5296;--gold:#b7841f;--gold-bg:#fdf6e6;
+  --green:#1c7a45;--green-bg:#e8f6ee;--blue-bg:#eaf1fb;--sky:#2f6fd0;
+  --shadow:0 1px 3px rgba(20,40,80,.06),0 8px 24px rgba(20,40,80,.05);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:24px 18px 72px}
+a.back{display:inline-block;color:var(--navy2);text-decoration:none;font-size:13px;font-weight:600;margin-bottom:16px}
+a.back:hover{text-decoration:underline}
+
+/* Header */
+.hero{
+  background:linear-gradient(135deg,#123a6b,#1c5296);
+  color:#fff;border-radius:16px;padding:26px 26px 24px;box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;
+  background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%);pointer-events:none}
+.hero .kicker{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c9dcf6;margin-bottom:6px}
+.hero h1{font-size:26px;line-height:1.2;margin:0 0 10px;color:#fff;font-weight:750}
+.hero .meta{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 12px}
+.hero .pill{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:20px;
+  padding:5px 13px;font-size:12.5px;color:#eaf2ff}
+.hero .pill b{color:#fff}
+.hero .goal{font-size:14.5px;color:#e8f0fc;max-width:760px;margin-top:4px}
+
+/* KPI banner */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0 8px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.kpi .lbl{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.kpi .big{font-size:30px;font-weight:800;color:var(--navy);line-height:1.1;margin:6px 0 2px}
+.kpi .big span{font-size:15px;font-weight:600;color:var(--muted)}
+.kpi .cap{font-size:12.5px;color:var(--muted)}
+.bar{height:10px;border-radius:8px;background:var(--line2);overflow:hidden;margin:9px 0 6px;border:1px solid var(--line)}
+.bar > i{display:block;height:100%;background:linear-gradient(90deg,#1c7a45,#37a866);width:0;transition:width .6s ease}
+.kpi.gate .big{color:var(--green)}
+
+.section{margin-top:34px}
+.section h2{font-size:17px;color:var(--navy);margin:0 0 4px;font-weight:750}
+.section .hint{font-size:13px;color:var(--muted);margin:0 0 16px}
+
+/* Timeline */
+.timeline{position:relative;margin-left:6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.step{position:relative;padding:12px 16px;margin-bottom:12px;background:var(--card);
+  border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+.step::before{content:"";position:absolute;left:-24px;top:20px;width:14px;height:14px;border-radius:50%;
+  background:#fff;border:3px solid var(--faint);box-shadow:0 0 0 3px var(--paper)}
+.step .wk{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.step .wknum{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--navy2)}
+.step .date{font-size:12px;color:var(--muted);font-weight:600}
+.step .title{font-size:15px;font-weight:700;color:var(--ink)}
+.step .gate{font-size:13.5px;color:var(--ink2);margin-top:5px}
+.step .flag{margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+  padding:2px 9px;border-radius:20px}
+.flag.done{background:var(--green-bg);color:var(--green);border:1px solid #bfe3cd}
+.flag.current{background:var(--gold-bg);color:var(--gold);border:1px solid #ecd9a6}
+.flag.upcoming{background:#eef2f8;color:var(--faint);border:1px solid var(--line)}
+.step.done::before{border-color:var(--green);background:var(--green)}
+.step.current::before{border-color:var(--gold);background:var(--gold);box-shadow:0 0 0 3px var(--paper),0 0 0 6px var(--gold-bg)}
+.step.current{border-color:#ecd9a6}
+
+/* Rubric */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.rcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+.rcard h3{margin:0 0 3px;font-size:15px;color:var(--navy);font-weight:750;display:flex;align-items:center;gap:8px}
+.rcard .tag{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:20px}
+.tag.dollars{background:var(--green-bg);color:var(--green);border:1px solid #bfe3cd}
+.tag.ai{background:var(--blue-bg);color:var(--navy2);border:1px solid #c8dcf6}
+.rcard .csub{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+.metric{padding:10px 0;border-top:1px solid var(--line2)}
+.metric:first-of-type{border-top:none}
+.metric .ml{font-size:14px;font-weight:700;color:var(--ink);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.metric .w{font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--gold);
+  background:var(--gold-bg);border:1px solid #ecd9a6;border-radius:12px;padding:1px 7px}
+.metric .w.north{color:var(--navy2);background:var(--blue-bg);border-color:#c8dcf6}
+.metric .md{font-size:12.5px;color:var(--ink2);margin-top:3px}
+.callout{margin-top:16px;background:var(--gold-bg);border:1px solid #ecd9a6;border-radius:12px;padding:14px 18px}
+.callout .ct{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.callout p{margin:0;font-size:13.5px;color:var(--ink2)}
+.callout .cadence{margin-top:8px;font-size:12.5px;color:var(--muted)}
+
+/* Scorecard table */
+.tablewrap{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line2);white-space:nowrap}
+th{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:#f8fafd}
+tr:last-child td{border-bottom:none}
+.empty{padding:26px 20px;text-align:center;color:var(--muted);font-size:14px}
+
+.foot{margin-top:34px;color:var(--faint);font-size:11.5px;text-align:center}
+.foot .dot{color:var(--line);margin:0 6px}
+#error{display:none;background:#fdecec;border:1px solid #f3b6b6;color:#8a1a1a;
+  border-radius:12px;padding:14px 18px;font-size:13.5px;margin-bottom:16px}
+@media(max-width:720px){
+  .kpis{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr}
+  .hero h1{font-size:22px}
+  .step .flag{margin-left:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="/index.html">← Mission Control</a>
+  <div id="error"></div>
+  <div id="app" aria-busy="true">
+    <div class="empty" style="background:#fff;border:1px solid var(--line);border-radius:14px">Loading capstone tracker…</div>
+  </div>
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const API = '/api/capstone-program';
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const has = (v) => v != null && String(v).trim() !== '';
+
+function fmtDate(d){
+  try{
+    return d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+  }catch(_){ return ''; }
+}
+function parseStart(s){
+  if(!has(s)) return null;
+  // Expect YYYY-MM-DD; parse as local date to avoid TZ drift
+  const m = String(s).trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m){ return new Date(+m[1], +m[2]-1, +m[3]); }
+  const d = new Date(s);
+  return isNaN(d) ? null : d;
+}
+function addDays(base, n){ const d = new Date(base.getTime()); d.setDate(d.getDate()+n); return d; }
+
+/* Header */
+function renderHero(d){
+  const team = has(d.team_name)
+    ? `<span class="pill">Team: <b>${esc(d.team_name)}</b></span>`
+    : `<span class="pill">Team name: <b>(the team sets its own space-themed name — Week 1)</b></span>`;
+  const start = has(d.start_date)
+    ? `<span class="pill">Start: <b>${esc(fmtDate(parseStart(d.start_date)) || d.start_date)}</b></span>`
+    : `<span class="pill">Start date: <b>TBD (set by Edwin)</b></span>`;
+  const admin = has(d.utd_admin) ? `<span class="pill">UTD admin: <b>${esc(d.utd_admin)}</b></span>` : '';
+  const exos = has(d.owner_exos) ? `<span class="pill">Exos owner: <b>${esc(d.owner_exos)}</b></span>` : '';
+  return `<div class="hero">
+    <div class="kicker">Progress Tracker</div>
+    <h1>${esc(d.program || 'Exos × UTD EXO3 Payload Capstone')}</h1>
+    <div class="meta">${team}${start}${admin}${exos}</div>
+    ${has(d.goal) ? `<div class="goal">${esc(d.goal)}</div>` : ''}
+  </div>`;
+}
+
+/* KPI banner */
+function renderKpis(d){
+  const t = d.north_star_targets || {};
+  const cap = t.bay_capacity_kg != null ? t.bay_capacity_kg : 135;
+  const gate = t.kg_booked_reward_gate != null ? t.kg_booked_reward_gate : 100;
+  const highProb = has(t.high_prob_opportunities) ? t.high_prob_opportunities : '10× the current weekly run-rate';
+
+  // kg booked toward the reward gate — 0 until scorecard has data
+  const kgBooked = kgBookedFromScorecard(d);
+  const pct = gate > 0 ? Math.max(0, Math.min(100, Math.round((kgBooked / gate) * 100))) : 0;
+
+  return `<div class="kpis">
+    <div class="kpi">
+      <div class="lbl">Bay capacity to fill</div>
+      <div class="big">${esc(cap)}<span> kg</span></div>
+      <div class="cap">Open payload mass on BLK3 Flight 2</div>
+    </div>
+    <div class="kpi gate">
+      <div class="lbl">Launch-reward gate</div>
+      <div class="big">${esc(kgBooked)}<span> / ${esc(gate)} kg</span></div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+      <div class="cap">${kgBooked>0 ? pct+'% to the reward gate' : 'Fills as kg get booked'}</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">High-probability target</div>
+      <div class="big" style="font-size:20px;line-height:1.25;margin-top:9px">${esc(highProb)}</div>
+      <div class="cap">Baseline locked Week 1</div>
+    </div>
+  </div>`;
+}
+function kgBookedFromScorecard(d){
+  const sc = d.scorecard || {};
+  const weeks = Array.isArray(sc.weeks) ? sc.weeks : [];
+  if(!weeks.length) return 0;
+  // Try common keys; fall back to 0. Use the latest cumulative value if present.
+  const keys = ['kg_booked','booked_kg','kg_booked_cumulative','kg_advanced','cumulative_kg_booked'];
+  let best = 0;
+  for(const w of weeks){
+    for(const k of keys){
+      const v = Number(w[k]);
+      if(!isNaN(v)) best = Math.max(best, v);
+    }
+  }
+  return best;
+}
+
+/* Weekly timeline */
+function renderTimeline(d){
+  const gates = Array.isArray(d.weekly_gates) ? d.weekly_gates : [];
+  if(!gates.length) return '';
+  const start = parseStart(d.start_date);
+  let currentWeek = 0;
+  if(start){
+    const today = new Date();
+    const diffDays = Math.floor((today - start) / 86400000);
+    currentWeek = Math.floor(diffDays / 7) + 1; // week 1 = first 7 days
+  }
+  const rows = gates.map(g => {
+    const wk = g.week;
+    let cls = 'upcoming', flag = 'Upcoming';
+    if(start){
+      if(wk < currentWeek){ cls='done'; flag='Complete'; }
+      else if(wk === currentWeek){ cls='current'; flag='In progress'; }
+    }
+    let dateHtml = '';
+    if(start){
+      const wd = addDays(start, (wk-1)*7);
+      const we = addDays(wd, 6);
+      dateHtml = `<span class="date">${esc(fmtDate(wd))} – ${esc(fmtDate(we))}</span>`;
+    }
+    return `<div class="step ${cls}">
+      <div class="wk">
+        <span class="wknum">Week ${esc(wk)}</span>
+        ${dateHtml}
+        <span class="title">${esc(g.title || '')}</span>
+        <span class="flag ${cls}">${flag}</span>
+      </div>
+      ${has(g.gate) ? `<div class="gate">${esc(g.gate)}</div>` : ''}
+    </div>`;
+  }).join('');
+  return `<div class="section">
+    <h2>Weekly Gates</h2>
+    <p class="hint">${start ? '15-week plan with calendar dates from the start date.' : '15-week plan. Calendar dates appear once Edwin sets the start date; all weeks show as upcoming until then.'}</p>
+    <div class="timeline">${rows}</div>
+  </div>`;
+}
+
+/* Rubric */
+function renderRubric(d){
+  const g = d.grading_metrics || {};
+  const dollars = Array.isArray(g.student_outcomes_real_dollars) ? g.student_outcomes_real_dollars : [];
+  const ai = Array.isArray(g.ai_effectiveness) ? g.ai_effectiveness : [];
+
+  const metric = (m, withWeight) => {
+    let w = '';
+    if(withWeight && has(m.weight)){
+      const north = /north/i.test(m.weight);
+      w = `<span class="w ${north?'north':''}">${esc(m.weight)}</span>`;
+    }
+    return `<div class="metric">
+      <div class="ml">${esc(m.label || m.key || '')} ${w}</div>
+      ${has(m.definition) ? `<div class="md">${esc(m.definition)}</div>` : ''}
+    </div>`;
+  };
+
+  const dollarCard = `<div class="rcard">
+    <h3>Graded on real payload $ <span class="tag dollars">Student outcomes</span></h3>
+    <p class="csub">Your grade tracks the pipeline and bookings you actually move — not slideware.</p>
+    ${dollars.length ? dollars.map(m=>metric(m,true)).join('') : '<div class="md" style="color:var(--muted)">Metrics loading…</div>'}
+  </div>`;
+
+  const aiCard = `<div class="rcard">
+    <h3>AI effectiveness <span class="tag ai">Human × fleet</span></h3>
+    <p class="csub">How much leverage you get from directing the EXO3 agent fleet.</p>
+    ${ai.length ? ai.map(m=>metric(m,false)).join('') : '<div class="md" style="color:var(--muted)">Metrics loading…</div>'}
+  </div>`;
+
+  const callout = (has(g.challenge) || has(g.cadence)) ? `<div class="callout">
+    ${has(g.challenge) ? `<div class="ct">The Challenge</div><p>${esc(g.challenge)}</p>` : ''}
+    ${has(g.cadence) ? `<div class="cadence"><b>Cadence:</b> ${esc(g.cadence)}</div>` : ''}
+  </div>` : '';
+
+  return `<div class="section">
+    <h2>How You're Graded</h2>
+    <p class="hint">Two lenses: the real dollars you generate, and how effectively you wield AI to get there.</p>
+    <div class="cards">${dollarCard}${aiCard}</div>
+    ${callout}
+  </div>`;
+}
+
+/* Scorecard table */
+function titleCase(k){
+  return String(k).replace(/[_\-]+/g,' ').replace(/\b\w/g, c=>c.toUpperCase());
+}
+function renderScorecard(d){
+  const sc = d.scorecard || {};
+  const weeks = Array.isArray(sc.weeks) ? sc.weeks : [];
+  const stamp = has(sc.last_computed) ? ` · Last computed ${esc(sc.last_computed)}` : '';
+  let body;
+  if(!weeks.length){
+    body = `<div class="tablewrap"><div class="empty">Scorecard populates weekly once outreach begins.</div></div>`;
+  }else{
+    // Union of keys across rows, preserving first-seen order
+    const cols = [];
+    weeks.forEach(w => Object.keys(w||{}).forEach(k => { if(!cols.includes(k)) cols.push(k); }));
+    const head = cols.map(c=>`<th>${esc(titleCase(c))}</th>`).join('');
+    const rows = weeks.map(w =>
+      `<tr>${cols.map(c=>{
+        const v = w[c];
+        return `<td>${esc(v==null?'—':(typeof v==='object'?JSON.stringify(v):v))}</td>`;
+      }).join('')}</tr>`
+    ).join('');
+    body = `<div class="tablewrap"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  return `<div class="section">
+    <h2>Weekly Scorecard</h2>
+    <p class="hint">Week-over-week trend on the graded metrics.${stamp}</p>
+    ${body}
+  </div>`;
+}
+
+/* Sales funnel explainer + prioritized work queue (fed daily by the sales engine) */
+function renderFunnelQueue(d){
+  const f = d.payload_funnel || null;
+  const ex = Array.isArray(d.funnel_explainer) ? d.funnel_explainer : [];
+  const q = Array.isArray(d.work_queue) ? d.work_queue : [];
+  if(!f && !q.length) return '';
+
+  const stampF = f && f.updated ? ` <span class="pill">Updated ${esc(f.updated)}</span>` : '';
+  const counts = f ? `
+    <div class="kpis" style="margin-top:6px">
+      <div class="kpi"><div class="lbl">NEW — unworked</div><div class="big">${esc(f.NEW||0)}</div><div class="cap">Pick these up first</div></div>
+      <div class="kpi"><div class="lbl">RESEARCHING</div><div class="big">${esc(f.RESEARCHING||0)}</div><div class="cap">Finding POC + funding</div></div>
+      <div class="kpi"><div class="lbl">READY — to send</div><div class="big">${esc(f.READY||0)}</div><div class="cap">POC + draft done → Lizi sends</div></div>
+    </div>` : '';
+
+  const legend = ex.length ? `<div style="margin-top:12px">${ex.map(s=>`
+    <div style="margin:6px 0;padding:8px 12px;background:#0c1c36;border:1px solid var(--line);border-radius:8px">
+      <b>${esc(s.stage)}</b> — ${esc(s.meaning)}</div>`).join('')}</div>` : '';
+
+  const stageColor = st => st==='RESEARCHING' ? 'var(--yellow,#eab308)' : (st==='READY' ? 'var(--green,#22c55e)' : 'var(--accent)');
+  const rows = q.map(item => `
+    <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin:7px 0;background:#0c1c36">
+      <div style="min-width:30px;font-weight:700;font-size:18px;color:var(--muted)">${esc(item.rank||'')}</div>
+      <div style="flex:1">
+        <div style="font-weight:600">${esc(item.name||'')}
+          <span class="pill" style="border-color:${stageColor(item.stage)};color:${stageColor(item.stage)}">${esc(item.stage||'')}</span>
+          ${item.has_poc ? '' : '<span class="pill" style="border-color:var(--red,#ff4444);color:var(--red,#ff4444)">no POC yet</span>'}
+        </div>
+        <div style="color:var(--muted);font-size:13px;margin-top:3px">Why it's ranked here: ${esc(item.why||'')}</div>
+        <div style="font-size:13px;margin-top:3px">➡️ <b>Next:</b> ${esc(item.next_action||'')}</div>
+      </div>
+      <div style="min-width:64px;text-align:right"><div style="font-size:20px;font-weight:700">${esc(item.score||0)}</div><div style="color:var(--muted);font-size:11px">priority</div></div>
+    </div>`).join('');
+
+  return `<div class="section">
+    <h2>📊 Your Sales Funnel${stampF}</h2>
+    <p class="hint">Every prospect moves through three stages. Your job is to move leads to the right: <b>NEW → RESEARCHING → READY</b>.</p>
+    ${counts}
+    ${legend}
+  </div>
+  <div class="section">
+    <h2>🎯 Your Prioritized Work Queue</h2>
+    <p class="hint">${esc(d.work_queue_note || 'Work this queue by rank, not top-to-bottom — the highest-priority leads are first, scored on funding signal, a named contact, and leverage. Move each lead NEW → RESEARCHING → READY, then hand READY leads to Lizi to send.')}</p>
+    ${rows || '<div class="md" style="color:var(--muted)">Queue loading…</div>'}
+  </div>`;
+}
+
+function render(d){
+  $('app').removeAttribute('aria-busy');
+  $('app').innerHTML =
+    renderHero(d) +
+    renderKpis(d) +
+    renderFunnelQueue(d) +
+    renderTimeline(d) +
+    renderRubric(d) +
+    renderScorecard(d);
+  $('foot').innerHTML =
+    `Exos Aerospace · Mission Control<span class="dot">•</span>Scope: Payload Sales`+
+    `<span class="dot">•</span>Auto-refreshes every 60s`+
+    `<span class="dot">•</span>Updated ${esc(new Date().toLocaleTimeString())}`;
+}
+
+async function load(){
+  try{
+    const res = await fetch(API, {headers:{'Accept':'application/json'}, cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    $('error').style.display='none';
+    render(data || {});
+  }catch(err){
+    const e = $('error');
+    e.style.display='block';
+    e.textContent = 'Could not load the tracker right now ('+err.message+'). Retrying automatically…';
+    // Keep any previously rendered content in place; if none, show a friendly stub.
+    if($('app').getAttribute('aria-busy')==='true'){
+      $('app').removeAttribute('aria-busy');
+      $('app').innerHTML = `<div class="empty" style="background:#fff;border:1px solid var(--line);border-radius:14px">Waiting for the capstone data feed…</div>`;
+    }
+  }
+}
+
+load();
+setInterval(load, 60000);
+</script>
+</body>
+</html>
