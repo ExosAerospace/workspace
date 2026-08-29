@@ -263,13 +263,20 @@ def main():
         near_due = days is not None and NEAR_DUE_MIN <= days <= NEAR_DUE_MAX
         if near_due:
             computed = max(computed, NEAR_DUE_FLOOR)
+        # CRITICAL overdue escalation (Jon 2026-08-29): a maxed-out task (raw >= 100) that is
+        # ALSO overdue breaks above the 100 ceiling into a red-glow tier so it pins to the very
+        # top of the board and cannot be missed. Scales 101..130 by how many days overdue.
+        # Blocked tasks are excluded (they're gated, not actionable).
+        if days is not None and days < 0 and raw >= 100 and not blk:
+            computed = 100 + min(int(-days), 30)
         # Manual override: a `pin:<N>` tag hard-sets the score, beating the computed value
         # (and the blocker downgrade). Explicit human intent wins. The computed score is kept
         # in the breakdown so we can show "pinned to 95 (would compute 58)".
         pin = manual_pin(t.get("tags"))
         final = pin if pin is not None else computed
+        is_critical = final > 100  # overdue + maxed (or a >100 manual pin) → red-glow tier
         scores[str(t["id"])] = {
-            "score": final, "pillar": pillar, "blocked": bool(blk),
+            "score": final, "pillar": pillar, "blocked": bool(blk), "critical": is_critical,
             "pinned": pin is not None, "pin_value": pin, "computed_score": computed,
             "north_star": ns, "role_ns": role_ns, "owner": t.get("assigned_email") or t.get("owner"),
             "title": (t.get("title") or "")[:70],
