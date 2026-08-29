@@ -260,18 +260,35 @@ const PDF_CONVERTIBLE = ['.docx', '.doc'];
 // immediately, then polls /api/chat/result. The agent runs in the background here
 // keyed by jobId; the reply lands whatever page the user is on. Jobs are per-user
 // (email-scoped) and expire after ~20 min to bound memory.
-const chatJobs = new Map();  // jobId -> { email, status:'pending'|'done', reply, ts }
+const chatJobs = new Map();  // jobId -> { email, skey, isMain, status:'pending'|'done', reply, ts }
+const chatMainBusy = new Set();   // emails whose MAIN continuity session has a job in flight
+const CHAT_MAX_PARALLEL = 4;      // per-user concurrent question cap (guards runaway agent spawns)
 function chatJobsGC() {
   const cutoff = Date.now() - 20 * 60 * 1000;
-  for (const [id, j] of chatJobs) if (j.ts < cutoff) chatJobs.delete(id);
+  for (const [id, j] of chatJobs) if (j.ts < cutoff) {
+    if (j.isMain && j.status === 'pending') chatMainBusy.delete(j.email);
+    chatJobs.delete(id);
+  }
 }
-function runExobotChat(jobId, email, msg) {
+function chatPendingCount(email) {
+  let n = 0; for (const j of chatJobs.values()) if (j.email === email && j.status === 'pending') n++; return n;
+}
+// Lane assignment: the FIRST in-flight question uses the user's persistent continuity session
+// (agent:main:mcchat-<slug>). A question fired while that one is still running forks into its own
+// parallel lane (…-p<id>) so the two truly run at once without colliding on one session — like
+// running a second task in a separate Discord channel. When the main lane frees, continuity resumes.
+function chatAssignSession(email, jobId) {
   const slug = (email || 'anon').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
-  const skey = 'agent:main:mcchat-' + slug;
-  const tagged = `[Mission Control chat · ${email || 'user'}] ${msg}`;
+  const mainKey = 'agent:main:mcchat-' + slug;
+  if (!chatMainBusy.has(email)) { chatMainBusy.add(email); return { skey: mainKey, isMain: true }; }
+  return { skey: mainKey + '-p' + jobId.slice(0, 6), isMain: false };
+}
+function runExobotChat(jobId, msg) {
+  const job = chatJobs.get(jobId); if (!job) return;
+  const tagged = `[Mission Control chat · ${job.email || 'user'}] ${msg}`;
   const { execFile } = require('child_process');
   const childEnv = { ...process.env, PATH: '/opt/homebrew/bin:' + (process.env.PATH || '/usr/bin:/bin') };
-  execFile(OPENCLAW_BIN, ['agent', '--session-key', skey, '-m', tagged, '--json', '--timeout', '150'],
+  execFile(OPENCLAW_BIN, ['agent', '--session-key', job.skey, '-m', tagged, '--json', '--timeout', '150'],
     { timeout: 165000, maxBuffer: 16 * 1024 * 1024, env: childEnv }, (err, stdout) => {
       let reply = '';
       try {
@@ -280,7 +297,10 @@ function runExobotChat(jobId, email, msg) {
           || (j.result && j.result.meta && j.result.meta.finalAssistantVisibleText) || '';
       } catch {}
       if (!reply) reply = err ? 'Exobot timed out or errored on that one — try again or use the email lane.' : 'No reply.';
-      chatJobs.set(jobId, { email, status: 'done', reply, ts: Date.now() });
+      const cur = chatJobs.get(jobId) || job;
+      cur.status = 'done'; cur.reply = reply; cur.ts = Date.now();
+      chatJobs.set(jobId, cur);
+      if (cur.isMain) chatMainBusy.delete(cur.email);   // free the continuity lane
     });
 }
 // docx -> HTML with EMBEDDED images (via mammoth). macOS `textutil` drops all embedded images
@@ -3658,12 +3678,20 @@ const server = http.createServer((req, res) => {
       try { msg = (JSON.parse(body || '{}').message || '').toString().trim(); } catch {}
       if (!msg) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'empty message' })); return; }
       if (msg.length > 4000) msg = msg.slice(0, 4000);
-      // Async: create a background job, return its id immediately. The widget polls
-      // /api/chat/result, so the answer survives navigating to another page.
+      // Async + parallel: create a background job, return its id immediately. The widget
+      // polls /api/chat/result, so the answer survives navigation; and a question fired
+      // while another is still running forks into its own lane so both run at once.
       chatJobsGC();
+      const email = session.email || 'user';
+      if (chatPendingCount(email) >= CHAT_MAX_PARALLEL) {
+        res.writeHead(429, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: `You already have ${CHAT_MAX_PARALLEL} questions running — let one finish before adding another.` }));
+        return;
+      }
       const jobId = crypto.randomBytes(12).toString('hex');
-      chatJobs.set(jobId, { email: session.email || 'user', status: 'pending', reply: '', ts: Date.now() });
-      runExobotChat(jobId, session.email || 'user', msg);
+      const lane = chatAssignSession(email, jobId);
+      chatJobs.set(jobId, { email, skey: lane.skey, isMain: lane.isMain, status: 'pending', reply: '', ts: Date.now() });
+      runExobotChat(jobId, msg);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ jobId }));
     });

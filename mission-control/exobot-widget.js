@@ -44,8 +44,9 @@
     wrap.innerHTML =
       '<div id="exobotFab" title="Ask Exobot">💬<span id="ecBadge"></span></div>'
       + '<div id="exobotChat">'
-      + '<div class="ec-head"><span>🤖 Ask Exobot <span class="ec-sub">private session · follows you across pages</span></span>'
-      + '<button class="ec-x" id="ecClose">✕</button></div>'
+      + '<div class="ec-head"><span>🤖 Ask Exobot <span class="ec-sub">private · follows you across pages · ask several at once</span></span>'
+      + '<span><button class="ec-x" id="ecClear" title="Clear conversation">🗑</button>'
+      + '<button class="ec-x" id="ecClose">✕</button></span></div>'
       + '<div class="ec-body" id="ecBody"></div>'
       + '<div class="ec-foot">'
       + '<textarea id="ecInput" rows="1" placeholder="Ask Exobot…  (Enter to send, Shift+Enter for newline)"></textarea>'
@@ -53,6 +54,7 @@
     document.body.appendChild(wrap);
     document.getElementById('exobotFab').addEventListener('click', function () { toggle(true); });
     document.getElementById('ecClose').addEventListener('click', function () { toggle(false); });
+    document.getElementById('ecClear').addEventListener('click', clearConv);
     document.getElementById('ecSendBtn').addEventListener('click', send);
     document.getElementById('ecInput').addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
@@ -77,9 +79,11 @@
       save(OPENK, true);
     } else { p.classList.remove('open'); fab.style.display = ''; save(OPENK, false); }
   }
+  function pushHist(m) { hist.push(m); if (hist.length > 120) hist = hist.slice(-120); save(HIST, hist); }
+  function clearConv() { hist = []; pending = []; save(HIST, hist); save(PEND, pending); unread = 0; badge(0); render(); }
   function greet() {
-    hist.push({ who: 'bot', text: "Hi — I'm Exobot. Ask me anything, or tell me to add a task, run DD, find a document, etc. This conversation follows you across pages, so you won't lose an answer if you navigate away." });
-    save(HIST, hist); render();
+    pushHist({ who: 'bot', text: "Hi — I'm Exobot. Ask me anything, or tell me to add a task, run DD, find a document, etc. This conversation follows you across pages, and you can fire several questions at once — a new one runs in parallel while another is still working." });
+    render();
   }
   function bubble(who, text, thinking) {
     var d = document.createElement('div'); d.className = 'ec-msg ec-' + who + (thinking ? ' ec-thinking' : '');
@@ -89,21 +93,26 @@
     var b = document.getElementById('ecBody'); if (!b) return;
     b.innerHTML = '';
     hist.forEach(function (m) { b.appendChild(bubble(m.who, m.text)); });
-    pending.forEach(function (p) { b.appendChild(bubble('bot', '…thinking', true)); });
+    pending.forEach(function (p) { b.appendChild(bubble('bot', '…working: ' + (p.q || '').slice(0, 46), true)); });
     b.scrollTop = b.scrollHeight;
   }
   function send() {
     var inp = document.getElementById('ecInput'); var msg = (inp.value || '').trim(); if (!msg) return;
     inp.value = '';
-    hist.push({ who: 'me', text: msg }); save(HIST, hist); render();
+    pushHist({ who: 'me', text: msg }); render();
     var btn = document.getElementById('ecSendBtn'); btn.disabled = true;
     fetch('/api/chat', { method: 'POST', credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg }) })
-      .then(function (r) { if (r.status === 401) { hist.push({ who: 'bot', text: 'Session expired — reload and log in.' }); save(HIST, hist); render(); return null; } return r.json(); })
-      .then(function (j) { btn.disabled = false; if (!j) return;
-        if (j.jobId) { pending.push({ jobId: j.jobId, q: msg }); save(PEND, pending); render(); poll(); }
-        else { hist.push({ who: 'bot', text: j.reply || j.error || 'No reply.' }); save(HIST, hist); render(); } })
-      .catch(function (e) { btn.disabled = false; hist.push({ who: 'bot', text: 'Error: ' + e.message }); save(HIST, hist); render(); });
+      .then(function (r) {
+        btn.disabled = false;
+        if (r.status === 401) { pushHist({ who: 'bot', text: 'Session expired — reload and log in.' }); render(); return; }
+        return r.json().then(function (j) {
+          if (r.status === 429) { pushHist({ who: 'bot', text: (j && j.error) || 'Too many questions running at once — let one finish.' }); render(); return; }
+          if (j && j.jobId) { pending.push({ jobId: j.jobId, q: msg }); save(PEND, pending); render(); poll(); }
+          else { pushHist({ who: 'bot', text: (j && (j.reply || j.error)) || 'No reply.' }); render(); }
+        });
+      })
+      .catch(function (e) { btn.disabled = false; pushHist({ who: 'bot', text: 'Error: ' + e.message }); render(); });
     var inp2 = document.getElementById('ecInput'); if (inp2) inp2.focus();
   }
   function poll() {
@@ -115,7 +124,7 @@
           if (!j || j.status === 'pending') return;
           // done or error — resolve this job
           pending = pending.filter(function (x) { return x.jobId !== p.jobId; }); save(PEND, pending);
-          hist.push({ who: 'bot', text: (j.reply || j.error || 'No reply.') }); save(HIST, hist);
+          pushHist({ who: 'bot', text: (j.reply || j.error || 'No reply.') });
           render();
           if (!isOpen()) { unread++; badge(unread); }
         }).catch(function () {});
