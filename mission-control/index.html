@@ -804,8 +804,17 @@
 <script>
 // ── STATE ──
 let tasks = [];
-let sortByScore = true;       // DEFAULT board order = Mission Score (Jon 2026-08-27); due-date rides in via urgency/aging
-let sortByDue = false;        // sort by soonest due date (mutually exclusive with score)
+// Board sort DEFAULTS to Mission Score for every employee (Jon 2026-08-29). A user can switch to
+// another order and their choice persists per-browser (localStorage); new users get Mission Score.
+let _savedSort = null; try { _savedSort = localStorage.getItem('mc_task_sort'); } catch (e) {}
+let sortByScore = _savedSort ? _savedSort === 'score' : true;
+let sortByDue = _savedSort === 'due';
+function _persistSort() { try { localStorage.setItem('mc_task_sort', sortByDue ? 'due' : sortByScore ? 'score' : 'default'); } catch (e) {} }
+function syncSortButtons() {
+  const b = document.getElementById('scoreToggle'); if (b) b.classList.toggle('active', sortByScore);
+  const d = document.getElementById('dueSortToggle'); if (d) d.classList.toggle('active', sortByDue);
+}
+syncSortButtons();
 let MSCORES = {};             // task_id -> {score,pillar,blocked} from data/mission-scores.json
 async function loadMissionScores() {
   try {
@@ -836,6 +845,7 @@ function toggleScoreSort() {
   if (b) b.classList.toggle('active', sortByScore);
   const d = document.getElementById('dueSortToggle');
   if (d) d.classList.toggle('active', sortByDue);
+  _persistSort();
   render();
 }
 function toggleDueSort() {
@@ -845,6 +855,7 @@ function toggleDueSort() {
   if (d) d.classList.toggle('active', sortByDue);
   const b = document.getElementById('scoreToggle');
   if (b) b.classList.toggle('active', sortByScore);
+  _persistSort();
   render();
 }
 let dragTaskId = null;
