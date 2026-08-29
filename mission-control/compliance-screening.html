@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compliance Screening — Exos Mission Control</title>
+<style>
+  :root{--navy:#0B2A4A;--red:#C8102E;--ink:#14202E;--gray:#5A6675;--line:#E1E8F0;--bg:#F5F8FB;--green:#1a7f3c;--amber:#c47f10}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  header{background:var(--navy);color:#fff;padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
+  header .t{font-weight:800;letter-spacing:.5px}
+  header a{color:#cdd9e6;text-decoration:none;font-size:13px}
+  .wrap{max-width:1040px;margin:0 auto;padding:22px}
+  .sub{color:var(--gray);font-size:12.5px;margin:-6px 0 14px}
+  .counts{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+  .chip{border:1px solid var(--line);border-top:3px solid var(--navy);border-radius:8px;padding:10px 16px;text-align:center;background:#fff;min-width:96px}
+  .chip .n{font-size:24px;font-weight:800;color:var(--navy)}
+  .chip.green{border-top-color:var(--green)} .chip.green .n{color:var(--green)}
+  .chip.bad{border-top-color:var(--red)} .chip.bad .n{color:var(--red)}
+  .chip .l{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin-top:2px}
+  section{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin-bottom:16px}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--navy);border-bottom:2px solid var(--line);padding-bottom:6px;margin:0 0 10px}
+  .flag{padding:11px 14px;border-radius:8px;margin-bottom:9px;font-size:13.5px;line-height:1.5}
+  .flag.open{background:#fdecec;border-left:4px solid var(--red)}
+  .flag.cleared{background:#eef4ef;border-left:4px solid var(--green)}
+  .flag.confirmed{background:#fdf5e6;border-left:4px solid var(--amber)}
+  .flag .p{font-weight:800;color:var(--navy)} .flag .meta{color:var(--gray);font-size:12px}
+  .badge{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:2px 7px;border-radius:10px;color:#fff;margin-left:6px}
+  .badge.open{background:var(--red)} .badge.cleared{background:var(--green)} .badge.confirmed{background:var(--amber)}
+  .dispo{margin-top:5px;font-size:12px;color:#333;background:#fff;border:1px dashed var(--line);border-radius:6px;padding:6px 9px}
+  .muted{color:var(--gray);font-size:12px}
+  .foot{color:var(--gray);font-size:12px;margin-top:8px}
+  code{background:#eef2f7;padding:1px 6px;border-radius:4px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="t">🛡️ COMPLIANCE SCREENING — denied-party (Consolidated Screening List)</div>
+  <a href="/index.html">← Mission Control</a>
+</header>
+<div class="wrap">
+  <div id="content"><p class="muted">Loading screening report…</p></div>
+</div>
+<script>
+const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+async function load(){
+  let d;
+  try{ d=await (await fetch('/data/csl-screening.json?t='+Date.now())).json(); }
+  catch(e){ document.getElementById('content').innerHTML='<section><b>No screening report yet.</b><br><span class="muted">Run <code>python3 scripts/csl_nightly.py</code>.</span></section>'; return; }
+  const c=d.counts||{};
+  let h='';
+  h+='<div class="sub">Screens all CRM organizations + suppliers against the full 11-list U.S. Consolidated Screening List (BIS Entity/Denied/Unverified, State AECA-debarred + nonproliferation, OFAC SDN + non-SDN, SSI). CSL list date '+esc(d.csl_list_date)+' · '+esc(d.csl_entities)+' listed entities.</div>';
+  h+='<div class="counts">';
+  h+='<div class="chip"><div class="n">'+(c.screened||0)+'</div><div class="l">Screened</div></div>';
+  h+='<div class="chip green"><div class="n">'+(c.clear||0)+'</div><div class="l">Clear</div></div>';
+  h+='<div class="chip"><div class="n">'+(c.flagged||0)+'</div><div class="l">Flagged</div></div>';
+  h+='<div class="chip '+(c.open? 'bad':'green')+'"><div class="n">'+(c.open||0)+'</div><div class="l">Open — need review</div></div>';
+  h+='<div class="chip"><div class="n">'+(c.cleared||0)+'</div><div class="l">Dispositioned</div></div>';
+  h+='</div>';
+
+  const flags=d.flags||[];
+  const open=flags.filter(f=>!f.disposition);
+  if(open.length){
+    h+='<section><h2>✗ Open flags — disposition required (log a clear or confirm)</h2>';
+    open.forEach(f=>{h+=flagRow(f,'open');});
+    h+='</section>';
+  }
+  const done=flags.filter(f=>f.disposition);
+  if(done.length){
+    h+='<section><h2>✓ Dispositioned (audit record)</h2>';
+    done.forEach(f=>{h+=flagRow(f, (f.disposition&&f.disposition.status)||'cleared');});
+    h+='</section>';
+  }
+  if(!flags.length){ h+='<section><b>No matches — all parties clear.</b></section>'; }
+  h+='<div class="foot">Generated '+esc(d.generated)+' · nightly via <code>com.exos.csl-screen</code> · to disposition, add an entry to <code>mission-control/data/csl-dispositions.json</code> keyed by the normalized party name.</div>';
+  document.getElementById('content').innerHTML=h;
+}
+function flagRow(f, cls){
+  const st=(f.disposition&&f.disposition.status)||'open';
+  let h='<div class="flag '+cls+'"><span class="p">'+esc(f.party)+'</span> <span class="meta">['+esc(f.party_type)+']</span>'+
+    '<span class="badge '+st+'">'+esc(st)+'</span><br>'+
+    '<span class="meta">→ matches listed party <b>'+esc(f.listed_name)+'</b> · '+esc(f.list)+' · '+esc(f.programs||'')+' · '+esc(f.countries||'n/a')+' · score '+esc(f.score)+'</span>';
+  if(f.disposition){
+    h+='<div class="dispo"><b>'+esc(f.disposition.status.toUpperCase())+'</b> — '+esc(f.disposition.note)+'<br><span class="meta">by '+esc(f.disposition.by)+' · '+esc(f.disposition.date)+'</span></div>';
+  }
+  h+='</div>';
+  return h;
+}
+load(); setInterval(load,120000);
+</script>
+</body>
+</html>

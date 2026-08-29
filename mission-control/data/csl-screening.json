@@ -1,0 +1,29 @@
+{
+  "generated": "2026-08-29T12:32:34+00:00",
+  "csl_entities": 25964,
+  "csl_list_date": "2026-08-29",
+  "counts": {
+    "screened": 551,
+    "flagged": 1,
+    "open": 0,
+    "cleared": 1,
+    "clear": 550
+  },
+  "flags": [
+    {
+      "party": "Ideal Vacuum",
+      "party_type": "supplier",
+      "listed_name": "FUYA PARS PROSPECTIVE TECHNOLOGISTS",
+      "list": "Specially Designated Nationals (SDN) - Treasury Department",
+      "programs": "NPWMD, IFSR",
+      "countries": "IR",
+      "score": 1.0,
+      "disposition": {
+        "status": "cleared",
+        "note": "Name collision, no nexus. Our supplier is Ideal Vacuum Products (Albuquerque, NM, USA), a legitimate domestic vacuum-equipment vendor. The CSL match is an ALIAS on an Iran-based SDN (FUYA PARS PROSPECTIVE TECHNOLOGISTS; NPWMD/IFSR). Different entity, different country, no ownership or transactional nexus. Cleared.",
+        "by": "Exo, on John Quinn's instruction",
+        "date": "2026-08-29"
+      }
+    }
+  ]
+}
