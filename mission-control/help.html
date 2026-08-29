@@ -17,6 +17,11 @@
   a.home{color:var(--muted);font-size:13px;text-decoration:none}
   .wrap{max-width:820px;margin:0 auto;padding:24px 24px 90px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:0 0 18px;border-left:4px solid var(--accent)}
+  /* Daily-workflow callout — red pulsing glow, mirrors the critical-task border on the board */
+  .card.daily-first{border:2px solid #ff2d2d;border-left:4px solid #ff2d2d;box-shadow:0 0 10px rgba(255,45,45,.55),0 0 24px rgba(255,45,45,.3);animation:crit-glow 1.8s ease-in-out infinite}
+  @keyframes crit-glow{0%,100%{box-shadow:0 0 8px rgba(255,45,45,.5),0 0 16px rgba(255,45,45,.28)}50%{box-shadow:0 0 15px rgba(255,45,45,.85),0 0 30px rgba(255,45,45,.5)}}
+  .card.daily-first h2{color:#ff6b6b}
+  .card.daily-first ol li{margin:8px 0}
   h2{font-size:16px;margin:0 0 10px}
   ol,ul{margin:8px 0 0;padding-left:22px}
   li{margin:6px 0}
@@ -39,6 +44,18 @@
   <a class="home" href="/">← Mission Control</a>
 </header>
 <div class="wrap">
+
+  <div class="card daily-first">
+    <h2>🔴 Your Daily Workflow — Mission Control First</h2>
+    <p class="big"><b>Mission Control is the #1 task of your day.</b> Open it <b>before your inbox</b> and let your board — not your email — decide what you work on. Email is the <b>support tool</b> for Mission Control, not the other way around.</p>
+    <ol class="big">
+      <li><b>Start in Mission Control, not email.</b> First thing each day, open your board and work it <b>top-down</b>: the <b>red-glowing critical items</b> (overdue + top priority) first, then everything else in Mission Score order. The board has already ranked your day for you.</li>
+      <li><b>Let the board drive your priorities.</b> What's overdue, what's due today, and what's waiting on your decision is already surfaced and ranked. Work it in that order instead of reacting to whatever email arrived last.</li>
+      <li><b>Use email to <i>execute</i>, not to prioritize.</b> Email is how you communicate and get things done — but it serves the board. Forward or BCC the messages that matter to <code>exosmc@proton.me</code> and they become tasks, contacts, and decisions automatically. A full inbox is not your to-do list; your Mission Control board is.</li>
+      <li><b>Close the loop before you log off.</b> No red (critical/overdue) items left on your board, decisions answered, and status updates posted. If it's not in Mission Control, it didn't happen.</li>
+    </ol>
+    <div class="tip">Rule of thumb: <b>if you're deciding what to do next, look at Mission Control — not your inbox.</b> Email supports the board; the board runs your day.</div>
+  </div>
 
   <div class="card">
     <h2>What Mission Control is</h2>
