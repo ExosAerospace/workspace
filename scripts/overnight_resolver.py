@@ -258,6 +258,41 @@ def decision_for(task_id, open_decs):
     return None
 
 
+def held_sync(tasks, open_decs, resolved_ids, apply):
+    """D-7281672 (approved 2026-08-24): tasks with an open linked decision get parked at
+    state=Held with a decision-link note, so the nightly digest stops re-listing them
+    individually (noise reduction). If the linked decision closes and the task wasn't
+    already resolved to Done/Cancelled by auto_resolve, revert it to Blocked so it
+    re-enters normal flow instead of sitting in Held forever."""
+    now = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+    newly_held, reverted = [], []
+    for t in tasks:
+        tid = str(t["id"])
+        if tid in resolved_ids or _protected(t):
+            continue
+        state = t.get("state") or ""
+        dec = decision_for(t["id"], open_decs)
+        if dec and state != "Held":
+            note = f" [HELD {now[:10]} by overnight-resolver: linked to open Decision {dec.get('id')}; awaiting Jon. Reversible — auto-reopens when decision closes.]"
+            if apply:
+                try:
+                    sb_patch(t["id"], {"state": "Held", "description": (t.get("description") or "") + note})
+                except Exception as e:
+                    logline(f"held-set PATCH failed for {tid}: {e}"); continue
+            t["state"] = "Held"
+            newly_held.append(f"[{tid}] {(t.get('title') or '')[:56]} → HELD (decision {dec.get('id')})")
+        elif state == "Held" and not dec:
+            note = f" [UNHELD {now[:10]} by overnight-resolver: linked decision closed; reopened to Blocked.]"
+            if apply:
+                try:
+                    sb_patch(t["id"], {"state": "Blocked", "description": (t.get("description") or "") + note})
+                except Exception as e:
+                    logline(f"held-revert PATCH failed for {tid}: {e}"); continue
+            t["state"] = "Blocked"
+            reverted.append(f"[{tid}] {(t.get('title') or '')[:56]} → Blocked (decision closed)")
+    return newly_held, reverted
+
+
 def main():
     d = today()
     try:
@@ -294,6 +329,10 @@ def main():
         tasks = [t for t in tasks if str(t["id"]) not in resolved_ids]
         ws = [t for t in ws if str(t["id"]) not in resolved_ids]
 
+    # D-7281672: park decision-linked tasks at Held (mutates `tasks` in place) + auto-reopen
+    # ones whose decision closed. Runs against the full board, not just the top-15.
+    newly_held, reverted_held = held_sync(tasks, open_decs, resolved_ids, APPLY) if decisions_ok else ([], [])
+
     # Blocked + needs-Jon are computed from the FULL board (not just the top-15) so they always
     # surface; the radar/Top-3 use the ranked working set. Each item appears in ONE bucket.
     claimed = set()
@@ -305,13 +344,18 @@ def main():
                        + (f" — decision {dec.get('id')} open" if dec else " — no decision on file"))
         claimed.add(t["id"])
 
+    held_count = 0
     for t in sorted(tasks, key=rank_key):
         if t["id"] in claimed:
             continue
         due = parse_due(t)
         overdue = due is not None and due < d
         dec = decision_for(t["id"], open_decs) if decisions_ok else None
-        if dec:
+        if dec and t.get("state") == "Held" and f"[{t['id']}]" not in "".join(newly_held):
+            # Already parked on a prior run — don't re-list it every night (D-7281672 noise fix).
+            held_count += 1
+            claimed.add(t["id"])
+        elif dec:
             needs_jon.append(f"[{t['id']}] {(t.get('title') or '')[:58]} — decision {dec.get('id')} awaiting you")
             claimed.add(t["id"])
         elif overdue and not (t.get("assigned_to") or t.get("owner")):
@@ -338,6 +382,13 @@ def main():
         parts.append("🗳️ **NEEDS JON:**")
         parts += [f"• {x}" for x in needs_jon[:8]]
         parts.append("")
+    if newly_held or reverted_held or held_count:
+        parts.append("🔒 **HELD (decision open, parked off nightly list):**")
+        parts += [f"• NEW: {x}" for x in newly_held[:8]]
+        parts += [f"• REOPENED: {x}" for x in reverted_held[:8]]
+        if held_count:
+            parts.append(f"• {held_count} other item(s) already held — see MC for details")
+        parts.append("")
     if blocked:
         parts.append("⛔ **STILL BLOCKED:**")
         parts += [f"• {x}" for x in blocked[:8]]
@@ -358,6 +409,7 @@ def main():
 
     delivered = post_discord(summary)
     logline(f"run ok: ws={len(ws)} resolved={len(resolved)} blocked={len(blocked)} needs_jon={len(needs_jon)} "
+            f"held_new={len(newly_held)} held_reopened={len(reverted_held)} held_existing={held_count} "
             f"radar={len(advancing)} decisions_ok={decisions_ok} apply={APPLY} delivered={delivered}{' (dry-run)' if DRY else ''}")
     try:
         with open(USAGE_LOG, "a") as f:
