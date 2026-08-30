@@ -1799,23 +1799,25 @@ const server = http.createServer((req, res) => {
       'jquinn@exosaero.com': ['megawattcontrols@gmail.com'],
       'megawattcontrols@gmail.com': ['jquinn@exosaero.com'],
     };
+    // Which required-reading docs apply to a given user (role + departments).
+    const RR_DEPT_FOR_AUDIENCE = { '02-ground-operations': 'ops', '06-safety-ehs': 'ops', '04-procurement': 'procurement', '03-payload': 'sales', '08-security-cui': 'it-security', 'cmmc-2.0': 'it-security' };
+    const rrRequired = (doc, role, depts) => {
+      role = (role || '').toLowerCase();
+      // Members & early adopters: only Mission Control Getting Started — no other Exos training (Jon 2026-08-30).
+      if (role === 'member' || role === 'early_adopter') return doc.id === 'getting-started';
+      if (!doc.audience || doc.audience === 'all') return true;
+      if (role === 'admin' || role === 'manager') return true;
+      return Array.isArray(depts) && depts.includes(RR_DEPT_FOR_AUDIENCE[doc.audience] || doc.audience);
+    };
 
     // GET /api/required-reading → docs + this user's per-doc status
     if (req.url.split('?')[0] === '/api/required-reading' && req.method === 'GET') {
       if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
       const email = (session.email || '').toLowerCase();
-      const isMgr = session.role === 'admin' || session.role === 'manager';
       const rr = rrLoad();
-      // Department routing: 'all' → everyone; admins/managers → every doc; otherwise the doc's
-      // audience (area_id) maps to a department tag and shows only to users tagged with that dept.
-      const DEPT_FOR_AUDIENCE = { '02-ground-operations':'ops', '06-safety-ehs':'ops', '04-procurement':'procurement', '03-payload':'sales', '08-security-cui':'it-security', 'cmmc-2.0':'it-security' };
       const meUser = (loadUsers() || []).find(u => (u.email || '').toLowerCase() === email);
       const myDepts = (meUser && Array.isArray(meUser.departments)) ? meUser.departments : [];
-      const visibleDocs = rr.docs.filter(d => {
-        if (!d.audience || d.audience === 'all') return true;
-        if (isMgr) return true;
-        return myDepts.includes(DEPT_FOR_AUDIENCE[d.audience] || d.audience);
-      });
+      const visibleDocs = rr.docs.filter(d => rrRequired(d, session.role, myDepts));
       const mine = visibleDocs.map(d => {
         const prog = (rr.progress || []).find(p => p.user_email === email && p.doc_id === d.id && p.version === d.version) || null;
         const comp0 = (rr.completions || []).find(c => c.user_email === email && c.doc_id === d.id && c.doc_version === d.version && c.valid) || null;
@@ -1951,7 +1953,7 @@ const server = http.createServer((req, res) => {
       const rr = rrLoad();
       const users = loadUsers().filter(u => u.active !== false);
       const matrix = rr.docs.map(d => {
-        const rows = users.map(u => {
+        const rows = users.filter(u => rrRequired(d, u.role, u.departments)).map(u => {
           const email = (u.email || '').toLowerCase();
           const comp = (rr.completions || []).find(c => c.user_email === email && c.doc_id === d.id && c.doc_version === d.version);
           const prog = (rr.progress || []).find(p => p.user_email === email && p.doc_id === d.id && p.version === d.version);
