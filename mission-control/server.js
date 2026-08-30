@@ -1783,6 +1783,189 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── REQUIRED READING: verified-read tracker with server-side anti-gaming ──
+  // A ledger of required docs (data/required-reading.json). Reading is *proven* server-side:
+  // the client cannot self-certify. We store an open timestamp, clamp active-dwell to real
+  // wall-clock elapsed, require scroll-completion + multiple heartbeats, and only then record
+  // a valid completion. The enabled button is never sufficient — every ack is re-validated here.
+  {
+    const RR_FILE = path.join(__dirname, 'data', 'required-reading.json');
+    const rrLoad = () => { try { return JSON.parse(fs.readFileSync(RR_FILE, 'utf8')); } catch (e) { return { docs: [], progress: [], completions: [] }; } };
+    const rrSave = (o) => fs.writeFileSync(RR_FILE, JSON.stringify(o, null, 2));
+    const rrIsAdmin = (s) => s && (s.role === 'admin' || s.role === 'manager');
+    // Linked accounts: one person with two logins completes required reading once, and it
+    // shows complete under both. John Quinn = jquinn@exosaero.com + megawattcontrols@gmail.com.
+    const RR_ALIASES = {
+      'jquinn@exosaero.com': ['megawattcontrols@gmail.com'],
+      'megawattcontrols@gmail.com': ['jquinn@exosaero.com'],
+    };
+
+    // GET /api/required-reading → docs + this user's per-doc status
+    if (req.url.split('?')[0] === '/api/required-reading' && req.method === 'GET') {
+      if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+      const email = (session.email || '').toLowerCase();
+      const rr = rrLoad();
+      const mine = rr.docs.map(d => {
+        const prog = (rr.progress || []).find(p => p.user_email === email && p.doc_id === d.id && p.version === d.version) || null;
+        const comp = (rr.completions || []).find(c => c.user_email === email && c.doc_id === d.id && c.doc_version === d.version && c.valid) || null;
+        return {
+          doc_id: d.id, version: d.version,
+          completed: !!comp, valid: !!comp,
+          active_seconds: comp ? comp.active_seconds : (prog ? (prog.active_seconds || 0) : 0),
+          scroll_max_pct: comp ? comp.scroll_max_pct : (prog ? (prog.scroll_max_pct || 0) : 0),
+          acknowledged_at: comp ? comp.acknowledged_at : null
+        };
+      });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ docs: rr.docs, mine }));
+      return;
+    }
+
+    // POST /api/required-reading/open → start/refresh a progress record for (user,doc,version)
+    if (req.url.split('?')[0] === '/api/required-reading/open' && req.method === 'POST') {
+      if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+      let body = ''; req.on('data', c => { body += c; if (body.length > 1e5) req.destroy(); });
+      req.on('end', () => {
+        try {
+          const { doc_id } = JSON.parse(body || '{}');
+          const email = (session.email || '').toLowerCase();
+          const rr = rrLoad();
+          const doc = rr.docs.find(d => d.id === doc_id);
+          if (!doc) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'unknown doc' })); return; }
+          rr.progress = rr.progress || [];
+          let prog = rr.progress.find(p => p.user_email === email && p.doc_id === doc.id && p.version === doc.version);
+          const now = new Date().toISOString();
+          if (!prog) {
+            prog = {
+              user_email: email, user_name: session.name || email, doc_id: doc.id, version: doc.version,
+              server_open_at: now, active_seconds: 0, scroll_max_pct: 0, heartbeats: 0,
+              user_agent: req.headers['user-agent'] || '', ip: req.socket.remoteAddress || '', updated_at: now
+            };
+            rr.progress.push(prog);
+          } else if (!prog.server_open_at) {
+            prog.server_open_at = now;
+            prog.user_agent = req.headers['user-agent'] || prog.user_agent;
+            prog.ip = req.socket.remoteAddress || prog.ip;
+          }
+          rrSave(rr);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, server_open_at: prog.server_open_at }));
+        } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'bad request' })); }
+      });
+      return;
+    }
+
+    // POST /api/required-reading/heartbeat → accumulate dwell/scroll; clamp to wall-clock
+    if (req.url.split('?')[0] === '/api/required-reading/heartbeat' && req.method === 'POST') {
+      if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+      let body = ''; req.on('data', c => { body += c; if (body.length > 1e5) req.destroy(); });
+      req.on('end', () => {
+        try {
+          const { doc_id, active_seconds, scroll_max_pct, heartbeats } = JSON.parse(body || '{}');
+          const email = (session.email || '').toLowerCase();
+          const rr = rrLoad();
+          const doc = rr.docs.find(d => d.id === doc_id);
+          if (!doc) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'unknown doc' })); return; }
+          rr.progress = rr.progress || [];
+          const prog = rr.progress.find(p => p.user_email === email && p.doc_id === doc.id && p.version === doc.version);
+          if (!prog || !prog.server_open_at) { res.writeHead(409, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'not opened' })); return; }
+          const elapsed = Math.floor((Date.now() - new Date(prog.server_open_at).getTime()) / 1000);
+          const clamped = Math.max(0, Math.min(Number(active_seconds) || 0, elapsed));
+          prog.active_seconds = clamped;
+          prog.scroll_max_pct = Math.max(0, Math.min(100, Math.round(Number(scroll_max_pct) || 0)));
+          prog.heartbeats = Math.max(prog.heartbeats || 0, Number(heartbeats) || 0);
+          prog.updated_at = new Date().toISOString();
+          rrSave(rr);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, active_seconds: clamped }));
+        } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'bad request' })); }
+      });
+      return;
+    }
+
+    // POST /api/required-reading/ack → SERVER re-validates before recording a valid completion
+    if (req.url.split('?')[0] === '/api/required-reading/ack' && req.method === 'POST') {
+      if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+      let body = ''; req.on('data', c => { body += c; if (body.length > 1e5) req.destroy(); });
+      req.on('end', () => {
+        try {
+          const { doc_id } = JSON.parse(body || '{}');
+          const email = (session.email || '').toLowerCase();
+          const rr = rrLoad();
+          const doc = rr.docs.find(d => d.id === doc_id);
+          if (!doc) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'unknown doc' })); return; }
+          rr.progress = rr.progress || []; rr.completions = rr.completions || [];
+          // Already recorded for this version → idempotent success, don't nag.
+          const existing = rr.completions.find(c => c.user_email === email && c.doc_id === doc.id && c.doc_version === doc.version && c.valid);
+          if (existing) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, already: true, acknowledged_at: existing.acknowledged_at })); return; }
+          const prog = rr.progress.find(p => p.user_email === email && p.doc_id === doc.id && p.version === doc.version);
+          if (!prog || !prog.server_open_at) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Reading not started', reason: 'No open record for this document.', need: { min_active_seconds: doc.min_active_seconds, have_active_seconds: 0, scroll_max_pct: 0 } })); return; }
+          const now = Date.now();
+          const elapsed = Math.floor((now - new Date(prog.server_open_at).getTime()) / 1000);
+          const active = Math.max(0, Math.min(prog.active_seconds || 0, elapsed));
+          const scroll = Math.round(prog.scroll_max_pct || 0);
+          const hb = prog.heartbeats || 0;
+          const need = { min_active_seconds: doc.min_active_seconds, have_active_seconds: active, scroll_max_pct: scroll };
+          if (active < doc.min_active_seconds) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not enough active reading time', reason: `You have ${active}s of verified active reading; ${doc.min_active_seconds}s is required.`, need })); return; }
+          if (elapsed < doc.min_active_seconds) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Page not open long enough', reason: `The page has only been open ${elapsed}s; keep it open for the full review time.`, need })); return; }
+          if (doc.require_scroll_complete && scroll < 90) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Document not fully scrolled', reason: `You reached ${scroll}% of the page; scroll through at least 90% before acknowledging.`, need })); return; }
+          if (hb < 3) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not enough activity recorded', reason: 'The page must stay open and active long enough to record multiple check-ins.', need })); return; }
+          const comp = {
+            doc_id: doc.id, doc_version: doc.version, user_email: email, user_name: session.name || email,
+            opened_at: prog.server_open_at, acknowledged_at: new Date(now).toISOString(),
+            active_seconds: active, scroll_max_pct: scroll, heartbeats: hb,
+            user_agent: prog.user_agent || (req.headers['user-agent'] || ''), ip: prog.ip || (req.socket.remoteAddress || ''), valid: true
+          };
+          rr.completions.push(comp);
+          // Propagate to the same person's linked account(s) so they complete required reading once.
+          for (const alias of (RR_ALIASES[email] || [])) {
+            const dupe = rr.completions.find(c => c.user_email === alias && c.doc_id === doc.id && c.doc_version === doc.version && c.valid);
+            if (!dupe) rr.completions.push(Object.assign({}, comp, { user_email: alias, mirrored_from: email }));
+          }
+          rrSave(rr);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, acknowledged_at: comp.acknowledged_at }));
+        } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'bad request' })); }
+      });
+      return;
+    }
+
+    // GET /api/required-reading/admin → per-doc completion matrix over all active users
+    if (req.url.split('?')[0] === '/api/required-reading/admin' && req.method === 'GET') {
+      if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+      if (!rrIsAdmin(session)) { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Admin/manager only' })); return; }
+      const rr = rrLoad();
+      const users = loadUsers().filter(u => u.active !== false);
+      const matrix = rr.docs.map(d => {
+        const rows = users.map(u => {
+          const email = (u.email || '').toLowerCase();
+          const comp = (rr.completions || []).find(c => c.user_email === email && c.doc_id === d.id && c.doc_version === d.version);
+          const prog = (rr.progress || []).find(p => p.user_email === email && p.doc_id === d.id && p.version === d.version);
+          let status;
+          if (comp && comp.valid) status = 'completed';
+          else if (comp && !comp.valid) status = 'flagged';
+          else if (prog) status = 'in-progress';
+          else status = 'not-started';
+          return {
+            email: u.email, name: u.name || u.email, role: u.role || 'member', status,
+            active_seconds: comp ? comp.active_seconds : (prog ? (prog.active_seconds || 0) : 0),
+            scroll_max_pct: comp ? comp.scroll_max_pct : (prog ? (prog.scroll_max_pct || 0) : 0),
+            acknowledged_at: comp ? comp.acknowledged_at : null
+          };
+        });
+        const completed = rows.filter(r => r.status === 'completed').length;
+        return {
+          doc: { id: d.id, title: d.title, version: d.version, url: d.url, min_active_seconds: d.min_active_seconds, required: d.required, description: d.description },
+          rows,
+          summary: { doc_id: d.id, total: rows.length, completed, pending: rows.length - completed }
+        };
+      });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ matrix }));
+      return;
+    }
+  }
+
   // ── WELCOME PAGE (early adopter onboarding) ──
   if ((req.url === '/welcome' || req.url === '/welcome.html') && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'text/html' });
