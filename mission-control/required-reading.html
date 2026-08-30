@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Required Reading — Mission Control</title>
+<style>
+  :root{--navy:#0a1628;--card:#0f1e38;--text:#e8edf5;--muted:#8aa0bd;--accent:#0080ff;
+    --green:#22c55e;--red:#ff4444;--yellow:#eab308;--line:#1c3052;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--navy);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.55}
+  header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;
+    align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  h1{font-size:21px;margin:0}
+  .sub{color:var(--muted);font-size:13px;margin-top:4px}
+  a.home{color:var(--muted);font-size:13px;text-decoration:none}
+  a{color:var(--accent)}
+  .wrap{max-width:960px;margin:0 auto;padding:24px 24px 60px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:0 0 20px;border-left:4px solid var(--accent)}
+  h2{font-size:16px;margin:0 0 4px}
+  .docmeta{color:var(--muted);font-size:13px;margin-bottom:12px}
+  .pill{display:inline-block;border-radius:10px;padding:2px 9px;font-size:12px;font-weight:600}
+  .pill.ok{background:#0f2a1a;color:var(--green);border:1px solid var(--green)}
+  .pill.warn{background:#2a230a;color:var(--yellow);border:1px solid var(--yellow)}
+  .summary{font-size:15px;margin:0 0 14px;font-weight:600}
+  .summary .done{color:var(--green)} .summary .pend{color:var(--yellow)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#0a1830;color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.03em}
+  tr:nth-child(even) td{background:#0c1c36}
+  tr.pending td{background:#241a0a}
+  .st{font-weight:600}
+  .st.completed{color:var(--green)} .st.in-progress{color:var(--yellow)}
+  .st.not-started{color:var(--muted)} .st.flagged{color:var(--red)}
+  .muted{color:var(--muted)}
+  .notice{background:#0a1830;border:1px dashed var(--line);border-radius:8px;padding:14px 16px;color:#bcd0ee}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>📋 Required Reading</h1>
+  <div class="sub">Who has completed each required document — verified active reading, not self-reported.</div></div>
+  <a class="home" href="/">← Mission Control</a>
+</header>
+<div class="wrap" id="wrap">
+  <div class="notice" id="loading">Loading…</div>
+</div>
+<div class="wrap" id="hrdoc"></div>
+<script>
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function fmtSecs(s){ s=Math.max(0,Math.floor(Number(s)||0)); var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r; }
+function fmtDate(d){ if(!d) return '—'; try{ return new Date(d).toLocaleString(); }catch(e){ return d; } }
+function label(st){ return {completed:'Completed',' in-progress':'In progress','in-progress':'In progress','not-started':'Not started',flagged:'Flagged'}[st]||st; }
+
+fetch('/api/required-reading/admin',{credentials:'same-origin'})
+  .then(function(r){
+    if(r.status===403){ throw {code:403}; }
+    if(r.status===401){ throw {code:401}; }
+    return r.json();
+  })
+  .then(function(data){
+    var wrap=document.getElementById('wrap');
+    var out='';
+    (data.matrix||[]).forEach(function(m){
+      var d=m.doc, s=m.summary;
+      var allDone = s.pending===0 && s.total>0;
+      out+='<div class="card">';
+      out+='<h2>'+esc(d.title)+' '+(allDone?'<span class="pill ok">All complete</span>':'<span class="pill warn">'+s.pending+' pending</span>')+'</h2>';
+      out+='<div class="docmeta">Version '+esc(d.version)+' · min active read '+fmtSecs(d.min_active_seconds)+' · <a href="'+esc(d.url)+'">open document</a>'+(d.description?' · '+esc(d.description):'')+'</div>';
+      out+='<div class="summary"><span class="done">'+s.completed+'</span> / '+s.total+' complete · <span class="pend">'+s.pending+' pending</span></div>';
+      out+='<table><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Active time</th><th>Scroll</th><th>Completed</th></tr></thead><tbody>';
+      (m.rows||[]).sort(function(a,b){
+        var order={completed:0,'in-progress':1,flagged:1,'not-started':2};
+        return (order[a.status]-order[b.status]) || String(a.name).localeCompare(String(b.name));
+      }).forEach(function(u){
+        var pending = u.status!=='completed';
+        out+='<tr class="'+(pending?'pending':'')+'">';
+        out+='<td>'+esc(u.name)+'<div class="muted" style="font-size:12px">'+(u.employee_number?('Emp #'+esc(u.employee_number)):'')+'</div></td>';
+        out+='<td class="muted">'+esc(u.role)+'</td>';
+        out+='<td class="st '+esc(u.status)+'">'+esc(label(u.status))+'</td>';
+        out+='<td>'+fmtSecs(u.active_seconds)+'</td>';
+        out+='<td>'+(Math.round(u.scroll_max_pct||0))+'%</td>';
+        out+='<td class="muted">'+fmtDate(u.acknowledged_at)+'</td>';
+        out+='</tr>';
+      });
+      out+='</tbody></table></div>';
+    });
+    if(!out) out='<div class="notice">No required documents configured yet.</div>';
+    wrap.innerHTML=out;
+  })
+  .catch(function(err){
+    var wrap=document.getElementById('wrap');
+    if(err&&err.code===403){ wrap.innerHTML='<div class="notice">Admin/manager only.</div>'; }
+    else if(err&&err.code===401){ wrap.innerHTML='<div class="notice">Please <a href="/login">sign in</a> to view this page.</div>'; }
+    else { wrap.innerHTML='<div class="notice">Could not load required-reading data.</div>'; }
+  });
+
+// HR training — documented here for reference; per-employee records are maintained in BambooHR (not MC).
+fetch('/data/hr-training-register.json',{credentials:'same-origin'})
+  .then(function(r){ return r.ok?r.json():null; })
+  .then(function(h){
+    if(!h||!h.requirements) return;
+    var o='<div class="card"><h2>HR Training <span class="pill">System of record: '+esc(h.system_of_record||'BambooHR')+'</span></h2>';
+    o+='<div class="docmeta">'+esc(h.note||'')+'</div>';
+    o+='<table><thead><tr><th>Training</th><th>Cadence</th><th>Basis</th><th>How it stays compliant</th></tr></thead><tbody>';
+    h.requirements.forEach(function(x){
+      o+='<tr><td>'+esc(x.title)+'<div class="muted" style="font-size:12px">'+esc(x.doc_no)+'</div></td>'
+        +'<td>'+esc(x.cadence)+'</td><td class="muted">'+esc(x.authority)+'</td><td class="muted">'+esc(x.kept_fresh)+'</td></tr>';
+    });
+    o+='</tbody></table></div>';
+    document.getElementById('hrdoc').innerHTML=o;
+  }).catch(function(){});
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "system_of_record": "BambooHR",
+  "note": "HR-related training is required and its per-employee completion records are maintained in BambooHR, not Mission Control. Listed here for documentation and audit reference only — no employee training records are stored in Mission Control for these.",
+  "requirements": [
+    {
+      "doc_no": "HRC-HD",
+      "title": "Harassment & Discrimination Training",
+      "cadence": "Annual",
+      "authority": "EEOC / Title VII / Texas",
+      "kept_fresh": "Assigned and completion-tracked annually in BambooHR; content reviewed on regulatory change."
+    },
+    {
+      "doc_no": "HRC-PAYDAY",
+      "title": "Texas Payday Law Training",
+      "cadence": "Annual",
+      "authority": "Texas Payday Law",
+      "kept_fresh": "Reviewed and re-acknowledged annually in BambooHR."
+    },
+    {
+      "doc_no": "HR-HIRE",
+      "title": "Hiring Process",
+      "cadence": "Per hiring cycle / as updated",
+      "authority": "Exos HR policy",
+      "kept_fresh": "Reviewed each hiring cycle and on policy change; maintained in BambooHR."
+    },
+    {
+      "doc_no": "HR-ONBOARD",
+      "title": "Onboarding Process",
+      "cadence": "On hire",
+      "authority": "Exos HR policy",
+      "kept_fresh": "Completed by each new hire during onboarding; tracked in BambooHR."
+    }
+  ]
+}

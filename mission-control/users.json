@@ -10,7 +10,8 @@
     "active": true,
     "last_login": "2026-08-30T12:29:43.890Z",
     "password_set_at": "2026-07-16T12:25:33.813Z",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 2,
@@ -23,7 +24,8 @@
     "active": true,
     "password_set_at": "2026-07-15T13:54:20.444Z",
     "last_login": "2026-08-29T10:43:04.939Z",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 3,
@@ -36,7 +38,8 @@
     "active": true,
     "last_login": "2026-08-28T15:25:30.786Z",
     "password_set_at": "2026-07-22T15:48:59.543Z",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 4,
@@ -49,7 +52,8 @@
     "active": true,
     "last_login": "2026-08-27T17:29:15.866Z",
     "password_set_at": "2026-07-16T17:28:40.121Z",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 5,
@@ -62,7 +66,8 @@
     "active": true,
     "last_login": "2026-08-27T16:23:17.983Z",
     "password_set_at": "2026-07-15T13:31:31.924Z",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 6,
@@ -75,7 +80,8 @@
     "active": true,
     "last_login": "2026-08-28T20:53:37.449Z",
     "password_set_at": "2026-07-15T12:42:04.184Z",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 7,
@@ -87,7 +93,8 @@
     "created_at": "2026-06-26T21:15:00Z",
     "active": true,
     "last_login": "2026-07-15T12:23:59.519Z",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 9,
@@ -99,7 +106,8 @@
     "created_at": "2026-06-26T21:15:00Z",
     "active": true,
     "last_login": "2026-08-26T13:53:29.733Z",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 10,
@@ -114,7 +122,8 @@
     "title": "International Business Development Agent \u2014 Japan/Asia",
     "project": null,
     "crm_region": "Non-CONUS",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 8,
@@ -126,7 +135,8 @@
     "active": true,
     "created_at": "2026-08-22T15:52:44Z",
     "restored": "2026-08-22 (direct MC portal, off CMMC/M365 path; finance-allowlisted)",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 11,
@@ -139,7 +149,8 @@
     "password_hash": "48ac3213291482d49d2137bbb5eccf50f3bb5a76c04a2ef744259e39db49771c6691e3cac4e8bb4aeacc352a520e8e02db9c8267b33095522469c7cb978f7401",
     "password_salt": "2f3764fedb80b45b5f415ff25dbe53435a35bd9b3a51af7c5d52b8cbdd557f26",
     "password_set_at": "2026-08-26T13:42:32.863Z",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 12,
@@ -149,7 +160,8 @@
     "active": true,
     "created_at": "2026-08-26T00:00:00Z",
     "note": "John Quinn's other-company (Megawatt Control Solutions) email; source of the original ExO 3.0 engagement. Accepted as an authorized @Exobot sender 2026-08-26 per Jon. Email-command auth still requires a gmail DMARC/DKIM pass, so spoofing this address is still rejected.",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 13,
@@ -163,7 +175,8 @@
     "last_login": null,
     "password_set_at": "2026-08-29T10:45:00Z",
     "project": "Payload Sales",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 14,
@@ -177,7 +190,8 @@
     "last_login": null,
     "password_set_at": "2026-08-29T10:45:00Z",
     "project": "Payload Sales",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 15,
@@ -191,7 +205,8 @@
     "last_login": null,
     "password_set_at": "2026-08-29T10:45:00Z",
     "project": "Payload Sales",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 16,
@@ -205,7 +220,8 @@
     "last_login": "2026-08-29T17:21:43.125Z",
     "password_set_at": "2026-08-29T10:45:00Z",
     "project": "Payload Sales",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 17,
@@ -219,7 +235,8 @@
     "last_login": null,
     "password_set_at": "2026-08-29T10:45:00Z",
     "project": "Payload Sales",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 18,
@@ -233,7 +250,8 @@
     "last_login": null,
     "password_set_at": "2026-08-29T10:45:00Z",
     "project": "Payload Sales",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 19,
@@ -247,7 +265,8 @@
     "password_set_at": "2026-08-29T10:30:00Z",
     "created_at": "2026-08-29T10:30:00Z",
     "last_login": "2026-08-29T15:02:10.127Z",
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 20,
@@ -261,7 +280,8 @@
     "password_set_at": "2026-08-29T10:30:00Z",
     "created_at": "2026-08-29T10:30:00Z",
     "last_login": null,
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   },
   {
     "id": 21,
@@ -275,6 +295,7 @@
     "password_set_at": "2026-08-29T10:40:00Z",
     "created_at": "2026-08-29T10:40:00Z",
     "last_login": null,
-    "departments": []
+    "departments": [],
+    "employee_number": ""
   }
 ]
