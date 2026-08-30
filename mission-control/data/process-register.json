@@ -1200,8 +1200,8 @@
    "status": "Approved",
    "intl_release": "No",
    "ack_required": false,
-   "owner": "Safety Officer / Exo",
-   "remarks": "Cryogenic liquid oxygen (LOx) is purchased from Air Products for propulsion testing. This procedure is the safe-handling standard and defines the ANNUAL training requirement for all authorized LOx handlers. Approved by John Quinn (CEO) 2026-08-30 as the official LOx handling training standard; a designated Safety Officer may formally re-review.",
+   "owner": "John Quinn, CEO (Approver) / Exo",
+   "remarks": "Cryogenic liquid oxygen (LOx) is purchased from Air Products for propulsion testing. This procedure is the safe-handling standard and defines the ANNUAL training requirement for all authorized LOx handlers. Approved by John Quinn (CEO), the designated approver for Exos procedures and training, 2026-08-30.",
    "files": [
     "06-safety-ehs/EXOS-SAF-001-0_Cryogenic_Oxygen_(LOx)_Handling_Procedure.docx"
    ],
