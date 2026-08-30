@@ -8,8 +8,9 @@
     "password_salt": "e0c32f64bcf4e13ff845bd422c1d6e18e753579f9479b099f4591b6082c003b8",
     "created_at": "2026-05-14T22:00:00Z",
     "active": true,
-    "last_login": "2026-08-26T13:00:01.223Z",
-    "password_set_at": "2026-07-16T12:25:33.813Z"
+    "last_login": "2026-08-30T12:29:43.890Z",
+    "password_set_at": "2026-07-16T12:25:33.813Z",
+    "departments": []
   },
   {
     "id": 2,
@@ -21,7 +22,8 @@
     "created_at": "2026-05-19T12:49:53.510Z",
     "active": true,
     "password_set_at": "2026-07-15T13:54:20.444Z",
-    "last_login": "2026-08-26T19:32:22.181Z"
+    "last_login": "2026-08-29T10:43:04.939Z",
+    "departments": []
   },
   {
     "id": 3,
@@ -32,8 +34,9 @@
     "password_salt": "f59587590555f19f0d4ae297101d37c8ce88ff5ad675a60522f873bd750e6056",
     "created_at": "2026-06-26T21:15:00Z",
     "active": true,
-    "last_login": "2026-08-26T13:39:35.657Z",
-    "password_set_at": "2026-07-22T15:48:59.543Z"
+    "last_login": "2026-08-28T15:25:30.786Z",
+    "password_set_at": "2026-07-22T15:48:59.543Z",
+    "departments": []
   },
   {
     "id": 4,
@@ -44,8 +47,9 @@
     "password_salt": "017e028a4c77a012a7e0a14ce36bd75397f156108bde3882b53b0da7af456f0a",
     "created_at": "2026-06-26T21:15:00Z",
     "active": true,
-    "last_login": "2026-08-24T13:49:57.153Z",
-    "password_set_at": "2026-07-16T17:28:40.121Z"
+    "last_login": "2026-08-27T17:29:15.866Z",
+    "password_set_at": "2026-07-16T17:28:40.121Z",
+    "departments": []
   },
   {
     "id": 5,
@@ -56,8 +60,9 @@
     "password_salt": "441e2acbc1b75c979b7319feb6cfd123d605bb26bc213691d2feb193a1dbfa5c",
     "created_at": "2026-06-26T21:15:00Z",
     "active": true,
-    "last_login": "2026-08-25T14:38:18.582Z",
-    "password_set_at": "2026-07-15T13:31:31.924Z"
+    "last_login": "2026-08-27T16:23:17.983Z",
+    "password_set_at": "2026-07-15T13:31:31.924Z",
+    "departments": []
   },
   {
     "id": 6,
@@ -68,8 +73,9 @@
     "password_salt": "d034333fa5c22bc172e62d1b1e20e1bf53ed5b585d0f2c0cf14161626801a287",
     "created_at": "2026-06-26T21:15:00Z",
     "active": true,
-    "last_login": "2026-08-24T12:18:35.068Z",
-    "password_set_at": "2026-07-15T12:42:04.184Z"
+    "last_login": "2026-08-28T20:53:37.449Z",
+    "password_set_at": "2026-07-15T12:42:04.184Z",
+    "departments": []
   },
   {
     "id": 7,
@@ -80,7 +86,8 @@
     "password_salt": "35eed264e92e38a4412d6481cc80243701f10af7842e344dd6b8538790e4f2d4",
     "created_at": "2026-06-26T21:15:00Z",
     "active": true,
-    "last_login": "2026-07-15T12:23:59.519Z"
+    "last_login": "2026-07-15T12:23:59.519Z",
+    "departments": []
   },
   {
     "id": 9,
@@ -91,7 +98,8 @@
     "password_salt": "6a989e762682f034f0a25fb51d0abebe39ddd43218db0b4b8e2ebd14af05d9c0",
     "created_at": "2026-06-26T21:15:00Z",
     "active": true,
-    "last_login": "2026-08-26T13:53:29.733Z"
+    "last_login": "2026-08-26T13:53:29.733Z",
+    "departments": []
   },
   {
     "id": 10,
@@ -103,9 +111,10 @@
     "created_at": "2026-08-12T12:40:00.000Z",
     "active": true,
     "last_login": null,
-    "title": "International Business Development Agent — Japan/Asia",
+    "title": "International Business Development Agent \u2014 Japan/Asia",
     "project": null,
-    "crm_region": "Non-CONUS"
+    "crm_region": "Non-CONUS",
+    "departments": []
   },
   {
     "id": 8,
@@ -116,7 +125,8 @@
     "password_salt": "0014f505927e9c643e33e81ca28a042614adf9b489f50294c5691ce6547794e6",
     "active": true,
     "created_at": "2026-08-22T15:52:44Z",
-    "restored": "2026-08-22 (direct MC portal, off CMMC/M365 path; finance-allowlisted)"
+    "restored": "2026-08-22 (direct MC portal, off CMMC/M365 path; finance-allowlisted)",
+    "departments": []
   },
   {
     "id": 11,
@@ -125,10 +135,11 @@
     "role": "member",
     "active": true,
     "created_at": "2026-08-26T13:13:43Z",
-    "last_login": "2026-08-26T18:46:01.705Z",
+    "last_login": "2026-08-28T16:19:00.219Z",
     "password_hash": "48ac3213291482d49d2137bbb5eccf50f3bb5a76c04a2ef744259e39db49771c6691e3cac4e8bb4aeacc352a520e8e02db9c8267b33095522469c7cb978f7401",
     "password_salt": "2f3764fedb80b45b5f415ff25dbe53435a35bd9b3a51af7c5d52b8cbdd557f26",
-    "password_set_at": "2026-08-26T13:42:32.863Z"
+    "password_set_at": "2026-08-26T13:42:32.863Z",
+    "departments": []
   },
   {
     "id": 12,
@@ -137,6 +148,133 @@
     "role": "admin",
     "active": true,
     "created_at": "2026-08-26T00:00:00Z",
-    "note": "John Quinn's other-company (Megawatt Control Solutions) email; source of the original ExO 3.0 engagement. Accepted as an authorized @Exobot sender 2026-08-26 per Jon. Email-command auth still requires a gmail DMARC/DKIM pass, so spoofing this address is still rejected."
+    "note": "John Quinn's other-company (Megawatt Control Solutions) email; source of the original ExO 3.0 engagement. Accepted as an authorized @Exobot sender 2026-08-26 per Jon. Email-command auth still requires a gmail DMARC/DKIM pass, so spoofing this address is still rejected.",
+    "departments": []
+  },
+  {
+    "id": 13,
+    "email": "KXV220043@utdallas.edu",
+    "name": "Karan Vijaya Sankar",
+    "role": "early_adopter",
+    "password_hash": "2c557d2caf2d9c9db9facad71e741a68db3c7838163146e63ae97eb24100b0c92eb43a9aa224af2ab0a3329bcaea861a5fc95eb4edca74a9556312135f9ac37f",
+    "password_salt": "bca10aaf8005175b9ac8d501860796ecc9e5ec6b83818eeba1b11c7eec458b21",
+    "created_at": "2026-08-28T14:12:46.000Z",
+    "active": true,
+    "last_login": null,
+    "password_set_at": "2026-08-29T10:45:00Z",
+    "project": "Payload Sales",
+    "departments": []
+  },
+  {
+    "id": 14,
+    "email": "BXS230052@utdallas.edu",
+    "name": "Brenda Segovia Saldana",
+    "role": "early_adopter",
+    "password_hash": "9ae7d5cc5f13b9435ba4e0197d829dcad09d94d10f0067e0b75f73176466d73322b36eb1330f5b9033dbc3525551e987a6b0919fbddb79fda7cd4ef91a2113e8",
+    "password_salt": "6f2b92701bfb84fb496a7ad5207a9db21e84a7405418eca8ce3d9c21ebc38f40",
+    "created_at": "2026-08-28T14:12:46.000Z",
+    "active": true,
+    "last_login": null,
+    "password_set_at": "2026-08-29T10:45:00Z",
+    "project": "Payload Sales",
+    "departments": []
+  },
+  {
+    "id": 15,
+    "email": "RCS220001@utdallas.edu",
+    "name": "Roel Saenz",
+    "role": "early_adopter",
+    "password_hash": "62f4ee472bf69a0b01a350ff2a041f481e97a2de46571a4edab8f520303f865533b4eebeb3211ef205ba16761a05b540a1664b05dc99e55d4bea33b53f6eda9e",
+    "password_salt": "a5341fa57e22a258421eb4ee5b5abf9917da8d4e8e99628c0b62750db812f1b6",
+    "created_at": "2026-08-28T14:12:46.000Z",
+    "active": true,
+    "last_login": null,
+    "password_set_at": "2026-08-29T10:45:00Z",
+    "project": "Payload Sales",
+    "departments": []
+  },
+  {
+    "id": 16,
+    "email": "SXM220350@utdallas.edu",
+    "name": "Sunidhi Mathew",
+    "role": "early_adopter",
+    "password_hash": "2c99224faa2d62327df443c311e8b8283c0aa74af62bba7f9bfe404990002679a8fafbd0b7538e30836f2ccaad2733613eefe42e85a7c76fdd494a2c83515102",
+    "password_salt": "7f682b7cc8f5b04f65ccf1830839b2b1f5d3962ec2f2b6f16faae2036e9877cd",
+    "created_at": "2026-08-28T14:12:46.000Z",
+    "active": true,
+    "last_login": "2026-08-29T17:21:43.125Z",
+    "password_set_at": "2026-08-29T10:45:00Z",
+    "project": "Payload Sales",
+    "departments": []
+  },
+  {
+    "id": 17,
+    "email": "AXH230026@utdallas.edu",
+    "name": "Adrian Haro",
+    "role": "early_adopter",
+    "password_hash": "9d256fe13fc3eb824aff20bf4203e134921428ae9f55b6cebaff953310d7523679f8f2d163562556eae94b2a67d6d9ee11c9ca8fa830ae116b7a4a6d9facb852",
+    "password_salt": "a96e53fec8d210e0a070d74689c65875c4a55e9dabbf6d223a4960ac5b318390",
+    "created_at": "2026-08-28T14:12:46.000Z",
+    "active": true,
+    "last_login": null,
+    "password_set_at": "2026-08-29T10:45:00Z",
+    "project": "Payload Sales",
+    "departments": []
+  },
+  {
+    "id": 18,
+    "email": "LEG240001@utdallas.edu",
+    "name": "Laura Granados Lopez",
+    "role": "early_adopter",
+    "password_hash": "325d8367cc3b2e7b3efc0f47e1e37d3c6c842837d9e70530f4cdbaacc0174101801180dd82b55c68756904a39ad545ae37953f7f4ca91f368294d11c9946d1f5",
+    "password_salt": "29a35a2ad9c98b265dfbd7e88abfb0a26d93cc2a9968b75c9d5e657eb07eeca7",
+    "created_at": "2026-08-28T14:12:46.000Z",
+    "active": true,
+    "last_login": null,
+    "password_set_at": "2026-08-29T10:45:00Z",
+    "project": "Payload Sales",
+    "departments": []
+  },
+  {
+    "id": 19,
+    "name": "Edwin Van Der Vlist",
+    "email": "EdwinVanDerVlist@utdallas.edu",
+    "role": "early_adopter",
+    "project": "Payload Sales",
+    "active": true,
+    "password_hash": "05e65c888e075e79c1bc5b0740f129a0bb26ab8dd35b41c3b1f43283bbf48ce45e9ecebddcf914d8da2299429445da8308f3c81a2a8921f3df53b4dbeb78f397",
+    "password_salt": "33670d4cc974f6cc422c1c68110acfcd2bc9e1c40c7183298e8947c6b8a5c4f6",
+    "password_set_at": "2026-08-29T10:30:00Z",
+    "created_at": "2026-08-29T10:30:00Z",
+    "last_login": "2026-08-29T15:02:10.127Z",
+    "departments": []
+  },
+  {
+    "id": 20,
+    "name": "Don Proeschel",
+    "email": "don.proeschel@utdallas.edu",
+    "role": "early_adopter",
+    "project": "Payload Sales",
+    "active": true,
+    "password_hash": "478b5266070f898146e4f123701f176bc39b559165edc09e4fb52edfe0e42cce4dac367f2637a8adb66b90487286c318ba213f6f3e9c9ad576676a802b654ba0",
+    "password_salt": "097f62667b906dc2f40465bda3a924c9a6e891f2a868168d959ed3cafb6291fb",
+    "password_set_at": "2026-08-29T10:30:00Z",
+    "created_at": "2026-08-29T10:30:00Z",
+    "last_login": null,
+    "departments": []
+  },
+  {
+    "id": 21,
+    "name": "Senthil (UTD)",
+    "email": "senthil@utdallas.edu",
+    "role": "early_adopter",
+    "project": "Payload Sales",
+    "active": true,
+    "password_hash": "c8b376ad13685d98383bba4ebaaf5a1ebc93642f6e10da25e89490a1a536a94ae148c05f4086aded0fc5bb93d84a2bb91f9db1af8f42b6b937a1e85f0989a00c",
+    "password_salt": "fcb98cb6abfbf9a49ab0d851764d6781aeb43bb8d8eb4525ebe7686dee6fc0cd",
+    "password_set_at": "2026-08-29T10:40:00Z",
+    "created_at": "2026-08-29T10:40:00Z",
+    "last_login": null,
+    "departments": []
   }
 ]

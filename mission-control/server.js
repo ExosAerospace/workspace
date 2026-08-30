@@ -1806,9 +1806,16 @@ const server = http.createServer((req, res) => {
       const email = (session.email || '').toLowerCase();
       const isMgr = session.role === 'admin' || session.role === 'manager';
       const rr = rrLoad();
-      // Audience scoping: everyone sees company-wide ('all'); admins/managers see every doc;
-      // role/area-scoped docs otherwise show only to a matching role (until per-user dept tags exist).
-      const visibleDocs = rr.docs.filter(d => !d.audience || d.audience === 'all' || isMgr || d.audience === (session.role || ''));
+      // Department routing: 'all' → everyone; admins/managers → every doc; otherwise the doc's
+      // audience (area_id) maps to a department tag and shows only to users tagged with that dept.
+      const DEPT_FOR_AUDIENCE = { '02-ground-operations':'ops', '06-safety-ehs':'ops', '04-procurement':'procurement', '03-payload':'sales', '08-security-cui':'it-security', 'cmmc-2.0':'it-security' };
+      const meUser = (loadUsers() || []).find(u => (u.email || '').toLowerCase() === email);
+      const myDepts = (meUser && Array.isArray(meUser.departments)) ? meUser.departments : [];
+      const visibleDocs = rr.docs.filter(d => {
+        if (!d.audience || d.audience === 'all') return true;
+        if (isMgr) return true;
+        return myDepts.includes(DEPT_FOR_AUDIENCE[d.audience] || d.audience);
+      });
       const mine = visibleDocs.map(d => {
         const prog = (rr.progress || []).find(p => p.user_email === email && p.doc_id === d.id && p.version === d.version) || null;
         const comp0 = (rr.completions || []).find(c => c.user_email === email && c.doc_id === d.id && c.doc_version === d.version && c.valid) || null;
