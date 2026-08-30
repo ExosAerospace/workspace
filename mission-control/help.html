@@ -58,6 +58,17 @@
   </div>
 
   <div class="card">
+    <h2>✅ How to answer a Decision</h2>
+    <p class="big">A Decision is a quick call waiting on you. Each one is usually one of three things:</p>
+    <ul class="big">
+      <li><b>Yes / No</b> — just pick the option.</li>
+      <li><b>Reassign</b> — if it's not really yours, send it to someone better equipped to answer (use <b>"Not my decision"</b>) and it moves to their queue.</li>
+      <li><b>A custom answer</b> — type your own response in the box.</li>
+    </ul>
+    <p class="big">Make your choice (or type your answer) <b>before you click Submit</b>. You can line up answers to several decisions and <b>submit them together</b>.</p>
+  </div>
+
+  <div class="card">
     <h2>What Mission Control is</h2>
     <p class="big">Think of it as one shared online board for everything we are working on: who is doing what, what is due, what is waiting on a decision, and where the documents live. Instead of work scattered across email, Teamwork, and people's heads, it all lives in one place everyone can see. You open it in a web browser. It is replacing Teamwork.</p>
     <p class="big"><b>The big idea — you do not maintain it by hand.</b> You keep working in email exactly as you do now. By forwarding or BCC'ing the right messages to <b>one address</b> (<code>exosmc@proton.me</code>), your everyday communication <b>becomes</b> the work management: Mission Control turns it into tasks, contacts, decisions, and status updates for you. No separate system to keep up, no data entry.</p>
@@ -347,5 +358,112 @@
   </div>
 
 </div>
+
+<!-- ── REQUIRED READING TRACKER ──────────────────────────────────────────────
+     Proves this page was actually read: active-dwell timer (only while the tab is
+     visible AND the reader has been active in the last 30s), scroll-depth, and
+     periodic heartbeats to the server. The server clamps everything to real
+     wall-clock time and re-validates on acknowledge — the enabled button alone is
+     never sufficient. -->
+<div id="rrBar" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  background:#0f1e38;border-top:1px solid #1c3052;box-shadow:0 -6px 20px rgba(0,0,0,.4);
+  padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e8edf5">
+  <div id="rrStatus" style="font-size:14px;color:#8aa0bd;min-width:220px">Required reading — starting…</div>
+  <button id="rrBtn" disabled style="background:#1c3052;color:#8aa0bd;border:1px solid #1c3052;
+    border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:not-allowed;transition:all .15s">
+    ✓ I have read and understood</button>
+</div>
+<script>
+(function(){
+  var DOC_ID='getting-started', MIN=180, SCROLL_MIN=90;
+  var bar=document.getElementById('rrBar'), statusEl=document.getElementById('rrStatus'), btn=document.getElementById('rrBtn');
+  var activeSeconds=0, scrollMaxPct=0, heartbeats=0, lastActivity=Date.now(), done=false, opened=false, ackInFlight=false;
+
+  function fmt(s){ s=Math.max(0,Math.floor(s)); var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r; }
+  function post(url,payload){ return fetch(url,{method:'POST',credentials:'same-origin',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify(payload||{})}); }
+
+  function markActivity(){ lastActivity=Date.now(); }
+  ['mousemove','scroll','keydown','touchstart','click'].forEach(function(ev){
+    window.addEventListener(ev, markActivity, {passive:true}); });
+
+  function updateScroll(){
+    var se=document.documentElement, sTop=window.pageYOffset||se.scrollTop||0;
+    var vh=window.innerHeight||se.clientHeight, sh=se.scrollHeight||document.body.scrollHeight;
+    var pct = sh>0 ? Math.min(100, (sTop+vh)/sh*100) : 100;
+    if(pct>scrollMaxPct) scrollMaxPct=pct;
+  }
+  window.addEventListener('scroll', updateScroll, {passive:true});
+  window.addEventListener('resize', updateScroll, {passive:true});
+
+  function setCompleted(dateStr){
+    done=true;
+    statusEl.innerHTML='<span style="color:#22c55e">✓ Completed — recorded '+dateStr+'</span>';
+    btn.textContent='✓ Completed';
+    btn.disabled=true; btn.style.cursor='default';
+    btn.style.background='#0f2a1a'; btn.style.color='#22c55e'; btn.style.border='1px solid #22c55e';
+  }
+  function refreshUI(){
+    if(done) return;
+    var pct=Math.round(scrollMaxPct);
+    statusEl.textContent='Required reading — active review '+fmt(activeSeconds)+' / '+fmt(MIN)+' · scrolled '+pct+'%';
+    var ok = activeSeconds>=MIN && scrollMaxPct>=SCROLL_MIN;
+    btn.disabled=!ok;
+    if(ok){ btn.style.cursor='pointer'; btn.style.background='#0080ff'; btn.style.color='#fff'; btn.style.border='1px solid #0080ff'; }
+    else { btn.style.cursor='not-allowed'; btn.style.background='#1c3052'; btn.style.color='#8aa0bd'; btn.style.border='1px solid #1c3052'; }
+  }
+
+  // 1s dwell accumulator: count a second only if tab visible AND active within last 30s.
+  setInterval(function(){
+    if(done) return;
+    if(document.visibilityState==='visible' && (Date.now()-lastActivity)<30000) activeSeconds++;
+    refreshUI();
+  }, 1000);
+
+  function sendHeartbeat(){
+    if(!opened || done) return Promise.resolve();
+    updateScroll();
+    return post('/api/required-reading/heartbeat',
+      {doc_id:DOC_ID, active_seconds:activeSeconds, scroll_max_pct:scrollMaxPct, heartbeats:++heartbeats})
+      .then(function(r){ return r.ok?r.json():null; })
+      .then(function(d){ if(d&&typeof d.active_seconds==='number'){ activeSeconds=Math.min(activeSeconds,d.active_seconds); refreshUI(); } })
+      .catch(function(){});
+  }
+  setInterval(sendHeartbeat, 15000);
+
+  btn.addEventListener('click', function(){
+    if(btn.disabled||done||ackInFlight) return;
+    ackInFlight=true; btn.disabled=true; btn.style.cursor='wait';
+    sendHeartbeat().then(function(){
+      return post('/api/required-reading/ack', {doc_id:DOC_ID});
+    }).then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
+      .then(function(res){
+        ackInFlight=false;
+        if(res.ok && res.d && res.d.ok){ setCompleted(new Date(res.d.acknowledged_at||Date.now()).toLocaleDateString()); }
+        else {
+          var reason=(res.d&&(res.d.reason||res.d.error))||'Could not record — keep reading and try again.';
+          statusEl.innerHTML='<span style="color:#ff4444">'+reason+'</span>';
+          refreshUI();
+        }
+      }).catch(function(){ ackInFlight=false; refreshUI(); });
+  });
+
+  // Boot: check prior completion, then open a server-side reading record.
+  fetch('/api/required-reading',{credentials:'same-origin'})
+    .then(function(r){ return r.ok?r.json():null; })
+    .then(function(data){
+      if(!data) return; // not logged in — stay silent
+      var mine=(data.mine||[]).find(function(m){ return m.doc_id===DOC_ID; });
+      bar.style.display='flex';
+      if(mine && mine.completed){ setCompleted(mine.acknowledged_at?new Date(mine.acknowledged_at).toLocaleDateString():'earlier'); return; }
+      updateScroll(); refreshUI();
+      post('/api/required-reading/open', {doc_id:DOC_ID})
+        .then(function(r){ if(r.ok) opened=true; })
+        .catch(function(){});
+    })
+    .catch(function(){});
+})();
+</script>
 </body>
 </html>
