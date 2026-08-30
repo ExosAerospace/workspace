@@ -106,6 +106,22 @@ for i,(h,b) in enumerate(cols):
 txt(s,Inches(0.55),Inches(6.25),Inches(12.2),Inches(0.7),[("Exos is the rare asset that is all three at once: a profitable, licensed, reusable hardware operator, running AI-native, holding lunar-proven IP.",13,NAVY,True)],align=PP_ALIGN.CENTER)
 footer(s)
 
+# ---------- FOUR CORE ASSETS ----------
+s=slide(); header(s,"FOUR CORE ASSETS","Three technical assets, compounded by a fourth")
+assets=[("1 · SCORPIUS TYPE-5 CRYO IP + ROFR","TRL-9 linerless composite cryogenic tanks, flight-proven on Intuitive Machines' IM-1 and IM-2. Exos holds 18% plus a right of first refusal at the 2021 basis — strategic valuation arbitrage."),
+        ("2 · REUSABLE SUBORBITAL PLATFORM","BLK3 — one of only three FAA-licensed reusable rocket launch providers in the U.S. Recoverable, high-cadence, minimal fixed infrastructure."),
+        ("3 · RDRE / ADVANCED PROPULSION","Active USAF SBIR Phase II on a government-furnished RDRE, opening a sole-source Phase III path with no dollar ceiling. Reusable-RDRE roadmap."),
+        ("4 · AI-DEPLOYED OPERATING PLATFORM","Mission Control plus a governed agent fleet run BD, capture, compliance, and operations. A compounding, owned decision-and-audit-trail asset — capital-efficient and ITAR/CUI-safe.")]
+mA=Inches(0.55); gapA=Inches(0.3); cwA=int((W-2*mA-gapA)/2); chA=Inches(2.15); y0A=Inches(1.55); vgapA=Inches(0.22)
+for i,(h,b) in enumerate(assets):
+    r,c=divmod(i,2); x=mA+c*(cwA+gapA); y=y0A+r*(chA+vgapA)
+    accent = NAVY if i==3 else RED
+    box(s,x,y,cwA,chA,fill=LIGHT,line=CARD,lw=1); box(s,x,y,cwA,Pt(3),fill=accent)
+    txt(s,x+Inches(0.22),y+Inches(0.16),cwA-Inches(0.44),Inches(0.5),[(h,14,NAVY,True)])
+    txt(s,x+Inches(0.22),y+Inches(0.72),cwA-Inches(0.44),chA-Inches(0.86),[(b,12.5,INK,False)])
+txt(s,Inches(0.55),Inches(6.35),Inches(12.2),Inches(0.6),[("Assets 1–3 are the hardware and IP; #4 is the operating system that compounds them — management-characterized, a moat, not a separate line item. Single valuation of record: $169.7M.",12,NAVY,True)],align=PP_ALIGN.CENTER)
+footer(s)
+
 # ---------- 3. TIMELINE STORY ----------
 s=slide(); header(s,"THE STORY","25 years of reusable rockets — to a profitable, lunar-proven inflection point")
 tl=[("2000","Armadillo Aerospace — reusable VTVL rockets; 100+ engines built"),
