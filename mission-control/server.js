@@ -1804,8 +1804,12 @@ const server = http.createServer((req, res) => {
     if (req.url.split('?')[0] === '/api/required-reading' && req.method === 'GET') {
       if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
       const email = (session.email || '').toLowerCase();
+      const isMgr = session.role === 'admin' || session.role === 'manager';
       const rr = rrLoad();
-      const mine = rr.docs.map(d => {
+      // Audience scoping: everyone sees company-wide ('all'); admins/managers see every doc;
+      // role/area-scoped docs otherwise show only to a matching role (until per-user dept tags exist).
+      const visibleDocs = rr.docs.filter(d => !d.audience || d.audience === 'all' || isMgr || d.audience === (session.role || ''));
+      const mine = visibleDocs.map(d => {
         const prog = (rr.progress || []).find(p => p.user_email === email && p.doc_id === d.id && p.version === d.version) || null;
         const comp = (rr.completions || []).find(c => c.user_email === email && c.doc_id === d.id && c.doc_version === d.version && c.valid) || null;
         return {
@@ -1817,7 +1821,7 @@ const server = http.createServer((req, res) => {
         };
       });
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ docs: rr.docs, mine }));
+      res.end(JSON.stringify({ docs: visibleDocs, mine }));
       return;
     }
 
