@@ -1833,7 +1833,7 @@ const server = http.createServer((req, res) => {
         };
       });
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ docs: visibleDocs, mine }));
+      res.end(JSON.stringify({ docs: visibleDocs, mine, role: (session.role || 'member'), name: (meUser && meUser.name) || '', is_admin: (session.role === 'admin') }));
       return;
     }
 

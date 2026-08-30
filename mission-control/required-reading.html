@@ -43,9 +43,10 @@
   <div class="sub">Who has completed each required document — verified active reading, not self-reported.</div></div>
   <a class="home" href="/">← Mission Control</a>
 </header>
-<div class="wrap" id="wrap">
+<div class="wrap" id="me">
   <div class="notice" id="loading">Loading…</div>
 </div>
+<div class="wrap" id="wrap"></div>
 <div class="wrap" id="hrdoc"></div>
 <script>
 function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -53,50 +54,88 @@ function fmtSecs(s){ s=Math.max(0,Math.floor(Number(s)||0)); var m=Math.floor(s/
 function fmtDate(d){ if(!d) return '—'; try{ return new Date(d).toLocaleString(); }catch(e){ return d; } }
 function label(st){ return {completed:'Completed',' in-progress':'In progress','in-progress':'In progress','not-started':'Not started',flagged:'Flagged'}[st]||st; }
 
-fetch('/api/required-reading/admin',{credentials:'same-origin'})
-  .then(function(r){
-    if(r.status===403){ throw {code:403}; }
-    if(r.status===401){ throw {code:401}; }
-    return r.json();
-  })
+// ── EVERYONE: your own training status ──────────────────────────────────────
+// The Required Reading list shows each person ONLY their own training status.
+var IS_ADMIN=false;
+fetch('/api/required-reading',{credentials:'same-origin'})
+  .then(function(r){ if(r.status===401){ throw {code:401}; } return r.json(); })
   .then(function(data){
-    var wrap=document.getElementById('wrap');
-    var out='';
-    (data.matrix||[]).forEach(function(m){
-      var d=m.doc, s=m.summary;
-      var allDone = s.pending===0 && s.total>0;
-      out+='<div class="card">';
-      out+='<h2>'+esc(d.title)+' '+(allDone?'<span class="pill ok">All complete</span>':'<span class="pill warn">'+s.pending+' pending</span>')+'</h2>';
-      out+='<div class="docmeta">Version '+esc(d.version)+' · min active read '+fmtSecs(d.min_active_seconds)+' · <a href="'+esc(d.url)+'">open document</a>'+(d.description?' · '+esc(d.description):'')+'</div>';
-      out+='<div class="summary"><span class="done">'+s.completed+'</span> / '+s.total+' complete · <span class="pend">'+s.pending+' pending</span></div>';
-      out+='<table><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Active time</th><th>Scroll</th><th>Completed</th></tr></thead><tbody>';
-      (m.rows||[]).sort(function(a,b){
-        var order={completed:0,'in-progress':1,flagged:1,'not-started':2};
-        return (order[a.status]-order[b.status]) || String(a.name).localeCompare(String(b.name));
-      }).forEach(function(u){
-        var pending = u.status!=='completed';
-        out+='<tr class="'+(pending?'pending':'')+'">';
-        out+='<td>'+esc(u.name)+'</td>';
-        out+='<td class="muted">'+esc(u.role)+'</td>';
-        out+='<td class="st '+esc(u.status)+'">'+esc(label(u.status))+'</td>';
-        out+='<td>'+fmtSecs(u.active_seconds)+'</td>';
-        out+='<td>'+(Math.round(u.scroll_max_pct||0))+'%</td>';
-        out+='<td class="muted">'+fmtDate(u.acknowledged_at)+'</td>';
-        out+='</tr>';
-      });
-      out+='</tbody></table></div>';
+    IS_ADMIN = !!data.is_admin;
+    var me=document.getElementById('me');
+    var docs=data.docs||[], mine=data.mine||[];
+    var byId={}; mine.forEach(function(x){ byId[x.doc_id+'@'+x.version]=x; });
+    var done=0;
+    var rows='';
+    docs.forEach(function(d){
+      var m=byId[d.id+'@'+d.version]||{};
+      var st = m.completed ? 'completed' : ((m.active_seconds>0||m.scroll_max_pct>0)?'in-progress':'not-started');
+      if(st==='completed') done++;
+      rows+='<tr class="'+(st==='completed'?'':'pending')+'">';
+      rows+='<td><a href="'+esc(d.url)+'">'+esc(d.title)+'</a>'+(d.recurrence==='annual'?' <span class="muted" style="font-size:12px">(annual)</span>':'')+'</td>';
+      rows+='<td class="st '+st+'">'+esc(label(st))+'</td>';
+      rows+='<td>'+fmtSecs(m.active_seconds)+'</td>';
+      rows+='<td>'+(Math.round(m.scroll_max_pct||0))+'%</td>';
+      rows+='<td class="muted">'+fmtDate(m.acknowledged_at)+'</td>';
+      rows+='</tr>';
     });
-    if(!out) out='<div class="notice">No required documents configured yet.</div>';
-    wrap.innerHTML=out;
+    var pending=docs.length-done;
+    var out='<div class="card">';
+    out+='<h2>My Required Training '+(pending===0&&docs.length>0?'<span class="pill ok">All complete</span>':'<span class="pill warn">'+pending+' outstanding</span>')+'</h2>';
+    out+='<div class="docmeta">'+esc(data.name||'')+(data.role?' · '+esc(data.role):'')+' · your reading is verified server-side (active time + scroll), not self-reported.</div>';
+    if(docs.length){
+      out+='<div class="summary"><span class="done">'+done+'</span> / '+docs.length+' complete · <span class="pend">'+pending+' outstanding</span></div>';
+      out+='<table><thead><tr><th>Document</th><th>Status</th><th>Active read</th><th>Scroll</th><th>Completed</th></tr></thead><tbody>'+rows+'</tbody></table>';
+    } else {
+      out+='<div class="notice">You have no outstanding required reading. 🎉</div>';
+    }
+    out+='</div>';
+    me.innerHTML=out;
+    if(IS_ADMIN){ loadAdminMatrix(); loadHR(); }
   })
   .catch(function(err){
-    var wrap=document.getElementById('wrap');
-    if(err&&err.code===403){ wrap.innerHTML='<div class="notice">Admin/manager only.</div>'; }
-    else if(err&&err.code===401){ wrap.innerHTML='<div class="notice">Please <a href="/login">sign in</a> to view this page.</div>'; }
-    else { wrap.innerHTML='<div class="notice">Could not load required-reading data.</div>'; }
+    var me=document.getElementById('me');
+    if(err&&err.code===401){ me.innerHTML='<div class="notice">Please <a href="/login">sign in</a> to view your training.</div>'; }
+    else { me.innerHTML='<div class="notice">Could not load your training status.</div>'; }
   });
 
+// ── ADMINS ONLY: full org-wide completion matrix, shown BELOW your own training ──
+function loadAdminMatrix(){
+  fetch('/api/required-reading/admin',{credentials:'same-origin'})
+    .then(function(r){ if(r.status===403||r.status===401){ throw {code:r.status}; } return r.json(); })
+    .then(function(data){
+      var wrap=document.getElementById('wrap');
+      var out='<div class="card" style="border-left-color:var(--muted);background:#0a1830"><h2 style="margin:0">All Training — Everyone</h2><div class="docmeta">Org-wide completion status (admin view). Employee name only — no other personal data.</div></div>';
+      (data.matrix||[]).forEach(function(m){
+        var d=m.doc, s=m.summary;
+        var allDone = s.pending===0 && s.total>0;
+        out+='<div class="card">';
+        out+='<h2>'+esc(d.title)+' '+(allDone?'<span class="pill ok">All complete</span>':'<span class="pill warn">'+s.pending+' pending</span>')+'</h2>';
+        out+='<div class="docmeta">Version '+esc(d.version)+' · min active read '+fmtSecs(d.min_active_seconds)+' · <a href="'+esc(d.url)+'">open document</a>'+(d.description?' · '+esc(d.description):'')+'</div>';
+        out+='<div class="summary"><span class="done">'+s.completed+'</span> / '+s.total+' complete · <span class="pend">'+s.pending+' pending</span></div>';
+        out+='<table><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Active time</th><th>Scroll</th><th>Completed</th></tr></thead><tbody>';
+        (m.rows||[]).sort(function(a,b){
+          var order={completed:0,'in-progress':1,flagged:1,'not-started':2};
+          return (order[a.status]-order[b.status]) || String(a.name).localeCompare(String(b.name));
+        }).forEach(function(u){
+          var pending = u.status!=='completed';
+          out+='<tr class="'+(pending?'pending':'')+'">';
+          out+='<td>'+esc(u.name)+'</td>';
+          out+='<td class="muted">'+esc(u.role)+'</td>';
+          out+='<td class="st '+esc(u.status)+'">'+esc(label(u.status))+'</td>';
+          out+='<td>'+fmtSecs(u.active_seconds)+'</td>';
+          out+='<td>'+(Math.round(u.scroll_max_pct||0))+'%</td>';
+          out+='<td class="muted">'+fmtDate(u.acknowledged_at)+'</td>';
+          out+='</tr>';
+        });
+        out+='</tbody></table></div>';
+      });
+      wrap.innerHTML=out;
+    })
+    .catch(function(){ /* not an admin, or transient — personal view already shown */ });
+}
+
 // HR training — documented here for reference; per-employee records are maintained in BambooHR (not MC).
+function loadHR(){
 fetch('/data/hr-training-register.json',{credentials:'same-origin'})
   .then(function(r){ return r.ok?r.json():null; })
   .then(function(h){
@@ -111,6 +150,7 @@ fetch('/data/hr-training-register.json',{credentials:'same-origin'})
     o+='</tbody></table></div>';
     document.getElementById('hrdoc').innerHTML=o;
   }).catch(function(){});
+}
 </script>
 </body>
 </html>
