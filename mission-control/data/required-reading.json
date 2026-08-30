@@ -519,6 +519,21 @@
    "require_scroll_complete": false,
    "published_at": "2026-08-30T00:00:00Z",
    "description": "Complete your annual CUI and ITAR training through Atomus, then email your completion certificate to exosmc@proton.me (subject [CERT]). Required every year for everyone with CUI/ITAR access."
+  },
+  {
+   "id": "airproducts-safetygram-16",
+   "title": "Air Products Safetygram-16 \u2014 Safe Handling of Cryogenic Liquids",
+   "url": "/process-library/06-safety-ehs/AirProducts_Safetygram-16_Safe_Handling_of_Cryogenic_Liquids.pdf",
+   "version": "2015-2026-08-30",
+   "required": true,
+   "audience": "06-safety-ehs",
+   "category": "safety-ehs",
+   "recurrence": "annual",
+   "min_active_seconds": 120,
+   "require_scroll_complete": true,
+   "doc_no": "REF-SG16",
+   "published_at": "2026-08-30T00:00:00Z",
+   "description": "Air Products (supplier) authoritative cryogenic-liquid handling guide \u2014 read alongside the Exos LOx Handling Procedure (EXOS-SAF-001-0). Annual for LOx handlers."
   }
  ],
  "progress": [
@@ -541,12 +556,12 @@
    "doc_id": "getting-started",
    "version": "2026-08-30",
    "server_open_at": "2026-08-30T14:01:16.231Z",
-   "active_seconds": 15,
+   "active_seconds": 19,
    "scroll_max_pct": 100,
-   "heartbeats": 1,
+   "heartbeats": 5,
    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
    "ip": "192.168.143.216",
-   "updated_at": "2026-08-30T14:01:41.059Z"
+   "updated_at": "2026-08-30T14:05:56.787Z"
   }
  ],
  "completions": [
