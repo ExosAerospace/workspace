@@ -4,6 +4,8 @@
 
 Positioning: this layers UNDER the core thesis (physical-AI re-industrialization + reusable platform + Scorpius ROFR). It is the *how we execute* story — capital efficiency and governance that de-risk the investment. AI is the operating advantage, NOT the product.
 
+**As of 2026-08-29 this AI-deployed operating platform (Mission Control + the governed agent fleet) is designated Exos's 4th core asset** — a compounding, owned decision-and-audit-trail asset — alongside (1) the Scorpius Type-5 cryo IP + ROFR, (2) the FAA-licensed reusable platform, and (3) the RDRE / advanced-propulsion pipeline. It remains the operating advantage and a moat, NOT the product; management-characterized, not a separately-appraised line item; single valuation of record $169.7M. See `data-room/Exos_SeriesA/Exos_Core_Assets_Analysis.md`.
+
 ═══════════════════════════════════════════════════════════════
 PART 1 — THE SLIDE: "Built to Compound: Exos Runs as an AI-Native Company"
 ═══════════════════════════════════════════════════════════════

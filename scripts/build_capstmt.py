@@ -65,6 +65,7 @@ ul{{margin:0 0 4px;padding-left:16px}} li{{margin:0 0 2.5px}}
 
 <h2>Company Overview</h2>
 <p>Exos Aerospace is an FAA-licensed reusable suborbital launch operator providing wet-lease flight-test infrastructure for space and defense applications. Exos delivers flight-proven reusable launch platforms that increase national test cadence, enable rapid iteration, and support payload recovery and operational learning.</p>
+<p style="font-size:9.6px;margin:2px 0 4px"><b style="color:#0b2a4a">Four core assets:</b> (1) Scorpius Type&#8209;5 cryogenic tank IP + ROFR (TRL&#8209;9, lunar&#8209;flown); (2) FAA&#8209;licensed reusable suborbital platform (BLK3); (3) RDRE / advanced&#8209;propulsion pipeline (USAF Phase II&#8594;III); (4) an <b>AI&#8209;deployed operating platform</b> &mdash; Mission Control + a governed agent fleet running the business as a compounding, owned, ITAR/CUI&#8209;safe asset.</p>
 
 <h2>Core Capabilities</h2>
 <div class="two"><div class="col"><ul>
@@ -102,6 +103,7 @@ ul{{margin:0 0 4px;padding-left:16px}} li{{margin:0 0 2.5px}}
 
 <div class="databand">
 <b>CAGE:</b> 7EMY6 &nbsp;|&nbsp; <b>UEI:</b> CK24BPZGF854 &nbsp;|&nbsp; <b>PSC:</b> 1725, 1340, 2645, 1675, AR15 &nbsp;|&nbsp; <b>NAICS:</b> 336414, 336415, 541715, 927110<br>
+<b>Cybersecurity:</b> NIST SP 800-171 implemented &middot; CMMC 2.0 self-assessment complete (via Atomus)<br>
 <b>Contact:</b> John M. Quinn, Cofounder &amp; CEO &nbsp;&middot;&nbsp; 299 FM 1903, Greenville, TX 75402 &nbsp;&middot;&nbsp; jquinn@exosaero.com &nbsp;&middot;&nbsp; 972-740-8355 &nbsp;&middot;&nbsp; www.exosaero.com
 </div>
 

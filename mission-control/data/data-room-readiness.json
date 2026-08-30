@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-29T19:49:25",
+  "generated": "2026-08-30T16:05:46",
   "status": "GREEN",
   "score": 100,
   "counts": {
@@ -57,7 +57,11 @@
       ],
       "CORE4_ai_platform_asset (AI operating platform = 4th core asset; Jon 8/29)": [
         "data-room/Exos_SeriesA/Exos_Core_Assets_Analysis.md",
-        "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md"
+        "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_PitchDeck_FULL_2026-08-16_CORRECTED.pptx",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_StrategicDeck_2026-08-13_CURRENT.pptx",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_StrategicTeaser_2026-08-21.pptx",
+        "drafts/Exos_Strategic_Capital_Deck_2026-08-13.pptx"
       ]
     },
     "missing": []
