@@ -1,0 +1,48 @@
+{
+ "docs": [
+  {
+   "id": "getting-started",
+   "title": "Getting Started with Mission Control",
+   "url": "/help.html",
+   "version": "2026-08-30",
+   "required": true,
+   "min_active_seconds": 180,
+   "require_scroll_complete": true,
+   "audience": "all",
+   "category": "onboarding",
+   "published_at": "2026-08-29T00:00:00Z",
+   "description": "How Mission Control works and how to run your day from it."
+  }
+ ],
+ "progress": [
+  {
+   "user_email": "jquinn@exosaero.com",
+   "user_name": "John Quinn",
+   "doc_id": "getting-started",
+   "version": "2026-08-29",
+   "server_open_at": "2026-08-30T12:30:49.082Z",
+   "active_seconds": 1535,
+   "scroll_max_pct": 100,
+   "heartbeats": 186,
+   "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+   "ip": "192.168.143.216",
+   "updated_at": "2026-08-30T13:42:56.936Z"
+  }
+ ],
+ "completions": [
+  {
+   "doc_id": "getting-started",
+   "doc_version": "2026-08-29",
+   "user_email": "jquinn@exosaero.com",
+   "user_name": "John Quinn",
+   "opened_at": "2026-08-30T12:30:49.082Z",
+   "acknowledged_at": "2026-08-30T13:42:57.022Z",
+   "active_seconds": 1535,
+   "scroll_max_pct": 100,
+   "heartbeats": 186,
+   "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+   "ip": "192.168.143.216",
+   "valid": true
+  }
+ ]
+}
