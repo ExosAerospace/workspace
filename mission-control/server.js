@@ -1962,11 +1962,11 @@ const server = http.createServer((req, res) => {
           else if (comp && !comp.valid) status = 'flagged';
           else if (prog) status = 'in-progress';
           else status = 'not-started';
-          // PII guardrail: the training tracking/admin system exposes ONLY employee number + name
-          // (plus training metadata) — never work email or any other regulated personal data. This
-          // object is built by explicit whitelist, so no extra user fields can ever leak.
+          // PII guardrail: the training tracking/admin system exposes ONLY the employee's NAME
+          // (plus training metadata) — never employee number, work email, or any other regulated
+          // personal data. This object is built by explicit whitelist, so no user field can leak.
           return {
-            employee_number: u.employee_number || '', name: u.name || '', role: u.role || 'member', status,
+            name: u.name || '', role: u.role || 'member', status,
             active_seconds: comp ? comp.active_seconds : (prog ? (prog.active_seconds || 0) : 0),
             scroll_max_pct: comp ? comp.scroll_max_pct : (prog ? (prog.scroll_max_pct || 0) : 0),
             acknowledged_at: comp ? comp.acknowledged_at : null

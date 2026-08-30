@@ -76,7 +76,7 @@ fetch('/api/required-reading/admin',{credentials:'same-origin'})
       }).forEach(function(u){
         var pending = u.status!=='completed';
         out+='<tr class="'+(pending?'pending':'')+'">';
-        out+='<td>'+esc(u.name)+'<div class="muted" style="font-size:12px">'+(u.employee_number?('Emp #'+esc(u.employee_number)):'')+'</div></td>';
+        out+='<td>'+esc(u.name)+'</td>';
         out+='<td class="muted">'+esc(u.role)+'</td>';
         out+='<td class="st '+esc(u.status)+'">'+esc(label(u.status))+'</td>';
         out+='<td>'+fmtSecs(u.active_seconds)+'</td>';
