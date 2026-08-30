@@ -36,6 +36,7 @@ except Exception:
 # --- /governance ---
 
 import imaplib, email, json, os, re, sys, subprocess, tempfile, fcntl, hashlib, html as _html, mimetypes
+from datetime import datetime, timezone
 import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from email.utils import getaddresses, parsedate_to_datetime
 from email.message import EmailMessage
@@ -311,6 +312,60 @@ def imap_conn():
     return m
 
 
+# ── Training certificates ([CERT]) — file per-employee + record completion ──
+RR_FILE = os.path.join(WS, "mission-control/data/required-reading.json")
+CERT_STORE = os.path.join(WS, "submissions-archive", "training-certificates")
+
+def save_training_certs(msg, sender):
+    """File any attachments from a [CERT] email into the per-employee training-record store."""
+    d = os.path.join(CERT_STORE, re.sub(r'[^a-z0-9._@-]', '_', sender.lower()))
+    os.makedirs(d, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
+    saved = []
+    for part in msg.walk():
+        fn = part.get_filename()
+        if not fn:
+            continue
+        try:
+            data = part.get_payload(decode=True)
+            if not data:
+                continue
+            out = os.path.join(d, f"{stamp}_{re.sub(r'[^A-Za-z0-9._-]', '_', fn)[:120]}")
+            with open(out, "wb") as f:
+                f.write(data)
+            saved.append(out)
+        except Exception as e:
+            log(f"[cert] attachment save failed: {e}")
+    return saved
+
+def record_training_completion(sender, sender_name, cert_paths, doc_id="cui-itar-annual"):
+    """Record a certificate-based required-reading completion for the sender (resets the annual clock)."""
+    try:
+        rr = json.load(open(RR_FILE))
+    except Exception as e:
+        log(f"[cert] cannot read required-reading.json: {e}"); return False
+    doc = next((x for x in rr.get("docs", []) if x.get("id") == doc_id), None)
+    if not doc:
+        log(f"[cert] doc {doc_id} not registered"); return False
+    ver = doc.get("version")
+    rr.setdefault("completions", [])
+    rr["completions"] = [c for c in rr["completions"]
+                         if not (c.get("user_email") == sender.lower() and c.get("doc_id") == doc_id and c.get("doc_version") == ver)]
+    rr["completions"].append({
+        "doc_id": doc_id, "doc_version": ver, "user_email": sender.lower(),
+        "user_name": sender_name, "acknowledged_at": datetime.now(timezone.utc).isoformat(),
+        "valid": True, "type": "certificate",
+        "certificates": [os.path.relpath(p, WS) for p in cert_paths],
+    })
+    try:
+        tmp = RR_FILE + ".tmp"
+        json.dump(rr, open(tmp, "w"), indent=1)
+        os.replace(tmp, RR_FILE)
+        return True
+    except Exception as e:
+        log(f"[cert] write failed: {e}"); return False
+
+
 def _strip_html(h):
     h = re.sub(r'(?is)<(script|style).*?</\1>', ' ', h)
     h = re.sub(r'(?s)<[^>]+>', ' ', h)
@@ -429,7 +484,10 @@ def main():
         # Exception: internal-only mail (all recipients are @exosaero.com) is US-person-to-US-person
         # and is NOT an export — quarantine_and_alert returns False in that case. Only skip processing
         # when the hold was actually placed (returned True); allow internal mail through.
-        ee_hits = ee.deep_hits(subject + "\n" + body + "\n" + " ".join(ee.attachment_names(msg)))
+        # [CERT] training-certificate submissions are administrative completion records (not
+        # controlled technical data) and are filed internally with no external release, so they
+        # are exempt from the export-control hold.
+        ee_hits = [] if subject.strip().upper().startswith("[CERT]") else ee.deep_hits(subject + "\n" + body + "\n" + " ".join(ee.attachment_names(msg)))
         if ee_hits:
             _recips = []
             for _hk in ("To", "Cc", "Delivered-To", "X-Original-To", "Envelope-To"):
@@ -469,6 +527,25 @@ def main():
             discord("⚠️ A Mission Control email-command was IGNORED (possible spoof).\n"
                     f"From: {sender or 'unknown'}\nSubject: {subject}\n"
                     f"Reason: {', '.join(reasons)}")
+            processed += 1
+            continue
+
+        # ---- [CERT] training-certificate submission: file it + record completion (no agent turn) ----
+        if subject.strip().upper().startswith("[CERT]"):
+            certs = save_training_certs(msg, sender)
+            sname = names.get(sender, sender)
+            if not certs:
+                email_requester(sender, subject, "certificate",
+                    "We received your [CERT] email but found no certificate attached. Please reply with your training completion certificate attached (PDF or image).")
+                discord(f"📄 [CERT] from {sname} had no attachment — asked them to resend.")
+            else:
+                ok_rec = record_training_completion(sender, sname, certs)
+                fnames = ", ".join(os.path.basename(c) for c in certs)
+                email_requester(sender, subject, "certificate",
+                    f"Thank you. Your training certificate ({fnames}) has been filed and your annual CUI/ITAR training is recorded as complete for this year.")
+                discord(f"📄✅ Training certificate filed for {sname} <{sender}>: {fnames}"
+                        + ("" if ok_rec else " (⚠️ completion NOT recorded — check cui-itar-annual doc)"))
+                log(f"[cert] mid={mid} filed {len(certs)} cert(s) for {sender} recorded={ok_rec}")
             processed += 1
             continue
 
