@@ -51,6 +51,7 @@ GOV_GATES = {
     "C4_listing_narrative (private now / TXSE dated+conditioned)": rx(r"txse|private\s+growth|listing\s+path|dated,?\s+conditioned"),
     "C1_reconciliation_tab (DCF/market behind recon)": rx(r"reconciliation\s+tab|reconcil"),
     "C2_base_upside (contracted base; TACFI/entX labeled upside)": rx(r"labeled\s+upside|contracted\s+(backbone|revenue)|base\s+case"),
+    "CORE4_ai_platform_asset (AI operating platform = 4th core asset; Jon 8/29)": rx(r"ai[- ]?(native|deployed)\s+(operating\s+)?(platform|firm|company|advantage)|governed\s+(agent\s+)?fleet|four\s+core\s+assets|4th\s+(core\s+|most[- ]valuable\s+)?asset"),
 }
 
 def extract_text(path):
@@ -94,8 +95,10 @@ def main():
             unscanned.append(rp); continue
         scanned.append(rp)
         corpus += " " + text
-        # staleness
-        if os.path.getmtime(p) < figs_mtime - 1:
+        # staleness — 14-day grace so routine edits to FIGURES_OF_RECORD don't flag the whole room;
+        # only docs materially older than the last figures change are worth a look.
+        GRACE = 14 * 86400
+        if os.path.getmtime(p) < figs_mtime - GRACE:
             age = int((figs_mtime - os.path.getmtime(p)) / 86400)
             findings.append({"file": rp, "severity": "WARN", "rule": f"stale — older than FIGURES_OF_RECORD by ~{age}d (may predate a locked figure)"})
         # banned claims — skip the governance meta-layer (rulebook + manifests necessarily
