@@ -81,7 +81,7 @@
     "id": 7,
     "email": "rblink@exosaero.com",
     "name": "Russ Blink",
-    "role": "manager",
+    "role": "member",
     "password_hash": "5db97e95b46eabf7c67a7d353ae53173c5026a1303a5214c136ff07a7f5f35252e59254da99cdbac5b9fa0a2739dd9e2c8ea438698305b771d854030da9aef62",
     "password_salt": "35eed264e92e38a4412d6481cc80243701f10af7842e344dd6b8538790e4f2d4",
     "created_at": "2026-06-26T21:15:00Z",
