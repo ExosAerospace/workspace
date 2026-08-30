@@ -126,20 +126,6 @@
    "description": "Safety / EHS \u2014 acknowledgment/training required."
   },
   {
-   "id": "safe-lox",
-   "title": "LOx & Ethanol Handling Training",
-   "url": "/process-library/06-safety-ehs/Equipment_Operation_Drill_Guide.docx",
-   "version": "2024-2026-08-30",
-   "required": true,
-   "min_active_seconds": 120,
-   "require_scroll_complete": true,
-   "audience": "06-safety-ehs",
-   "category": "safety-ehs",
-   "doc_no": "SAFE-LOX",
-   "published_at": "2026-08-30T00:00:00Z",
-   "description": "Safety / EHS \u2014 acknowledgment/training required."
-  },
-  {
    "id": "safe-thca",
    "title": "Texas Hazard Communication Act (THCA)",
    "url": "/process-library/06-safety-ehs/Chemical_Identification_Exercise.docx",
@@ -558,6 +544,21 @@
    "doc_no": "POLICY-ISP",
    "published_at": "2026-08-30T00:00:00Z",
    "description": "CMMC 2.0 \u2014 acknowledgment/training required."
+  },
+  {
+   "id": "exos-saf-001-0",
+   "title": "Cryogenic Oxygen (LOx) Handling Procedure",
+   "url": "/process-library/06-safety-ehs/EXOS-SAF-001-0_Cryogenic_Oxygen_(LOx)_Handling_Procedure.docx",
+   "version": "0-2026-08-30",
+   "required": true,
+   "min_active_seconds": 180,
+   "require_scroll_complete": true,
+   "audience": "06-safety-ehs",
+   "category": "safety-ehs",
+   "doc_no": "EXOS-SAF-001-0",
+   "recurrence": "annual",
+   "published_at": "2026-08-30T00:00:00Z",
+   "description": "Safety / EHS \u2014 cryogenic LOx handling; ANNUAL re-certification required for authorized handlers."
   }
  ],
  "progress": [

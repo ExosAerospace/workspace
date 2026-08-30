@@ -1811,7 +1811,10 @@ const server = http.createServer((req, res) => {
       const visibleDocs = rr.docs.filter(d => !d.audience || d.audience === 'all' || isMgr || d.audience === (session.role || ''));
       const mine = visibleDocs.map(d => {
         const prog = (rr.progress || []).find(p => p.user_email === email && p.doc_id === d.id && p.version === d.version) || null;
-        const comp = (rr.completions || []).find(c => c.user_email === email && c.doc_id === d.id && c.doc_version === d.version && c.valid) || null;
+        const comp0 = (rr.completions || []).find(c => c.user_email === email && c.doc_id === d.id && c.doc_version === d.version && c.valid) || null;
+        // Annual re-certification: a completion older than 365 days is due again.
+        const comp = (comp0 && d.recurrence === 'annual' && comp0.acknowledged_at &&
+                      (Date.now() - new Date(comp0.acknowledged_at).getTime()) > 365 * 86400000) ? null : comp0;
         return {
           doc_id: d.id, version: d.version,
           completed: !!comp, valid: !!comp,

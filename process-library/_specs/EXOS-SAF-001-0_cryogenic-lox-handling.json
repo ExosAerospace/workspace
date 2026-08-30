@@ -1,0 +1,70 @@
+{
+  "title": "Cryogenic Oxygen (LOx) Handling Procedure",
+  "doc_no": "EXOS-SAF-001-0",
+  "area": "Safety / EHS",
+  "area_id": "06-safety-ehs",
+  "owner": "Safety Officer / Exo",
+  "rev": "0",
+  "status": "Draft",
+  "intl_release": "No",
+  "reference_docs": "Air Products Liquid Oxygen Safety Data Sheet (SDS); Compressed Gas Association CGA P-12 (Safe Handling of Cryogenic Liquids); OSHA 29 CFR 1910 (oxygen / cryogens / PPE); NFPA 55 (Compressed Gases and Cryogenic Fluids Code); Texas Hazard Communication Act (THCA); Exos Emergency Action Plan (SAFE-EAP)",
+  "remarks": "Cryogenic liquid oxygen (LOx) is purchased from Air Products for propulsion testing. This procedure is the safe-handling standard and defines the ANNUAL training requirement for all authorized LOx handlers. DRAFT pending Safety Officer review/approval before adoption as official training.",
+  "objective": "establish the safe-handling requirements and the annual training standard for cryogenic liquid oxygen (LOx) at Exos - covering receipt from Air Products, storage, transfer, personal protective equipment, hazard controls, and emergency response - so that personnel handle LOx without cryogenic injury or an oxygen-enrichment fire",
+  "overview": "Liquid oxygen (LOx) is a cryogenic liquid at roughly minus 297 degrees Fahrenheit (minus 183 degrees Celsius) and a strong oxidizer, purchased from Air Products for Exos propulsion testing. It carries four linked hazards that everyone who handles it must understand. (1) Extreme cold - contact causes instant cryogenic burns/frostbite, and it embrittles many materials until they fracture. (2) Oxygen enrichment - LOx and its cold vapor dramatically raise the risk of fire; materials that barely burn in air ignite readily, and oil or grease in contact with oxygen can ignite or detonate. (3) Expansion and asphyxiation/over-pressure - one volume of LOx becomes roughly 860 volumes of gas, which can over-pressurize a closed container and, though oxygen itself is not an asphyxiant, displaces normal air balance in low or confined spaces. (4) Trapped-liquid pressure - LOx sealed with no relief path builds destructive pressure as it warms. This procedure applies to every person who receives, stores, transfers, or works near LOx, and defines the annual training all such personnel must complete and re-certify.",
+  "tasks": [
+    {
+      "name": "Task 1 - Complete Training and Authorization Before Handling",
+      "steps": [
+        "Do not receive, store, transfer, or work near LOx unless you have completed this LOx handling training within the last 12 months and are on the Safety Officer's authorized-handler list.",
+        "Review the current Air Products Liquid Oxygen Safety Data Sheet (SDS) and confirm you understand the cold, oxygen-enrichment, expansion/asphyxiation, and trapped-pressure hazards described in the Overview.",
+        "Know the location of the nearest safety shower and eyewash, the oxygen monitor, and the emergency contacts and Emergency Action Plan (SAFE-EAP) before you begin."
+      ]
+    },
+    {
+      "name": "Task 2 - Wear the Required PPE",
+      "steps": [
+        "Wear a full face shield over safety glasses/goggles, and cryogenic (loose-fitting, insulated) gloves that can be shed instantly if liquid gets inside.",
+        "Wear long sleeves and long pants of non-absorbent material with no cuffs or open pockets that can trap liquid; wear closed-toe leather boots with pant legs worn OUTSIDE the boots.",
+        "Keep all clothing, gloves, tools, and skin free of oil, grease, and hand cream - in an oxygen-enriched atmosphere these become highly flammable.",
+        "Remove watches, rings, and jewelry that could trap cold liquid or gas against the skin."
+      ]
+    },
+    {
+      "name": "Task 3 - Receive LOx from Air Products Safely",
+      "steps": [
+        "Meet the Air Products delivery; verify the delivery ticket product (liquid oxygen) and quantity against the order before any transfer.",
+        "Confirm the receiving vessel/dewar is rated and in-date for LOx service and is grounded/bonded as required.",
+        "Clear the fill area of ignition sources, oil, grease, and combustibles, and ensure it is outdoors or well ventilated with oxygen monitoring.",
+        "Verify all transfer hoses and fittings are clean, oxygen-service rated, and free of oil/grease before connecting; never use non-oxygen-rated components."
+      ]
+    },
+    {
+      "name": "Task 4 - Store and Transfer LOx",
+      "steps": [
+        "Store LOx only in approved, vented cryogenic vessels; NEVER seal LOx in a closed container or trap it between closed valves without a pressure-relief path - warming LOx builds destructive pressure.",
+        "Transfer slowly to control boil-off, opening valves gradually; never allow LOx to contact skin, asphalt, oil, or grease (LOx on asphalt or organics is an explosion hazard).",
+        "When indoors or working in low spots, monitor the atmosphere with a calibrated oxygen meter and stop work if oxygen exceeds 23.5 percent (cold oxygen-rich vapor settles into low areas).",
+        "Keep LOx equipment dedicated to oxygen service only; never use it for any other gas."
+      ]
+    },
+    {
+      "name": "Task 5 - Respond to Spills, Exposure, and Emergencies",
+      "steps": [
+        "Skin or eye contact: flush the area with copious tepid (not hot) water for at least 15 minutes, do not rub, remove any non-frozen clothing from the area, treat as frostbite, and get medical help.",
+        "If clothing is splashed or soaked with LOx, it is oxygen-saturated and dangerously flammable - leave the area, keep away from all ignition sources, and ventilate the clothing for at least 15 minutes before going near any spark or flame.",
+        "Spill: evacuate and ventilate the area, remove ignition sources, allow small spills to evaporate, and keep everyone clear until the oxygen level returns to normal.",
+        "Fire: an oxygen-enriched fire is fast and intense - activate the Emergency Action Plan, evacuate, and call 911; shut off the LOx supply only if it is safe to do so.",
+        "Report every LOx incident, exposure, or near-miss to the Safety Officer."
+      ]
+    },
+    {
+      "name": "Task 6 - Maintain the Annual Training and Authorization",
+      "steps": [
+        "This LOx handling training is REQUIRED ANNUALLY for every authorized handler - complete it in Mission Control Required Reading and re-certify each year.",
+        "New personnel must complete this training and be added to the authorized-handler list before their first LOx handling.",
+        "Re-train immediately whenever the equipment, this procedure, or the Air Products SDS changes materially.",
+        "The Safety Officer maintains the authorized-handler list and verifies annual completion."
+      ]
+    }
+  ]
+}
