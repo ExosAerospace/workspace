@@ -3797,6 +3797,27 @@ const server = http.createServer((req, res) => {
     }); return;
   }
 
+  // Attach a note to a decision WITHOUT answering it — the note is saved on the still-open
+  // decision so the person can then Approve/Deny with the note riding along. This exists because
+  // saving a note must NOT resolve the card (that surprised Phil + Steve: "Save Note" made the
+  // box vanish before they could approve). Body: { id, note }. Session-gated.
+  if (req.url === '/api/decisions/note' && req.method === 'POST') {
+    const nsess = getSession(req);
+    if (!nsess) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const p = JSON.parse(body || '{}');
+        const arr = loadDecisions();
+        const d = arr.find(x => String(x.id) === String(p.id));
+        if (!d) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'decision not found' })); return; }
+        d.note = (p.note || '').toString();        // attach the note; do NOT change status
+        d.updated = new Date().toISOString();
+        saveDecisions(arr);
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, id: d.id, note: d.note })); return;
+      } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+    }); return;
+  }
+
   // "Not mine" — reassign a misrouted decision to the correct owner, or flag it for Exo to reroute.
   // Body: { id, to?  (name or email), reason? }. Session-gated.
   if (req.url === '/api/decisions/reassign' && req.method === 'POST') {

@@ -179,13 +179,13 @@ function card(d){
     </label>
     <span style="font-size:10px;color:var(--red);margin-left:8px">No CUI / ITAR — keep that in SharePoint</span>
     <div style="font-size:11px;color:var(--muted);margin-top:4px">Attach an agreement or supporting file here — it's saved to this decision and stays with the record.</div>
-    <div style="font-size:11px;color:var(--muted);margin-top:8px">Click an option to answer — it saves instantly and moves to Answered. Add a note first if you want it attached.</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px">Type a note if you want, then click an option (Approve / Deny) — your note is submitted with your answer. "📝 Attach note" saves the note but keeps the decision open so you can still choose.</div>
     <div class="opts" id="opts-${d.id}">
       ${opts.map(o=>`<button class="opt" onclick="pick('${d.id}',this,${JSON.stringify(o).replace(/"/g,'&quot;')})">${esc(o)}</button>`).join('')}
     </div>
-    <textarea class="note" id="note-${d.id}" placeholder="Note / answer… — or just say what needs doing (e.g. 'renew the FAA license', 'have Neil handle X', '#1234 done'); Exo assigns it" oninput="noteChange('${d.id}',this.value)"></textarea>
+    <textarea class="note" id="note-${d.id}" placeholder="Add a note / instruction (optional) — it's submitted with your Approve/Deny and reaches whoever's waiting. e.g. 'approved, but have Neil confirm the date first'" oninput="noteChange('${d.id}',this.value)"></textarea>
     <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap">
-      <button onclick="saveNote('${d.id}')" title="Save this note as your answer (no option needed) — records instantly" style="background:#0a1830;border:1px solid var(--accent,#0080ff);color:var(--accent,#0080ff);border-radius:7px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer">💾 Save note</button>
+      <button onclick="saveNote('${d.id}')" title="Attach this note to the decision — it stays open so you can then Approve or Deny (your note is submitted with your answer)" style="background:#0a1830;border:1px solid var(--accent,#0080ff);color:var(--accent,#0080ff);border-radius:7px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer">📝 Attach note (keep open)</button>
       <button onclick="reassignDecision('${d.id}')" title="This decision isn't mine — send it to the right person or let Exo reroute it" style="background:transparent;border:1px solid #3a4f73;color:#8aa0bd;border-radius:7px;padding:4px 10px;font-size:12px;cursor:pointer">🔀 Not my decision</button>
     </div>
   </div>`;
@@ -249,16 +249,29 @@ function confirmModal({body,choice,onYes,onBack}){
   card.querySelector('#cm-back').onclick=()=>{close();onBack&&onBack();};
   ov.addEventListener('click',e=>{if(e.target===ov){close();onBack&&onBack();}}); // click-outside = Back
 }
-// Save a note-only answer (no option chosen) — keeps the freeform/instruction path working one-click
+// Attach a note to the decision WITHOUT resolving it — the card stays open so you can then
+// Approve/Deny (the note rides along with your answer). This does NOT submit an answer.
 async function saveNote(id){
   const note=(document.getElementById('note-'+id)?.value||'').trim();
   if(!note){toast('Type a note first');return;}
   try{
-    const r=await fetch('/api/decisions/answer',{method:'POST',credentials:'same-origin',
-      headers:{'Content-Type':'application/json'},body:JSON.stringify({answers:[{id,answer:'',note}]})});
+    const r=await fetch('/api/decisions/note',{method:'POST',credentials:'same-origin',
+      headers:{'Content-Type':'application/json'},body:JSON.stringify({id,note})});
     if(!r.ok) throw new Error('save failed');
-    toast('✓ Note saved & routed to Exo');
-    load();
+    // Keep the card in place; just confirm the note is attached and flag it visually.
+    picks[id]=picks[id]||{}; picks[id].note=note;
+    const ta=document.getElementById('note-'+id);
+    if(ta){ta.style.borderColor='#2f8f4e';}
+    const card=document.getElementById('opts-'+id)?.closest('.card');
+    const flag=card?.querySelector('.note-saved-flag');
+    if(card && !flag){
+      const s=document.createElement('div');
+      s.className='note-saved-flag';
+      s.style.cssText='font-size:11px;color:#4caf6e;margin-top:4px;font-weight:600';
+      s.textContent='📝 Note attached — now click Approve or Deny to submit it with your answer.';
+      (document.getElementById('note-'+id)?.parentNode||card).insertBefore(s,document.getElementById('note-'+id).nextSibling);
+    }
+    toast('📝 Note attached — now Approve or Deny (the note goes with it)');
   }catch(e){toast('Could not save — check you are logged in, then try again');}
 }
 // Note text is captured per-card and saved via the option buttons or 💾 Save note (instant-submit).
