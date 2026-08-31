@@ -3767,6 +3767,25 @@ const server = http.createServer((req, res) => {
           updated.push(d.id);
         }
         saveDecisions(arr);
+        // Fire rendered notifications async (non-blocking) for each answered decision.
+        // Notifies the internal person waiting (owner field → @exosaero.com email) via
+        // Discord DM + email. Never blocks the HTTP response.
+        if (updated.length) {
+          const { spawn } = require('child_process');
+          const NOTIFY = path.join(__dirname, '..', 'scripts', 'decision-rendered-notify.py');
+          const answererName = (session && session.name) || who;
+          for (const id of updated) {
+            const d = arr.find(x => x.id === id);
+            if (!d) continue;
+            const args = ['--id', id, '--answer', d.answer || '', '--note', d.note || '', '--by', answererName];
+            try {
+              const env = Object.assign({}, process.env, {
+                PATH: ['/Users/exomac/.local/share/mise/shims', '/opt/homebrew/bin', '/usr/local/bin', process.env.PATH || ''].join(':')
+              });
+              spawn('python3', [NOTIFY, ...args], { detached: true, stdio: 'ignore', env }).unref();
+            } catch (e) { /* notify is best-effort; never fail the answer */ }
+          }
+        }
         res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ updated })); return;
       } catch (e) { res.writeHead(400); res.end(JSON.stringify({ error: e.message })); }
     }); return;

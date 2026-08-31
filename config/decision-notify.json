@@ -1,0 +1,7 @@
+{
+  "_comment": "Discord user IDs for decision-rendered notifications. Add id for any team member who should receive Discord DMs.",
+  "discord_ids": {
+    "jquinn@exosaero.com":    "1501632195163590739"
+  },
+  "fallback_channel": null
+}
