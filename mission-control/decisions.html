@@ -251,9 +251,19 @@ function confirmModal({body,choice,onYes,onBack}){
 }
 // Attach a note to the decision WITHOUT resolving it — the card stays open so you can then
 // Approve/Deny (the note rides along with your answer). This does NOT submit an answer.
-async function saveNote(id){
+// Same courtesy as the answer buttons: pop a Yes / ← Back confirm before the note is attached.
+function saveNote(id){
   const note=(document.getElementById('note-'+id)?.value||'').trim();
   if(!note){toast('Type a note first');return;}
+  const title=(document.getElementById('opts-'+id)?.closest('.card')?.querySelector('.title')?.textContent||'this decision').trim();
+  confirmModal({
+    body:'Attach this note to "'+title+'"? The decision stays open — you’ll then click Approve or Deny to submit it with your answer.',
+    choice:'📝 Attach note (keep open)',
+    onYes:()=>doSaveNote(id,note),
+    onBack:()=>{}   // no change
+  });
+}
+async function doSaveNote(id,note){
   try{
     const r=await fetch('/api/decisions/note',{method:'POST',credentials:'same-origin',
       headers:{'Content-Type':'application/json'},body:JSON.stringify({id,note})});
