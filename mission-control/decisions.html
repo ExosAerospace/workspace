@@ -97,12 +97,6 @@
   </div>
 </div>
 <div class="wrap" id="list"><div class="empty">Loading…</div></div>
-<div class="bar" id="bar" style="display:none">
-  <div class="barwrap">
-    <div class="count" id="count">0 answered</div>
-    <button class="submit" id="submit" disabled onclick="submitAll()">Submit answers</button>
-  </div>
-</div>
 <div id="submittals" style="margin-top:22px"></div>
 <script>
 let tab='open', data=[], picks={}, searchQuery='', scopeAll=false; // picks[id]={answer,note}
@@ -155,12 +149,10 @@ function render(){
     rows=data.filter(d=> tab==='answered' ? d.status==='answered'
       : (d.status!=='answered' && d.status!=='cancelled' && d.status!=='superseded'));
   }
-  if(!rows.length){el.innerHTML='<div class="empty">'+(q?('No decisions match "'+esc(searchQuery)+'".'):(tab==='open'?'🎉 Nothing waiting on you. Inbox zero.':'No answered items yet.'))+'</div>';document.getElementById('bar').style.display='none';return;}
+  if(!rows.length){el.innerHTML='<div class="empty">'+(q?('No decisions match "'+esc(searchQuery)+'".'):(tab==='open'?'🎉 Nothing waiting on you. Inbox zero.':'No answered items yet.'))+'</div>';return;}
   const prio={high:0,med:1,low:2};
   const sorted=[...rows].sort((a,b)=>((prio[a.priority]??1)-(prio[b.priority]??1))||(new Date(b.created||0)-new Date(a.created||0)));
   el.innerHTML=sorted.map(d=>card(d)).join('');
-  document.getElementById('bar').style.display = tab==='open'?'block':'none';
-  updateCount();
 }
 function card(d){
   const pr=d.priority||'med';
@@ -187,11 +179,15 @@ function card(d){
     </label>
     <span style="font-size:10px;color:var(--red);margin-left:8px">No CUI / ITAR — keep that in SharePoint</span>
     <div style="font-size:11px;color:var(--muted);margin-top:4px">Attach an agreement or supporting file here — it's saved to this decision and stays with the record.</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px">Click an option to answer — it saves instantly and moves to Answered. Add a note first if you want it attached.</div>
     <div class="opts" id="opts-${d.id}">
       ${opts.map(o=>`<button class="opt" onclick="pick('${d.id}',this,${JSON.stringify(o).replace(/"/g,'&quot;')})">${esc(o)}</button>`).join('')}
     </div>
     <textarea class="note" id="note-${d.id}" placeholder="Note / answer… — or just say what needs doing (e.g. 'renew the FAA license', 'have Neil handle X', '#1234 done'); Exo assigns it" oninput="noteChange('${d.id}',this.value)"></textarea>
-    <div style="margin-top:6px"><button onclick="reassignDecision('${d.id}')" title="This decision isn't mine — send it to the right person or let Exo reroute it" style="background:transparent;border:1px solid #3a4f73;color:#8aa0bd;border-radius:7px;padding:4px 10px;font-size:12px;cursor:pointer">🔀 Not my decision</button></div>
+    <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="saveNote('${d.id}')" title="Save this note as your answer (no option needed) — records instantly" style="background:#0a1830;border:1px solid var(--accent,#0080ff);color:var(--accent,#0080ff);border-radius:7px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer">💾 Save note</button>
+      <button onclick="reassignDecision('${d.id}')" title="This decision isn't mine — send it to the right person or let Exo reroute it" style="background:transparent;border:1px solid #3a4f73;color:#8aa0bd;border-radius:7px;padding:4px 10px;font-size:12px;cursor:pointer">🔀 Not my decision</button>
+    </div>
   </div>`;
 }
 function reassignDecision(id){
@@ -207,27 +203,66 @@ function reassignDecision(id){
 }
 function pick(id,btn,val){
   const box=document.getElementById('opts-'+id);
+  if(box.dataset.busy) return;              // guard against double-fire
   box.querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));
-  btn.classList.add('sel');
-  picks[id]=picks[id]||{}; picks[id].answer=val; updateCount();
+  btn.classList.add('sel');                 // show selection while confirming
+  const title=(box.closest('.card')?.querySelector('.title')?.textContent||'this decision').trim();
+  confirmModal({
+    body:'You are about to answer "'+title+'" as:',
+    choice:val,
+    onYes:()=>submitAnswer(id,val,box),
+    onBack:()=>{btn.classList.remove('sel');}   // no change, just clear the highlight
+  });
 }
-function noteChange(id,v){picks[id]=picks[id]||{};picks[id].note=v;updateCount();}
-function answeredCount(){return Object.keys(picks).filter(id=>(picks[id].answer!==undefined&&picks[id].answer!=='')||(picks[id].note&&picks[id].note.trim())).length;}
-function updateCount(){
-  const n=answeredCount();
-  const openCount=data.filter(d=>d.status!=='answered'&&d.status!=='cancelled'&&d.status!=='superseded').length;
-  document.getElementById('count').textContent=n+' answered · '+openCount+' open';
-  document.getElementById('submit').disabled=n===0;
+async function submitAnswer(id,val,box){
+  if(box.dataset.busy) return;
+  box.dataset.busy='1';
+  box.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  const note=(document.getElementById('note-'+id)?.value||'').trim();
+  try{
+    const r=await fetch('/api/decisions/answer',{method:'POST',credentials:'same-origin',
+      headers:{'Content-Type':'application/json'},body:JSON.stringify({answers:[{id,answer:val,note}]})});
+    if(!r.ok) throw new Error('save failed');
+    toast('✓ '+val+' — recorded & routed to Exo');
+    load();                                 // re-render: card moves to Answered, notifications fire server-side
+  }catch(e){
+    toast('Could not save — check you are logged in, then try again');
+    box.querySelectorAll('.opt').forEach(b=>b.disabled=false);
+    box.dataset.busy='';
+  }
 }
-async function submitAll(){
-  const answers=Object.keys(picks).map(id=>({id,answer:picks[id].answer,note:picks[id].note||''}))
-    .filter(a=>(a.answer!==undefined&&a.answer!=='')||(a.note&&a.note.trim()));
-  if(!answers.length)return;
-  const r=await fetch('/api/decisions/answer',{method:'POST',credentials:'same-origin',
-    headers:{'Content-Type':'application/json'},body:JSON.stringify({answers})});
-  if(r.ok){toast(answers.length+' answer'+(answers.length>1?'s':'')+' sent to Exo');load();}
-  else toast('Error saving — try again');
+// Small confirm popup — Yes / Back. No timeout.
+function confirmModal({body,choice,onYes,onBack}){
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:1000';
+  const card=document.createElement('div');
+  card.style.cssText='background:#0d1b30;border:1px solid #2a3f63;border-radius:12px;max-width:440px;width:90%;padding:22px;box-shadow:0 12px 44px rgba(0,0,0,.55)';
+  card.innerHTML='<div style="font-size:15px;color:#e6edf7;line-height:1.4;margin-bottom:6px">'+esc(body)+'</div>'
+    +'<div style="font-size:19px;font-weight:800;color:#4aa3ff;margin:6px 0 18px">'+esc(choice)+'</div>'
+    +'<div style="display:flex;gap:10px;justify-content:flex-end">'
+    +'<button id="cm-back" style="background:transparent;border:1px solid #3a4f73;color:#9fb3d1;border-radius:8px;padding:9px 16px;font-weight:600;cursor:pointer">← Back</button>'
+    +'<button id="cm-yes" style="background:linear-gradient(135deg,#1668d6,#2f8bff);border:none;color:#fff;border-radius:8px;padding:9px 20px;font-weight:700;cursor:pointer">Yes, confirm</button>'
+    +'</div>';
+  ov.appendChild(card); document.body.appendChild(ov);
+  const close=()=>ov.remove();
+  card.querySelector('#cm-yes').onclick=()=>{close();onYes&&onYes();};
+  card.querySelector('#cm-back').onclick=()=>{close();onBack&&onBack();};
+  ov.addEventListener('click',e=>{if(e.target===ov){close();onBack&&onBack();}}); // click-outside = Back
 }
+// Save a note-only answer (no option chosen) — keeps the freeform/instruction path working one-click
+async function saveNote(id){
+  const note=(document.getElementById('note-'+id)?.value||'').trim();
+  if(!note){toast('Type a note first');return;}
+  try{
+    const r=await fetch('/api/decisions/answer',{method:'POST',credentials:'same-origin',
+      headers:{'Content-Type':'application/json'},body:JSON.stringify({answers:[{id,answer:'',note}]})});
+    if(!r.ok) throw new Error('save failed');
+    toast('✓ Note saved & routed to Exo');
+    load();
+  }catch(e){toast('Could not save — check you are logged in, then try again');}
+}
+// Note text is captured per-card and saved via the option buttons or 💾 Save note (instant-submit).
+function noteChange(id,v){picks[id]=picks[id]||{};picks[id].note=v;}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2600);}
 async function loadSubmittals(){
   const el=document.getElementById('submittals'); if(!el) return;
