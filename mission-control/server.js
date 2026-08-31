@@ -3849,8 +3849,17 @@ const server = http.createServer((req, res) => {
         const note = `Reassigned by ${who} (not mine)${p.reason ? ': ' + p.reason : ''}`;
         d.note = (d.note ? d.note + ' | ' : '') + note;
         d.reassignedFrom = from; d.updated = now;
+        // The "my decisions" filter matches on assignee OR the named approver. If the person
+        // reassigning is the stale approver, leaving that field would keep the card glued to their
+        // board even after handoff (this is why Phil kept seeing cards he'd reassigned). Clear/repoint
+        // the approver whenever it points at the reassigner (or is empty) so handoff actually sticks.
+        const reassignerEmail = ((rsess.email) || '').toLowerCase();
+        const curApM = /([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})/i.exec(d.approver || '');
+        const curApproverEmail = curApM ? curApM[1].toLowerCase() : '';
+        const approverIsReassigner = !d.approver || (curApproverEmail && curApproverEmail === reassignerEmail);
         if (email) {
           d.assignedTo = email; d.status = d.status === 'answered' ? d.status : 'open';
+          if (approverIsReassigner) d.approver = email;   // new owner is now the approver of record
           d.needsExoRouting = false;
           saveDecisions(arr);
           res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -3858,6 +3867,7 @@ const server = http.createServer((req, res) => {
         } else {
           // Couldn't determine the owner — take it out of the sender's inbox and flag it for Exo.
           d.assignedTo = 'exo@exosaero.com'; d.status = 'reassigning'; d.needsExoRouting = true;
+          if (approverIsReassigner) d.approver = '';       // don't let it linger on the reassigner's board
           saveDecisions(arr);
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ ok: true, queued: true, message: "Flagged for Exo to reroute — it's out of your inbox." }));
