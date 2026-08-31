@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "name": "Exos BLK3-adjacent NON-CONTROLLED model eval",
+    "note": "Every prompt is generic/public. NO ITAR/CUI, NO BLK3 vehicle data, NO Exos-proprietary designs. controlled MUST be false for the runner to execute an item.",
+    "version": "1"
+  },
+  "items": [
+    {
+      "id": "aero-01",
+      "category": "aerospace-domain-qa",
+      "controlled": false,
+      "prompt": "Explain the key differences between a suborbital reusable launch vehicle and an orbital launch vehicle in terms of energy requirements, thermal environment on reentry, and typical reusability strategy. Keep it technically accurate and concise.",
+      "rubric": ["Correct delta-v / orbital-energy distinction", "Reentry heating scales with velocity (suborbital far milder)", "Reusability strategy tied to recovery regime", "No hand-wavy errors"]
+    },
+    {
+      "id": "aero-02",
+      "category": "aerospace-domain-qa",
+      "controlled": false,
+      "prompt": "A sounding-rocket-class vehicle experiences roughly 4 g axial during boost and a transient near 7 g at burnout. Explain qualitatively how these load factors drive structural sizing of a thin-walled pressurized aluminum airframe, and what failure modes an engineer would check.",
+      "rubric": ["Axial load path + buckling of thin shells", "Pressure stabilization interaction", "Yield vs buckling vs joint failure", "Reasonable engineering framing"]
+    },
+    {
+      "id": "gnc-01",
+      "category": "published-gnc-control-theory",
+      "controlled": false,
+      "prompt": "Compare PID and LQR control for attitude control of a rocket during powered flight. Discuss the tradeoffs in tuning effort, robustness to modeling error, handling of coupled multi-axis dynamics, and computational cost. Reference only published, generic control theory.",
+      "rubric": ["Correct PID vs LQR characterization", "LQR handles MIMO/coupling; needs a model", "Robustness/gain-margin discussion", "No fabricated equations"]
+    },
+    {
+      "id": "gnc-02",
+      "category": "published-gnc-control-theory",
+      "controlled": false,
+      "prompt": "Describe how a Kalman filter fuses inertial measurement unit (IMU) data with GNSS for a launch-vehicle navigation solution. Cover the predict/update cycle, why the two sensors are complementary, and what happens to the estimate during a GNSS outage. Published/generic only.",
+      "rubric": ["Predict (IMU integration) vs update (GNSS) cycle", "Complementary error characteristics (drift vs noise)", "Covariance growth during outage", "Correct, non-hallucinated"]
+    },
+    {
+      "id": "gnc-03",
+      "category": "published-gnc-control-theory",
+      "controlled": false,
+      "prompt": "Explain closed-loop guidance vs open-loop (pre-programmed) guidance for a boost phase, and the conditions under which each is appropriate. Keep it to published guidance concepts.",
+      "rubric": ["Open-loop = pre-planned pitch program", "Closed-loop reacts to state errors / targets", "Dispersion & robustness tradeoffs", "Accurate"]
+    },
+    {
+      "id": "sw-01",
+      "category": "flight-software-architecture",
+      "controlled": false,
+      "prompt": "You are designing the flight software architecture for a small reusable rocket avionics system (generic, not any specific vehicle). Discuss the tradeoffs between a bare-metal super-loop, an RTOS (e.g. an ARINC-653-style partitioned RTOS), and a Linux-based flight computer. Address determinism, certification burden, and fault containment.",
+      "rubric": ["Determinism/latency tradeoffs", "Partitioning & fault containment", "Certification/verification burden per approach", "Balanced, correct"]
+    },
+    {
+      "id": "sw-02",
+      "category": "flight-software-architecture",
+      "controlled": false,
+      "prompt": "Describe common redundancy architectures for flight-critical avionics (dual-redundant, triple modular redundancy / voting, dissimilar redundancy). Explain how each detects and tolerates faults, and the cost/complexity tradeoffs. Generic engineering, no proprietary designs.",
+      "rubric": ["TMR voting mechanism", "Fault detection vs tolerance distinction", "Dissimilar redundancy addresses common-mode faults", "SWaP/cost tradeoffs"]
+    },
+    {
+      "id": "sw-03",
+      "category": "flight-software-architecture",
+      "controlled": false,
+      "prompt": "Explain the role of a hardware watchdog timer in a rocket flight computer, how a safe-state / abort design interacts with it, and three software bugs that a watchdog would and would not catch.",
+      "rubric": ["Watchdog kick/reset mechanism", "Safe-state on timeout", "Catches hangs/deadlocks; misses logic errors that keep kicking", "Concrete examples"]
+    },
+    {
+      "id": "mkt-01",
+      "category": "competitive-market-synthesis",
+      "controlled": false,
+      "prompt": "Summarize the current landscape of the commercial suborbital flight and microgravity research market, including the main categories of providers and the typical customer segments (research, technology de-risk, education). Public information only.",
+      "rubric": ["Identifies provider categories", "Customer segments correct", "No fabricated companies/figures", "Concise synthesis"]
+    },
+    {
+      "id": "prop-01",
+      "category": "proposal-first-draft",
+      "controlled": false,
+      "prompt": "Draft a one-paragraph capability statement (public tone, no proprietary specifics) for a company that offers reusable suborbital flight test services to help other aerospace companies de-risk hardware before orbital deployment. Keep claims generic and defensible.",
+      "rubric": ["Clear value proposition", "Defensible, non-overclaiming language", "Professional proposal tone", "No invented certifications/numbers"]
+    }
+  ]
+}
