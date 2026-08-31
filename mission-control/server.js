@@ -253,7 +253,7 @@ function saveUploadsMeta(meta) {
 const PDF_CACHE_DIR = path.join(UPLOADS_DIR, '.pdfcache');
 const CHROME_BIN = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const OPENCLAW_BIN = '/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw';
-const PDF_CONVERTIBLE = ['.docx', '.doc'];
+const PDF_CONVERTIBLE = ['.docx', '.doc', '.pptx', '.ppt'];
 
 // ── Exobot chat: async job store so answers survive page navigation ──
 // The global chat widget (exobot-widget.js) POSTs a question, gets a jobId back
@@ -307,6 +307,7 @@ function runExobotChat(jobId, msg) {
 // (letterhead banners, diagrams, photos) from previews; mammoth keeps them. Kept as the primary
 // path with a textutil fallback (mammoth is .docx-only / may be absent).
 const DOCX2HTML = path.join(__dirname, '..', 'scripts', 'docx2html.py');
+const PPTX2HTML = path.join(__dirname, '..', 'scripts', 'pptx2html.py');
 function ensurePdfRendition(storedName) {
   const ext = path.extname(storedName).toLowerCase();
   if (!PDF_CONVERTIBLE.includes(ext)) return null;
@@ -321,12 +322,19 @@ function ensurePdfRendition(storedName) {
   } catch {}
   const tmpHtml = path.join(PDF_CACHE_DIR, storedName + '.html');
   try {
-    // Primary: mammoth (embeds images). Fallback: textutil (text only) for .doc or if mammoth fails.
-    try {
-      execFileSync('/usr/bin/python3', [DOCX2HTML, src, tmpHtml], { timeout: 60000, stdio: 'ignore' });
-      if (!(fs.existsSync(tmpHtml) && fs.statSync(tmpHtml).size > 0)) throw new Error('empty html');
-    } catch (mErr) {
-      execFileSync('textutil', ['-convert', 'html', '-output', tmpHtml, src], { timeout: 30000, stdio: 'ignore' });
+    // PPTX/PPT: python-pptx → content HTML (soffice hangs here, so we render a content view,
+    // not a pixel-perfect one — enough to review ordering/figures/narrative before approving).
+    if (ext === '.pptx' || ext === '.ppt') {
+      execFileSync('/usr/bin/python3', [PPTX2HTML, src, tmpHtml], { timeout: 90000, stdio: 'ignore' });
+      if (!(fs.existsSync(tmpHtml) && fs.statSync(tmpHtml).size > 0)) throw new Error('empty pptx html');
+    } else {
+      // Primary: mammoth (embeds images). Fallback: textutil (text only) for .doc or if mammoth fails.
+      try {
+        execFileSync('/usr/bin/python3', [DOCX2HTML, src, tmpHtml], { timeout: 60000, stdio: 'ignore' });
+        if (!(fs.existsSync(tmpHtml) && fs.statSync(tmpHtml).size > 0)) throw new Error('empty html');
+      } catch (mErr) {
+        execFileSync('textutil', ['-convert', 'html', '-output', tmpHtml, src], { timeout: 30000, stdio: 'ignore' });
+      }
     }
     execFileSync(CHROME_BIN, ['--headless=new', '--disable-gpu', '--no-sandbox',
       '--no-pdf-header-footer', `--print-to-pdf=${pdfPath}`, 'file://' + tmpHtml],
@@ -3694,13 +3702,33 @@ const server = http.createServer((req, res) => {
       arr.sort((a, b) => (b._score - a._score) || (a.created || '').localeCompare(b.created || ''));
       for (const d of arr) delete d._score;
     }
-    // Attach uploaded documents linked to each decision (reuse uploads store).
+    // Attach uploaded documents so a decision can be REVIEWED from the Decisions board.
+    // Match docs linked directly to the decision OR to its related task (relatedItem like
+    // "… (task 2467)") — most "approve this document" decisions carry the file on the task, not
+    // the decision. Office docs get a /viewpdf review link (inline PDF render); others open raw.
     try {
       const upMeta = loadUploadsMeta();
+      const OFFICE = new Set(['docx', 'pptx', 'xlsx', 'doc', 'ppt', 'xls']);
       for (const d of arr) {
-        d.attachments = upMeta
-          .filter(m => String(m.decision_id) === String(d.id))
-          .map(m => ({ id: m.id, filename: m.filename, url: '/uploads/' + encodeURIComponent(m.stored_name), size: m.size, uploaded_at: m.uploaded_at }));
+        const tm = /task\s*#?\s*(\d+)/i.exec(d.relatedItem || '');
+        const taskId = tm ? tm[1] : null;
+        const linked = upMeta.filter(m =>
+          String(m.decision_id) === String(d.id) ||
+          (taskId && m.task_id != null && String(m.task_id) === String(taskId)));
+        d.attachments = linked.map(m => {
+          const ext = (String(m.stored_name).split('.').pop() || '').toLowerCase();
+          const enc = encodeURIComponent(m.stored_name);
+          return {
+            id: m.id, filename: m.filename, ext,
+            url: '/uploads/' + enc,
+            review_url: OFFICE.has(ext) ? '/viewpdf/' + enc : '/uploads/' + enc,
+            size: m.size, uploaded_at: m.uploaded_at,
+          };
+        });
+        // An explicit review_url on the decision record wins as the primary reviewable.
+        if (d.review_url && !d.attachments.some(a => a.review_url === d.review_url)) {
+          d.attachments.unshift({ filename: d.review_label || 'Review document', review_url: d.review_url, url: d.review_url, ext: '' });
+        }
       }
     } catch (e) { /* attachments are best-effort */ }
     res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(arr)); return;
