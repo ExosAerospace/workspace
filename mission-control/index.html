@@ -538,9 +538,10 @@
     <span style="color:var(--muted,#8aa0bd);opacity:.4;margin:0 8px;">│</span>
     <!-- Utility -->
     <a href="help.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🚀 Getting Started</a>
+    <a href="required-reading.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📋 Required Reading</a>
     <a href="set-password.html" style="color:var(--muted,#8aa0bd);text-decoration:none;font-size:0.85rem;margin-right:4px;">🔑 Set Password</a>
     <button class="btn orange small" id="syncTwBtn" onclick="syncTeamwork()">Sync Teamwork</button>
-    <script>fetch('/api/decisions?status=open',{credentials:'same-origin'}).then(r=>r.ok?r.json():[]).then(d=>{if(d&&d.length){var b=document.getElementById('decisionsBadge');b.textContent=d.length;b.style.display='inline-block';}}).catch(()=>{});</script>
+    <script>fetch('/api/me',{credentials:'same-origin'}).then(r=>r.ok?r.json():{}).then(me=>{if(me&&me.role==='early_adopter')return;fetch('/api/decisions?status=open',{credentials:'same-origin'}).then(r=>r.ok?r.json():[]).then(d=>{if(d&&d.length){var b=document.getElementById('decisionsBadge');b.textContent=d.length;b.style.display='inline-block';}}).catch(()=>{});}).catch(()=>{});</script>
     <a href="ctd-dd.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🔎 CTD DD</a>
     <a href="gov-readiness.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🛡️ Gov/DIB Readiness</a>
     <a href="#" onclick="fetch('/api/logout',{method:'POST'}).then(()=>location.href='/login');return false;" style="color:var(--red,#ff4444);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">Sign Out</a>
@@ -925,12 +926,18 @@ async function initUserRole() {
         render();
       }
       if (me.role === 'early_adopter') {
-        // Hide internal nav links
-        document.getElementById('syncTwBtn').style.display = 'none';
-        document.querySelectorAll('.header-right a').forEach(a => {
-          if (['opportunities.html','crm.html','docusign.html'].some(p => a.href.includes(p))) {
-            a.style.display = 'none';
-          }
+        // SANDBOX: whitelist the header — hide EVERY internal nav link/button, keep only
+        // Sign Out + Refresh. Was a 3-link blocklist, so every nav link added since
+        // (Decisions, Fleet, HR, Expenses, Procedures, CTD DD, Gov Readiness, …) leaked
+        // into the external capstone sandbox as clickable buttons.
+        document.querySelectorAll('.header-right a, .header-right button').forEach(el => {
+          const oc = el.getAttribute('onclick') || '';
+          const href = el.getAttribute('href') || '';
+          // Keep Sign Out + Refresh, AND the self-service Set Password link so
+          // capstone/external users can change their temporary password (the
+          // whitelist was otherwise hiding their only way to do it).
+          const keep = /logout|loadTasks/.test(oc) || /set-password/.test(href);
+          if (!keep) el.style.display = 'none';
         });
         // Add welcome link and user badge
         const badge = document.createElement('span');
@@ -942,6 +949,24 @@ async function initUserRole() {
         welcomeLink.style.cssText = 'color:#60a5fa;text-decoration:none;font-size:0.85rem;margin-right:4px;';
         welcomeLink.textContent = 'Welcome Guide';
         document.querySelector('.header-right').prepend(welcomeLink);
+      }
+      if (me.role === 'member') {
+        // MEMBER NAV: hide the header buttons/links a member has no rights to operate —
+        // admin/ops/sensitive-internal surfaces and privileged actions (Sync Teamwork,
+        // Finance, HR, Team Perf, ERP, Production, Assets, CTD DD / M&A due-diligence,
+        // Gov/DIB Readiness, admin/dashboard/users/backup). Members keep their BD tools,
+        // their tasks/decisions, expenses, and self-service. This is an ALLOWLIST so any
+        // nav link added later does NOT silently leak to members.
+        const MEMBER_KEEP = ['search.html','opportunities.html','capability-gaps.html',
+          'consortium.html','crm.html','dossier.html','program.html','research.html',
+          'docusign.html','schedule.html','process-library.html','decisions.html',
+          'fleet.html','help.html','required-reading.html','set-password.html','expenses.html'];
+        document.querySelectorAll('.header-right a, .header-right button').forEach(el => {
+          const oc = el.getAttribute('onclick') || '';
+          const href = (el.getAttribute('href') || '').replace(/^\//, '');
+          const keep = /logout|loadTasks/.test(oc) || MEMBER_KEEP.indexOf(href) !== -1;
+          if (!keep) el.style.display = 'none';
+        });
       }
     }
   } catch(e) { /* ignore — will redirect to login if 401 */ }
@@ -1445,7 +1470,7 @@ function openEdit(id) {
   const badgeEl = document.getElementById('panelStateBadge');
   badgeEl.textContent = task.state;
   badgeEl.className = 'panel-state-badge ' + (
-    task.state === 'Blocked' ? 'state-blocked' :
+    task.state === 'Blocked' || task.state === 'Held' ? 'state-blocked' :
     task.state === 'In Progress' ? 'state-progress' : 'state-done'
   );
 
@@ -1728,7 +1753,7 @@ async function saveEdit() {
       const badgeEl = document.getElementById('panelStateBadge');
       badgeEl.textContent = updated.state;
       badgeEl.className = 'panel-state-badge ' + (
-        updated.state === 'Blocked' ? 'state-blocked' :
+        updated.state === 'Blocked' || updated.state === 'Held' ? 'state-blocked' :
         updated.state === 'In Progress' ? 'state-progress' : 'state-done'
       );
       const ownerEl = document.getElementById('panelOwnerBadge');
@@ -1787,8 +1812,14 @@ async function moveTask(id, newState) {
 let TEAM_MEMBERS = [];
 async function populateOwnerDropdowns() {
   try {
-    const r = await fetch('/api/team', { credentials: 'same-origin' });
-    if (r.ok) TEAM_MEMBERS = await r.json();
+    // Skip the /api/team roster probe for the sandbox role — it 403s anyway and the
+    // auto-fired denial is what made a routine page-load look like account "probing".
+    const meR = await fetch('/api/me', { credentials: 'same-origin' });
+    const me = meR.ok ? await meR.json() : {};
+    if (!(me && me.role === 'early_adopter')) {
+      const r = await fetch('/api/team', { credentials: 'same-origin' });
+      if (r.ok) TEAM_MEMBERS = await r.json();
+    }
   } catch (e) {}
   if (!Array.isArray(TEAM_MEMBERS)) TEAM_MEMBERS = [];
 
