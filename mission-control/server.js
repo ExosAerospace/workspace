@@ -4085,16 +4085,22 @@ const server = http.createServer((req, res) => {
       // public/sandbox pages) so the conversation persists across navigation.
       const NO_WIDGET = ['login.html', 'set-password.html', 'sign.html', 'docusign.html', 'welcome.html', 'exobot-widget.js'];
       const base = path.basename(filePath);
+      // App pages + scripts must never be served stale: a code deploy has to take effect on the
+      // next load, not after a manual hard-refresh. (This is what left Phil on the old "Save Note"
+      // behavior after it was already fixed.) Data/static assets can still be revalidated normally.
+      const noStore = (ext === '.html' || ext === '.js');
       if (ext === '.html' && !NO_WIDGET.includes(base)) {
         let html = fs.readFileSync(filePath, 'utf-8');
         if (html.indexOf('/exobot-widget.js') === -1) {
           const tag = '<script src="/exobot-widget.js" defer></script>';
           html = html.indexOf('</body>') !== -1 ? html.replace('</body>', tag + '\n</body>') : html + tag;
         }
-        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.writeHead(200, { 'Content-Type': 'text/html', 'Cache-Control': 'no-store, must-revalidate' });
         res.end(html);
       } else {
-        res.writeHead(200, { 'Content-Type': extMap[ext] || 'text/plain' });
+        const headers = { 'Content-Type': extMap[ext] || 'text/plain' };
+        if (noStore) headers['Cache-Control'] = 'no-store, must-revalidate';
+        res.writeHead(200, headers);
         res.end(fs.readFileSync(filePath));
       }
     } else {
