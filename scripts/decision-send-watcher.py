@@ -71,8 +71,18 @@ def decisions():
     d = load_json(DEC, [])
     return d if isinstance(d,list) else d.get("decisions", d.get("items", []))
 
+# Jon 2026-08-31: an email-command (@exobot / [EXO]) already gets a full reply — with the
+# deliverable ATTACHED — sent straight back to the requester by mc-email-command.py. If the agent
+# also spun up a "send/deliver" Decision during that same run, this watcher would email a SECOND,
+# redundant "[Ready to send — from you]" copy. Suppress that: one email-command → one reply. The
+# Decision still lives on the board, so answering it there later still delivers the draft normally.
+EMAIL_CMD_SOURCE_RX = re.compile(r"email[\s\-]?command", re.I)
+def from_email_command(it):
+    return bool(EMAIL_CMD_SOURCE_RX.search(str(it.get("source", "") or "")))
+
 def is_send_request(it):
     if str(it.get("status","")).lower() != "answered": return False
+    if from_email_command(it): return False  # already delivered via the email-command reply
     ans = str(it.get("answer","")); note = str(it.get("note",""))
     title = str(it.get("title",""))
     # affirmative?
@@ -185,6 +195,7 @@ def is_deliver_to_jon(it):
     """OPEN decision whose only action is handing Jon the draft to send from his own inbox."""
     if str(it.get("status","") or "open").lower() != "open":
         return False
+    if from_email_command(it): return False  # email-command reply already delivered it (no 2nd email)
     blob = " ".join(str(it.get(k,"")) for k in ("proposedAction","question","context"))
     return bool(DELIVER_TO_JON.search(blob))
 
