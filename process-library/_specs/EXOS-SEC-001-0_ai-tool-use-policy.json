@@ -1,0 +1,75 @@
+{
+  "title": "AI Tool-Use Policy (Tiered: Local / Grok-ZDR / Never)",
+  "doc_no": "EXOS-SEC-001-0",
+  "area": "Security / CUI",
+  "area_id": "08-security-cui",
+  "owner": "Information Security / Exo",
+  "rev": "0",
+  "status": "Approved",
+  "intl_release": "No",
+  "reference_docs": "ITAR 22 CFR 120-130 (USML Category IV — launch vehicles & rocket engines, incl. RDRE technical data); EAR 15 CFR 730-774; DFARS 252.204-7012 (CUI safeguarding, NIST SP 800-171); Exos Export-Control Screening (itar_ear_screen); Exos CUI Policies & Procedures (SEC-CUI); xAI/SpaceXAI Zero Data Retention (ZDR) enterprise documentation.",
+  "remarks": "Approved under the authority of John Quinn, Cofounder & CEO. Bright-line, tiered rule so personnel do not have to judgment-call each prompt. Reflects the Feb 2, 2026 SpaceX acquisition of xAI (Grok is now a SpaceX product) and the availability of enterprise Zero Data Retention. Grok is NOT FedRAMP-authorized as of this revision — no federal/CUI data path. Reassess if xAI achieves FedRAMP High with no-train guarantees.",
+  "objective": "establish a bright-line, tiered rule for which AI tool Exos personnel may use for a given task — so that export-controlled technical data (ITAR/EAR), CUI, and competitively sensitive information are never exposed to an external AI service, while still letting the team use commercial AI (Grok) for genuine non-sensitive work",
+  "overview": "The export-control risk of AI is not 'using an AI to help design a rocket' — it is the specific DATA placed into a prompt. Transmitting USML Category IV technical data (Exos's specific engine/vehicle designs, dimensions, performance figures, test data, drawings, or GNC internals) to an external service is a potential export; asking a model for general physics, public-literature synthesis, math, or non-controlled coding is not. This policy sorts every AI task into one of three tiers based on WHAT the prompt contains. When in doubt, a prompt drops to the more restrictive tier. Tier 1 (Local) is the vault; Tier 2 (Grok-ZDR) is the external non-controlled tier under strict conditions; Tier 3 is never. The Exos local Ollama stack (zero data egress) is always an acceptable substitute for any task.",
+  "tasks": [
+    {
+      "name": "Task 1 - Classify the prompt BEFORE you send it",
+      "steps": [
+        "Ask: does this prompt contain any export-controlled technical data (ITAR USML Category IV — rocket engines, launch/suborbital vehicles, RDRE; or EAR-controlled data)? If yes -> Tier 1 (Local only).",
+        "Ask: does it contain CUI, NDA-covered material, or anything marked proprietary/controlled? If yes -> Tier 1 (Local only).",
+        "Ask: does it contain Exos business-development, strategy, capital/financial, cap-table, customer, or competitive information? If yes -> Tier 1 (Local only).",
+        "Ask: does it contain personnel/HR/PII data? If yes -> Tier 1 (Local only).",
+        "If NONE of the above apply and the content is general, public, or non-controlled -> Tier 2 (Grok-ZDR) is permitted.",
+        "_____ When uncertain whether data is controlled, DEFAULT DOWN to Tier 1 (Local) and, if needed, request an export determination per Task 5. Do not guess upward."
+      ]
+    },
+    {
+      "name": "Task 2 - TIER 1 (LOCAL ONLY): the vault - zero egress",
+      "steps": [
+        "Use ONLY the Exos local model stack (Ollama on Exos-controlled machines, Mac Studio primary) for anything in this tier. No external AI service, ever.",
+        "Tier 1 covers: specific RDRE / engine / vehicle designs, geometry, dimensions, injector/chamber details, performance parameters, GNC internals, test data, drawings, and manufacturing know-how (USML Category IV technical data).",
+        "Tier 1 also covers: CUI and DFARS-safeguarded data; NDA-covered third-party material; BD/strategy/capital/financial/competitive material; customer-identifying information; personnel/HR/PII.",
+        "_____ Confirm the model you are using is the local stack (zero egress) and not a cloud endpoint before entering Tier 1 content.",
+        "_____ If a Tier 1 task exceeds local-model capability, escalate per Task 5 — do NOT move the data to an external tool to get a better answer."
+      ]
+    },
+    {
+      "name": "Task 3 - TIER 2 (GROK-ZDR): external non-controlled tier - conditions REQUIRED",
+      "steps": [
+        "Permitted uses ONLY: general engineering physics and detonation-wave theory from public literature; math and sanity-checks; synthesis of public information; drafting/formatting of non-sensitive text; coding on non-controlled, non-proprietary code.",
+        "_____ Use the xAI/SpaceXAI ENTERPRISE API with Zero Data Retention (ZDR) ENABLED at the team level. Verify the 'x-zero-data-retention' response header is present.",
+        "_____ NEVER use consumer Grok or the Grok Build CLI for Exos work — a July 2026 wire-level audit showed the consumer Grok Build agent uploading entire code repositories and history, including files it was told to ignore. API + ZDR only.",
+        "_____ Do NOT upload repositories, file trees, or codebases. Paste only the specific non-controlled snippet needed.",
+        "_____ Run the scope through Exos export screening (itar_ear_screen) if there is any question that the topic borders controlled technology.",
+        "Remember: even under ZDR, Grok is a SpaceX-owned product (xAI acquired by SpaceX Feb 2, 2026). Keep all competitive/BD/strategy content OUT regardless of ZDR — that is a Tier 1 item.",
+        "_____ Observe budget caps and log usage per the Exos AI cost-tier controls."
+      ]
+    },
+    {
+      "name": "Task 4 - TIER 3 (NEVER): absolute prohibitions",
+      "steps": [
+        "NEVER transmit ITAR/EAR-controlled technical data, CUI, or NDA-covered material to ANY external AI service (Grok or otherwise), with or without ZDR.",
+        "NEVER route federal or CUI data through Grok — xAI is NOT FedRAMP-authorized as of this revision; there is no compliant government/CUI data path.",
+        "NEVER use consumer Grok / Grok Build CLI on Exos machines or repositories.",
+        "NEVER feed Exos BD, strategy, capital, or competitive information to xAI/SpaceXAI.",
+        "_____ Any exception to a Tier 3 prohibition requires written approval from the CEO and the Empowered Official — no self-authorization."
+      ]
+    },
+    {
+      "name": "Task 5 - When unsure: escalate for an export determination",
+      "steps": [
+        "If you cannot confidently classify a prompt, hold it in Tier 1 (Local) and request a determination before using any external tool.",
+        "_____ Route the export/classification question to the Exos Empowered Official (export control) via the DD -> Dossier -> TDTCA -> EO release workflow.",
+        "_____ Do not proceed with an external tool until the determination is returned and logged."
+      ]
+    },
+    {
+      "name": "Task 6 - Reassessment triggers",
+      "steps": [
+        "Reassess this policy if xAI/SpaceXAI achieves FedRAMP High authorization WITH no-train / data-residency guarantees — that could open a controlled-data path and would change Tier 3.",
+        "Reassess on any change to Exos's export posture, the local model stack, or the availability/behavior of enterprise ZDR.",
+        "_____ Record any reassessment as a new revision of this procedure through the procedure generator (never edit the controlled doc by hand)."
+      ]
+    }
+  ]
+}

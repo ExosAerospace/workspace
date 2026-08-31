@@ -1206,6 +1206,22 @@
     "06-safety-ehs/EXOS-SAF-001-0_Cryogenic_Oxygen_(LOx)_Handling_Procedure.docx"
    ],
    "file_count": 1
+  },
+  {
+   "area": "Security / CUI",
+   "area_id": "08-security-cui",
+   "procedure": "AI Tool-Use Policy (Tiered: Local / Grok-ZDR / Never)",
+   "doc_no": "EXOS-SEC-001-0",
+   "rev": "0",
+   "status": "Approved",
+   "intl_release": "No",
+   "ack_required": false,
+   "owner": "Information Security / Exo",
+   "remarks": "Approved under the authority of John Quinn, Cofounder & CEO. Bright-line, tiered rule so personnel do not have to judgment-call each prompt. Reflects the Feb 2, 2026 SpaceX acquisition of xAI (Grok is now a SpaceX product) and the availability of enterprise Zero Data Retention. Grok is NOT FedRAMP-authorized as of this revision — no federal/CUI data path. Reassess if xAI achieves FedRAMP High with no-train guarantees.",
+   "files": [
+    "08-security-cui/EXOS-SEC-001-0_AI_Tool-Use_Policy_(Tiered:_Local_-_Grok-ZDR_-_Never).docx"
+   ],
+   "file_count": 1
   }
  ]
 }
