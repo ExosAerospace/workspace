@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Tool-Use Policy — Required Reading</title>
+<style>
+  :root{--navy:#0a1628;--card:#0f1e38;--text:#e8edf5;--muted:#8aa0bd;--accent:#0080ff;
+    --green:#22c55e;--red:#ff4444;--yellow:#eab308;--line:#1c3052;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--navy);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.55}
+  header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;
+    align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  h1{font-size:21px;margin:0}
+  .sub{color:var(--muted);font-size:13px;margin-top:4px}
+  a.home{color:var(--muted);font-size:13px;text-decoration:none}
+  .wrap{max-width:820px;margin:0 auto;padding:24px 24px 100px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:0 0 18px;border-left:4px solid var(--accent)}
+  .card.t1{border-left-color:var(--red)}
+  .card.t2{border-left-color:var(--yellow)}
+  .card.t3{border-left-color:var(--muted)}
+  .card.rule{border:2px solid var(--accent);border-left:4px solid var(--accent)}
+  h2{font-size:16px;margin:0 0 10px}
+  .t1 h2{color:#ff6b6b}.t2 h2{color:#f2c94c}
+  ol,ul{margin:8px 0 0;padding-left:22px}
+  li{margin:6px 0}
+  code{background:#0a1830;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:.92em}
+  .tip{background:#0a1830;border:1px dashed var(--line);border-radius:8px;padding:10px 12px;color:#bcd0ee;font-size:14px;margin-top:10px}
+  .big{font-size:15px}
+  .docno{color:var(--muted);font-size:12px;letter-spacing:.03em}
+  a{color:var(--accent)}
+  b.k{color:#fff}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🔐 AI Tool-Use Policy</h1>
+  <div class="sub">Required reading for everyone · <span class="docno">Controlled doc: EXOS-SEC-001-0 · Rev 0 · Approved</span></div></div>
+  <a class="home" href="/">← Mission Control</a>
+</header>
+<div class="wrap">
+
+  <div class="card rule">
+    <h2>The one rule</h2>
+    <p class="big">The export-control risk of AI is <b class="k">not</b> "using an AI to help design a rocket." It's <b class="k">the specific data you type into the prompt.</b> So before you send anything to an AI, ask one question: <b class="k">what's in this prompt?</b> The answer routes you to one of three tiers. <b class="k">When in doubt, drop to the more restrictive tier.</b></p>
+    <div class="tip">Our local model stack (Ollama, on Exos machines, zero data leaves the building) is <b>always</b> a safe choice for <i>any</i> task. If you're unsure, use it.</div>
+  </div>
+
+  <div class="card">
+    <h2>Step 1 — Classify the prompt before you send it</h2>
+    <p>If the prompt contains <b>any</b> of the following, it's <b style="color:#ff6b6b">Tier 1 (Local only)</b>:</p>
+    <ul>
+      <li>Export-controlled technical data — our <b>specific</b> engine or vehicle designs, dimensions, RDRE/injector/chamber details, performance numbers, GNC internals, test data, drawings, or manufacturing know-how (this is USML Category IV / ITAR).</li>
+      <li>CUI, NDA-covered material, or anything marked proprietary/controlled.</li>
+      <li>Exos business development, strategy, capital/financials, cap table, customers, or competitive information.</li>
+      <li>Personnel / HR / personal data.</li>
+    </ul>
+    <p>If <b>none</b> of that applies and the content is general, public, or non-controlled → <b style="color:#f2c94c">Tier 2 (Grok-ZDR)</b> is allowed.</p>
+  </div>
+
+  <div class="card t1">
+    <h2>Tier 1 — LOCAL ONLY (the vault)</h2>
+    <p>Use <b>only</b> the Exos local model stack (Ollama on our machines — zero data egress). <b>No external AI service, ever</b>, for this content.</p>
+    <p>Covers: controlled technical data (engine/vehicle design specifics, performance, test data, drawings, GNC), CUI, NDA material, BD/strategy/capital/competitive material, customer identities, and HR/personal data.</p>
+    <div class="tip">If a Tier 1 task is too hard for the local model, <b>escalate</b> (Step below) — do <b>not</b> move the data to an external tool just to get a better answer.</div>
+  </div>
+
+  <div class="card t2">
+    <h2>Tier 2 — GROK-ZDR (external, non-controlled only)</h2>
+    <p><b>Allowed uses only:</b> general engineering physics and detonation theory from public literature; math and sanity-checks; synthesis of public information; drafting/formatting non-sensitive text; coding on non-controlled, non-proprietary code.</p>
+    <p><b>Conditions — all required:</b></p>
+    <ul>
+      <li>Use the <b>enterprise xAI/SpaceXAI API with Zero Data Retention (ZDR) turned ON</b> (the response carries an <code>x-zero-data-retention</code> header). ZDR means your inputs aren't stored or trained on.</li>
+      <li><b>Never the consumer Grok app or the Grok Build CLI.</b> A July 2026 audit caught the consumer Grok Build agent uploading <b>entire code repositories and history</b> — including files it was told to ignore. API + ZDR only.</li>
+      <li><b>No repo/file-tree uploads.</b> Paste only the specific non-controlled snippet you need.</li>
+      <li>If a topic borders controlled technology, run it through export screening first.</li>
+    </ul>
+    <div class="tip">Remember: Grok is a <b>SpaceX-owned</b> product now (xAI was acquired by SpaceX in Feb 2026). Even under ZDR, keep all competitive/BD/strategy content out — that's a Tier 1 item.</div>
+  </div>
+
+  <div class="card t3">
+    <h2>Tier 3 — NEVER</h2>
+    <ul>
+      <li><b>Never</b> send ITAR/EAR-controlled technical data, CUI, or NDA material to <b>any</b> external AI — with or without ZDR.</li>
+      <li><b>Never</b> route federal or CUI data through Grok — it is <b>not</b> FedRAMP-authorized; there's no compliant government/CUI path today.</li>
+      <li><b>Never</b> use consumer Grok / Grok Build CLI on Exos machines or repositories.</li>
+      <li><b>Never</b> feed Exos BD, strategy, capital, or competitive information to xAI/SpaceXAI.</li>
+    </ul>
+    <p>Any exception requires written approval from the <b>CEO and the Empowered Official</b> — no self-authorization.</p>
+  </div>
+
+  <div class="card">
+    <h2>When you're unsure</h2>
+    <p>Hold the prompt in Tier 1 (Local) and request an export/classification determination through the Empowered Official before using any external tool. Don't guess upward.</p>
+    <p class="docno">This page is the plain-language version of controlled procedure <b>EXOS-SEC-001-0</b> (Security / CUI). The controlled document is the system of record. Reassessed if xAI achieves FedRAMP High with no-train guarantees.</p>
+  </div>
+
+</div>
+
+<!-- ── REQUIRED READING TRACKER ──────────────────────────────────────────────
+     Proves this page was actually read: active-dwell timer (only while the tab is
+     visible AND the reader has been active in the last 30s), scroll-depth, and
+     periodic heartbeats to the server. The server clamps everything to real
+     wall-clock time and re-validates on acknowledge — the enabled button alone is
+     never sufficient. -->
+<div id="rrBar" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  background:#0f1e38;border-top:1px solid #1c3052;box-shadow:0 -6px 20px rgba(0,0,0,.4);
+  padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e8edf5">
+  <div id="rrStatus" style="font-size:14px;color:#8aa0bd;min-width:220px">Required reading — starting…</div>
+  <button id="rrBtn" disabled style="background:#1c3052;color:#8aa0bd;border:1px solid #1c3052;
+    border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:not-allowed;transition:all .15s">
+    ✓ I have read and understood</button>
+</div>
+<script>
+(function(){
+  var DOC_ID='ai-tool-use-policy', MIN=150, SCROLL_MIN=90;
+  var bar=document.getElementById('rrBar'), statusEl=document.getElementById('rrStatus'), btn=document.getElementById('rrBtn');
+  var activeSeconds=0, scrollMaxPct=0, heartbeats=0, lastActivity=Date.now(), done=false, opened=false, ackInFlight=false;
+
+  function fmt(s){ s=Math.max(0,Math.floor(s)); var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r; }
+  function post(url,payload){ return fetch(url,{method:'POST',credentials:'same-origin',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify(payload||{})}); }
+
+  function markActivity(){ lastActivity=Date.now(); }
+  ['mousemove','scroll','keydown','touchstart','click'].forEach(function(ev){
+    window.addEventListener(ev, markActivity, {passive:true}); });
+
+  function updateScroll(){
+    var se=document.documentElement, sTop=window.pageYOffset||se.scrollTop||0;
+    var vh=window.innerHeight||se.clientHeight, sh=se.scrollHeight||document.body.scrollHeight;
+    var pct = sh>0 ? Math.min(100, (sTop+vh)/sh*100) : 100;
+    if(pct>scrollMaxPct) scrollMaxPct=pct;
+  }
+  window.addEventListener('scroll', updateScroll, {passive:true});
+  window.addEventListener('resize', updateScroll, {passive:true});
+
+  function setCompleted(dateStr){
+    done=true;
+    statusEl.innerHTML='<span style="color:#22c55e">✓ Completed — recorded '+dateStr+'</span>';
+    btn.textContent='✓ Completed';
+    btn.disabled=true; btn.style.cursor='default';
+    btn.style.background='#0f2a1a'; btn.style.color='#22c55e'; btn.style.border='1px solid #22c55e';
+  }
+  function refreshUI(){
+    if(done) return;
+    var pct=Math.round(scrollMaxPct);
+    statusEl.textContent='Required reading — active review '+fmt(activeSeconds)+' / '+fmt(MIN)+' · scrolled '+pct+'%';
+    var ok = activeSeconds>=MIN && scrollMaxPct>=SCROLL_MIN;
+    btn.disabled=!ok;
+    if(ok){ btn.style.cursor='pointer'; btn.style.background='#0080ff'; btn.style.color='#fff'; btn.style.border='1px solid #0080ff'; }
+    else { btn.style.cursor='not-allowed'; btn.style.background='#1c3052'; btn.style.color='#8aa0bd'; btn.style.border='1px solid #1c3052'; }
+  }
+
+  setInterval(function(){
+    if(done) return;
+    if(document.visibilityState==='visible' && (Date.now()-lastActivity)<30000) activeSeconds++;
+    refreshUI();
+  }, 1000);
+
+  function sendHeartbeat(){
+    if(!opened || done) return Promise.resolve();
+    updateScroll();
+    return post('/api/required-reading/heartbeat',
+      {doc_id:DOC_ID, active_seconds:activeSeconds, scroll_max_pct:scrollMaxPct, heartbeats:++heartbeats})
+      .then(function(r){ return r.ok?r.json():null; })
+      .then(function(d){ if(d&&typeof d.active_seconds==='number'){ activeSeconds=Math.min(activeSeconds,d.active_seconds); refreshUI(); } })
+      .catch(function(){});
+  }
+  setInterval(sendHeartbeat, 15000);
+
+  btn.addEventListener('click', function(){
+    if(btn.disabled||done||ackInFlight) return;
+    ackInFlight=true; btn.disabled=true; btn.style.cursor='wait';
+    sendHeartbeat().then(function(){
+      return post('/api/required-reading/ack', {doc_id:DOC_ID});
+    }).then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
+      .then(function(res){
+        ackInFlight=false;
+        if(res.ok && res.d && res.d.ok){ setCompleted(new Date(res.d.acknowledged_at||Date.now()).toLocaleDateString()); }
+        else {
+          var reason=(res.d&&(res.d.reason||res.d.error))||'Could not record — keep reading and try again.';
+          statusEl.innerHTML='<span style="color:#ff4444">'+reason+'</span>';
+          refreshUI();
+        }
+      }).catch(function(){ ackInFlight=false; refreshUI(); });
+  });
+
+  fetch('/api/required-reading',{credentials:'same-origin'})
+    .then(function(r){ return r.ok?r.json():null; })
+    .then(function(data){
+      if(!data) return;
+      var mine=(data.mine||[]).find(function(m){ return m.doc_id===DOC_ID; });
+      bar.style.display='flex';
+      if(mine && mine.completed){ setCompleted(mine.acknowledged_at?new Date(mine.acknowledged_at).toLocaleDateString():'earlier'); return; }
+      updateScroll(); refreshUI();
+      post('/api/required-reading/open', {doc_id:DOC_ID})
+        .then(function(r){ if(r.ok) opened=true; })
+        .catch(function(){});
+    })
+    .catch(function(){});
+})();
+</script>
+</body>
+</html>

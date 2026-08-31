@@ -1803,8 +1803,10 @@ const server = http.createServer((req, res) => {
     const RR_DEPT_FOR_AUDIENCE = { '02-ground-operations': 'ops', '06-safety-ehs': 'ops', '04-procurement': 'procurement', '03-payload': 'sales', '08-security-cui': 'it-security', 'cmmc-2.0': 'it-security' };
     const rrRequired = (doc, role, depts) => {
       role = (role || '').toLowerCase();
-      // Members & early adopters: only Mission Control Getting Started — no other Exos training (Jon 2026-08-30).
-      if (role === 'member' || role === 'early_adopter') return doc.id === 'getting-started';
+      // Early adopters (external capstone sandbox): only Mission Control Getting Started (Jon 2026-08-30).
+      if (role === 'early_adopter') return doc.id === 'getting-started';
+      // Members: Getting Started + the org-wide AI Tool-Use Policy — but NOT the department training set (Jon 2026-08-30).
+      if (role === 'member') return doc.id === 'getting-started' || doc.id === 'ai-tool-use-policy';
       if (!doc.audience || doc.audience === 'all') return true;
       if (role === 'admin' || role === 'manager') return true;
       return Array.isArray(depts) && depts.includes(RR_DEPT_FOR_AUDIENCE[doc.audience] || doc.audience);

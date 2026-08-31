@@ -14,6 +14,20 @@
    "description": "How Mission Control works and how to run your day from it."
   },
   {
+   "id": "ai-tool-use-policy",
+   "title": "AI Tool-Use Policy (Local / Grok-ZDR / Never)",
+   "url": "/ai-tool-use-policy.html",
+   "version": "0-2026-08-30",
+   "required": true,
+   "min_active_seconds": 150,
+   "require_scroll_complete": true,
+   "audience": "all",
+   "category": "security-compliance",
+   "doc_no": "EXOS-SEC-001-0",
+   "published_at": "2026-08-30T00:00:00Z",
+   "description": "Bright-line tiered rule for which AI tool to use per task (controlled EXOS-SEC-001-0)."
+  },
+  {
    "id": "grn-001",
    "title": "Crane Operations Procedure",
    "url": "/process-library/02-ground-operations/EXOS-GRN-001-0_Crane_Operations_Procedure.doc",
@@ -556,12 +570,12 @@
    "doc_id": "getting-started",
    "version": "2026-08-30",
    "server_open_at": "2026-08-30T14:01:16.231Z",
-   "active_seconds": 19,
+   "active_seconds": 21,
    "scroll_max_pct": 100,
-   "heartbeats": 5,
+   "heartbeats": 19,
    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
    "ip": "192.168.143.216",
-   "updated_at": "2026-08-30T14:05:56.787Z"
+   "updated_at": "2026-08-30T15:23:38.285Z"
   }
  ],
  "completions": [
