@@ -3463,10 +3463,16 @@ const server = http.createServer((req, res) => {
         '.csv': 'text/csv', '.txt': 'text/plain', '.zip': 'application/zip', '.md': 'text/markdown',
       };
       const meta = loadUploadsMeta().find(m => m.stored_name === fileName);
-      const origName = meta ? meta.filename : fileName;
+      let origName = meta ? meta.filename : fileName;
+      // Some display filenames were stored WITHOUT an extension (e.g. "… Master Deck (DRAFT v1)"),
+      // so the download saved with no file type and wouldn't open. Always carry the real extension.
+      if (ext && !origName.toLowerCase().endsWith(ext)) origName = origName + ext;
+      // Office docs / archives are not meaningfully "inline"-viewable — force a proper download so
+      // the browser keeps the filename+extension instead of trying to render and dropping it.
+      const inlineOk = ['.pdf', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.txt', '.md', '.csv'].includes(ext);
       res.writeHead(200, {
         'Content-Type': mimeTypes[ext] || 'application/octet-stream',
-        'Content-Disposition': safeContentDisposition(origName, 'inline'),
+        'Content-Disposition': safeContentDisposition(origName, inlineOk ? 'inline' : 'attachment'),
       });
       res.end(fs.readFileSync(filePath));
     } else {
