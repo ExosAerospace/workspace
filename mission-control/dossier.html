@@ -74,12 +74,21 @@ function liList(arr){if(!Array.isArray(arr))arr=(arr==null?[]:[arr]);return '<ul
   return '<li'+cls+'>'+esc(s)+'</li>';
 }).join('')+'</ul>';}
 let ALL=[];
+let MNDAREG={};
+function _mnorm(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');}
+function mndaFor(name){const key=_mnorm(name);if(!key)return null;if(MNDAREG[key])return MNDAREG[key];
+  for(const k in MNDAREG){if(k.length<4||key.length<4)continue;const a=key.length<=k.length?key:k,b=key.length<=k.length?k:key;if(b.startsWith(a)&&a.length/b.length>=0.5)return MNDAREG[k];}return null;}
 function byId(id){return ALL.find(x=>x.id===id);}
-function cardHtml(x){const failed=x.dd_status==='failed';return `
-    <div class="card${failed?' failed':''}" id="card-${x.id}">
+function cardHtml(x){const failed=x.dd_status==='failed';
+  const m=mndaFor(x.name);const onRec=m&&m.on_record;
+  let mBadge='';
+  if(m){const dt=m.date||(onRec?'date TBD':'');const label=onRec?('MNDA ✓'+(dt?' '+dt:'')):('MNDA '+(m.status||'pending'));
+    mBadge=`<span title="${esc((m.status||'')+(m.source?' — '+m.source:''))}" style="margin-left:8px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:rgba(168,85,247,${onRec?'0.18':'0.08'});color:#c99bf5;border:1px ${onRec?'solid':'dashed'} rgba(168,85,247,0.5);white-space:nowrap;">🔒 ${esc(label)}</span>`;}
+  return `
+    <div class="card${failed?' failed':''}" id="card-${x.id}"${onRec?' style="border-left:4px solid #a855f7"':''}>
       ${failed?`<div class="dd-banner">❌ Failed Due Diligence${x.dd_status_by?' · flagged by '+esc(x.dd_status_by):''}</div>`:''}
       <div class="card-top">
-        <div class="card-name">${esc(x.name)}</div>
+        <div class="card-name">${esc(x.name)}${mBadge}</div>
         <span class="pill ${x.stage_color||'orange'}">${esc(x.stage)}</span>
       </div>
       <p class="headline">${esc(x.headline)}</p>
@@ -132,6 +141,7 @@ async function toggleDD(id,toFailed){
 }
 function render(list){document.getElementById('grid').innerHTML=list.map(cardHtml).join('')||'<div class="updated">No matches.</div>';}
 async function reload(){
+  try{const mr=await fetch('/api/mnda',{credentials:'same-origin'});if(mr.ok){MNDAREG=(await mr.json()).registry||{};}}catch(e){}
   const d=await (await fetch('data/dossiers.json?_='+Date.now())).json();
   ALL=d.dossiers;
   document.getElementById('updated').textContent='Updated '+(d.generated_display||'')+' · '+ALL.length+' relationships';
