@@ -47,7 +47,17 @@ def main():
         return dd_screen.verdict_for(firm=c.get("firm"))
 
     delisted = [c for c in eligible if dd_of(c) == "fail"]
-    live = [c for c in eligible if dd_of(c) != "fail"]
+    # Jon 2026-09-01 rule: a DD-CAUTION firm is only worked if it is a VALIDATED active
+    # space/tech investor — an obvious, currently active fund WITH funding traction in the last
+    # ~12 months. Caution firms not yet validated (the `fund_active_12mo` flag, set by the DD
+    # sweep) are auto-dropped from the daily work list rather than surfaced for cold contact.
+    def validated_fund(c):
+        return bool(c.get("fund_active_12mo"))
+    dropped_caution = [c for c in eligible
+                       if dd_of(c) == "caution" and not validated_fund(c)]
+    _drop_ids = {id(c) for c in dropped_caution}
+    live = [c for c in eligible
+            if dd_of(c) != "fail" and id(c) not in _drop_ids]
 
     live.sort(key=lambda c: -(c.get("score") or 0))
     top = live[:TOPN]
@@ -74,6 +84,12 @@ def main():
         screen = f"🛡️ DD pre-screen: delisted {len(delisted)} failed-DD firm(s) — {names}{more}"
     else:
         screen = "🛡️ DD pre-screen: 0 failed-DD firms in pool ✅"
+    if dropped_caution:
+        cnames = ", ".join(c.get("firm") for c in dropped_caution[:12])
+        cmore = f" (+{len(dropped_caution) - 12} more)" if len(dropped_caution) > 12 else ""
+        screen += (f"\n🚦 Auto-dropped {len(dropped_caution)} DD-CAUTION firm(s) with no validated active "
+                   f"space/tech fund + 12-mo traction — {cnames}{cmore}. "
+                   f"(Validate a fund → set fund_active_12mo to re-include.)")
     if not crm_ok:
         screen += "\n⚠️ CRM DD engine registry unreadable — screened against do-not-engage blocklist only (partial)."
 
