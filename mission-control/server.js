@@ -3290,22 +3290,30 @@ const server = http.createServer((req, res) => {
           try { mcPublicUrl = require('fs').readFileSync(require('path').join(__dirname, '.public-url'), 'utf-8').trim(); } catch {}
         }
         const base = (mcPublicUrl || ('http://' + host)).replace(/\/+$/, '');
+        // Signing order (John 2026-09-01): the counterparty signs FIRST, Exos countersigns LAST,
+        // so we control final execution and are never bound while waiting on the other side. Push any
+        // Exos signer to the end (stable, preserves counterparty order) regardless of submitted order.
+        const isExosSigner = (s) => /@exosaero\.com$/i.test(s.email||'') || /\bquinn\b/i.test(s.name||'');
+        const ordered = [...valid].sort((a,b) => (isExosSigner(a)?1:0) - (isExosSigner(b)?1:0));
         const env = {
           id: esignToken().slice(0,12), title: title || 'Document', html: html || '',
           message: message || '', subject: subject || ('Signature requested: ' + (title||'Document')),
           createdAt: new Date().toISOString(), expiresAt: new Date(Date.now() + 5*24*60*60*1000).toISOString(), status: 'pending',
-          signers: valid.map(s => ({ name: s.name||'Signer', email: s.email, role: s.role||'', token: esignToken(), signed:false, signedAt:null, ip:null, signatureType:null, signatureData:null }))
+          base: base,
+          signers: ordered.map(s => ({ name: s.name||'Signer', email: s.email, role: s.role||'', token: esignToken(), signed:false, signedAt:null, ip:null, signatureType:null, signatureData:null }))
         };
         const all = loadEnvelopes(); all.push(env); saveEnvelopes(all);
         const t = esignTransport();
-        const links = [];
-        for (const s of env.signers) {
-          const link = base + '/sign?token=' + s.token;
-          links.push({ email: s.email, name: s.name, link });
-          try { await t.sendMail({ from: '"John Quinn — Exos Aerospace" <jquinnexo@pm.me>', replyTo: 'jquinn@exosaero.com', to: s.email, subject: env.subject, html: esignRequestEmail(s, link, env) }); }
-          catch (e) { console.error('[E-Sign] link email error to', s.email, e.message); }
+        // All links (for the API response/admin), but SEQUENTIAL routing: email only the first
+        // (counterparty) signer now; each subsequent signer is emailed as the prior one completes.
+        const links = env.signers.map(s => ({ email: s.email, name: s.name, link: base + '/sign?token=' + s.token }));
+        const first = env.signers.find(s => !s.signed);
+        if (first) {
+          const link = base + '/sign?token=' + first.token;
+          try { await t.sendMail({ from: '"John Quinn — Exos Aerospace" <jquinnexo@pm.me>', replyTo: 'jquinn@exosaero.com', to: first.email, subject: env.subject, html: esignRequestEmail(first, link, env) }); }
+          catch (e) { console.error('[E-Sign] link email error to', first.email, e.message); }
         }
-        console.log('[E-Sign] Envelope ' + env.id + ' created, ' + links.length + ' signing links sent');
+        console.log('[E-Sign] Envelope ' + env.id + ' created; sequential signing, first link sent to ' + (first ? first.email : 'n/a'));
         res.writeHead(200, {'Content-Type':'application/json'}); res.end(JSON.stringify({ success:true, id: env.id, links }));
       } catch (e) { console.error('[E-Sign] create error:', e.message); res.writeHead(500,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
     }); return;
@@ -3380,6 +3388,20 @@ const server = http.createServer((req, res) => {
         const allSigned = env.signers.every(s => s.signed);
         if (allSigned && env.status !== 'completed') { env.status = 'completed'; env.completedAt = new Date().toISOString(); }
         saveEnvelopes(all);
+        // Sequential routing: now that this signer is done, email the NEXT unsigned signer their link
+        // (counterparty first → Exos last). Failure here is logged, not fatal to this signature.
+        if (!allSigned) {
+          const next = env.signers.find(s => !s.signed);
+          if (next) {
+            try {
+              const t2 = esignTransport();
+              const base2 = env.base || ('http://' + (req.headers.host || ''));
+              const link = base2 + '/sign?token=' + next.token;
+              await t2.sendMail({ from: '"John Quinn — Exos Aerospace" <jquinnexo@pm.me>', replyTo: 'jquinn@exosaero.com', to: next.email, subject: env.subject, html: esignRequestEmail(next, link, env) });
+              console.log('[E-Sign] Envelope ' + env.id + ': ' + signer.email + ' signed; next link sent to ' + next.email);
+            } catch(e){ console.error('[E-Sign] next-signer email error:', e.message); }
+          }
+        }
         if (allSigned) { try { await esignDeliverCompleted(env); } catch(e){ console.error('[E-Sign] completed delivery error:', e.message); } }
         res.writeHead(200,{'Content-Type':'application/json'}); res.end(JSON.stringify({ success:true, allSigned }));
       } catch (e) { console.error('[E-Sign] sign error:', e.message); res.writeHead(500,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
