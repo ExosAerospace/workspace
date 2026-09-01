@@ -8,7 +8,7 @@
     "password_salt": "e0c32f64bcf4e13ff845bd422c1d6e18e753579f9479b099f4591b6082c003b8",
     "created_at": "2026-05-14T22:00:00Z",
     "active": true,
-    "last_login": "2026-08-30T12:29:43.890Z",
+    "last_login": "2026-09-01T11:51:25.668Z",
     "password_set_at": "2026-07-16T12:25:33.813Z",
     "departments": []
   },
@@ -22,7 +22,7 @@
     "created_at": "2026-05-19T12:49:53.510Z",
     "active": true,
     "password_set_at": "2026-07-15T13:54:20.444Z",
-    "last_login": "2026-08-29T10:43:04.939Z",
+    "last_login": "2026-08-31T12:36:12.245Z",
     "departments": []
   },
   {
@@ -34,7 +34,7 @@
     "password_salt": "f59587590555f19f0d4ae297101d37c8ce88ff5ad675a60522f873bd750e6056",
     "created_at": "2026-06-26T21:15:00Z",
     "active": true,
-    "last_login": "2026-08-28T15:25:30.786Z",
+    "last_login": "2026-08-31T14:44:49.347Z",
     "password_set_at": "2026-07-22T15:48:59.543Z",
     "departments": []
   },
@@ -47,7 +47,7 @@
     "password_salt": "017e028a4c77a012a7e0a14ce36bd75397f156108bde3882b53b0da7af456f0a",
     "created_at": "2026-06-26T21:15:00Z",
     "active": true,
-    "last_login": "2026-08-27T17:29:15.866Z",
+    "last_login": "2026-08-31T13:49:19.113Z",
     "password_set_at": "2026-07-16T17:28:40.121Z",
     "departments": []
   },
@@ -60,7 +60,7 @@
     "password_salt": "441e2acbc1b75c979b7319feb6cfd123d605bb26bc213691d2feb193a1dbfa5c",
     "created_at": "2026-06-26T21:15:00Z",
     "active": true,
-    "last_login": "2026-08-27T16:23:17.983Z",
+    "last_login": "2026-08-31T18:25:24.265Z",
     "password_set_at": "2026-07-15T13:31:31.924Z",
     "departments": []
   },
@@ -73,7 +73,7 @@
     "password_salt": "d034333fa5c22bc172e62d1b1e20e1bf53ed5b585d0f2c0cf14161626801a287",
     "created_at": "2026-06-26T21:15:00Z",
     "active": true,
-    "last_login": "2026-08-28T20:53:37.449Z",
+    "last_login": "2026-08-31T12:55:45.556Z",
     "password_set_at": "2026-07-15T12:42:04.184Z",
     "departments": []
   },
@@ -106,15 +106,16 @@
     "email": "toshihisa@exosaero.com",
     "name": "Toshihisa Kumazawa",
     "role": "member",
-    "password_hash": "8858ffda1b8b55d9f80580d734aeafcbaf8bb282b85433dfdd10a88814b222a8d3c1ba2381b57b639814bc3636aed9b02c9b4375cd2e663b791aae425fa7ef8d",
-    "password_salt": "b6d5847d217e06e93cd8cce08ff506cd091552ba04b2b4c99fa83427a2c4aa77",
+    "password_hash": "575baf494534f3a9afda0501ea07163da3b1b8b09fc33fc34f1973da0388f2105a85df9b71fdc18b25a672f6fb72d8bafca54dd8f028162ddc4c1789d9a91f14",
+    "password_salt": "dd1e7637f9032a5ebba86b8135af044ed3694c2938b2adee275b9c1be6c26c8f",
     "created_at": "2026-08-12T12:40:00.000Z",
     "active": true,
-    "last_login": null,
+    "last_login": "2026-08-31T23:27:46.309Z",
     "title": "International Business Development Agent \u2014 Japan/Asia",
     "project": null,
     "crm_region": "Non-CONUS",
-    "departments": []
+    "departments": [],
+    "password_set_at": "2026-08-31T23:28:38.016Z"
   },
   {
     "id": 8,
@@ -160,7 +161,7 @@
     "password_salt": "bca10aaf8005175b9ac8d501860796ecc9e5ec6b83818eeba1b11c7eec458b21",
     "created_at": "2026-08-28T14:12:46.000Z",
     "active": true,
-    "last_login": null,
+    "last_login": "2026-08-31T21:52:52.649Z",
     "password_set_at": "2026-08-29T10:45:00Z",
     "project": "Payload Sales",
     "departments": []
@@ -174,7 +175,7 @@
     "password_salt": "6f2b92701bfb84fb496a7ad5207a9db21e84a7405418eca8ce3d9c21ebc38f40",
     "created_at": "2026-08-28T14:12:46.000Z",
     "active": true,
-    "last_login": null,
+    "last_login": "2026-09-01T03:17:01.106Z",
     "password_set_at": "2026-08-29T10:45:00Z",
     "project": "Payload Sales",
     "departments": []
@@ -188,7 +189,7 @@
     "password_salt": "a5341fa57e22a258421eb4ee5b5abf9917da8d4e8e99628c0b62750db812f1b6",
     "created_at": "2026-08-28T14:12:46.000Z",
     "active": true,
-    "last_login": null,
+    "last_login": "2026-08-31T17:54:19.804Z",
     "password_set_at": "2026-08-29T10:45:00Z",
     "project": "Payload Sales",
     "departments": []
@@ -202,7 +203,7 @@
     "password_salt": "7f682b7cc8f5b04f65ccf1830839b2b1f5d3962ec2f2b6f16faae2036e9877cd",
     "created_at": "2026-08-28T14:12:46.000Z",
     "active": true,
-    "last_login": "2026-08-29T17:21:43.125Z",
+    "last_login": "2026-08-31T22:31:37.200Z",
     "password_set_at": "2026-08-29T10:45:00Z",
     "project": "Payload Sales",
     "departments": []
@@ -216,7 +217,7 @@
     "password_salt": "a96e53fec8d210e0a070d74689c65875c4a55e9dabbf6d223a4960ac5b318390",
     "created_at": "2026-08-28T14:12:46.000Z",
     "active": true,
-    "last_login": null,
+    "last_login": "2026-08-31T21:18:08.757Z",
     "password_set_at": "2026-08-29T10:45:00Z",
     "project": "Payload Sales",
     "departments": []
@@ -260,7 +261,7 @@
     "password_salt": "097f62667b906dc2f40465bda3a924c9a6e891f2a868168d959ed3cafb6291fb",
     "password_set_at": "2026-08-29T10:30:00Z",
     "created_at": "2026-08-29T10:30:00Z",
-    "last_login": null,
+    "last_login": "2026-08-31T17:47:57.166Z",
     "departments": []
   },
   {
@@ -276,5 +277,17 @@
     "created_at": "2026-08-29T10:40:00Z",
     "last_login": null,
     "departments": []
+  },
+  {
+    "id": 22,
+    "email": "aoverman@exosaero.com",
+    "name": "Andrew Overman",
+    "role": "member",
+    "password_hash": "6dedf2aa856c8edb3504d8f25495d381a6b5f235175424139886372aae8c42c8f6010b0502a8933e3e74c1aeb3b99a88de642026d5f28dc0aa73343f84391dbe",
+    "password_salt": "f8b8c261bedc426dba8155951683984f30df66cc8e723a97fe774215756b8b44",
+    "created_at": "2026-09-01T13:29:24.780772+00:00",
+    "active": true,
+    "departments": [],
+    "last_login": "2026-09-01T13:29:33.014Z"
   }
 ]
