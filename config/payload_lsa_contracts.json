@@ -1,0 +1,17 @@
+{
+  "_note": "Registry of EXECUTED + SIGNED payload Launch Services Agreements. A QB payment from any customer listed here (lsa_executed=true) triggers an MC payload-commission-check task via scripts/payload_commission_trigger.py. attributed_agent=null means no commission salesperson — the task still fires (audit trigger) and asks Jon to confirm attribution or waive. Add a row when a new payload LSA is executed.",
+  "contracts": [
+    {
+      "qb_customer": "entX Limited",
+      "qb_customer_id": "1099",
+      "contract_id": "OPP-007",
+      "program": "Project Lazarus RHU demo (BLK3 Flight 1)",
+      "lsa_executed": true,
+      "lsa_signed_date": "2026-02-20",
+      "contract_total": 820000,
+      "currency": "USD",
+      "attributed_agent": null,
+      "notes": "Signed John Quinn / Bryn Jones. No commission salesperson attributed to this deal."
+    }
+  ]
+}
