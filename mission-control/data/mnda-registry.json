@@ -1,0 +1,58 @@
+{
+  "andrewfinn": {
+    "company": "Andrew Finn",
+    "status": "partial",
+    "date": "2026-06-06",
+    "source": "docusign:eda4339f230c",
+    "on_record": false
+  },
+  "appian": {
+    "company": "Appian",
+    "status": "partial",
+    "date": "2026-06-07",
+    "source": "docusign:0f1b0772764a",
+    "on_record": false
+  },
+  "stratelligence": {
+    "company": "Stratelligence",
+    "status": "pending",
+    "date": "2026-06-16",
+    "source": "docusign:22ee09ebbc2d",
+    "on_record": false
+  },
+  "vuronyxtechnologies": {
+    "company": "Vuronyx Technologies",
+    "status": "exos_signed",
+    "date": "2026-09-01",
+    "source": "docusign:f162237cf9c1",
+    "on_record": false
+  },
+  "mdbcapitalholdings": {
+    "company": "MDB Capital Holdings",
+    "status": "executed",
+    "date": null,
+    "source": "real DocuSign (signed outside MC \u2014 confirm date)",
+    "on_record": true
+  },
+  "innovationdojojapan": {
+    "company": "Innovation Dojo Japan",
+    "status": "executed",
+    "date": "2026-04-23",
+    "source": "inbound-contracts (export-hardened mutual NDA)",
+    "on_record": true
+  },
+  "universityofnorthdakota": {
+    "company": "University of North Dakota",
+    "status": "executed",
+    "date": null,
+    "source": "UND MNDA (Dr. Gupta) \u2014 confirm date",
+    "on_record": true
+  },
+  "gloyertaylorlaboratories": {
+    "company": "Gloyer-Taylor Laboratories",
+    "status": "signature_ready",
+    "date": null,
+    "source": "uploads/MNDA_Exos_GloyerTaylorLabs (awaiting signature)",
+    "on_record": false
+  }
+}

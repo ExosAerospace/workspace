@@ -66,6 +66,10 @@ tr:hover { background: var(--surface); }
 .notes-cell:hover { white-space: normal; }
 
 /* Badges */
+/* MNDA on record — purple indicator (reused wherever a company shows an MNDA) */
+tr.mnda-on-record td:first-child { box-shadow: inset 4px 0 0 0 #a855f7; }
+.mnda-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; background: rgba(168,85,247,0.18); color: #c99bf5; border: 1px solid rgba(168,85,247,0.5); white-space: nowrap; vertical-align: middle; }
+.mnda-badge.pending { background: rgba(168,85,247,0.08); color: #a78bbf; border-style: dashed; }
 .tier-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
 .tier-1 { background: rgba(239,68,68,0.2); color: var(--red); }
 .tier-2 { background: rgba(234,179,8,0.2); color: var(--yellow); }
@@ -523,8 +527,16 @@ function renderCompanies() {
   document.getElementById('companyTable').innerHTML = filtered.map(c => {
     const cContacts = contacts.filter(x => x.company === c.name).length;
     const cDeals = deals.filter(d => d.company_id === c.id).length;
-    return `<tr>
-      <td><strong>${esc(c.name)}</strong></td>
+    const m = c.mnda;
+    const onRec = m && m.on_record;
+    let mBadge = '';
+    if (m) {
+      const dt = m.date ? m.date : (onRec ? 'date TBD' : '');
+      const label = onRec ? ('MNDA ✓' + (dt ? ' ' + dt : '')) : ('MNDA ' + (m.status || 'pending'));
+      mBadge = `<span class="mnda-badge${onRec ? '' : ' pending'}" title="${esc((m.status||'') + (m.source ? ' — ' + m.source : ''))}">🔒 ${esc(label)}</span>`;
+    }
+    return `<tr class="${onRec ? 'mnda-on-record' : ''}">
+      <td><strong>${esc(c.name)}</strong>${mBadge}</td>
       <td>${esc(c.industry)}</td>
       <td>${esc(c.size)}</td>
       <td>${cContacts}</td>

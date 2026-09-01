@@ -186,6 +186,23 @@ const ENVELOPES_FILE = path.join(__dirname, 'data', 'envelopes.json');
 function esignToken() { return crypto.randomBytes(20).toString('hex'); }
 function loadEnvelopes() { try { return JSON.parse(fs.readFileSync(ENVELOPES_FILE, 'utf-8')); } catch { return []; } }
 function saveEnvelopes(arr) { fs.mkdirSync(path.dirname(ENVELOPES_FILE), { recursive: true }); fs.writeFileSync(ENVELOPES_FILE, JSON.stringify(arr, null, 2)); }
+// ── MNDA registry (source of truth for the purple "MNDA on record" border; reused by CRM/ERP/dossiers) ──
+function loadMndaRegistry() { try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'mnda-registry.json'), 'utf-8')); } catch { return {}; } }
+function _mndaNorm(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+function mndaForCompany(company) {
+  const key = _mndaNorm(company); if (!key) return null;
+  const reg = loadMndaRegistry();
+  if (reg[key]) return reg[key];
+  // conservative fuzzy: prefix match where the shorter name is >=50% of the longer
+  // (blocks "appian" bleeding into "appianwaycapitalpartners"), min length 4.
+  for (const k of Object.keys(reg)) {
+    if (k.length < 4 || key.length < 4) continue;
+    const [a, b] = key.length <= k.length ? [key, k] : [k, key];
+    if (b.startsWith(a) && a.length / b.length >= 0.5) return reg[k];
+  }
+  return null;
+}
+
 function esignTransport() {
   const cert = fs.existsSync('/Users/exomac/.protonmail-bridge.crt') ? fs.readFileSync('/Users/exomac/.protonmail-bridge.crt') : undefined;
   return nodemailer.createTransport({ host: '127.0.0.1', port: 1025, secure: false, requireTLS: true, tls: { ca: cert, rejectUnauthorized: false }, auth: { user: 'jquinnexo@pm.me', pass: 'SPqYBivj98-jyF3RujLKxA' } });
@@ -2516,6 +2533,15 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify({ error: 'Read-only access — contact an admin to modify contacts' }));
     return;
   }
+  // MNDA registry — reusable across CRM / ERP / dossiers. Optional ?company=Name → single match.
+  if (req.url.split('?')[0] === '/api/mnda' && req.method === 'GET') {
+    if (!getSession(req)) { res.writeHead(401, {'Content-Type':'application/json'}); res.end(JSON.stringify({error:'Unauthorized'})); return; }
+    const q = new URL(req.url, 'http://localhost').searchParams.get('company');
+    res.writeHead(200, {'Content-Type':'application/json'});
+    res.end(JSON.stringify(q ? { company: q, mnda: mndaForCompany(q) } : { registry: loadMndaRegistry() }));
+    return;
+  }
+
   if (req.url.split('?')[0] === '/api/crm' && req.method === 'GET') {
     // Supabase caps at 1000 per request, so paginate
     async function fetchAllContacts() {
@@ -2540,7 +2566,7 @@ const server = http.createServer((req, res) => {
           || (session.email && (u.email || '').toLowerCase() === session.email.toLowerCase()))) || {});
         const q = new URL(req.url, 'http://localhost').searchParams.get('region');
         const want = meU.crm_region || (q && q.toLowerCase() !== 'all' ? q : null);
-        let rows = data.map(toFrontend).map(r => ({ ...r, region: crmRegion(r) }));
+        let rows = data.map(toFrontend).map(r => ({ ...r, region: crmRegion(r), mnda: mndaForCompany(r.company) }));
         if (want) rows = rows.filter(r => (r.region || '').toLowerCase() === want.toLowerCase());
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(rows));
@@ -2638,8 +2664,9 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/companies' && req.method === 'GET') {
     supabaseGetAll('companies?order=name.asc')
       .then(({ status, data }) => {
+        const out = Array.isArray(data) ? data.map(c => ({ ...c, mnda: mndaForCompany(c.name) })) : data;
         res.writeHead(status >= 400 ? status : 200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(data));
+        res.end(JSON.stringify(out));
       }).catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
     return;
   }
