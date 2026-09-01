@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>APAC Deal Flow — Mission Control</title>
+<style>
+  :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--card:#0f1e38;--text:#e8edf5;
+    --text2:#8aa0bd;--muted:#8aa0bd;--border:#1c3052;--accent:#0080ff;--green:#22c55e;
+    --red:#ff4444;--gold:#e8aa3c;--cyan:#46c8ff;--orange2:#ff8c33;--purple:#a855f7;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--navy);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.5}
+  header{padding:18px 24px;border-bottom:1px solid var(--border);background:var(--navy2);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  h1{font-size:20px;margin:0}
+  .sub{color:var(--text2);font-size:13px;margin-top:3px}
+  a.home{color:var(--text2);font-size:13px;text-decoration:none}
+  a{color:var(--accent)}
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 24px 60px}
+  .cards{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+  .kpi{flex:1;min-width:180px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:4px solid var(--accent)}
+  .kpi.green{border-left-color:var(--green)} .kpi.gold{border-left-color:var(--gold)} .kpi.cyan{border-left-color:var(--cyan)}
+  .kpi .num{font-size:26px;font-weight:700}
+  .kpi .lbl{color:var(--text2);font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+  .kpi .note{color:var(--text2);font-size:11.5px;margin-top:4px}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+  input,select{background:var(--navy3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 11px;font-size:13px;outline:none}
+  input#q{flex:1;min-width:200px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{border-bottom:1px solid var(--border);padding:9px 11px;text-align:left;vertical-align:top}
+  th{color:var(--text2);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;white-space:nowrap}
+  tr.row{cursor:pointer} tr.row:hover td{background:var(--navy3)}
+  .val{color:var(--green);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .badge{display:inline-block;border-radius:8px;padding:2px 8px;font-size:11.5px;font-weight:600;white-space:nowrap}
+  .b-pursuing{background:rgba(0,128,255,.15);color:var(--accent);border:1px solid var(--accent)}
+  .b-active{background:rgba(34,197,94,.15);color:var(--green);border:1px solid var(--green)}
+  .b-watch{background:rgba(138,160,189,.12);color:var(--text2);border:1px solid var(--border)}
+  .b-booked{background:rgba(232,170,60,.15);color:var(--gold);border:1px solid var(--gold)}
+  .score{display:inline-block;min-width:34px;text-align:center;font-weight:700;font-size:12px;border-radius:6px;padding:1px 6px}
+  .detail td{background:var(--navy2);color:var(--text2);font-size:13px}
+  .muted{color:var(--text2)} .flag{color:var(--gold);font-size:12px}
+  .notice{background:var(--navy2);border:1px dashed var(--border);border-radius:8px;padding:12px 15px;color:#bcd0ee;font-size:12.5px;margin-bottom:18px}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🌏 APAC Deal Flow</h1><div class="sub">Asia-Pacific opportunities, pipeline value &amp; booked payloads — BD owner: Toshihisa Kumazawa</div></div>
+  <a class="home" href="/">← Mission Control</a>
+</header>
+<div class="wrap">
+  <div class="cards" id="kpis"></div>
+  <div class="notice" id="note"></div>
+  <div class="toolbar">
+    <input id="q" placeholder="Search APAC opportunities…" oninput="render()">
+    <select id="country" onchange="render()"><option value="">All countries</option></select>
+    <select id="stage" onchange="render()"><option value="">All stages</option></select>
+  </div>
+  <table>
+    <thead><tr>
+      <th onclick="sortBy('id')">ID</th>
+      <th onclick="sortBy('title')">Opportunity</th>
+      <th onclick="sortBy('country')">Country</th>
+      <th onclick="sortBy('type')">Type</th>
+      <th onclick="sortBy('stage')">Stage</th>
+      <th onclick="sortBy('value_usd')">Value</th>
+      <th onclick="sortBy('next_action')">Next action</th>
+      <th onclick="sortBy('owner')">Owner</th>
+      <th onclick="sortBy('priority')">Score</th>
+    </tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+</div>
+<script>
+var DATA=[], SORT={f:'priority',dir:-1}, OPEN={};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function usd(n){n=Number(n)||0; if(n>=1e6)return '$'+(n/1e6).toFixed(n%1e6?1:0)+'M'; if(n>=1e3)return '$'+Math.round(n/1e3)+'K'; return n?'$'+n:'—';}
+function stBadge(s){var k=(s||'').toLowerCase();var c=k.indexOf('activ')>=0?'b-active':k.indexOf('watch')>=0?'b-watch':'b-pursuing';return '<span class="badge '+c+'">'+esc(s||'—')+'</span>';}
+function scoreColor(p){p=Number(p)||0;return p>=75?'#22c55e':p>=50?'#e8aa3c':'#8aa0bd';}
+
+fetch('data/apac-opportunities.json?_='+Date.now(),{credentials:'same-origin'})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    DATA=d.opportunities||[];
+    document.getElementById('note').innerHTML='ℹ️ '+esc(d.note||'');
+    var cs=document.getElementById('country'), sg=document.getElementById('stage');
+    Array.from(new Set(DATA.map(function(o){return o.country;}))).sort().forEach(function(c){cs.innerHTML+='<option>'+esc(c)+'</option>';});
+    Array.from(new Set(DATA.map(function(o){return o.stage;}))).sort().forEach(function(s){sg.innerHTML+='<option>'+esc(s)+'</option>';});
+    render();
+  })
+  .catch(function(){document.getElementById('rows').innerHTML='<tr><td colspan="9" class="muted">Could not load APAC opportunities.</td></tr>';});
+
+function filtered(){
+  var q=(document.getElementById('q').value||'').toLowerCase();
+  var c=document.getElementById('country').value, s=document.getElementById('stage').value;
+  return DATA.filter(function(o){
+    if(c&&o.country!==c)return false;
+    if(s&&o.stage!==s)return false;
+    if(q){var hay=[o.id,o.title,o.country,o.type,o.stage,o.next_action,o.owner,o.description].join(' ').toLowerCase();if(hay.indexOf(q)<0)return false;}
+    return true;
+  });
+}
+function sortBy(f){SORT.dir=SORT.f===f?-SORT.dir:(f==='value_usd'||f==='priority'?-1:1);SORT.f=f;render();}
+
+function render(){
+  var rows=filtered().slice().sort(function(a,b){
+    var x=a[SORT.f],y=b[SORT.f];
+    if(typeof x==='number'||typeof y==='number'){x=Number(x)||0;y=Number(y)||0;return (x-y)*SORT.dir;}
+    return String(x||'').localeCompare(String(y||''))*SORT.dir;
+  });
+  // KPIs computed over the FULL dataset (not the filtered view) so totals are stable
+  var pipe=DATA.reduce(function(s,o){return s+(Number(o.value_usd)||0);},0);
+  var booked=DATA.filter(function(o){return o.booked;});
+  var bookedVal=booked.reduce(function(s,o){return s+(Number(o.value_usd)||0);},0);
+  var bookedKg=booked.reduce(function(s,o){return s+(Number(o.payload_kg)||0);},0);
+  var active=DATA.filter(function(o){return /pursu|activ/i.test(o.status||'');}).length;
+  document.getElementById('kpis').innerHTML=
+    '<div class="kpi green"><div class="num">'+usd(pipe)+'</div><div class="lbl">APAC Pipeline Value</div><div class="note">estimated · unweighted</div></div>'+
+    '<div class="kpi"><div class="num">'+DATA.length+'</div><div class="lbl">Opportunities</div><div class="note">'+active+' active/pursuing</div></div>'+
+    '<div class="kpi gold"><div class="num">'+usd(bookedVal)+'</div><div class="lbl">Booked Payloads</div><div class="note">'+booked.length+' booked · '+bookedKg+' kg</div></div>'+
+    '<div class="kpi cyan"><div class="num">'+usd(pipe-bookedVal)+'</div><div class="lbl">Unbooked Pipeline</div><div class="note">still to close</div></div>';
+  var out='';
+  rows.forEach(function(o){
+    out+='<tr class="row" onclick="toggle(\''+esc(o.id)+'\')">'+
+      '<td class="muted" style="white-space:nowrap">'+esc(o.id)+'</td>'+
+      '<td><strong>'+esc(o.title)+'</strong>'+(o.booked?' <span class="badge b-booked">BOOKED</span>':'')+'</td>'+
+      '<td>'+esc(o.country||'—')+'</td>'+
+      '<td class="muted">'+esc(o.type||'—')+'</td>'+
+      '<td>'+stBadge(o.status)+'<div class="muted" style="font-size:11px">'+esc(o.stage||'')+'</div></td>'+
+      '<td class="val" title="'+esc(o.value_display||'')+'">'+usd(o.value_usd)+'</td>'+
+      '<td class="muted" style="max-width:280px">'+esc((o.next_action||'').slice(0,110))+((o.next_action||'').length>110?'…':'')+'</td>'+
+      '<td class="muted">'+esc(o.owner||'—')+'</td>'+
+      '<td><span class="score" style="color:'+scoreColor(o.priority)+'">'+(o.priority||'—')+'</span></td>'+
+    '</tr>';
+    if(OPEN[o.id]) out+='<tr class="detail"><td></td><td colspan="8"><strong>'+esc(o.value_display||'')+'</strong><br>'+esc(o.description||'')+'<br><span class="flag">Next: '+esc(o.next_action||'')+'</span></td></tr>';
+  });
+  document.getElementById('rows').innerHTML=out||'<tr><td colspan="9" class="muted">No matches.</td></tr>';
+}
+function toggle(id){OPEN[id]=!OPEN[id];render();}
+</script>
+</body>
+</html>
