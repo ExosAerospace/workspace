@@ -258,6 +258,8 @@
     50%     { box-shadow:0 0 14px #ff2d2d, 0 0 30px rgba(255,45,45,0.9), inset 0 0 10px rgba(255,45,45,0.20); }
   }
   .task-card.critical .ms-chip { background:#ff2d2d; color:#fff; border-color:#ff2d2d; }
+  .await-chip { font-size:10px; font-weight:700; color:#0a1628; background:#f5a623; border-radius:4px; padding:1px 6px; margin-right:2px; }
+  .task-card.awaiting-answer { border-color:#f5a623; box-shadow:0 0 6px rgba(245,166,35,0.55), inset 0 0 6px rgba(245,166,35,0.10); }
   .funding-flag {
     font-size:10px; font-weight:800; letter-spacing:0.4px; color:#0a0f1a;
     background:#39ff14; border-radius:4px; padding:2px 6px; text-transform:uppercase;
@@ -1244,8 +1246,11 @@ function render() {
   const isExp = t => ((t.category === 'Expense' || t.source === 'expense-workflow') && t.state !== 'Done') ? 1 : 0;
   // CRITICAL (score > 100 AND overdue) floats above EVERYTHING, most-overdue first.
   const crit = t => ((MSCORES[String(t.id)] || {}).critical && t.state !== 'Done') ? 1 : 0;
+  // Unanswered @Exobot question floats just under critical so it can't hide in a queue.
+  const awaiting = t => (Array.isArray(t.tags) && t.tags.map(x => String(x).toLowerCase()).includes('awaiting-exo-answer') && t.state !== 'Done') ? 1 : 0;
   const sorted = [...filtered].sort((a, b) =>
     (crit(b) - crit(a)) || (crit(a) ? (msOf(b) - msOf(a)) : 0) ||
+    (awaiting(b) - awaiting(a)) ||
     (sortByDue ? (dueVal(a) - dueVal(b)) || (b.priority || 0) - (a.priority || 0)
     : sortByScore ? (isExp(b) - isExp(a)) || (msOf(b) - msOf(a)) || (b.id || 0) - (a.id || 0)
     : (isExp(b) - isExp(a))
@@ -1417,13 +1422,20 @@ function buildCard(task) {
       })()
     : '';
 
+  // Unanswered @Exobot question → visible flag so it can't hide in a background queue.
+  let awaitingHtml = '';
+  if (Array.isArray(task.tags) && task.tags.map(x => String(x).toLowerCase()).includes('awaiting-exo-answer') && task.state !== 'Done') {
+    div.classList.add('awaiting-answer');
+    awaitingHtml = '<span class="await-chip">❓ Awaiting Exo answer</span>';
+  }
+
   div.innerHTML = `
     <div class="task-top">
       <div class="task-title" onclick="openEdit('${task.id}')">${escHtml(task.title)}</div>
       <span class="owner-badge ${ownerClass(task.owner)}">${ownerLabel(task.owner)}</span>
     </div>
     <div class="task-meta">
-      ${projectHtml}${msHtml}${fundingFlagHtml}${catHtml}${srcHtml}${priHtml}${dueDateHtml}
+      ${awaitingHtml}${projectHtml}${msHtml}${fundingFlagHtml}${catHtml}${srcHtml}${priHtml}${dueDateHtml}
       ${assignSelect}
     </div>
     <div class="move-btns">${moveBtns}</div>

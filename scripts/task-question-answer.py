@@ -123,6 +123,14 @@ def main():
         supa("POST", "activities", {"type": "task_note", "subject": f"task:{origid}",
              "body": "✅ Exo (answering the question): " + ans, "owner": "Exo", "status": "completed"})
         supa("PATCH", f"tasks?id=eq.{tid}", {"state": "Done"})
+        # Clear the visible 'awaiting-exo-answer' flag on the ORIGINAL task now that it's answered.
+        try:
+            cur = supa("GET", f"tasks?id=eq.{origid}&select=tags") or []
+            if cur:
+                tags = [t for t in (cur[0].get("tags") or []) if t != "awaiting-exo-answer"]
+                supa("PATCH", f"tasks?id=eq.{origid}", {"tags": tags})
+        except Exception as e:
+            log(f"WARN clear flag on {origid}: {e}")
         seen.add(tid); fails.pop(tid, None)
         log(f"answered task {tid} -> posted on #{origid}")
 

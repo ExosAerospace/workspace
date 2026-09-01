@@ -77,6 +77,21 @@ def reply(taskid, msg):
          "body": msg, "owner": "Exo", "status": "completed"})
 
 
+def flag_awaiting(taskid):
+    """Make an unanswered @Exobot question VISIBLE: tag the original task 'awaiting-exo-answer' and
+    bump its priority so it rises to the top of the board. The answerer clears the tag when it posts
+    the answer. This is why questions no longer silently vanish into a background queue."""
+    try:
+        cur = supa("GET", f"tasks?id=eq.{taskid}&select=tags,priority") or []
+        tags = (cur[0].get("tags") or []) if cur else []
+        if "awaiting-exo-answer" not in tags:
+            tags = tags + ["awaiting-exo-answer"]
+        pr = max(int(cur[0].get("priority") or 0), 90) if cur else 90
+        supa("PATCH", f"tasks?id=eq.{taskid}", {"tags": tags, "priority": pr})
+    except Exception as e:
+        logline(f"WARN flag_awaiting {taskid}: {e}")
+
+
 # Common nicknames -> canonical @exosaero email (names people actually type).
 ALIASES = {"lizi": "lquinn@exosaero.com", "liz": "lquinn@exosaero.com", "elizabeth": "lquinn@exosaero.com",
            "toshi": "toshihisa@exosaero.com", "vic": "vcastilleja@exosaero.com", "victor": "vcastilleja@exosaero.com",
@@ -181,25 +196,32 @@ def main():
         cmd = directive_after(body)
         low = cmd.lower()
         did = []
+        # A structured command must be the LEADING intent — only match state/priority/reassign
+        # verbs in the first few words. Otherwise a keyword buried in a sentence/question
+        # (e.g. "...still holding the old Blocked State- fix it") wrongly fires a state change.
+        # Long notes (a real instruction or question) fall through to free-form / question handling.
+        words = low.split()
+        cmdzone = " ".join(words[:5])
+        is_short_cmd = len(words) <= 6
 
-        # 1) reassignment
-        if re.search(r"\b(reassign|assign|hand|give|have|route|delegate)\b", low):
+        # 1) reassignment (leading verb only)
+        if re.search(r"\b(reassign|assign|hand|give|have|route|delegate)\b", cmdzone):
             p = resolve_person(cmd, roster)
             if p:
                 supa("PATCH", f"tasks?id=eq.{taskid}", {"owner": p["name"], "assigned_to": p["name"],
                      "assigned_email": p["email"], "assigned_at": datetime.now(timezone.utc).isoformat()})
                 did.append(f"reassigned to {p['name']}")
-        # 2) state changes
-        if re.search(r"\b(done|close[d]?|complete[d]?|resolved?|paid|finished)\b", low):
+        # 2) state changes — leading verb AND a short note (guards against incidental keywords)
+        if is_short_cmd and re.search(r"\b(done|close[d]?|complete[d]?|resolved?|paid|finished)\b", cmdzone):
             supa("PATCH", f"tasks?id=eq.{taskid}", {"state": "Done"}); did.append("marked Done")
-        elif re.search(r"\b(reopen|re-open)\b", low):
+        elif is_short_cmd and re.search(r"\b(reopen|re-open)\b", cmdzone):
             supa("PATCH", f"tasks?id=eq.{taskid}", {"state": "To Do"}); did.append("reopened")
-        elif re.search(r"\b(unblock|resume|proceed)\b", low):
+        elif is_short_cmd and re.search(r"\b(unblock|resume|proceed)\b", cmdzone):
             supa("PATCH", f"tasks?id=eq.{taskid}", {"state": "To Do"}); did.append("unblocked")
-        elif re.search(r"\b(block|blocked|on hold|hold|pause|waiting)\b", low):
+        elif is_short_cmd and re.search(r"\b(block|blocked|on hold|hold|pause|waiting)\b", cmdzone):
             supa("PATCH", f"tasks?id=eq.{taskid}", {"state": "Blocked"}); did.append("set Blocked")
-        # 3) priority bump
-        if re.search(r"\b(urgent|asap|high priority|top priority|escalate|critical)\b", low):
+        # 3) priority bump (leading + short)
+        if is_short_cmd and re.search(r"\b(urgent|asap|high priority|top priority|escalate|critical)\b", cmdzone):
             supa("PATCH", f"tasks?id=eq.{taskid}", {"priority": 92}); did.append("prioritized")
         # 3b) due date  (@Exobot due 8/17  |  due Aug 17)
         if re.search(r"\bdue\b", low):
@@ -237,6 +259,7 @@ def main():
              "category": "Task", "source": "task-note-command", "tags": ["note-routed", "needs-attention"],
              "description": f"@Exobot note on task #{taskid} (by {owner_of_note}): {cmd}. Exo to review and act."})
         newid = nid[0]["id"] if nid else "?"
+        flag_awaiting(taskid)   # surface the ORIGINAL task to the top until answered
         reply(taskid, f"✅ Exo: got your question — I'll post the answer here on this task shortly (ref #{newid}).")
         logline(f"triage {aid} task {taskid} -> #{newid}"); acted += 1
 
