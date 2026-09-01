@@ -178,7 +178,7 @@
    "status": "✅ LSA EXECUTED - entX signed L",
    "type": "Commercial Launch Services (Project Lazarus / BLK3.1 build)",
    "category": "Opportunity",
-   "value": "entX contract = $1,012,500 | $506,250 (50%) received to date (capital-bridge ledger of record). Supersedes May-20 $840K/-$480K net and July $420K partial; refresh net vs $1,012,500 before citing.",
+   "value": "entX cash received to date = $410,000 (QuickBooks-verified 2026-09-01: inv #0067 $82,000 + inv #0069 $328,000, both paid in full, A/R $0). Supersedes the $840K/-$480K May analysis, the $506,250 ledger projection (NOT in QB), and the rounded $420K note. Full LSA contract total unresolved ($840K vs $1,012,500) — reconcile vs the executed LSA; only $410K invoiced+paid so far.",
    "due": "Q1 2027 launch (Spaceport America)",
    "next_action": "(1) Prioritize second payload manifest - contact BD-021 ASGSR targets, BD-015 Narravity, BD-013 Montana; (2) Russ Blink to advise on software/TT&C line items for BLK3.1 budget; (3) Obtain Part 450 lau",
    "priority": 40,
