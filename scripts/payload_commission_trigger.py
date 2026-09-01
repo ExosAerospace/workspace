@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 payload_commission_trigger.py — fire a Mission Control commission-check task whenever
-payload-contracted funds are RECEIVED against an EXECUTED + SIGNED Launch Services Agreement.
+payload-contracted funds are RECEIVED against a payload Launch Services Agreement. Receipt of
+funds is the trigger; the task surfaces the LSA's execution status (a doc is only "fully executed"
+once BOTH parties have signed AND all dates are filled — money received on a not-yet-executed
+contract is flagged as a paperwork gap).
 
 Jon's rule (2026-09-01): the receipt of payload-contract money is the trigger to cut a payload
 sales commission check. It must fire even when NO commission salesperson is attributed (e.g. entX)
@@ -57,8 +60,19 @@ def save_state(st):
 
 
 def load_contracts():
+    # Every row is a tracked payload contract; receipt of funds is the commission trigger,
+    # independent of whether the LSA is fully executed (the task flags execution status).
     d = json.load(open(CONFIG))
-    return [c for c in d.get("contracts", []) if c.get("lsa_executed")]
+    return d.get("contracts", [])
+
+
+def execution_clause(c):
+    if c.get("fully_executed"):
+        return "LSA status: fully executed (both parties signed, dates complete)."
+    pend = "; ".join(c.get("pending_for_full_execution") or ["entX countersignature", "all dates filled"])
+    who = " (Exos-signed only)" if c.get("exos_signed") else ""
+    return ("⚠️ LSA status: NOT fully executed%s — pending: %s. Funds have been received against a "
+            "contract that is not yet fully executed; close this paperwork gap." % (who, pend))
 
 
 def qb_payments_for(customer_id):
@@ -131,17 +145,17 @@ def make_task(c, pay, running, is_onboard=False):
         source_key = "payload-commission-trigger:onboard:" + c["contract_id"]
         title = "Payload commission check (baseline) — %s: %s received to date" % (c["qb_customer"], _money(running))
         desc = ("Onboarding %s (%s) to the payload-commission trigger. Payload-contract funds RECEIVED to date "
-                "against the EXECUTED/SIGNED LSA = %s%s (QuickBooks). %s Going forward, each NEW payment auto-files "
+                "against the payload LSA = %s%s (QuickBooks). %s %s Going forward, each NEW payment auto-files "
                 "its own commission-check task." % (c["qb_customer"], c["contract_id"], _money(running), pct,
-                                                    attribution_clause(c)))
+                                                    execution_clause(c), attribution_clause(c)))
     else:
         source_key = "payload-commission-trigger:qbpmt:" + pay["id"]
         title = "Payload commission check — %s: %s received%s" % (c["qb_customer"], _money(pay["amount"]),
                                                                   pct.strip() and " " + pct.strip() or "")
-        desc = ("Payload-contract funds RECEIVED against the EXECUTED/SIGNED LSA (%s, %s). Payment %s on %s "
-                "(QB Payment %s). Running total received %s%s. %s"
+        desc = ("Payload-contract funds RECEIVED against the payload LSA (%s, %s). Payment %s on %s "
+                "(QB Payment %s). Running total received %s%s. %s %s"
                 % (c["contract_id"], c["qb_customer"], _money(pay["amount"]), pay.get("date"), pay["id"],
-                   _money(running), pct, attribution_clause(c)))
+                   _money(running), pct, execution_clause(c), attribution_clause(c)))
     task = {"title": title, "description": desc, "category": "EXOS ADMIN", "priority": 80,
             "due_date": due + "T23:59:59Z", "owner": "Jon", "assigned_to": "Jon",
             "assigned_email": "jquinn@exosaero.com", "source": source_key, "state": "To Do"}

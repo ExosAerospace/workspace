@@ -1,21 +1,24 @@
 {
-  "_note": "Registry of EXECUTED + SIGNED payload Launch Services Agreements. A QB payment from any customer listed here (lsa_executed=true) triggers an MC payload-commission-check task via scripts/payload_commission_trigger.py. attributed_agent=null means no commission salesperson — the task still fires (audit trigger) and asks Jon to confirm attribution or waive. Add a row when a new payload LSA is executed.",
+  "_note": "Registry of payload Launch Services Agreements being tracked for commission triggering. A QB payment from any customer listed here fires an MC payload-commission-check task via scripts/payload_commission_trigger.py (receipt of funds is the commission trigger). Each row carries an honest execution status — a doc is 'fully_executed' ONLY when BOTH parties have signed AND all dates are filled in; do NOT mark fully_executed otherwise. attributed_agent=null means no commission salesperson (task still fires and asks Jon to confirm attribution or waive). The task surfaces the execution status so an incomplete contract with money already received is flagged. Add a row when a new payload LSA is signed.",
   "contracts": [
     {
       "qb_customer": "entX Limited",
       "qb_customer_id": "1099",
       "contract_id": "OPP-007",
       "program": "Project Lazarus RHU demo (BLK3 Flight 1)",
-      "lsa_executed": true,
-      "lsa_signed_date": "2026-02-20",
+      "fully_executed": false,
+      "exos_signed": true,
+      "exos_signed_by": "John Quinn (CEO)",
+      "exos_signed_date": "2026-02-20",
+      "pending_for_full_execution": ["entX countersignature", "all dates filled (Effective Date, milestone due dates, launch date)"],
       "contract_total": 820000,
       "currency": "USD",
       "attributed_agent": null,
-      "executed_docs": {
-        "lsa": {"upload_id": "12cc017f0d91843b", "filename": "entX_LSA_Appendix_A_EXECUTED_DocuSign.pdf", "docusign_envelope_id": "3E382971-CA8F-4681-8CD3-20E03274DC0D"},
+      "signed_docs": {
+        "lsa": {"upload_id": "12cc017f0d91843b", "filename": "entX_LSA_Appendix_A_SIGNED-by-Exos_pending-execution.pdf", "docusign_envelope_id": "3E382971-CA8F-4681-8CD3-20E03274DC0D", "status": "Exos-signed only, NOT fully executed"},
         "subpart_a_cross_waiver": {"upload_id": "4b05d7c01cd4eaf4", "filename": "entX_Subpart_A_CrossWaiver_SIGNED.pdf"}
       },
-      "notes": "Both documents executed & on file in MC uploads (project OPP-007): LSA (DocuSign, signed John Quinn / Bryn Jones) + signed Subpart A cross-waiver of claims. No commission salesperson attributed to this deal."
+      "notes": "Docs on file in MC uploads (project OPP-007). LSA is SIGNED BY EXOS ONLY and NOT fully executed (pending entX countersignature + all dates). NOTE: $410,000 already received from entX per QB despite the contract not being fully executed — paperwork gap to close. No commission salesperson attributed."
     }
   ]
 }
