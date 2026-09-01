@@ -600,7 +600,7 @@
     <option value="Jon+Exo">Both</option>
   </select>
   <select id="newState">
-    <option value="Blocked">Blocked</option>
+    <option value="Blocked">To Do</option>
     <option value="In Progress">In Progress</option>
     <option value="Done">Done</option>
   </select>
@@ -650,7 +650,7 @@
       <div class="panel-task-id" id="panelTaskId">#0</div>
       <div class="panel-task-title" id="panelTaskTitle">Task Title</div>
     </div>
-    <span class="panel-state-badge" id="panelStateBadge">Blocked</span>
+    <span class="panel-state-badge" id="panelStateBadge">To Do</span>
     <span class="owner-badge" id="panelOwnerBadge">JON</span>
   </div>
 
@@ -719,7 +719,7 @@
           <div>
             <label>State</label>
             <select id="editState">
-              <option value="Blocked">Blocked</option>
+              <option value="Blocked">To Do</option>
               <option value="In Progress">In Progress</option>
               <option value="Done">Done</option>
             </select>
@@ -992,6 +992,9 @@ function normalizeState(s) {
   if (lower === 'to do') return 'Blocked';
   return 'Blocked';
 }
+// User-facing label: the internal 'Blocked' state IS the "To Do" (not-started) column. Keep the
+// internal key stable ('Blocked') so all state logic works; only the DISPLAY reads "To Do".
+function stateLabel(s) { return (s === 'Blocked' || String(s || '').toLowerCase() === 'to do') ? 'To Do' : s; }
 
 function colIdForState(state) {
   if (state === 'Done') return 'col-done';
@@ -1399,7 +1402,7 @@ function buildCard(task) {
       <button class="move-btn done-btn" onclick="event.stopPropagation();moveTask('${task.id}','Done')">Done</button>`;
   } else if (task.state === 'In Progress') {
     moveBtns = `
-      <button class="move-btn" onclick="event.stopPropagation();moveTask('${task.id}','Blocked')">Block</button>
+      <button class="move-btn" onclick="event.stopPropagation();moveTask('${task.id}','Blocked')">To Do</button>
       <button class="move-btn done-btn" onclick="event.stopPropagation();moveTask('${task.id}','Done')">Done</button>`;
   } else {
     moveBtns = `
@@ -1480,7 +1483,7 @@ function openEdit(id) {
   document.getElementById('panelTaskTitle').textContent = task.title || 'Untitled';
 
   const badgeEl = document.getElementById('panelStateBadge');
-  badgeEl.textContent = task.state;
+  badgeEl.textContent = stateLabel(task.state);
   badgeEl.className = 'panel-state-badge ' + (
     task.state === 'Blocked' || task.state === 'Held' ? 'state-blocked' :
     task.state === 'In Progress' ? 'state-progress' : 'state-done'
@@ -1763,7 +1766,7 @@ async function saveEdit() {
     if (updated) {
       document.getElementById('panelTaskTitle').textContent = updated.title;
       const badgeEl = document.getElementById('panelStateBadge');
-      badgeEl.textContent = updated.state;
+      badgeEl.textContent = stateLabel(updated.state);
       badgeEl.className = 'panel-state-badge ' + (
         updated.state === 'Blocked' || updated.state === 'Held' ? 'state-blocked' :
         updated.state === 'In Progress' ? 'state-progress' : 'state-done'
