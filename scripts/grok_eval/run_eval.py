@@ -15,12 +15,19 @@ default so no spend happens without an explicit request:
 Secrets: ~/.openclaw/secrets.json  (xai_api_key, anthropic_default_key_main, moonshot_api_key)
 Results: results/<UTC-timestamp>/<model>/<item_id>.txt  +  results/<ts>/summary.json
 """
-import os, sys, json, time, urllib.request, urllib.error
+import os, sys, json, time, urllib.request, urllib.error, subprocess, tempfile, hashlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
 OLLAMA = "http://localhost:11434"
 LOCAL_MODELS = ["qwen3.6:35b-a3b", "gemma4:e4b"]
+OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+
+def _oc_env():
+    env = dict(os.environ)
+    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.15.0/bin:"
+                   "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+    return env
 
 def secret(name, default=None):
     try:
@@ -43,17 +50,30 @@ def call_ollama(model, prompt, timeout=300):
                     {"Content-Type": "application/json"}, timeout)
     return out.get("message", {}).get("content", ""), ms, None
 
-def call_opus(prompt, timeout=120):
-    key = secret("anthropic_default_key_main") or secret("anthropic_default_key_coding")
-    if not key:
-        raise RuntimeError("pending key: anthropic_default_key_main")
-    out, ms = _post("https://api.anthropic.com/v1/messages",
-                    {"model": "claude-opus-4-8", "max_tokens": 1200,
-                     "messages": [{"role": "user", "content": prompt}]},
-                    {"Content-Type": "application/json", "x-api-key": key,
-                     "anthropic-version": "2023-06-01"}, timeout)
-    txt = "".join(b.get("text", "") for b in out.get("content", []) if b.get("type") == "text")
-    return txt, ms, out.get("usage")
+def call_opus(prompt, timeout=240):
+    # The raw anthropic key in secrets is not valid for the Messages API (MC routes via the CLI),
+    # so run Opus through `openclaw agent` in an ISOLATED session (never posts to any channel).
+    pf = None
+    t0 = time.time()
+    try:
+        with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as tf:
+            tf.write(prompt); pf = tf.name
+        skey = "agent:main:evalopus-" + hashlib.sha1(prompt.encode()).hexdigest()[:12]
+        r = subprocess.run([OPENCLAW, "agent", "--model", "anthropic/claude-opus-4-8",
+                            "--session-key", skey, "--message-file", pf, "--json"],
+                           capture_output=True, text=True, timeout=timeout, env=_oc_env())
+        j = json.loads(r.stdout)
+        res = (j or {}).get("result", {}) or {}
+        txt = "\n".join((p.get("text") or "") for p in res.get("payloads", []) if p.get("text")).strip()
+        if not txt:
+            txt = ((res.get("meta", {}) or {}).get("finalAssistantVisibleText") or "").strip()
+        if not txt:
+            raise RuntimeError("empty opus reply rc=%s %s" % (r.returncode, (r.stderr or '')[:120]))
+        return txt, int((time.time() - t0) * 1000), None
+    finally:
+        if pf:
+            try: os.unlink(pf)
+            except Exception: pass
 
 def _openai_compat(base, key, model, prompt, timeout, fallback_model=None):
     try:
@@ -82,7 +102,7 @@ def call_kimi(prompt, timeout=120):
     if not key:
         raise RuntimeError("pending key: moonshot_api_key")
     base = secret("moonshot_base_url", "https://api.moonshot.ai/v1")
-    model = os.environ.get("KIMI_MODEL") or secret("kimi_eval_model", "kimi-k3-turbo-preview")
+    model = os.environ.get("KIMI_MODEL") or secret("kimi_eval_model", "kimi-k3")
     return _openai_compat(base, key, model, prompt, timeout)
 
 def main():
@@ -94,7 +114,7 @@ def main():
 
     # Build the model roster
     roster = []  # (label, callable)
-    if not only:
+    if not only and "--no-local" not in argv:
         for m in LOCAL_MODELS:
             roster.append((m, (lambda p, mm=m: call_ollama(mm, p))))
     if "--opus" in argv or only == "opus":

@@ -33,7 +33,7 @@ except Exception:
     pass
 # --- /governance ---
 
-import imaplib, email, json, os, sys, shutil, subprocess, re
+import imaplib, email, json, os, sys, shutil, subprocess, re, urllib.request
 import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from datetime import datetime, timezone
 from email.header import decode_header
@@ -159,6 +159,51 @@ def match_reason(sender_addr, subject, cfg):
     return None
 
 
+# ── Inbound-resource safety net ───────────────────────────────────────────────
+# Root-cause fix (2026-09-01): a resource/credential emailed by an authorized sender must NOT
+# depend on an in-session promise to get processed — a session can get pulled onto other work and
+# the commitment evaporates (this is exactly how an emailed xAI API key sat un-ingested for a day).
+# So: detect such emails and create a DURABLE, high-priority Mission Control task (survives any
+# session change; shows on the board until Done) IN ADDITION to the Discord alert.
+_SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
+_SUPA_KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+RESOURCE_RE = re.compile(
+    r"\b(api[\s_-]?key|access[\s_-]?key|secret[\s_-]?key|\bsecret\b|\btoken\b|credential|password|"
+    r"\bkey\b|\[apikey\]|resource|licen[cs]e key|service account)\b", re.I)
+
+def is_authorized_sender(addr):
+    a = (addr or "").lower()
+    return a.endswith("@exosaero.com") or a == "jquinnexo@pm.me"
+
+def is_resource_email(sender_addr, subject, snippet):
+    """Authorized sender + credential/resource language → treat as an inbound resource."""
+    if not is_authorized_sender(sender_addr):
+        return False
+    return bool(RESOURCE_RE.search((subject or "") + "\n" + (snippet or "")))
+
+def create_resource_task(sender_addr, subject):
+    """Durable high-priority MC task so the resource can't be silently dropped. Returns task id or None."""
+    body = json.dumps({
+        "title": f"🔑 Inbound resource from {sender_addr}: {(subject or '')[:80]}",
+        "owner": "Exo", "assigned_email": "exo@exosaero.com", "state": "To Do", "priority": 95,
+        "category": "Task", "source": "inbound-resource-watch", "tags": ["inbound-resource", "needs-attention"],
+        "description": (f"An authorized sender ({sender_addr}) emailed something that looks like a "
+                        f"resource/credential (subject: {subject}). INGEST/PROCESS it now: extract → "
+                        f"install (e.g. ~/.openclaw/secrets.json) → test → delete the email → confirm to John. "
+                        f"Do NOT let this sit — it exists as a durable task precisely so a session pull can't drop it."),
+    }).encode()
+    req = urllib.request.Request(_SUPA + "/tasks", method="POST", data=body,
+        headers={"apikey": _SUPA_KEY, "Authorization": "Bearer " + _SUPA_KEY,
+                 "Content-Type": "application/json", "Prefer": "return=representation"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            out = json.loads(r.read().decode() or "[]")
+        return (out[0].get("id") if out else None)
+    except Exception as e:
+        logline(f"WARN: resource-task create failed: {e}")
+        return None
+
+
 def main():
     cfg = load_json(CONFIG, {})
     if not cfg:
@@ -199,20 +244,28 @@ def main():
         _, sender_addr = parseaddr(from_raw)
         date_hdr = dec(msg.get("Date", ""))
 
+        snippet = body_snippet(msg)
         reason = match_reason(sender_addr, subject, cfg)
-        if not reason:
+        resource = is_resource_email(sender_addr, subject, snippet)
+        if not reason and not resource:
             continue
+        if resource and not reason:
+            reason = "inbound resource/credential"
 
         # On first run, baseline only: record but do not alert on backlog.
         if first_run:
             logline(f"baseline (no alert) uid={uid} from={sender_addr} subj={subject[:60]!r}")
             continue
 
-        snippet = body_snippet(msg)
+        # Inbound resource → create a DURABLE high-priority task BEFORE anything else, so even if
+        # the DM fails or a session is mid-context-switch, the work is captured and tracked.
+        rtask = create_resource_task(sender_addr, subject) if resource else None
+
         hit = {
             "ts": now_iso(), "uid": uid, "reason": reason,
             "from": from_raw, "sender": sender_addr,
             "subject": subject, "date": date_hdr, "snippet": snippet,
+            "resource_task": rtask,
         }
         # Durable record FIRST (no-loss), then notify.
         try:
@@ -221,16 +274,21 @@ def main():
         except Exception as e:
             logline(f"WARN: could not write hit log: {e}")
 
+        rnote = ""
+        if resource:
+            rnote = (f"\n\U0001F511 Logged as durable MC task #{rtask} (priority 95) so it can't be dropped — "
+                     f"Exo will ingest/process it." if rtask else
+                     "\n⚠️ Resource detected but task creation FAILED — see log.")
         text = (
             f"\U0001F4E5 **Priority email** ({reason})\n"
             f"**From:** {from_raw}\n"
             f"**Subject:** {subject}\n"
             f"**Date:** {date_hdr}\n\n"
-            f"{snippet}\n\n"
+            f"{snippet}{rnote}\n\n"
             f"_Flagged by priority-inbox-watcher. Reply here to action it._"
         )
         ok = post_discord(target, text)
-        logline(f"ALERT uid={uid} reason={reason!r} from={sender_addr} dm={'ok' if ok else 'FAILED-logged'}")
+        logline(f"ALERT uid={uid} reason={reason!r} resource_task={rtask} from={sender_addr} dm={'ok' if ok else 'FAILED-logged'}")
         alerts += 1
 
     state["last_uid"] = max_uid
