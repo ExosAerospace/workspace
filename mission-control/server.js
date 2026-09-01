@@ -3334,6 +3334,31 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (req.url === '/api/esign/list' && req.method === 'GET') {
+    const session = getSession(req);
+    if (!session) { res.writeHead(401,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:'Unauthorized'})); return; }
+    const all = loadEnvelopes();
+    const isAdmin = session.role === 'admin';
+    const myEmail = (session.email||'').toLowerCase();
+    const now = Date.now();
+    const out = [];
+    for (const e of all) {
+      const mine = (e.signers||[]).find(s => (s.email||'').toLowerCase() === myEmail);
+      if (!isAdmin && !mine) continue; // non-admins see only envelopes they are a signer on
+      const expired = e.expiresAt && now > Date.parse(e.expiresAt);
+      out.push({
+        id: e.id, title: e.title, status: expired && e.status!=='completed' ? 'expired' : e.status,
+        createdAt: e.createdAt, expiresAt: e.expiresAt,
+        myToken: (mine && !mine.signed && !expired) ? mine.token : null,
+        mySigned: mine ? mine.signed : null,
+        signers: (e.signers||[]).map(s => ({ name:s.name, email:s.email, role:s.role, signed:s.signed, signedAt:s.signedAt }))
+      });
+    }
+    out.sort((a,b) => String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+    res.writeHead(200,{'Content-Type':'application/json'}); res.end(JSON.stringify({ envelopes: out }));
+    return;
+  }
+
   if (req.url === '/api/esign/sign' && req.method === 'POST') {
     let body=''; req.on('data',c=>body+=c); req.on('end', async () => {
       try {

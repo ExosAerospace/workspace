@@ -593,6 +593,16 @@
   <button class="btn orange" onclick="openCreateModal()">+ New Document</button>
 </div>
 
+<div style="padding:20px 24px 0;">
+  <h2 style="font-size:1rem;color:var(--text);margin-bottom:4px;">Awaiting Signature &mdash; Mission Control</h2>
+  <p style="font-size:0.78rem;color:var(--text2);margin-bottom:12px;">Documents routed to you through Exos e-sign (server-hosted). Click Review &amp; Sign to open and sign here in Mission Control.</p>
+</div>
+<div class="doc-list" id="serverDocList"><div class="empty-state" style="padding:20px;">Loading&hellip;</div></div>
+
+<div style="padding:20px 24px 0;">
+  <h2 style="font-size:1rem;color:var(--text);margin-bottom:4px;">Local Drafts (this browser)</h2>
+  <p style="font-size:0.78rem;color:var(--text2);margin-bottom:0;">Documents you are drafting/composing on this device.</p>
+</div>
 <div class="doc-list" id="docList"></div>
 
 <!-- ═══════════════════════ CREATE / EDIT MODAL ═══════════════════════ -->
@@ -2558,6 +2568,34 @@ document.addEventListener('keydown', (e) => {
     document.body.style.overflow = '';
   }
 });
+</script>
+
+<script>
+// ── Server-hosted e-sign envelopes (self-hosted signature system) ──
+function sdEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+async function loadServerEnvelopes(){
+  var el=document.getElementById('serverDocList');
+  if(!el) return;
+  try{
+    var r=await fetch('/api/esign/list',{credentials:'same-origin'});
+    if(r.status===401){ el.innerHTML='<div class="empty-state" style="padding:20px;"><h3>Sign in to Mission Control</h3><p>Log in to see documents routed to you for signature.</p></div>'; return; }
+    if(!r.ok){ el.innerHTML='<div class="empty-state" style="padding:20px;">Could not load signature documents.</div>'; return; }
+    var data=await r.json(); var envs=(data&&data.envelopes)||[];
+    if(!envs.length){ el.innerHTML='<div class="empty-state" style="padding:20px;"><h3>Nothing awaiting your signature</h3></div>'; return; }
+    el.innerHTML=envs.map(function(e){
+      var st=(e.status==='completed')?'signed':(e.status||'pending');
+      var cls=(st==='signed')?'signed':(st==='expired')?'expired':'pending';
+      var badge='<span class="status-badge '+cls+'">'+sdEsc(st)+'</span>';
+      var who=(e.signers||[]).map(function(s){return sdEsc(s.name)+(s.signed?' ✓':'');}).join(', ');
+      var act;
+      if(e.myToken){ act='<a class="btn green small" href="/sign?token='+encodeURIComponent(e.myToken)+'" target="_blank" rel="noopener">Review &amp; Sign</a>'; }
+      else if(e.mySigned){ act='<span class="btn small secondary" style="cursor:default;">You signed</span>'; }
+      else { act='<span style="font-size:0.75rem;color:var(--text2);">'+(st==='expired'?'Expired':'—')+'</span>'; }
+      return '<div class="doc-card" style="cursor:default;"><div class="doc-info"><h3>'+sdEsc(e.title)+'</h3><div class="meta">'+badge+'<span>'+who+'</span></div></div><div class="doc-actions">'+act+'</div></div>';
+    }).join('');
+  }catch(err){ el.innerHTML='<div class="empty-state" style="padding:20px;">Could not load signature documents.</div>'; }
+}
+loadServerEnvelopes();
 </script>
 </body>
 </html>
