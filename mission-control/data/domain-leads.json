@@ -1,0 +1,15 @@
+{
+  "_doc": "Domain experience leads: category -> the person who owns that domain. auto_reassign.py pulls open tasks owned by Jon/unassigned in a category to its lead, but ONLY where confirmed=true. Seed values are DRAFT, derived from revealed expertise (who actually completes work in each category) + role knowledge. Flip confirmed=true (ideally after the named lead confirms their domain = the 'employee input') to let the weekly job reassign that category. Series A and Government are intentionally kept with Jon.",
+  "updated": "2026-07-24",
+  "leads": {
+    "Payload Sales": {"lead": "Lizi Quinn", "email": "lquinn@exosaero.com", "confirmed": false, "basis": "owns 100% of open + 22 completed", "confidence": "high"},
+    "EXOS HVRR RDRE": {"lead": "Neil Milburn", "email": "nmilburn@exosaero.com", "confirmed": false, "basis": "9 completed (propulsion domain)", "confidence": "high"},
+    "ASTRO-X": {"lead": "Phil Eaton", "email": "peaton@exosaero.com", "confirmed": false, "basis": "9 completed", "confidence": "high"},
+    "EXOS ADMIN": {"lead": "Steve Norsworthy", "email": "snorsworthy@exosaero.com", "confirmed": false, "basis": "7 completed, most active", "confidence": "high"},
+    "Blk3 Flight": {"lead": "Russ Blink", "email": "rblink@exosaero.com", "confirmed": false, "basis": "most open ownership; hardware led by Eaton", "confidence": "medium"},
+    "Revenue": {"lead": null, "email": null, "confirmed": false, "basis": "North Star for all non-Jon staff; specific lead needs employee input", "confidence": "low"},
+    "BD": {"lead": null, "email": null, "confirmed": false, "basis": "completions spread across Neil/Steve/Lizi/Talley; needs owner decision", "confidence": "low"},
+    "Series A": {"lead": "Jon", "email": "jquinn@exosaero.com", "confirmed": true, "basis": "CEO North Star, stays with Jon", "confidence": "locked"},
+    "Government": {"lead": "Jon", "email": "jquinn@exosaero.com", "confirmed": true, "basis": "gov/.mil contacts route through Jon", "confidence": "locked"}
+  }
+}

@@ -62,11 +62,10 @@ ALIAS = {
     'toshihisa kumazawa': 'Toshihisa Kumazawa', 'toshi': 'Toshihisa Kumazawa', 'toshihisa': 'Toshihisa Kumazawa',
     'andrew overman': 'Andrew Overman', 'aoverman': 'Andrew Overman',
     'victor castilleja': 'Victor Castilleja', 'vcastilleja': 'Victor Castilleja', 'victor': 'Victor Castilleja',
-    'joseph lagrave': 'Joseph LaGrave', 'jlagrave': 'Joseph LaGrave',
     'exo': 'Exo (AI)',
 }
 HUMANS = ['John Quinn', 'Lizi Quinn', 'Neil Milburn', 'Steve Norsworthy', 'Phil Eaton', 'Kyle Ballard',
-          'Russ Blink', 'Mike Talley', 'Toshihisa Kumazawa', 'Andrew Overman', 'Victor Castilleja', 'Joseph LaGrave']
+          'Russ Blink', 'Mike Talley', 'Toshihisa Kumazawa', 'Andrew Overman', 'Victor Castilleja']
 ACTIVE = {'To Do', 'In Progress', 'Queued', 'Blocked', 'Open'}
 _SUFFIX = re.compile(r'\s*\+\s*\d+\s+other[s]?\s*$', re.I)
 

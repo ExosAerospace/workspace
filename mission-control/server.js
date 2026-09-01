@@ -2220,10 +2220,9 @@ const server = http.createServer((req, res) => {
           'toshihisa kumazawa': 'Toshihisa Kumazawa', 'toshi': 'Toshihisa Kumazawa', 'toshihisa': 'Toshihisa Kumazawa',
           'andrew overman': 'Andrew Overman', 'aoverman': 'Andrew Overman',
           'victor castilleja': 'Victor Castilleja', 'vcastilleja': 'Victor Castilleja', 'victor': 'Victor Castilleja',
-          'joseph lagrave': 'Joseph LaGrave', 'jlagrave': 'Joseph LaGrave',
           'exo': 'Exo (AI)',
         };
-        const HUMANS = ['John Quinn', 'Lizi Quinn', 'Neil Milburn', 'Steve Norsworthy', 'Phil Eaton', 'Kyle Ballard', 'Russ Blink', 'Mike Talley', 'Toshihisa Kumazawa', 'Andrew Overman', 'Victor Castilleja', 'Joseph LaGrave'];
+        const HUMANS = ['John Quinn', 'Lizi Quinn', 'Neil Milburn', 'Steve Norsworthy', 'Phil Eaton', 'Kyle Ballard', 'Russ Blink', 'Mike Talley', 'Toshihisa Kumazawa', 'Andrew Overman', 'Victor Castilleja'];
         function canon(raw) {
           if (!raw) return '(unassigned)';
           // strip shared-task suffix "Name + 2 others" → attribute to the named lead
