@@ -9,15 +9,22 @@ overall and per category, writes a markdown report, and prints a summary.
 Usage: python3 judge.py [results_dir ...]
   No args → auto: scan results/*/ and take the newest answer per (model,item).
 """
-import os, sys, json, glob, re, urllib.request
+import os, sys, json, glob, re, time, subprocess, tempfile, hashlib
 from datetime import datetime, timezone
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
+OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
 
 def secret(n, d=None):
     try: return json.load(open(SECRETS)).get(n, d)
     except Exception: return d
+
+def _oc_env():
+    env = dict(os.environ)
+    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.15.0/bin:"
+                   "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+    return env
 
 def gather(dirs):
     """model -> item_id -> answer text (newest dir wins)."""
@@ -38,15 +45,28 @@ def gather(dirs):
     return data
 
 def opus_judge(prompt):
-    key = secret("anthropic_default_key_main") or secret("anthropic_default_key_coding")
-    req = urllib.request.Request("https://api.anthropic.com/v1/messages",
-        data=json.dumps({"model": "claude-opus-4-8", "max_tokens": 2000,
-                         "messages": [{"role": "user", "content": prompt}]}).encode(),
-        headers={"Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01"},
-        method="POST")
-    with urllib.request.urlopen(req, timeout=180) as r:
-        out = json.loads(r.read())
-    return "".join(b.get("text", "") for b in out.get("content", []) if b.get("type") == "text")
+    # The raw anthropic key in secrets is NOT valid for the Messages API (MC routes via the CLI),
+    # so run the Opus judge through `openclaw agent` in an ISOLATED session (never posts to a channel).
+    pf = None
+    try:
+        with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as tf:
+            tf.write(prompt); pf = tf.name
+        skey = "agent:main:evaljudge-" + hashlib.sha1(prompt.encode()).hexdigest()[:12]
+        r = subprocess.run([OPENCLAW, "agent", "--model", "anthropic/claude-opus-4-8",
+                            "--session-key", skey, "--message-file", pf, "--json"],
+                           capture_output=True, text=True, timeout=240, env=_oc_env())
+        j = json.loads(r.stdout)
+        res = (j or {}).get("result", {}) or {}
+        txt = "\n".join((p.get("text") or "") for p in res.get("payloads", []) if p.get("text")).strip()
+        if not txt:
+            txt = ((res.get("meta", {}) or {}).get("finalAssistantVisibleText") or "").strip()
+        if not txt:
+            raise RuntimeError("empty judge reply rc=%s %s" % (r.returncode, (r.stderr or '')[:160]))
+        return txt
+    finally:
+        if pf:
+            try: os.unlink(pf)
+            except Exception: pass
 
 def main():
     dirs = sys.argv[1:]

@@ -75,15 +75,15 @@ def call_opus(prompt, timeout=240):
             try: os.unlink(pf)
             except Exception: pass
 
-def _openai_compat(base, key, model, prompt, timeout, fallback_model=None):
+def _openai_compat(base, key, model, prompt, timeout, fallback_model=None, temperature=0.3):
     try:
         out, ms = _post(base.rstrip("/") + "/chat/completions",
-                        {"model": model, "messages": [{"role": "user", "content": prompt}], "temperature": 0.3},
+                        {"model": model, "messages": [{"role": "user", "content": prompt}], "temperature": temperature},
                         {"Content-Type": "application/json", "Authorization": "Bearer " + key}, timeout)
     except urllib.error.HTTPError as e:
         if e.code in (404, 400) and fallback_model:
             out, ms = _post(base.rstrip("/") + "/chat/completions",
-                            {"model": fallback_model, "messages": [{"role": "user", "content": prompt}], "temperature": 0.3},
+                            {"model": fallback_model, "messages": [{"role": "user", "content": prompt}], "temperature": temperature},
                             {"Content-Type": "application/json", "Authorization": "Bearer " + key}, timeout)
         else:
             raise
@@ -103,7 +103,8 @@ def call_kimi(prompt, timeout=120):
         raise RuntimeError("pending key: moonshot_api_key")
     base = secret("moonshot_base_url", "https://api.moonshot.ai/v1")
     model = os.environ.get("KIMI_MODEL") or secret("kimi_eval_model", "kimi-k3")
-    return _openai_compat(base, key, model, prompt, timeout)
+    # kimi-k3 rejects any temperature != 1 ("only 1 is allowed for this model")
+    return _openai_compat(base, key, model, prompt, timeout, temperature=1)
 
 def main():
     argv = sys.argv[1:]
