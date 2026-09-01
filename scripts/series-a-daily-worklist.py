@@ -51,8 +51,10 @@ def main():
     # space/tech investor — an obvious, currently active fund WITH funding traction in the last
     # ~12 months. Caution firms not yet validated (the `fund_active_12mo` flag, set by the DD
     # sweep) are auto-dropped from the daily work list rather than surfaced for cold contact.
+    # Validated either by a manual flag on the contact OR by the DD deep-dive (fund_active_12mo
+    # written into the DD registry when it confirms an active space/tech fund with ~12-mo traction).
     def validated_fund(c):
-        return bool(c.get("fund_active_12mo"))
+        return bool(c.get("fund_active_12mo")) or dd_screen.fund_active_for(firm=c.get("firm"))
     dropped_caution = [c for c in eligible
                        if dd_of(c) == "caution" and not validated_fund(c)]
     _drop_ids = {id(c) for c in dropped_caution}

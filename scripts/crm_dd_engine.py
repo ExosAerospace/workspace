@@ -201,6 +201,54 @@ def classify(company, dom, findings, deep=False):
     if conf not in ("low","medium","high"): conf = "low"
     return v, (j.get("summary") or "")[:240], conf
 
+_FUND_HINT = ("capital", "ventures", "venture", " vc", "vc ", "fund", "equity", "partners",
+              "angel", "family office", "investment", "invest", "holdings")
+
+def _looks_like_fund(name):
+    n = f" {(name or '').lower()} "
+    return any(k in n for k in _FUND_HINT)
+
+FUND_RUBRIC = (
+    "You are validating whether a firm belongs on Exos Aerospace's ACTIVE Series A investor "
+    "outreach list. Given web findings about the firm, decide whether it is BOTH: (a) an operating "
+    "venture / investment / PE fund, family office, or angel group that invests in aerospace, space, "
+    "defense, deep tech, or frontier/hard tech; AND (b) shows REAL funding traction in roughly the "
+    "last 12 months — a new fund close, announced new investments, or actively deploying capital. "
+    "The current date is September 2026, so 2025-2026 activity counts as recent. Return STRICT JSON "
+    "only: {\"active\":true|false,\"confidence\":\"low|medium|high\",\"why\":\"one line\"}. "
+    "active=true ONLY with specific evidence of recent investment/fundraising by THIS firm in a "
+    "relevant sector. Not an investor, dormant, wrong sector, or thin/generic evidence => active=false.")
+
+def fund_active_check(company, dom, findings):
+    """Local-model gate: is this a currently-active space/tech fund with ~12-mo funding traction?
+    Runs ONE targeted recency search (recent investments / new-fund close) on top of the deep-dive
+    findings so the model has real evidence, then classifies. Conservative: only True on specific
+    recent evidence at medium/high confidence — a thin 'maybe' does NOT re-surface a firm for cold
+    contact. Returns (active_bool, n_searches)."""
+    n = 0
+    try:
+        recent, _ = tavily(f'{company} {dom} recent investments 2025 2026 new fund close portfolio deals aerospace space deep tech', depth="advanced")
+        n = 1
+        findings = (findings or "") + "\n\n[RECENT FUND ACTIVITY]\n" + recent
+    except Exception:
+        pass
+    try:
+        payload = json.dumps({"model": MODEL, "stream": False, "format": "json",
+            "messages": [{"role":"system","content":FUND_RUBRIC},
+                         {"role":"user","content":f"Company: {company}\nDomain: {dom}\n\nWeb findings:\n{findings or '(none found)'}"}]}).encode()
+        with urllib.request.urlopen(urllib.request.Request(OLLAMA, data=payload, headers={"Content-Type":"application/json"}), timeout=150) as r:
+            d = json.load(r)
+        raw = (d.get("message") or {}).get("content") or "{}"
+        try: j = json.loads(raw)
+        except Exception:
+            m = re.search(r"\{.*\}", raw, re.S); j = json.loads(m.group(0)) if m else {}
+        active = j.get("active") in (True, "true", "1")
+        conf = (j.get("confidence") or "low").lower().strip()
+        return bool(active and conf in ("medium", "high")), n
+    except Exception as e:
+        print("  fund_active_check failed:", e)
+        return False, n
+
 def log_dossier(company, dom, verdict, summary):
     try:
         subprocess.run(["python3", os.path.join(WS,"scripts","log_dd.py"), "--firm", company, "--domain", dom,
@@ -265,8 +313,16 @@ def _screen_pass(dom, name, deep=False):
             srcs = (srcs + u2 + u3)[:8]; n_searches = 3
         except Exception: pass
     v, s, conf = classify(name, dom, findings, deep=deep)
-    return {"verdict":v,"summary":s,"source":"tavily+ollama","confidence":conf,
-            "sources":srcs,"depth":("deep" if deep else "quick"),"_searches":n_searches}
+    rec = {"verdict":v,"summary":s,"source":"tavily+ollama","confidence":conf,
+           "sources":srcs,"depth":("deep" if deep else "quick"),"_searches":n_searches}
+    # On a deep screen of an investor-looking firm, also validate whether it's an ACTIVE space/tech
+    # fund with ~12-mo traction. This is the flag the Series A worklist gates caution firms on:
+    # a caution that's a validated active fund is re-included instead of auto-dropped.
+    if deep and _looks_like_fund(name):
+        active, fn = fund_active_check(name, dom, findings)
+        rec["fund_active_12mo"] = active
+        rec["_searches"] += fn
+    return rec
 
 
 def screen_one(dom, name, high_stakes=False, owner="Jon"):
@@ -327,6 +383,8 @@ def write_record(reg, dom, name, r, owner="Jon"):
                 "escalated": r.get("escalated", False)}
     if r.get("escalated"):
         reg[dom]["initial_verdict"] = r.get("initial_verdict")
+    if "fund_active_12mo" in r:
+        reg[dom]["fund_active_12mo"] = bool(r["fund_active_12mo"])
     if r["verdict"] in ("fail","caution"):
         log_dossier(name, dom, r["verdict"], r["summary"])
     # Only a fail that has been deep-verified reaches the do-not-engage Decision. After the
@@ -353,6 +411,12 @@ def needs_dd(rec):
     # clear it to pass or confirm it (keeps the worklist from parking unresolved cautions).
     if (rec.get("status") == "caution" and rec.get("source") == "tavily+ollama"
             and rec.get("depth") != "deep" and not rec.get("escalated")):
+        return True
+    # A caution on an investor-looking firm that was never fund-validated -> re-screen so the
+    # deep-dive stamps fund_active_12mo (the flag the worklist gates caution re-inclusion on).
+    # Covers already-deep caution funds the escalation clause above would otherwise skip.
+    if (rec.get("status") == "caution" and rec.get("source") == "tavily+ollama"
+            and _looks_like_fund(rec.get("company")) and "fund_active_12mo" not in rec):
         return True
     try:
         age = (datetime.date.today() - datetime.date.fromisoformat((rec.get("date") or "")[:10])).days

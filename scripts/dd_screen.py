@@ -57,7 +57,25 @@ def _load_crm_verdicts():
     return out
 
 
+def _load_fund_active():
+    """name->bool map: firms the DD deep-dive validated as an ACTIVE space/tech fund with
+    ~12-mo funding traction (fund_active_12mo). Used to re-include a validated caution firm."""
+    try:
+        reg = json.load(open(CRM_DD))
+    except Exception:
+        return {}
+    out = {}
+    for v in (reg.values() if isinstance(reg, dict) else reg):
+        if not isinstance(v, dict):
+            continue
+        name = _norm(v.get("company"))
+        if name and v.get("fund_active_12mo"):
+            out[name] = True
+    return out
+
+
 _CRM_CACHE = None
+_FUND_CACHE = None
 
 
 def crm_verdicts():
@@ -66,6 +84,14 @@ def crm_verdicts():
     if _CRM_CACHE is None:
         _CRM_CACHE = _load_crm_verdicts()
     return _CRM_CACHE
+
+
+def fund_active_for(firm=None):
+    """True if the DD deep-dive validated this firm as an active space/tech fund (cached)."""
+    global _FUND_CACHE
+    if _FUND_CACHE is None:
+        _FUND_CACHE = _load_fund_active()
+    return bool(_FUND_CACHE.get(_norm(firm)))
 
 
 def verdict_for(firm=None, email=None, domain=None):
