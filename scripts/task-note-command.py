@@ -249,6 +249,7 @@ def main():
                      "source": "task-note-command", "tags": ["note-routed", "needs-owner"],
                      "description": f"From a note on task #{taskid} (by {owner_of_note}). Directive: {cmd}. Exo to own/assign."})
                 who = "Exo (triage)"
+                flag_awaiting(taskid)   # Exo-owned directive: surface the ORIGINAL task to the top too
             newid = nid[0]["id"] if nid else "?"
             reply(taskid, f"✅ Exo: created task #{newid} → {who} for “{cmd[:110]}”.")
             logline(f"route {aid} task {taskid} -> {who} #{newid}"); acted += 1; continue
