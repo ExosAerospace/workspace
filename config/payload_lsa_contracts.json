@@ -11,7 +11,11 @@
       "contract_total": 820000,
       "currency": "USD",
       "attributed_agent": null,
-      "notes": "Signed John Quinn / Bryn Jones. No commission salesperson attributed to this deal."
+      "executed_docs": {
+        "lsa": {"upload_id": "12cc017f0d91843b", "filename": "entX_LSA_Appendix_A_EXECUTED_DocuSign.pdf", "docusign_envelope_id": "3E382971-CA8F-4681-8CD3-20E03274DC0D"},
+        "subpart_a_cross_waiver": {"upload_id": "4b05d7c01cd4eaf4", "filename": "entX_Subpart_A_CrossWaiver_SIGNED.pdf"}
+      },
+      "notes": "Both documents executed & on file in MC uploads (project OPP-007): LSA (DocuSign, signed John Quinn / Bryn Jones) + signed Subpart A cross-waiver of claims. No commission salesperson attributed to this deal."
     }
   ]
 }
