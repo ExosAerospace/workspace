@@ -2007,6 +2007,64 @@ const server = http.createServer((req, res) => {
     }
   }
 
+  // ── APAC DEAL FLOW: save/book/delete an opportunity (persists data/apac-opportunities.json) ──
+  // Editors: admins, managers, and the APAC BD owner (Toshi). Members otherwise can only read.
+  {
+    const apacFp = path.join(__dirname, 'data', 'apac-opportunities.json');
+    const apacCanEdit = (s) => s && (s.role === 'admin' || s.role === 'manager' || (s.email || '').toLowerCase() === 'toshihisa@exosaero.com');
+    const apacNum = (v) => { const n = Number(String(v).replace(/[^0-9.\-]/g, '')); return isFinite(n) ? n : 0; };
+    if (req.url.split('?')[0] === '/api/apac-opportunities/save' && req.method === 'POST') {
+      const s = getSession(req);
+      if (!apacCanEdit(s)) { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not authorized to edit APAC deal flow' })); return; }
+      let body = ''; req.on('data', c => { body += c; if (body.length > 2e5) req.destroy(); });
+      req.on('end', () => {
+        try {
+          const inp = JSON.parse(body);
+          const doc = JSON.parse(fs.readFileSync(apacFp, 'utf8'));
+          doc.opportunities = doc.opportunities || [];
+          const clean = {
+            title: String(inp.title || '').slice(0, 200), country: String(inp.country || '').slice(0, 60),
+            type: String(inp.type || '').slice(0, 60), stage: String(inp.stage || '').slice(0, 60),
+            status: String(inp.status || 'Pursuing').slice(0, 40), value_usd: Math.max(0, apacNum(inp.value_usd)),
+            value_display: String(inp.value_display || '').slice(0, 120), payload_kg: Math.max(0, apacNum(inp.payload_kg)),
+            booked: !!inp.booked, priority: Math.max(0, Math.min(130, apacNum(inp.priority))),
+            owner: String(inp.owner || 'Toshihisa Kumazawa').slice(0, 80),
+            next_action: String(inp.next_action || '').slice(0, 400), description: String(inp.description || '').slice(0, 2000)
+          };
+          let id = String(inp.id || '').trim();
+          if (id) {
+            const idx = doc.opportunities.findIndex(o => o.id === id);
+            if (idx >= 0) doc.opportunities[idx] = Object.assign(doc.opportunities[idx], clean, { id });
+            else doc.opportunities.push(Object.assign({ id }, clean));
+          } else {
+            let mx = 0; doc.opportunities.forEach(o => { const m = /APAC-(\d+)/.exec(o.id || ''); if (m) mx = Math.max(mx, +m[1]); });
+            id = 'APAC-' + String(mx + 1).padStart(3, '0');
+            doc.opportunities.push(Object.assign({ id }, clean));
+          }
+          doc.generated_display = new Date().toISOString().slice(0, 10) + ' · edited in Mission Control';
+          const tmp = apacFp + '.tmp'; fs.writeFileSync(tmp, JSON.stringify(doc, null, 2)); fs.renameSync(tmp, apacFp);
+          res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, id }));
+        } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e.message || e) })); }
+      });
+      return;
+    }
+    if (req.url.split('?')[0] === '/api/apac-opportunities/delete' && req.method === 'POST') {
+      const s = getSession(req);
+      if (!apacCanEdit(s)) { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not authorized' })); return; }
+      let body = ''; req.on('data', c => { body += c; if (body.length > 1e4) req.destroy(); });
+      req.on('end', () => {
+        try {
+          const { id } = JSON.parse(body);
+          const doc = JSON.parse(fs.readFileSync(apacFp, 'utf8'));
+          doc.opportunities = (doc.opportunities || []).filter(o => o.id !== id);
+          const tmp = apacFp + '.tmp'; fs.writeFileSync(tmp, JSON.stringify(doc, null, 2)); fs.renameSync(tmp, apacFp);
+          res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true }));
+        } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e.message || e) })); }
+      });
+      return;
+    }
+  }
+
   // ── WELCOME PAGE (early adopter onboarding) ──
   if ((req.url === '/welcome' || req.url === '/welcome.html') && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'text/html' });

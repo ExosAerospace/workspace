@@ -39,6 +39,21 @@
   .detail td{background:var(--navy2);color:var(--text2);font-size:13px}
   .muted{color:var(--text2)} .flag{color:var(--gold);font-size:12px}
   .notice{background:var(--navy2);border:1px dashed var(--border);border-radius:8px;padding:12px 15px;color:#bcd0ee;font-size:12.5px;margin-bottom:18px}
+  .editbtn{background:none;border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:2px 7px;cursor:pointer;font-size:12px}
+  .editbtn:hover{color:var(--text);border-color:var(--accent)}
+  .modal-bg{position:fixed;inset:0;background:rgba(3,8,18,.7);display:none;align-items:flex-start;justify-content:center;z-index:50;overflow:auto;padding:40px 16px}
+  .modal{background:var(--card);border:1px solid var(--border);border-radius:12px;max-width:640px;width:100%;padding:20px 22px}
+  .modal h2{margin:0 0 14px;font-size:17px}
+  .fld{margin-bottom:11px} .fld label{display:block;font-size:12px;color:var(--text2);margin-bottom:3px}
+  .fld input,.fld select,.fld textarea{width:100%;font-size:13px}
+  .fld textarea{min-height:64px;resize:vertical;font-family:inherit}
+  .row2{display:flex;gap:10px} .row2>.fld{flex:1}
+  .mact{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+  .btn{border:none;border-radius:8px;padding:9px 16px;font-weight:600;cursor:pointer;font-size:13px}
+  .btn.primary{background:var(--accent);color:#fff} .btn.ghost{background:var(--navy3);color:var(--text);border:1px solid var(--border)}
+  .btn.danger{background:none;color:var(--red);border:1px solid var(--red)}
+  .ck{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text)}
+  .ck input{width:auto}
 </style>
 </head>
 <body>
@@ -53,6 +68,7 @@
     <input id="q" placeholder="Search APAC opportunities…" oninput="render()">
     <select id="country" onchange="render()"><option value="">All countries</option></select>
     <select id="stage" onchange="render()"><option value="">All stages</option></select>
+    <button id="addBtn" onclick="openEdit()" style="display:none;background:var(--accent);border:none;color:#fff;font-weight:600;border-radius:8px;padding:8px 14px;cursor:pointer">＋ Add opportunity</button>
   </div>
   <table>
     <thead><tr>
@@ -69,24 +85,67 @@
     <tbody id="rows"></tbody>
   </table>
 </div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h2 id="modalTitle">Add opportunity</h2>
+    <input type="hidden" id="f_id">
+    <div class="fld"><label>Title</label><input id="f_title"></div>
+    <div class="row2">
+      <div class="fld"><label>Country</label><input id="f_country"></div>
+      <div class="fld"><label>Type</label><input id="f_type" placeholder="Wet-lease / Payload / …"></div>
+    </div>
+    <div class="row2">
+      <div class="fld"><label>Stage</label><input id="f_stage" placeholder="Warm — MOU target"></div>
+      <div class="fld"><label>Status</label><select id="f_status"><option>Pursuing</option><option>Active</option><option>Watch</option><option>Won</option><option>Lost</option></select></div>
+    </div>
+    <div class="row2">
+      <div class="fld"><label>Value (USD, number)</label><input id="f_value_usd" type="number" min="0" step="1000"></div>
+      <div class="fld"><label>Value label (display)</label><input id="f_value_display" placeholder="~$6M est."></div>
+    </div>
+    <div class="row2">
+      <div class="fld"><label>Priority / score (0–130)</label><input id="f_priority" type="number" min="0" max="130"></div>
+      <div class="fld"><label>Owner</label><input id="f_owner" value="Toshihisa Kumazawa"></div>
+    </div>
+    <div class="fld" style="background:var(--navy2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+      <label class="ck"><input type="checkbox" id="f_booked" onchange="document.getElementById('f_payload_kg').disabled=!this.checked"> 📦 Booked payload</label>
+      <div class="fld" style="margin:8px 0 0"><label>Payload booked (kg) — counts toward the Booked Payloads total</label><input id="f_payload_kg" type="number" min="0" step="0.5" disabled></div>
+    </div>
+    <div class="fld"><label>Next action</label><input id="f_next_action"></div>
+    <div class="fld"><label>Description / notes</label><textarea id="f_description"></textarea></div>
+    <div class="mact">
+      <button class="btn danger" id="delBtn" onclick="delOpp()" style="margin-right:auto;display:none">Delete</button>
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" onclick="saveOpp()">Save</button>
+    </div>
+  </div>
+</div>
+
 <script>
-var DATA=[], SORT={f:'priority',dir:-1}, OPEN={};
+var DATA=[], SORT={f:'priority',dir:-1}, OPEN={}, CAN_EDIT=false;
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function usd(n){n=Number(n)||0; if(n>=1e6)return '$'+(n/1e6).toFixed(n%1e6?1:0)+'M'; if(n>=1e3)return '$'+Math.round(n/1e3)+'K'; return n?'$'+n:'—';}
 function stBadge(s){var k=(s||'').toLowerCase();var c=k.indexOf('activ')>=0?'b-active':k.indexOf('watch')>=0?'b-watch':'b-pursuing';return '<span class="badge '+c+'">'+esc(s||'—')+'</span>';}
 function scoreColor(p){p=Number(p)||0;return p>=75?'#22c55e':p>=50?'#e8aa3c':'#8aa0bd';}
 
-fetch('data/apac-opportunities.json?_='+Date.now(),{credentials:'same-origin'})
-  .then(function(r){return r.json();})
-  .then(function(d){
-    DATA=d.opportunities||[];
-    document.getElementById('note').innerHTML='ℹ️ '+esc(d.note||'');
-    var cs=document.getElementById('country'), sg=document.getElementById('stage');
-    Array.from(new Set(DATA.map(function(o){return o.country;}))).sort().forEach(function(c){cs.innerHTML+='<option>'+esc(c)+'</option>';});
-    Array.from(new Set(DATA.map(function(o){return o.stage;}))).sort().forEach(function(s){sg.innerHTML+='<option>'+esc(s)+'</option>';});
-    render();
-  })
-  .catch(function(){document.getElementById('rows').innerHTML='<tr><td colspan="9" class="muted">Could not load APAC opportunities.</td></tr>';});
+function loadData(){
+  return fetch('data/apac-opportunities.json?_='+Date.now(),{credentials:'same-origin'})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      DATA=d.opportunities||[];
+      document.getElementById('note').innerHTML='ℹ️ '+esc(d.note||'');
+      var cs=document.getElementById('country'), sg=document.getElementById('stage');
+      cs.innerHTML='<option value="">All countries</option>'; sg.innerHTML='<option value="">All stages</option>';
+      Array.from(new Set(DATA.map(function(o){return o.country;}))).sort().forEach(function(c){cs.innerHTML+='<option>'+esc(c)+'</option>';});
+      Array.from(new Set(DATA.map(function(o){return o.stage;}))).sort().forEach(function(s){sg.innerHTML+='<option>'+esc(s)+'</option>';});
+      render();
+    })
+    .catch(function(){document.getElementById('rows').innerHTML='<tr><td colspan="9" class="muted">Could not load APAC opportunities.</td></tr>';});
+}
+fetch('/api/me',{credentials:'same-origin'}).then(function(r){return r.ok?r.json():{};}).then(function(me){
+  CAN_EDIT = !!(me && (me.role==='admin'||me.role==='manager'||(me.email||'').toLowerCase()==='toshihisa@exosaero.com'));
+  if(CAN_EDIT){var b=document.getElementById('addBtn');if(b)b.style.display='';}
+}).catch(function(){}).then(loadData);
 
 function filtered(){
   var q=(document.getElementById('q').value||'').toLowerCase();
@@ -128,13 +187,53 @@ function render(){
       '<td class="val" title="'+esc(o.value_display||'')+'">'+usd(o.value_usd)+'</td>'+
       '<td class="muted" style="max-width:280px">'+esc((o.next_action||'').slice(0,110))+((o.next_action||'').length>110?'…':'')+'</td>'+
       '<td class="muted">'+esc(o.owner||'—')+'</td>'+
-      '<td><span class="score" style="color:'+scoreColor(o.priority)+'">'+(o.priority||'—')+'</span></td>'+
+      '<td><span class="score" style="color:'+scoreColor(o.priority)+'">'+(o.priority||'—')+'</span>'+(CAN_EDIT?' <button class="editbtn" title="Edit / book" onclick="event.stopPropagation();openEdit(\''+esc(o.id)+'\')">✎</button>':'')+'</td>'+
     '</tr>';
     if(OPEN[o.id]) out+='<tr class="detail"><td></td><td colspan="8"><strong>'+esc(o.value_display||'')+'</strong><br>'+esc(o.description||'')+'<br><span class="flag">Next: '+esc(o.next_action||'')+'</span></td></tr>';
   });
   document.getElementById('rows').innerHTML=out||'<tr><td colspan="9" class="muted">No matches.</td></tr>';
 }
 function toggle(id){OPEN[id]=!OPEN[id];render();}
+
+// ── editor (admin/manager + Toshi) ──
+function setV(id,v){var e=document.getElementById(id);if(e.type==='checkbox')e.checked=!!v;else e.value=(v==null?'':v);}
+function getV(id){var e=document.getElementById(id);return e.type==='checkbox'?e.checked:e.value;}
+function openEdit(id){
+  var o = id ? DATA.filter(function(x){return x.id===id;})[0] : null;
+  document.getElementById('modalTitle').textContent = o ? ('Edit '+o.id) : 'Add opportunity';
+  setV('f_id', o?o.id:''); setV('f_title', o&&o.title); setV('f_country', o&&o.country);
+  setV('f_type', o&&o.type); setV('f_stage', o&&o.stage); setV('f_status', (o&&o.status)||'Pursuing');
+  setV('f_value_usd', o?o.value_usd:''); setV('f_value_display', o&&o.value_display);
+  setV('f_priority', o?o.priority:''); setV('f_owner', (o&&o.owner)||'Toshihisa Kumazawa');
+  setV('f_booked', o&&o.booked); setV('f_payload_kg', o?o.payload_kg:'');
+  document.getElementById('f_payload_kg').disabled = !(o&&o.booked);
+  setV('f_next_action', o&&o.next_action); setV('f_description', o&&o.description);
+  document.getElementById('delBtn').style.display = o ? '' : 'none';
+  document.getElementById('modalBg').style.display='flex';
+}
+function closeModal(){document.getElementById('modalBg').style.display='none';}
+function saveOpp(){
+  var payload={ id:getV('f_id'), title:getV('f_title'), country:getV('f_country'), type:getV('f_type'),
+    stage:getV('f_stage'), status:getV('f_status'), value_usd:getV('f_value_usd'), value_display:getV('f_value_display'),
+    priority:getV('f_priority'), owner:getV('f_owner'), booked:getV('f_booked'),
+    payload_kg:getV('f_booked')?getV('f_payload_kg'):0, next_action:getV('f_next_action'), description:getV('f_description') };
+  if(!payload.title){alert('Title is required');return;}
+  fetch('/api/apac-opportunities/save',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(r){return r.json();}).then(function(res){
+      if(res.error){alert('Save failed: '+res.error);return;}
+      closeModal(); loadData();
+    }).catch(function(e){alert('Save failed: '+e);});
+}
+function delOpp(){
+  var id=getV('f_id'); if(!id)return;
+  if(!confirm('Delete '+id+'?'))return;
+  fetch('/api/apac-opportunities/delete',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})})
+    .then(function(r){return r.json();}).then(function(res){
+      if(res.error){alert('Delete failed: '+res.error);return;}
+      closeModal(); loadData();
+    }).catch(function(e){alert('Delete failed: '+e);});
+}
+document.getElementById('modalBg').addEventListener('click',function(e){if(e.target===this)closeModal();});
 </script>
 </body>
 </html>
