@@ -52,8 +52,15 @@ def _norm(s): return re.sub(r"[^a-z0-9 ]", "", (s or "").lower()).strip()
 
 def _meta_from(c):
     email = c.get("email") or ""
-    dom = (c.get("domain") or (email.split("@")[-1] if "@" in email else "")).lower().strip()
+    dom = (c.get("domain") or (email.split("@")[-1] if "@" in email else "")).lower().strip().rstrip(".,;:'\" ")
     if not dom or "." not in dom or dom in FREE_MAIL:
+        return None, None
+    # Government domains and directory/contact-list rows are not vendors/investors to vet — excluding
+    # them stops false-positive DD fails and the resulting decision re-nags (e.g. ibc.doi.gov / "DARPA Contact List").
+    nm = (c.get("company") or c.get("organization") or c.get("name") or c.get("contact") or "").lower()
+    if dom.endswith((".gov", ".mil")) or ".mil" in dom or ".gov" in dom or dom.split(".")[-2:] == ["doi", "gov"]:
+        return None, None
+    if any(k in nm for k in ("contact list", "contacts", "open bids", "vendor contact", "gov and vendor")):
         return None, None
     cat = (c.get("category") or ""); tier = str(c.get("tier") or "")
     tags = " ".join(c.get("tags") or []) if isinstance(c.get("tags"), list) else str(c.get("tags") or "")
@@ -208,7 +215,10 @@ def route_decision(company, dom, summary, owner, deep_confirmed=False):
     store = load_json(DECISIONS, {"decisions": []})
     arr = store if isinstance(store, list) else store.setdefault("decisions", [])
     dk = f"dd-fail-{dom}"
-    if any((x.get("dedupeKey") == dk and (x.get("status") or "open") == "open") for x in arr):
+    # Never re-raise once a decision for this domain already exists in ANY state (open OR answered).
+    # (Previously this only skipped OPEN ones, so answering a decision let the next run spawn a new one —
+    #  the re-nag Jon saw on ibc.doi.gov after confirming it twice.)
+    if any(x.get("dedupeKey") == dk for x in arr):
         return
     today = datetime.datetime.now().isoformat(timespec="seconds")
     owner_email = OWNER_EMAIL.get((owner or "").lower().strip(), "jquinn@exosaero.com")
@@ -290,6 +300,23 @@ def screen_one(dom, name, high_stakes=False, owner="Jon"):
             deep["summary"] = (f"Quick scan flagged FAIL, but deep-dive did NOT confirm "
                                f"(now {deep['verdict'].upper()}) — " + deep["summary"])
         return deep
+
+    # A quick CAUTION is also UNCONFIRMED: caution = thin/unclear info, which a deeper scan
+    # (more sources + stricter rubric) can resolve to a clean PASS or harden to a fail. Escalate
+    # it the same way as a fail so cautions self-clear instead of parking on the list forever.
+    if r["verdict"] == "caution" and not high_stakes:
+        deep = _screen_pass(dom, name, deep=True)
+        deep["escalated"] = True
+        deep["initial_verdict"] = "caution"
+        deep["initial_summary"] = r["summary"]
+        deep["_searches"] = r.get("_searches", 1) + deep.get("_searches", 3)
+        if deep["verdict"] == "pass":
+            deep["summary"] = "Quick scan flagged CAUTION, but deep-dive CLEARED it (now PASS) — " + deep["summary"]
+        elif deep["verdict"] == "fail":
+            deep["summary"] = "Quick scan flagged CAUTION; deep-dive escalated to FAIL — " + deep["summary"]
+        else:
+            deep["summary"] = "Deep-dive re-screen still CAUTION — " + deep["summary"]
+        return deep
     return r
 
 def write_record(reg, dom, name, r, owner="Jon"):
@@ -320,6 +347,11 @@ def needs_dd(rec):
     if rec.get("status") in (None,"pending","error"): return True
     if rec.get("status") == "pass" and rec.get("confidence") == "low": return True
     if (rec.get("status") == "fail" and rec.get("source") == "tavily+ollama"
+            and rec.get("depth") != "deep" and not rec.get("escalated")):
+        return True
+    # A shallow CAUTION was never deep-verified -> re-screen through the escalation gate to
+    # clear it to pass or confirm it (keeps the worklist from parking unresolved cautions).
+    if (rec.get("status") == "caution" and rec.get("source") == "tavily+ollama"
             and rec.get("depth") != "deep" and not rec.get("escalated")):
         return True
     try:
