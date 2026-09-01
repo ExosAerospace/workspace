@@ -237,7 +237,7 @@ def main():
              "category": "Task", "source": "task-note-command", "tags": ["note-routed", "needs-attention"],
              "description": f"@Exobot note on task #{taskid} (by {owner_of_note}): {cmd}. Exo to review and act."})
         newid = nid[0]["id"] if nid else "?"
-        reply(taskid, f"✅ Exo: noted — queued as #{newid} for review.")
+        reply(taskid, f"✅ Exo: got your question — I'll post the answer here on this task shortly (ref #{newid}).")
         logline(f"triage {aid} task {taskid} -> #{newid}"); acted += 1
 
     state["seen"] = list(seen)[-4000:]  # bound growth
