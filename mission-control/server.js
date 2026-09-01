@@ -1315,10 +1315,22 @@ const server = http.createServer((req, res) => {
   // member role: block deals, templates, admin, dashboard endpoints
   const session = getSession(req);
   if (session && session.role === 'member') {
-    const blockedForMember = ['/api/deals', '/api/templates', '/api/admin', '/api/dashboard', '/api/exosops'];
-    if (blockedForMember.some(p => req.url.startsWith(p))) {
+    const fp = req.url.split('?')[0];
+    // API + data endpoints members may not read. Includes the sensitive pages' data sources so
+    // the block is real access control, not just a hidden nav button: HR directory, CTD DD (M&A
+    // due-diligence), and Gov/DIB Readiness.
+    const blockedForMember = ['/api/deals', '/api/templates', '/api/admin', '/api/dashboard',
+      '/api/exosops', '/api/hr', '/data/ctd-dd.json', '/data/gov-readiness.json'];
+    if (blockedForMember.some(p => fp.startsWith(p))) {
       res.writeHead(403, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Forbidden — upgrade your role to access this' }));
+      res.end(JSON.stringify({ error: 'Forbidden — you do not have access to this' }));
+      return;
+    }
+    // Sensitive pages members may not open even by direct URL (nav buttons already hidden).
+    const blockedPages = ['/ctd-dd', '/ctd-dd.html', '/hr', '/hr.html', '/gov-readiness', '/gov-readiness.html'];
+    if (blockedPages.includes(fp)) {
+      res.writeHead(302, { 'Location': '/' });
+      res.end();
       return;
     }
   }
