@@ -75,7 +75,8 @@ def scan(since_days=5):
             if mid in seen: continue
             seen.add(mid)
             name, addr, snip = embedded_sender(full_text(msg))
-            out.append({"date": msg.get("Date", ""), "subject": subj,
+            out.append({"id": (msg.get("Message-ID") or mid).strip(),
+                        "date": msg.get("Date", ""), "subject": subj,
                         "forwarded_from": addr or "(unparsed — read manually)",
                         "forwarded_name": name or "", "snippet": snip})
     m.logout()
