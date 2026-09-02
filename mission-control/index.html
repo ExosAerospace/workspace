@@ -778,20 +778,20 @@
 
   <!-- Add update bar (always visible at bottom) -->
   <div class="add-update">
-    <button type="button" class="cmdhelp-btn" title="@Exobot commands" onclick="toggleCmdHelp(event)">?</button>
+    <button type="button" class="cmdhelp-btn" title="@exo commands" onclick="toggleCmdHelp(event)">?</button>
     <div class="cmdhelp-pop" id="cmdHelpPop">
-      <h4>@Exobot commands</h4>
-      <div class="row">Type <code>@Exobot</code> plus a command in a note. Exo acts on this task within ~2 min and replies with a ✅.</div>
-      <div class="row"><code>@Exobot done</code> — mark this task Done</div>
-      <div class="row"><code>@Exobot reopen</code> — reopen it</div>
-      <div class="row"><code>@Exobot block</code> / <code>unblock</code> — set / clear Blocked</div>
-      <div class="row"><code>@Exobot reassign to Neil</code> — hand it off (also "have Lizi take it")</div>
-      <div class="row"><code>@Exobot urgent</code> — raise priority</div>
-      <div class="row"><code>@Exobot order a new servo</code> — any request routes to the right owner</div>
-      <div class="row"><code>@Exobot meeting prep — who's attending</code> — walk-in brief (background, open questions, constraints, timed agenda, next steps, contacts), emailed to you</div>
-      <div class="muted">A plain note without <code>@Exobot</code> just logs — it won't trigger any action.</div>
+      <h4>@exo commands</h4>
+      <div class="row">Type <code>@exo</code> plus a command in a note. Exo acts on this task within ~2 min and replies with a ✅.</div>
+      <div class="row"><code>@exo done</code> — mark this task Done</div>
+      <div class="row"><code>@exo reopen</code> — reopen it</div>
+      <div class="row"><code>@exo block</code> / <code>unblock</code> — set / clear Blocked</div>
+      <div class="row"><code>@exo reassign to Neil</code> — hand it off (also "have Lizi take it")</div>
+      <div class="row"><code>@exo urgent</code> — raise priority</div>
+      <div class="row"><code>@exo order a new servo</code> — any request routes to the right owner</div>
+      <div class="row"><code>@exo meeting prep — who's attending</code> — walk-in brief (background, open questions, constraints, timed agenda, next steps, contacts), emailed to you</div>
+      <div class="muted"><code>@exobot</code> still works too. A plain note without <code>@exo</code> just logs — it won't trigger any action.</div>
     </div>
-    <textarea id="newUpdateText" placeholder="Add an update or note...  (tip: start with @Exobot to give a command — click ? )" oninput="autoGrow(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();postUpdate()}"></textarea>
+    <textarea id="newUpdateText" placeholder="Add an update or note...  (tip: start with @exo to give a command — click ? )" oninput="autoGrow(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();postUpdate()}"></textarea>
     <button class="btn small" onclick="postUpdate()">Post</button>
   </div>
   <script>
@@ -2126,8 +2126,11 @@ document.addEventListener('keydown', e => {
 let pendingTaskOpen = new URLSearchParams(location.search).get('task') || '';
 loadTasks(true);
 
-// Ask Exobot is now a GLOBAL widget (mission-control/exobot-widget.js, auto-injected
+// Ask Exobot is now a GLOBAL widget (see exobot-widget in mission-control, auto-injected
 // on every page by the server) so the conversation persists across navigation.
+// NOTE: do NOT write the literal script path here — the server skips injecting the
+// widget on any page that already contains that path string, which would silently
+// remove the chat bubble from this page (root cause of the 2026-09-01 "missing chat").
 </script>
 
 </body>

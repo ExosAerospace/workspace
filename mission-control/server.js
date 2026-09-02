@@ -944,19 +944,19 @@ h1{font-size:28px;margin-bottom:8px}h1 span{color:#0080ff}
 <li><strong>Step 4:</strong> Use the "+ Add" bar at the top to create new tasks</li>
 <li><strong>Step 5:</strong> Drag and drop tasks between columns, or use quick-move buttons</li>
 </ul></div>
-<div class="card"><h2>Commanding Exo with @Exobot</h2>
-<p style="color:#c8d6e5;font-size:14px;line-height:1.6;margin-bottom:14px">You can tell Exo what to do right from a task. In the <strong>"Add an update or note…"</strong> box at the bottom of a task, type <strong>@Exobot</strong> followed by a command. Exo acts on that task within about two minutes and posts a ✅ confirmation note back. Click the small <strong>?</strong> in the top-right of that box to see the list any time.</p>
+<div class="card"><h2>Commanding Exo with @exo</h2>
+<p style="color:#c8d6e5;font-size:14px;line-height:1.6;margin-bottom:14px">You can tell Exo what to do right from a task. In the <strong>"Add an update or note…"</strong> box at the bottom of a task, type <strong>@exo</strong> followed by a command. Exo acts on that task within about two minutes and posts a ✅ confirmation note back. Click the small <strong>?</strong> in the top-right of that box to see the list any time. (<strong>@Exobot</strong> still works too.)</p>
 <ul>
-<li><strong>@Exobot done</strong> - mark the task Done (also close / complete / paid)</li>
-<li><strong>@Exobot reopen</strong> - move it back to To Do</li>
-<li><strong>@Exobot block</strong> / <strong>unblock</strong> - set or clear Blocked</li>
-<li><strong>@Exobot reassign to Neil</strong> - hand it to someone (or "have Lizi take it", "give to Kyle")</li>
-<li><strong>@Exobot urgent</strong> - raise the task's priority</li>
-<li><strong>@Exobot order a new release servo</strong> - any plain-English request is routed to the right owner automatically; you don't need to know who handles it</li>
+<li><strong>@exo done</strong> - mark the task Done (also close / complete / paid)</li>
+<li><strong>@exo reopen</strong> - move it back to To Do</li>
+<li><strong>@exo block</strong> / <strong>unblock</strong> - set or clear Blocked</li>
+<li><strong>@exo reassign to Neil</strong> - hand it to someone (or "have Lizi take it", "give to Kyle")</li>
+<li><strong>@exo urgent</strong> - raise the task's priority</li>
+<li><strong>@exo order a new release servo</strong> - any plain-English request is routed to the right owner automatically; you don't need to know who handles it</li>
 </ul>
 <div class="rules"><h3>Good to know</h3><ul>
-<li>A note <strong>without</strong> @Exobot just logs to the task - it will not trigger any action, so you can comment freely.</li>
-<li>@Exobot also works in a <strong>Decision</strong> note, and by email to <strong>exosmc@proton.me</strong> with "@Exobot" and a request.</li>
+<li>A note <strong>without</strong> @exo (or @Exobot) just logs to the task - it will not trigger any action, so you can comment freely.</li>
+<li>@exo also works in a <strong>Decision</strong> note, and by email to <strong>exosmc@proton.me</strong> with "@exo" and a request. <strong>@Exobot</strong> remains valid everywhere @exo is.</li>
 <li>Anything external or sensitive is drafted and held for approval, never sent automatically.</li>
 </ul></div></div>
 <a href="/" class="cta">Go to Mission Control</a>
