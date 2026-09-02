@@ -305,14 +305,29 @@ def _screen_pass(dom, name, deep=False):
     searches (advanced Tavily) and the stricter, name-specific classify rubric."""
     findings, srcs = tavily(f'{name} {dom} company overview: what they do, leadership, funding, headquarters, legitimacy')
     n_searches = 1
+    adverse_hay = ""
     if deep:
         try:
             adv, u2 = tavily(f'{name} {dom} lawsuit fraud investigation SEC regulatory sanction controversy', depth="advanced")
             own, u3 = tavily(f'{name} {dom} owner parent company acquisition foreign ownership headquarters country')
             findings += "\n\n[ADVERSE MEDIA]\n" + adv + "\n\n[OWNERSHIP]\n" + own
             srcs = (srcs + u2 + u3)[:8]; n_searches = 3
+            adverse_hay = adv + " " + " ".join(u2)   # the evidence a FAIL rests on
         except Exception: pass
     v, s, conf = classify(name, dom, findings, deep=deep)
+    # NAME-CONFUSION GUARD: downgrade a model FAIL to caution (human review) when the fail evidence
+    # never references the entity's OWN domain label — i.e. a namesake collision (e.g. Scentience vs
+    # 'Sentient'/'Sentient Technologies'). Prevents silently blocking a legitimate counterparty on
+    # adverse media about a different, similarly-named company. Hard fails (SAM/OFAC/failed-registry)
+    # never reach here — they short-circuit before classify.
+    if v == "fail":
+        label = re.sub(r"[^a-z0-9]", "", re.sub(r"^www\.", "", (dom or "").lower()).split(".")[0])
+        evidence = adverse_hay if deep else findings
+        hay = re.sub(r"[^a-z0-9]", "", (evidence or "").lower())
+        if len(label) >= 5 and label not in hay:
+            s = ("[name-confusion guard] " + s +
+                 f" — adverse findings did not reference the entity's own domain ({dom}); routed to HUMAN REVIEW instead of auto-fail.")
+            v = "caution"; conf = "low"
     rec = {"verdict":v,"summary":s,"source":"tavily+ollama","confidence":conf,
            "sources":srcs,"depth":("deep" if deep else "quick"),"_searches":n_searches}
     # On a deep screen of an investor-looking firm, also validate whether it's an ACTIVE space/tech
