@@ -1,7 +1,7 @@
 {
  "meta": {
   "title": "Exos Process & Procedures — Master Register",
-  "updated": "2026-08-30",
+  "updated": "2026-09-02",
   "source": "Lizi turnover → Exo (MC management); schema per Exos Procedures Master List",
   "template": "Exos-US Procedure Template",
   "doc_control": "STATUS on each doc; records in the Exos Work Management System (Mission Control / ERP)",
@@ -1220,6 +1220,22 @@
    "remarks": "Approved under the authority of John Quinn, Cofounder & CEO. Bright-line, tiered rule so personnel do not have to judgment-call each prompt. Reflects the Feb 2, 2026 SpaceX acquisition of xAI (Grok is now a SpaceX product) and the availability of enterprise Zero Data Retention. Grok is NOT FedRAMP-authorized as of this revision — no federal/CUI data path. Reassess if xAI achieves FedRAMP High with no-train guarantees.",
    "files": [
     "08-security-cui/EXOS-SEC-001-0_AI_Tool-Use_Policy_(Tiered:_Local_-_Grok-ZDR_-_Never).docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Security / CUI",
+   "area_id": "08-security-cui",
+   "procedure": "Monthly DD-Blocked Senders — Outlook Rule Update",
+   "doc_no": "IT-002",
+   "rev": "0",
+   "status": "Approved",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "All Employees / Exo",
+   "remarks": "The blocklist is regenerated monthly from the Exos DD engine and emailed to all employees. Non-technical / no CUI or export-controlled data; releasable to international staff.",
+   "files": [
+    "08-security-cui/IT-002_Monthly_DD-Blocked_Senders_—_Outlook_Rule_Update.docx"
    ],
    "file_count": 1
   }
