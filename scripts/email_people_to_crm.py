@@ -59,15 +59,27 @@ def keep_addr(a):
     a = (a or "").lower().strip()
     return bool(a) and "@" in a and not is_own(a) and not SKIP.search(a)
 
+def _html_to_text(h):
+    t = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", h)
+    t = re.sub(r"(?s)<[^>]+>", " ", t)
+    for a, b in (("&nbsp;", " "), ("&amp;", "&"), ("&lt;", "<"), ("&gt;", ">"), ("&#39;", "'"), ("&quot;", '"')):
+        t = t.replace(a, b)
+    return re.sub(r"[ \t]*\n\s*", "\n", re.sub(r"[ \t]+", " ", t)).strip()
+
 def get_body(msg):
-    if msg.is_multipart():
-        for part in msg.walk():
-            if part.get_content_type() == "text/plain" and "attachment" not in str(part.get("Content-Disposition")):
-                try: return part.get_payload(decode=True).decode(part.get_content_charset() or "utf-8", "ignore")
-                except Exception: pass
-        return ""
-    try: return msg.get_payload(decode=True).decode(msg.get_content_charset() or "utf-8", "ignore")
-    except Exception: return ""
+    """Prefer text/plain; fall back to stripped text/html (most modern email is HTML-only)."""
+    plain, html = "", ""
+    parts = msg.walk() if msg.is_multipart() else [msg]
+    for part in parts:
+        ct = part.get_content_type()
+        if "attachment" in str(part.get("Content-Disposition") or ""): continue
+        if ct not in ("text/plain", "text/html"): continue
+        try: payload = part.get_payload(decode=True).decode(part.get_content_charset() or "utf-8", "ignore")
+        except Exception: continue
+        if ct == "text/plain" and not plain: plain = payload
+        elif ct == "text/html" and not html: html = payload
+    if plain.strip(): return plain
+    return _html_to_text(html) if html else ""
 
 
 # ---- Supabase ----
