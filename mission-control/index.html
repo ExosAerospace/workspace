@@ -600,7 +600,7 @@
     <option value="Jon+Exo">Both</option>
   </select>
   <select id="newState">
-    <option value="Blocked">To Do</option>
+    <option value="To Do">To Do</option>
     <option value="In Progress">In Progress</option>
     <option value="Done">Done</option>
   </select>
@@ -617,7 +617,7 @@
       <div class="col-title">To Do</div>
       <span class="col-count" id="count-blocked">0</span>
     </div>
-    <div class="col-body" id="col-blocked" ondragover="dragOver(event,'Blocked')" ondrop="drop(event,'Blocked')" ondragleave="dragLeave(event)"></div>
+    <div class="col-body" id="col-blocked" ondragover="dragOver(event,'To Do')" ondrop="drop(event,'To Do')" ondragleave="dragLeave(event)"></div>
   </div>
 
   <div class="column" data-col="progress">
@@ -719,7 +719,7 @@
           <div>
             <label>State</label>
             <select id="editState">
-              <option value="Blocked">To Do</option>
+              <option value="To Do">To Do</option>
               <option value="In Progress">In Progress</option>
               <option value="Done">Done</option>
             </select>
@@ -784,7 +784,6 @@
       <div class="row">Type <code>@exo</code> plus a command in a note. Exo acts on this task within ~2 min and replies with a ✅.</div>
       <div class="row"><code>@exo done</code> — mark this task Done</div>
       <div class="row"><code>@exo reopen</code> — reopen it</div>
-      <div class="row"><code>@exo block</code> / <code>unblock</code> — set / clear Blocked</div>
       <div class="row"><code>@exo reassign to Neil</code> — hand it off (also "have Lizi take it")</div>
       <div class="row"><code>@exo urgent</code> — raise priority</div>
       <div class="row"><code>@exo order a new servo</code> — any request routes to the right owner</div>
@@ -895,7 +894,7 @@ function personCanon(raw){
   var k = o.toLowerCase();
   return PERSON_ALIAS[k] || o;
 }
-const ACTIVE_STATES = ['To Do','In Progress','Queued','Blocked','Open'];
+const ACTIVE_STATES = ['To Do','In Progress','Queued','To Do','Open'];
 function applyPeopleParams(){
   const p = new URLSearchParams(location.search);
   urlPerson = p.get('person') || '';
@@ -903,7 +902,7 @@ function applyPeopleParams(){
   const bar = document.getElementById('drillBar');
   if(!bar) return;
   if(urlPerson){
-    const flLabel = {open:'Open',overdue:'Overdue',next7:'Due ≤ 7 days',high:'High priority',blocked:'Blocked',inprog:'In progress'}[urlFlt] || 'All';
+    const flLabel = {open:'Open',overdue:'Overdue',next7:'Due ≤ 7 days',high:'High priority',blocked:'To Do',inprog:'In progress'}[urlFlt] || 'All';
     bar.style.display='flex';
     bar.innerHTML = '<span>📊 Team Performance drill-through — <strong>'+urlPerson+'</strong> · '+flLabel+
       '</span> <a href="#" onclick="clearDrill();return false;" style="color:#fff;text-decoration:underline">clear filter ✕</a>'+
@@ -985,16 +984,16 @@ async function apiFetch(path, opts = {}) {
 
 // ── STATE NORMALIZATION ──
 function normalizeState(s) {
-  if (!s) return 'Blocked';
+  if (!s) return 'To Do';
   const lower = s.toLowerCase();
   if (lower === 'done') return 'Done';
   if (lower === 'in progress') return 'In Progress';
-  if (lower === 'to do') return 'Blocked';
-  return 'Blocked';
+  if (lower === 'to do') return 'To Do';
+  return 'To Do';
 }
-// User-facing label: the internal 'Blocked' state IS the "To Do" (not-started) column. Keep the
-// internal key stable ('Blocked') so all state logic works; only the DISPLAY reads "To Do".
-function stateLabel(s) { return (s === 'Blocked' || String(s || '').toLowerCase() === 'to do') ? 'To Do' : s; }
+// User-facing label: the internal 'To Do' state IS the "To Do" (not-started) column. Keep the
+// internal key stable ('To Do') so all state logic works; only the DISPLAY reads "To Do".
+function stateLabel(s) { return (s === 'To Do' || String(s || '').toLowerCase() === 'to do') ? 'To Do' : s; }
 
 function colIdForState(state) {
   if (state === 'Done') return 'col-done';
@@ -1041,7 +1040,7 @@ async function loadTasks(showFeedback = false) {
       data = (jsonData.tasks || []).map((t, idx) => ({
         id: t.id || idx,
         title: t.title || '',
-        state: t.state === 'Ready' ? 'Blocked' : t.state,  // map Ready → Blocked col
+        state: t.state === 'Ready' ? 'To Do' : t.state,  // map Ready → To Do col
         owner: t.owner || 'Exo',
         due_date: t.due_date || null,
         priority: t.priority || 0,
@@ -1096,7 +1095,7 @@ async function loadTasks(showFeedback = false) {
 // ── STATS ──
 function renderStats() {
   const total = tasks.length;
-  const blocked = tasks.filter(t => t.state === 'Blocked').length;
+  const blocked = tasks.filter(t => t.state === 'To Do').length;
   const progress = tasks.filter(t => t.state === 'In Progress').length;
   const done = tasks.filter(t => t.state === 'Done').length;
   const now = new Date();
@@ -1158,7 +1157,7 @@ function getFilteredTasks() {
     Array.isArray(t.tags) && t.tags.map(x => String(x).toLowerCase()).includes('project'));
   else if (currentFilter === 'task') filtered = filtered.filter(t =>
     !(Array.isArray(t.tags) && t.tags.map(x => String(x).toLowerCase()).includes('project')));
-  else if (currentFilter === 'blocked') filtered = filtered.filter(t => t.state === 'Blocked');
+  else if (currentFilter === 'blocked') filtered = filtered.filter(t => t.state === 'To Do');
   else if (currentFilter === 'in_progress') filtered = filtered.filter(t => t.state === 'In Progress');
   else if (currentFilter === 'done') filtered = filtered.filter(t => t.state === 'Done');
   else if (currentFilter === 'overdue') filtered = filtered.filter(t =>
@@ -1201,7 +1200,7 @@ function getFilteredTasks() {
     const active = t => ACTIVE_STATES.includes(t.state);
     if (urlFlt === 'open') filtered = filtered.filter(active);
     else if (urlFlt === 'inprog') filtered = filtered.filter(t => t.state === 'In Progress');
-    else if (urlFlt === 'blocked') filtered = filtered.filter(t => t.state === 'Blocked');
+    else if (urlFlt === 'blocked') filtered = filtered.filter(t => t.state === 'To Do');
     else if (urlFlt === 'high') filtered = filtered.filter(t => active(t) && (t.priority || 0) >= 80);
     else if (urlFlt === 'overdue') filtered = filtered.filter(t => active(t) && t.due_date && new Date(t.due_date).getTime() < now);
     else if (urlFlt === 'next7') filtered = filtered.filter(t => active(t) && t.due_date && new Date(t.due_date).getTime() >= now && new Date(t.due_date).getTime() <= now + 7 * day);
@@ -1230,11 +1229,11 @@ function setFilter(f) {
 // ── RENDER ──
 function render() {
   const cols = {
-    'Blocked':     document.getElementById('col-blocked'),
+    'To Do':     document.getElementById('col-blocked'),
     'In Progress': document.getElementById('col-progress'),
     'Done':        document.getElementById('col-done'),
   };
-  const counts = { 'Blocked': 0, 'In Progress': 0, 'Done': 0 };
+  const counts = { 'To Do': 0, 'In Progress': 0, 'Done': 0 };
   Object.values(cols).forEach(c => { c.innerHTML = ''; });
 
   const filtered = getFilteredTasks();
@@ -1262,7 +1261,7 @@ function render() {
       || (msOf(b) - msOf(a)) || (b.priority || 0) - (a.priority || 0) || (b.id || 0) - (a.id || 0)));
 
   sorted.forEach(task => {
-    const col = cols[task.state] || cols['Blocked'];
+    const col = cols[task.state] || cols['To Do'];
     col.appendChild(buildCard(task));
     counts[task.state] = (counts[task.state] || 0) + 1;
   });
@@ -1271,7 +1270,7 @@ function render() {
     if (col.children.length === 0) col.innerHTML = '<div class="empty-col">No tasks here</div>';
   });
 
-  document.getElementById('count-blocked').textContent  = counts['Blocked'] || 0;
+  document.getElementById('count-blocked').textContent  = counts['To Do'] || 0;
   document.getElementById('count-progress').textContent = counts['In Progress'] || 0;
   document.getElementById('count-done').textContent     = counts['Done'] || 0;
 }
@@ -1396,13 +1395,13 @@ function buildCard(task) {
 
   // Move buttons
   let moveBtns = '';
-  if (task.state === 'Blocked') {
+  if (task.state === 'To Do') {
     moveBtns = `
       <button class="move-btn" onclick="event.stopPropagation();moveTask('${task.id}','In Progress')">In Progress</button>
       <button class="move-btn done-btn" onclick="event.stopPropagation();moveTask('${task.id}','Done')">Done</button>`;
   } else if (task.state === 'In Progress') {
     moveBtns = `
-      <button class="move-btn" onclick="event.stopPropagation();moveTask('${task.id}','Blocked')">To Do</button>
+      <button class="move-btn" onclick="event.stopPropagation();moveTask('${task.id}','To Do')">To Do</button>
       <button class="move-btn done-btn" onclick="event.stopPropagation();moveTask('${task.id}','Done')">Done</button>`;
   } else {
     moveBtns = `
@@ -1485,7 +1484,7 @@ function openEdit(id) {
   const badgeEl = document.getElementById('panelStateBadge');
   badgeEl.textContent = stateLabel(task.state);
   badgeEl.className = 'panel-state-badge ' + (
-    task.state === 'Blocked' || task.state === 'Held' ? 'state-blocked' :
+    task.state === 'To Do' || task.state === 'Held' ? 'state-blocked' :
     task.state === 'In Progress' ? 'state-progress' : 'state-done'
   );
 
@@ -1502,7 +1501,7 @@ function openEdit(id) {
   document.getElementById('editDesc').value = task.description || '';
   autoGrow(document.getElementById('editDesc'));
   document.getElementById('editOwner').value = task.owner || 'Jon';
-  document.getElementById('editState').value = task.state || 'Blocked';
+  document.getElementById('editState').value = task.state || 'To Do';
   document.getElementById('editDue').value = task.due_date ? task.due_date.slice(0, 10) : '';
   // Show the EFFECTIVE priority: if the task is pinned, the pin value IS the priority the board
   // uses; otherwise the raw priority field. Remember it so save can tell if the user changed it.
@@ -1768,7 +1767,7 @@ async function saveEdit() {
       const badgeEl = document.getElementById('panelStateBadge');
       badgeEl.textContent = stateLabel(updated.state);
       badgeEl.className = 'panel-state-badge ' + (
-        updated.state === 'Blocked' || updated.state === 'Held' ? 'state-blocked' :
+        updated.state === 'To Do' || updated.state === 'Held' ? 'state-blocked' :
         updated.state === 'In Progress' ? 'state-progress' : 'state-done'
       );
       const ownerEl = document.getElementById('panelOwnerBadge');

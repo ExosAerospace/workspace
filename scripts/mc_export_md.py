@@ -36,17 +36,10 @@ def render_mc(today):
     if not tasks:
         return None  # never overwrite the board file with an empty/failed Supabase read
     opent = [t for t in tasks if (t.get("state") or "") not in DONE]
-    blocked = [t for t in opent if t.get("state") == "Blocked"]
     L = [f"# Exos Mission Control (LIVE from Supabase — do not hand-edit)",
          f"_Generated {today:%Y-%m-%d %H:%M} from Supabase tasks. Source of truth = Supabase, NOT this file._",
-         "", f"**Open:** {len(opent)} | **Blocked:** {len(blocked)} | **Total:** {len(tasks)}", ""]
+         "", f"**Open:** {len(opent)} | **Total:** {len(tasks)}", ""]
 
-    L.append("## Blocked (waiting on Jon)")
-    for t in blocked[:25]:
-        d = parse_d(t.get("due_date")); due = f" (due {d:%b %-d})" if d else ""
-        L.append(f"- #{t['id']} {(t.get('title') or '')[:110]}{due}")
-    if not blocked: L.append("- (none)")
-    L.append("")
 
     td = today.date() if isinstance(today, datetime.datetime) else today
     horizon = td + datetime.timedelta(days=30)

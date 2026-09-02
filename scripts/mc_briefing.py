@@ -92,7 +92,6 @@ def main():
     tasks = q("tasks?select=id,title,owner,state,priority,due_date,category,completed_at,updated_at&order=priority.desc&limit=1000")
 
     open_tasks = [t for t in tasks if (t.get("state") or "") not in DONE]
-    blocked = [t for t in open_tasks if t.get("state") == "Blocked"]
 
     stale_cut = today - datetime.timedelta(days=30)
     dated = []       # actionable: due within last 30d .. +horizon
@@ -119,7 +118,7 @@ def main():
 
     L = []
     L.append(f"📋 Mission Control Briefing — {today:%A, %B %-d, %Y} (live Supabase board)")
-    L.append(f"Open: {len(open_tasks)} | Blocked: {len(blocked)} | Due ≤{HORIZON_DAYS}d: {len(dated)}")
+    L.append(f"Open: {len(open_tasks)} | Due ≤{HORIZON_DAYS}d: {len(dated)}")
     L.append("")
 
     L.append("🔴 DEADLINES (next 14 days)")
@@ -133,16 +132,6 @@ def main():
         L.append("  (none dated in window)")
     if stale:
         L.append(f"  … plus {len(stale)} aged tasks overdue >30d (stale — need close/re-date, not real deadlines)")
-    L.append("")
-
-    L.append("⛔ BLOCKED — waiting on you")
-    if blocked:
-        for t in blocked[:12]:
-            d = parse_due(t.get("due_date"))
-            due = f" (due {d:%b %-d})" if d else ""
-            L.append(f"  • {(t.get('title') or '')[:90]}{due}")
-    else:
-        L.append("  (none)")
     L.append("")
 
     if recent:
