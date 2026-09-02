@@ -35,7 +35,16 @@
     + 'color:var(--text,#e8edf5);padding:9px 11px;font-size:13px;font-family:inherit;outline:none;max-height:100px}'
     + '.ec-foot textarea:focus{border-color:#60a5fa}'
     + '#ecSendBtn{background:#2563eb;color:#fff;border:none;border-radius:9px;width:42px;font-size:16px;cursor:pointer}'
-    + '#ecSendBtn:disabled{opacity:.5;cursor:default}';
+    + '#ecSendBtn:disabled{opacity:.5;cursor:default}'
+    + '.ec-help{background:none;border:none;color:var(--text2,#8aa0bd);font-size:14px;font-weight:700;cursor:pointer;line-height:1}'
+    + '.ec-help:hover{color:#fff}'
+    + '#ecHelpPop{position:absolute;top:46px;right:10px;width:300px;max-width:90%;background:#0f1e38;'
+    + 'border:1px solid var(--border,#2a3f63);border-radius:10px;padding:12px 14px;box-shadow:0 10px 28px rgba(0,0,0,.5);z-index:90;display:none}'
+    + '#ecHelpPop.show{display:block}'
+    + '#ecHelpPop h4{font-size:11px;color:#60a5fa;margin:0 0 8px;text-transform:uppercase;letter-spacing:.04em}'
+    + '#ecHelpPop .row{padding:3px 0;font-size:12px;line-height:1.45;color:#c8d6e5}'
+    + '#ecHelpPop code{background:#162a4a;color:#ffb27a;padding:1px 5px;border-radius:4px;font-size:11px;white-space:nowrap}'
+    + '#ecHelpPop .muted{color:#7a8aa0;font-size:10.5px;margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:7px}';
 
   function boot() {
     if (document.getElementById('exobotFab')) return; // never double-inject
@@ -45,8 +54,16 @@
       '<div id="exobotFab" title="Ask Exobot">💬<span id="ecBadge"></span></div>'
       + '<div id="exobotChat">'
       + '<div class="ec-head"><span>🤖 Ask Exobot <span class="ec-sub">private · follows you across pages · ask several at once</span></span>'
-      + '<span><button class="ec-x" id="ecClear" title="Clear conversation">🗑</button>'
+      + '<span><button class="ec-help" id="ecHelp" title="What can I ask?">?</button>'
+      + '<button class="ec-x" id="ecClear" title="Clear conversation">🗑</button>'
       + '<button class="ec-x" id="ecClose">✕</button></span></div>'
+      + '<div id="ecHelpPop">'
+      + '<h4>What you can ask</h4>'
+      + '<div class="row"><b>Ask anything</b> — or tell me to act: <code>add a task</code>, <code>run DD on [company]</code>, <code>find the [doc]</code>, <code>draft an email to…</code></div>'
+      + '<div class="row"><b>Follows you across pages</b> — ask here, navigate away, the reply lands back in this chat.</div>'
+      + '<div class="row"><b>Ask several at once</b> — a new question runs in parallel while another is still working.</div>'
+      + '<div class="muted">Private to you. History is kept on this device — 🗑 clears it.</div>'
+      + '</div>'
       + '<div class="ec-body" id="ecBody"></div>'
       + '<div class="ec-foot">'
       + '<textarea id="ecInput" rows="1" placeholder="Ask Exobot…  (Enter to send, Shift+Enter for newline)"></textarea>'
@@ -54,6 +71,14 @@
     document.body.appendChild(wrap);
     document.getElementById('exobotFab').addEventListener('click', function () { toggle(true); });
     document.getElementById('ecClose').addEventListener('click', function () { toggle(false); });
+    document.getElementById('ecHelp').addEventListener('click', function (e) {
+      e.stopPropagation(); document.getElementById('ecHelpPop').classList.toggle('show');
+    });
+    document.addEventListener('click', function (e) {
+      var pop = document.getElementById('ecHelpPop');
+      if (pop && pop.classList.contains('show') && !pop.contains(e.target)
+          && e.target.id !== 'ecHelp') pop.classList.remove('show');
+    });
     document.getElementById('ecClear').addEventListener('click', clearConv);
     document.getElementById('ecSendBtn').addEventListener('click', send);
     document.getElementById('ecInput').addEventListener('keydown', function (e) {
@@ -77,7 +102,8 @@
       if (!hist.length && !pending.length) greet();
       var b = document.getElementById('ecBody'); if (b) b.scrollTop = b.scrollHeight;
       save(OPENK, true);
-    } else { p.classList.remove('open'); fab.style.display = ''; save(OPENK, false); }
+    } else { p.classList.remove('open'); fab.style.display = ''; save(OPENK, false);
+      var hp = document.getElementById('ecHelpPop'); if (hp) hp.classList.remove('show'); }
   }
   function pushHist(m) { hist.push(m); if (hist.length > 120) hist = hist.slice(-120); save(HIST, hist); }
   function clearConv() { hist = []; pending = []; save(HIST, hist); save(PEND, pending); unread = 0; badge(0); render(); }
