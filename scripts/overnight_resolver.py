@@ -282,14 +282,14 @@ def held_sync(tasks, open_decs, resolved_ids, apply):
             t["state"] = "Held"
             newly_held.append(f"[{tid}] {(t.get('title') or '')[:56]} → HELD (decision {dec.get('id')})")
         elif state == "Held" and not dec:
-            note = f" [UNHELD {now[:10]} by overnight-resolver: linked decision closed; reopened to Blocked.]"
+            note = f" [UNHELD {now[:10]} by overnight-resolver: linked decision closed; reopened to To Do.]"
             if apply:
                 try:
-                    sb_patch(t["id"], {"state": "Blocked", "description": (t.get("description") or "") + note})
+                    sb_patch(t["id"], {"state": "To Do", "description": (t.get("description") or "") + note})
                 except Exception as e:
                     logline(f"held-revert PATCH failed for {tid}: {e}"); continue
-            t["state"] = "Blocked"
-            reverted.append(f"[{tid}] {(t.get('title') or '')[:56]} → Blocked (decision closed)")
+            t["state"] = "To Do"
+            reverted.append(f"[{tid}] {(t.get('title') or '')[:56]} → To Do (decision closed)")
     return newly_held, reverted
 
 

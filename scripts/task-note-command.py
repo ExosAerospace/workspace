@@ -230,7 +230,7 @@ def main():
         elif is_short_cmd and re.search(r"\b(unblock|resume|proceed)\b", cmdzone):
             supa("PATCH", f"tasks?id=eq.{taskid}", {"state": "To Do"}); did.append("unblocked")
         elif is_short_cmd and re.search(r"\b(block|blocked|on hold|hold|pause|waiting)\b", cmdzone):
-            supa("PATCH", f"tasks?id=eq.{taskid}", {"state": "Blocked"}); did.append("set Blocked")
+            supa("PATCH", f"tasks?id=eq.{taskid}", {"state": "To Do"}); did.append("moved to To Do (not started)")  # "Blocked" retired (Jon 9/2)
         # 3) priority bump (leading + short)
         if is_short_cmd and re.search(r"\b(urgent|asap|high priority|top priority|escalate|critical)\b", cmdzone):
             supa("PATCH", f"tasks?id=eq.{taskid}", {"priority": 92}); did.append("prioritized")

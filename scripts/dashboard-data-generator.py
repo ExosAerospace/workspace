@@ -320,7 +320,7 @@ def parse_mission_control(content):
                 if '✅' in status_text:
                     state = 'Done'
             elif 'BLOCKED' in status_text.upper():
-                state = 'Blocked'
+                state = 'To Do'  # "Blocked" retired (Jon 9/2) — not-in-progress = To Do
 
         # Section overrides
         if section == 'Done':

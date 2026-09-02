@@ -241,7 +241,7 @@ def update_task_from_email(task, subject, body, sender_email, sender_name):
     if any(sig in body_lower for sig in completion_signals):
         new_state = 'Done'
     elif any(sig in body_lower for sig in blocked_signals):
-        new_state = 'Blocked'
+        new_state = 'To Do'  # "Blocked" retired (Jon 9/2) — not-in-progress = To Do
     elif any(sig in body_lower for sig in progress_signals):
         new_state = 'In Progress'
 
