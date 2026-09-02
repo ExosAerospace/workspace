@@ -2689,6 +2689,44 @@ const server = http.createServer((req, res) => {
     }
   }
 
+  // ── FOLLOW-UPS panel (option B): awaiting-reply contacts + one-tap "✓ replied" / "dismiss" ──
+  {
+    const FU_LOG = path.join(__dirname, '..', 'logs', 'sent-followup-log.json');
+    const fuLoad = () => { try { return JSON.parse(fs.readFileSync(FU_LOG, 'utf8')); } catch (e) { return { contacts: {} }; } };
+    const MINd = 7, MAXd = 45;
+    if (req.url.split('?')[0] === '/api/followups' && req.method === 'GET') {
+      if (!getSession(req)) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end('{"error":"auth"}'); return; }
+      const now = Date.now(); const out = [];
+      const cs = fuLoad().contacts || {};
+      for (const [a, c] of Object.entries(cs)) {
+        if (c.replied || c.cleared || !c.last_sent) continue;
+        const age = Math.floor((now - new Date(c.last_sent).getTime()) / 86400000);
+        if (age < MINd || age > MAXd) continue;
+        out.push({ contact: a, name: c.name || a, subj: (c.subj || '').slice(0, 80),
+                   last_sent: String(c.last_sent).slice(0, 10), age, task_id: c.task_id || null });
+      }
+      out.sort((x, y) => y.age - x.age);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ count: out.length, items: out })); return;
+    }
+    if (req.url.split('?')[0] === '/api/followups/clear' && req.method === 'POST') {
+      if (!getSession(req)) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end('{"error":"auth"}'); return; }
+      let body = ''; req.on('data', c => { body += c; if (body.length > 1e4) req.destroy(); });
+      req.on('end', () => {
+        let inp = {}; try { inp = JSON.parse(body); } catch (e) {}
+        const contact = String(inp.contact || '').toLowerCase();
+        const doc = fuLoad();
+        if (doc.contacts && doc.contacts[contact]) {
+          if (inp.action === 'replied') doc.contacts[contact].replied = true;
+          else doc.contacts[contact].cleared = true;
+          try { fs.writeFileSync(FU_LOG, JSON.stringify(doc, null, 2)); } catch (e) {}
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{"ok":true}');
+      });
+      return;
+    }
+  }
+
   if (req.url.startsWith('/api/crm/delete') && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());

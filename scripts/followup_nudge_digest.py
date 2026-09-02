@@ -58,7 +58,7 @@ def main():
 
     due = []
     for a, c in contacts.items():
-        if c.get("replied") or not c.get("last_sent"):
+        if c.get("replied") or c.get("cleared") or not c.get("last_sent"):
             continue
         age = age_days(c["last_sent"], now)
         if age < MIN_DAYS or age > MAX_DAYS:
@@ -79,6 +79,7 @@ def main():
         lines.append(f"• **{age}d** — {name} <{a}>{tag}\n   ↳ {subj[:70]}")
     if remaining > 0:
         lines.append(f"…{remaining} more queued — I'll feed 5/day until you're caught up.")
+    lines.append("✓ Clear answered ones: https://mc.exosaero.space/followups.html")
     msg = "\n".join(lines)[:1900]
     print(msg)
     if not dry:
