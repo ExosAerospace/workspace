@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sent — needs task link · Mission Control</title>
+<style>
+  :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--card:#0f1e38;--text:#e8edf5;--text2:#8aa0bd;
+    --border:#1c3052;--accent:#0080ff;--green:#22c55e;--gold:#e8aa3c;--red:#ff4444;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--navy);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.5}
+  header{padding:18px 24px;border-bottom:1px solid var(--border);background:var(--navy2);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  h1{font-size:20px;margin:0}.sub{color:var(--text2);font-size:13px;margin-top:3px}
+  a{color:var(--accent)} a.home{color:var(--text2);font-size:13px;text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:20px 24px 60px}
+  .notice{background:var(--navy2);border:1px dashed var(--border);border-radius:8px;padding:12px 15px;color:#bcd0ee;font-size:12.5px;margin-bottom:16px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{border-bottom:1px solid var(--border);padding:9px 10px;text-align:left;vertical-align:top}
+  th{color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+  .muted{color:var(--text2)} .sugg{color:var(--gold)}
+  input.tid{width:74px;background:var(--navy3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:5px 7px;font-size:13px}
+  button{border:none;border-radius:7px;padding:6px 11px;font-size:12.5px;font-weight:600;cursor:pointer;margin-right:5px}
+  .link{background:var(--green);color:#04210f} .dismiss{background:transparent;border:1px solid #3a4f73;color:var(--text2)}
+  tr.gone{opacity:.35}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>📤 Sent — needs task link</h1>
+  <div class="sub">Your Bcc'd sends with no confident task match. Accept the suggestion, type a task #, or dismiss.</div></div>
+  <a class="home" href="/">← Mission Control</a>
+</header>
+<div class="wrap">
+  <div class="notice" id="note">Loading…</div>
+  <table><thead><tr><th>Sent</th><th>Contact</th><th>Subject</th><th>Suggested task</th><th>Action</th></tr></thead>
+  <tbody id="rows"></tbody></table>
+</div>
+<script>
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+let ITEMS=[];
+fetch('/api/sent-review',{credentials:'same-origin'}).then(r=>r.json()).then(d=>{
+  ITEMS=d.items||[];
+  document.getElementById('note').textContent = ITEMS.length+' sends awaiting a task link — '+ITEMS.filter(i=>i.suggested_task_id).length+' have a suggested match.';
+  render();
+}).catch(()=>{document.getElementById('note').textContent='Could not load.';});
+function render(){
+  document.getElementById('rows').innerHTML = ITEMS.map((i,ix)=>{
+    const sug = i.suggested_task_id
+      ? `<a href="/index.html?task=${i.suggested_task_id}" target="_blank" class="sugg">#${i.suggested_task_id}</a> ${esc(i.suggested_title)}`
+      : '<span class="muted">— none —</span>';
+    const linkBtn = i.suggested_task_id
+      ? `<button class="link" onclick="doLink(${ix},${i.suggested_task_id})">✓ Link #${i.suggested_task_id}</button>` : '';
+    return `<tr id="r${ix}">
+      <td class="muted" style="white-space:nowrap">${esc(i.last_sent)}${i.replied?' ✅':''}</td>
+      <td>${esc(i.name)}<div class="muted" style="font-size:11px">${esc(i.contact)}</div></td>
+      <td>${esc(i.subj).slice(0,60)}</td>
+      <td>${sug}</td>
+      <td style="white-space:nowrap">${linkBtn}
+        <input class="tid" id="t${ix}" placeholder="#" title="or type a task number">
+        <button class="link" onclick="doLinkManual(${ix})">Link</button>
+        <button class="dismiss" onclick="doDismiss(${ix})">Dismiss</button></td></tr>`;
+  }).join('') || '<tr><td colspan="5" class="muted">🎉 Nothing to review.</td></tr>';
+}
+function post(url,payload,ix){
+  return fetch(url,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(r=>r.json()).then(res=>{ if(res.error){alert(res.error);return;} const tr=document.getElementById('r'+ix); if(tr){tr.classList.add('gone');setTimeout(()=>tr.remove(),400);} });
+}
+function doLink(ix,tid){ post('/api/sent-review/link',{contact:ITEMS[ix].contact,task_id:tid},ix); }
+function doLinkManual(ix){ const v=(document.getElementById('t'+ix).value||'').replace(/[^0-9]/g,''); if(!v){alert('Enter a task #');return;} post('/api/sent-review/link',{contact:ITEMS[ix].contact,task_id:+v},ix); }
+function doDismiss(ix){ post('/api/sent-review/dismiss',{contact:ITEMS[ix].contact},ix); }
+</script>
+</body>
+</html>

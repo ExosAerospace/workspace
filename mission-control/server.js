@@ -2642,6 +2642,53 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── SENT REVIEW panel (option C): unlinked outbound sends + one-click link/dismiss ──
+  {
+    const SR_FILE = path.join(__dirname, 'data', 'sent-review.json');
+    const SR_DISMISS = path.join(__dirname, '..', 'logs', 'sent-review-dismissed.json');
+    const SR_LOG = path.join(__dirname, '..', 'logs', 'sent-followup-log.json');
+    const srLoad = (p, d) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch (e) { return d; } };
+    if (req.url.split('?')[0] === '/api/sent-review' && req.method === 'GET') {
+      if (!getSession(req)) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end('{"error":"auth"}'); return; }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(srLoad(SR_FILE, { items: [] }))); return;
+    }
+    if ((req.url.split('?')[0] === '/api/sent-review/link' || req.url.split('?')[0] === '/api/sent-review/dismiss') && req.method === 'POST') {
+      const sess = getSession(req);
+      if (!sess) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end('{"error":"auth"}'); return; }
+      const isLink = req.url.split('?')[0].endsWith('/link');
+      let body = ''; req.on('data', c => { body += c; if (body.length > 1e5) req.destroy(); });
+      req.on('end', () => {
+        let inp = {}; try { inp = JSON.parse(body); } catch (e) {}
+        const contact = String(inp.contact || '').toLowerCase();
+        if (!contact) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end('{"error":"contact required"}'); return; }
+        const review = srLoad(SR_FILE, { items: [] });
+        const item = (review.items || []).find(i => String(i.contact).toLowerCase() === contact) || {};
+        // drop it from the review list + remember the decision so it doesn't re-surface
+        review.items = (review.items || []).filter(i => String(i.contact).toLowerCase() !== contact);
+        try { fs.writeFileSync(SR_FILE, JSON.stringify(review, null, 2)); } catch (e) {}
+        const dis = srLoad(SR_DISMISS, []); if (!dis.includes(contact)) dis.push(contact);
+        try { fs.writeFileSync(SR_DISMISS, JSON.stringify(dis, null, 2)); } catch (e) {}
+        // update the follow-up log so the tracker keeps the linkage / doesn't re-add
+        const flog = srLoad(SR_LOG, { contacts: {} });
+        if (flog.contacts && flog.contacts[contact]) {
+          flog.contacts[contact].conf = isLink ? 'high' : 'dismissed';
+          if (isLink && inp.task_id) flog.contacts[contact].task_id = inp.task_id;
+          try { fs.writeFileSync(SR_LOG, JSON.stringify(flog, null, 2)); } catch (e) {}
+        }
+        const finish = () => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true })); };
+        if (isLink && inp.task_id) {
+          supabaseRequest('POST', 'activities', {
+            type: 'task_note', subject: 'task:' + inp.task_id, owner: 'Exo', status: 'completed',
+            body: `📤 Email sent to ${item.name || contact} <${contact}> on ${item.last_sent || ''} — ${item.subj || ''}`
+                  + (item.replied ? '' : '  ·  ⏳ awaiting reply')
+          }).then(finish).catch(finish);
+        } else { finish(); }
+      });
+      return;
+    }
+  }
+
   if (req.url.startsWith('/api/crm/delete') && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
