@@ -22,7 +22,7 @@ activity ids). Baseline-safe: the first run records existing @Exobot notes and d
 never fires on historical comments. Deterministic; local Ollama only for owner routing (bounded).
 """
 import json, os, re, urllib.request, urllib.parse
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 WS = "/Users/exomac/.openclaw/workspace"
 ROSTER = os.path.join(WS, "mission-control", "data", "routing-roster.json")
@@ -30,6 +30,13 @@ STATE = os.path.join(WS, "logs", "task-note-command-state.json")
 LOG = os.path.join(WS, "logs", "task-note-command.log")
 SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
 KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+
+# Trigger recognition — accept all three forms, case-insensitively:
+#   "@exo" / "@exobot" text (any case: @Exo, @EXO, @ExoBot …)
+#   the Discord role/user mention token the client inserts when you type "@Exo"
+#   e.g. <@&1501704079901069386> (role), <@1501704079901069386> / <@!…> (user).
+EXO_MENTION_IDS = ["1501704079901069386"]  # @Exobot Discord role
+MENTION_RE = re.compile(r"@exo(?:bot)?\b|<@[&!]?(?:" + "|".join(EXO_MENTION_IDS) + r")>", re.I)
 
 # Skip notes authored by automation (prevent loops / only act on human commands).
 SKIP_OWNERS = re.compile(r"^(exo|decisions|mission control|mc\b|expense-workflow|.*-router|.*-watcher)", re.I)
@@ -154,9 +161,11 @@ def parse_due(text):
 
 
 def directive_after(body):
-    """Return the text following the FIRST @Exobot mention (that's the command)."""
-    m = re.search(r"@exo(?:bot)?\b[:,\-\s]*(.*)", body, re.I | re.S)
-    return (m.group(1) if m else body).strip()
+    """Return the command text after the FIRST trigger (@exo/@exobot text OR an Exobot mention token)."""
+    m = MENTION_RE.search(body or "")
+    tail = (body or "")[m.end():] if m else (body or "")
+    tail = re.sub(r"<@[&!]?\d+>", "", tail)  # strip any residual mention tokens
+    return tail.strip(" :,-—\n\t")
 
 
 def main():
@@ -165,17 +174,19 @@ def main():
     by_email = {p["email"].lower(): p for p in roster}
     state = load(STATE, None)
 
-    # Pull recent task comments mentioning @Exobot.
+    # Pull recent task comments (last 7 days) and filter for the trigger in Python — the DB can't
+    # gate on the role-mention token, so we fetch by recency and match with MENTION_RE.
+    since = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
     q = ("activities?select=id,type,subject,body,owner,created_at"
          "&type=in.(task_note,comment)"
-         "&body=ilike." + urllib.parse.quote("*@exo*") +
+         "&created_at=gte." + urllib.parse.quote(since) +
          "&order=created_at.desc&limit=400")
     rows = supa("GET", q) or []
-    # keep only ones truly mentioning @exobot/@exo on a task:<id>
+    # keep only ones truly mentioning @exo/@exobot OR the Exobot mention token, on a task:<id>
     def taskid_of(r):
         m = re.match(r"task:(\d+)$", (r.get("subject") or ""))
         return m.group(1) if m else None
-    cmds = [r for r in rows if taskid_of(r) and re.search(r"@exo(bot)?\b", r.get("body") or "", re.I)]
+    cmds = [r for r in rows if taskid_of(r) and MENTION_RE.search(r.get("body") or "")]
 
     if state is None:  # BASELINE — record existing, act on nothing
         state = {"seen": [r["id"] for r in cmds]}
