@@ -29,6 +29,8 @@ MANUAL_SEED = {
     "Innovation Dojo Japan":       {"status": "executed", "date": "2026-04-23","source": "inbound-contracts (export-hardened mutual NDA)"},
     "University of North Dakota":  {"status": "executed", "date": None,        "source": "UND MNDA (Dr. Gupta) — confirm date"},
     "Gloyer-Taylor Laboratories":  {"status": "signature_ready", "date": None, "source": "uploads/MNDA_Exos_GloyerTaylorLabs (awaiting signature)"},
+    "MATECH GSM":                  {"status": "sent", "date": "2026-08-13", "source": "MNDA sent to Dr. Ed Pope 8/13 — awaiting signature"},
+    "Super Carbon Composites":     {"status": "sent", "date": "2026-08-13", "source": "MNDA sent to Dr. Ed Pope 8/13 — awaiting signature"},
 }
 
 def counterparty_from_title(t):

@@ -54,5 +54,19 @@
     "date": null,
     "source": "uploads/MNDA_Exos_GloyerTaylorLabs (awaiting signature)",
     "on_record": false
+  },
+  "matechgsm": {
+    "company": "MATECH GSM",
+    "status": "sent",
+    "date": "2026-08-13",
+    "source": "MNDA sent to Dr. Ed Pope 8/13 \u2014 awaiting signature",
+    "on_record": false
+  },
+  "supercarboncomposites": {
+    "company": "Super Carbon Composites",
+    "status": "sent",
+    "date": "2026-08-13",
+    "source": "MNDA sent to Dr. Ed Pope 8/13 \u2014 awaiting signature",
+    "on_record": false
   }
 }
