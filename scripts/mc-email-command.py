@@ -437,15 +437,10 @@ def is_trigger(msg, subject, body):
             for _n, a in getaddresses([v]):
                 if a:
                     to_recips.add(a.lower())
-    if to_recips & TASK_TO_ADDR:
-        return True
-    # Cc/Bcc to a LOG address from an INTERNAL sender (Jon/team) → log it to MC regardless of line.
-    # Bcc is stripped from headers, so the sender-is-internal check is what separates a deliberate
-    # copy from ordinary inbound (which all lands in jquinnexo's inbox and would otherwise flood).
-    _from = getaddresses([msg.get("From", "")])
-    _sender = (_from[0][1].lower() if _from else "")
-    _internal = _sender.endswith("@exosaero.com") or _sender in ("jquinnexo@pm.me", "jquinnexo@proton.me")
-    return bool(_internal and (recips & LOG_ADDR))
+    return bool(to_recips & TASK_TO_ADDR)
+    # NOTE (Jon 2026-09-02): a Bcc'd sent-copy must NOT trigger an agent run / create a task. It
+    # should MATCH an existing open task and log "email sent on <date>" for follow-up tracking. That
+    # is handled by the dedicated sent-log processor (sent-loop-closer), NOT this command trigger.
 
 
 def main():
