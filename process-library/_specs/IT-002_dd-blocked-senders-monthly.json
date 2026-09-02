@@ -1,5 +1,5 @@
 {
-  "title": "Monthly DD-Blocked Senders — Outlook Rule Update",
+  "title": "Monthly DD-Blocked Senders \u2014 Outlook Rule Update",
   "doc_no": "IT-002",
   "area": "Security / CUI",
   "area_id": "08-security-cui",
@@ -13,7 +13,15 @@
   "overview": "Exos screens inbound counterparties through an automated due-diligence engine. Senders that fail (scam 'investors,' OFAC/SAM/SEC-flagged, debarred, or spoofed domains) are compiled into a DD-Blocked Senders list that Exos distributes to all employees monthly. Each employee maintains a single Outlook rule that deletes or junks mail from those senders, and updates that rule when the refreshed list arrives. This keeps bad actors out of individual inboxes between the automated screens.",
   "tasks": [
     {
-      "name": "Task 1 - Create the rule (first-time setup)",
+      "name": "Task 1 - Easiest: create or update the rule with Copilot",
+      "steps": [
+        "Open Microsoft 365 Copilot (or Copilot in Outlook) and paste the current 'Exos DD-Blocked Senders' Copilot prompt included in the monthly Exos email.",
+        "Copilot creates the rule (or, if it already exists, adds the new domains to it) and confirms; verify in Outlook that the rule 'Exos DD-Blocked Senders' exists and is enabled.",
+        "At each monthly refresh, paste the latest prompt again - it adds that month's new domains. If your Copilot cannot create rules directly, it will return the exact steps; use Task 2 instead."
+      ]
+    },
+    {
+      "name": "Task 2 - Create the rule manually (first-time setup)",
       "steps": [
         "Open the current Exos DD-Blocked Senders email from Exos and keep the domain list handy.",
         "Windows desktop Outlook: Home > Rules > Manage Rules & Alerts > New Rule > 'Apply rule on messages I receive' > Next. Outlook on the web / New Outlook: Settings (gear) > Mail > Rules > Add new rule.",
@@ -25,7 +33,7 @@
       ]
     },
     {
-      "name": "Task 2 - Monthly update",
+      "name": "Task 3 - Monthly update",
       "steps": [
         "When the refreshed DD-Blocked Senders list arrives from Exos each month, open it.",
         "Windows desktop: Home > Rules > Manage Rules & Alerts > select 'Exos DD-Blocked Senders' > Edit Rule Settings > click the sender-address words link > add the new domains > OK > Apply. Web: Settings > Mail > Rules > open 'Exos DD-Blocked Senders' > edit the 'Sender address includes' condition > add the new domains > Save.",
@@ -34,7 +42,7 @@
       ]
     },
     {
-      "name": "Task 3 - Exceptions and safe use",
+      "name": "Task 4 - Exceptions and safe use",
       "steps": [
         "If you are expecting mail from a listed party, check your Junk / Deleted Items before it purges, and notify Exo so the entry can be reviewed.",
         "Never add a free email-provider domain (for example gmail.com, proton/protonmail.com, sbcglobal.net, yahoo.com, outlook.com) to the rule - blocking the whole domain removes legitimate mail. If a specific scammer uses a free provider, block the full email ADDRESS instead of the domain.",

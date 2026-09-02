@@ -53,6 +53,13 @@ def main():
     today = datetime.date.today().isoformat()
     open(os.path.join(WS, f"drafts/DD_Blocked_Senders_{today}.txt"), "w").write("\n".join(block) + "\n")
     dom = ";".join(block)
+    copilot = ('Create an Outlook inbox rule named "Exos DD-Blocked Senders". Apply it to incoming mail: '
+        'if the sender\'s email address contains ANY of the domains listed below, permanently delete the message '
+        '(or move it to Junk Email). Turn the rule on after creating it and confirm it is done. If a rule with that '
+        'name already exists, add any missing domains to it instead of creating a duplicate. If you cannot create the '
+        'rule directly, give me the exact click-by-click steps for both new Outlook (web) and classic Outlook desktop.\n\n'
+        'Domains: ' + dom)
+    open(os.path.join(WS, f"drafts/DD_Copilot_Prompt_{today}.txt"), "w").write(copilot + "\n")
     recips = employees()
     body = f"""Team,
 
@@ -60,6 +67,13 @@ Monthly refresh of the Exos DD-Blocked Senders list. These are senders that FAIL
 
 FULL PROCEDURE: IT-002 "Monthly DD-Blocked Senders — Outlook Rule Update" in the Mission Control Process Library (Security / CUI).
 
+EASIEST — LET COPILOT DO IT: open Microsoft 365 Copilot (or Copilot in Outlook) and paste the prompt below. It creates/updates the rule for you. First time and every monthly refresh, just paste the latest version of this prompt.
+
+----- COPILOT PROMPT (paste this) -----
+{copilot}
+----- END COPILOT PROMPT -----
+
+OR DO IT MANUALLY —
 FIRST TIME (create the rule):
 - Windows desktop Outlook: Home > Rules > Manage Rules & Alerts > New Rule > "Apply rule on messages I receive" > check "with specific words in the sender's address" > add the domains below > action "delete it" (or move to Junk) > name it "Exos DD-Blocked Senders."
 - Outlook on the web / New Outlook: Settings (gear) > Mail > Rules > Add new rule > condition "Sender address includes" > add the domains below > action Delete (or Move to Junk) > Save.
