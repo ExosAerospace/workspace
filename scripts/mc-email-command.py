@@ -56,10 +56,16 @@ TRIGGER_ADDR = {"jquinnexo+do@pm.me", "exosmc+do@proton.me"}
 # is itself a task command, even without an "@exobot" keyword. Cc/Bcc to exosmc stays
 # passive (submissions archive / email tracker) so copying it on a thread doesn't fire a run.
 TASK_TO_ADDR = {"exosmc@pm.me", "exosmc@proton.me", "jquinnexo+do@pm.me", "exosmc+do@proton.me"}
+# LOG addresses: when an INTERNAL sender (Jon/team) copies any of these on ANY line (To/Cc/Bcc),
+# it's a deliberate "log this to Mission Control" — process it just like exosmc, regardless of line.
+# (Jon 2026-09-02: every email sent cc/bcc to his Proton should update tasks like exosmc does.)
+LOG_ADDR = {"jquinnexo@pm.me", "jquinnexo@proton.me", "exosmc@pm.me", "exosmc@proton.me",
+            "jquinnexo+do@pm.me", "exosmc+do@proton.me"}
 JON_DISCORD = "1501632195163590739"
 OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
 MAX_PER_RUN = int(os.environ.get("MCC_MAX_PER_RUN", "3"))
-EXOBOT_RE = re.compile(r'@\s*ex(?:obot|obto|bot|oboto|obott)\b', re.I)  # tolerate common typos (exobto/exbot)
+# Matches @exo AND @exobot (+ common typos: exbot / exobto). Fires from the body regardless of line.
+EXOBOT_RE = re.compile(r'@\s*ex(?:o(?:bot|bto|boto|bott)?|bot)\b', re.I)
 
 ENVELOPE = (
     "[EMAIL-COMMAND from {sender_name} <{sender_email}> — authenticated{note}]\n\n"
@@ -431,7 +437,15 @@ def is_trigger(msg, subject, body):
             for _n, a in getaddresses([v]):
                 if a:
                     to_recips.add(a.lower())
-    return bool(to_recips & TASK_TO_ADDR)
+    if to_recips & TASK_TO_ADDR:
+        return True
+    # Cc/Bcc to a LOG address from an INTERNAL sender (Jon/team) → log it to MC regardless of line.
+    # Bcc is stripped from headers, so the sender-is-internal check is what separates a deliberate
+    # copy from ordinary inbound (which all lands in jquinnexo's inbox and would otherwise flood).
+    _from = getaddresses([msg.get("From", "")])
+    _sender = (_from[0][1].lower() if _from else "")
+    _internal = _sender.endswith("@exosaero.com") or _sender in ("jquinnexo@pm.me", "jquinnexo@proton.me")
+    return bool(_internal and (recips & LOG_ADDR))
 
 
 def main():
