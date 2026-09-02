@@ -1,0 +1,4 @@
+{
+  "exclude_domains": ["leagueadvisors.com", "scentience.ai"],
+  "note": "DD-failed but intentionally excluded from the employee inbox auto-block rule (active contacts) per John 2026-09-02. Still do-not-engage internally via the CRM DD gate."
+}
