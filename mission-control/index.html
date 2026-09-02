@@ -224,6 +224,7 @@
   .task-priority-med { font-size: 10px; color: var(--yellow); }
 
   /* ── OWNER BADGE ── */
+  .owner-badges { display:flex; flex-wrap:wrap; gap:3px; }
   .owner-badge {
     flex-shrink: 0; font-size: 10px; font-weight: 700;
     padding: 2px 7px; border-radius: 10px; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 1px;
@@ -653,7 +654,7 @@
       <div class="panel-task-title" id="panelTaskTitle">Task Title</div>
     </div>
     <span class="panel-state-badge" id="panelStateBadge">To Do</span>
-    <span class="owner-badge" id="panelOwnerBadge">JON</span>
+    <div class="owner-badges" id="panelOwnerBadge" style="display:inline-flex;gap:4px;"></div>
   </div>
 
   <div class="panel-tabs">
@@ -711,12 +712,8 @@
         <textarea id="editDesc" oninput="autoGrow(this)"></textarea>
         <div class="edit-row">
           <div>
-            <label>Owner</label>
-            <select id="editOwner">
-              <option value="Jon">Jon</option>
-              <option value="Exo">Exo</option>
-              <option value="Jon+Exo">Both</option>
-            </select>
+            <label>Assignees <span style="font-weight:400;font-size:11px;color:var(--text2)">(hold Ctrl/⌘ to select multiple)</span></label>
+            <select id="editOwner" multiple size="5" style="height:auto;min-height:80px"></select>
           </div>
           <div>
             <label>State</label>
@@ -1142,11 +1139,12 @@ function getFilteredTasks() {
     const ae = (t.assigned_email || '').toLowerCase();
     // assigned_email is the SOLE source of truth: if a task has one, match ONLY on it
     // (prevents a task assigned to someone else leaking in via a stale owner name)
-    if (ae) return !!me && ae === me;
+    // Multi-assignee: stored as comma-joined emails
+    if (ae) return !!me && ae.split(',').map(e => e.trim()).includes(me);
     // legacy tasks with NO assigned_email: fall back to owner-name match
     const mineC = canonOwner(currentUser.name || '');
-    const oC = canonOwner(t.owner || '');
-    return oC === mineC || (mineC === 'Jon' && oC === 'Jon+Exo');
+    const ownerParts = String(t.owner || '').split('+').map(p => canonOwner(p.trim()));
+    return ownerParts.includes(mineC) || (mineC === 'Jon' && ownerParts.includes('Jon+Exo'));
   });
   else if (currentFilter === 'group') filtered = filtered.filter(t =>
     (t.owner || '').toLowerCase() === 'team' ||
@@ -1170,8 +1168,11 @@ function getFilteredTasks() {
   if (cat) filtered = filtered.filter(t => t.category === cat);
   const asgEl = document.getElementById('assigneeFilter');
   const asg = asgEl ? asgEl.value.toLowerCase() : '';
-  if (asg) filtered = filtered.filter(t =>
-    (t.owner || '').toLowerCase() === asg || (t.assigned_to || '').toLowerCase() === asg);
+  if (asg) filtered = filtered.filter(t => {
+    // split owner on '+' so multi-assignee tasks match any single assignee filter
+    const parts = String(t.owner || t.assigned_to || '').toLowerCase().split('+').map(p => p.trim());
+    return parts.includes(asg) || parts.some(p => canonOwner(p).toLowerCase() === asg);
+  });
   // Priority band filter — driven by MISSION SCORE (High ≥60, Med 40–59, Low <40), matching the
   // card badge. Uses the computed mission score, not the flat priority-field default.
   const priEl = document.getElementById('priorityFilter');
@@ -1320,6 +1321,21 @@ function ownerLabel(owner) {
   return owner.split(/\s+/)[0].toUpperCase().slice(0, 6);
 }
 
+// Render one badge per assignee (owner may be "A+B+C")
+function ownerBadgesHtml(owner, extraStyle) {
+  if (!owner) return `<span class="owner-badge owner-other"${extraStyle ? ' style="'+extraStyle+'"' : ''}>?</span>`;
+  const parts = String(owner).split('+').map(p => p.trim()).filter(Boolean);
+  return parts.map(p => {
+    const c = canonOwner(p);
+    return `<span class="owner-badge ${ownerClass(c)}"${extraStyle ? ' style="'+extraStyle+'"' : ''}>${ownerLabel(c)}</span>`;
+  }).join('');
+}
+
+// Full assignee names (owner may be "A + B + C") — for partner visibility.
+function ownerNames(owner) {
+  return String(owner || '').split('+').map(p => canonOwner(p.trim())).filter(Boolean);
+}
+
 // Build <option> list for owner selects on cards and in add/edit bars
 function buildOwnerOptions(selected) {
   const fixed = [{ value: 'Exo', label: 'Exo' }, { value: 'Jon+Exo', label: 'Both' }];
@@ -1435,7 +1451,7 @@ function buildCard(task) {
   div.innerHTML = `
     <div class="task-top">
       <div class="task-title" onclick="openEdit('${task.id}')">${escHtml(task.title)}</div>
-      <span class="owner-badge ${ownerClass(task.owner)}">${ownerLabel(task.owner)}</span>
+      <div class="owner-badges" style="flex-shrink:0" title="Assigned to: ${escHtml(ownerNames(task.owner).join(', '))}">${ownerBadgesHtml(task.owner)}</div>
     </div>
     <div class="task-meta">
       ${awaitingHtml}${projectHtml}${msHtml}${fundingFlagHtml}${catHtml}${srcHtml}${priHtml}${dueDateHtml}
@@ -1491,8 +1507,7 @@ function openEdit(id) {
   );
 
   const ownerEl = document.getElementById('panelOwnerBadge');
-  ownerEl.textContent = ownerLabel(task.owner);
-  ownerEl.className = 'owner-badge ' + ownerClass(task.owner);
+  ownerEl.innerHTML = ownerBadgesHtml(task.owner);
 
   // Overview tab
   renderOverview(task);
@@ -1502,7 +1517,11 @@ function openEdit(id) {
   document.getElementById('editTitle').value = task.title || '';
   document.getElementById('editDesc').value = task.description || '';
   autoGrow(document.getElementById('editDesc'));
-  document.getElementById('editOwner').value = task.owner || 'Jon';
+  const _editOwnerSel = document.getElementById('editOwner');
+  const _ownerParts = String(task.owner || 'Jon').split('+').map(p => canonOwner(p.trim())).filter(Boolean);
+  Array.from(_editOwnerSel.options).forEach(o => {
+    o.selected = _ownerParts.includes(canonOwner(o.value));
+  });
   document.getElementById('editState').value = task.state || 'To Do';
   document.getElementById('editDue').value = task.due_date ? task.due_date.slice(0, 10) : '';
   // Show the EFFECTIVE priority: if the task is pinned, the pin value IS the priority the board
@@ -1557,7 +1576,7 @@ function renderOverview(task) {
   const _msRec = MSCORES[String(task.id)];
 
   grid.innerHTML = `
-    <div class="detail-field"><label>Owner</label><div class="val"><span class="owner-badge ${ownerClass(task.owner)}" style="font-size:12px;padding:3px 10px">${ownerLabel(task.owner)}</span></div></div>
+    <div class="detail-field"><label>Assignees${ownerNames(task.owner).length > 1 ? ' (partnered)' : ''}</label><div class="val"><div class="owner-badges">${ownerBadgesHtml(task.owner, 'font-size:12px;padding:3px 10px')}</div><div style="margin-top:5px;font-size:12.5px;color:var(--text)">👥 ${escHtml(ownerNames(task.owner).join(', ')) || '—'}</div></div></div>
     <div class="detail-field"><label>State</label><div class="val">${task.state}</div></div>
     <div class="detail-field"><label>Due Date</label><div class="val">${fmtDate(task.due_date)}</div></div>
     <div class="detail-field"><label>Priority (Mission Score)</label><div class="val">${priLabel(msOf(task), _msRec)}</div></div>
@@ -1719,7 +1738,7 @@ async function saveEdit() {
     id,
     title: document.getElementById('editTitle').value.trim(),
     description: document.getElementById('editDesc').value.trim(),
-    owner: document.getElementById('editOwner').value,
+    owner: Array.from(document.getElementById('editOwner').selectedOptions).map(o => o.value).join('+') || 'Jon',
     state: document.getElementById('editState').value,
     due_date: document.getElementById('editDue').value || null,
     priority: parseInt(document.getElementById('editPriority').value) || 0,
@@ -1773,8 +1792,7 @@ async function saveEdit() {
         updated.state === 'In Progress' ? 'state-progress' : 'state-done'
       );
       const ownerEl = document.getElementById('panelOwnerBadge');
-      ownerEl.textContent = ownerLabel(updated.owner);
-      ownerEl.className = 'owner-badge ' + ownerClass(updated.owner);
+      ownerEl.innerHTML = ownerBadgesHtml(updated.owner);
       renderOverview(updated);
     }
     // Reload timeline to show the auto-logged change
@@ -1851,9 +1869,14 @@ async function populateOwnerDropdowns() {
   ['newOwner', 'editOwner'].forEach(idv => {
     const sel = document.getElementById(idv);
     if (!sel) return;
-    const cur = sel.value;
-    sel.innerHTML = opts;
-    if (cur && dedupedOpts.some(o => o.name === cur)) sel.value = cur;
+    if (sel.multiple) {
+      // Multi-select: populate options; openEdit() sets the per-task selection state
+      sel.innerHTML = opts;
+    } else {
+      const cur = sel.value;
+      sel.innerHTML = opts;
+      if (cur && dedupedOpts.some(o => o.name === cur)) sel.value = cur;
+    }
   });
 
   // "Assigned to" filter — team members, keeping the leading "Anyone" option
