@@ -23,7 +23,9 @@ LOG = os.path.join(WS, "logs", "sent-followup-log.json")
 STATE = os.path.join(WS, "logs", "followup-nudge-state.json")
 OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
 JON = "1501632195163590739"
-MIN_DAYS, MAX_DAYS, RENUDGE = 7, 45, 3
+# 7d before a first nudge; stop chasing past 45d; re-nudge the SAME contact at most every 10d
+# (outreach-appropriate, not aggressive); feed at most 5/day so the backlog drains gently.
+MIN_DAYS, MAX_DAYS, RENUDGE, MAX_PER_DAY = 7, 45, 10, 5
 
 
 def env():
@@ -68,19 +70,21 @@ def main():
 
     if not due:
         print("no follow-ups due"); return
-    due.sort(reverse=True)
-    lines = ["📮 **Follow-ups due** — no reply yet (you can nudge):"]
-    for age, name, a, subj, tid in due[:20]:
+    due.sort(reverse=True)                 # oldest first — chase the most overdue
+    batch = due[:MAX_PER_DAY]              # at most 5/day; the rest wait for tomorrow
+    remaining = len(due) - len(batch)
+    lines = ["📮 **Follow-ups due** — no reply yet (up to 5/day):"]
+    for age, name, a, subj, tid in batch:
         tag = f" · task #{tid}" if tid else ""
         lines.append(f"• **{age}d** — {name} <{a}>{tag}\n   ↳ {subj[:70]}")
-    if len(due) > 20:
-        lines.append(f"…and {len(due)-20} more.")
+    if remaining > 0:
+        lines.append(f"…{remaining} more queued — I'll feed 5/day until you're caught up.")
     msg = "\n".join(lines)[:1900]
     print(msg)
     if not dry:
         subprocess.run([OPENCLAW, "message", "send", "--channel", "discord", "--target", "user:" + JON, "-m", msg],
                        capture_output=True, text=True, timeout=60, env=env())
-        for age, name, a, subj, tid in due:
+        for age, name, a, subj, tid in batch:   # mark ONLY the 5 sent (rest reappear tomorrow)
             st[a] = now.isoformat()
         json.dump(st, open(STATE, "w"), indent=2)
 
