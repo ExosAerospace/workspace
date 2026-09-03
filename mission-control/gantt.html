@@ -89,7 +89,7 @@
 const LEFT=300, ROW=24, HEADER=48, LISTH=26, MONTHW=96, PAD=10;
 const WIN_START='2026-08-10', WIN_END='2027-03-15';
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-function d2(s){return s?new Date(s+'T00:00:00'):null;}
+function d2(s){if(!s)return null;const dt=new Date(String(s).slice(0,10)+'T00:00:00');return isNaN(dt.getTime())?null:dt;}
 function daysBetween(a,b){return (b-a)/86400000;}
 function statusColor(st){const s=(st||'').toLowerCase();
   if(s==='done'||s==='complete'||s==='completed')return'#22c55e';
