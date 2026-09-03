@@ -430,7 +430,14 @@ def is_trigger(msg, subject, body):
                     recips.add(a.lower())
     if recips & TRIGGER_ADDR:
         return True
-    # A deliberate send TO the task inbox (not merely Cc/Bcc) is a command on its own.
+    # Copying the shared command address exosmc anywhere (To/Cc/Bcc) is a deliberate "read this and
+    # act" signal — Exo processes the FULL message + attachments (updates the matching task, files /
+    # version-controls any [DOC]). John 2026-09-03: Cc/Bcc to exosmc is now ACTIVE, not passive.
+    # (jquinnexo is Jon's personal inbox, NOT a team command channel — its content is only actioned
+    # via @Exobot / [EXO]; plain mail there is status-tracked by the metadata layer, not content-read.)
+    CMD_ANY = {"exosmc@pm.me", "exosmc@proton.me"}
+    if recips & CMD_ANY:
+        return True
     to_recips = set()
     for hk in ("To", "Delivered-To", "X-Original-To", "Envelope-To"):
         for v in msg.get_all(hk, []):

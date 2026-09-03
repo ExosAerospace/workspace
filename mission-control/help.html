@@ -76,14 +76,19 @@
   </div>
 
   <div class="card">
-    <h2>📧 Email a task straight to Mission Control</h2>
-    <p class="big">You can hand work to Mission Control by email — send it <b>To:</b> <code>exosmc@pm.me</code> (or <code>exosmc@proton.me</code>). <b>Putting it in the To: line is the signal to act</b> — even without any "@Exobot" keyword, it becomes a task and Exo works it.</p>
+    <h2>📧 How your email connects to Mission Control — two layers</h2>
+    <p class="big">There are <b>two</b> separate things going on. Know the difference so you get what you expect.</p>
     <ul class="big">
-      <li><b>To: exosmc = "do this / track this."</b> Exo creates or updates a task (assigned to you), acts on it, and emails you back. Anything external or sensitive is <b>drafted for your approval as a Decision</b> — never auto-sent.</li>
-      <li><b>CC / BCC exosmc = passive.</b> It's just archived and tracked — copying it on a thread does <b>not</b> trigger any action.</li>
-      <li><b>Only your work email counts.</b> Sends are authenticated (must be a Mission Control user, from your verified address), so spoofed or outside mail is ignored.</li>
+      <li><b>1) Automatic status tracking (nothing to do).</b> Every email you send and receive on your <b>@exosaero.com</b> mailbox is read for <b>metadata only</b> — sender, recipient, date, subject line. Never the body, never attachments. This quietly keeps task <b>status</b> and follow-ups current (it notes that you reached out, and closes the loop when someone replies). You don't have to copy anyone for this — it just happens.</li>
+      <li><b>2) Content &amp; documents — you must copy <code>exosmc@proton.me</code>.</b> The status layer can't see message content or open a file. So <b>if you want Exo to read the actual email, update a task with the substance, or manage a document's versions, put <code>exosmc@proton.me</code> (or <code>exosmc@pm.me</code>) on the email — To, Cc, or Bcc — and attach the document.</b> That routes the full message to Exo so it can act. Copying exosmc is the signal "read this and act"; without it, only the metadata/status is captured.</li>
     </ul>
-    <div class="tip">Rule of thumb: <b>To: exosmc</b> when you want Exo to do or track something; <b>CC/BCC exosmc</b> when you just want it on the record. Use subject <b>[DOC]</b> to file a document, or <b>@Exobot &lt;instruction&gt;</b> anywhere in a forwarded email to give a specific command.</div>
+    <div class="tip"><b>Quick rules:</b><br>
+      • <b>Just working normally</b> → status/follow-ups tracked automatically, do nothing.<br>
+      • <b>Want Exo to act on the content / update the task with detail</b> → Cc or Bcc <code>exosmc@proton.me</code> (To/Cc most reliable; Bcc usually works too).<br>
+      • <b>Filing or versioning a document</b> → email it to <code>exosmc@proton.me</code> with subject starting <b>[DOC]</b> and the file attached — it's stored, version-controlled, and searchable ("Exobot, pull the latest MDB MNDA").<br>
+      • <b>A specific instruction</b> → put <b>@Exobot &lt;what to do&gt;</b> anywhere in the body.<br>
+      • <b>Note:</b> <code>jquinnexo@…</code> is John's personal mailbox, not a team command channel — use <b>exosmc</b> for anything you want Exo to act on. Controlled CUI/ITAR content is always screened out and never stored in Mission Control.</div>
+    <p class="big" style="margin-top:10px"><b>Only your verified work email counts</b> — commands are authenticated (you must be a Mission Control user sending from your @exosaero.com address), so spoofed or outside mail is ignored.</p>
   </div>
 
   <div class="card">
