@@ -1,5 +1,5 @@
 # PURSUIT TRACKER — Capital Bridge ($1M / 4–6 months) [APEX]
-*Single source of truth. The Capital Bridge Agent reads this each run, advances the top open action, drafts (never sends) investor/customer materials, and coordinates the other capture agents by time-to-cash. Last updated: 2026-08-10 (05:00 CT run).*
+*Single source of truth. The Capital Bridge Agent reads this each run, advances the top open action, drafts (never sends) investor/customer materials, and coordinates the other capture agents by time-to-cash. Last updated: 2026-09-03 (01:00 CT run).*
 
 > **⛔ entX (OPP-007) — RESOLVED / PAID. DO NOT re-open, nag, or run Plan B (2026-08-16, per Jon).**
 > Jon confirmed 2026-08-16: entX's **first two milestone payments (50% + 40%) have been received.** The "$506,250 booking deposit not received" narrative in the log below is **WRONG on two counts**: (1) **$506K was never entX's number** — it is Engine B's *hypothetical full-bay* figure (135 kg × $7,500 = $1,012,500 → 50% = $506,250) that a prior run mis-attributed to entX; entX is a single RHU payload with its own (smaller) contract. (2) entX is **already paid** through milestone 2. All entX deposit READY-ACTIONs (v1/v2/v3) and the Aug-17 Plan-B trigger are neutralized. Do not treat entX as an open cash trigger or generate new entX collection nags. Exact contract total pending Jon's confirmation against the executed LSA.
@@ -1841,3 +1841,50 @@ END-READY-ACTION -->
 - **SENT CONFIRMED (auto): larry.paxton@jhuapl.edu** on 2026-08-31 14:39 — subject "=?utf-8?q?Former_Armadillo-_Exos_intro_=E2=86=92_Larry_Paxton_(JHU_APL)?=". Nudge-to-send STOPPED; reply-watch only.
 
 | 2026-09-02 (01:00) | **No new capital movement.** Ran capital_bridge_funds.py (--since-days 2) + full inbox scan since Aug 30/31 (headers + external-sender sweep) — zero new wires, zero new SENT CONFIRMs, zero non-internal replies except an unrelated UTD capstone access email. Confirmed total unchanged: **$148,579 of $1,000,000 (504/PO10 only) / $851,421 gap.** Checked all open Engine B threads by name (Wolk, Paxton, Morfin, Gavrila, Webb) — **no replies from any of them** since the last run. Wolk/APL call remains locked on calendar for Sept 9, 3:00pm ET. Paxton MNDA still not received — nothing to draft until it lands. **Swept for a new item flagged "@exobot DD" in Jon's inbox (Fw: TEN Capital Network 'Scale-Up Pitch' Dallas, Sept 24) — already fully resolved**: Decision D-7281744 was answered 2026-09-01 (Jon: pass, declined directly to Mostafa Shahat — generalist pay-to-pitch audience is a weak fit for a $25M Series A). No open thread there. Unchanged: Morfin LinkedIn DM v2 ($250K, 43 days dark, still unsent), Gavrila ($16,800 at_risk) and Webb ($18,200 awaiting funds) pending packets, entX bookkeeping item (non-blocking), Montana NCE co-apex still stalled per capture/NCE_BLK3_Build.md (POA v2 + Governor Signing Agreement unexecuted). No new autonomous draft was needed this run — every open item is genuinely gated on an external reply or a Jon send, not on research or drafting. | **Jon: (1) Wolk/APL — Sept 9, 3:00pm ET, on calendar, no action needed. (2) Watch for the APL MNDA from Larry Paxton — Exo turns it around same day once it lands. (3) Morfin LinkedIn DM — $250K, still unsent at 43 days, in inbox since Aug 19. (4) Gavrila ($16,800) and Webb ($18,200) — aging pending packets, worth a nudge when convenient.** |
+| 2026-09-03 (01:00) | **No new capital movement.** Ran capital_bridge_funds.py (--since-days 3) + inbox keyword sweep (Wolk/Paxton/Morfin/Gavrila/Webb/entX/Montana/Siroky/SEARF/Garza/HELIOTECH/de Nolfo) since Aug 31 — zero new wires, zero new SENT CONFIRMs. Confirmed total unchanged: **$148,579 of $1,000,000 (504/PO10 only) / $851,421 gap.** **NEW Engine B lead surfaced: Georgia de Nolfo (NASA GSFC/Goddard), energetic-particle/heliophysics PI.** Jon cold-emailed her Aug 31 12:13pm off the HELIOTECH room (same conference that produced Wolk + Paxton — third lead from one trip); she replied same day, has a payload she could fly early next year, and agreed to book time via Jon's booking link. Jon tagged @exobot 6:44pm: "track this assigned to me, make sure I follow up" — this is Jon's own follow-up to run (no dollar figure, no draft needed yet), logged to Engine B watch list alongside Wolk/BLAST and Paxton. **Clarifying note for future runs:** a Sept 2 Neil Milburn thread titled "BLK3 Launch Planning Agreement - entX RHU Payload Launch" is NOT the outstanding entX LSA-total confirm — it's Neil/Spaceport America (Salvador Rodriguez) technical coordination on trajectory dispersion (Part 431/450 splash-plot 3-σ) for the entX RHU Planning Agreement, expected executed end of this week. The entX $ bookkeeping item remains open and non-blocking as before; don't conflate the two threads. **Proactive build this run: Wolk/APL BLAST leave-behind one-pager** — Jon was offered this Aug 28 ("reply send if you want it built") and never replied; with the call now 6 days out, built it anyway rather than waiting on a reply that may not come (READY-ACTION below, informational — no send-approval needed, it's for Jon's own use in the meeting). Unchanged: Morfin LinkedIn DM v2 ($250K, 44 days dark), Gavrila ($16,800 at_risk) and Webb ($18,200 awaiting funds) pending packets. | **Jon: (1) NEW — Georgia de Nolfo (NASA GSFC) has a payload for early 2027 and agreed to book time; this is on your plate per your own @exobot tag, not gated on Exo. (2) Wolk/APL BLAST leave-behind one-pager built below — print/reference for the Sept 9, 3pm ET call; skip if you don't need it. (3) Wolk/APL call itself — Sept 9, on calendar, no action needed. (4) Watch for the APL MNDA from Larry Paxton. (5) Morfin LinkedIn DM — $250K, still unsent at 44 days. (6) Gavrila ($16,800) and Webb ($18,200) — aging pending packets, nudge when convenient.** |
+
+<!-- READY-ACTION
+key: capital-bridge-wolk-jhuapl-blast-leavebehind-v1
+task_title: PREP: Wolk/APL BLAST leave-behind one-pager (Sept 9 call, 6 days out)
+to: jquinn@exosaero.com
+subject: [PREP] Wolk/APL BLAST leave-behind — print for the Sept 9, 3pm ET call
+category: BD
+priority: 70
+body:
+Jon,
+
+You were offered this Aug 28 and never replied "send" — built it anyway since the Wolk call is now 6 days out (Sept 9, 3:00-3:30pm ET, on your calendar). Print it or reference it on the call; skip it if you don't need it.
+
+──────────────────────────────────────────────
+EXOS AEROSPACE — BLK3 SUBORBITAL PLATFORM
+One of only three FAA-licensed reusable rocket launch providers in the US
+──────────────────────────────────────────────
+
+VEHICLE: BLK3 PSRLV (Precision Suborbital Reusable Launch Vehicle)
+  • >100 km altitude (above Kármán line)
+  • 135 kg recoverable payload bay
+  • 3–4 minutes of continuous microgravity
+  • Powered vertical landing + 2-day vehicle turnaround
+  • FAA launch license: March 2026
+
+FIRST COMMERCIAL FLIGHT: Q1 2027 | Spaceport America, NM
+PRICING: $7,500/kg | 50% at booking / 40% at T-90 days / 10% post-flight
+FULL BAY: $1,012,500 total | $506,250 cash at booking
+
+FIT FOR BLAST / MDA TARGETS WORK:
+  • Recoverable test-article carrier — Exos primes flight-test/qualification infrastructure, never the weapon system itself
+  • Repeatable, scheduled cadence vs. bespoke single-use sounding-rocket builds
+  • Hardware returns for post-flight inspection and reflight on the same vehicle
+  • Heritage: SARGE flew 4 reuse missions (2018–2019, same airframe); commercial payload customers include Mayo Clinic, Purdue, UCF/NASA REDDI
+  • Secondary asset if thermal/cryo protection comes up: Scorpius TRL-9 cryo tank heritage (flew on Odysseus/Athena lunar landers)
+
+RISK DISCLOSURE (hold this line, don't overclaim): BLK3 is FAA-licensed but has not yet flown commercially — Flight 1 is early 2027, this bay (Flight 2) shortly after. Single-airframe risk is real; Airframe #2 is a stated use-of-proceeds priority.
+
+OPEN CAPACITY: Flight 2 booking now — first deposit secures the slot.
+
+Contact: John Quinn, Cofounder & CEO
+jquinn@exosaero.com | 972-740-8355 | www.exosaero.com
+──────────────────────────────────────────────
+
+Exo | Capital Bridge Agent
+END-READY-ACTION -->
