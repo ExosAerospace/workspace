@@ -1,0 +1,69 @@
+{
+  "title": "NLX2500 SS Tool Post Calibration",
+  "doc_no": "EXOS-MFG-001-0",
+  "area": "Manufacturing / Machine Shop",
+  "area_id": "13-manufacturing",
+  "owner": "Machine Shop / Exo",
+  "rev": "0",
+  "status": "Approved",
+  "intl_release": "Yes",
+  "reference_docs": "Mori Seiki / DMG MORI NLX2500SY/700 Operation & Maintenance Manual (sub-spindle tool-eye sensor-position parameters 2097X / 2098X / 2097Z / 2098Z). Machine record: data/cnc-machines.json (NLX2500, SN NL254140428).",
+  "remarks": "Run after replacing the sub-spindle tool setter disc/contact post, or after any setter crash. The removable sub-spindle tool-eye arm's four measuring surfaces are defined by paired parameters: X = 2097X & 2098X, Z = 2097Z & 2098Z. X error is diametral (convert to mm, divide by 2 = radial correction). Add/subtract direction for X should be field-verified once and recorded on this procedure. Always record the existing parameter values before changing so they can be reverted.",
+  "objective": "correctly calibrate the sub-spindle tool setter (removable tool-eye arm) on the Mori Seiki NLX2500SY/700 after the tool setter disc/contact post has been replaced, by re-teaching the sensor-position parameters (2097X / 2098X / 2097Z / 2098Z) so that tools measured on the sub-spindle read true.",
+  "overview": "Replacing the tool setter disc/contact post physically relocates the four measuring surfaces of the sub-spindle tool-eye. Until the stored sensor-position parameters are re-taught, every tool measured on the sub-spindle side will be off by the amount the post moved. This procedure re-establishes those parameters using a mic-verified reference tool and a measure-error to adjust-parameter loop, then verifies to tolerance. Perform with SINGLE BLOCK enabled and rapid/feed override turned down.",
+  "tasks": [
+    {
+      "name": "Task 1 - Preparation and safety",
+      "steps": [
+        "Confirm the new tool setter disc/contact post is fully seated and torqued on the removable sub-spindle arm.",
+        "Enable SINGLE BLOCK; turn rapid override and feed override down. Keep one hand near FEED HOLD throughout.",
+        "On the sensor-position parameter screen, RECORD the current values of 2097X, 2098X, 2097Z, and 2098Z on paper so they can be reverted if needed.",
+        "Deploy the removable sub-spindle tool-eye arm and confirm it is seated and clear of the turret path."
+      ]
+    },
+    {
+      "name": "Task 2 - Establish a reference (truth) tool",
+      "steps": [
+        "Chuck a test bar in the SUB-SPINDLE.",
+        "Face the bar; set the reference tool's Z geometry offset to the faced surface.",
+        "Turn the OD a short distance, retract without moving X, and measure the diameter with a micrometer.",
+        "Set the reference tool's X geometry offset from the measured diameter. Mic-verify. This tool is now the calibration reference."
+      ]
+    },
+    {
+      "name": "Task 3 - Measure the reference tool on the setter",
+      "steps": [
+        "With the reference tool selected, touch it off on the sub-spindle setter using the normal tool-measurement function.",
+        "Write down the X (and Z) geometry value the setter reports for the reference tool."
+      ]
+    },
+    {
+      "name": "Task 4 - Cut a test part and calculate the error",
+      "steps": [
+        "With the reference tool, take a skim finish cut on the sub-spindle part.",
+        "Micrometer the actual cut DIAMETER (X) and the actual FACE/length (Z).",
+        "X error = setter-reported diameter minus mic'd diameter. Convert to millimeters if needed, then DIVIDE BY 2 to get the radial correction.",
+        "Z error = setter-reported face minus mic'd face (direct value, no halving)."
+      ]
+    },
+    {
+      "name": "Task 5 - Correct the sensor-position parameters",
+      "steps": [
+        "Navigate to the sub-spindle tool-eye sensor-position parameters per the machine book (SYSTEM to SETUP to AXIS, page to the 209x block).",
+        "X axis: shift BOTH 2097X and 2098X by the Task 4 radial value. If the test part measured OVERSIZE add the value; if UNDERSIZE subtract it (verify this sign once on this machine, then record it on this sheet).",
+        "Z axis: shift BOTH 2097Z and 2098Z by the Task 4 Z error, using the same oversize/undersize sign logic.",
+        "Move both members of each axis pair by the SAME amount - you are translating the re-installed post, not changing its geometry."
+      ]
+    },
+    {
+      "name": "Task 6 - Verify and iterate",
+      "steps": [
+        "Repeat Task 3 and Task 4. Because the entire post was replaced, expect 2 to 3 iterations to converge.",
+        "Continue until the setter reading agrees with the mic within plus/minus 0.0002 in (plus/minus 0.005 mm) on both axes.",
+        "Confirm on a second tool plus a test cut before trusting production offsets.",
+        "If X and Z are both far off after one pass, a sign is likely flipped - revert to the recorded values and redo that axis. If it will not converge, the arm is not repeatably seating (mechanical issue), not a parameter issue.",
+        "Record the final 2097X / 2098X / 2097Z / 2098Z values and the verified X sign direction on this sheet."
+      ]
+    }
+  ]
+}

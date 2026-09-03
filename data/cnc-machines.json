@@ -1,0 +1,21 @@
+{
+  "cnc_machines": [
+    {
+      "id": "NLX2500",
+      "alias": "NLX2500",
+      "manufacturer": "Mori Seiki",
+      "model": "NLX2500SY/700",
+      "serial_number": "NL254140428",
+      "type": "CNC Turning Center",
+      "notes": "Sub-spindle tool setter = removable/swing tool-eye arm; tools touch off on a disc/contact post. Sub-spindle tool-eye SENSOR-POSITION parameters (per machine book): X surfaces = 2097X & 2098X; Z surfaces = 2097Z & 2098Z. Calibrate by measure-error->adjust-parameter loop with a mic-verified reference tool (X error is diametral: convert to mm, divide by 2 = radial correction). Re-run after any disc-post replacement or setter crash. Record old param values before changing so you can revert.",
+      "tool_setter": {
+        "location": "sub_spindle",
+        "type": "removable_swing_arm_tool_eye",
+        "sensor_position_parameters": {
+          "x_surfaces": ["2097X", "2098X"],
+          "z_surfaces": ["2097Z", "2098Z"]
+        }
+      }
+    }
+  ]
+}
