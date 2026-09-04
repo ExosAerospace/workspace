@@ -12,13 +12,13 @@ National Charter Enterprise = leverage state/national/allied-nation economic-dev
 After the Bozeman/Montana ITZ meeting, Jon's call: **not worth the effort — they don't appear to have the infrastructure to support our needs.** Appreciates their time; the ITZ-container path is dead. Supersedes the 2026-08-31 "Butte ITZ committed / agreement in draft" milestone below. Answers Decision **D-7281759** = NO-GO.
 
 **Jon's reasons (verbatim, 2026-09-04):**
-- Need to deal with a **DOD component** for the storage and access to the shipping container instead.
+- Need to deal with a military-type host for the storage and access to the shipping container instead — **"DoD component" is a little strong; a National Guard base or other military-type component may be the fit, and is more aligned with potential future payloads** (defense-adjacent test/qual work).
 - They won't accept that the process is handled **almost totally by AI** — no paperwork except someone scanning a package barcode, pushing a button, and possibly reviewing the document before pushing send.
 - **Timeline:** shipping a container in the next 3–4 weeks is never going to happen with them.
 - **Need-to-know / sensitivity barrier:** they want payload detail beyond class A / class B (air-freight shipping-manifest level) — that would reveal sensitive research information they have no need to know. If the info requested exceeds what's required to fly it on an airplane, Jon will NOT ask customers to divulge that to a third party.
 - Compares unfavorably to the response Exos got in **Billings** (also at an "airport"). This makes the Montana ITZ path a non-starter.
 
-**New direction:** pursue a **DOD component** for the container storage/access (custody + secure access), not a state/local International Trade Zone. → stand up as a new pursuit thread; ties to [[project_intl_suborbital_trade_zone]] and the test-side/DOD posture.
+**New direction:** pursue a **military-type host** for the container storage/access (custody + secure access) — a **National Guard base** or similar military component (not necessarily a formal "DoD component"), better aligned with likely future defense-adjacent payloads. NOT a state/local International Trade Zone. → stand up as a new pursuit thread; ties to [[project_intl_suborbital_trade_zone]] and [[project_exos_flight_test_prime_missile_defense]] (test-side/defense posture).
 **⚠️ Edgar close-out message:** Jon sent a message to Edgar closing this out and wants it appended here — it did NOT arrive with the 2026-09-04 Discord message (no attachment). AWAITING resend/paste to append.
 
 ### Program Summary
