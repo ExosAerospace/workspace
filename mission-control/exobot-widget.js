@@ -13,13 +13,13 @@
 
   var css = '#exobotFab{position:fixed;bottom:22px;right:22px;width:54px;height:54px;border-radius:50%;'
     + 'background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;font-size:24px;display:flex;'
-    + 'align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);z-index:80}'
+    + 'align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);z-index:1002}'
     + '#exobotFab:hover{transform:scale(1.06)}'
     + '#ecBadge{position:absolute;top:-2px;right:-2px;min-width:16px;height:16px;border-radius:8px;background:#ef4444;'
     + 'color:#fff;font-size:10px;line-height:16px;text-align:center;padding:0 4px;display:none}'
     + '#exobotChat{position:fixed;bottom:22px;right:22px;width:380px;max-width:94vw;height:520px;max-height:80vh;'
     + 'background:var(--panel,#0f1e38);border:1px solid var(--border,#2a3f63);border-radius:14px;'
-    + 'box-shadow:0 10px 40px rgba(0,0,0,.5);z-index:81;display:none;flex-direction:column;overflow:hidden}'
+    + 'box-shadow:0 10px 40px rgba(0,0,0,.5);z-index:1003;display:none;flex-direction:column;overflow:hidden}'
     + '#exobotChat.open{display:flex}'
     + '.ec-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;'
     + 'background:linear-gradient(135deg,#1e3a8a,#0f1e38);border-bottom:1px solid var(--border,#2a3f63);font-weight:600;font-size:14px;color:var(--text,#e8edf5)}'
@@ -44,7 +44,10 @@
     + '#ecHelpPop h4{font-size:11px;color:#60a5fa;margin:0 0 8px;text-transform:uppercase;letter-spacing:.04em}'
     + '#ecHelpPop .row{padding:3px 0;font-size:12px;line-height:1.45;color:#c8d6e5}'
     + '#ecHelpPop code{background:#162a4a;color:#ffb27a;padding:1px 5px;border-radius:4px;font-size:11px;white-space:nowrap}'
-    + '#ecHelpPop .muted{color:#7a8aa0;font-size:10.5px;margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:7px}';
+    + '#ecHelpPop .muted{color:#7a8aa0;font-size:10.5px;margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:7px}'
+    // When a task detail drawer (660px, right-anchored) is open, slide the launcher/chat
+    // left of it on wide screens so both stay visible and the drawer's own buttons aren't covered.
+    + '@media(min-width:1120px){#exobotFab.mc-task-open{right:700px}#exobotChat.mc-task-open{right:700px}}';
 
   function boot() {
     if (document.getElementById('exobotFab')) return; // never double-inject
@@ -85,8 +88,26 @@
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
     });
     render();
+    watchTaskPanel();
     if (load(OPENK, false)) toggle(true, true);
     setInterval(poll, 3000); poll();
+  }
+
+  // Keep the launcher/chat clickable and visible when the task detail drawer is open.
+  // The drawer (#panelOverlay toggles .open) sits at z-index 998/999; the launcher now
+  // rides above it and shifts left of the drawer on wide screens (see .mc-task-open CSS).
+  function watchTaskPanel() {
+    var ov = document.getElementById('panelOverlay'); // only exists on the tasks board
+    if (!ov) return;
+    function sync() {
+      var open = ov.classList.contains('open');
+      var fab = document.getElementById('exobotFab');
+      var chat = document.getElementById('exobotChat');
+      if (fab) fab.classList.toggle('mc-task-open', open);
+      if (chat) chat.classList.toggle('mc-task-open', open);
+    }
+    new MutationObserver(sync).observe(ov, { attributes: true, attributeFilter: ['class'] });
+    sync();
   }
 
   function badge(n) {
