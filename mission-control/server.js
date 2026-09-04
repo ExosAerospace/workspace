@@ -20,7 +20,30 @@ function loadDossiersFile() { try { return JSON.parse(fs.readFileSync(DOSSIERS_F
 function saveDossiersFile(o) { fs.writeFileSync(DOSSIERS_FILE, JSON.stringify(o, null, 2)); }
 const DTOKEN_FILE = path.join(__dirname, 'data', '.decisions-token');
 function loadDecisions() { try { return JSON.parse(fs.readFileSync(DECISIONS_FILE, 'utf-8')); } catch { return []; } }
-function saveDecisions(arr) { fs.mkdirSync(path.dirname(DECISIONS_FILE), { recursive: true }); fs.writeFileSync(DECISIONS_FILE, JSON.stringify(arr, null, 2)); }
+function saveDecisions(arr) {
+  fs.mkdirSync(path.dirname(DECISIONS_FILE), { recursive: true });
+  // Anti-wipe guard: loadDecisions() returns [] on a corrupt/unreadable file, so a load→push→save
+  // cycle could otherwise overwrite the whole store with a near-empty set (this actually happened
+  // 2026-09-04). Refuse to catastrophically shrink: if the on-disk store is substantial (parseable
+  // >25 items, or unparseable but >5KB) and the incoming set is <50% of it, back up and refuse.
+  try {
+    if (fs.existsSync(DECISIONS_FILE)) {
+      const raw = fs.readFileSync(DECISIONS_FILE, 'utf-8');
+      let cur = null; try { cur = JSON.parse(raw); } catch {}
+      const curLen = Array.isArray(cur) ? cur.length : null;
+      const bigOnDisk = curLen === null ? raw.length > 5000 : curLen > 25;
+      if (bigOnDisk && (curLen === null || arr.length < curLen * 0.5)) {
+        fs.copyFileSync(DECISIONS_FILE, DECISIONS_FILE + '.bak-shrinkguard-' + Date.now());
+        throw new Error('saveDecisions refused: on-disk has ' +
+          (curLen === null ? ('unparseable ~' + raw.length + 'B') : (curLen + ' items')) +
+          ', incoming set has ' + arr.length + ' — backed up, NOT overwriting');
+      }
+    }
+  } catch (e) { if (String(e.message).startsWith('saveDecisions refused')) throw e; }
+  const tmp = DECISIONS_FILE + '.tmp-' + process.pid;
+  fs.writeFileSync(tmp, JSON.stringify(arr, null, 2));
+  fs.renameSync(tmp, DECISIONS_FILE);   // atomic replace
+}
 
 // ── Research & Intel feed ──
 const RESEARCH_FILE = path.join(__dirname, 'data', 'research.json');
