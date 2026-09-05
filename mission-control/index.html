@@ -1627,12 +1627,41 @@ function renderTaskDescription(task) {
     descEl.innerHTML = html;
     descEl.classList.remove('empty');
   } else if (desc.trim()) {
-    descEl.textContent = desc;
+    if (/^\s*[-*]\s*\[[ xX]\]/m.test(desc)) renderChecklistDesc(task, descEl, desc);
+    else descEl.textContent = desc;
     descEl.classList.remove('empty');
   } else {
     descEl.textContent = (task.description === undefined) ? 'Loading…' : 'No description yet. Switch to Edit tab to add one.';
     descEl.classList.add('empty');
   }
+}
+
+// Render a description containing markdown-style "- [ ]" / "- [x]" lines as interactive,
+// click-to-toggle checkboxes; toggling flips the line and saves the description back.
+function renderChecklistDesc(task, el, desc) {
+  window.__descTask = task;
+  const lines = (desc || '').split('\n');
+  el.innerHTML = lines.map((ln, i) => {
+    const m = ln.match(/^(\s*[-*]\s*)\[([ xX])\]\s?(.*)$/);
+    if (m) {
+      const done = m[2].toLowerCase() === 'x';
+      return '<label style="display:flex;gap:8px;align-items:flex-start;margin:3px 0;cursor:pointer">'
+        + '<input type="checkbox" ' + (done ? 'checked' : '') + ' onchange="toggleDescCheck(' + JSON.stringify(String(task.id)) + ',' + i + ',this.checked)" style="width:auto;margin-top:3px;flex:none">'
+        + '<span style="' + (done ? 'color:var(--text2);text-decoration:line-through' : '') + '">' + escHtml(m[3]) + '</span></label>';
+    }
+    return '<div style="white-space:pre-wrap">' + escHtml(ln) + '</div>';
+  }).join('');
+}
+async function toggleDescCheck(taskId, lineIdx, checked) {
+  const task = window.__descTask;
+  if (!task || String(task.id) !== String(taskId)) return;
+  const lines = (task.description || '').split('\n');
+  if (lineIdx < 0 || lineIdx >= lines.length) return;
+  lines[lineIdx] = lines[lineIdx].replace(/^(\s*[-*]\s*)\[[ xX]\]/, '$1[' + (checked ? 'x' : ' ') + ']');
+  task.description = lines.join('\n');
+  renderChecklistDesc(task, document.getElementById('detailDesc'), task.description);
+  try { await apiFetch('/api/tasks', { method: 'PATCH', body: JSON.stringify({ id: task.id, description: task.description }) }); }
+  catch (e) { /* optimistic; will reconcile on next open */ }
 }
 
 function showDenyBox(id) {
