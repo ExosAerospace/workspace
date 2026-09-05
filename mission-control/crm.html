@@ -70,6 +70,10 @@ tr:hover { background: var(--surface); }
 tr.mnda-on-record td:first-child { box-shadow: inset 4px 0 0 0 #a855f7; }
 .mnda-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; background: rgba(168,85,247,0.18); color: #c99bf5; border: 1px solid rgba(168,85,247,0.5); white-space: nowrap; vertical-align: middle; }
 .mnda-badge.pending { background: rgba(168,85,247,0.08); color: #a78bbf; border-style: dashed; }
+/* Payload customer — green indicator (former/active paying payload customer) */
+tr.payload-customer td:first-child { box-shadow: inset 4px 0 0 0 #22c55e; }
+tr.mnda-on-record.payload-customer td:first-child { box-shadow: inset 4px 0 0 0 #22c55e, inset 8px 0 0 0 #a855f7; }
+.payload-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; background: rgba(34,197,94,0.18); color: #7ee2a8; border: 1px solid rgba(34,197,94,0.5); white-space: nowrap; vertical-align: middle; }
 .tier-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
 .tier-1 { background: rgba(239,68,68,0.2); color: var(--red); }
 .tier-2 { background: rgba(234,179,8,0.2); color: var(--yellow); }
@@ -535,8 +539,16 @@ function renderCompanies() {
       const label = onRec ? ('MNDA ✓' + (dt ? ' ' + dt : '')) : ('MNDA ' + (m.status || 'pending'));
       mBadge = `<span class="mnda-badge${onRec ? '' : ' pending'}" title="${esc((m.status||'') + (m.source ? ' — ' + m.source : ''))}">🔒 ${esc(label)}</span>`;
     }
-    return `<tr class="${onRec ? 'mnda-on-record' : ''}">
-      <td><strong>${esc(c.name)}</strong>${mBadge}</td>
+    const pc = c.payloadCustomer;
+    const isCust = pc && pc.is_payload_customer;
+    let pBadge = '';
+    if (isCust) {
+      const paid = pc.total_paid_usd ? ' · $' + Number(pc.total_paid_usd).toLocaleString() : '';
+      const since = pc.customer_since ? ' since ' + pc.customer_since : '';
+      pBadge = `<span class="payload-badge" title="Former/active payload customer — ${pc.payload_count} payload(s)${paid}${since}">🛰️ Payload Customer ×${pc.payload_count}</span>`;
+    }
+    return `<tr class="${onRec ? 'mnda-on-record' : ''}${isCust ? ' payload-customer' : ''}">
+      <td><strong>${esc(c.name)}</strong>${mBadge}${pBadge}</td>
       <td>${esc(c.industry)}</td>
       <td>${esc(c.size)}</td>
       <td>${cContacts}</td>

@@ -226,6 +226,52 @@ function mndaForCompany(company) {
   return null;
 }
 
+// ── Payload-customer registry (former/active PAYING payload customers; joined onto CRM/company rows) ──
+// Source of truth for the green "Payload Customer" flag. Keyed by normalized company name (mirrors MNDA).
+// Each record captures high-level CONTRACT + PAYLOAD detail and the SIGNED-CONTRACT reference so Mission
+// Control reports TRUE customer metrics (who paid, how many payloads, total contract $ vs paid $).
+// Exo updates it any time a customer pays — via POST /api/payload-customers or scripts/payload_customer.py.
+const PAYLOAD_CUSTOMERS_FILE = path.join(__dirname, 'data', 'payload-customers.json');
+function loadPayloadCustomers() { try { return JSON.parse(fs.readFileSync(PAYLOAD_CUSTOMERS_FILE, 'utf-8')); } catch { return {}; } }
+function savePayloadCustomers(reg) { fs.mkdirSync(path.dirname(PAYLOAD_CUSTOMERS_FILE), { recursive: true }); fs.writeFileSync(PAYLOAD_CUSTOMERS_FILE, JSON.stringify(reg, null, 2)); }
+function payloadCustomerForCompany(company) {
+  const key = _mndaNorm(company); if (!key) return null;
+  const reg = loadPayloadCustomers();
+  if (reg[key]) return reg[key];
+  for (const k of Object.keys(reg)) {
+    if (k.length < 4 || key.length < 4) continue;
+    const [a, b] = key.length <= k.length ? [key, k] : [k, key];
+    if (b.startsWith(a) && a.length / b.length >= 0.5) return reg[k];
+  }
+  return null;
+}
+function recomputePayloadCustomer(rec) {
+  const pls = Array.isArray(rec.payloads) ? rec.payloads : [];
+  rec.is_payload_customer = pls.length > 0;
+  rec.payload_count = pls.length;
+  rec.total_contract_value_usd = pls.reduce((s, p) => s + (Number(p.contract_value_usd) || 0), 0);
+  rec.total_paid_usd = pls.reduce((s, p) => s + (Number(p.amount_paid_usd) || 0), 0);
+  const paid = pls.map(p => p.paid_date).filter(Boolean).sort();
+  rec.customer_since = paid[0] || rec.customer_since || null;
+  rec.last_payload_date = paid[paid.length - 1] || rec.last_payload_date || null;
+  return rec;
+}
+function payloadCustomerMetrics(reg) {
+  const recs = Object.values(reg).filter(r => r && r.is_payload_customer);
+  return {
+    total_customers: recs.length,
+    repeat_customers: recs.filter(r => (r.payload_count || 0) > 1).length,
+    total_payloads: recs.reduce((s, r) => s + (r.payload_count || 0), 0),
+    total_contract_value_usd: recs.reduce((s, r) => s + (r.total_contract_value_usd || 0), 0),
+    total_paid_usd: recs.reduce((s, r) => s + (r.total_paid_usd || 0), 0),
+    customers: recs.map(r => ({ company: r.company, payloads: r.payload_count || 0,
+      contract_value_usd: r.total_contract_value_usd || 0, paid_usd: r.total_paid_usd || 0,
+      customer_since: r.customer_since || null,
+      signed_contracts: (r.payloads || []).filter(p => p.signed_contract_ref).length }))
+      .sort((a, b) => (a.customer_since || '').localeCompare(b.customer_since || '')),
+  };
+}
+
 function esignTransport() {
   const cert = fs.existsSync('/Users/exomac/.protonmail-bridge.crt') ? fs.readFileSync('/Users/exomac/.protonmail-bridge.crt') : undefined;
   return nodemailer.createTransport({ host: '127.0.0.1', port: 1025, secure: false, requireTLS: true, tls: { ca: cert, rejectUnauthorized: false }, auth: { user: 'jquinnexo@pm.me', pass: 'SPqYBivj98-jyF3RujLKxA' } });
@@ -2589,7 +2635,7 @@ const server = http.createServer((req, res) => {
           || (session.email && (u.email || '').toLowerCase() === session.email.toLowerCase()))) || {});
         const q = new URL(req.url, 'http://localhost').searchParams.get('region');
         const want = meU.crm_region || (q && q.toLowerCase() !== 'all' ? q : null);
-        let rows = data.map(toFrontend).map(r => ({ ...r, region: crmRegion(r), mnda: mndaForCompany(r.company) }));
+        let rows = data.map(toFrontend).map(r => ({ ...r, region: crmRegion(r), mnda: mndaForCompany(r.company), payloadCustomer: payloadCustomerForCompany(r.company) }));
         if (want) rows = rows.filter(r => (r.region || '').toLowerCase() === want.toLowerCase());
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(rows));
@@ -2772,7 +2818,7 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/companies' && req.method === 'GET') {
     supabaseGetAll('companies?order=name.asc')
       .then(({ status, data }) => {
-        const out = Array.isArray(data) ? data.map(c => ({ ...c, mnda: mndaForCompany(c.name) })) : data;
+        const out = Array.isArray(data) ? data.map(c => ({ ...c, mnda: mndaForCompany(c.name), payloadCustomer: payloadCustomerForCompany(c.name) })) : data;
         res.writeHead(status >= 400 ? status : 200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(out));
       }).catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
@@ -2799,6 +2845,46 @@ const server = http.createServer((req, res) => {
       supabaseRequest('DELETE', `companies?id=eq.${id}`)
         .then(({ status }) => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
         .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
+    }); return;
+  }
+
+  // ── Payload customers: read registry + TRUE customer metrics (feeds CRM badge + reporting) ──
+  if (req.url.split('?')[0] === '/api/payload-customers' && req.method === 'GET') {
+    const reg = loadPayloadCustomers();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ registry: reg, metrics: payloadCustomerMetrics(reg) }));
+    return;
+  }
+  // ── Payload customers: upsert a PAID payload → flags the company as a payload customer ──
+  // Body: { company, payload: { payload_name, mission, flight_date, mass_kg, contract_id,
+  //   contract_value_usd, amount_paid_usd, paid_date, signed_contract_ref, signed_date, notes } }
+  // (Exo can also update directly via scripts/payload_customer.py — same registry file.)
+  if (req.url === '/api/payload-customers' && req.method === 'POST') {
+    if (!session || (session.role !== 'admin' && session.role !== 'member')) {
+      res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'forbidden' })); return;
+    }
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const p = JSON.parse(body || '{}');
+        const company = (p.company || '').trim();
+        if (!company) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'company required' })); return; }
+        const reg = loadPayloadCustomers();
+        const key = _mndaNorm(company);
+        const now = new Date().toISOString().slice(0, 10);
+        const rec = reg[key] || { company, payloads: [], created: now };
+        rec.company = rec.company || company;
+        rec.payloads = Array.isArray(rec.payloads) ? rec.payloads : [];
+        if (p.payload && typeof p.payload === 'object') {
+          rec.payloads.push({ ...p.payload, paid_date: p.payload.paid_date || now,
+            logged: now, logged_by: (session && session.email) || 'Exo' });
+        }
+        recomputePayloadCustomer(rec);
+        rec.updated = now;
+        reg[key] = rec;
+        savePayloadCustomers(reg);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(rec));
+      } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
     }); return;
   }
 
