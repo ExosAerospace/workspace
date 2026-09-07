@@ -5,3 +5,19 @@ governance/events.jsonl
 doc-library/
 mission-control/.ds-passcode
 /Users/exomac/exos-asset-backups/
+
+# --- Mission Control runtime state (generated, not source) ---
+# Uploaded binaries + caches (keep the index + already-tracked BOM/buy sheets)
+mission-control/uploads/*
+!mission-control/uploads/_meta.json
+!mission-control/uploads/1787343333564_BLK3_BOM_8-21-2026.xlsx
+!mission-control/uploads/1787344060367_HVRR_BOM_8-21-2026.xlsx
+!mission-control/uploads/EXOS_Strategic_Buy_BLK3-HVRR_2026-08-21.xlsx
+# Data backups / dedup snapshots / auth tokens
+mission-control/data/backups/
+mission-control/data/*.bak*
+mission-control/data/*-snapshot-*.json
+mission-control/data/*.backup-*.json
+mission-control/data/*.tmp
+mission-control/data/.backup-token
+mission-control/data/.decisions-token
