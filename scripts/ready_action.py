@@ -33,6 +33,48 @@ SMTP_HOST, SMTP_PORT = "127.0.0.1", 1025
 SMTP_USER, SMTP_PASS = "jquinnexo@pm.me", "SPqYBivj98-jyF3RujLKxA"
 JON = "jquinn@exosaero.com"
 
+# ── Route deliverables to the RESPONSIBLE PARTY, not always Jon (Jon directive 2026-09-08) ──
+# Map an owner name/alias to a work email. Sourced from the ERP employee table + explicit
+# aliases (Lizi=Elizabeth Quinn, etc.). Unknown/blank/Jon -> Jon (safe fallback).
+_TEAM_ALIASES = {
+    "jon": JON, "john": JON, "john quinn": JON, "jquinn": JON, "jon+exo": JON, "exo": JON, "": JON,
+    "lizi": "lquinn@exosaero.com", "liz": "lquinn@exosaero.com", "lizi quinn": "lquinn@exosaero.com",
+    "elizabeth quinn": "lquinn@exosaero.com",
+    "phil": "peaton@exosaero.com", "phil eaton": "peaton@exosaero.com", "phillip eaton": "peaton@exosaero.com",
+    "steve": "snorsworthy@exosaero.com", "steve norsworthy": "snorsworthy@exosaero.com",
+    "steven norsworthy": "snorsworthy@exosaero.com",
+    "toshi": "toshihisa@exosaero.com", "toshihisa kumazawa": "toshihisa@exosaero.com",
+    "kyle": "kballard@exosaero.com", "kyle ballard": "kballard@exosaero.com",
+    "neil": "nmilburn@exosaero.com", "neil milburn": "nmilburn@exosaero.com",
+}
+_TEAM_CACHE = None
+def resolve_owner_email(owner):
+    """Owner name/alias -> work email. Unknown/blank/Jon -> Jon (safe fallback)."""
+    o = str(owner or "").strip().lower()
+    if o in _TEAM_ALIASES:
+        return _TEAM_ALIASES[o]
+    global _TEAM_CACHE
+    if _TEAM_CACHE is None:
+        _TEAM_CACHE = {}
+        try:
+            import sqlite3
+            db = sqlite3.connect(os.path.expanduser("~/.openclaw/workspace/erp-foundation/mc.db"))
+            for full, rj in db.execute("SELECT full_name, raw_json FROM employee WHERE employment_status='Active'"):
+                try:
+                    em = (json.loads(rj) or {}).get("email")
+                except Exception:
+                    em = None
+                if full and em:
+                    _TEAM_CACHE[full.strip().lower()] = em
+            db.close()
+        except Exception:
+            pass
+    if o in _TEAM_CACHE:
+        return _TEAM_CACHE[o]
+    first = o.split()[0] if o.split() else o
+    hits = {em for nm, em in _TEAM_CACHE.items() if nm.split() and nm.split()[0] == first}
+    return next(iter(hits)) if len(hits) == 1 else JON
+
 # Supabase MC board
 SB_URL = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
 def _sb_key():
@@ -88,13 +130,15 @@ def create_task(title, description, category="BD", priority=70, owner="Jon", sou
 
 def email_ready(subject, body, to=JON):
     msg = MIMEMultipart()
-    msg["From"] = f"Exo <{SMTP_USER}>"; msg["Reply-To"] = JON
+    # Reply-To the responsible party so the thread stays with them (Jon oversight via cc-free default);
+    # falls back to Jon when the recipient IS Jon.
+    msg["From"] = f"Exo <{SMTP_USER}>"; msg["Reply-To"] = to or JON
     msg["To"] = to; msg["Subject"] = subject
     msg.attach(MIMEText(body, "plain"))
     with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as s:
         s.ehlo(); s.starttls(); s.ehlo(); s.login(SMTP_USER, SMTP_PASS)
         s.sendmail(SMTP_USER, [to], msg.as_string())
-    _log(f"emailed ready-to-send: {subject}")
+    _log(f"emailed ready-to-send to {to}: {subject}")
 
 
 import re as _re
@@ -190,7 +234,7 @@ def _emailed_recently(prev):
 
 
 def deliver(key, subject, body, to_line="", cc_line="", task_title=None,
-            category="BD", priority=75, do_email=True, do_mc=True, owner="Jon"):
+            category="BD", priority=75, do_email=True, do_mc=True, owner="Jon", to=None):
     """Idempotent: emails Jon the ready-to-send + opens an MC task. Re-running with the
     same key+content is a no-op. Changed content re-delivers, but at most once per
     COOLDOWN_DAYS per key (variant-churn guard). Returns a result dict. Aging day-counters
@@ -224,25 +268,30 @@ def deliver(key, subject, body, to_line="", cc_line="", task_title=None,
         _log(f"cooldown-suppressed re-send ({key}); {COOLDOWN_DAYS}d window not elapsed")
         return {"key": key, "skipped": True, "reason": "cooldown", "task_id": prev.get("task_id")}
 
+    # Route the ready-to-send to the RESPONSIBLE PARTY (task owner), not always Jon.
+    # `to` override wins; otherwise resolve the owner to their work email; unknown/Jon -> Jon.
+    recipient = to or resolve_owner_email(owner)
+
     # Compose the inbox email: recipients header block + the ready-to-send body
     hdr = ""
     if to_line: hdr += f"TO: {to_line}\n"
     if cc_line: hdr += f"CC: {cc_line}\n"
     hdr += f"SUBJECT: {subject}\n"
     inbox_subject = f"[READY TO SEND] {task_title or subject}"
-    inbox_body = ("Ready-to-send below. Copy/forward from Outlook (gov contacts send from you).\n\n"
+    inbox_body = ("Ready-to-send below — you are the responsible owner. Copy/forward from your mail "
+                  "(external / gov contacts send from you; loop Jon only if it needs his sign-off).\n\n"
                   + hdr + "\n" + body)
 
     emailed = False
     if do_email:
         try:
-            email_ready(inbox_subject, inbox_body); emailed = True
+            email_ready(inbox_subject, inbox_body, to=recipient); emailed = True
         except Exception as e:
             _log(f"email FAILED ({key}): {e}")
 
     task_id = prev.get("task_id") if prev else None
     if do_mc and not task_id:
-        desc = (f"Ready-to-send delivered to Jon's inbox {datetime.now():%Y-%m-%d %H:%M}.\n\n"
+        desc = (f"Ready-to-send delivered to {recipient} {datetime.now():%Y-%m-%d %H:%M}.\n\n"
                 + hdr + "\n" + body[:1500])
         task_id = create_task(task_title or subject, desc, category=category, priority=priority, owner=owner)
 
