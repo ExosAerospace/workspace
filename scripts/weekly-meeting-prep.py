@@ -42,8 +42,11 @@ def page(path):
 
 
 def build_agenda(meeting_day):
+    # Only ACTIONABLE work counts toward a person's line. Done/Cancelled/Held/Queued are not
+    # open action items — counting them made John's line read "597 open" when ~40 were dead states.
+    DEAD = ("done", "cancelled", "canceled", "held", "queued")
     tasks = [t for t in page("tasks?select=id,title,due_date,state,owner,assigned_email,priority,category&order=id")
-             if (t.get("state") or "").lower() != "done" and t.get("source") != "mc-board-legacy"]
+             if (t.get("state") or "").lower() not in DEAD and t.get("source") != "mc-board-legacy"]
     today = datetime.date.today()
     soon = today + datetime.timedelta(days=10)
     lines = [f"Exos Weekly Team Meeting — {meeting_day:%A, %b %d} 10:00 CT",
@@ -56,7 +59,10 @@ def build_agenda(meeting_day):
             except Exception: return None
         hot = [t for t in mine if (due(t) and due(t) <= soon) or (t.get("priority") or 0) >= 80]
         hot.sort(key=lambda t: (due(t) or datetime.date(2099, 1, 1)))
-        lines.append(f"— {name}: {len(mine)} open ({len(hot)} due-soon/high)")
+        import re as _re
+        ready = [t for t in mine if _re.search(r'\[READY|SUBMIT-READY|Ready to send|\bDRAFT\b|REVIEW V|for review', t.get("title") or "", _re.I)]
+        rtag = f" · {len(ready)} ready for your review/send" if ready else ""
+        lines.append(f"— {name}: {len(mine)} actionable ({len(hot)} due-soon/high{rtag})")
         for t in hot[:5]:
             d = due(t)
             flag = " ⚠️overdue" if d and d < today else (f" (due {d:%b %d})" if d else "")

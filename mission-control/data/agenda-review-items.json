@@ -2,24 +2,35 @@
   "_comment": "Scripted review items appended to the weekly team-meeting agenda by scripts/weekly-meeting-prep.py. Remove an item once reviewed/closed.",
   "review_items": [
     {
-      "title": "ERP / Mission Control build review — what shipped this week",
+      "title": "Mission Control / ERP — what shipped this week",
       "owner": "Exo / John",
-      "added": "2026-08-10",
+      "added": "2026-09-08",
       "script": [
-        "HR Directory & Org (MC → 👥 HR): now live from BambooHR with managers, C-Suite (John, David), Victor → Operations, Andrew's email; org-chart + CSV download available.",
-        "Asset Register (🛰️ Assets) and Production Control (🏭 Production) live — closes gov-readiness gap MQ-1 (manufacturing management).",
-        "Phil Eaton is now the ERP program lead; Lizi + Kyle own Phase 2 DCAA timekeeping setup in Bamboo."
+        "Teamwork RETIRED — the BLK3 vehicle schedule now lives in the audited ERP (📅 Schedule + 📊 Gantt), which is the sole system of record; production work orders and CDRL milestones tie to these dates directly.",
+        "Removed a stale imported task ('provide alternate budget… extend target date to July') that was confusing the schedule with an old date.",
+        "Fixed the Exobot question box (chat widget) — it was failing on a version-skewed agent binary; now pinned to the live gateway version.",
+        "CRM: companies with executed MNDAs show a purple border + MNDA date; DocuSign page now surfaces server-side envelopes awaiting signature.",
+        "Security: monthly DD-blocked-sender list auto-generates and pushes to all employees (procedure IT-002)."
       ]
     },
     {
-      "title": "BLK3 schedule → ERP integration (Teamwork)",
+      "title": "BLK3 schedule (ERP = system of record) — refresh owners + dates",
       "owner": "Phil (lead) + Steve",
-      "added": "2026-08-10",
+      "added": "2026-09-08",
       "script": [
-        "The Teamwork 'Blk3 Flight' schedule is now replicated live into Mission Control (📅 Schedule): 11 task-lists, 35 tasks, auto-syncs every 6h — Teamwork stays the system of record.",
-        "FLAG: the schedule is stale — tasks carry 2022–2024 dates and most have no assignee. Team decision: refresh start/due dates + assign owners in Teamwork (task #1884, Phil lead + Steve).",
-        "Confirm 'Blk3 Flight' (Teamwork 902146) is the authoritative BLK3 vehicle schedule (ORIONAST BLK3 and Purdue BLK3 projects are empty).",
-        "Next once refreshed: tie Production work orders (Phase 5B) and CDRL milestones (Phase 4) to real schedule dates."
+        "The BLK3 schedule (45 tasks across its task-lists) is now edited directly in Mission Control's audited ERP — no external tool.",
+        "ACTION: assign an owner to every unassigned task and set real start/due dates; program window Day 1 = 2026-08-10 → 2027-03-15.",
+        "Once owners/dates are set, the critical path recomputes automatically and Production work orders (Phase 5B) + CDRL milestones (Phase 4) can tie to real dates."
+      ]
+    },
+    {
+      "title": "John's task load — delegation pass",
+      "owner": "John + Exo",
+      "added": "2026-09-08",
+      "script": [
+        "~568 actionable items are assigned to John — this is a delegation/reassignment issue, not junk (dedup already ran; no duplicates remain).",
+        "Many are auto-created from email addressed to John but are really Lizi/Phil/Steve execution work, or are Exo-completed drafts waiting only on John's review/send.",
+        "DECISION: authorize Exo to run a reassignment pass (move execution items off John to the right owner; keep only decisions/sends/approvals on John's line)."
       ]
     }
   ]
