@@ -9,7 +9,22 @@
   function load(k, d) { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } }
   function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   var hist = load(HIST, []);        // [{who:'me'|'bot', text}]
-  var pending = load(PEND, []);     // [{jobId, q}]
+  var pending = load(PEND, []);     // [{jobId, q, ts}]
+  // A pending job is only "in flight" for so long. If the server forgets it
+  // (restart, lost job) the result endpoint 404s forever — without these caps a
+  // '…working' bubble would stick permanently. GRACE tolerates transient errors;
+  // TTL is the hard ceiling after which we give up and clear the bubble.
+  var PEND_GRACE = 90 * 1000, PEND_TTL = 10 * 60 * 1000;
+  function nowMs() { return Date.now(); }
+  function prunePending() {
+    var n = nowMs(), changed = false;
+    pending = pending.filter(function (p) {
+      if (!p.ts || (n - p.ts) > PEND_TTL) { changed = true; return false; }
+      return true;
+    });
+    if (changed) save(PEND, pending);
+  }
+  prunePending();  // drop any stale/legacy '…working' jobs left over from a prior session
   var attachments = [];             // in-memory only: [{name, data(dataURL), size}] for the next send
 
   var css = '#exobotFab{position:fixed;bottom:22px;right:22px;width:54px;height:54px;border-radius:50%;'
@@ -209,7 +224,7 @@
         if (r.status === 401) { pushHist({ who: 'bot', text: 'Session expired — reload and log in.' }); render(); return; }
         return r.json().then(function (j) {
           if (r.status === 429) { pushHist({ who: 'bot', text: (j && j.error) || 'Too many questions running at once — let one finish.' }); render(); return; }
-          if (j && j.jobId) { pending.push({ jobId: j.jobId, q: msg || (atts.length ? '📄 ' + atts[0].name : '') }); save(PEND, pending); render(); poll(); }
+          if (j && j.jobId) { pending.push({ jobId: j.jobId, q: msg || (atts.length ? '📄 ' + atts[0].name : ''), ts: nowMs() }); save(PEND, pending); render(); poll(); }
           else { pushHist({ who: 'bot', text: (j && (j.reply || j.error)) || 'No reply.' }); render(); }
         });
       })
@@ -217,18 +232,25 @@
     var inp2 = document.getElementById('ecInput'); if (inp2) inp2.focus();
   }
   function poll() {
+    prunePending();
     if (!pending.length) return;
     pending.slice().forEach(function (p) {
+      function drop(text) {
+        pending = pending.filter(function (x) { return x.jobId !== p.jobId; }); save(PEND, pending);
+        if (text) { pushHist({ who: 'bot', text: text }); if (!isOpen()) { unread++; badge(unread); } }
+        render();
+      }
       fetch('/api/chat/result?id=' + encodeURIComponent(p.jobId), { credentials: 'same-origin' })
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (j) {
-          if (!j || j.status === 'pending') return;
-          // done or error — resolve this job
-          pending = pending.filter(function (x) { return x.jobId !== p.jobId; }); save(PEND, pending);
-          pushHist({ who: 'bot', text: (j.reply || j.error || 'No reply.') });
-          render();
-          if (!isOpen()) { unread++; badge(unread); }
-        }).catch(function () {});
+          if (j && j.status === 'pending') return;              // still working — keep waiting
+          if (j) { drop(j.reply || j.error || 'No reply.'); return; }   // terminal answer/error
+          // Unknown/expired job (server 404 or error body). Tolerate a brief blip,
+          // but once past GRACE the job is gone for good — clear it so it can't hang.
+          if (nowMs() - (p.ts || 0) > PEND_GRACE) drop('That request timed out and was cleared — please re-send if you still need it.');
+        }).catch(function () {
+          if (nowMs() - (p.ts || 0) > PEND_TTL) drop('');        // network trouble past the hard cap — silently clear
+        });
     });
   }
 
