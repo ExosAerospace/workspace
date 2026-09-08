@@ -173,6 +173,13 @@ function decisionsToken() {
     return t;
   }
 }
+// R-017 (Decisions Matrix Daily Update cron) reads/closes decisions headlessly via X-Exo-Token —
+// it has no login session cookie. GET /api/decisions and POST /api/decisions/answer are otherwise
+// session-gated for per-user scoping; this lets a valid token stand in as the cron's identity on
+// ONLY those two exact paths (checked below), without weakening session auth anywhere else.
+function isDecisionsCronToken(req) {
+  return (req.headers['x-exo-token'] || '') === decisionsToken();
+}
 // Streaming backup download (see /backup/ route). Files live here; token gates access.
 const BACKUP_DL_DIR = path.join(process.env.HOME || '/Users/exomac', 'exos-asset-backups', '_download');
 const BTOKEN_FILE = path.join(__dirname, 'data', '.backup-token');
@@ -338,7 +345,12 @@ function saveUploadsMeta(meta) {
 // which is reliable here (LibreOffice/soffice hangs in this environment).
 const PDF_CACHE_DIR = path.join(UPLOADS_DIR, '.pdfcache');
 const CHROME_BIN = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const OPENCLAW_BIN = '/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw';
+// Use the version-independent mise shim, NOT a node-version-pinned path. A hardcoded
+// installs/node/<ver>/bin path silently drifts out of sync with the running gateway on every
+// node bump (was pinned to 24.14.0 / v2026.6.34 while the gateway ran v2026.7.1-2 → chat agent
+// version skew and intermittent "No reply." failures). The shim always resolves to the active
+// openclaw, matching the running gateway.
+const OPENCLAW_BIN = '/Users/exomac/.local/share/mise/shims/openclaw';
 const PDF_CONVERTIBLE = ['.docx', '.doc', '.pptx', '.ppt'];
 
 // ── Exobot chat: async job store so answers survive page navigation ──
@@ -378,7 +390,10 @@ function runExobotChat(jobId, msg) {
     { timeout: 165000, maxBuffer: 16 * 1024 * 1024, env: childEnv }, (err, stdout) => {
       let reply = '';
       try {
-        const j = JSON.parse(stdout);
+        // Tolerate any non-JSON prefix on stdout (e.g. a CLI version/upgrade warning that
+        // bleeds to stdout): parse from the first '{' so a stray line never blanks the reply.
+        const s = stdout.indexOf('{');
+        const j = JSON.parse(s >= 0 ? stdout.slice(s) : stdout);
         reply = (j.result && Array.isArray(j.result.payloads) ? j.result.payloads.map(p => p && p.text).filter(Boolean).join('\n') : '')
           || (j.result && j.result.meta && j.result.meta.finalAssistantVisibleText) || '';
       } catch {}
@@ -1367,10 +1382,14 @@ const server = http.createServer((req, res) => {
   // ── AUTH GATE: protect all pages and APIs except login ──
   const publicPaths = ['/api/login', '/login', '/login.html', '/api/inbound-email', '/brand-assets/', '/sign', '/sign.html', '/api/esign/get', '/api/esign/sign', '/api/decisions/ingest', '/api/research/ingest'];
   const isPublic = publicPaths.some(p => req.url.startsWith(p));
+  const decisionsCronPath = req.url.split('?')[0];
+  const isDecisionsCronRequest = (decisionsCronPath === '/api/decisions' || decisionsCronPath === '/api/decisions/answer') && isDecisionsCronToken(req);
   const fullSession = getSession(req);
   const dsSession = getDsSession(req);
   if (!fullSession) {
-    if (dsSession) {
+    if (isDecisionsCronRequest) {
+      // Token-authenticated cron request on an allowed decisions path — fall through to the handler.
+    } else if (dsSession) {
       // DocuSign-only session: confined strictly to DocuSign actions (+ already-public assets).
       if (!isDsAllowed(req.url) && !isPublic) {
         if (req.url.startsWith('/api/')) {
@@ -1507,7 +1526,7 @@ const server = http.createServer((req, res) => {
       res.writeHead(403); res.end('Forbidden'); return;
     }
     // Block internal pages — only allow tasks board and welcome
-    const allowedPages = ['/', '/index.html', '/welcome', '/welcome.html', '/login', '/login.html', '/dashboard', '/dashboard.html', '/capstone-tracker', '/capstone-tracker.html'];
+    const allowedPages = ['/', '/index.html', '/welcome', '/welcome.html', '/login', '/login.html', '/dashboard', '/dashboard.html', '/capstone-tracker', '/capstone-tracker.html', '/set-password', '/set-password.html'];
     const isAllowedPage = allowedPages.some(p => req.url === p || req.url.startsWith(p + '?'));
     if (req.method === 'GET' && !req.url.startsWith('/api/') && !isAllowedPage && !req.url.startsWith('/brand-assets')) {
       res.writeHead(302, { 'Location': '/' });
@@ -2475,9 +2494,14 @@ const server = http.createServer((req, res) => {
         // otherwise so the filter falls back to owner-name matching (the @Exobot path already
         // sets all three; this brings the UI dropdown to parity).
         if (fields.owner && fields.owner !== oldTask.owner) {
-          const ownerUser = findOwnerUser(fields.owner);
+          // Multi-assignee: owner may be "Person A+Person B"; resolve each part to an email
+          const ownerParts = String(fields.owner).split('+').map(p => p.trim()).filter(Boolean);
+          const emails = ownerParts.map(p => {
+            const u = findOwnerUser(p);
+            return (u && u.email) ? u.email.toLowerCase() : null;
+          }).filter(Boolean);
           fields.assigned_to = fields.owner;
-          fields.assigned_email = (ownerUser && ownerUser.email) ? ownerUser.email : null;
+          fields.assigned_email = emails.length > 0 ? emails.join(',') : null;
           fields.assigned_at = new Date().toISOString();
         }
 
@@ -4022,7 +4046,7 @@ const server = http.createServer((req, res) => {
     // Admins can pass ?scope=all to see the whole board.
     const dsess = getSession(req);
     const me = ((dsess && dsess.email) || '').toLowerCase();
-    const scopeAll = urlObj.searchParams.get('scope') === 'all' && dsess && dsess.role === 'admin';
+    const scopeAll = (urlObj.searchParams.get('scope') === 'all' && dsess && dsess.role === 'admin') || isDecisionsCronToken(req);
     if (!scopeAll) {
       arr = arr.filter(d => {
         const assignee = String(d.assignedTo || 'jquinn@exosaero.com').toLowerCase();
@@ -4100,7 +4124,7 @@ const server = http.createServer((req, res) => {
         const p = JSON.parse(body || '{}');
         const items = Array.isArray(p.answers) ? p.answers : [p];
         const arr = loadDecisions(); const now = new Date().toISOString(); const updated = [];
-        const who = (session && session.name) || 'Jon';
+        const who = (session && session.name) || (isDecisionsCronToken(req) ? 'Decisions Daily Update' : 'Jon');
         for (const it of items) {
           const d = arr.find(x => x.id === it.id);
           if (!d) continue;
