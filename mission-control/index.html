@@ -2025,6 +2025,14 @@ function formatFileSize(bytes) {
 
 async function loadDocuments(taskId) {
   const el = document.getElementById('docList');
+  // early_adopter sandbox: the /api/uploads route is intentionally blocked (docs aren't
+  // project-scoped). Skip the call entirely so it doesn't 403 and get mislogged as
+  // out-of-scope "probing" every time a student opens one of their own task cards.
+  if (currentUserRole === 'early_adopter') {
+    el.innerHTML = '<div class="docs-empty">Documents are not available in the preview.</div>';
+    updateDocBadge(0);
+    return;
+  }
   el.innerHTML = '<div class="docs-empty">Loading documents...</div>';
   try {
     const res = await fetch(`/api/uploads?task_id=${taskId}`);

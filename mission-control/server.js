@@ -1505,7 +1505,12 @@ const server = http.createServer((req, res) => {
   // doc (investor decks, 409A, financial model, ITAR-adjacent) to an external sandbox user
   // (e.g. the UTD capstone students, who are scoped to "Payload Sales" only).
   if (session && session.role === 'early_adopter') {
-    const allowedAPIs = ['/api/tasks', '/api/me', '/api/logout', '/api/layout', '/api/capstone-program'];
+    // NOTE: /api/task-desc is allowed here but is PROJECT-SCOPED inside its own handler
+    // (an early_adopter only gets the description of a task in their assigned project).
+    // Without it the board detail panel lazy-load (index.html) 403s on every card open —
+    // students can't read their own scoped tasks and each click is mislogged as
+    // out-of-scope "probing". uploads stays OFF the list (docs aren't project-scoped).
+    const allowedAPIs = ['/api/tasks', '/api/task-desc', '/api/me', '/api/logout', '/api/layout', '/api/capstone-program'];
     const isAllowedAPI = allowedAPIs.some(p => req.url.startsWith(p));
     if (req.url.startsWith('/api/') && !isAllowedAPI) {
       auditDeny(session, req, 'out-of-scope-api');
@@ -2450,8 +2455,27 @@ const server = http.createServer((req, res) => {
   if (req.url.split('?')[0] === '/api/task-desc' && req.method === 'GET') {
     const id = (new URLSearchParams(req.url.split('?')[1] || '')).get('id');
     if (!id) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'id required' })); return; }
-    supabaseRequest('GET', `tasks?id=eq.${encodeURIComponent(id)}&select=id,description`)
-      .then(({ data }) => { const row = Array.isArray(data) ? data[0] : null; res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ id, description: row ? (row.description || '') : '' })); })
+    // early_adopter sandbox: only return the description if the task is in the user's
+    // assigned project (same rule that scopes the board list). Prevents a sandbox user
+    // from reading arbitrary task descriptions by id, while letting their own board work.
+    const descCols = (session && session.role === 'early_adopter') ? 'id,description,category' : 'id,description';
+    supabaseRequest('GET', `tasks?id=eq.${encodeURIComponent(id)}&select=${descCols}`)
+      .then(({ data }) => {
+        const row = Array.isArray(data) ? data[0] : null;
+        if (session && session.role === 'early_adopter') {
+          const users = loadUsers();
+          const user = users.find(u => u.id === session.userId);
+          const allowedProject = user && user.project ? user.project : null;
+          if (!row || !allowedProject || row.category !== allowedProject) {
+            auditDeny(session, req, 'out-of-scope-task-desc');
+            res.writeHead(403, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Not permitted' }));
+            return;
+          }
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ id, description: row ? (row.description || '') : '' }));
+      })
       .catch(e => { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e).slice(0, 200) })); });
     return;
   }
