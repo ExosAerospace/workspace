@@ -15,7 +15,25 @@
           "x_surfaces": ["2097X", "2098X"],
           "z_surfaces": ["2097Z", "2098Z"]
         }
-      }
+      },
+      "documents": [
+        {
+          "title": "Mori Seiki NL Series Programming Manual",
+          "type": "Programming Manual",
+          "path": "data/machine-docs/NLX2500/MoriSeiki-NLSeries-Programming-Manual.pdf",
+          "added": "2026-09-08",
+          "added_by": "mtalley@exosaero.com",
+          "pages": 481,
+          "notes": "Programming/G-M code reference. Presetter appears only as M-codes (M71/M72 arm up/down, M250/M255 sub-spindle, sensor air-blow M50/M55, sensor switching M87/M88). Does NOT contain probe/tool-setter calibration instructions or the 2097/2098 sensor-position params - those are in the Operation/Maintenance Manual (not yet on file)."
+        }
+      ],
+      "procedures": [
+        {
+          "doc_no": "EXOS-MFG-001-0",
+          "title": "NLX2500 SS Tool Post Calibration",
+          "path": "process-library/13-manufacturing/EXOS-MFG-001-0_NLX2500_SS_Tool_Post_Calibration.pdf"
+        }
+      ]
     }
   ]
 }
