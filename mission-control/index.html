@@ -686,7 +686,7 @@
            ondrop="handleFileDrop(event)"
            onclick="document.getElementById('fileInput').click()">
         <div class="upload-icon">+</div>
-        <div class="upload-text">Drop files here or <strong>click to browse</strong></div>
+        <div class="upload-text">Drop files here, <strong>click to browse</strong>, or paste</div>
         <div class="upload-hint">PDF, DOCX, XLSX, PPTX, PNG, JPG, CSV, ZIP — max 25 MB</div>
       </div>
       <input type="file" id="fileInput" style="display:none"
@@ -2074,6 +2074,21 @@ function handleFileDrop(e) {
     handleFileSelect(e.dataTransfer.files);
   }
 }
+
+// Paste-to-attach: while a task drawer is open, pasting a file or screenshot attaches it to
+// that task's Documents. Guarded so it never fires for a paste inside the Ask Exobot widget
+// (which handles its own file pastes) and only when a task is actually open.
+document.addEventListener('paste', function (e) {
+  const ov = document.getElementById('panelOverlay');
+  if (!ov || !ov.classList.contains('open') || !currentPanelTaskId) return;
+  if (e.target && e.target.closest && e.target.closest('#exobotChat')) return; // Exobot owns its pastes
+  const items = (e.clipboardData || {}).items || [], files = [];
+  for (let i = 0; i < items.length; i++) { if (items[i].kind === 'file') { const f = items[i].getAsFile(); if (f) files.push(f); } }
+  if (!files.length) return;              // plain-text pastes pass through untouched
+  e.preventDefault();
+  try { switchTab('documents'); } catch (_) {}
+  handleFileSelect(files);
+});
 
 async function handleFileSelect(files) {
   if (!files || files.length === 0 || !currentPanelTaskId) return;
