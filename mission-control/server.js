@@ -4322,11 +4322,15 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/chat' && req.method === 'POST') {
     const session = getSession(req);
     if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
-    let body = ''; req.on('data', c => body += c); req.on('end', () => {
-      let msg = '';
-      try { msg = (JSON.parse(body || '{}').message || '').toString().trim(); } catch {}
-      if (!msg) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'empty message' })); return; }
-      if (msg.length > 4000) msg = msg.slice(0, 4000);
+    let body = ''; req.on('data', c => { body += c; if (body.length > 30 * 1024 * 1024) req.destroy(); }); req.on('end', () => {
+      let payload = {};
+      try { payload = JSON.parse(body || '{}'); } catch {}
+      let msg = (payload.message || '').toString().trim();
+      if (msg.length > 8000) msg = msg.slice(0, 8000);
+      // Pasted / attached documents (base64). Saved to disk so the agent (full file tools)
+      // can read them; the paths are handed to the agent in the prompt.
+      const atts = Array.isArray(payload.attachments) ? payload.attachments.slice(0, 10) : [];
+      if (!msg && !atts.length) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'empty message' })); return; }
       // Async + parallel: create a background job, return its id immediately. The widget
       // polls /api/chat/result, so the answer survives navigation; and a question fired
       // while another is still running forks into its own lane so both run at once.
@@ -4338,9 +4342,31 @@ const server = http.createServer((req, res) => {
         return;
       }
       const jobId = crypto.randomBytes(12).toString('hex');
+      let attNote = '';
+      if (atts.length) {
+        try {
+          const dir = path.join(UPLOADS_DIR, 'chat', jobId);
+          fs.mkdirSync(dir, { recursive: true });
+          const saved = [];
+          for (const a of atts) {
+            const safe = (String(a.name || 'document').replace(/[^\w.\-]/g, '_').slice(0, 120)) || 'document';
+            const b64 = String(a.data || '').split(',').pop();
+            if (!b64) continue;
+            const buf = Buffer.from(b64, 'base64');
+            if (!buf.length || buf.length > 25 * 1024 * 1024) continue;
+            const fp = path.join(dir, safe);
+            fs.writeFileSync(fp, buf);
+            saved.push(fp);
+          }
+          if (saved.length) attNote = '\n\n[The user attached ' + (saved.length > 1 ? saved.length + ' documents' : 'a document')
+            + ' via the Ask Exobot chat — read the file' + (saved.length > 1 ? 's' : '') + ' at '
+            + (saved.length > 1 ? 'these paths' : 'this path') + ' for full content:]\n' + saved.map(p => '- ' + p).join('\n');
+        } catch (e) { /* if save fails, proceed with text only */ }
+      }
+      const fullMsg = (msg || '(see attached document)') + attNote;
       const lane = chatAssignSession(email, jobId);
       chatJobs.set(jobId, { email, skey: lane.skey, isMain: lane.isMain, status: 'pending', reply: '', ts: Date.now() });
-      runExobotChat(jobId, msg);
+      runExobotChat(jobId, fullMsg);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ jobId }));
     });
