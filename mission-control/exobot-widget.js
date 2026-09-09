@@ -48,7 +48,7 @@
     + '.ec-thinking{color:var(--text2,#8aa0bd);font-style:italic}'
     + '.ec-foot{display:flex;gap:8px;padding:10px;border-top:1px solid var(--border,#2a3f63)}'
     + '.ec-foot textarea{flex:1;resize:none;background:#0a1830;border:1px solid var(--border,#2a3f63);border-radius:9px;'
-    + 'color:var(--text,#e8edf5);padding:9px 11px;font-size:13px;font-family:inherit;outline:none;max-height:100px}'
+    + 'color:var(--text,#e8edf5);padding:9px 11px;font-size:13px;font-family:inherit;outline:none;min-height:96px;max-height:160px}'
     + '.ec-foot textarea:focus{border-color:#60a5fa}'
     + '#ecSendBtn{background:#2563eb;color:#fff;border:none;border-radius:9px;width:42px;font-size:16px;cursor:pointer}'
     + '#ecSendBtn:disabled{opacity:.5;cursor:default}'
@@ -97,7 +97,7 @@
       + '<div class="ec-foot">'
       + '<input type="file" id="ecFile" multiple style="display:none">'
       + '<button id="ecAttachBtn" class="ec-attach" title="Attach documents (or paste / drag &amp; drop)">📎</button>'
-      + '<textarea id="ecInput" rows="1" placeholder="Ask Exobot…  (Enter to send · 📎 or paste/drop a document)"></textarea>'
+      + '<textarea id="ecInput" rows="5" placeholder="Ask Exobot…  (Enter to send · 📎 or paste/drop a document)"></textarea>'
       + '<button id="ecSendBtn">➤</button></div></div>';
     document.body.appendChild(wrap);
     document.getElementById('exobotFab').addEventListener('click', function () { toggle(true); });
@@ -134,6 +134,12 @@
     watchTaskPanel();
     if (load(OPENK, false)) toggle(true, true);
     setInterval(poll, 3000); poll();
+    // Browsers throttle/pause setInterval in background or inactive tabs, so a reply
+    // that finished server-side can sit unfetched until the user interacts — making an
+    // already-ready answer appear only when you type your next question. Poll the instant
+    // the tab regains visibility/focus so completed answers surface immediately on return.
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) poll(); });
+    window.addEventListener('focus', poll);
   }
 
   // Keep the launcher/chat clickable and visible when the task detail drawer is open.
