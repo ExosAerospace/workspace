@@ -140,6 +140,26 @@ def _route_owner(b):
     return "Jon"                                          # unsure -> Jon (safe default)
 
 
+def _log_capture_review(b):
+    """Surface a Jon-routed capture to the monthly review digest instead of his task board.
+    Reviewed at the weekly meeting; anything worth doing gets promoted via an explicit @exo command."""
+    try:
+        from datetime import datetime
+        month = datetime.now().strftime("%Y-%m")
+        path = os.path.join(WS, "memory", f"capture-review-{month}.md")
+        new = not os.path.exists(path)
+        with open(path, "a", encoding="utf-8") as f:
+            if new:
+                f.write(f"# Capture review — {month}\n\n"
+                        "Inbound-derived captures that routed to Jon. NOT tasks — review here; "
+                        "promote to a task only via an explicit @exo instruction to exosmc.\n\n")
+            ts = datetime.now().strftime("%Y-%m-%d %H:%M")
+            title = b.get("task_title") or b.get("subject") or b.get("key")
+            f.write(f"- [{ts}] (p{_prio(b.get('priority', 75))}) {title}  —  key:`{b.get('key')}`\n")
+    except Exception as e:
+        print(f"  ! capture-review log failed: {e}")
+
+
 def main():
     dry = "--dry-run" in sys.argv
     found = dispatched = skipped = 0
@@ -173,13 +193,19 @@ def main():
         payload = _is_payload_sales(b)
         restricted = payload and _is_restricted(b)
         if restricted:
-            route, category, owner, do_email = "RESTRICTED", RESTRICTED_CAT, "Jon+Exo", False
+            route, category, owner, do_email, do_mc = "RESTRICTED", RESTRICTED_CAT, "Jon+Exo", False, True
         elif payload:
-            route, category, owner, do_email = "UTD-QUEUE", PAYLOAD_CAT, UTD_QUEUE_OWNER, False
+            route, category, owner, do_email, do_mc = "UTD-QUEUE", PAYLOAD_CAT, UTD_QUEUE_OWNER, False, True
         else:
             owner = _route_owner(b)
-            route = "JON" if owner == "Jon" else "OWNER"
-            category, do_email = b.get("category", "BD"), True
+            if owner == "Jon":
+                # Jon's rule (2026-09-09): inbound/forwarded email must NOT spawn a task on his
+                # board or an email nag. Only an explicit @exo instruction to exosmc creates a Jon
+                # task. A capture that routes to Jon is surfaced to the capture-review digest for
+                # later review — never auto-tasked, never auto-emailed.
+                route, category, owner, do_email, do_mc = "JON-REVIEW", b.get("category", "BD"), "Jon", False, False
+            else:
+                route, category, do_email, do_mc = "OWNER", b.get("category", "BD"), True, True
         if dry:
             print(f"  [dry-run] [{route}] {label} -> cat={category!r} owner={owner!r} email={do_email}")
             continue
@@ -194,12 +220,14 @@ def main():
                 to_line=b.get("to", ""), cc_line=b.get("cc", ""),
                 task_title=b.get("task_title"), category=category,
                 priority=_prio(b.get("priority", 75)),
-                do_email=do_email, owner=owner)
+                do_email=do_email, do_mc=do_mc, owner=owner)
             if res.get("skipped"):
                 skipped += 1
             else:
                 if do_email:
                     dispatched += 1
+                if route == "JON-REVIEW":
+                    _log_capture_review(b)
                 print(f"  dispatched [{route}]: {label} | emailed={res.get('emailed')} task={res.get('task_id')}")
         except Exception as e:
             print(f"  ! dispatch failed for {label}: {e}")
