@@ -7,7 +7,7 @@ Lizi) and delivers it the day before (Monday). SKIPS the week of the monthly Wor
 Run:  python3 scripts/weekly-meeting-prep.py            # gated (only the day before a weekly Tue)
       python3 scripts/weekly-meeting-prep.py --force    # test now
 """
-import os, sys, json, datetime, urllib.request, subprocess
+import os, sys, json, re, datetime, urllib.request, subprocess
 import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 
 WS = os.path.expanduser("~/.openclaw/workspace")
@@ -67,14 +67,63 @@ def build_agenda(meeting_day):
             d = due(t)
             flag = " ⚠️overdue" if d and d < today else (f" (due {d:%b %d})" if d else "")
             lines.append(f"    • #{t['id']} {(t.get('title') or '')[:60]}{flag}")
-    # project pulse
-    proj = {}
-    for t in tasks:
-        c = t.get("category") or ""
-        if c in ("BLK3 to Flight", "HVRR-RDRE"):
-            proj[c] = proj.get(c, 0) + 1
-    if proj:
-        lines.append("\nProjects: " + " · ".join(f"{k} ({v} open)" for k, v in proj.items()))
+    def due2(t):
+        try: return datetime.date.fromisoformat((t.get("due_date") or "")[:10])
+        except Exception: return None
+
+    # ---- Solicitations, pursuits & funding actions (trailing 7 days) ----
+    # New solicitations submitted, opportunity pursuits, and major funding/contract actions.
+    # Sourced from the opportunities board; "new this week" = most recent date stamped in the item.
+    def clean(s, n=74):
+        return re.sub(r"\s+", " ", (s or "")).strip()[:n]
+    try:
+        opps = json.load(open(os.path.join(WS, "mission-control", "data", "opportunities.json")))
+        opps = opps if isinstance(opps, list) else opps.get("opportunities", [])
+    except Exception:
+        opps = []
+    cutoff = meeting_day - datetime.timedelta(days=7)
+    dre = re.compile(r"(20\d\d)-(\d\d)-(\d\d)")
+    fund = re.compile(r"\b(WON|AWARD|AWARDED|CONTRACT|OBLIGAT|FUNDED|SUBMITTED|SELECTED)\b", re.I)
+    recent = []
+    for o in opps:
+        blob = f"{o.get('status','')} {o.get('description','')} {o.get('next_action','')}"
+        ds = []
+        for y, m, d in dre.findall(blob):
+            try: ds.append(datetime.date(int(y), int(m), int(d)))
+            except Exception: pass
+        last = max(ds) if ds else None
+        if last and cutoff <= last <= meeting_day:
+            recent.append((last, o, bool(fund.search(blob))))
+    recent.sort(key=lambda x: x[0], reverse=True)
+    lines.append("\nNew solicitations, pursuits & funding actions (last 7 days):")
+    if recent:
+        for dt, o, funding in recent[:10]:
+            icon = "💰" if funding else "▹"
+            lines.append(f"   {icon} {clean(o.get('title'))}  [{dt:%b %d}]")
+    else:
+        lines.append("   ▹ (no new pursuit/solicitation/funding activity logged this week)")
+
+    # ---- BLK3-to-Flight & HVRR build — per-employee task review ----
+    # What each person owns to get BLK3 to flight and the HVRR build completed.
+    # Detailed critical path lives in the ERP Schedule/Gantt; this is the owner roll-up.
+    from collections import defaultdict
+    def program_block(title, category):
+        rows = [t for t in tasks if (t.get("category") or "") == category]
+        lines.append(f"\n{title} — what each person owns ({len(rows)} open):")
+        if not rows:
+            lines.append("   • (nothing tagged to this program — add owners/dates in the ERP Schedule)")
+            return
+        g = defaultdict(list)
+        for t in rows:
+            g[(t.get("owner") or t.get("assigned_email") or "Unassigned")].append(t)
+        for who in sorted(g, key=lambda k: -len(g[k])):
+            lines.append(f"   {who} ({len(g[who])}):")
+            for t in sorted(g[who], key=lambda t: (due2(t) or datetime.date(2099, 1, 1)))[:6]:
+                d = due2(t)
+                flag = " ⚠️overdue" if d and d < today else (f" (due {d:%b %d})" if d else "")
+                lines.append(f"      • #{t['id']} {(t.get('title') or '')[:56]}{flag}")
+    program_block("BLK3 to Flight", "Blk3 Flight")
+    program_block("HVRR-RDRE build", "EXOS HVRR RDRE")
     try:
         dec = json.load(open(os.path.join(WS, "mission-control", "data", "decisions.json")))
         dec = dec if isinstance(dec, list) else dec.get("decisions", [])
