@@ -574,7 +574,33 @@ function teamworkStateMap(status) {
   return 'To Do';
 }
 
+// ── Short-TTL in-memory read cache for Supabase GETs ─────────────────────────
+// Disk-IO remediation (2026-09-09): the Supabase project was draining its Disk IO
+// Budget because every open dashboard tab (many auto-refresh on 15–60s timers) and
+// every polling page hit Supabase disk with an UNCACHED read. This collapses all
+// near-simultaneous list reads into ONE Supabase read per query per TTL window, no
+// matter how many tabs/pollers are open — the dominant IO driver.
+//   • Only multi-row list GETs are cached. Point lookups (id=eq.) and single-row
+//     (limit=1) reads — i.e. read-before-write paths — are NEVER cached, so writes
+//     stay correct.
+//   • Any write (POST/PATCH/DELETE) through this server flushes the whole cache.
+//   • Fully reversible: set MC_SB_CACHE_TTL_MS=0 to disable, or delete this block.
+const SB_CACHE_TTL_MS = parseInt(process.env.MC_SB_CACHE_TTL_MS || '15000', 10);
+const _sbCache = new Map(); // key -> { exp, payload }
+function _sbCacheable(pathAndQuery) {
+  return SB_CACHE_TTL_MS > 0
+    && !/id=eq\./.test(pathAndQuery)
+    && !/(^|[?&])limit=1(&|$)/.test(pathAndQuery);
+}
+
 function supabaseRequest(method, pathAndQuery, body) {
+  const isGet = method === 'GET';
+  const cacheKey = isGet ? ('GET ' + pathAndQuery) : null;
+  if (isGet && _sbCacheable(pathAndQuery)) {
+    const hit = _sbCache.get(cacheKey);
+    if (hit && hit.exp > Date.now()) return Promise.resolve(structuredClone(hit.payload));
+    if (hit) _sbCache.delete(cacheKey);
+  }
   return new Promise((resolve, reject) => {
     const url = new URL(SUPABASE_URL + '/rest/v1/' + pathAndQuery);
     const options = {
@@ -592,8 +618,18 @@ function supabaseRequest(method, pathAndQuery, body) {
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
-        try { resolve({ status: res.statusCode, data: data ? JSON.parse(data) : null }); }
-        catch { resolve({ status: res.statusCode, data }); }
+        let payload;
+        try { payload = { status: res.statusCode, data: data ? JSON.parse(data) : null }; }
+        catch { payload = { status: res.statusCode, data }; }
+        if (isGet) {
+          if (_sbCacheable(pathAndQuery) && payload.status >= 200 && payload.status < 300) {
+            if (_sbCache.size > 300) _sbCache.clear(); // bound memory
+            _sbCache.set(cacheKey, { exp: Date.now() + SB_CACHE_TTL_MS, payload: structuredClone(payload) });
+          }
+        } else {
+          _sbCache.clear(); // any write invalidates cached reads
+        }
+        resolve(payload);
       });
     });
     req.on('error', reject);
