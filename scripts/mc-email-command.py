@@ -87,6 +87,14 @@ ENVELOPE = (
     "`source` to \"Exo (email command)\". Your reply below is emailed straight back to the requester "
     "with the deliverable attached, so a separate 'ready to send' email must NOT also go out — the "
     "email-command source tag is how the send-watcher knows to stay silent and avoid a duplicate email.\n"
+    "- NO DUPLICATE FOR JON (Jon 2026-09-09): if the requester IS Jon (sender_email jquinn@exosaero.com "
+    "or jquinnexo@pm.me) and your handling produces a Decision for HIM to make (a DD verdict, a go/no-go, "
+    "or an approve-to-send), that Decision is the ONLY artifact he needs. Put the full substance IN the "
+    "Decision (one-line verdict + the specific choice + any links), and begin your reply with the literal "
+    "token [[DECISION_ONLY]] on its own first line. The channel then suppresses the duplicate email to Jon "
+    "(he gets the Decision in Mission Control + a short Discord note) so he is not made to read the same "
+    "thing twice. Do NOT restate the analysis as an emailed write-up. This applies ONLY to Jon and ONLY "
+    "when a Decision is created — deliverables/attachments and all other requesters still get the email.\n"
     "- When done, end your reply with a concise summary of what you did (or what now awaits "
     "{first_name}'s approval, and any decisions they must make); that reply is delivered straight "
     "back to {first_name} by email and posted to Jon's Discord.\n\n"
@@ -639,18 +647,34 @@ def main():
                     log(f"[agent] NO_ACTION mid={mid} — nothing actionable; silent (no task/reply/discord)")
                 else:
                     atts = collect_reply_attachments(reply, instruction)
+                    # NO DUPLICATE FOR JON (Jon 2026-09-09): when HIS own @exo task produces a Decision for
+                    # him to make (agent flags it with a leading [[DECISION_ONLY]] token), the Decision is the
+                    # single artifact — do NOT also email him the write-up (it was filling his inbox and making
+                    # him read the same thing twice). Team email-users (Phil/Lizi) and deliverable/attachment
+                    # replies are unaffected: they still get the email.
+                    _sender_l = (sender or "").lower()
+                    _is_jon = _sender_l in ("jquinn@exosaero.com", "jquinnexo@pm.me",
+                                            "jquinnexo+do@pm.me", "jquinnexo@proton.me")
+                    _decision_only = bool(re.search(r"\[\[\s*decision[_ ]only\s*\]\]", reply or "", re.I))
+                    reply = re.sub(r"\[\[\s*decision[_ ]only\s*\]\]", "", reply or "", flags=re.I).strip()
                     _summary, _cut = _clean_cut(reply, 1600)
-                    discord(f"✅ Email-command done for {sender_name} — {subject}\n\n{_summary}"
-                            + ("\n\n📧 Full reply sent to your inbox — trimmed here to keep the channel clean." if _cut else "")
-                            + (f"\n\n📎 attached: {', '.join(os.path.basename(a) for a in atts)}" if atts else ""))
-                    # ALWAYS reply to the requester on the channel THEY used (email). The Discord post above
-                    # goes to Jon's ops channel, NOT the requester — so a summary-only answer would never reach
-                    # them otherwise. (This silently dropped Phil's Grant Engine DD, 2026-08-18: rc=0 but the
-                    # only delivery was "discord-only", which Phil, an email user, never saw.)
-                    email_requester(sender, subject, instruction, reply, attachments=atts)
-                    _how = (f"discord+emailed requester; attached {len(atts)} file(s)" if atts
-                            else "discord+emailed requester (summary)")
-                    log(f"[agent] done rc=0 mid={mid}; {_how} {sender}")
+                    if _is_jon and _decision_only:
+                        # Decision is the sole artifact: Discord note only, no email to Jon.
+                        discord(f"✅ Email-command done — {subject}\n\n{_summary}"
+                                "\n\n🗳️ Decision created for your call in Mission Control — no duplicate email sent.")
+                        log(f"[agent] done rc=0 mid={mid}; decision-only, email-to-Jon suppressed {sender}")
+                    else:
+                        discord(f"✅ Email-command done for {sender_name} — {subject}\n\n{_summary}"
+                                + ("\n\n📧 Full reply sent to your inbox — trimmed here to keep the channel clean." if _cut else "")
+                                + (f"\n\n📎 attached: {', '.join(os.path.basename(a) for a in atts)}" if atts else ""))
+                        # ALWAYS reply to the requester on the channel THEY used (email). The Discord post above
+                        # goes to Jon's ops channel, NOT the requester — so a summary-only answer would never reach
+                        # them otherwise. (This silently dropped Phil's Grant Engine DD, 2026-08-18: rc=0 but the
+                        # only delivery was "discord-only", which Phil, an email user, never saw.)
+                        email_requester(sender, subject, instruction, reply, attachments=atts)
+                        _how = (f"discord+emailed requester; attached {len(atts)} file(s)" if atts
+                                else "discord+emailed requester (summary)")
+                        log(f"[agent] done rc=0 mid={mid}; {_how} {sender}")
         except Exception as e:
             log(f"[agent] run failed: {e}")
             discord(f"⚠️ Email-command received but the agent run errored: {e}")
