@@ -16,6 +16,9 @@ and acts:
     -> create a linked task auto-assigned to the resolved owner (or an Exo triage task).
   Anything else with @Exobot (a question/FYI):
     -> create an Exo triage task so the main Exo session handles it (nothing lost).
+  ANY note containing a question mark "?" (even WITHOUT @exo) is auto-answered on the task
+    -> routed to the answer loop; Exo posts the answer on the task (Jon 2026-09-10). Guards:
+       never answers Exo's own posts, and won't retro-answer questions older than QM_SINCE.
 
 Every processed note gets a "✅ Exo:" confirmation reply on the task. Idempotent (state = processed
 activity ids). Baseline-safe: the first run records existing @Exobot notes and does nothing, so it
@@ -37,6 +40,10 @@ KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
 #   e.g. <@&1501704079901069386> (role), <@1501704079901069386> / <@!…> (user).
 EXO_MENTION_IDS = ["1501704079901069386"]  # @Exobot Discord role
 MENTION_RE = re.compile(r"@exo(?:bot)?\b|<@[&!]?(?:" + "|".join(EXO_MENTION_IDS) + r")>", re.I)
+# Auto-answer ANY task note that contains a question mark, even without @exo (Jon 2026-09-10).
+# QM_SINCE prevents a retroactive burst: question notes older than this are recorded-as-seen and
+# NOT answered (so deploying the feature doesn't re-answer a week of historical questions).
+QM_SINCE = "2026-09-10T17:00:00+00:00"
 
 # Skip notes authored by automation (prevent loops / only act on human commands).
 SKIP_OWNERS = re.compile(r"^(exo|decisions|mission control|mc\b|expense-workflow|.*-router|.*-watcher)", re.I)
@@ -186,7 +193,9 @@ def main():
     def taskid_of(r):
         m = re.match(r"task:(\d+)$", (r.get("subject") or ""))
         return m.group(1) if m else None
-    cmds = [r for r in rows if taskid_of(r) and MENTION_RE.search(r.get("body") or "")]
+    # Candidates: notes that @-mention Exo OR that contain a question mark (auto-answer).
+    cmds = [r for r in rows if taskid_of(r)
+            and (MENTION_RE.search(r.get("body") or "") or ("?" in (r.get("body") or "")))]
 
     if state is None:  # BASELINE — record existing, act on nothing
         state = {"seen": [r["id"] for r in cmds]}
@@ -204,6 +213,23 @@ def main():
             continue  # automation-authored, not a human command
         taskid = taskid_of(r)
         body = r.get("body") or ""
+        # Question-mark auto-answer: a note WITHOUT @exo that contains "?" is routed straight to
+        # the answer loop (no command parsing — a plain question must never trigger done/close/etc.).
+        if not MENTION_RE.search(body):
+            if body.lstrip().startswith("✅ Exo"):
+                continue  # never answer Exo's own posts
+            if (r.get("created_at") or "") < QM_SINCE:
+                continue  # pre-feature question: already marked seen; do not retro-answer
+            qtext = body.strip()
+            nid = supa("POST", "tasks", {"title": f"[note] {qtext[:60] or 'question'} (task #{taskid})",
+                 "owner": "Exo", "assigned_email": "exo@exosaero.com", "state": "To Do", "priority": 70,
+                 "category": "Task", "source": "task-note-command",
+                 "tags": ["note-routed", "needs-attention", "auto-question"],
+                 "description": f"Question posted on task #{taskid} (by {owner_of_note or 'team'}): {qtext}. Exo to review and answer."})
+            newid = nid[0]["id"] if nid else "?"
+            flag_awaiting(taskid)
+            reply(taskid, f"✅ Exo: got your question — I'll post the answer here on this task shortly (ref #{newid}).")
+            logline(f"auto-q {aid} task {taskid} -> #{newid}"); acted += 1; continue
         cmd = directive_after(body)
         low = cmd.lower()
         did = []

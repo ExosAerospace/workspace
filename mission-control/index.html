@@ -387,6 +387,10 @@
   .timeline-entry:last-child .timeline-line { display: none; }
   .timeline-time { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
   .timeline-body { font-size: 13px; color: var(--text); line-height: 1.5; white-space: pre-wrap; }
+  .timeline-actions { display:flex; gap:6px; margin-top:5px; }
+  .tl-btn { font-size:11px; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.06); color:var(--text2); border:1px solid rgba(255,255,255,0.12); cursor:pointer; }
+  .tl-btn:hover { background:rgba(255,255,255,0.12); color:var(--text); }
+  .tl-del:hover { background:rgba(255,68,68,0.18); color:#ff7070; border-color:rgba(255,68,68,0.4); }
   .timeline-empty { text-align: center; color: var(--text2); padding: 40px 20px; font-size: 13px; }
 
   /* Add update */
@@ -786,9 +790,10 @@
       <div class="row"><code>@exo urgent</code> — raise priority</div>
       <div class="row"><code>@exo order a new servo</code> — any request routes to the right owner</div>
       <div class="row"><code>@exo meeting prep — who's attending</code> — walk-in brief (background, open questions, constraints, timed agenda, next steps, contacts), emailed to you</div>
-      <div class="muted"><code>@exobot</code> still works too. A plain note without <code>@exo</code> just logs — it won't trigger any action.</div>
+      <div class="row"><b>Just ask a question</b> — end any note with a <b>?</b> and Exo answers it here automatically (no <code>@exo</code> needed).</div>
+      <div class="muted"><code>@exobot</code> still works too. A note with a <b>?</b> is auto-answered; a plain statement (no <b>?</b>, no <code>@exo</code>) just logs.</div>
     </div>
-    <textarea id="newUpdateText" placeholder="Add an update or note...  (tip: start with @exo to give a command — click ? )" oninput="autoGrow(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();postUpdate()}"></textarea>
+    <textarea id="newUpdateText" placeholder="Add an update, ask a question (end with ?), or @exo a command — click ?" oninput="autoGrow(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();postUpdate()}"></textarea>
     <button class="btn small" onclick="postUpdate()">Post</button>
   </div>
   <script>
@@ -987,6 +992,7 @@ function normalizeState(s) {
   if (lower === 'done') return 'Done';
   if (lower === 'in progress') return 'In Progress';
   if (lower === 'to do') return 'To Do';
+  if (lower === 'cancelled' || lower === 'canceled' || lower === 'archived' || lower === 'rejected') return 'Cancelled';
   return 'To Do';
 }
 // User-facing label: the internal 'To Do' state IS the "To Do" (not-started) column. Keep the
@@ -1712,11 +1718,15 @@ async function loadTimeline(taskId) {
       if (isChange && bodyText.startsWith('[Update] ')) {
         bodyText = bodyText.replace('[Update] ', '').replace(/ \| /g, '\n');
       }
+      const canEd = canEditNote(c);
+      if (canEd) (window._tlBody = window._tlBody || {})[c.id] = c.body || '';
+      const actions = canEd ? `<div class="timeline-actions"><button class="tl-btn" onclick="editUpdate('${c.id}')">Edit</button><button class="tl-btn tl-del" onclick="deleteUpdate('${c.id}')">Delete</button></div>` : '';
       return `<div class="timeline-entry ${cls}">
         <div class="timeline-dot"></div>
         <div class="timeline-line"></div>
         <div class="timeline-time">${time}${c.owner ? ' &middot; ' + escHtml(c.owner) : ''}</div>
         <div class="timeline-body">${escHtml(bodyText)}</div>
+        ${actions}
       </div>`;
     }).join('');
   } catch(e) {
@@ -1724,6 +1734,28 @@ async function loadTimeline(taskId) {
   }
 }
 
+function canEditNote(c){
+  const isChange = c.type === 'task_update' || (c.body||'').startsWith('[Update]');
+  if (isChange) return false;
+  if ((c.body||'').startsWith('Email from')) return false;
+  try {
+    if (typeof currentUser === 'undefined' || !currentUser) return true;
+    const me = canonOwner(currentUser.name || '');
+    return !c.owner || canonOwner(c.owner) === me || currentUser.role === 'admin';
+  } catch(e){ return true; }
+}
+async function editUpdate(id){
+  const cur = (window._tlBody && window._tlBody[id]) || '';
+  const next = prompt('Edit your update:', cur);
+  if (next === null) return;
+  try { await apiFetch('/api/tasks/updates', { method:'PATCH', body: JSON.stringify({ id, body: next }) }); toast('Update edited'); loadTimeline(currentPanelTaskId); }
+  catch(e){ toast('Edit failed: ' + e.message); }
+}
+async function deleteUpdate(id){
+  if (!confirm('Delete this update? This cannot be undone.')) return;
+  try { await apiFetch('/api/tasks/updates/delete', { method:'POST', body: JSON.stringify({ id }) }); toast('Update deleted'); loadTimeline(currentPanelTaskId); }
+  catch(e){ toast('Delete failed: ' + e.message); }
+}
 async function postUpdate() {
   const el = document.getElementById('newUpdateText');
   const body = el.value.trim();
