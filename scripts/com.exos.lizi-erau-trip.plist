@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.exos.lizi-erau-trip</string>
+  <key>ProgramArguments</key><array>
+    <string>/Users/exomac/.local/share/mise/installs/python/latest/bin/python3</string>
+    <string>/Users/exomac/.openclaw/workspace/scripts/lizi-erau-trip-reminder.py</string>
+  </array>
+  <key>StartCalendarInterval</key><array>
+    <dict><key>Month</key><integer>9</integer><key>Day</key><integer>14</integer><key>Hour</key><integer>8</integer><key>Minute</key><integer>0</integer></dict>
+    <dict><key>Month</key><integer>9</integer><key>Day</key><integer>15</integer><key>Hour</key><integer>8</integer><key>Minute</key><integer>0</integer></dict>
+  </array>
+  <key>StandardOutPath</key><string>/tmp/lizi-erau-trip.out</string>
+  <key>StandardErrorPath</key><string>/tmp/lizi-erau-trip.err</string>
+</dict></plist>
