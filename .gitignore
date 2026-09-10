@@ -21,3 +21,22 @@ mission-control/data/*.backup-*.json
 mission-control/data/*.tmp
 mission-control/data/.backup-token
 mission-control/data/.decisions-token
+# --- secrets / credentials (never commit) — added 2026-09-10 ---
+secrets.json
+*.secrets.json
+*.env
+.env
+ha-config.env
+*.crt
+*.pem
+*.key
+.protonmail-bridge.crt
+*bridge*.crt
+id_rsa*
+*.p12
+*.pfx
+logs/*secret*
+**/*credential*
+service-account*.json
+*.bak-*
+*.bak.*
