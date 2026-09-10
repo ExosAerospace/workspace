@@ -1,0 +1,49 @@
+{
+  "title": "Using Subtasks (Work-Breakdown) in Mission Control",
+  "doc_no": "IT-003",
+  "area": "IT / Mission Control",
+  "area_id": "08-security-cui",
+  "owner": "All Mission Control users / Exo",
+  "rev": "0",
+  "status": "Draft",
+  "intl_release": "Yes",
+  "reference_docs": "Mission Control task board; Subtasks feature (shipped 2026-09-10); worked example: BLK3 Part 450 License Application WBS (parent task #2802). Approver: John Quinn (CEO).",
+  "remarks": "Non-technical Mission Control usage guide; no CUI or export-controlled content; releasable to international staff. DRAFT pending John Quinn (CEO) approval. Key rule of thumb: use the lightweight description checklist for simple sub-items of one deliverable; use SUBTASKS when children need their own owner, due date, and status that roll up to a parent.",
+  "objective": "give Mission Control users a consistent way to break a large effort into trackable subtasks (a work-breakdown) so multi-part work rolls up under one parent task with clear owners, due dates, and visible progress",
+  "overview": "A single Mission Control task can be broken into child tasks (subtasks). Each subtask is a full task with its own owner, due date, and status; the parent shows a roll-up badge of how many children are done. Children stay attached to the parent - they do not clutter the board as separate cards and are not counted in any one person's actionable total. This procedure defines when to use subtasks (versus the lightweight checklist inside a task's description) and how to create and track them, either from the task drawer or from a note using an @exo command. Parent-child linkage is a reversible tag on the child, so a subtask can be detached or promoted at any time.",
+  "tasks": [
+    {
+      "name": "Task 1 - Choose the right tool: subtask vs. checklist",
+      "steps": [
+        "Use the lightweight CHECKLIST (type '- [ ]' lines in a task's description) when the sub-items are simple steps or components of ONE deliverable that do NOT each need a separate owner or due date - for example document versions, a parts list, or a short to-do sequence.",
+        "Use SUBTASKS when a large effort has multiple parts that each need their OWN owner, due date, and status, and you want progress to roll up to one parent - for example a Part 450 license-application package, or a build with several parallel workstreams.",
+        "When unsure, start with a checklist; promote an item to a subtask the moment it needs its own owner or due date."
+      ]
+    },
+    {
+      "name": "Task 2 - Add subtasks from the task drawer",
+      "steps": [
+        "Open the parent task (click its card) and stay on the Overview tab; scroll to the 'Subtasks' section below the description.",
+        "Type the subtask title, choose an owner from the dropdown, and set a due date (optional), then click 'Add'.",
+        "Repeat for each child. Each new subtask becomes a full task with its own status, owner, and due date."
+      ]
+    },
+    {
+      "name": "Task 3 - Add a subtask from a note (@exo command)",
+      "steps": [
+        "On any task, post a note in this form: '@exo subtask: <what needs doing>' - for example '@exo subtask: run the 450.119 malfunction analysis'.",
+        "Exo creates the child task under that task within about two minutes, inheriting the parent's category and owner, and confirms with a checkmark note on the task.",
+        "Open the child from the parent's Subtasks list to set its own owner or due date if they differ from the parent."
+      ]
+    },
+    {
+      "name": "Task 4 - Track progress and complete",
+      "steps": [
+        "Read progress from the parent card's roll-up badge, shown as done/total (for example a badge reading 3 of 9).",
+        "Open the parent to see all children; tick a child's checkbox (or move it to Done) as it completes - the badge updates automatically.",
+        "Reassign or re-date any child as the work firms up; children never appear as separate top-level board cards and are not counted in an individual's actionable total, so the board stays clean.",
+        "To detach a child, remove its 'parent:<id>' tag - the linkage is reversible and the child becomes a normal standalone task."
+      ]
+    }
+  ]
+}

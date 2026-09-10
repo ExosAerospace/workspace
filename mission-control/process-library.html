@@ -57,7 +57,7 @@
 {
  "meta": {
   "title": "Exos Process & Procedures — Master Register",
-  "updated": "2026-09-02",
+  "updated": "2026-09-10",
   "source": "Lizi turnover → Exo (MC management); schema per Exos Procedures Master List",
   "template": "Exos-US Procedure Template",
   "doc_control": "STATUS on each doc; records in the Exos Work Management System (Mission Control / ERP)",
@@ -76,7 +76,9 @@
    "Reference (external benchmarks)",
    "Administrative",
    "Ground Operations",
-   "Finance & Accounting"
+   "Finance & Accounting",
+   "Manufacturing / Machine Shop",
+   "IT / Mission Control"
   ]
  },
  "register": [
@@ -1292,6 +1294,70 @@
    "remarks": "The blocklist is regenerated monthly from the Exos DD engine and emailed to all employees. Non-technical / no CUI or export-controlled data; releasable to international staff.",
    "files": [
     "08-security-cui/IT-002_Monthly_DD-Blocked_Senders_—_Outlook_Rule_Update.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Manufacturing / Machine Shop",
+   "area_id": "13-manufacturing",
+   "procedure": "NLX2500 SS Tool Post Calibration",
+   "doc_no": "EXOS-MFG-001-0",
+   "rev": "0",
+   "status": "Approved",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Machine Shop / Exo",
+   "remarks": "Run after replacing the sub-spindle tool setter disc/contact post, or after any setter crash. The removable sub-spindle tool-eye arm's four measuring surfaces are defined by paired parameters: X = 2097X & 2098X, Z = 2097Z & 2098Z. X error is diametral (convert to mm, divide by 2 = radial correction). Add/subtract direction for X should be field-verified once and recorded on this procedure. Always record the existing parameter values before changing so they can be reverted.",
+   "files": [
+    "13-manufacturing/EXOS-MFG-001-0_NLX2500_SS_Tool_Post_Calibration.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Finance & Accounting",
+   "area_id": "12-finance-accounting",
+   "procedure": "DCAA-Compliant Timekeeping Policy",
+   "doc_no": "EXOS-FIN-002-0",
+   "rev": "0",
+   "status": "PENDING APPROVAL",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Kyle Ballard (CFO / Finance), Exo administering; Lizi advising",
+   "remarks": "Pilot on Project Hermes (FA9300-25-C-6022) before any DCAA-required contract. MC reads approved actuals for WBS cost rollup.",
+   "files": [
+    "12-finance-accounting/EXOS-FIN-002-0_DCAA-Compliant_Timekeeping_Policy.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Security / CUI",
+   "area_id": "08-security-cui",
+   "procedure": "CUI / ITAR / EAR Document Handling and Storage (SharePoint GCC High)",
+   "doc_no": "SEC-CUI-STOR",
+   "rev": "0",
+   "status": "PENDING APPROVAL",
+   "intl_release": "No",
+   "ack_required": true,
+   "owner": "Exo (Security) administering; Atomus advising; task owner executes",
+   "remarks": "Interim control until the Azure Gov / GCC-High CUI-document enclave (Decision D-002, deferred) is built. Any MC task involving CUI/ITAR/EAR MUST complete this procedure; MC records only a reference + approved-access link, never the file or its content.",
+   "files": [
+    "08-security-cui/SEC-CUI-STOR_CUI_-_ITAR_-_EAR_Document_Handling_and_Storage_(SharePoint_GCC_High).docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "IT / Mission Control",
+   "area_id": "08-security-cui",
+   "procedure": "Using Subtasks (Work-Breakdown) in Mission Control",
+   "doc_no": "IT-003",
+   "rev": "0",
+   "status": "Draft",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "All Mission Control users / Exo",
+   "remarks": "Non-technical Mission Control usage guide; no CUI or export-controlled content; releasable to international staff. DRAFT pending John Quinn (CEO) approval. Key rule of thumb: use the lightweight description checklist for simple sub-items of one deliverable; use SUBTASKS when children need their own owner, due date, and status that roll up to a parent.",
+   "files": [
+    "08-security-cui/IT-003_Using_Subtasks_(Work-Breakdown)_in_Mission_Control.docx"
    ],
    "file_count": 1
   }
