@@ -104,7 +104,12 @@ ENVELOPE = (
     "your own diligence concludes do-not-engage (cold-broker / advance-fee / scam), record it so the whole "
     "team recognizes them next time: run `python3 scripts/failed_dd.py add --firm \"<firm>\" --domain "
     "<domain> --email <email> --person \"<name>\" --reason \"<one-line why>\"`. That registry is checked "
-    "automatically on all inbound, so the team never has to forward these to Jon again.\n\n"
+    "automatically on all inbound, so the team never has to forward these to Jon again.\n"
+    "- IF THE REQUESTER IS JON (Jon 2026-09-10): a DD verdict on something HE forwarded "
+    "(pass / caution / FAIL / do-not-engage on a contact not in the CRM) is DECISION_ONLY. The Decision "
+    "already gives him the status, so put the verdict IN the Decision and begin your reply with "
+    "[[DECISION_ONLY]] on its own first line — do NOT also send him an email response. His words: "
+    "\"you already send me a decision so I know the status - do not send me an email response too.\"\n\n"
     "ALWAYS LOG EVERY COMPANY DD IN MISSION CONTROL (so the whole team can see the DD is already done and "
     "nobody repeats it): after ANY due-diligence on a company — pass, caution, OR fail — run "
     "`python3 scripts/log_dd.py --firm \"<firm>\" --domain <domain> --person \"<name>\" --email <email> "
@@ -246,23 +251,37 @@ def _as_word(ap):
 def collect_reply_attachments(*texts, cap=5, max_bytes=20 * 1024 * 1024):
     """Pull real, existing artifact files referenced in the agent's reply/instruction so the
     outbound email includes the actual document. Bounded by count and total size.
-    Any .md/.txt artifact is converted to Word before attaching (standing: deliver .docx)."""
-    out, total = [], 0
+    Any .md/.txt artifact is converted to Word before attaching (standing: deliver .docx).
+
+    Returns (attached_paths, missed) where `missed` is a list of (reference, reason) for any
+    path the agent referenced like a deliverable but that could NOT be attached — so a drop is
+    SURFACED, never silent (Jon 2026-09-10: a referenced-but-missing file must throw a warning)."""
+    out, total, missed, seen = [], 0, [], set()
     for t in texts:
         for rel in _ATTACH_RE.findall(t or ""):
-            ap = os.path.normpath(os.path.join(WS, rel.strip()))
-            if not ap.startswith(WS) or not os.path.isfile(ap) or ap in out:
+            rel = rel.strip()
+            if rel in seen:
                 continue
-            ap = _as_word(ap)
-            if not ap or not os.path.isfile(ap) or ap in out:
+            seen.add(rel)
+            ap = os.path.normpath(os.path.join(WS, rel))
+            if not ap.startswith(WS):
+                missed.append((rel, "invalid path")); continue
+            if not os.path.isfile(ap):
+                missed.append((rel, "file not found")); continue
+            wp = _as_word(ap)
+            if not wp or not os.path.isfile(wp):
+                missed.append((rel, "conversion failed")); continue
+            if wp in out:
                 continue
-            sz = os.path.getsize(ap)
-            if sz == 0 or sz > max_bytes or total + sz > max_bytes:
-                continue
-            out.append(ap); total += sz
+            sz = os.path.getsize(wp)
+            if sz == 0:
+                missed.append((rel, "empty file")); continue
+            if sz > max_bytes or total + sz > max_bytes:
+                missed.append((rel, "too large (>20MB)")); continue
+            out.append(wp); total += sz
             if len(out) >= cap:
-                return out
-    return out
+                return out, missed
+    return out, missed
 
 
 def email_requester(to_addr, orig_subject, instruction, reply_text, attachments=None):
@@ -312,13 +331,35 @@ def sub_env():
     return env
 
 
+def _chunk_text(s, limit=1800):
+    """Split on line boundaries into <=limit-char parts (Discord hard-caps ~2000/msg; oversized
+    sends were also timing out). A single overlong line is hard-split."""
+    parts, cur = [], ""
+    for line in (s or "").split("\n"):
+        while len(line) > limit:
+            if cur:
+                parts.append(cur); cur = ""
+            parts.append(line[:limit]); line = line[limit:]
+        if len(cur) + len(line) + 1 > limit:
+            parts.append(cur); cur = line
+        else:
+            cur = (cur + "\n" + line) if cur else line
+    if cur:
+        parts.append(cur)
+    return parts or [""]
+
+
 def discord(text):
-    try:
-        subprocess.run([OPENCLAW, "message", "send", "--channel", "discord",
-                        "--target", JON_DISCORD, "-m", text],
-                       capture_output=True, text=True, timeout=60, env=sub_env())
-    except Exception as e:
-        log(f"[discord] failed: {e}")
+    # Chunk to Discord's message limit and give each part a generous timeout — the old single
+    # 60s send silently failed (timed out) on long email-command summaries (Jon 2026-09-10).
+    parts = _chunk_text(text)
+    for i, part in enumerate(parts):
+        try:
+            subprocess.run([OPENCLAW, "message", "send", "--channel", "discord",
+                            "--target", JON_DISCORD, "-m", part],
+                           capture_output=True, text=True, timeout=180, env=sub_env())
+        except Exception as e:
+            log(f"[discord] failed (part {i + 1}/{len(parts)}): {e}")
 
 
 def imap_conn():
@@ -646,7 +687,15 @@ def main():
                 if (reply or "").strip().upper().replace("*", "").replace("`", "").startswith("NO_ACTION"):
                     log(f"[agent] NO_ACTION mid={mid} — nothing actionable; silent (no task/reply/discord)")
                 else:
-                    atts = collect_reply_attachments(reply, instruction)
+                    atts, missed_atts = collect_reply_attachments(reply, instruction)
+                    # Surface referenced-but-missing attachments instead of dropping them silently
+                    # (Jon 2026-09-10 root-cause: a described .xlsx that was never written just vanished).
+                    _miss_note = ""
+                    if missed_atts:
+                        _mw = "; ".join(f"{os.path.basename(r)} ({why})" for r, why in missed_atts)
+                        log(f"[email-reply] ⚠️ referenced attachment(s) NOT sent: {_mw}")
+                        _miss_note = ("\n\n⚠️ Referenced but NOT attached (file missing/failed): " + _mw
+                                      + "\n(The document was named but no valid file was found — it was not generated or the path is wrong.)")
                     # NO DUPLICATE FOR JON (Jon 2026-09-09): when HIS own @exo task produces a Decision for
                     # him to make (agent flags it with a leading [[DECISION_ONLY]] token), the Decision is the
                     # single artifact — do NOT also email him the write-up (it was filling his inbox and making
@@ -661,12 +710,14 @@ def main():
                     if _is_jon and _decision_only:
                         # Decision is the sole artifact: Discord note only, no email to Jon.
                         discord(f"✅ Email-command done — {subject}\n\n{_summary}"
-                                "\n\n🗳️ Decision created for your call in Mission Control — no duplicate email sent.")
+                                "\n\n🗳️ Decision created for your call in Mission Control — no duplicate email sent."
+                                + _miss_note)
                         log(f"[agent] done rc=0 mid={mid}; decision-only, email-to-Jon suppressed {sender}")
                     else:
                         discord(f"✅ Email-command done for {sender_name} — {subject}\n\n{_summary}"
                                 + ("\n\n📧 Full reply sent to your inbox — trimmed here to keep the channel clean." if _cut else "")
-                                + (f"\n\n📎 attached: {', '.join(os.path.basename(a) for a in atts)}" if atts else ""))
+                                + (f"\n\n📎 attached: {', '.join(os.path.basename(a) for a in atts)}" if atts else "")
+                                + _miss_note)
                         # ALWAYS reply to the requester on the channel THEY used (email). The Discord post above
                         # goes to Jon's ops channel, NOT the requester — so a summary-only answer would never reach
                         # them otherwise. (This silently dropped Phil's Grant Engine DD, 2026-08-18: rc=0 but the
