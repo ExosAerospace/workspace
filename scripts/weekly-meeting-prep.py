@@ -45,8 +45,11 @@ def build_agenda(meeting_day):
     # Only ACTIONABLE work counts toward a person's line. Done/Cancelled/Held/Queued are not
     # open action items — counting them made John's line read "597 open" when ~40 were dead states.
     DEAD = ("done", "cancelled", "canceled", "held", "queued")
-    tasks = [t for t in page("tasks?select=id,title,due_date,state,owner,assigned_email,priority,category&order=id")
-             if (t.get("state") or "").lower() not in DEAD and t.get("source") != "mc-board-legacy"]
+    def _is_subtask(t):
+        return any(str(x).lower().startswith("parent:") for x in (t.get("tags") or []))
+    tasks = [t for t in page("tasks?select=id,title,due_date,state,owner,assigned_email,priority,category,tags&order=id")
+             if (t.get("state") or "").lower() not in DEAD and t.get("source") != "mc-board-legacy"
+             and not _is_subtask(t)]
     today = datetime.date.today()
     soon = today + datetime.timedelta(days=10)
     lines = [f"Exos Weekly Team Meeting — {meeting_day:%A, %b %d} 10:00 CT",

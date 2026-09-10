@@ -367,6 +367,28 @@
   }
   .detail-desc-block.empty { color: var(--text2); font-style: italic; }
 
+  /* Subtasks (work-breakdown) */
+  .subtask-badge { font-size: 9px; font-weight: 700; color: #7dd3fc; background: rgba(56,189,248,0.15);
+    border: 1px solid rgba(56,189,248,0.35); border-radius: 4px; padding: 2px 6px; letter-spacing: .3px; }
+  .subtasks-head label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .5px;
+    display: flex; align-items: center; gap: 8px; margin: 4px 0 6px; }
+  .subtask-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+  .subtask-row { display: flex; align-items: center; gap: 8px; background: var(--navy3); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 9px; font-size: 12.5px; }
+  .subtask-row.st-done .subtask-title { text-decoration: line-through; color: var(--text2); }
+  .subtask-title { flex: 1; color: var(--text); cursor: pointer; }
+  .subtask-title:hover { color: var(--blue2); }
+  .subtask-due { font-size: 11px; color: var(--text2); font-family: ui-monospace, Menlo, monospace; }
+  .subtask-state { font-size: 10px; color: var(--text2); text-transform: uppercase; }
+  .subtask-empty { color: var(--text2); font-style: italic; font-size: 12px; }
+  .subtask-add { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .subtask-add input[type=text] { flex: 1; min-width: 140px; background: var(--navy); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text); padding: 6px 9px; font-size: 12.5px; font-family: inherit; }
+  .subtask-add select, .subtask-add input[type=date] { background: var(--navy); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text); padding: 5px 7px; font-size: 12px; }
+  .subtask-add button { background: var(--blue); color: #fff; border: none; border-radius: 6px;
+    padding: 6px 12px; font-size: 12px; cursor: pointer; }
+
   /* Timeline / Updates tab */
   .timeline { display: flex; flex-direction: column; gap: 0; }
   .timeline-entry {
@@ -673,6 +695,7 @@
       <div class="detail-grid" id="detailGrid"></div>
       <label style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;display:block;">Description</label>
       <div class="detail-desc-block" id="detailDesc">No description</div>
+      <div id="panelSubtasks"></div>
     </div>
 
     <!-- UPDATES TAB (scrollable timeline) -->
@@ -1130,7 +1153,7 @@ function updateCategoryFilter() {
 function getFilteredTasks() {
   // Cancelled tasks are dead — never render them on the board (dedup-by-cancel
   // should actually remove clutter). Done stays visible via its own filter.
-  let filtered = tasks.filter(t => t.state !== 'Cancelled');
+  let filtered = tasks.filter(t => t.state !== 'Cancelled' && !isSubtask(t));
   const q = document.getElementById('searchBox').value.toLowerCase();
   if (q) filtered = filtered.filter(t =>
     (t.title || '').toLowerCase().includes(q) ||
@@ -1459,7 +1482,7 @@ function buildCard(task) {
       <div class="owner-badges" style="flex-shrink:0" title="Assigned to: ${escHtml(ownerNames(task.owner).join(', '))}">${ownerBadgesHtml(task.owner)}</div>
     </div>
     <div class="task-meta">
-      ${awaitingHtml}${projectHtml}${msHtml}${fundingFlagHtml}${catHtml}${srcHtml}${priHtml}${dueDateHtml}
+      ${awaitingHtml}${projectHtml}${(() => { const s = subSummary(task.id); return s.total ? `<span class="subtask-badge" title="Subtasks">▸ ${s.done}/${s.total}</span>` : ''; })()}${msHtml}${fundingFlagHtml}${catHtml}${srcHtml}${priHtml}${dueDateHtml}
       ${assignSelect}
     </div>
     <div class="move-btns">${moveBtns}</div>
@@ -1470,6 +1493,74 @@ function buildCard(task) {
 
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── SUBTASKS (work-breakdown) ── parent linkage encoded as a `parent:<id>` tag (no schema change).
+function parentIdOf(t) {
+  const tg = (Array.isArray(t.tags) ? t.tags : []).map(x => String(x).toLowerCase());
+  for (const x of tg) { const m = x.match(/^parent:(\d+)$/); if (m) return m[1]; }
+  return null;
+}
+function isSubtask(t) { return !!parentIdOf(t); }
+function childrenOf(id) { return tasks.filter(t => String(parentIdOf(t)) === String(id)); }
+function subSummary(id) {
+  const c = childrenOf(id);
+  return { done: c.filter(t => t.state === 'Done').length, total: c.length };
+}
+function renderSubtasks(task) {
+  const box = document.getElementById('panelSubtasks'); if (!box) return;
+  const kids = childrenOf(task.id).sort((a, b) => (a.id || 0) - (b.id || 0));
+  const s = { done: kids.filter(k => k.state === 'Done').length, total: kids.length };
+  const rows = kids.map(k => {
+    const done = k.state === 'Done';
+    const due = k.due_date ? new Date(k.due_date).toLocaleDateString('en-US', {month:'short', day:'numeric'}) : '';
+    return `<div class="subtask-row${done ? ' st-done' : ''}">
+      <input type="checkbox" ${done ? 'checked' : ''} onchange="toggleSubtask('${k.id}', this.checked)">
+      <span class="subtask-title" onclick="openEdit('${k.id}')">${escHtml(k.title)}</span>
+      <span class="subtask-owner">${ownerBadgesHtml(k.owner)}</span>
+      ${due ? `<span class="subtask-due">${due}</span>` : ''}
+      <span class="subtask-state">${escHtml(stateLabel(k.state))}</span>
+    </div>`;
+  }).join('');
+  box.innerHTML = `
+    <div class="subtasks-head"><label>Subtasks ${s.total ? `<span class="subtask-badge">▸ ${s.done}/${s.total}</span>` : ''}</label></div>
+    <div class="subtask-list">${rows || '<div class="subtask-empty">No subtasks yet.</div>'}</div>
+    <div class="subtask-add">
+      <input type="text" id="newSubtaskTitle" placeholder="Add a subtask…" onkeydown="if(event.key==='Enter'){event.preventDefault();addSubtask('${task.id}')}">
+      <select id="newSubtaskOwner">${buildOwnerOptions(task.owner)}</select>
+      <input type="date" id="newSubtaskDue" title="Due (optional)">
+      <button onclick="addSubtask('${task.id}')">Add</button>
+    </div>`;
+}
+async function addSubtask(parentId) {
+  const parent = tasks.find(t => t.id == parentId); if (!parent) return;
+  const titleEl = document.getElementById('newSubtaskTitle');
+  const title = (titleEl.value || '').trim(); if (!title) { titleEl.focus(); return; }
+  const owner = document.getElementById('newSubtaskOwner').value || parent.owner || 'Jon';
+  const due = document.getElementById('newSubtaskDue').value || null;
+  titleEl.disabled = true;
+  try {
+    const child = await apiFetch('/api/tasks', { method: 'POST', body: JSON.stringify({
+      title, owner, state: 'To Do', category: parent.category || null,
+      due_date: due, priority: parent.priority || 50,
+      source: 'subtask', tags: ['subtask', 'parent:' + parentId] }) });
+    child.state = normalizeState(child.state);
+    tasks.unshift(child);
+    renderSubtasks(parent); render();
+    titleEl.value = ''; document.getElementById('newSubtaskDue').value = '';
+    toast('Subtask added');
+  } catch (e) { toast('Failed: ' + e.message); }
+  finally { titleEl.disabled = false; const t = document.getElementById('newSubtaskTitle'); if (t) t.focus(); }
+}
+async function toggleSubtask(id, done) {
+  const newState = done ? 'Done' : 'To Do';
+  try {
+    await apiFetch('/api/tasks', { method: 'PATCH', body: JSON.stringify({ id, state: newState }) });
+    const k = tasks.find(t => t.id == id); if (k) k.state = newState;
+    const parent = tasks.find(t => t.id == currentPanelTaskId);
+    if (parent) renderSubtasks(parent);
+    render();
+  } catch (e) { toast('Failed: ' + e.message); }
 }
 
 // ── GO TO TASK # — jump straight to a task by its number ──
@@ -1592,6 +1683,7 @@ function renderOverview(task) {
   `;
 
   renderTaskDescription(task);
+  renderSubtasks(task);
   // Description is omitted from the board list payload (≈70% smaller) — lazy-load it on open.
   if (task.description === undefined) {
     fetch('/api/task-desc?id=' + encodeURIComponent(task.id), { credentials: 'same-origin' })

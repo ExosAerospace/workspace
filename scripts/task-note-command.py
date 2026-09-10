@@ -266,6 +266,18 @@ def main():
             if iso:
                 supa("PATCH", f"tasks?id=eq.{taskid}", {"due_date": iso}); did.append(f"due {iso}")
 
+        # subtask: "@exo subtask: <title>" -> create a child task under THIS task (parent:<id> tag)
+        msub = re.match(r"subtask\s*[:\-]?\s+(.+)", cmd, re.I)
+        if msub and msub.group(1).strip():
+            stitle = msub.group(1).strip()[:70]
+            par = (supa("GET", f"tasks?id=eq.{taskid}&select=category,owner,priority") or [{}])
+            par = par[0] if par else {}
+            child = supa("POST", "tasks", {"title": stitle, "owner": par.get("owner") or owner_of_note or "Jon",
+                 "state": "To Do", "priority": par.get("priority") or 60, "category": par.get("category"),
+                 "source": "subtask", "tags": ["subtask", "parent:" + str(taskid)]})
+            cid = child[0]["id"] if child else "?"
+            did.append(f"added subtask #{cid}: {stitle}")
+
         if did:
             reply(taskid, f"✅ Exo: {', '.join(did)} (per {owner_of_note or 'note'}: “{cmd[:120]}”).")
             logline(f"act {aid} task {taskid}: {did}"); acted += 1; continue
