@@ -228,6 +228,16 @@ def main():
     except Exception:
         pass
 
+    # ==== 10-12. Self-audit (Jon 2026-09-10): catch-it-without-being-asked class —
+    # secret/code hygiene, board integrity, preference compliance. Read-only. ====
+    audit_issue_ct = 0
+    try:
+        import rsi_self_audit
+        alines, audit_issue_ct, _ = rsi_self_audit.run_all(supa_get=supa_get)
+        L.extend(alines)
+    except Exception as _e:
+        L.append(f"\n## 10-12. Self-audit\n- (self-audit module error: {_e})")
+
     report = "\n".join(L)
 
     os.makedirs(REPORTS, exist_ok=True)
@@ -249,7 +259,8 @@ def main():
             "title": f"Weekly CEO Prioritization Review — {stamp}",
             "question": (f"This week: {accuracy}% of top-scored work moved, {len(overdue)} overdue items, "
                          f"{len(divergence)} score-vs-human divergences, "
-                         f"{'cron issues flagged' if cron_issues else 'crons healthy'}. "
+                         f"{'cron issues flagged' if cron_issues else 'crons healthy'}, "
+                         f"{('⚠️ ' + str(audit_issue_ct) + ' self-audit issue(s)') if audit_issue_ct else 'self-audit clean'}. "
                          "Approve applying the proposed Mission-Score weight tuning next week?"),
             "context": report[:1800],
             "proposedAction": "Review the full report in reports/ and approve/adjust weight tuning.",
@@ -263,9 +274,11 @@ def main():
         os.replace(tmp, DEC_FILE)
 
     alert(f"🧠 Weekly RSI review ({stamp}): top-scored work moved {accuracy}% · {len(overdue)} overdue · "
-          f"{'⚠️ cron issues' if cron_issues else 'crons OK'} · {len(divergence)} tuning candidates. "
+          f"{'⚠️ cron issues' if cron_issues else 'crons OK'} · {len(divergence)} tuning candidates · "
+          f"{('⚠️ ' + str(audit_issue_ct) + ' self-audit issue(s)') if audit_issue_ct else 'self-audit ✅'}. "
           f"Decision card posted to your inbox; full report reports/weekly-rsi-{stamp}.md")
-    print(f"RSI done: accuracy={accuracy}% overdue={len(overdue)} divergence={len(divergence)} cron_issues={len(cron_issues)} -> {rp}")
+    print(f"RSI done: accuracy={accuracy}% overdue={len(overdue)} divergence={len(divergence)} "
+          f"cron_issues={len(cron_issues)} self_audit_issues={audit_issue_ct} -> {rp}")
 
 
 if __name__ == "__main__":
