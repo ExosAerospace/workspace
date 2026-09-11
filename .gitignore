@@ -40,3 +40,6 @@ logs/*secret*
 service-account*.json
 *.bak-*
 *.bak.*
+
+# stale subagent worktrees (never commit)
+.claude/worktrees/

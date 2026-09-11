@@ -281,7 +281,7 @@ function payloadCustomerMetrics(reg) {
 
 function esignTransport() {
   const cert = fs.existsSync('/Users/exomac/.protonmail-bridge.crt') ? fs.readFileSync('/Users/exomac/.protonmail-bridge.crt') : undefined;
-  return nodemailer.createTransport({ host: '127.0.0.1', port: 1025, secure: false, requireTLS: true, tls: { ca: cert, rejectUnauthorized: false }, auth: { user: 'jquinnexo@pm.me', pass: 'SPqYBivj98-jyF3RujLKxA' } });
+  return nodemailer.createTransport({ host: '127.0.0.1', port: 1025, secure: false, requireTLS: true, tls: { ca: cert, rejectUnauthorized: false }, auth: { user: 'jquinnexo@pm.me', pass: PROTON_PW } });
 }
 function esignRequestEmail(signer, link, env) {
   return `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;">
@@ -524,6 +524,7 @@ function parseMultipart(req) {
 // Supabase config
 const SUPABASE_URL = 'https://pcrgpuoljylqcumijvnw.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp';
+const PROTON_PW = (() => { try { return (JSON.parse(require('fs').readFileSync(require('os').homedir() + '/.openclaw/secrets.json', 'utf8')).protonmail_bridge_smtp_password) || ''; } catch (e) { return ''; } })();  // secrets.json, not hardcoded (2026-09-10)
 
 // Teamwork config (moved server-side from teamwork.html)
 const TEAMWORK_TOKEN = 'twp_qI3nZlYw4JHzCa87ef63uoP88LRC';
@@ -781,7 +782,7 @@ async function sendTaskAssignmentEmail(task, assignedBy) {
     const transporter = nodemailer.createTransport({
       host: '127.0.0.1', port: 1025, secure: false, requireTLS: true,
       tls: { ca: bridgeCert, rejectUnauthorized: false },
-      auth: { user: 'jquinnexo@pm.me', pass: 'SPqYBivj98-jyF3RujLKxA' }
+      auth: { user: 'jquinnexo@pm.me', pass: PROTON_PW }
     });
 
     const due = task.due_date ? String(task.due_date).slice(0, 10) : 'None';
@@ -2656,6 +2657,32 @@ const server = http.createServer((req, res) => {
     }); return;
   }
 
+  // ── EDIT a task update (Jon 2026-09-10: edit your own timeline notes) ──
+  if (req.url === '/api/tasks/updates' && req.method === 'PATCH') {
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const { id, body: newBody } = JSON.parse(body);
+        if (!id || typeof newBody !== 'string') { res.writeHead(400); res.end(JSON.stringify({ error: 'id and body required' })); return; }
+        supabaseRequest('PATCH', `activities?id=eq.${encodeURIComponent(id)}`, { body: newBody })
+          .then(() => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
+          .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
+      } catch (e) { res.writeHead(400); res.end(JSON.stringify({ error: e.message })); }
+    }); return;
+  }
+
+  // ── DELETE a task update (Jon 2026-09-10: remove duplicate/own timeline notes) ──
+  if (req.url === '/api/tasks/updates/delete' && req.method === 'POST') {
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const { id } = JSON.parse(body);
+        if (!id) { res.writeHead(400); res.end(JSON.stringify({ error: 'id required' })); return; }
+        supabaseRequest('DELETE', `activities?id=eq.${encodeURIComponent(id)}`)
+          .then(() => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
+          .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
+      } catch (e) { res.writeHead(400); res.end(JSON.stringify({ error: e.message })); }
+    }); return;
+  }
+
   // ── AUTO-CAPTURE: Create tasks from Series A / BD items ──
   if (req.url === '/api/tasks/capture' && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
@@ -3526,7 +3553,7 @@ const server = http.createServer((req, res) => {
           secure: false,
           requireTLS: true,
           tls: { ca: bridgeCert, rejectUnauthorized: false },
-          auth: { user: 'jquinnexo@pm.me', pass: 'SPqYBivj98-jyF3RujLKxA' }
+          auth: { user: 'jquinnexo@pm.me', pass: PROTON_PW }
         });
 
         // Build HTML email body

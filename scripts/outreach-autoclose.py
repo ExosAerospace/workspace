@@ -42,7 +42,7 @@ from datetime import datetime, timedelta
 
 IMAP_HOST, IMAP_PORT = '127.0.0.1', 1143
 EMAIL_USER = 'jquinnexo@pm.me'
-EMAIL_PASS = 'SPqYBivj98-jyF3RujLKxA'
+EMAIL_PASS = __import__('json').load(open(__import__('os').path.expanduser('~/.openclaw/secrets.json')))['protonmail_bridge_smtp_password']
 SELF_FROMS = ('exosaero.com', 'jquinnexo@pm.me', 'jquinnexo@proton.me')
 INTERNAL = re.compile(r'(exosaero\.com|jquinnexo@|@pm\.me|@proton\.me|noreply|no-reply|mailer-daemon)', re.I)
 EMAIL_RE = re.compile(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}')
@@ -56,6 +56,7 @@ LOG = os.path.join(WS, 'logs', 'outreach-autoclose.jsonl')
 STATE = os.path.join(WS, 'logs', 'outreach-autoclose-state.json')
 MAP_FILE = os.path.join(WS, 'config', 'outreach-domain-map.json')
 AUTOCLOSE_TAGS = {'outreach', 'cold-outreach', 'autoclose-on-send'}
+SENT_SUBJECTS = set()  # lowercased subjects of Jon's recent sends (for match-subject:<kw> auto-close)
 
 DRY = '--dry-run' in sys.argv
 VERBOSE = '--verbose' in sys.argv or DRY
@@ -134,6 +135,7 @@ def collect_recipients():
                 msg = email.message_from_bytes(md[0][1])
                 if not _is_self(msg.get('From', '')):
                     continue
+                SENT_SUBJECTS.add((msg.get('Subject', '') or '').lower())
                 recips = set(a.lower() for _, a in getaddresses(msg.get_all('To', []) + msg.get_all('Cc', []))
                              if a and EMAIL_RE.fullmatch(a.strip()) and not INTERNAL.search(a.lower()))
                 if not recips:  # forwarded-in: real recipients hidden in body
@@ -187,6 +189,15 @@ def main():
             for c in companies:
                 if c and c in hay:
                     matched = ('company', c); break
+        # (3) subject-keyword rule: a task opts in with a 'match-subject:<kw>' tag and
+        #     auto-closes when any of Jon's recent sends carries <kw> in its subject
+        #     (for recurring sends to a fixed recipient, e.g. the weekly investor update).
+        if not matched:
+            for tg in tags:
+                if tg.startswith('match-subject:'):
+                    kw = tg.split(':', 1)[1].strip()
+                    if kw and any(kw in subj for subj in SENT_SUBJECTS):
+                        matched = ('subject', kw); break
         if not matched:
             continue
         now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
