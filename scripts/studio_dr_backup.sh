@@ -59,6 +59,18 @@ run_rsync "$WS_SRC" "workspace/"
 #    Exclude the big regenerable model cache; models are backed up separately (2 copies/2 sites).
 run_rsync "$CFG_SRC" "openclaw-config/"
 
+# 2b) home-level credentials that live OUTSIDE ~/.openclaw (Bridge cert, msmtp config).
+#     Needed for failover email; the failover drill flagged these were being missed.
+for f in "$HOME/.protonmail-bridge.crt" "$HOME/.msmtprc"; do
+  [ -f "$f" ] || continue
+  bn=$(basename "$f")
+  if [ "$DEST_REMOTE" = "True" ] || [ "$DEST_REMOTE" = "true" ]; then
+    rsync -a -e ssh "$f" "${DEST}openclaw-config/$bn" 2>>"$LOG" || RSYNC_RC=$?
+  else
+    cp -p "$f" "${DEST}openclaw-config/$bn" 2>>"$LOG" || RSYNC_RC=$?
+  fi
+done
+
 # 3) optional git push (off in self-test)
 if [ "$GIT_PUSH" = "True" ] || [ "$GIT_PUSH" = "true" ]; then
   ( cd "$WS" && git push 2>>"$LOG" ) && log "git push OK" || log "WARN git push failed"
