@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.exos.util-metrics</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/exomac/.openclaw/workspace/scripts/util_metrics.py</string>
+  </array>
+  <key>StartInterval</key><integer>600</integer>
+  <key>StandardOutPath</key><string>/Users/exomac/.openclaw/workspace/logs/util-metrics.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/exomac/.openclaw/workspace/logs/util-metrics.err.log</string>
+  <key>RunAtLoad</key><true/>
+</dict>
+</plist>

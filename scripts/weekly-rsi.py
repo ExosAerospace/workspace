@@ -238,6 +238,20 @@ def main():
     except Exception as _e:
         L.append(f"\n## 10-12. Self-audit\n- (self-audit module error: {_e})")
 
+    # ==== 13. Machine utilization & capacity forecast (utilization-sharing RSI loop, Jon 2026-09-13) ====
+    util_provision = False; util_issue_ct = 0
+    try:
+        import rsi_util_capacity
+        u = rsi_util_capacity.build()
+        L.append(f"\n## 13. {u['title']}")
+        L.extend("- " + ln for ln in u["lines"])
+        util_provision = u.get("_provision", False)
+        util_issue_ct = len(u.get("issues", []))
+        if u.get("issues"):
+            L.append("- issues: " + "; ".join(u["issues"]))
+    except Exception as _e:
+        L.append(f"\n## 13. Machine utilization\n- (utilization module error: {_e})")
+
     report = "\n".join(L)
 
     os.makedirs(REPORTS, exist_ok=True)
@@ -273,9 +287,36 @@ def main():
         json.dump(arr, open(tmp, "w"), indent=2)
         os.replace(tmp, DEC_FILE)
 
+    # ---- Look-ahead: hardware PRE-ORDER Decision when the capacity forecast crosses lead-time.
+    #      Routed to Jon for approval (money = human-in-the-loop); NEVER an auto-purchase. ----
+    if util_provision:
+        pk = "hw-preorder-" + stamp
+        if not any(d.get("dedupeKey") == pk for d in arr):
+            now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            arr.append({
+                "id": "HW-" + hashlib.sha1(pk.encode()).hexdigest()[:6].upper(),
+                "created": now, "updated": now, "source": "Capacity Forecast",
+                "title": f"Hardware pre-order — capacity crossing inside lead-time ({stamp})",
+                "question": ("The utilization forecast projects a machine hitting its capacity threshold "
+                             "within hardware lead-time. Pre-order additional compute now to stay ahead of "
+                             "the growing human+AI workforce? See section 13 of this week's RSI report for the "
+                             "per-machine trend and the efficiency-lever state."),
+                "context": report[:1800],
+                "proposedAction": "Approve a hardware pre-order (spec sized to the projected shortfall); "
+                                  "or bump the lab-efficiency multiplier if a capability gain covers the gap.",
+                "type": "yesno", "options": ["Yes — pre-order now", "No — hold; capability gains will cover it"],
+                "priority": "high", "dedupeKey": pk, "status": "open",
+                "answer": None, "note": "", "answeredAt": None,
+                "assignedTo": "jquinn@exosaero.com", "approver": "jquinn@exosaero.com",
+            })
+            tmp = DEC_FILE + ".tmp"
+            json.dump(arr, open(tmp, "w"), indent=2)
+            os.replace(tmp, DEC_FILE)
+
     alert(f"🧠 Weekly RSI review ({stamp}): top-scored work moved {accuracy}% · {len(overdue)} overdue · "
           f"{'⚠️ cron issues' if cron_issues else 'crons OK'} · {len(divergence)} tuning candidates · "
-          f"{('⚠️ ' + str(audit_issue_ct) + ' self-audit issue(s)') if audit_issue_ct else 'self-audit ✅'}. "
+          f"{('⚠️ ' + str(audit_issue_ct) + ' self-audit issue(s)') if audit_issue_ct else 'self-audit ✅'} · "
+          f"{'🛒 HW pre-order recommended' if util_provision else ('util:' + str(util_issue_ct) + ' flag(s)' if util_issue_ct else 'util ✅')}. "
           f"Decision card posted to your inbox; full report reports/weekly-rsi-{stamp}.md")
     print(f"RSI done: accuracy={accuracy}% overdue={len(overdue)} divergence={len(divergence)} "
           f"cron_issues={len(cron_issues)} self_audit_issues={audit_issue_ct} -> {rp}")
