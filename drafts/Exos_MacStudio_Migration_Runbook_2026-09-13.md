@@ -61,12 +61,23 @@
 - [ ] Bridge sends a test email + reads inbox. Ollama serves a test prompt. Fleet health/watchdog green.
 - [ ] Run **48 h in parallel** (Mini still able to resume) before flipping Mini to DR-only.
 
-## Phase 8 — Mini → offsite DR (Location 2)
-- [ ] Relocate Mini to Location 2; attach **WD 8 TB** (offsite TM + Kimi K3 archive) + UPS + internet + recovery display/kb.
-- [ ] Cloudflare tunnel/Access on the Mini for DR reachability (per Atomus).
-- [ ] Set Mini to **warm standby**: keep workspace + model set synced from Studio **over Cloudflare**; disable its active/primary crons (Studio is primary) but keep it resume-ready.
+## Phase 8 — Mini → Lizi's residence (Location 2: offsite DR + Lizi's workstation + batch worker)
+- [ ] Relocate Mini to **Lizi's residence** (reliable fiber); attach **WD 8 TB** (offsite TM + Kimi K3 archive) + UPS + internet + display/kb for Lizi.
+- [ ] Cloudflare tunnel/Access on the Mini for DR reachability **and Lizi's identity** (per Atomus).
+- [ ] **Compliance (machine at an employee residence holding DR + portal logins):** Atomus MDM/CMMC enrollment + FileVault ON + Cloudflare Access gated to Lizi.
+- [ ] **Lizi's application/login workstation:** OpenClaw session on the Mini she drives at her desk (MC Exobot widget for chat + browser tool with HER browser profile / HER portal creds+2FA). This is how she gets Exo support filling web applications (the NIH-style capability), local + low-latency for her.
+- [ ] Roles on the Mini: (1) Lizi interactive, (2) batch worker, (3) hot DR. **Batch yields to Lizi's active session** (interactive priority). It does NOT run the autonomous send-crons (singleton stays on the Studio → no split-brain).
+- [ ] Sync workspace + model set Studio↔Mini **over Cloudflare**.
 - [ ] Studio → new **4 TB Time Machine** + UPS.
-- [ ] Redundancy check: **models 2 copies / 2 sites**; **Mac data 3 copies** (Studio live + Studio 4TB TM + offsite Mini/WD 8TB).
+- [ ] Redundancy check: **models 2 copies / 2 sites**; **Mac data 3 copies** (Studio live + Studio 4TB TM + Mini/WD 8TB at Lizi's).
+
+## Phase 8b — Utilization-sharing loop go-live (both boxes)
+- [ ] Load `com.exos.util-metrics` on the Studio too (collector already live on the Mini since 9/13).
+- [ ] **GPU telemetry sudoers** (each box) — enables real GPU% sampling when proxies cross the warm line. Add a drop-in `/etc/sudoers.d/exos-powermetrics`:
+      `exomac ALL=(root) NOPASSWD: /usr/bin/powermetrics --samplers gpu_power -n 1 -i 200`
+      (run `sudo visudo -f /etc/sudoers.d/exos-powermetrics`). Atomus should bless this.
+- [ ] Build the **dispatcher** (route jobs by latency + live load; interactive-priority on the Mini). Config in `config/capacity-forecast.json`.
+- [ ] Pre-order authority = **Option 1: draft a Decision for Jon's approval** (built default; no auto-purchase).
 
 ## Phase 9 — Daily backup + failover safety (both machines = `exomac`)
 **Design:** both the Studio and the offsite Mini run as username `exomac` (identical `/Users/exomac` paths) — this is what makes failover clean: any plist/script/config runs on either box unchanged. Guardrail: **only ONE box is "active" at a time** (active crons + cloudflared tunnel + ProtonMail Bridge). Studio = active/primary; Mini = **standby** (active jobs disabled) until promoted, so no duplicate sends/Decisions (split-brain).
