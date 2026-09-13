@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- STAGED — load at migration (Studio). Daily DR backup Studio->offsite Mini @ 02:00 CT.
+     Install:  cp config/launchd-staged/com.exos.dr-backup.plist ~/Library/LaunchAgents/
+               launchctl load ~/Library/LaunchAgents/com.exos.dr-backup.plist
+     Pre-req:  config/dr-backup.json dest set to the Mini over Cloudflare SSH, dest_is_remote=true. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.exos.dr-backup</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/exomac/.openclaw/workspace/scripts/studio_dr_backup.sh</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict><key>Hour</key><integer>2</integer><key>Minute</key><integer>0</integer></dict>
+  <key>StandardOutPath</key><string>/Users/exomac/.openclaw/workspace/logs/dr-backup.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/exomac/.openclaw/workspace/logs/dr-backup.err.log</string>
+  <key>RunAtLoad</key><false/>
+</dict>
+</plist>

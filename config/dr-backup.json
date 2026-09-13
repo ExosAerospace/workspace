@@ -1,0 +1,13 @@
+{
+  "_comment": "DR backup config for the Studio->offsite-Mini topology. Pre-migration these run in LOCAL self-test mode (dest is a local staging dir). At migration, set 'dest' to the offsite Mini over the Cloudflare SSH tunnel, e.g. exomac@ssh.exosaero.space:/Users/exomac/dr-mirror/ and set dest_is_remote=true.",
+  "dest": "/Users/exomac/dr-selftest-mirror/",
+  "dest_is_remote": false,
+  "workspace_src": "/Users/exomac/.openclaw/workspace/",
+  "openclaw_config_src": "/Users/exomac/.openclaw/",
+  "max_age_hours": 26,
+  "git_push": false,
+  "git_push_note": "flip to true at migration once the Studio has the git remote + creds; pre-migration we don't want the mini pushing on a test",
+  "alert_discord_dm_target": "user:1501632195163590739",
+  "alert_discord_system_channel": "channel:1501636814849577050",
+  "alert_email_to": "jquinn@exosaero.com"
+}

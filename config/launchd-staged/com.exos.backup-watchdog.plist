@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- STAGED — load at migration (Studio). Hourly backup-health watchdog: alerts Jon + pauses
+     Studio-only crons if the DR backup goes stale; auto-resumes on recovery.
+     Install:  cp config/launchd-staged/com.exos.backup-watchdog.plist ~/Library/LaunchAgents/
+               launchctl load ~/Library/LaunchAgents/com.exos.backup-watchdog.plist -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.exos.backup-watchdog</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/exomac/.openclaw/workspace/scripts/backup_watchdog.py</string>
+  </array>
+  <key>StartInterval</key><integer>3600</integer>
+  <key>StandardOutPath</key><string>/Users/exomac/.openclaw/workspace/logs/backup-watchdog.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/exomac/.openclaw/workspace/logs/backup-watchdog.err.log</string>
+  <key>RunAtLoad</key><true/>
+</dict>
+</plist>

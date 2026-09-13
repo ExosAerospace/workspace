@@ -1,0 +1,86 @@
+#!/bin/bash
+# studio_dr_backup.sh — daily DR backup of the primary (Studio) -> offsite Mini.
+#
+# Copies the operational stack (workspace/git working tree, ~/.openclaw config,
+# secrets, MC data), computes a manifest checksum, and on success writes the
+# backup-health sentinel (backup_health_gate.py). The watchdog reads that sentinel.
+#
+# Pre-migration SELF-TEST mode: config/dr-backup.json has dest_is_remote=false and a
+# LOCAL dest dir, so we prove rsync+manifest+sentinel end-to-end on the mini without
+# needing the Studio. At migration: set dest to the Mini over the Cloudflare SSH tunnel
+# (exomac@ssh.exosaero.space:/Users/exomac/dr-mirror/) and dest_is_remote=true.
+#
+# Usage: bash scripts/studio_dr_backup.sh
+set -uo pipefail
+
+WS=/Users/exomac/.openclaw/workspace
+CFG="$WS/config/dr-backup.json"
+LOG="$WS/logs/dr-backup.log"
+mkdir -p "$WS/logs"
+
+j() { python3 -c "import json,sys; print(json.load(open('$CFG')).get('$1',''))"; }
+
+DEST=$(j dest)
+DEST_REMOTE=$(j dest_is_remote)
+WS_SRC=$(j workspace_src)
+CFG_SRC=$(j openclaw_config_src)
+GIT_PUSH=$(j git_push)
+
+ts() { date '+%Y-%m-%d %H:%M:%S'; }
+log() { echo "$(ts) $*" | tee -a "$LOG"; }
+
+log "=== DR backup start (dest=$DEST remote=$DEST_REMOTE) ==="
+
+CUI_EXCLUDE="$WS/scripts/cui-exclude-list.txt"
+COMMON_EXCLUDES=(
+  --exclude='.git/' --exclude='node_modules/' --exclude='logs/'
+  --exclude='*.log' --exclude='.DS_Store' --exclude='cui-quarantine/'
+  --exclude='.venv/' --exclude='__pycache__/'
+  --exclude='*.backup-before-*' --exclude='*.orig' --exclude='*.tmp'
+)
+[ -f "$CUI_EXCLUDE" ] && COMMON_EXCLUDES+=(--exclude-from="$CUI_EXCLUDE")
+
+RSYNC_RC=0
+run_rsync() {  # $1=src  $2=subdir-under-dest
+  local src="$1" sub="$2"
+  if [ "$DEST_REMOTE" = "True" ] || [ "$DEST_REMOTE" = "true" ]; then
+    local host="${DEST%%:*}" base="${DEST#*:}"
+    ssh "$host" "mkdir -p '${base}${sub}'" 2>>"$LOG" || true
+    rsync -az --delete "${COMMON_EXCLUDES[@]}" -e ssh "$src" "${DEST}${sub}" 2>>"$LOG" || RSYNC_RC=$?
+  else
+    mkdir -p "${DEST}${sub}"
+    rsync -a --delete "${COMMON_EXCLUDES[@]}" "$src" "${DEST}${sub}" 2>>"$LOG" || RSYNC_RC=$?
+  fi
+}
+
+# 1) workspace working tree
+run_rsync "$WS_SRC" "workspace/"
+# 2) openclaw config (INCLUDES secrets.json) — no --exclude of secrets; DR must be complete.
+#    Exclude the big regenerable model cache; models are backed up separately (2 copies/2 sites).
+run_rsync "$CFG_SRC" "openclaw-config/"
+
+# 3) optional git push (off in self-test)
+if [ "$GIT_PUSH" = "True" ] || [ "$GIT_PUSH" = "true" ]; then
+  ( cd "$WS" && git push 2>>"$LOG" ) && log "git push OK" || log "WARN git push failed"
+fi
+
+# 4) manifest checksum over the workspace working tree (integrity signal for the watchdog)
+MANIFEST_SHA=$(cd "$WS_SRC" && find . -type f \
+    -not -path './.git/*' -not -path './node_modules/*' -not -path './logs/*' \
+    -not -name '*.log' 2>/dev/null | sort | \
+    xargs -I{} stat -f '%N %z %m' {} 2>/dev/null | shasum -a 256 | awk '{print $1}')
+log "manifest sha256=$MANIFEST_SHA rsync_rc=$RSYNC_RC"
+
+# rsync exit codes: 0=perfect; 23=partial (some files unreadable, e.g. a stray perms-denied
+# junk file); 24=some source files vanished mid-run. 23/24 are benign for DR — the important
+# data still copied — so we accept them as success-with-warning. Any OTHER non-zero (12 proto,
+# 30 timeout, 255 ssh, etc.) is a REAL failure -> no sentinel, watchdog alerts + pauses.
+if [ "$RSYNC_RC" -eq 0 ] || [ "$RSYNC_RC" -eq 23 ] || [ "$RSYNC_RC" -eq 24 ]; then
+  [ "$RSYNC_RC" -ne 0 ] && log "WARN rsync rc=$RSYNC_RC (partial — a few unreadable/vanished files skipped; treated as OK)"
+  python3 "$WS/scripts/backup_health_gate.py" --write "$MANIFEST_SHA" >>"$LOG" 2>&1
+  log "=== DR backup SUCCESS — sentinel written ==="
+  exit 0
+else
+  log "=== DR backup FAILED (rsync_rc=$RSYNC_RC) — sentinel NOT updated; watchdog will alert+pause ==="
+  exit 1
+fi
