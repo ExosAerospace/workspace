@@ -4,6 +4,7 @@
 **Scope on current host:** 127 `com.exos.*` launchd jobs · 9.7 GB workspace (git) · ~50 GB Ollama models · 37 secrets · ProtonMail Bridge · cloudflared tunnel (mc.exosaero.space) · QuickBooks OAuth · browser profile.
 **Storage:** Studio → new **4 TB** Time Machine. Offsite Mini → keeps the **WD 8 TB** (offsite TM + Kimi K3 archive).
 **DELIVERY: CONFIRMED Sept 16, 2026** (shipped 9/11, order W1877619261, Standard Delivery).
+**Sites:** Studio = **Jon's residence** (fiber + Starlink backup; serves the Exos Greenville location remotely). Mini = **Lizi's residence** (fiber) — Lizi knows she inherits it once the Studio is up for backup services.
 
 **Pre-built & self-tested on the mini 2026-09-13 (ready to point Studio→Mini + load):**
 - `scripts/backup_health_gate.py` — shared gate (sentinel + pause). Tested: healthy/stale/pause/resume all pass.
