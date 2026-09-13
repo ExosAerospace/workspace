@@ -102,6 +102,12 @@ def build():
         cpu_peak = (max(cpu_vals))/eff if cpu_vals else None
         mem_avg = sum(mem_vals)/len(mem_vals) if mem_vals else None
         disk_free = hr[-1]["disk"].get("root_free_gb")
+        gpu_vals = [r.get("gpu",{}).get("active_pct") for r in hr
+                    if r.get("gpu",{}).get("sampled") and r.get("gpu",{}).get("active_pct") is not None]
+        gpu_str = f", GPU avg {sum(gpu_vals)/len(gpu_vals):.0f}%" if gpu_vals else ""
+        gpu_armed_recent = any(r.get("gpu_armed") for r in hr)
+        if gpu_armed_recent and not gpu_vals:
+            gpu_str = ", GPU armed (awaiting sudo helper)"
 
         verdict = "healthy"
         if cpu_avg is not None and cpu_avg < c["cpu_idle_pct"]:
@@ -112,7 +118,7 @@ def build():
             issues.append(f"{h}: hot — peak CPU {cpu_peak:.0f}% / mem {mem_avg:.0f}% eff")
 
         lines.append(f"• {h} [{role}]: CPU avg {cpu_avg:.0f}% / peak {cpu_peak:.0f}% (eff), "
-                     f"mem avg {mem_avg:.0f}%, disk free {disk_free}GB → {verdict}"
+                     f"mem avg {mem_avg:.0f}%{gpu_str}, disk free {disk_free}GB → {verdict}"
                      if cpu_avg is not None else f"• {h}: (insufficient CPU samples)")
 
         # forecast on daily-avg CPU

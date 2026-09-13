@@ -70,6 +70,39 @@ def disk():
         return {"root_free_gb": round(f/1e9,1), "root_used_pct": round(100.0*u/t,1)}
     except Exception: return {}
 
+def _warm_cfg():
+    # early-warning thresholds: GPU telemetry only arms when a proxy crosses these
+    c = {"cpu_warm_pct": 50.0, "mem_warm_pct": 65.0, "gpu_telemetry": "auto"}
+    try:
+        j = json.load(open(os.path.join(WS, "config", "capacity-forecast.json")))
+        for k in c: c[k] = j.get(k, c[k])
+    except Exception: pass
+    return c
+
+def gpu(armed):
+    """Real GPU telemetry via powermetrics — ONLY when armed (proxies near capacity) so the
+    sudo-heavy sampler doesn't run all the time. Needs a passwordless sudoers entry for
+    powermetrics (see scripts/README / migration runbook); until then it reports needs_sudo."""
+    if not armed:
+        return {"sampled": False, "reason": "below warm threshold (armed only near capacity)"}
+    try:
+        r = subprocess.run(
+            ["sudo", "-n", "powermetrics", "--samplers", "gpu_power", "-n", "1", "-i", "200"],
+            capture_output=True, text=True, timeout=8)
+        if r.returncode != 0:
+            return {"sampled": False, "reason": "needs_sudo_helper", "err": (r.stderr or "")[:80]}
+        active = None
+        for ln in r.stdout.splitlines():
+            l = ln.strip()
+            if "active residency" in l.lower() and "%" in l:
+                try: active = float(l.split("%")[0].split()[-1])
+                except Exception: pass
+        return {"sampled": True, "active_pct": active}
+    except FileNotFoundError:
+        return {"sampled": False, "reason": "powermetrics not found"}
+    except Exception as e:
+        return {"sampled": False, "reason": f"error:{str(e)[:60]}"}
+
 def ollama():
     # best-effort: loaded models + in-flight requests via the local API
     try:
@@ -84,11 +117,17 @@ def ollama():
 def sample():
     host = socket.gethostname().split(".")[0]
     role = ROLE.get(host, "worker")
+    c = cpu(); m = memory(); wc = _warm_cfg()
+    # arm real GPU telemetry only when a proxy is near capacity (Jon 2026-09-13)
+    cpu_pct = c.get("load1_pct_of_cores") or 0
+    mem_pct = m.get("used_pct") or 0
+    armed = (wc["gpu_telemetry"] != "off") and (cpu_pct >= wc["cpu_warm_pct"] or mem_pct >= wc["mem_warm_pct"])
     return {
         "ts": datetime.now(timezone.utc).isoformat(),
         "epoch": int(time.time()),
         "host": host, "role": role,
-        "cpu": cpu(), "mem": memory(), "disk": disk(), "ollama": ollama(),
+        "cpu": c, "mem": m, "disk": disk(), "ollama": ollama(),
+        "gpu": gpu(armed), "gpu_armed": armed,
     }
 
 def append(s):
