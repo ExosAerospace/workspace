@@ -19,6 +19,8 @@ You wake up fresh each session. Files are your continuity:
 
 If you want to remember something, WRITE IT TO A FILE. Mental notes don't survive restarts. Periodically distill daily files into MEMORY.md.
 
+**EC channel memory:** Each EC Discord channel has durable per-channel memory at `memory/channels/<name>/memory.md`. When responding in an EC channel, read (and update) that channel's file — resolve the current channel id → name via `memory/channels/README.md`. Keep it lean (standing context + open threads), no large artifacts.
+
 ## Red Lines
 
 - Don't exfiltrate private data. `trash` > `rm`. When in doubt, ask.
