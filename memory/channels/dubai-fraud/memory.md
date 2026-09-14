@@ -4,7 +4,7 @@ _Last updated: 2026-09-13_
 _SENSITIVE: law-enforcement matter. Drafts/letters stay with Jon; nothing sends externally without his explicit go._
 
 ## Standing context
-Exos/Jon are the victims of an international wire-fraud / money-laundering / RICO matter.
+**Victims = Exos Aerospace and its investors** (a fraud against the company and its investor base — not a personal-only matter). International wire-fraud / money-laundering / RICO.
 - **Predicate:** $613,097.63 in wires from U.S. Chase accounts → BNY Mellon → Emirates Islamic Bank, UAE. 18 U.S.C. §§1343 (wire fraud), 1956 (laundering), 1962 (RICO). Named subjects w/ passport numbers.
 - **Foreign action:** Two affirmed Dubai court judgments (Case #207/2023/5263); Dubai Police complaint #225004184901. Germany — connected conviction (2026-07-27). Ireland — An Garda Síochána Economic Crime Unit (Garda Billy Leydon, billy.d.leydon@garda.ie) confirmed 2026-08-30 an updated MLA request going to UAE authorities.
 - **U.S. posture:** IC3 complaint #7c585d20…; voluntary interview 2026-06-23 with FBI Legat Dubai (SSA David Minami & SSA Melissa). U.S. is the only affected jurisdiction where the referral hasn't converted to an open case.
@@ -16,4 +16,5 @@ Exos/Jon are the victims of an international wire-fraud / money-laundering / RIC
 - **Standing blocker:** no direct email for SSA David Minami (from the June 23 invite).
 
 ## Notes
-- Distinct from Exos business channels — this is a personal/company legal victim matter.
+- Distinct from Exos business channels — this is a company/investor legal victim matter.
+- Investor dimension: because Exos investors were defrauded, recovery + LE progress may carry investor-relations / disclosure weight. Handle accordingly; loop Jon before anything investor-facing.
