@@ -35,6 +35,13 @@ PREVIEW = "--preview" in sys.argv
 JON = "jquinn@exosaero.com"
 INTAKE = "exosmc@proton.me"
 
+# Jon has several email identities but ONE Mission Control board (all tasks land on
+# jquinn@exosaero.com). Any of these alias records must be treated as Jon so the
+# adoption-nudge weekly is not mailed to a 0-task duplicate identity (which produced a
+# false "Nothing is assigned to you" note to the CEO who actually has 250+ open items).
+JON_ALIASES = {"jquinnexo@pm.me", "megawattcontrols@gmail.com"}
+ALL_JON = {JON} | JON_ALIASES
+
 
 def supa(path):
     k = json.load(open(SECRETS))["supabase_service_role_key"]
@@ -93,7 +100,7 @@ def send(to, subject, body):
 def main():
     skip = optout_set()
     users = [u for u in json.load(open(USERS))
-             if (u.get("email") or "").lower() != JON
+             if (u.get("email") or "").lower() not in ALL_JON
              and (u.get("email") or "").lower() not in skip]
     tasks = supa("tasks?select=id,title,state,due_date,assigned_email&limit=5000")
     sent = 0
