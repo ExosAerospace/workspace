@@ -245,7 +245,12 @@
       "signed_date": "2026-07-29",
       "deposit_date": null,
       "status": "at_risk",
-      "note": "Largest outstanding. Neil reports copies of comms re problems with his bank / investment company; aging ('growing whiskers'). Signed ~3 weeks, funds not received."
+      "note": "Largest outstanding. Neil reports copies of comms re problems with his bank / investment company; aging ('growing whiskers'). Signed ~3 weeks, funds not received.",
+      "last_nudge": {
+        "date": "2026-09-14",
+        "by": "Exo\u2192Neil (email nmilburn@exosaero.com)",
+        "note": "Jon authorized direct nudge to Neil; PO10 collection follow-up sent"
+      }
     },
     {
       "investor": "Charles Webb",
@@ -257,7 +262,12 @@
       "signed_date": "2026-08-10",
       "deposit_date": null,
       "status": "awaiting_funds",
-      "note": "Executed 8/10, funds not yet received (recent)."
+      "note": "Executed 8/10, funds not yet received (recent).",
+      "last_nudge": {
+        "date": "2026-09-14",
+        "by": "Exo\u2192Neil (email nmilburn@exosaero.com)",
+        "note": "Jon authorized direct nudge to Neil; PO10 collection follow-up sent"
+      }
     },
     {
       "investor": "Deborah Napolitano",
