@@ -127,7 +127,28 @@ def resolve(origid, request, ctx):
             except Exception: pass
 
 
+def sweep_stale_flags():
+    """Self-heal: strip 'awaiting-exo-answer' from any task that is already Done or already has a
+    posted '✅ Exo:' answer. Catches flags that leaked past the resolve loop (e.g. a transient
+    Supabase failure on the clear PATCH, or an answer posted before this guard existed)."""
+    tagged = supa("GET", "tasks?select=id,state,tags&tags=cs.%7Bawaiting-exo-answer%7D&limit=200") or []
+    for t in tagged:
+        tid = str(t.get("id"))
+        answered = False
+        if t.get("state") == "Done":
+            answered = True
+        else:
+            notes = supa("GET", f"activities?select=body&subject=eq.task:{tid}"
+                                f"&type=eq.task_note&order=created_at.desc&limit=10") or []
+            answered = any(str(n.get("body") or "").lstrip().startswith("✅ Exo:") for n in notes)
+        if answered:
+            tags = [x for x in (t.get("tags") or []) if x != "awaiting-exo-answer"]
+            supa("PATCH", f"tasks?id=eq.{tid}", {"tags": tags})
+            log(f"sweep: cleared stale awaiting-exo-answer on task #{tid} (state={t.get('state')})")
+
+
 def main():
+    sweep_stale_flags()
     try:
         st = json.load(open(STATE))
     except Exception:
@@ -185,17 +206,21 @@ def main():
         supa("POST", "activities", {"type": "task_note", "subject": f"task:{origid}",
              "body": "✅ Exo: " + resp, "owner": "Exo", "status": "completed"})
         supa("PATCH", f"tasks?id=eq.{tid}", {"state": "Done"})
-        # Clear the top-of-board flag only if fully resolved; keep it visible if it now needs John.
+        # A substantive answer is posted → Exo is no longer the blocker, so ALWAYS clear the
+        # "awaiting-exo-answer" chip. The chip means "Exo owes an answer"; once answered it is
+        # misleading to keep it lit (even when the ball is now in John's court — that path is
+        # surfaced via the dm_jon escalation below, not by leaving this flag on).
         cur = supa("GET", f"tasks?id=eq.{origid}&select=tags") or []
         if cur:
-            tags = cur[0].get("tags") or []
-            if resolved:
-                tags = [x for x in tags if x != "awaiting-exo-answer"]
-            elif "awaiting-exo-answer" not in tags:
-                tags = tags + ["awaiting-exo-answer"]
+            tags = [x for x in (cur[0].get("tags") or []) if x != "awaiting-exo-answer"]
             supa("PATCH", f"tasks?id=eq.{origid}", {"tags": tags})
+        # If it now needs John, keep it visible via a one-time DM (not a stale board chip).
+        if not resolved and tid not in escalated:
+            dm_jon(f"↩️ @Exobot answered task #{origid} but it now needs you — “{request[:140]}”. "
+                   f"My reply is on the task.")
+            escalated.add(tid)
         seen.add(tid); fails.pop(tid, None)
-        log(f"resolved triage {tid} -> task #{origid} (resolved={resolved})")
+        log(f"resolved triage {tid} -> task #{origid} (resolved={resolved}, chip cleared)")
 
     st["seen"] = list(seen)[-3000:]; st["fails"] = fails; st["escalated"] = list(escalated)[-500:]
     json.dump(st, open(STATE, "w"))
