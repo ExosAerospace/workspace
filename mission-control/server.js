@@ -751,8 +751,9 @@ function findOwnerUser(owner) {
   let u = users.find(x => (x.email && x.email.toLowerCase() === o) ||
                           (x.name && x.name.toLowerCase() === o));
   if (u) return u;
-  // alias: "jon" → John Quinn
-  if (o === 'jon') u = users.find(x => x.email && x.email.toLowerCase() === 'jquinn@exosaero.com');
+  // alias: "jon" / Jon's ProtonMail alias → John Quinn (one inbox, several aliases)
+  if (o === 'jon' || o === 'jquinnexo@pm.me' || o === 'exosmc@proton.me')
+    u = users.find(x => x.email && x.email.toLowerCase() === 'jquinn@exosaero.com');
   if (u) return u;
   // first-name / prefix match (e.g. "Lizi" → "Lizi Quinn")
   u = users.find(x => {
@@ -4135,11 +4136,27 @@ const server = http.createServer((req, res) => {
     const me = ((dsess && dsess.email) || '').toLowerCase();
     const scopeAll = (urlObj.searchParams.get('scope') === 'all' && dsess && dsess.role === 'admin') || isDecisionsCronToken(req);
     if (!scopeAll) {
+      // Resolve names/aliases to a canonical email so name-assigned decisions ("John",
+      // "Lizi") and Jon's Proton alias (jquinnexo@pm.me) reach the right person's board
+      // instead of silently vanishing on an exact-string mismatch. Cache within the request
+      // so we don't re-load users.json per decision.
+      const _canon = new Map();
+      const canon = v => {
+        const s = String(v || '').trim().toLowerCase();
+        if (!s) return '';
+        if (_canon.has(s)) return _canon.get(s);
+        const em = /([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})/i.exec(s);
+        const key = em ? em[1] : s;
+        const u = findOwnerUser(key);
+        const out = (u && u.email) ? u.email.toLowerCase() : key;
+        _canon.set(s, out);
+        return out;
+      };
+      const meC = canon(me);
       arr = arr.filter(d => {
-        const assignee = String(d.assignedTo || 'jquinn@exosaero.com').toLowerCase();
-        const am = /([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})/i.exec(d.approver || '');
-        const approverEmail = am ? am[1].toLowerCase() : '';
-        return (me && assignee === me) || (approverEmail && approverEmail === me);
+        const assignee = canon(d.assignedTo || 'jquinn@exosaero.com');
+        const approver = canon(d.approver || '');
+        return (meC && assignee === meC) || (approver && approver === meC);
       });
     }
     // Normalize actionable-status synonyms: agent-written decisions sometimes use 'pending'
