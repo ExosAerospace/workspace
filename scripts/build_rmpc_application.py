@@ -41,7 +41,7 @@ Post-challenge: Exos offers the demonstrated capability as an integrated flight-
 
 S5="""Two deliberate design choices and one integration note warrant explanation.
 
-First, working fluid. For the orbital demonstration we baseline a benign, storable working fluid rather than a cryogen. Within the mandatory 12.5 kg mass, an interface-limited power budget (about 28 V/3 A), and full thermal isolation from the bus — and given the payload persists on orbit from an early-2028 launch until the FFR rendezvous — sustaining a cryogen is not credible. A storable fluid demonstrates the ISAM-critical step within the box; because the iBOSS iFEX coupling is multi-propellant (liquid and cryogenic), the same interface carries forward to cryogenic depots, and cryogen-specific fluid physics is retired on Exos's parallel BLK3 suborbital transfer flight. This is a scoping choice, not a capability gap.
+First, the working fluid — why a benign simulant rather than live propellant. This is deliberate, and it costs the demonstration nothing. The capability being proven is the robotic act: autonomous coupling mate and demate with a metered transfer across the interface — leak-tight sealing, alignment and contact under compliance, and true zero-g fluid behavior through the joint. That physics is identical whether the fluid is live propellant or a benign storable simulant; the robotic and interface risk we retire does not depend on the fluid being energetic. Flying live propellant would, by contrast, add launch-vehicle and range-safety review, host and co-manifest safety constraints on a shared FFR platform, and a hazardous-handling burden — none of which the eight-month schedule or the award scope can absorb, and none of which earns additional evaluation credit. It is also physically infeasible in the box: a cryogen cannot be powered or insulated within the 12.5 kg mass and the roughly 28 V/3 A interface limit, and would boil off during the long on-orbit loiter from an early-2028 launch to the FFR rendezvous. Crucially, the real-propellant behavior is still covered, just not on this platform: the iBOSS iFEX coupling is multi-propellant, and the iSSI interface it derives from flew in space in 2022, so the same coupling we demonstrate here qualifies directly for cryogenic depots — and cryogen-specific fluid physics is retired in parallel on Exos's BLK3 suborbital transfer flight. The benign fluid therefore maximizes demonstrated ISAM value per unit of cost and risk within the guidelines: a scoping choice with the propellant-specific risk fully retired elsewhere, not a capability gap.
 
 Second, manipulation. Because the FFR arm interfaces only through the CrossLink cleat and only one deck CrossLink position is available, the receiver is integral to our ORU, and the coupling mate/demate is performed by the iSSI/iFEX interface driven by the arm's install motion — an active manipulation, not passive carriage.
 
@@ -148,4 +148,50 @@ p("If total cost exceeds $500,000, explain how you plan to fund the remaining co
 p(BUDGET_DETAIL, size=10.5, color=DARK)
 
 p("Open items before Aug 12 submission: formalize the iBOSS teaming/license (via iBOSS.space US LLC) and the foreground-IP clause across Exos/Scorpius/Princeton/iBOSS; run the ITAR/export screen on iSSI/iFEX technical-data exchange; pull FFR CAD to fix arm reach/workspace assumptions; firm iFEX and Type-V costs with vendor quotes.", size=8.5, italic=True, color=RED, before=10)
+
+# --- Acronyms & Terms glossary (every acronym used above, defined once) ---
+ACRONYMS=[
+ ("CAD","Computer-Aided Design"),
+ ("CDR","Critical Design Review"),
+ ("CFM","Cryogenic Fluid Management"),
+ ("ConOps","Concept of Operations"),
+ ("CrossLink","Fly Foundational Robots deck robotic interface/cleat the arm grapples (proper name)"),
+ ("EMI / EMC","Electromagnetic Interference / Electromagnetic Compatibility"),
+ ("FFR","Fly Foundational Robots — the NASA (Goddard) robotic host platform already in orbit that the TechLeap payloads rendezvous with (FFR launches late 2027; payloads early 2028)"),
+ ("ICD","Interface Control Document"),
+ ("iBOSS","Team vendor providing the iSSI/iFEX interface (via iBOSS.space US LLC); from 'intelligent Building Blocks for On-orbit Satellite Servicing'"),
+ ("iFEX","iSSI Fuel Exchange — iBOSS androgynous, multi-propellant fluid coupling (variant of iSSI)"),
+ ("IM-1 / IM-2","Intuitive Machines Mission 1 (Odysseus) / Mission 2 (Athena) lunar landers"),
+ ("IP","Intellectual Property"),
+ ("ISAM","In-space Servicing, Assembly, and Manufacturing"),
+ ("iSSI","intelligent Space System Interface — iBOSS standardized robotic interface"),
+ ("ITAR","International Traffic in Arms Regulations"),
+ ("LEO","Low Earth Orbit"),
+ ("LOX","Liquid Oxygen"),
+ ("MLI","Multi-Layer Insulation"),
+ ("NDA","Non-Disclosure Agreement"),
+ ("ORU","Orbital Replacement Unit"),
+ ("PDR","Preliminary Design Review"),
+ ("RCRD","Robotically-Mated Cryogenic Refueling Demonstration (Exos concept name for this effort)"),
+ ("R&D","Research and Development"),
+ ("RMPC","Robotically Manipulated Payload Challenge (the NASA TechLeap Prize)"),
+ ("ROM","Rough Order of Magnitude"),
+ ("RS422","EIA/TIA-422 serial data interface standard"),
+ ("SBIR","Small Business Innovation Research"),
+ ("SF28 / SF31 / SF32","NASA 2026 Civil Space Shortfalls (28 robotics/automation/autonomy; 31 technology-demonstration environments; 32 affordable, resilient supply chain)"),
+ ("SRR","System Requirements Review"),
+ ("SWaP","Size, Weight, and Power"),
+ ("TID","Total Ionizing Dose"),
+ ("TRL","Technology Readiness Level (TRL-9 = flight-proven)"),
+ ("TVAC","Thermal-Vacuum (environmental test)"),
+ ("Type-V","Type V linerless all-composite pressure vessel (cryogenic tank)"),
+]
+head6("9","Acronyms & Terms","glossary")
+p("Every acronym used in this application, defined once for the reviewer.", size=8.5, italic=True, color=GREY, after=5)
+for ac,defn in ACRONYMS:
+    pa=doc.add_paragraph(); pa.paragraph_format.left_indent=Inches(0.28); pa.paragraph_format.space_after=Pt(2)
+    r=pa.add_run(ac+" — "); r.font.size=Pt(9.5); r.font.bold=True; r.font.color.rgb=NAVY; r.font.name="Calibri"
+    r2=pa.add_run(defn); r2.font.size=Pt(9.5); r2.font.color.rgb=DARK; r2.font.name="Calibri"
+print(f"  S9 (Acronyms): {len(ACRONYMS)} terms")
+
 doc.save(OUT); print("BUILT", OUT)

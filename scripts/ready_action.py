@@ -30,7 +30,7 @@ SENT_REGISTRY = os.path.join(WS, "logs", "outreach-sent-registry.json")
 
 # Email (Proton bridge, same as the other senders)
 SMTP_HOST, SMTP_PORT = "127.0.0.1", 1025
-SMTP_USER, SMTP_PASS = "jquinnexo@pm.me", "SPqYBivj98-jyF3RujLKxA"
+SMTP_USER, SMTP_PASS = "jquinnexo@pm.me", __import__('json').load(open(__import__('os').path.expanduser('~/.openclaw/secrets.json')))['protonmail_bridge_smtp_password']
 JON = "jquinn@exosaero.com"
 
 # ── Route deliverables to the RESPONSIBLE PARTY, not always Jon (Jon directive 2026-09-08) ──

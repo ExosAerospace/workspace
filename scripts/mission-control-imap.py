@@ -40,7 +40,7 @@ socket.setdefaulttimeout(30)
 IMAP_HOST = '127.0.0.1'
 IMAP_PORT = 1143
 EMAIL_USER = 'jquinnexo@pm.me'
-EMAIL_PASS = 'SPqYBivj98-jyF3RujLKxA'
+EMAIL_PASS = __import__('json').load(open(__import__('os').path.expanduser('~/.openclaw/secrets.json')))['protonmail_bridge_smtp_password']
 
 SUPABASE_URL = 'https://pcrgpuoljylqcumijvnw.supabase.co'
 SUPABASE_KEY = 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp'

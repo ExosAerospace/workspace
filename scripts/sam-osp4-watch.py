@@ -96,8 +96,10 @@ def send_alert(new_notices):
     body = "\n".join(lines)
     msg = (f"From: jquinnexo@pm.me\nTo: {TO}\n"
            f"Subject: [SAM WATCH] {len(new_notices)} new OSP-4 / responsive-launch notice(s)\n\n{body}\n")
-    p = subprocess.run(['msmtp', '-a', 'protonmail', TO], input=msg.encode(), capture_output=True)
-    return p.returncode == 0
+    import shutil
+    _oc = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+    r = subprocess.run([_oc, "message", "send", "--channel", "discord", "--target", "1501636814849577050", "-m", f"**[SAM WATCH] {len(new_notices)} new OSP-4 / responsive-launch notice(s)**\n\n" + body], capture_output=True, timeout=60)
+    return r.returncode == 0
 
 def main():
     key = get_key()

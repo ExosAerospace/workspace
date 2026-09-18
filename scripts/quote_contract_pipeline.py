@@ -17,6 +17,12 @@ import os, sys, json, argparse, datetime, urllib.request
 WS = os.path.expanduser("~/.openclaw/workspace")
 RATE = os.path.join(WS, "pricing", "rate-card.json")
 DECISIONS_API = "http://localhost:8080/api/decisions/ingest"
+# Pending-close queue: the authoritative contract $ captured AT QUOTE TIME (from the
+# rate card), keyed by the Decision dedupeKey. quote_close_stamp.py stamps these hard
+# figures onto the opportunity the moment the deal is WON — so the number never has to
+# be re-derived from stale free-text prose again (the entX regression). See
+# stamp_opportunity_financials.py.
+CLOSE_QUEUE = os.path.join(WS, "mission-control", "data", "quote-close-queue.json")
 CONTRACT_TEMPLATE = "Attachment_B_BLK3_Bailment_and_Operating_Lease_TermSheet.docx"
 # During the PROG-002 test phase the drafted package routes to Phil to check the work and
 # update the documents — NOT to Jon's decision box. Change this to hand review to someone else.
@@ -28,7 +34,7 @@ def _token():
     try:
         return open(os.path.join(WS, "mission-control", "data", ".decisions-token")).read().strip()
     except Exception:
-        return "33bad1599d6fdc99af6c10026cdab10c46c5a7bbcbbff18b"  # fallback (matches decisions crons)
+        return ""  # fallback (matches decisions crons)
 
 
 def quote(kg):
@@ -84,6 +90,27 @@ On approval, Exo delivers the tailored quote + term sheet to your inbox to send;
     return out, price_line
 
 
+def record_pending_close(customer, kg, price, dedupe_key):
+    """Capture the quoted contract $ at source so close can stamp exact figures.
+    Idempotent upsert keyed by the Decision dedupeKey. No price -> nothing to stamp."""
+    if not price:
+        return
+    try:
+        q = json.load(open(CLOSE_QUEUE)) if os.path.exists(CLOSE_QUEUE) else {}
+    except Exception:
+        q = {}
+    entry = q.get(dedupe_key, {})
+    entry.update({"customer": customer, "kg": kg,
+                  "contract_value": float(price), "payload_value": float(price),
+                  "dedupeKey": dedupe_key, "payload_buyer": True})
+    entry.setdefault("created", datetime.date.today().isoformat())
+    entry.setdefault("closed", False)
+    q[dedupe_key] = entry
+    tmp = CLOSE_QUEUE + ".tmp"
+    json.dump(q, open(tmp, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+    os.replace(tmp, CLOSE_QUEUE)
+
+
 def post_decision(customer, kg, price_line, pkg_path):
     body = {"source": "AI Mission Desk (PROG-002)",
             "title": f"Review drafted quote + package for {customer} ({kg} kg, {price_line})",
@@ -106,11 +133,24 @@ def main():
     ap.add_argument("--post", action="store_true")
     a = ap.parse_args()
     q = quote(a.kg)
+    # Recursive loop: if we can't fulfill it single-flight, that's a capability limit — log a gap so
+    # corp-dev (build/buy/license/partner) sees the demand the current platform can't capture.
+    if q.get("price") is None:
+        try:
+            from capability_gap_ledger import log_gap
+            log_gap(
+                capability=f"Payload capacity beyond BLK3 single flight ({a.kg:.0f} kg)",
+                description=f"Inquiry from {a.customer} for {a.kg:.0f} kg / {a.mission} exceeds the 135 kg BLK3 bay — needs multi-flight, a larger vehicle, or a consortium partner.",
+                source=f"QUOTE: {a.customer} ({a.kg:.0f} kg)", severity="medium")
+        except Exception:
+            pass
     pkg, price_line = build_package(a.customer, a.kg, a.altitude, a.mission, q)
     print(f"Quote: {a.customer} · {a.kg} kg · {q['tier']} · {price_line}")
     print(f"Package: {pkg}")
     if a.post:
         print("Decision posted (status", post_decision(a.customer, a.kg, price_line, pkg), f") — routed to {REVIEWER_NAME} for review")
+        record_pending_close(a.customer, a.kg, q.get("price"), f"quote-{a.customer.lower().replace(' ','-')}")
+        print(f"Pending-close captured: {price_line} — will stamp OPP financials on WON")
     else:
         print("(dry-run — add --post to route into Decisions for approval)")
 

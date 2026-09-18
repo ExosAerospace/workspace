@@ -30,7 +30,7 @@ SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
 
 IMAP_HOST, IMAP_PORT = "127.0.0.1", 1143
 EMAIL_USER = "jquinnexo@pm.me"
-EMAIL_PASS = "SPqYBivj98-jyF3RujLKxA"   # Proton Bridge local password (same as other intake scripts)
+EMAIL_PASS = __import__('json').load(open(__import__('os').path.expanduser('~/.openclaw/secrets.json')))['protonmail_bridge_smtp_password']   # Proton Bridge local password (same as other intake scripts)
 
 SB_URL = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
 TASK_TITLE = "Capital Bridge — PO10 Funds Received (auto-tracker)"
@@ -41,6 +41,12 @@ SELF_ALIASES = {"exosmc@pm.me", "exosmc@proton.me", "jquinnexo@pm.me", "jquinnex
 
 # "<Name> funds received"  /  "funds received from <Name>"  /  "received funds ..."
 FUNDS_RE   = re.compile(r"funds?\s+rec(?:ei|ie)ved|rec(?:ei|ie)ved\s+funds?", re.I)
+# Skip aggregate/report emails — these carry cumulative dollar figures that must NOT
+# be parsed as a single PO10 receipt (caused a $613k false entry from the July
+# Monthly Investor Report, 2026-07-31). A "funds received" line inside a report body
+# should never inflate the running total.
+SKIP_SUBJECT_RE = re.compile(r"monthly\s+(?:investor\s+)?report|investor\s+report|"
+                             r"statement|summary|digest|recap|roll[\s-]?up|newsletter", re.I)
 NAME_LEAD  = re.compile(r"^\s*(?:re|fw|fwd)\s*:\s*", re.I)
 NAME_FROM_SUBJ = re.compile(r"^(.+?)\s+funds?\s+rec(?:ei|ie)ved", re.I)
 NAME_AFTER = re.compile(r"funds?\s+rec(?:ei|ie)ved\s+from\s+([A-Z][\w.\-']+(?:\s+[A-Z][\w.\-']+){0,3})", re.I)
@@ -166,6 +172,9 @@ def main():
             subject = decode(msg.get("Subject", ""))
             body = body_text(msg)
             if not FUNDS_RE.search(subject) and not FUNDS_RE.search(body):
+                continue
+            if SKIP_SUBJECT_RE.search(subject):
+                log(f"SKIP aggregate/report email (not a single receipt): {subject[:70]}")
                 continue
             mid = (msg.get("Message-ID") or "").strip() or f"nomid-{subject[:40]}"
             if mid in seen:

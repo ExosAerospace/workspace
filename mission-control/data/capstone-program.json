@@ -1,5 +1,5 @@
 {
-  "program": "Exos \u00d7 UTD EXO3 Payload Capstone",
+  "program": "Exos × UTD EXO3 Payload Capstone",
   "owner_exos": "Lizi Quinn (relationship + public-content gate); Jon Quinn supportive",
   "utd_admin": "Edwin Van Der Vlist",
   "team_name": "",
@@ -11,10 +11,9 @@
     "Narravity",
     "Napier Park"
   ],
-  "goal": "Market and fill the open 135 kg on BLK3 Flight 2 (early 2027, Spaceport America NM) via the SPACEavailable\u2026\u2122 campaign, directing the EXO3 agent fleet.",
+  "goal": "Market and fill the open 135 kg on BLK3 Flight 2 (early 2027, Spaceport America NM) via the SPACEavailable…™ campaign, directing the EXO3 agent fleet.",
   "north_star_targets": {
-    "high_prob_opportunities": "10\u00d7 the current weekly run-rate (baseline locked Week 1)",
-    "kg_booked_reward_gate": 100,
+    "high_prob_opportunities": "Research + disposition quality (no sales quota)",
     "bay_capacity_kg": 135
   },
   "grading_metrics": {
@@ -29,11 +28,11 @@
         "key": "high_prob_opps",
         "label": "High-probability close opportunities",
         "weight": "primary",
-        "definition": "ICP-fit + buying signal (reply/meeting/budget) = handoff-ready. Graded vs the 10\u00d7 target."
+        "definition": "ICP-fit + buying signal (reply/meeting/budget) = handoff-ready. Graded vs the 10× target."
       },
       {
         "key": "kg_advanced",
-        "label": "kg of the 135 kg bay advanced \u2192 booked",
+        "label": "kg of the 135 kg bay advanced → booked",
         "weight": "primary",
         "definition": "Payload kg moved into qualified pipeline and ultimately booked."
       },
@@ -47,7 +46,7 @@
         "key": "funnel_conversion",
         "label": "Funnel conversion",
         "weight": "secondary",
-        "definition": "outreach \u2192 reply \u2192 qualified \u2192 handoff rates."
+        "definition": "outreach → reply → qualified → handoff rates."
       }
     ],
     "ai_effectiveness": [
@@ -79,77 +78,77 @@
     {
       "week": 1,
       "title": "Onboard & baseline",
-      "gate": "Access live; team sets its space-themed NAME; learn EXO3 stack + brand + board; LOCK the 10\u00d7 high-prob baseline; start ICP. EXOS SITE VISIT (Greenville, TX, 3\u20134 hrs) scheduled in weeks 1\u20132 \u2014 Jon/Lizi + BD team address the team in person + facility tour."
+      "gate": "Access live; team sets its space-themed NAME; learn the EXO3 stack, brand, and board; start the ICP. Exos site visit (Greenville, TX) scheduled in the first weeks."
     },
     {
       "week": 2,
-      "title": "Prep the race",
-      "gate": "ICP + 5 segments finalized; campaign v1 messaging shaped/approved; matched prospect cohorts split; challenge metrics pre-registered. (Exos site visit falls in this weeks-1\u20132 window if not held in week 1.)"
+      "title": "Prep the research",
+      "gate": "ICP + 5 segments finalized; campaign v1 messaging shaped and approved; begin market-landscape and positioning research."
     },
     {
       "week": 3,
-      "title": "\u26a1 CHALLENGE KICKOFF",
-      "gate": "AI-only vs Hybrid BOTH live \u2014 clock starts. First personalized outreach out (Exos-approved) on both arms."
+      "title": "Outreach begins",
+      "gate": "First Exos-approved personalized outreach goes out; disposition work underway on the prioritized target queue."
     },
     {
       "week": 4,
       "title": "First pipeline gate",
-      "gate": "First qualified opportunities in pipeline; SPACEavailable\u2026\u2122 microsite v1 staged (PR-gated to Lizi)."
+      "gate": "First qualified opportunities dispositioned with rationale; SPACEavailable…™ microsite v1 staged (PR-gated to Lizi)."
     },
     {
       "week": 5,
       "title": "Full campaign kit",
-      "gate": "Deck + social/video + site live-staged; outreach at target weekly volume on both arms."
+      "gate": "Deck + social/video + site live-staged; steady outreach cadence on the queue."
     },
     {
       "week": 6,
       "title": "Pipeline gate A",
-      "gate": "Weekly qualified-pipeline $ target hit; first handoffs to Lizi; head-to-head standings visible."
+      "gate": "Qualified opportunities advancing; first READY hand-offs to Lizi; market-landscape research maturing."
     },
     {
       "week": 7,
       "title": "Pipeline gate B",
-      "gate": "10\u00d7 high-prob run-rate on track; conversion improving week-over-week."
+      "gate": "Disposition and outreach cadence steady; conversion improving week over week; positioning analysis drafted."
     },
     {
       "week": 8,
-      "title": "Mid-challenge readout",
-      "gate": "Cumulative AI-vs-Hybrid readout; cumulative qualified pipeline $ gate."
+      "title": "Mid-project readout",
+      "gate": "Mid-project readout: disposition progress, research findings so far, and process feedback on how the AI is performing."
     },
     {
       "week": 9,
       "title": "Scale",
-      "gate": "Sustained qualified pipeline; kg-advanced climbing toward 100 kg."
+      "gate": "Sustained pipeline development; deepen segment and competitive research."
     },
     {
       "week": 10,
       "title": "Convert",
-      "gate": "Handoffs converting; booked $ and kg accelerating."
+      "gate": "Hand-offs converting into booked interest (tracked as program value, not a graded number)."
     },
     {
       "week": 11,
-      "title": "100 kg push A",
-      "gate": "Drive kg-advanced toward the 100 kg reward gate."
+      "title": "Disposition push A",
+      "gate": "Drive the remaining targets through disposition; sharpen the highest-fit set with rationale."
     },
     {
       "week": 12,
-      "title": "100 kg push B",
-      "gate": "Close toward 100 kg; finalize challenge dataset."
+      "title": "Disposition push B",
+      "gate": "Finalize the dispositioned target set; complete the competitive and positioning analysis."
     },
     {
       "week": 13,
       "title": "Lock results",
-      "gate": "Freeze challenge metrics; verify attribution; prep readout."
+      "gate": "Freeze the dataset; verify attribution of who shaped what; prep the readout."
     },
     {
       "week": 14,
       "title": "Results analysis",
-      "gate": "AI-only vs Hybrid outcome analyzed; ROI + leverage written up."
+      "gate": "Analyze results and AI leverage; write up the ROI of human-directed vs AI-only work."
     },
     {
       "week": 15,
-      "title": "Final & selection",
-      "gate": "Final presentation + reusable GTM playbook; challenge outcome; Payload Sales Engineer selections."
+      "title": "Final & wrap-up",
+      "gate": "Final presentation + reusable GTM playbook; project wrap-up."
     }
   ],
   "scorecard": {
@@ -158,29 +157,29 @@
     "weeks": []
   },
   "challenge_kickoff_week": 3,
-  "exos_site_visit": "Scheduled within the first two weeks (3\u20134 hours) \u2014 Exos site visit to Greenville, TX: Jon, Lizi + BD team address the team in person, facility tour, and program alignment. Exos hosts. At the kickoff, every student is issued (and physically handed) a company Divvy card to hold through to the launch \u2014 a core briefing moment on responsibility and 'having a job.'",
+  "exos_site_visit": "Scheduled within the first two weeks (3–4 hours) — Exos site visit to Greenville, TX: Jon, Lizi + BD team address the team in person, facility tour, and program alignment. Exos hosts. At the kickoff, every student is issued (and physically handed) a company Divvy card to hold through to the launch — a core briefing moment on responsibility and 'having a job.'",
   "design_request_loop": {
     "purpose": "Students get Exo's code-gen on tap to build campaign tools/site, safely.",
-    "gate": "EXO BOT is the primary gate \u2014 Exo triages and decides design/build requests autonomously so Jon's inbox is never the bottleneck.",
-    "escalation": "Exo's call on design review \u2192 escalate to Lizi for judgment calls \u2192 escalate to Jon ONLY for critical impact or anything that could affect Exo's own functionality/security.",
-    "isolation": "Exo generates in the fenced capstone sandbox (spaceavailable-site/ + capstone-tools/) only \u2014 never Exos prod/CRM/ERP/MC internals. Every artifact is a reviewed, reversible diff; PR-gated deploy to the static site.",
+    "gate": "EXO BOT is the primary gate — Exo triages and decides design/build requests autonomously so Jon's inbox is never the bottleneck.",
+    "escalation": "Exo's call on design review → escalate to Lizi for judgment calls → escalate to Jon ONLY for critical impact or anything that could affect Exo's own functionality/security.",
+    "isolation": "Exo generates in the fenced capstone sandbox (spaceavailable-site/ + capstone-tools/) only — never Exos prod/CRM/ERP/MC internals. Every artifact is a reviewed, reversible diff; PR-gated deploy to the static site.",
     "students": "Students REQUEST; Exo GENERATES; humans REVIEW; isolated DEPLOY. No shell/exec on Exos systems."
   },
   "hosting": {
     "current": "exosaero.com on Squarespace.",
-    "decision": "SPACEavailable microsite \u2192 static host (Cloudflare Pages) as subdomain spaceavailable.exosaero.com; EXO3-aligned (git/content-as-data, WAF, immutable, rollback). Main site can migrate off Squarespace later.",
+    "decision": "SPACEavailable microsite → static host (Cloudflare Pages) as subdomain spaceavailable.exosaero.com; EXO3-aligned (git/content-as-data, WAF, immutable, rollback). Main site can migrate off Squarespace later.",
     "dns_owner": "Lizi has full domain/DNS rights (Jon grants registrar access); Exo gives exact steps + stands up the host."
   },
   "ip_ownership": "Exos owns all capstone deliverables (site, copy, campaign assets, pipeline). Integrate into the UTD docs/MOU; verify UTD capstone terms don't auto-assign to students.",
   "travel_package": {
-    "transport": "15-passenger van (Exos-provided); ~12-hour drive Greenville TX \u2192 Spaceport America NM (drive, not fly).",
+    "transport": "15-passenger van (Exos-provided); ~12-hour drive Greenville TX → Spaceport America NM (drive, not fly).",
     "duration": "~4 days (second BLK3 launch window).",
-    "lodging": "Group vacation rental / Airbnb (men and women SEPARATE), or hotel block. Consider staying where the Exos team stays (Exos joins for dinner \u22651 night).",
-    "lodging_options_prestaged": "Truth or Consequences NM (~25\u201330 mi, closest): Holiday Inn Express & Suites, Comfort Inn & Suites I-25 (named 'Near Spaceport America'), Sierra Grande Lodge, or a large T-or-C vacation rental. Las Cruces NM (~55 mi/1 hr, more inventory + dinner options): Hotel Encanto + many chains + group Airbnbs. Rec: closest (T-or-C) for early launch mornings; book EARLY (launch draws crowds). (Jon referenced a 'Rocket City/Rocket Inn' in T or C \u2014 Lizi to verify.)",
+    "lodging": "Group vacation rental / Airbnb (men and women SEPARATE), or hotel block. Consider staying where the Exos team stays (Exos joins for dinner ≥1 night).",
+    "lodging_options_prestaged": "Truth or Consequences NM (~25–30 mi, closest): Holiday Inn Express & Suites, Comfort Inn & Suites I-25 (named 'Near Spaceport America'), Sierra Grande Lodge, or a large T-or-C vacation rental. Las Cruces NM (~55 mi/1 hr, more inventory + dinner options): Hotel Encanto + many chains + group Airbnbs. Rec: closest (T-or-C) for early launch mornings; book EARLY (launch draws crowds). (Jon referenced a 'Rocket City/Rocket Inn' in T or C — Lizi to verify.)",
     "food": "Per-person per-day food budget (Lizi to set the per-diem cap).",
     "owner": "Lizi plans/books; Exo pre-staged options above."
   },
-  "commission_credit_rule": "A hired Payload Sales Engineer gets ATTRIBUTION CREDIT carried forward for opportunities they sourced during the capstone \u2014 but commissions are payable ONLY on FUTURE sales that close BEYOND the capstone period (capstone-period work is graded, not commissioned). Fold into the comp model + MOU.",
+  "commission_credit_rule": "A hired Payload Sales Engineer gets ATTRIBUTION CREDIT carried forward for opportunities they sourced during the capstone — but commissions are payable ONLY on FUTURE sales that close BEYOND the capstone period (capstone-period work is graded, not commissioned). Fold into the comp model + MOU.",
   "individual_contribution": {
     "purpose": "It's a team effort, but EACH person must materially contribute to earn the launch trip AND 1U-payload content. Objective per-person score informs the call; Edwin + Exos JOINTLY make the final material-contribution determination.",
     "determination": "Edwin (UTD) + Exos jointly. Metrics are the objective input; both must affirm eligibility.",
@@ -195,7 +194,7 @@
         "key": "team_outcome_contribution",
         "label": "Contribution to team outcome",
         "weight": 20,
-        "definition": "Demonstrable effect of their work on the team's real-$ result \u2014 credits ENABLING work (a converting site the outreach rides on counts like booked pipeline)."
+        "definition": "Demonstrable effect of their work on the team's real-$ result — credits ENABLING work (a converting site the outreach rides on counts like booked pipeline)."
       },
       {
         "key": "ai_leverage",
@@ -218,7 +217,7 @@
     ],
     "eligibility_threshold": "Material contributor = individual score >= 60/100 (scored in their track) AND affirmed by BOTH Edwin and Exos, role-aware. Below that OR not affirmed = not eligible for the launch trip or 1U content.",
     "weights_sum": 100,
-    "role_fair_principle": "CONTRIBUTION IS ROLE-FAIR. Dedicating fully to the website/pipeline build (or creative, or analytics/ops) is an EQUAL, unpenalized path to eligibility \u2014 no student is required to do outreach marketing. Each person is scored in the currency of THEIR track, and Edwin + Exos assess material contribution WITHIN that role. Enabling work (a converting site, a tool the team relies on) counts as fully as booked pipeline.",
+    "role_fair_principle": "CONTRIBUTION IS ROLE-FAIR. Dedicating fully to the website/pipeline build (or creative, or analytics/ops) is an EQUAL, unpenalized path to eligibility — no student is required to do outreach marketing. Each person is scored in the currency of THEIR track, and Edwin + Exos assess material contribution WITHIN that role. Enabling work (a converting site, a tool the team relies on) counts as fully as booked pipeline.",
     "contribution_tracks": [
       {
         "key": "growth_outreach",
@@ -248,23 +247,23 @@
     "description": "A 1U payload container (~10x10x10 cm) on the BLK3 flight the team can put content into (names/logo chip, mementos, small flight-safe artifacts). 'Your content goes to space.'",
     "team_objective": "Unlocks at the 75 kg BOOKED milestone (of the 135 kg bay).",
     "individual_eligibility": "ONLY materially-contributing members (per individual_contribution, affirmed by Edwin + Exos) may place a small item. Non-contributors are NOT allowed to place anything.",
-    "content_constraints": "All items: \u22641 kg total, fit the 1U volume, flight-safe materials per the PUG, export-safe (no ITAR). Any use of Exos/Armadillo marks on sold items is gated by Lizi/Exos.",
+    "content_constraints": "All items: ≤1 kg total, fit the 1U volume, flight-safe materials per the PUG, export-safe (no ITAR). Any use of Exos/Armadillo marks on sold items is gated by Lizi/Exos.",
     "mass_limit_kg": 1,
     "mass_note": "The 1U payload contents must weigh NO MORE THAN 1 kg total.",
-    "use_determination": "The eligible (participating) team members decide the use of the payload \u2014 e.g., engraved dog tags / names, sticker or flown-item sales, or other creative. It MAY include revenue generation for a UNIVERSITY-APPROVED eligible team activity (the students' fundraiser, NOT Exos revenue), or both."
+    "use_determination": "The eligible (participating) team members decide the use of the payload — e.g., engraved dog tags / names, sticker or flown-item sales, or other creative. It MAY include revenue generation for a UNIVERSITY-APPROVED eligible team activity (the students' fundraiser, NOT Exos revenue), or both."
   },
   "source_materials": {
-    "primary": "Exos BLK3 Payload User's Guide (PUG) \u2014 the primary/authoritative source for all specs and claims.",
+    "primary": "Exos BLK3 Payload User's Guide (PUG) — the primary/authoritative source for all specs and claims.",
     "context": "Historical Exos Aerospace + Armadillo Aerospace YouTube videos for context/heritage.",
-    "attribution_rule": "\u26a0\ufe0f ANY material used from former Armadillo Aerospace (images, video, footage, etc.) MUST credit 'Armadillo Aerospace' (Exos is the commercial successor/buyout of Armadillo). Non-negotiable attribution.",
+    "attribution_rule": "⚠️ ANY material used from former Armadillo Aerospace (images, video, footage, etc.) MUST credit 'Armadillo Aerospace' (Exos is the commercial successor/buyout of Armadillo). Non-negotiable attribution.",
     "guardrail": "Public claims still bound by positioning rules (flying since 2018, one of three FAA-licensed reusable, never 'first commercial flight', no overstatement, export-safe). Lizi gates public content."
   },
   "launch_trip_reward": {
-    "team_gate": "Team books 100 kg \u2192 the launch trip is unlocked (2nd BLK3 launch, Spaceport America).",
-    "individual_eligibility": "PER PERSON \u2014 only materially-contributing members travel. If Exos spends money to send someone, they must have materially contributed to getting us there.",
+    "team_gate": "Team books 100 kg → the launch trip is unlocked (2nd BLK3 launch, Spaceport America).",
+    "individual_eligibility": "PER PERSON — only materially-contributing members travel. If Exos spends money to send someone, they must have materially contributed to getting us there.",
     "logistics": "See travel_package (15-pax van, ~4 days, M/F-separate lodging, per-diem).",
     "estimated_cost": {
-      "assumptions": "~10\u201312 students; drive from DFW to Spaceport America NM (~700 mi/~12 hr each way); ~4-night launch window + travel; group lodging in Truth or Consequences, men/women separate; students are Exos's launch guests (no viewing-ticket cost). Firms up with the roster.",
+      "assumptions": "~10–12 students; drive from DFW to Spaceport America NM (~700 mi/~12 hr each way); ~4-night launch window + travel; group lodging in Truth or Consequences, men/women separate; students are Exos's launch guests (no viewing-ticket cost). Firms up with the roster.",
       "line_items_usd": {
         "van_15pax_rental_dfw_5_6_days": 900,
         "fuel_roundtrip_~1400mi": 450,
@@ -272,27 +271,27 @@
         "food_perdiem_55pp_day_x5_x11": 3025,
         "contingency_~10pct": 750
       },
-      "estimated_total_usd": "~8,100 (range 8,000\u20139,500)",
-      "per_person_usd": "~700\u2013850",
+      "estimated_total_usd": "~8,100 (range 8,000–9,500)",
+      "per_person_usd": "~700–850",
       "note": "Exos staff (Jon/Lizi/BD) travel to the launch is ADDITIONAL and separate from the student package."
     },
     "expense_model": {
-      "method": "Virtual Divvy (Bill Spend & Expense) cards issued per trip-ELIGIBLE student \u2014 NOT a flat per-diem.",
+      "method": "Virtual Divvy (Bill Spend & Expense) cards issued per trip-ELIGIBLE student — NOT a flat per-diem.",
       "cap": "Up to $55/person/day for ACTUAL, receipted expenses (food/incidentals). Pay real expenses, not a flat rate someone could pocket.",
-      "workflow": "Students use the NATIVE Divvy (Bill Spend & Expense) app \u2014 download it, transact on the virtual card, and submit receipts/expense reports IN THE DIVVY APP. No need to replicate/build an expense model in Mission Control; the Divvy app IS the corporate expense experience (even more real). Lizi/finance review + approve in Bill/Divvy; Exobot need not host it.",
+      "workflow": "Students use the NATIVE Divvy (Bill Spend & Expense) app — download it, transact on the virtual card, and submit receipts/expense reports IN THE DIVVY APP. No need to replicate/build an expense model in Mission Control; the Divvy app IS the corporate expense experience (even more real). Lizi/finance review + approve in Bill/Divvy; Exobot need not host it.",
       "card_controls": "Per-card daily limit ($55) + trip-total cap; food/incidentals merchant categories; issued only to eligible travelers; activated for the trip window; auto-freeze/expire after the trip.",
       "central_costs": "Van + lodging booked and paid CENTRALLY by Exos (not on student cards). Student cards cover food/incidentals only.",
       "verify": "Confirm with Divvy/Bill: (1) non-employee/student cardholder eligibility + KYC; (2) accountable-plan structure so receipted reimbursements are NOT taxable income / no 1099; (3) all students 18+.",
       "supersedes": "Replaces the flat $55/day per-diem assumption used in the cost estimate (actual spend likely averages below $55, so this also trims cost).",
-      "food_only_gating": "HARD GATE at point of sale: restrict each virtual card by Merchant Category Code to FOOD ONLY \u2014 restaurants, fast food, and grocery/food stores. Non-food swipes (apparel, gift/novelty shops, memorabilia, general retail) are DECLINED automatically. So the card itself enforces the policy; they cannot buy T-shirts or souvenirs with the funds.",
-      "accountability_assessment": "Each student submits their OWN expense reports (receipts, categorization, on-time). How they handle it \u2014 timeliness, completeness, accuracy, policy compliance \u2014 is OBSERVED and feeds their individual evaluation (professional-behavior / consistency track). A real accountability test: 'see how they do with that.'",
+      "food_only_gating": "HARD GATE at point of sale: restrict each virtual card by Merchant Category Code to FOOD ONLY — restaurants, fast food, and grocery/food stores. Non-food swipes (apparel, gift/novelty shops, memorabilia, general retail) are DECLINED automatically. So the card itself enforces the policy; they cannot buy T-shirts or souvenirs with the funds.",
+      "accountability_assessment": "Each student submits their OWN expense reports (receipts, categorization, on-time). How they handle it — timeliness, completeness, accuracy, policy compliance — is OBSERVED and feeds their individual evaluation (professional-behavior / consistency track). A real accountability test: 'see how they do with that.'",
       "gating_summary": "Two layers: (1) card MCC controls enforce food-only at the register; (2) mandatory individual expense reports test personal accountability and are assessed.",
-      "issuance_at_kickoff": "Virtual Divvy cards are issued to EVERYONE at the on-site kickoff (the Exos site visit) as a deliberate briefing moment \u2014 each student physically receives and HOLDS a company card and keeps it through to the launch (est. April 2027). ~8 months of ownership.",
-      "activation_gate": "Cards stay INACTIVE (zero spend possible) until BOTH (1) the launch window is set AND (2) the student is BOOKED for the trip. A student who does not become eligible (material contribution) simply never has their card activated \u2014 issuing to all preserves the experiential intent without breaking the eligibility gate.",
-      "briefing_intent": "Part of the kickoff briefing: students walk away feeling the physical responsibility of holding a company credit card and 'having a job' \u2014 and they carry that responsibility for months until it activates. A standing motivator."
+      "issuance_at_kickoff": "Virtual Divvy cards are issued to EVERYONE at the on-site kickoff (the Exos site visit) as a deliberate briefing moment — each student physically receives and HOLDS a company card and keeps it through to the launch (est. April 2027). ~8 months of ownership.",
+      "activation_gate": "Cards stay INACTIVE (zero spend possible) until BOTH (1) the launch window is set AND (2) the student is BOOKED for the trip. A student who does not become eligible (material contribution) simply never has their card activated — issuing to all preserves the experiential intent without breaking the eligibility gate.",
+      "briefing_intent": "Part of the kickoff briefing: students walk away feeling the physical responsibility of holding a company credit card and 'having a job' — and they carry that responsibility for months until it activates. A standing motivator."
     }
   },
-  "rewards_eligibility_CLEAR": "PERFECTLY CLEAR: anyone who does NOT materially participate (as determined by Edwin + Exos) will NOT go on the launch trip AND will NOT be allowed to place any item in the 1U payload. Participation is the price of both rewards. Two rungs: 75 kg booked \u2192 1U payload (eligible members place items); 100 kg booked \u2192 launch trip (eligible members travel).",
+  "rewards_eligibility_CLEAR": "PERFECTLY CLEAR: anyone who does NOT materially participate (as determined by Edwin + Exos) will NOT go on the launch trip AND will NOT be allowed to place any item in the 1U payload. Participation is the price of both rewards. Two rungs: 75 kg booked → 1U payload (eligible members place items); 100 kg booked → launch trip (eligible members travel).",
   "total_exos_contribution": {
     "purpose": "Show the full Exos investment in a successful project (mirrors putting a price on the payload).",
     "direct_dollar_rewards": {
@@ -300,9 +299,305 @@
       "launch_trip_team": 8100,
       "subtotal_usd": 16100
     },
-    "in_kind_value_substantial": "EXO3 platform + AI agent-fleet access, Exo's code-gen/build time, brand assets + media, CEO + BD team time (3\u20134 hr site visit + weekly touch), and the contracted Payload Sales Engineer opportunity for top performers. Materially exceeds the hard-dollar rewards.",
+    "in_kind_value_substantial": "EXO3 platform + AI agent-fleet access, Exo's code-gen/build time, brand assets + media, CEO + BD team time (3–4 hr site visit + weekly touch), and the contracted Payload Sales Engineer opportunity for top performers. Materially exceeds the hard-dollar rewards.",
     "headline": "~$16,100 in direct rewards for a successful project, on top of significant in-kind platform, mentorship, and a real job pathway."
   },
-  "scope_simplification": "No MC expense-submission build needed \u2014 Divvy/Bill natively handles cards + receipts + reports (Jon, 2026-08-16). Students' scoped MC area stays board/tracker only.",
-  "launch_estimate": "Estimated April 2027."
+  "scope_simplification": "No MC expense-submission build needed — Divvy/Bill natively handles cards + receipts + reports (Jon, 2026-08-16). Students' scoped MC area stays board/tracker only.",
+  "launch_estimate": "Estimated April 2027.",
+  "payload_funnel": {
+    "total": 66,
+    "live": 66,
+    "with_poc": 48,
+    "NEW": 50,
+    "RESEARCHING": 14,
+    "READY": 2,
+    "updated": "2026-09-17"
+  },
+  "funnel_explainer": [
+    {
+      "stage": "NEW",
+      "meaning": "Freshly sourced lead — not yet worked. No point-of-contact, no research. Your job: pick it up and start."
+    },
+    {
+      "stage": "RESEARCHING",
+      "meaning": "Being worked — finding the named point-of-contact, their active programs, and funding that could pay for a flight."
+    },
+    {
+      "stage": "READY",
+      "meaning": "Fully worked — POC found AND a tailored outreach draft written. Exos (Lizi) reviews and sends. Your goal is to move leads to here."
+    }
+  ],
+  "work_queue_note": "Work this list top-down — it is ranked by opportunity quality (funding signal, a named POC, and leverage), so the leads most likely to convert are first. Move each NEW → RESEARCHING → READY.",
+  "work_queue": [
+    {
+      "name": "UCF / Stephen W. Hawking Center for Microgravity Research — ⭐⭐⭐ WARM PRIOR CUSTO",
+      "stage": "NEW",
+      "score": 93,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 1
+    },
+    {
+      "name": "NASA Glenn Research Center — Dr. Jason Hartwig, CFM Reduced Gravity Cryogenics ⭐",
+      "stage": "NEW",
+      "score": 93,
+      "has_poc": true,
+      "why": "funding signal, named POC, identity verified",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 2
+    },
+    {
+      "name": "Astrobotic Technology — John Thornton (CEO) ⭐⭐",
+      "stage": "NEW",
+      "score": 93,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 3
+    },
+    {
+      "name": "LASP (Laboratory for Atmospheric and Space Physics) — Dr. Brian Fleming ⭐⭐",
+      "stage": "NEW",
+      "score": 93,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 4
+    },
+    {
+      "name": "Starlab Space / Voyager — Marshall Smith (CEO) ⭐⭐ NANORACKS LEGACY + ISS TRANSIT",
+      "stage": "NEW",
+      "score": 93,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 5
+    },
+    {
+      "name": "BioOrbit / Dr. Katie King — mAb Protein Crystal ISS-Launched Company ⭐⭐ NEW INTL",
+      "stage": "NEW",
+      "score": 93,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 6
+    },
+    {
+      "name": "SpaceTango (Lexington, KY) — Broker/Integrator",
+      "stage": "RESEARCHING",
+      "score": 88,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 7
+    },
+    {
+      "name": "Texas A&M — Aerospace Engineering, Propulsion/CFM",
+      "stage": "RESEARCHING",
+      "score": 88,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 8
+    },
+    {
+      "name": "SpaceTango (Twyman Clements) — Deepened Enrichment",
+      "stage": "RESEARCHING",
+      "score": 88,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 9
+    },
+    {
+      "name": "NCATS / Tissue Chips in Space — NIH Research Continuity",
+      "stage": "RESEARCHING",
+      "score": 88,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 10
+    },
+    {
+      "name": "NRL Space Science Division (Code 7600) — NEW PROSPECT ⭐⭐",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 11
+    },
+    {
+      "name": "Embry-Riddle Aeronautical University — Dr. Pedro LLanos ⭐⭐⭐ TOP NEW PRIORITY",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 12
+    },
+    {
+      "name": "Sandia National Laboratories — Ben English (High OpTempo Hypersonics Program) ⭐⭐",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 13
+    },
+    {
+      "name": "Montana State University SSEL — Space Science & Engineering Laboratory ⭐",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 14
+    },
+    {
+      "name": "Johns Hopkins APL — Joshua Wolk, BLAST Program / Targets (MDA) ⭐⭐⭐ ACTIVE BUYER",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 15
+    },
+    {
+      "name": "Draper Laboratory — DMEN Team (Lunar GNC / Terrain Navigation) ⭐⭐",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 16
+    },
+    {
+      "name": "Varda Space Industries — Will Bruey (CEO/Co-founder) ⭐⭐⭐ PARTNER/MULTIPLIER PLAY",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 17
+    },
+    {
+      "name": "United Therapeutics — Martine Rothblatt, PhD (CEO) ⭐⭐",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 18
+    },
+    {
+      "name": "Impulse Space — Tom Mueller, Founder/CEO/CTO ⭐⭐",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 19
+    },
+    {
+      "name": "Rhodium Scientific — Olivia Gamez Holzhaus (CEO/Founder) ⭐⭐⭐ MULTIPLIER PLAY",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 20
+    },
+    {
+      "name": "Ursa Major Technologies — Chris Spagnoletti (CEO) ⭐⭐ AFRL/DoD BRIDGE",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 21
+    },
+    {
+      "name": "DIU HyCAT Program — Col. Nicholas Estep ⭐⭐⭐ ACTIVE COMMERCIAL SUBORBITAL BUYER",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 22
+    },
+    {
+      "name": "Kratos Defense & Security Solutions — Josh Peterson (SVP, MACH-TB) ⭐⭐⭐ $1.45B MA",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 23
+    },
+    {
+      "name": "Hypersonix Launch Systems USA — David Waterhouse (CEO) ⭐⭐⭐ ACTIVE HyCAT TESTBED ",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 24
+    },
+    {
+      "name": "UAH Propulsion Research Center — Dr. David Lineberry ⭐⭐ MSFC-ADJACENT PROPULSION",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 25
+    },
+    {
+      "name": "NCAR / ACOM — Dr. Eric Apel (Atmospheric Chemistry) ⭐⭐ BRIDGES TO SACSS/NOAA PUR",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 26
+    },
+    {
+      "name": "Sierra Space — Tom Vice (CEO) ⭐⭐ DREAM CHASER PAYLOAD CUSTOMER BRIDGE",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 27
+    },
+    {
+      "name": "Hermeus — AJ Piplica (CEO) ⭐⭐⭐ ALREADY AT SPACEPORT AMERICA",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 28
+    },
+    {
+      "name": "Firehawk Aerospace — Will Edwards (CEO) ⭐⭐ TEXAS NEIGHBOR + AFWERX FUNDED",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 29
+    },
+    {
+      "name": "Phase Four — Dr. Steve Kiser, CEO ⭐⭐ IN-SPACE PROPULSION STARTUP, SERIES C FUNDE",
+      "stage": "NEW",
+      "score": 83,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Research their active programs + funding, then draft outreach",
+      "rank": 30
+    }
+  ]
 }

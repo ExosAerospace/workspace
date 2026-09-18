@@ -17,9 +17,9 @@ from datetime import datetime, timedelta
 HOST, PORT, USER = "127.0.0.1", 1143, "jquinnexo@pm.me"
 def _pw():
     try:
-        return json.load(open(os.path.expanduser("~/.openclaw/secrets.json"))).get("protonmail_bridge_smtp_password") or "SPqYBivj98-jyF3RujLKxA"
+        return json.load(open(os.path.expanduser("~/.openclaw/secrets.json"))).get("protonmail_bridge_smtp_password") or __import__('json').load(open(__import__('os').path.expanduser('~/.openclaw/secrets.json')))['protonmail_bridge_smtp_password']
     except Exception:
-        return "SPqYBivj98-jyF3RujLKxA"
+        return __import__('json').load(open(__import__('os').path.expanduser('~/.openclaw/secrets.json')))['protonmail_bridge_smtp_password']
 INTERNAL = ("exosaero.com", "pm.me", "proton.me")
 FWD_FROM = re.compile(r'From:\s*(.+?)\s*<\s*([^>\s]+@[^>\s]+)\s*>', re.I)
 JON = "jquinn@exosaero.com"

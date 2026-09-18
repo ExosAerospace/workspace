@@ -1,22 +1,22 @@
 {
-  "generated": "2026-08-10T16:02:53.539649-05:00",
+  "generated": "2026-09-18T05:16:54.975211-05:00",
   "kpis": {
     "agents_green": 11,
     "agents_amber": 0,
     "agents_red": 0,
     "classes_total": 11,
-    "crons_total": 27,
-    "crons_error": 0,
+    "crons_total": 31,
+    "crons_error": 8,
     "crons_disabled": 0,
-    "open_decisions": 4,
-    "pipeline_value": 71373275.99000001,
-    "pipeline_priced": 208,
-    "opps_live": 307,
-    "payload_buyers": 41,
-    "payload_value": 840000.0,
-    "payload_received": 506000.0,
-    "drafts_staged": 11,
-    "agents_logged": 40
+    "open_decisions": 6,
+    "pipeline_value": 141315666.19,
+    "pipeline_priced": 491,
+    "opps_live": 598,
+    "payload_buyers": 53,
+    "payload_value": 0,
+    "payload_received": 0,
+    "drafts_staged": 12,
+    "agents_logged": 51
   },
   "classes": [
     {
@@ -37,11 +37,11 @@
       "autonomy_tier": "Recommend-with-Context",
       "delegation_enabled": true,
       "flag": "GREEN",
-      "override_rate": 0.037,
+      "override_rate": 0.035,
       "ceiling": 0.45,
-      "decided": 240,
+      "decided": 284,
       "note": "override rate 4% within ceiling 45%",
-      "last_event": "2026-08-10T07:06:12-0500"
+      "last_event": "2026-09-17T18:59:15-0500"
     },
     {
       "id": "research",
@@ -53,7 +53,7 @@
       "ceiling": 0.5,
       "decided": 0,
       "note": "insufficient data (0/8 decided)",
-      "last_event": "2026-08-10T11:08:32-0500"
+      "last_event": "2026-09-17T14:05:24-0500"
     },
     {
       "id": "email-router",
@@ -65,7 +65,7 @@
       "ceiling": 0.2,
       "decided": 0,
       "note": "insufficient data (0/20 decided)",
-      "last_event": "2026-08-10T15:00:05-0500"
+      "last_event": "2026-09-18T01:00:30-0500"
     },
     {
       "id": "crm",
@@ -77,7 +77,7 @@
       "ceiling": 0.4,
       "decided": 0,
       "note": "insufficient data (0/10 decided)",
-      "last_event": "2026-08-10T09:03:07-0500"
+      "last_event": "2026-09-14T09:03:06-0500"
     },
     {
       "id": "sam-watch",
@@ -89,7 +89,7 @@
       "ceiling": 0.3,
       "decided": 0,
       "note": "insufficient data (0/10 decided)",
-      "last_event": "2026-08-10T06:30:07-0500"
+      "last_event": "2026-09-14T06:30:04-0500"
     },
     {
       "id": "dashboard-data",
@@ -101,7 +101,7 @@
       "ceiling": 0.1,
       "decided": 0,
       "note": "insufficient data (0/20 decided)",
-      "last_event": "2026-08-10T06:03:27-0500"
+      "last_event": "2026-09-17T17:45:05-0500"
     },
     {
       "id": "erp-dal",
@@ -113,7 +113,7 @@
       "ceiling": 0.1,
       "decided": 0,
       "note": "insufficient data (0/20 decided)",
-      "last_event": null
+      "last_event": "2026-08-10T23:37:55.329Z"
     },
     {
       "id": "payload-sales",
@@ -125,7 +125,7 @@
       "ceiling": 0.45,
       "decided": 2,
       "note": "insufficient data (2/8 decided)",
-      "last_event": "2026-08-10T05:45:51-0500"
+      "last_event": "2026-09-17T05:45:27-0500"
     },
     {
       "id": "derisk-orbital",
@@ -137,7 +137,7 @@
       "ceiling": 0.45,
       "decided": 25,
       "note": "override rate 0% within ceiling 45%",
-      "last_event": "2026-08-10T06:03:28-0500"
+      "last_event": "2026-09-17T06:03:36-0500"
     },
     {
       "id": "_system",
@@ -145,248 +145,294 @@
       "autonomy_tier": "",
       "delegation_enabled": false,
       "flag": "GREEN",
-      "override_rate": 0.203,
+      "override_rate": 0.126,
       "ceiling": 0.4,
-      "decided": 236,
-      "note": "override rate 20% within ceiling 40%",
+      "decided": 492,
+      "note": "override rate 13% within ceiling 40%",
       "last_event": null
     }
   ],
   "crons": [
     {
-      "name": "Discord \u2192 Mission Control Sync",
-      "enabled": true,
-      "last_run_ms": 1786240800049,
-      "last_status": "ok",
-      "next_run_ms": 1786413600000,
-      "model": "ollama/qwen3.6:35b-a3b"
-    },
-    {
-      "name": "Overnight Resolver",
-      "enabled": true,
-      "last_run_ms": 1786334400047,
-      "last_status": "ok",
-      "next_run_ms": 1786420800000,
-      "model": "anthropic/claude-sonnet-4-6"
-    },
-    {
-      "name": "Exos Capital Bridge Agent ($1M)",
-      "enabled": true,
-      "last_run_ms": 1786356000052,
-      "last_status": "ok",
-      "next_run_ms": 1786428000000,
-      "model": "anthropic/claude-sonnet-4-6"
-    },
-    {
-      "name": "Exos Sales Agent \u2014 Payload BD (full-time)",
-      "enabled": true,
-      "last_run_ms": 1786357800048,
-      "last_status": "ok",
-      "next_run_ms": 1786429800000,
-      "model": "anthropic/claude-sonnet-4-6"
-    },
-    {
-      "name": "Exos National Charter Enterprise Agent \u2014 BLK3 Build",
-      "enabled": true,
-      "last_run_ms": 1786347000049,
-      "last_status": "ok",
-      "next_run_ms": 1786433400000,
-      "model": "anthropic/claude-sonnet-4-6"
-    },
-    {
-      "name": "Exos Capture Agent \u2014 NASA RDRE Phase III",
-      "enabled": true,
-      "last_run_ms": 1786349700049,
-      "last_status": "ok",
-      "next_run_ms": 1786436100000,
-      "model": null
-    },
-    {
-      "name": "Exos Capture Agent \u2014 NOAA ERB/AC4 SACSS",
-      "enabled": true,
-      "last_run_ms": 1786352400046,
-      "last_status": "ok",
-      "next_run_ms": 1786438800000,
-      "model": "anthropic/claude-sonnet-4-6"
-    },
-    {
-      "name": "Exos Capture Agent \u2014 NIH Microgravity",
-      "enabled": true,
-      "last_run_ms": 1786355100049,
-      "last_status": "ok",
-      "next_run_ms": 1786441500000,
-      "model": "anthropic/claude-sonnet-4-6"
-    },
-    {
-      "name": "Exos Aerospace BD Daily Intel",
-      "enabled": true,
-      "last_run_ms": 1786356000045,
-      "last_status": "ok",
-      "next_run_ms": 1786442400000,
-      "model": "ollama/qwen3.6:35b-a3b"
-    },
-    {
       "name": "Decisions Matrix Daily Update (R-017)",
       "enabled": true,
-      "last_run_ms": 1786359900051,
-      "last_status": "ok",
-      "next_run_ms": 1786446300000,
-      "model": "anthropic/claude-sonnet-4-6"
+      "last_run_ms": 1789643159680,
+      "last_status": "error",
+      "next_run_ms": 1789729500000,
+      "model": "anthropic/claude-sonnet-5"
     },
     {
       "name": "Payload Sales \u2014 3 a day",
       "enabled": true,
-      "last_run_ms": 1786365900054,
-      "last_status": "skipped",
-      "next_run_ms": 1786452300000,
+      "last_run_ms": 1789650300045,
+      "last_status": "ok",
+      "next_run_ms": 1789736700000,
+      "model": null
+    },
+    {
+      "name": "Daily task-backlog grind \u2014 dedup + stale-close batch to Jon",
+      "enabled": true,
+      "last_run_ms": 1789653600086,
+      "last_status": "ok",
+      "next_run_ms": 1789740000000,
       "model": null
     },
     {
       "name": "SpaceWERX On-Orbit Logistics \u2014 concept-paper open-call watch",
       "enabled": true,
-      "last_run_ms": 1786370400047,
+      "last_run_ms": 1789653600077,
       "last_status": "ok",
-      "next_run_ms": 1786456800000,
-      "model": "ollama/qwen3.6:35b-a3b"
-    },
-    {
-      "name": "Research Team: Investor & Capital Markets",
-      "enabled": true,
-      "last_run_ms": 1785862800031,
-      "last_status": "ok",
-      "next_run_ms": 1786467600000,
-      "model": "anthropic/claude-sonnet-4-6"
-    },
-    {
-      "name": "Trending Content Scanner",
-      "enabled": true,
-      "last_run_ms": 1786123800048,
-      "last_status": "ok",
-      "next_run_ms": 1786469400000,
-      "model": "ollama/qwen3.6:35b-a3b"
-    },
-    {
-      "name": "Industry Signal Posts",
-      "enabled": true,
-      "last_run_ms": 1786123800051,
-      "last_status": "ok",
-      "next_run_ms": 1786469400000,
-      "model": "anthropic/claude-sonnet-4-6"
-    },
-    {
-      "name": "CRM Dashboard Refresh",
-      "enabled": true,
-      "last_run_ms": 1785934800023,
-      "last_status": "ok",
-      "next_run_ms": 1786539600000,
-      "model": "ollama/qwen3.6:35b-a3b"
-    },
-    {
-      "name": "Research Team: Grant & Contract Scanner",
-      "enabled": true,
-      "last_run_ms": 1785949200026,
-      "last_status": "ok",
-      "next_run_ms": 1786554000000,
-      "model": "ollama/qwen3.6:35b-a3b"
-    },
-    {
-      "name": "Research Team: Technology & IP Monitor",
-      "enabled": true,
-      "last_run_ms": 1786035600030,
-      "last_status": "ok",
-      "next_run_ms": 1786640400000,
-      "model": "ollama/qwen3.6:35b-a3b"
-    },
-    {
-      "name": "Exos Investor Update \u2014 Weekly Feed (David)",
-      "enabled": true,
-      "last_run_ms": 1786092300038,
-      "last_status": "ok",
-      "next_run_ms": 1786697100000,
-      "model": "anthropic/claude-sonnet-4-6"
+      "next_run_ms": 1789740000000,
+      "model": "anthropic/claude-sonnet-5"
     },
     {
       "name": "Research Team: Policy & Regulatory Watch",
       "enabled": true,
-      "last_run_ms": 1786122000042,
+      "last_run_ms": 1789146000061,
       "last_status": "ok",
-      "next_run_ms": 1786726800000,
+      "next_run_ms": 1789750800000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "Trending Content Scanner",
+      "enabled": true,
+      "last_run_ms": 1789493400063,
+      "last_status": "error",
+      "next_run_ms": 1789752600000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "Industry Signal Posts",
+      "enabled": true,
+      "last_run_ms": 1789580700036,
+      "last_status": "error",
+      "next_run_ms": 1789753500000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "Discord \u2192 Mission Control Sync",
+      "enabled": true,
+      "last_run_ms": 1789610400035,
+      "last_status": "ok",
+      "next_run_ms": 1789783200000,
       "model": "ollama/qwen3.6:35b-a3b"
     },
     {
-      "name": "Agent Self-Improvement Implementer (Weekly)",
+      "name": "Exos Aerospace BD Daily Intel",
       "enabled": true,
-      "last_run_ms": 1786273200041,
+      "last_run_ms": 1789725600065,
       "last_status": "ok",
-      "next_run_ms": 1786791600000,
-      "model": "anthropic/claude-sonnet-4-6"
+      "next_run_ms": 1789812000000,
+      "model": "anthropic/claude-sonnet-5"
     },
     {
       "name": "Agent Meta-Evaluator (Nightly)",
       "enabled": true,
-      "last_run_ms": 1786269600050,
+      "last_run_ms": 1789297680891,
       "last_status": "ok",
-      "next_run_ms": 1786874400000,
-      "model": "anthropic/claude-haiku-4-5"
+      "next_run_ms": 1789899600000,
+      "model": "anthropic/claude-sonnet-5"
     },
     {
-      "name": "LQuinn Weekly CRM Follow-Up Report",
+      "name": "Agent Self-Improvement Implementer (Weekly)",
       "enabled": true,
-      "last_run_ms": 1786350600048,
+      "last_run_ms": 1789297889091,
       "last_status": "ok",
-      "next_run_ms": 1786955400000,
-      "model": "anthropic/claude-sonnet-4-6"
+      "next_run_ms": 1789902000000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "APAC deal-flow weekly scan",
+      "enabled": true,
+      "last_run_ms": 1789340400037,
+      "last_status": "ok",
+      "next_run_ms": 1789945200000,
+      "model": null
+    },
+    {
+      "name": "Exos Capital Bridge Agent ($1M)",
+      "enabled": true,
+      "last_run_ms": 1789711200053,
+      "last_status": "ok",
+      "next_run_ms": 1789970400000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "Exos Sales Agent \u2014 Payload BD (full-time)",
+      "enabled": true,
+      "last_run_ms": 1789713000054,
+      "last_status": "ok",
+      "next_run_ms": 1789972200000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "Exos National Charter Enterprise Agent \u2014 BLK3 Build",
+      "enabled": true,
+      "last_run_ms": 1789716600050,
+      "last_status": "ok",
+      "next_run_ms": 1789975800000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "Exos Capture Agent \u2014 NASA RDRE Phase III",
+      "enabled": true,
+      "last_run_ms": 1789719300057,
+      "last_status": "ok",
+      "next_run_ms": 1789978500000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "Exos Capture Agent \u2014 NOAA ERB/AC4 SACSS",
+      "enabled": true,
+      "last_run_ms": 1789722000043,
+      "last_status": "ok",
+      "next_run_ms": 1789981200000,
+      "model": "anthropic/claude-sonnet-5"
     },
     {
       "name": "NASA SBIR cryo Phase I appendix watch",
       "enabled": true,
-      "last_run_ms": 1786354200044,
+      "last_run_ms": 1789378200030,
+      "last_status": "error",
+      "next_run_ms": 1789983000000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "Exos Capture Agent \u2014 NIH Microgravity",
+      "enabled": true,
+      "last_run_ms": 1789724700056,
       "last_status": "ok",
-      "next_run_ms": 1786959000000,
-      "model": "anthropic/claude-sonnet-4-6"
+      "next_run_ms": 1789983900000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "DIU HyCAT / open-solicitation watch (BD-032)",
+      "enabled": true,
+      "last_run_ms": 1789388400038,
+      "last_status": "ok",
+      "next_run_ms": 1789993200000,
+      "model": "anthropic/claude-sonnet-5"
     },
     {
       "name": "Research Team: Competitive Intelligence",
       "enabled": true,
-      "last_run_ms": 1786381200029,
+      "last_run_ms": 1789405200035,
       "last_status": "ok",
-      "next_run_ms": 1786986000000,
-      "model": "ollama/qwen3.6:35b-a3b"
+      "next_run_ms": 1790010000000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "Research Team: Investor & Capital Markets",
+      "enabled": true,
+      "last_run_ms": 1789491600024,
+      "last_status": "error",
+      "next_run_ms": 1790096400000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "SBIR/SpaceWERX topic-fit watch (Exos-filtered)",
+      "enabled": true,
+      "last_run_ms": 1789560900043,
+      "last_status": "error",
+      "next_run_ms": 1790165700000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "Research Team: Grant & Contract Scanner",
+      "enabled": true,
+      "last_run_ms": 1789578000036,
+      "last_status": "error",
+      "next_run_ms": 1790182800000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "Research Team: Technology & IP Monitor",
+      "enabled": true,
+      "last_run_ms": 1789664400051,
+      "last_status": "ok",
+      "next_run_ms": 1790269200000,
+      "model": "anthropic/claude-sonnet-5"
+    },
+    {
+      "name": "Exos Investor Update \u2014 Weekly Feed (David)",
+      "enabled": true,
+      "last_run_ms": 1789721100057,
+      "last_status": "ok",
+      "next_run_ms": 1790325900000,
+      "model": "anthropic/claude-sonnet-5"
     },
     {
       "name": "Monthly Investor Report",
       "enabled": true,
-      "last_run_ms": 1785538800047,
+      "last_run_ms": 1788217200023,
       "last_status": "ok",
-      "next_run_ms": 1787958000000,
+      "next_run_ms": 1790636400000,
       "model": "anthropic/claude-opus-4-8"
+    },
+    {
+      "name": "Japan/ITZ bi-weekly working session \u2014 Toshi + HOSPO (to Oct)",
+      "enabled": true,
+      "last_run_ms": 1789506000084,
+      "last_status": "ok",
+      "next_run_ms": 1790715600084,
+      "model": "ollama/qwen3.6:35b-a3b"
     },
     {
       "name": "SAM.gov API key renewal (89-day expiry)",
       "enabled": true,
+      "last_run_ms": 1789170374316,
+      "last_status": "error",
+      "next_run_ms": 1796514374316,
+      "model": "anthropic/claude-haiku-4-5"
+    },
+    {
+      "name": "M-STAR FY27 pre-position",
+      "enabled": true,
       "last_run_ms": null,
       "last_status": null,
-      "next_run_ms": 1789170374267,
-      "model": "anthropic/claude-haiku-4-5-20251001"
+      "next_run_ms": 1807020000000,
+      "model": null
+    },
+    {
+      "name": "Descartes VC renewal decision \u2014 cut over to in-house CSL",
+      "enabled": true,
+      "last_run_ms": null,
+      "last_status": null,
+      "next_run_ms": 1814450400000,
+      "model": null
     }
   ],
   "decisions": {
-    "open": 4,
+    "open": 6,
     "by_source": [
       {
-        "source": "Exo (email-command from Lizi)",
+        "source": "Exo (email command)",
+        "open": 4
+      },
+      {
+        "source": "Neil Milburn (via Exo)",
         "open": 1
       },
       {
         "source": "Exo",
         "open": 1
+      }
+    ],
+    "by_owner": [
+      {
+        "owner": "dmitchell@exosaero.com",
+        "open": 2
       },
       {
-        "source": "Exo (Neil email-command)",
+        "owner": "jquinnexo@pm.me",
+        "open": 2
+      },
+      {
+        "owner": "Exo",
         "open": 1
       },
       {
-        "source": "Decisions Daily Update",
+        "owner": "John",
         "open": 1
       }
     ]

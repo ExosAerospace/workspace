@@ -26,7 +26,7 @@ socket.setdefaulttimeout(30)
 IMAP_HOST = '127.0.0.1'
 IMAP_PORT = 1143
 EMAIL_USER = 'jquinnexo@pm.me'
-EMAIL_PASS = 'SPqYBivj98-jyF3RujLKxA'
+EMAIL_PASS = __import__('json').load(open(__import__('os').path.expanduser('~/.openclaw/secrets.json')))['protonmail_bridge_smtp_password']
 TRACK_ADDRESS = 'jquinnexo@pm.me'   # primary cc address Jon uses to flag submissions (display)
 import os as _pa_os, sys as _pa_sys; _pa_sys.path.insert(0, _pa_os.path.dirname(_pa_os.path.abspath(__file__)))
 from proton_aliases import PROTON_ALIASES as _CANON_ALIASES

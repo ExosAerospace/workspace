@@ -18,6 +18,13 @@
 ## Action items
 - [LIZI] Enter ESTELLEPARK (eRA Person ID 79298086) in ASSIST as Contact PD/PI
 - [DONE 9/3] Download and file Park cert — filed as Park_ResearchSecurity_Badge.png
-- [OPEN] Still need **Collicott's** research security training cert (co-PI/key personnel ≥1 mo effort)
+- [2026-09-03] Collicott DROPPED from PA-27-102 (per Lizi) — his training cert is no longer required.
 - [OPEN] Park to drop in reference list + lock citation numbering on the clean Research Plan
 - Deadline: **NIH STTR PA-27-102 submit by Fri Sept 8, 2026**
+
+
+## Research Security Training — BOTH PD/PIs COMPLETE (2026-09-03)
+- **Estelle Park (Purdue, Contact PD/PI):** cert on file — Brightspace assertion 540503 (badge PNG filed); verified live.
+- **John Quinn (Exos, PD/PI / SO):** Research Security Training (Federal Modules 1-4 Condensed and Combined), completed **9/2/2026** — cert filed `capture/NIH_STTR_compliance/John_Quinn_CTM_Security_Training_Cert.pdf`.
+- **Status:** research-security-training requirement (≥10% effort) SATISFIED for all key personnel. Collicott dropped → no third cert needed.
+- **Does not alter application content** — compliance attestation/attachment only; Research Plan + 14 ancillary attachments + budget unchanged.

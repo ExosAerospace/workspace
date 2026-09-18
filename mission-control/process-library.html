@@ -19,6 +19,13 @@
   .flow .step{background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:.82rem}
   .flow .arw{color:var(--blue2);font-weight:700}
   .summary{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 8px}
+  .search{display:flex;align-items:center;gap:10px;margin:14px 0 4px}
+  .search input{flex:1;min-width:0;background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.9rem;padding:10px 14px;font-family:inherit}
+  .search input:focus{outline:none;border-color:var(--blue2);box-shadow:0 0 0 2px rgba(0,128,255,.18)}
+  .search input::placeholder{color:var(--text2)}
+  .searchcount{color:var(--text2);font-size:.8rem;white-space:nowrap}
+  .noresult{color:var(--text2);font-size:.9rem;padding:24px 4px;text-align:center}
+  mark{background:rgba(232,170,60,.35);color:#ffe6b0;border-radius:3px;padding:0 1px}
   .chip{border-radius:18px;padding:5px 13px;font-size:.8rem;font-weight:600;border:1px solid var(--border)}
   h3.area{font-size:1.12rem;margin:26px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
   h3.area .n{font-size:.72rem;color:var(--text2);font-weight:400}
@@ -49,6 +56,7 @@
     <div class="steps"><span class="step">1 · Submit (Procedure Template)</span><span class="arw">→</span><span class="step">2 · Routes to Jon (Decisions matrix)</span><span class="arw">→</span><span class="step">3 · Approved → recorded on master list (doc # + rev)</span><span class="arw">→</span><span class="step">4 · Records in Mission Control (Exos Work Mgmt)</span></div>
   </div>
   <div class="summary" id="summary"></div>
+  <div class="search"><input id="search" type="search" placeholder="🔍 Search procedures — doc #, name, area, status, owner, remarks, filename…" autocomplete="off"><span id="searchcount" class="searchcount"></span></div>
   <div id="content"></div>
   <div class="foot" id="foot"></div>
   <footer>Exos Aerospace · Process & Procedures Library · managed in Mission Control by Exo (Lizi advising) · generated from data/process-register.json</footer>
@@ -57,7 +65,7 @@
 {
  "meta": {
   "title": "Exos Process & Procedures — Master Register",
-  "updated": "2026-09-10",
+  "updated": "2026-09-14",
   "source": "Lizi turnover → Exo (MC management); schema per Exos Procedures Master List",
   "template": "Exos-US Procedure Template",
   "doc_control": "STATUS on each doc; records in the Exos Work Management System (Mission Control / ERP)",
@@ -1360,6 +1368,22 @@
     "08-security-cui/IT-003_Using_Subtasks_(Work-Breakdown)_in_Mission_Control.docx"
    ],
    "file_count": 1
+  },
+  {
+   "area": "Human Resources",
+   "area_id": "05-human-resources",
+   "procedure": "New-Employee Onboarding Procedure (Integrated — HR/BambooHR + Mission Control)",
+   "doc_no": "EXOS-HR-001-0",
+   "rev": "0",
+   "status": "Pending Approval",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Lizi Quinn / Exo",
+   "remarks": "One integrated flow so a hire is processed once, not through two parallel lists. Adding the hire to BambooHR is the trigger: a daily watcher detects the new employee, auto-creates their Mission Control onboarding task (Phases B-E), and emails the HR owner. No ITAR/EAR/CUI in Mission Control or the email intake - that content lives only in SharePoint (GCC High). Confirm the 2022-era HR steps (BBSNV / Preveil / package contents) remain current at approval.",
+   "files": [
+    "05-human-resources/EXOS-HR-001-0_New-Employee_Onboarding_Procedure_(Integrated_—_HR-BambooHR_+_Mission_Control).docx"
+   ],
+   "file_count": 1
   }
  ]
 }
@@ -1400,21 +1424,44 @@ const procName=(r,isCUI)=>(!isCUI && r.files && r.files.length===1)
   : r.procedure;
 const applyBtn=r=>r.apply_link?`<div style="margin-top:6px"><a href="${r.apply_link}" style="display:inline-block;background:linear-gradient(135deg,#0066cc,#ff6b00);color:#fff;text-decoration:none;font-size:.78rem;font-weight:700;border-radius:8px;padding:4px 12px">${r.apply_label||'Open →'}</a></div>`:'';
 const order=[...new Set(reg.map(r=>r.area_id))];
-let html='';
-for(const aid of order){
-  const rows=reg.filter(r=>r.area_id===aid); const label=rows[0].area;
-  const isCUI=aid==='08-security-cui';
-  const isQA=aid.startsWith('01');
-  if(isCUI) html+=CUI_HTML;
-  html+=`<h3 class="area ${isQA?'qa':''}">${label} <span class="n">(${rows.length})</span>${isQA?' <span class="qa-badge">QA / AS9100 SPECIAL SECTION</span>':''}</h3>`;
-  html+=`<table><thead><tr><th>Doc #</th><th>Procedure</th><th>Rev</th><th>Status</th><th>Intl</th><th>Ack</th><th>Files</th></tr></thead><tbody>`;
-  for(const r of rows){
-    const flag=(r.status==='Needs Update'||r.status==='Rebuild')?` <span class="flag">⚠ ${r.remarks||''}</span>`:(r.remarks?` <span style="color:var(--text2);font-size:.75em">— ${r.remarks}</span>`:'');
-    const files=isCUI?'<span title="Access in GCC High, not Mission Control" style="color:#ff9b9b;font-size:.8em">🔒 GCC High</span>':fileCell(r);
-    html+=`<tr><td class="doc">${r.doc_no}</td><td>${procName(r,isCUI)}${flag}${applyBtn(r)}</td><td>${r.rev}</td><td>${badge(r.status)}</td><td>${r.intl_release==='Yes'?'🌐':'—'}</td><td>${r.ack_required?'✍️':'—'}</td><td class="files">${files}</td></tr>`;
+// Text a procedure is searchable by (everything a user might type).
+const haystack=r=>[r.doc_no,r.procedure,r.area,r.status,r.rev,r.owner,r.remarks,r.intl_release,(r.files||[]).map(f=>f.split('/').pop()).join(' ')].filter(Boolean).join(' ').toLowerCase();
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+// AND-match on whitespace-separated terms so "safety quiz" narrows to entries containing both.
+const matches=(r,terms)=>{const h=haystack(r);return terms.every(t=>h.includes(t));};
+
+function render(q){
+  const terms=(q||'').trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const shown=terms.length?reg.filter(r=>matches(r,terms)):reg;
+  const content=document.getElementById('content');
+  const sc=document.getElementById('searchcount');
+  sc.textContent=terms.length?`${shown.length} of ${reg.length} match`:'';
+  if(terms.length && !shown.length){content.innerHTML=`<div class="noresult">No procedures match “${esc(q.trim())}”.</div>`;return;}
+  let html='';
+  for(const aid of order){
+    const rows=shown.filter(r=>r.area_id===aid); if(!rows.length) continue;
+    const label=rows[0].area;
+    const isCUI=aid==='08-security-cui';
+    const isQA=aid.startsWith('01');
+    if(isCUI) html+=CUI_HTML;
+    html+=`<h3 class="area ${isQA?'qa':''}">${label} <span class="n">(${rows.length})</span>${isQA?' <span class="qa-badge">QA / AS9100 SPECIAL SECTION</span>':''}</h3>`;
+    html+=`<table><thead><tr><th>Doc #</th><th>Procedure</th><th>Rev</th><th>Status</th><th>Intl</th><th>Ack</th><th>Files</th></tr></thead><tbody>`;
+    for(const r of rows){
+      const flag=(r.status==='Needs Update'||r.status==='Rebuild')?` <span class="flag">⚠ ${r.remarks||''}</span>`:(r.remarks?` <span style="color:var(--text2);font-size:.75em">— ${r.remarks}</span>`:'');
+      const files=isCUI?'<span title="Access in GCC High, not Mission Control" style="color:#ff9b9b;font-size:.8em">🔒 GCC High</span>':fileCell(r);
+      html+=`<tr><td class="doc">${r.doc_no}</td><td>${procName(r,isCUI)}${flag}${applyBtn(r)}</td><td>${r.rev}</td><td>${badge(r.status)}</td><td>${r.intl_release==='Yes'?'🌐':'—'}</td><td>${r.ack_required?'✍️':'—'}</td><td class="files">${files}</td></tr>`;
+    }
+    html+='</tbody></table>';
   }
-  html+='</tbody></table>';
+  content.innerHTML=html;
 }
-document.getElementById('content').innerHTML=html;
+
+const searchBox=document.getElementById('search');
+searchBox.addEventListener('input',()=>render(searchBox.value));
+// Support ?q= deep links and Escape-to-clear.
+const q0=new URLSearchParams(location.search).get('q');
+if(q0){searchBox.value=q0;}
+searchBox.addEventListener('keydown',e=>{if(e.key==='Escape'){searchBox.value='';render('');}});
+render(searchBox.value);
 </script>
 </body></html>

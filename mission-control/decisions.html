@@ -154,12 +154,30 @@ function render(){
   const sorted=[...rows].sort((a,b)=>((prio[a.priority]??1)-(prio[b.priority]??1))||(new Date(b.created||0)-new Date(a.created||0)));
   el.innerHTML=sorted.map(d=>card(d)).join('');
 }
+// Build the related-item chip(s) in the meta line. A bare-number relatedItem (e.g. "802")
+// is a TASK id, not an opportunity — and dedicated task fields may also be set. Route tasks
+// to the Tasks board (index.html?task=<id>, which opens the task in context) and only send
+// real opportunity refs to opportunities.html. Fixes decisions→tasks dead-ending in Opportunities.
+function relatedLinks(d){
+  let out='';
+  const ri=(d.relatedItem==null?'':String(d.relatedItem)).trim();
+  const isTaskNum=/^#?\d+$/.test(ri);
+  let taskId=d.taskId||d.relatedTaskId||d.related_task||d.spawned_task||(isTaskNum?ri:'');
+  taskId=(taskId===0||taskId)?String(taskId).replace(/^#/,'').trim():'';
+  if(ri && !isTaskNum){
+    out+=' · <a href="opportunities.html?focus='+encodeURIComponent(ri)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(ri)+'</a>';
+  }
+  if(taskId){
+    out+=' · <a href="index.html?task='+encodeURIComponent(taskId)+'" style="color:var(--accent);text-decoration:none" title="Open this task in the Tasks board">🗒 Task #'+esc(taskId)+'</a>';
+  }
+  return out;
+}
 function card(d){
   const pr=d.priority||'med';
   if(d.status==='answered'){
     return `<div class="card answered ${pr}">
       <div class="row1"><div><p class="title">${esc(d.title)}</p>
-      <div class="meta">${d.id}${d.relatedItem?' · <a href="opportunities.html?focus='+encodeURIComponent(d.relatedItem)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(d.relatedItem)+'</a>':''} · ${esc(d.source||'')}${ownerTag(d)}</div></div></div>
+      <div class="meta">${d.id}${relatedLinks(d)} · ${esc(d.source||'')}${ownerTag(d)}</div></div></div>
       <div class="q">${esc(d.question)}</div>
       <div class="answered-box">✅ ${esc(d.answer||'(noted)')}${d.note?' — '+esc(d.note):''}<div class="meta">answered ${d.answeredAt?esc(new Date(d.answeredAt).toLocaleString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})+' CT'):''} by ${esc(d.answeredBy||'Jon')}</div></div>
       ${attachHtml(d)}${emailHtml(d)}

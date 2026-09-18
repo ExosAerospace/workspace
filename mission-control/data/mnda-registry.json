@@ -27,6 +27,27 @@
     "source": "docusign:f162237cf9c1",
     "on_record": false
   },
+  "vuronyxtech": {
+    "company": "VuronyxTech",
+    "status": "pending",
+    "date": "2026-09-07",
+    "source": "docusign:56312eeb7236",
+    "on_record": false
+  },
+  "jhuapl22684": {
+    "company": "JHU/APL (22684)",
+    "status": "pending",
+    "date": "2026-09-09",
+    "source": "docusign:8f2c9eccd208",
+    "on_record": false
+  },
+  "permianaerospacedevelopmenttest": {
+    "company": "Permian Aerospace Development [TEST]",
+    "status": "pending",
+    "date": "2026-09-11",
+    "source": "docusign:67bc5646e99f",
+    "on_record": false
+  },
   "mdbcapitalholdings": {
     "company": "MDB Capital Holdings",
     "status": "executed",
@@ -68,5 +89,12 @@
     "date": "2026-08-13",
     "source": "MNDA sent to Dr. Ed Pope 8/13 \u2014 awaiting signature",
     "on_record": false
+  },
+  "permianaerospacedevelopment": {
+    "company": "Permian Aerospace Development",
+    "status": "executed",
+    "date": "2026-09-17",
+    "source": "DocuSign \u2014 Neil Milburn -> Oscar S. Garcia, 'PAD_NDA Generic.pdf', completed 2026-09-17 (real send; distinct from the 9/11 [TEST] envelope). Retrieve executed PDF to data-room/NDAs/.",
+    "on_record": true
   }
 }

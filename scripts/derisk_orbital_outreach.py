@@ -72,7 +72,7 @@ US_TOKENS = ("us", "usa", "u.s.", "u.s.a.", "united states", "united states of a
 # no decision. Centralized in export_screen so every outreach engine screens the same.
 import os as _os2, sys as _sys2
 _sys2.path.insert(0, _os2.path.dirname(_os2.path.abspath(__file__)))
-from export_screen import classify_country
+from export_screen import classify_country, region_owner
 
 POOLS = """POOL A — SUBORBITAL REPEAT-FLIERS (warmest; they already buy suborbital):
   Organizations/PIs that have ALREADY flown a payload suborbitally — Blue Origin New
@@ -228,6 +228,7 @@ def render_block(oid, it, foreign):
         f"**Due:** BLK3 Flight 2 — March 2027\n"
         f"**POC:** {poc or 'TBD — enrich'}\n"
         f"**Why fit:** {g('why_fit')}\n"
+        f"**Owner:** {region_owner(g('country')) or 'jquinn@exosaero.com'}\n"
         f"**Next action:** {g('next_action') or 'Price off rate card; draft Mar-2027 slot outreach for Jon to approve.'}\n"
         f"**Source:** {g('source_url')}\n"
         f"_desc: {desc[:220]}_\n"

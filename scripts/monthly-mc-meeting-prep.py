@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """
-MONTHLY MC WORK-MANAGEMENT MEETING PREP — fires only on the LAST THURSDAY of the month.
-On that day it: (1) drafts this month's "what Exo automated" segment from the git log,
-(2) emails Jon the agenda Word doc, (3) posts a Discord reminder with the automation draft.
-Run by launchd every Thursday; self-gates to the last Thursday. Use --force to test.
+MONTHLY MC WORK-MANAGEMENT MEETING PREP — the monthly meeting now runs on the LAST
+TUESDAY of the month (10:00-11:00 CT), replacing that week's weekly team meeting.
+This prep fires the DAY BEFORE the last Tuesday and: (1) drafts this month's "what Exo
+automated" segment from the git log, (2) emails Jon the agenda Word doc, (3) posts a
+Discord reminder with the automation draft.
+Run by launchd Monday 15:00; self-gates to the day before the last Tuesday. Use --force to test.
 """
 import os, sys, subprocess, datetime, re
 import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)

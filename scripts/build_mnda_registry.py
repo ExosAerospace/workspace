@@ -31,6 +31,7 @@ MANUAL_SEED = {
     "Gloyer-Taylor Laboratories":  {"status": "signature_ready", "date": None, "source": "uploads/MNDA_Exos_GloyerTaylorLabs (awaiting signature)"},
     "MATECH GSM":                  {"status": "sent", "date": "2026-08-13", "source": "MNDA sent to Dr. Ed Pope 8/13 — awaiting signature"},
     "Super Carbon Composites":     {"status": "sent", "date": "2026-08-13", "source": "MNDA sent to Dr. Ed Pope 8/13 — awaiting signature"},
+    "Permian Aerospace Development": {"status": "executed", "date": "2026-09-17", "source": "DocuSign — Neil Milburn -> Oscar S. Garcia, 'PAD_NDA Generic.pdf', completed 2026-09-17 (real send; distinct from the 9/11 [TEST] envelope). Retrieve executed PDF to data-room/NDAs/."},
 }
 
 def counterparty_from_title(t):

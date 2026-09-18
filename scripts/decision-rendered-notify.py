@@ -22,7 +22,21 @@ USERS    = WS / "mission-control" / "users.json"
 DECS     = WS / "mission-control" / "data" / "decisions.json"
 CFG      = WS / "config" / "decision-notify.json"
 LOG      = WS / "logs" / "decision-notify.log"
+STATE    = WS / "logs" / "decision-rendered-notify-state.json"   # D-7281739 fix #2: idempotency
 MCURL    = "https://mc.exosaero.space"
+
+# D-7281739 fix #5: a SEND-class decision (title "Send: …", or answered with send phrasing) is
+# already delivered to the owner's inbox by decision-send-watcher.py ("[Ready to send]"). Firing a
+# second "[Decision Rendered]" here is the redundant double. Detect + suppress those.
+import re as _re
+_SEND_RX = _re.compile(r"\b(re-?send|send it|send me|send to me|send the draft|email me|"
+                       r"for me to send|for you to send|send drafted|send response|ready.*to send)\b", _re.I)
+def is_send_class(dec):
+    title = str(dec.get("title", ""))
+    if _re.match(r"^\s*send\b", title, _re.I):
+        return True
+    blob = " ".join(str(dec.get(k, "")) for k in ("answer", "note", "proposedAction"))
+    return bool(_SEND_RX.search(blob))
 
 OPENCLAW = shutil.which("openclaw") or \
     "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
@@ -205,6 +219,22 @@ def main():
         dec["note"] = args.note
     dec["answeredBy"] = args.by
 
+    # D-7281739 fix #5: suppress redundant notify on SEND-class decisions (decision-send-watcher
+    # already delivers those to the owner's inbox — the "[Decision Rendered]" would be a second email).
+    if is_send_class(dec):
+        log(f"SKIP {args.id}: send-class decision (delivered by decision-send-watcher; no 2nd email)")
+        return
+
+    # D-7281739 fix #2: idempotency keyed by decision-id + answeredAt. A re-answer / double-submit /
+    # watcher re-run with the SAME answeredAt must NOT re-email. A genuinely new answer changes
+    # answeredAt and is allowed through.
+    answered_at = str(dec.get("answeredAt") or args.answer)
+    state = load_json(STATE, {})
+    dkey = f"{args.id}:{answered_at}"
+    if state.get(dkey):
+        log(f"SKIP {args.id}: already notified for answeredAt={answered_at} (idempotent)")
+        return
+
     # Resolve the waiter from the owner field
     by_email, by_name = build_user_index()
     owner_str = dec.get("owner") or ""
@@ -234,6 +264,18 @@ def main():
 
     if not discord_ok and not disc_id:
         log(f"DISCORD SKIP {args.id}: no discord_id configured for {to_email}")
+
+    # Record idempotency key once we've actually delivered something, so a re-run with the same
+    # answeredAt won't re-notify. Keep the map bounded (last 500 keys).
+    if email_ok or discord_ok:
+        try:
+            state[dkey] = answered_at
+            if len(state) > 500:
+                for k in list(state)[:len(state) - 500]:
+                    del state[k]
+            STATE.write_text(json.dumps(state))
+        except Exception as e:
+            log(f"STATE write failed {args.id}: {e}")
 
     log(f"DONE {args.id}: email={'ok' if email_ok else 'FAIL'} discord={'ok' if discord_ok else ('SKIP' if not disc_id else 'FAIL')}")
 

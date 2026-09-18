@@ -86,6 +86,8 @@ def deliverable(name, **kw):
             st, note = "unblocked", f"{kw['gate']} resolved: {g['answer']}"
         else:
             st, note = "blocked", f"blocked on {kw['gate']}"
+    if kw.get("note"):
+        note = kw["note"]
     return {"name": name, "status": st, "note": note, "owner": kw.get("owner", ""), "gate": kw.get("gate")}
 
 
@@ -131,8 +133,10 @@ MILESTONES = [
     {"id": "PROG-003", "name": "Day 90 — First End-to-End", "due": "2026-09-25", "gate": "D-111",
      "depends_on": "PROG-002",
      "deliverables": [
-         deliverable("First customer lead → signed paper through the Desk", status_seed="todo"),
-         deliverable("Human-touched only: relationship + signature", status_seed="todo"),
+         deliverable("First customer lead → signed paper through the Desk", status_seed="in_progress",
+                     note="Matt Lesiw (1U, 420g, $8,000) — booking package prepared; send awaiting Jon (D-LESIW-EXO3-SEND)"),
+         deliverable("Human-touched only: relationship + signature", status_seed="in_progress",
+                     note="Human touches = Jon approves send + signature; all scope/quote/contract prep AI-run"),
          deliverable("Inbound-to-quote time measured (target: minutes)", status_seed="todo"),
      ]},
 ]

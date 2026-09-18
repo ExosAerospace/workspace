@@ -10,9 +10,9 @@
 
 | Artifact | Canonical file | Version / Date | Anchor value | Owner |
 |---|---|---|---|---|
-| Financial model | `EXOS_Financial_Model_Full_Revenue_FIXED_v9_409Afinal.xlsx` | v9 · Jun 19 2026 · 10-yr | DCF $252.0M / concluded equity **$169.7M** | Jon / Kyle |
+| Financial model | `EXOS_Financial_Model_Full_Revenue_FIXED_v12_FY2025actuals.xlsx` | v12 · Aug 21 2026 · 10-yr + **FY2025 Actuals tab** | Holds valuation of record **$169.7M** ($8.66/sh, DLOM 36.51%); internal blended EV $194.9M shown only inside model, bridged to the concluded 409A | Jon / Kyle |
 | 409A valuation | `EXOS_409A_Eqvista_2026-03-31_CURRENT.pdf` | Eqvista · dated 06/10/2026, as-of 03/31/2026 | **$8.66/sh**, $169.7M equity, DLOM 36.51% | Jon |
-| Pitch deck | `Exos_SeriesA_PitchDeck_FULL_2026-08-16_CORRECTED.pptx` | Aug 16 2026 · **policy-tailwind slide added Aug 21 2026** (slide 18, after "Why Now") | ⚠ must pass P1 reconciliation before room reopens; hold to $169.7M valuation of record | Jon |
+| Investor deck | `Exos_SeriesA_StrategicDeck_2026-09-06_CURRENT.pptx` | Sep 6 2026 (newest) | Figures-of-record clean: $169.7M / $10M→$25M / BLK3-first / TXSE-primary / no Euronext / no TBD. ⚠ still must pass P1 reconciliation before room reopens | Jon |
 | Policy tailwind brief | `Exos_Policy_Tailwind_NSTP_2026-08-21.pdf` (+ editable `.docx` twin) | Aug 21 2026 · **on Exos PRIMARY letterhead** | National Space Transportation Policy ("Golden Age") → Exos alignment; **no valuation stated** (room-safe) | Jon / Exo |
 | Cap table | `Exos_Capitalization_Table.xlsx` | confirm current dated version | — | Kyle |
 
@@ -29,7 +29,8 @@ These are set. The room follows FIGURES_OF_RECORD.md; anything contradicting it 
 
 ## ARCHIVE — pull these OUT of the shared room (superseded, retained in `_ARCHIVE_Superseded/`)
 
-**Models (all superseded by v9):**
+**Models (all superseded by v12):**
+- `EXOS_Financial_Model_Full_Revenue_FIXED_v9_409Afinal.xlsx` — v9, Jun 19 2026; superseded 2026-09-17 by v12 (FY2025 actuals refresh; same $169.7M valuation of record)
 - `EXOS_Financial_Model_Full_Revenue_FIXED_v5_jq.xlsx` — 5-yr, DCF $74.8M (the file that made us look worth 1/3 as much)
 - `..._v5_jq_BACKUP.xlsx`, `..._v7.xlsx`, `..._v8.xlsx`
 - `EXOS_Financial_Model_Rev_May29_2026.docx`, `..._v8_May29_2026.docx`, `..._v8_May29_2026_TXSE.docx`
@@ -38,13 +39,15 @@ These are set. The room follows FIGURES_OF_RECORD.md; anything contradicting it 
 - `EXOS_409A_Aranca_April2024.pdf` — $5.03
 - `EXOS_409A_Eqvista_May2025.pdf` — $7.06
 
-**Decks (superseded by July 2026):**
+**Decks (superseded):**
 - `Exos_PitchDeck_March_2026.pptx`
 - `Exos_SeriesA_PitchDeck_May2026.pptx`
 - `Exos_SeriesA_PitchDeck_June2026_PhysicalAI.pptx`
 - `Exos_SeriesA_PitchDeck_June2026_PhysicalAI_TXSE.pptx`
+- `Exos_SeriesA_PitchDeck_FULL_2026-08-16_CORRECTED.pptx` — superseded 2026-09-17 by the 9/6 Strategic deck
+- `Exos_SeriesA_StrategicTeaser_2026-08-21.pptx` — teaser variant; superseded 2026-09-17
 
-**Not room files (keep out — investor-specific / different purpose):** `Exos_Haas_Custom_Deck_2026-07.pptx`, Montana partnership decks.
+**Not room files (keep out — investor-specific / different purpose):** `Exos_Haas_Custom_Deck_2026-07.pptx`, Montana partnership decks, and `Exos_SSLC_Board_TechLicense_Request_2026-08-21.pptx` (SSLC board tech-license request — different audience/purpose; moved to `_RELATED_NotRoomFiles/`).
 
 **Related package (separate room):** `../Navy_Commission/` — Commission on the Future of the Navy site-visit materials (deck + deck-aligned model + projections) on the **conservative Cash Flow case (2027–2032)**. Kept separate on purpose; do not co-mingle with the Series A canonical set. See `../Navy_Commission/DATA_ROOM_MANIFEST.md`.
 
@@ -65,7 +68,8 @@ Do not share the room until every box is true:
 
 ## Status
 - **P0 (this doc):** DONE — canonical set staged in `_CANONICAL/`, superseded staged in `_ARCHIVE_Superseded/`, manifest published. Execute the same keep/archive split inside the Peony room.
-- **2026-08-21 policy update:** added policy-tailwind slide to the canonical pitch deck (slide 18) + new `Exos_Policy_Tailwind_NSTP_2026-08-21.pdf`. **To sync to the Peony room:** upload the updated deck + the policy brief. Deck backup at `.backups/`. NOTE: `_CANONICAL/` currently holds TWO decks (Pitch FULL Aug-16 + Strategic Aug-13) — the one-canonical-deck rule wants one; confirm whether to archive the Strategic deck or mirror the policy slide into it.
+- **2026-08-21 policy update:** added policy-tailwind slide to the canonical pitch deck (slide 18) + new `Exos_Policy_Tailwind_NSTP_2026-08-21.pdf`. **To sync to the Peony room:** upload the updated deck + the policy brief. Deck backup at `.backups/`.
+- **2026-09-17 reconciliation (task #1859):** model of record promoted **v9 → v12** (FY2025 actuals + bridged reconciliation note; holds $169.7M); v9 moved to `_ARCHIVE_Superseded/`. Room now has ONE model again. **Deck deconflicted (same run):** `_CANONICAL/` now holds ONE investor deck — `Exos_SeriesA_StrategicDeck_2026-09-06_CURRENT.pptx` (newest; figures-of-record clean: $169.7M / $10M→$25M / BLK3-first / TXSE / no Euronext / no TBD). The Aug-16 Pitch FULL + Aug-21 Teaser moved to `_ARCHIVE_Superseded/`; the SSLC Board tech-license deck moved to `_RELATED_NotRoomFiles/` (different purpose). Done as reversible cleanup while the room is CLOSED (no external exposure); Jon can swap the pick if he prefers the Aug-16 Pitch. ⚠ The single deck still must pass P1 figures-of-record before the room reopens.
 - **P1–P4:** blocked on Jon decisions #1 (fairness opinion), #2 (listing path), #3 (raise size). See task 1859.
 
 ---

@@ -1,3 +1,5 @@
+> **[SUPERSEDED 2026-09-03 — Collicott dropped from NIH STTR PA-27-102.]** Current structure: Exos Aerospace (small-business applicant) + **Purdue University as the sole Research Institution**, **Prof. Estelle (Sunghee) Park = Contact PD/PI** and sole biomedical lead; science = **human intestinal organoid chips** (enteroids / OCTOPUS). UW / Ed Kelly (out 8/31) and Prof. Steven Collicott (dropped 9/3) are no longer on this application. Retained for record only — do not use for the submission.
+
 # INTRO EMAIL — Jon → Estelle (Sunghee) Park, Purdue BME (NIH STTR co-investigator)
 *Warm follow to Steven Collicott's 2026-08-17 introduction. External send → Jon approves and sends from Outlook. Voice: "Hello [Name]," commas not em-dashes, no AI tells; Outlook appends the Exos signature. Reframed 2026-08-26: with Dr. Kelly (UW) confirmed as biomedical lead, Park is invited as an optional co-investigator via Purdue's subaward, not as the sole science lead.*
 

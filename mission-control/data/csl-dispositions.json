@@ -4,5 +4,23 @@
     "note": "Name collision, no nexus. Our supplier is Ideal Vacuum Products (Albuquerque, NM, USA), a legitimate domestic vacuum-equipment vendor. The CSL match is an ALIAS on an Iran-based SDN (FUYA PARS PROSPECTIVE TECHNOLOGISTS; NPWMD/IFSR). Different entity, different country, no ownership or transactional nexus. Cleared.",
     "by": "Exo, on John Quinn's instruction",
     "date": "2026-08-29"
+  },
+  "axiom": {
+    "status": "cleared",
+    "note": "Name collision (transliteration), no nexus. Our CRM party 'Axiom' is Axiom Space, Inc. (Houston, TX, USA), a U.S. commercial space company. The CSL match is AKSIOMA LIMITED LIABILITY COMPANY, a Russia-based SDN (RUSSIA-EO14024; RU); the 1.0 score is a transliteration hit ('aksioma' = Russian for 'axiom'). Different entity, different country, no ownership or transactional nexus. Cleared. (CRM record is thin \u2014 enrich with contact/domain at next touch.)",
+    "by": "Exo, on John Quinn's review",
+    "date": "2026-09-10"
+  },
+  "scorpius": {
+    "status": "cleared",
+    "note": "Name collision, no nexus. Our CRM party 'Scorpius' is Scorpius Space Launch Company (SSLC), Torrance, CA, USA \u2014 the U.S. entity Exos owns 18% of, with a right of first refusal on the balance. The CSL match is an Iran-sanctions SDN listing 'SCORPIUS' (IRAN-EO13846). Identical string, entirely different entity; no Iran nexus whatsoever. Cleared.",
+    "by": "Exo, on John Quinn's review",
+    "date": "2026-09-10"
+  },
+  "ae industrial": {
+    "status": "cleared",
+    "note": "Name collision, no nexus. Our CRM party 'AE Industrial' is AE Industrial Partners (Boca Raton, FL, USA), a U.S. aerospace/defense/space private-equity firm. The CSL match is AW Industrial Ltd on the BIS Unverified List (CN); the 0.923 score reflects the AE/AW fuzzy match. Different entity, different country, no nexus. Cleared.",
+    "by": "Exo, on John Quinn's review",
+    "date": "2026-09-10"
   }
 }

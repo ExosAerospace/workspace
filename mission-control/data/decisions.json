@@ -3442,6 +3442,19 @@
         "basis": [
           "llm:0.95"
         ]
+      },
+      {
+        "message_id": "<BNAP110MB1917007016E4D1A255F3C911AABAA@BNAP110MB1917.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-09-15T12:56:27+00:00",
+        "direction": "sent",
+        "from": "jquinn@exosaero.com",
+        "to": [
+          "exosmc@proton.me"
+        ],
+        "subject": "Fw: AEDC Velocity Alliance Base Agreement",
+        "basis": [
+          "llm:0.90"
+        ]
       }
     ]
   },
@@ -6785,6 +6798,19 @@
         "basis": [
           "llm:0.95"
         ]
+      },
+      {
+        "message_id": "<3986c38f158ab00ee295fa82abc32182@pm.me>",
+        "date": "2026-09-16T08:16:39+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "=?utf-8?q?=F0=9F=94=92_Nightly_Security_Alert_=E2=80=94_ExoMac_2026-09-16?=",
+        "basis": [
+          "llm:1.00"
+        ]
       }
     ]
   },
@@ -7123,6 +7149,19 @@
           "jquinnexo@pm.me"
         ],
         "subject": "=?utf-8?q?=F0=9F=94=92_Nightly_Security_Alert_=E2=80=94_ExoMac_2026-08-24?=",
+        "basis": [
+          "llm:0.90"
+        ]
+      },
+      {
+        "message_id": "<971b32818abcc5fbb9e3df0d2e7bc8e3@pm.me>",
+        "date": "2026-09-17T08:16:12+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "=?utf-8?q?=F0=9F=94=92_Nightly_Security_Alert_=E2=80=94_ExoMac_2026-09-17?=",
         "basis": [
           "llm:0.90"
         ]
@@ -18643,6 +18682,47 @@
         "basis": [
           "addr:don.proeschel@utdallas.edu"
         ]
+      },
+      {
+        "message_id": "<39444611df79d1159ca889d6da333776@pm.me>",
+        "date": "2026-09-14T12:01:13+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "edwinvandervlist@utdallas.edu"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:edwinvandervlist@utdallas.edu"
+        ]
+      },
+      {
+        "message_id": "<cd13a0af287737c49a01734973d2c4bd@pm.me>",
+        "date": "2026-09-14T12:01:19+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "don.proeschel@utdallas.edu"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:don.proeschel@utdallas.edu"
+        ]
+      },
+      {
+        "message_id": "<PH1P110MB15375CAAE2D43A897DD5C9C1ACB8A@PH1P110MB1537.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-09-17T16:37:33+00:00",
+        "direction": "received",
+        "from": "lquinn@exosaero.com",
+        "to": [
+          "mi.vo@utdallas.edu",
+          "don.proeschel@utdallas.edu",
+          "don.proeschel@utdallas.edu"
+        ],
+        "subject": "=?utf-8?q?Thank_you_+_next_steps_-_Exos_Aerospace_=C3=97_UTD_AIAA_/_Comet?= =?utf-8?q?_Rocketry?=",
+        "basis": [
+          "addr:don.proeschel@utdallas.edu"
+        ]
       }
     ]
   },
@@ -21005,6 +21085,20 @@
           "matthew.downey@und.edu"
         ],
         "subject": "Re: ",
+        "basis": [
+          "addr:marcos.fernandeztous@und.edu"
+        ]
+      },
+      {
+        "message_id": "<PH1P110MB15377F44CBEF14CB9CE9A8FAACBBA@PH1P110MB1537.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-09-14T14:27:15+00:00",
+        "direction": "received",
+        "from": "lquinn@exosaero.com",
+        "to": [
+          "marcos.fernandeztous@und.edu",
+          "dominik.steinhauer@und.edu"
+        ],
+        "subject": "Re: Exploring Collaboration: Advancing Space Propulsion and Hypersonic Research",
         "basis": [
           "addr:marcos.fernandeztous@und.edu"
         ]
@@ -23694,7 +23788,22 @@
     "owner": "UTD EXO3 Payload Capstone",
     "delegatedTo": "UTD EXO3 Payload Capstone",
     "delegation": "Payload sales \u2192 UTD (Exos gate: Lizi)",
-    "spawned_task": 2264
+    "spawned_task": 2264,
+    "email_activity": [
+      {
+        "message_id": "<178940028750.8169.1281358131592527687@exosaero.com>",
+        "date": "2026-09-14T15:38:10+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "lquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?Your_3_ERAU_drafts_(Allison_+_Perrell_+_Ferrando_Quilez)_?= =?utf-8?q?=E2=80=94_ready_to_send?=",
+        "basis": [
+          "llm:0.90"
+        ]
+      }
+    ]
   },
   {
     "id": "D-7281570",
@@ -25320,6 +25429,19 @@
           "sandip.agarwal@vuronyxtech.com"
         ],
         "subject": "=?utf-8?q?Exos_inputs_for_the_DOE_Phase_II_=E2=80=94_LOC,_budget,_facilit?= =?utf-8?q?ies,_CV_(NDA_sent_separately)?=",
+        "basis": [
+          "addr:sandip.agarwal@vuronyxtech.com"
+        ]
+      },
+      {
+        "message_id": "<PH1P110MB153741E6054F030C48219C9DACBBA@PH1P110MB1537.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-09-14T17:25:47+00:00",
+        "direction": "received",
+        "from": "lquinn@exosaero.com",
+        "to": [
+          "sandip.agarwal@vuronyxtech.com"
+        ],
+        "subject": "=?utf-8?q?Re:_Exos_inputs_for_the_DOE_Phase_II_=E2=80=94_LOC,_budget,_fac?= =?utf-8?q?ilities,_CV_(NDA_sent_separately)?=",
         "basis": [
           "addr:sandip.agarwal@vuronyxtech.com"
         ]
@@ -32348,6 +32470,19 @@
         "basis": [
           "addr:roel.saenziii@utdallas.edu"
         ]
+      },
+      {
+        "message_id": "<b6e24223f72ad0df98ebefdec652592a@pm.me>",
+        "date": "2026-09-14T12:01:25+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "senthil@utdallas.edu"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:senthil@utdallas.edu"
+        ]
       }
     ],
     "answeredBy": "email-tracker"
@@ -32920,6 +33055,19 @@
         "basis": [
           "llm:0.95"
         ]
+      },
+      {
+        "message_id": "<abbb9ca15fa93dd0abe00744b6cf7fd3@pm.me>",
+        "date": "2026-09-14T12:00:56+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "sxm220350@utdallas.edu"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:sxm220350@utdallas.edu"
+        ]
       }
     ],
     "answeredBy": "John Quinn"
@@ -33114,6 +33262,19 @@
           "id:D-7281689",
           "id:D-7281715",
           "id:D-mt-butte-itz-0903"
+        ]
+      },
+      {
+        "message_id": "<709aa8da4aa35e0733d8b018a6db7ef7@pm.me>",
+        "date": "2026-09-14T16:09:58+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "lquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?[Mission_Control]_Task_assigned_to_you:_Reach_out_to_Edgar_(Mon?= =?utf-8?q?tana)_to_coordinate_FAA_RFI_9736_meeting_=E2=80=94_confirm_lane?= =?utf-8?q?-s?=",
+        "basis": [
+          "llm:1.00"
         ]
       }
     ],
@@ -34339,7 +34500,7 @@
   {
     "id": "D-7281741",
     "created": "2026-08-31T17:05:00.515Z",
-    "updated": "2026-09-01T11:26:26.519Z",
+    "updated": "2026-09-17T17:43:10.841Z",
     "source": "Exo (email command)",
     "relatedItem": "",
     "title": "Approve ECHO proposal-support drafts (LOS + cost estimate) for Dr. Siwei Fan / ERAU",
@@ -34356,7 +34517,7 @@
     "dedupeKey": "echo-fan-erau-los-quote-approval",
     "status": "reassigning",
     "answer": null,
-    "note": "Reassigned by Lizi Quinn (not mine)",
+    "note": "Reassigned by Lizi Quinn (not mine) | Reassigned by Lizi Quinn (not mine)",
     "answeredAt": null,
     "agentClass": "",
     "correlationId": "",
@@ -34391,7 +34552,7 @@
         ]
       }
     ],
-    "reassignedFrom": "lquinn@exosaero.com",
+    "reassignedFrom": "exo@exosaero.com",
     "needsExoRouting": true
   },
   {
@@ -34557,6 +34718,19 @@
         "subject": "[READY TO SEND] Resolve D-7281743: investor-update watch offer securities review (13 days open)",
         "basis": [
           "id:D-7281743"
+        ]
+      },
+      {
+        "message_id": "<85bb31b25d1a9b1c80bcd37e4027b7f2@pm.me>",
+        "date": "2026-09-16T13:00:17+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "lquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?Weekly_Investor_Update_=E2=80=94_ready_for_review_(Sep_16)?=",
+        "basis": [
+          "llm:1.00"
         ]
       }
     ]
@@ -34872,7 +35046,7 @@
   {
     "id": "D-VRNXPKG01",
     "created": "2026-09-01T07:28:30",
-    "updated": "2026-09-01T20:37:20.235Z",
+    "updated": "2026-09-14T17:26:33.000Z",
     "source": "Exo (email command)",
     "relatedItem": "2523",
     "title": "DOE SBIR Phase II (VuronyxTech) \u2014 release Exos flight-test deliverable package to prime",
@@ -34886,9 +35060,9 @@
     ],
     "priority": "high",
     "dedupeKey": "vuronyx-doe-deliverable-release",
-    "status": "reassigning",
-    "answer": "",
-    "note": "Reassigned by Lizi Quinn (not mine)",
+    "status": "answered",
+    "answer": "Yes \u2014 released (moot: package already delivered to Sandip)",
+    "note": "[2026-09-14 \u00b7 Exo, per Lizi] Closing as already-released. Full Exos package (signed LOC 9/1, $525K BoE, Facilities & Equipment, technical POC CV) was already sent to Sandip Agarwal; the mutual NDA does not gate the DOE submission. Release approval is moot \u2014 nothing left to gate.",
     "assignedTo": "exo@exosaero.com",
     "owner": "Lizi Quinn",
     "email_activity": [
@@ -34996,6 +35170,84 @@
         "subject": "=?utf-8?q?[Mission_Control]_Task_assigned_to_you:_Exos_inputs_for_the_DOE?= =?utf-8?q?_Phase_II_=E2=80=94_LOC,_budget,_facilities,_CV_(NDA_sent_separ?= =?utf-8?q?at?=",
         "basis": [
           "llm:1.00"
+        ]
+      },
+      {
+        "message_id": "<ee095f35c43d7bb699c3423621f547b3@pm.me>",
+        "date": "2026-09-14T17:40:25+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "lquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?Re:_Re:_Exos_inputs_for_the_DOE_Phase_II_=E2=80=94_LOC,_budget,?= =?utf-8?q?_facilities,_CV_(NDA_sent_separately),_Exo_update?=",
+        "basis": [
+          "llm:0.95"
+        ]
+      },
+      {
+        "message_id": "<aa63ed469b6eeb53452711a3baa753d9@pm.me>",
+        "date": "2026-09-18T00:39:08+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?Re:_Fw:_Exos_inputs_for_the_DOE_Phase_II_=E2=80=94_LOC,_budget,?= =?utf-8?q?_facilities,_CV_(NDA_sent_separately),_Exo_update?=",
+        "basis": [
+          "llm:1.00"
+        ]
+      },
+      {
+        "message_id": "<BN0P110MB19148EE5B8F5B4D3E78FF380AA87A@BN0P110MB1914.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-09-18T01:00:17+00:00",
+        "direction": "sent",
+        "from": "jquinn@exosaero.com",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "=?utf-8?q?Re:_Fw:_Exos_inputs_for_the_DOE_Phase_II_=E2=80=94_LOC,_budget,?= =?utf-8?q?_facilities,_CV_(NDA_sent_separately),_Exo_update?=",
+        "basis": [
+          "llm:0.95"
+        ]
+      },
+      {
+        "message_id": "<BN0P110MB1914432B81C3D3DB1BA7BCDBAA87A@BN0P110MB1914.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-09-18T01:13:14+00:00",
+        "direction": "sent",
+        "from": "jquinn@exosaero.com",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "=?utf-8?q?Re:_Signature_requested:_Exos_Letter_of_Support_=E2=80=94_Vuron?= =?utf-8?q?yxTech_DOE_SBIR_Phase_II?=",
+        "basis": [
+          "llm:1.00"
+        ]
+      },
+      {
+        "message_id": "<BN0P110MB1914F28F24CD6A0DCC21F505AA87A@BN0P110MB1914.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-09-18T01:14:05+00:00",
+        "direction": "sent",
+        "from": "jquinn@exosaero.com",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "=?utf-8?q?Re:_Signature_requested:_Exos_Letter_of_Support_=E2=80=94_Vuron?= =?utf-8?q?yxTech_DOE_SBIR_Phase_II?=",
+        "basis": [
+          "llm:0.95"
+        ]
+      },
+      {
+        "message_id": "<dd5a2ce8ed40a3e8a3bfc1014b39188c@pm.me>",
+        "date": "2026-09-18T01:12:06+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?Re:_Re:_Fw:_Exos_inputs_for_the_DOE_Phase_II_=E2=80=94_LOC,_bud?= =?utf-8?q?get,_facilities,_CV_(NDA_sent_separately),_Exo_update,_Exo_upda?= =?utf-8?q?te?=",
+        "basis": [
+          "llm:0.90"
         ]
       }
     ],
@@ -37986,6 +38238,19 @@
         "basis": [
           "id:D-IDJ-OCT8-09081316"
         ]
+      },
+      {
+        "message_id": "<178939180132.93635.847868823435114614@pm.me>",
+        "date": "2026-09-14T13:16:45+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinn@exosaero.com"
+        ],
+        "subject": "COPY: Innovation Dojo presentation guardrails (sent to Toshi)",
+        "basis": [
+          "llm:0.95"
+        ]
       }
     ],
     "answer": "\ud83d\udcdd Instruction",
@@ -38252,11 +38517,11 @@
   {
     "id": "D-7281788",
     "created": "2026-09-09T20:49:44.242Z",
-    "updated": "2026-09-10T13:37:45.170Z",
+    "updated": "2026-09-14T17:13:00.000Z",
     "source": "Exo (email command)",
     "relatedItem": "",
     "title": "Approve reply to Mike Chacos (TradeVector\u2192PaceZero) \u2014 $750K BLK3 F2 advance: equity guarantee + creative structures",
-    "question": "VERDICT: Reply is ready \u2014 confirms equity guarantee IS available and offers a 5-option menu that removes PaceZero's 'this is really a loan' objection. Approve to go out over your signature? (3 factual blanks for you to fill: TACFI match/timeline, what was represented re NASA IDIQ, Flight 1 remaining capacity.)",
+    "question": "VERDICT: Reply is ready \u2014 confirms equity guarantee IS available and offers a 5-option menu that removes PaceZero's 'this is really a loan' objection. Approve to go out over your signature? (3 factual blanks for you to fill: TACFI match/timeline, what was represented re NASA IDIQ, Flight 1 remaining capacity.) [SENT 2026-09-11 to mike@tradevector.com per Jon @exo 2026-09-14 \u2014 reply went out over Jon's signature; awaiting PaceZero response.]",
     "context": "Mike Chacos (TradeVector) is shopping your $750K revenue-based advance to a new investor, PaceZero. His blocker: a clean receivable purchase can't carry the risk that Flight 2 doesn't sell out \u2014 that's a loan, which he won't do. He asked whether Exos equity is available as collateral (you said yes) and for demand data + answers on NASA IDIQ, TACFI, timing, and Flight 1 capacity.\n\nThe draft answers all of it and turns the equity guarantee into a menu that de-risks PaceZero (equity-collateralized advance / gov backstop sweep / convertible / receivable+warrant / first-loss reserve + Flight 3 oversell). Full draft below.\n\nSECURITIES GATE: the reply only says equity collateral is *available* and floats structures \u2014 no binding terms. Before any equity-pledge/convertible terms are actually papered, route final structure to the securities approver + Marion Keyes.\n\n----- DRAFT REPLY -----\n\n# DRAFT reply \u2014 John \u2192 Mike Chacos (TradeVector), for PaceZero\n**Re:** Exos Aerospace \u2014 $750K revenue-based advance against BLK3 Flight 2 payload receivables\n**Date drafted:** 2026-09-09 \u00b7 Awaiting John's approval (Decision on his matrix)\n**Jon must fill 3 brackets before send:** TACFI match/timeline \u00b7 what was represented re: NASA IDIQ \u00b7 Flight 1 remaining capacity\n\n---\n\nMike,\n\nGood to reconnect \u2014 answers below, and yes, an equity guarantee is on the table. Let me lay out the structure options so you and PaceZero have room to get comfortable, then hit your specific questions.\n\n**Equity guarantee + ways to structure the downside**\n\nYou're right that a clean receivable purchase can't carry the risk that we don't sell the Flight 2 bay \u2014 that's a loan, and I'm not asking you to write one. The point of collateral is to take that risk off PaceZero. Options, in order of how much they de-risk you:\n\n1. **Equity-collateralized advance.** We pledge Exos equity (a share pledge and/or warrant coverage) as security. If the Flight 2 receivables haven't repaid the $750K plus carry by March 30, 2027, the shortfall converts to Exos equity at the Series A price rather than triggering a cash repurchase. PaceZero's downside is secured by equity value, not by our capacity fill.\n\n2. **Government backstop as a senior repayment source.** Behind the bay sits a $4M DoD TACFI and a $2M Texas Space Commission grant now moving \u2014 an in-person presentation to the Commission by Senator Bob Hall's Chief of Staff last week, with multiple Congressional letters of support. We can assign approved proceeds to sweep to PaceZero first \u2014 a repayment source that doesn't depend on payload sales at all.\n\n3. **Convertible note.** If a receivable sale can't hold the performance risk on your side, we do the $750K as a convertible into the Series A at a discount, with the Flight 2 deposits sweeping for accelerated cash return. Secured downside, Series A upside.\n\n4. **Blended purchase + warrant kicker.** Buy the receivable at the agreed discount and attach warrants, so your return isn't tied only to how fast the bay fills.\n\n5. **First-loss reserve + Flight 3 oversell right.** We fund a deposit reserve as first-loss and give you the Flight 3 oversell as a second collection window \u2014 two shots at repayment.\n\nMix and match \u2014 happy to paper whichever combination PaceZero is most comfortable with.\n\n**Your questions**\n\n- **Does capacity like this sell out?** Structurally, yes \u2014 NASA Flight Opportunities is a standing federal buyer of exactly this suborbital research capacity, and Blue Origin's New Shepard and Zero-G fly recurring, oversubscribed research manifests. Closer to home: entX signed the Flight 1 LSA and we've collected $400K+ against it \u2014 we sign, collect, and fly. Behind Flight 2 is a priced pipeline north of $100M / 350+ opportunities, worked daily by our EXO3 payload engine and the UTD team, booking now. I'll share the pipeline detail under NDA.\n\n- **NASA IDIQ.** The NASA path we referenced is the Flight Opportunities on-ramp, which activates once BLK3 completes two flights above 85 km \u2014 not the Aug 17 IDIQ you found. Happy to walk through the distinction. *[JON \u2014 confirm exactly what was represented here so I frame it right.]*\n\n- **TACFI process/timing.** *[JON \u2014 confirm match amount + award timeline.]* The mechanism requires a private/non-federal match, which is exactly where a $750K commitment does double duty: it funds Flight 2 and helps anchor the match that unlocks the larger award.\n\n- **Timing / what the $750K does.** entX's $400K completes a portion, but full build + integration + fly for Flight 2 is ~$1.1M. The $750K is the bridge that gets the vehicle to its second launch, repaid from Flight 2 payload sales by March 30, 2027.\n\n- **Flight 1 capacity.** *[JON \u2014 confirm remaining capacity on Flight 1 / whether entX filled it.]*\n\nEasiest path is probably 15 minutes by phone this week to pick the structure PaceZero wants, then I'll get you a term summary to book. Let me know what works.\n\nBest regards,\n\nJohn\n\nJohn Quinn\nCofounder and CEO\nExos Aerospace Systems & Technologies, Inc.\nMob. +1-972-740-8355 \u00b7 www.exosaero.com\n",
     "proposedAction": "On Yes, I finalize with your three fill-ins and it's ready to go out over your signature to mike@tradevector.com. Use the note field to change any structure, the carry framing, or wording \u2014 or drop the fill-ins in and I'll slot them.",
     "type": "yesno",
@@ -38289,8 +38554,23 @@
         "basis": [
           "id:D-7281788"
         ]
+      },
+      {
+        "message_id": "<27e06387639db5a0f83b77363b57dc14@pm.me>",
+        "date": "2026-09-14T17:15:36+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinn@exosaero.com"
+        ],
+        "subject": "Re: update, Exo update",
+        "basis": [
+          "id:D-7281788"
+        ]
       }
-    ]
+    ],
+    "sent": true,
+    "sent_date": "2026-09-11"
   },
   {
     "id": "D-7281789",
@@ -38846,7 +39126,7 @@
   {
     "id": "D-7281806",
     "created": "2026-09-11T21:15:02.390Z",
-    "updated": "2026-09-11T21:15:02.390Z",
+    "updated": "2026-09-14T13:02:02.459Z",
     "source": "Exo",
     "relatedItem": "Japan Seed Round package (task 828)",
     "title": "Japan Seed \u2014 issuing entity: raise into the Japan K.K. (not the U.S. parent)",
@@ -38860,19 +39140,52 @@
     ],
     "priority": "high",
     "dedupeKey": "japan-seed-issuing-entity-828",
-    "status": "open",
-    "answer": null,
-    "note": "",
-    "answeredAt": null,
+    "status": "answered",
+    "answer": "Closed as duplicate \u2014 already decided.",
+    "note": "Already answered in D-7281807 + D-7281810: the seed issues shares of the US PARENT (Japan investors receive parent-company shares), with all Japan capital DIRECTED to Exos Aerospace Japan K.K., funded via Path A of the =<$10M Reg D 504. This decision re-asked (and contradicted) that answer. Closed as duplicate 2026-09-14 per Jon; unblocks task 828.",
+    "answeredAt": "2026-09-14T13:02:02.459Z",
     "agentClass": "",
     "correlationId": "",
     "approver": "",
-    "assignedTo": ""
+    "assignedTo": "",
+    "answeredBy": "Decisions Daily Update",
+    "email_activity": [
+      {
+        "message_id": "<2ca15857fdeda59ed40997c1ba7cddce@pm.me>",
+        "date": "2026-09-14T13:28:55+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?CORRECTED_=E2=80=94_Japan_Seed_answers_doc_(US-parent_structure?= =?utf-8?q?;_CFIUS_gate_flagged)?=",
+        "basis": [
+          "id:D-7281806",
+          "id:D-7281808",
+          "id:D-7281809"
+        ]
+      },
+      {
+        "message_id": "<822931268809b1888c7456087632d1f8@pm.me>",
+        "date": "2026-09-18T05:14:42+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "toshihisa@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?Mission_Control_Task_#828_=E2=80=94_Japan_Seed_Round_full_packa?= =?utf-8?q?ge?=",
+        "basis": [
+          "id:D-7281806",
+          "id:D-7281807",
+          "id:D-7281809"
+        ]
+      }
+    ]
   },
   {
     "id": "D-7281807",
     "created": "2026-09-11T21:15:02.448Z",
-    "updated": "2026-09-11T21:15:02.448Z",
+    "updated": "2026-09-14T12:57:39.062Z",
     "source": "Exo",
     "relatedItem": "Japan Seed Round package (task 828)",
     "title": "Japan Seed \u2014 share class: common-only ordinary shares (Class A Seed as fallback)",
@@ -38886,19 +39199,37 @@
     ],
     "priority": "high",
     "dedupeKey": "japan-seed-share-class-828",
-    "status": "open",
-    "answer": null,
-    "note": "",
-    "answeredAt": null,
+    "status": "answered",
+    "answer": "\ud83d\udcdd Instruction",
+    "note": "Revise to common shares issued in the US company and potential investors for funds to apply to the KK must request details via documented email.",
+    "answeredAt": "2026-09-14T12:57:39.062Z",
     "agentClass": "",
     "correlationId": "",
     "approver": "",
-    "assignedTo": ""
+    "assignedTo": "",
+    "answeredBy": "John Quinn",
+    "email_activity": [
+      {
+        "message_id": "<822931268809b1888c7456087632d1f8@pm.me>",
+        "date": "2026-09-18T05:14:42+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "toshihisa@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?Mission_Control_Task_#828_=E2=80=94_Japan_Seed_Round_full_packa?= =?utf-8?q?ge?=",
+        "basis": [
+          "id:D-7281806",
+          "id:D-7281807",
+          "id:D-7281809"
+        ]
+      }
+    ]
   },
   {
     "id": "D-7281808",
     "created": "2026-09-11T21:15:02.498Z",
-    "updated": "2026-09-11T21:15:02.498Z",
+    "updated": "2026-09-14T13:02:02.459Z",
     "source": "Exo",
     "relatedItem": "Japan Seed Round package (task 828)",
     "title": "Japan Seed \u2014 BLK3 custody path: bailment -> export-gated operating lease -> reversion to Exos US",
@@ -38912,19 +39243,37 @@
     ],
     "priority": "med",
     "dedupeKey": "japan-seed-vehicle-custody-828",
-    "status": "open",
-    "answer": null,
-    "note": "",
-    "answeredAt": null,
+    "status": "answered",
+    "answer": "Confirmed per standing ITAR / ownership policy.",
+    "note": "BLK3 remains Exos-US-owned and ITAR-controlled - bailment / Exos-operated wet lease now, export-gated operating lease to Japan later, reversion to Exos US on retirement or exit. Standing Exos policy, not a new commitment. Recorded + closed 2026-09-14 per Jon's directive to clear Japan-seed duplicates; reopen if a different structure is desired.",
+    "answeredAt": "2026-09-14T13:02:02.459Z",
     "agentClass": "",
     "correlationId": "",
     "approver": "",
-    "assignedTo": ""
+    "assignedTo": "",
+    "answeredBy": "Decisions Daily Update",
+    "email_activity": [
+      {
+        "message_id": "<2ca15857fdeda59ed40997c1ba7cddce@pm.me>",
+        "date": "2026-09-14T13:28:55+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?CORRECTED_=E2=80=94_Japan_Seed_answers_doc_(US-parent_structure?= =?utf-8?q?;_CFIUS_gate_flagged)?=",
+        "basis": [
+          "id:D-7281806",
+          "id:D-7281808",
+          "id:D-7281809"
+        ]
+      }
+    ]
   },
   {
     "id": "D-7281809",
     "created": "2026-09-11T21:15:02.545Z",
-    "updated": "2026-09-11T21:15:02.545Z",
+    "updated": "2026-09-14T13:49:18.320Z",
     "source": "Exo",
     "relatedItem": "Japan Seed Round package (task 828)",
     "title": "Japan Seed \u2014 set seed size & pre-money valuation for Tokyo (currently TBD in the one-pager)",
@@ -38938,19 +39287,52 @@
     ],
     "priority": "high",
     "dedupeKey": "japan-seed-size-valuation-828",
-    "status": "open",
-    "answer": null,
+    "status": "answered",
+    "answer": "Keep TBD \u2014 walk investors through in person",
     "note": "",
-    "answeredAt": null,
+    "answeredAt": "2026-09-14T13:49:18.320Z",
     "agentClass": "",
     "correlationId": "",
     "approver": "",
-    "assignedTo": ""
+    "assignedTo": "",
+    "email_activity": [
+      {
+        "message_id": "<2ca15857fdeda59ed40997c1ba7cddce@pm.me>",
+        "date": "2026-09-14T13:28:55+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?CORRECTED_=E2=80=94_Japan_Seed_answers_doc_(US-parent_structure?= =?utf-8?q?;_CFIUS_gate_flagged)?=",
+        "basis": [
+          "id:D-7281806",
+          "id:D-7281808",
+          "id:D-7281809"
+        ]
+      },
+      {
+        "message_id": "<822931268809b1888c7456087632d1f8@pm.me>",
+        "date": "2026-09-18T05:14:42+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "toshihisa@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?Mission_Control_Task_#828_=E2=80=94_Japan_Seed_Round_full_packa?= =?utf-8?q?ge?=",
+        "basis": [
+          "id:D-7281806",
+          "id:D-7281807",
+          "id:D-7281809"
+        ]
+      }
+    ],
+    "answeredBy": "John Quinn"
   },
   {
     "id": "D-7281810",
     "created": "2026-09-12T12:20:42.259Z",
-    "updated": "2026-09-12T12:20:42.259Z",
+    "updated": "2026-09-14T12:55:53.953Z",
     "source": "Exo",
     "relatedItem": "",
     "title": "Exos Aerospace Japan \u2014 funding path: US Reg D 504 vs. Japan FIEA raise (your 504 ask)",
@@ -38966,19 +39348,20 @@
     ],
     "priority": "high",
     "dedupeKey": "japan-funding-path-504-vs-fiea",
-    "status": "open",
-    "answer": null,
-    "note": "",
-    "answeredAt": null,
+    "status": "answered",
+    "answer": "\ud83d\udcdd Instruction",
+    "note": "Path A (fund the K.K. from the Series A slice) of the 504 Reg D that will not exceed $10M and all Japan Capital raised with be directed to the Japan K.K.  Japan Investors will get shares in the parent company and be limited",
+    "answeredAt": "2026-09-14T12:55:53.953Z",
     "agentClass": "",
     "correlationId": "",
     "approver": "",
-    "assignedTo": ""
+    "assignedTo": "",
+    "answeredBy": "John Quinn"
   },
   {
     "id": "D-7281811",
     "created": "2026-09-12T13:30:14.823Z",
-    "updated": "2026-09-12T13:30:14.823Z",
+    "updated": "2026-09-14T13:48:55.522Z",
     "source": "Exo (legacy triage)",
     "relatedItem": "",
     "title": "Legacy backlog triage \u2014 Batch 4 (25 items, 18 left after)",
@@ -38992,19 +39375,20 @@
     ],
     "priority": "low",
     "dedupeKey": "legacy-triage-batch-4",
-    "status": "open",
-    "answer": null,
+    "status": "answered",
+    "answer": "Apply my recommendations",
     "note": "",
-    "answeredAt": null,
+    "answeredAt": "2026-09-14T13:48:55.522Z",
     "agentClass": "",
     "correlationId": "",
     "approver": "",
-    "assignedTo": ""
+    "assignedTo": "",
+    "answeredBy": "John Quinn"
   },
   {
     "id": "RSI-F277F4",
     "created": "2026-09-14T01:00:14Z",
-    "updated": "2026-09-14T01:00:14Z",
+    "updated": "2026-09-14T13:47:19.624Z",
     "source": "Weekly RSI",
     "title": "Weekly CEO Prioritization Review \u2014 2026-09-13",
     "question": "This week: 55% of top-scored work moved, 70 overdue items, 12 score-vs-human divergences, cron issues flagged, \u26a0\ufe0f 3 self-audit issue(s). Approve applying the proposed Mission-Score weight tuning next week?",
@@ -39017,12 +39401,69 @@
     ],
     "priority": "medium",
     "dedupeKey": "rsi-2026-09-13",
-    "status": "open",
-    "answer": null,
+    "status": "answered",
+    "answer": "Yes \u2014 apply proposed tuning",
     "note": "",
-    "answeredAt": null,
+    "answeredAt": "2026-09-14T13:47:19.624Z",
     "assignedTo": "jquinn@exosaero.com",
-    "approver": "jquinn@exosaero.com"
+    "approver": "jquinn@exosaero.com",
+    "answeredBy": "John Quinn"
+  },
+  {
+    "id": "D-7281812",
+    "created": "2026-09-14T07:30:00.000Z",
+    "updated": "2026-09-14T13:48:35.836Z",
+    "source": "NCE BLK3 Build Agent",
+    "relatedItem": "New Mexico LEDA (Local Economic Development Act) \u2014 Spaceport America Job Creators Fund",
+    "title": "New Mexico LEDA expression of interest \u2014 file before Sept 26 Spaceport America Open House?",
+    "question": "Authorize filing the New Mexico LEDA expression of interest (Sierra County as local-government co-applicant) for BLK3 build-out jobs at Spaceport America? This has rolled unanswered for 14 straight daily cycles (first flagged 2026-08-31) with no task or Decision forcing a response \u2014 same root-cause pattern already fixed for the Utah RFI (D-7281799) and Edgar/Butte close-out (D-7281800) on 9/11.",
+    "context": "LEDA is a rolling, non-competitive, performance-based NM econ-dev program: state certifies job creation at/in support of Spaceport America, then pays out (no upfront cash). Exos already has an active tenant relationship at Spaceport America (existing launch site), which is a fast-path fit \u2014 SpinLaunch got M LEDA (2020) and BlackVe got .5M LEDA (2026) under the same program. Draft is ready: drafts/NM_LEDA_Expression_of_Interest.md (revised to name Sierra County, not Albuquerque, as local-government co-applicant). Spaceport America is hosting its 20th Anniversary Open House on Sept 26, 2026 (9AM-1PM, Truth or Consequences, NM) \u2014 filing before then sets up a natural in-person follow-on with NM EDD / Sierra County contacts who are likely to attend. This has no hard external deadline (LEDA applications are rolling), but the Sept 26 Open House is a real, time-boxed relationship window that closes if unfiled.",
+    "proposedAction": "Reply with: (1) Go \u2014 file the LEDA expression of interest now, ahead of Sept 26, or (2) Not now \u2014 hold this track, or (3) Send me the draft to review first.",
+    "type": "choice",
+    "options": [
+      "Go \u2014 file it now",
+      "Hold \u2014 not now",
+      "Send me the draft first"
+    ],
+    "priority": "normal",
+    "dedupeKey": "nm-leda-authorization-20260914",
+    "status": "answered",
+    "answer": "Send me the draft first",
+    "note": "",
+    "answeredAt": "2026-09-14T13:48:35.836Z",
+    "agentClass": "nce-blk3-build",
+    "correlationId": "",
+    "approver": "",
+    "assignedTo": "",
+    "answeredBy": "John Quinn",
+    "email_activity": [
+      {
+        "message_id": "<368a0dff819caab7623caa94a9b7cae2@pm.me>",
+        "date": "2026-09-14T13:49:42+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?[Ready_to_send_=E2=80=94_from_you]_New_Mexico_LEDA_expression_o?= =?utf-8?q?f_interest_=E2=80=94_file_before_Sept_26_Spaceport_America_Open?= =?utf-8?q?_House=3F?=",
+        "basis": [
+          "id:D-7281812"
+        ]
+      },
+      {
+        "message_id": "<a3e3a137765e5d4f13a3831d94a67d6e@pm.me>",
+        "date": "2026-09-18T07:31:02+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "=?utf-8?q?NM_LEDA_Expression_of_Interest_=E2=80=94_draft_for_your_review_?= =?utf-8?q?(D-7281812)?=",
+        "basis": [
+          "id:D-7281812"
+        ]
+      }
+    ]
   },
   {
     "id": "D-ROUTINE-BATCH",
@@ -39059,34 +39500,6 @@
         "Lquinn@exosaero.com"
       ]
     },
-    "note": "Standing rule applied 2026-09-14: 0 payload \u2192 UTD, 0 BLK3 \u2192 Lizi. Auto-applied every run; not resurfaced to Jon."
-  },
-  {
-    "id": "D-7281812",
-    "created": "2026-09-14T07:30:00.000Z",
-    "updated": "2026-09-14T07:30:00.000Z",
-    "source": "NCE BLK3 Build Agent",
-    "relatedItem": "New Mexico LEDA (Local Economic Development Act) \u2014 Spaceport America Job Creators Fund",
-    "title": "New Mexico LEDA expression of interest \u2014 file before Sept 26 Spaceport America Open House?",
-    "question": "Authorize filing the New Mexico LEDA expression of interest (Sierra County as local-government co-applicant) for BLK3 build-out jobs at Spaceport America? This has rolled unanswered for 14 straight daily cycles (first flagged 2026-08-31) with no task or Decision forcing a response \u2014 same root-cause pattern already fixed for the Utah RFI (D-7281799) and Edgar/Butte close-out (D-7281800) on 9/11.",
-    "context": "LEDA is a rolling, non-competitive, performance-based NM econ-dev program: state certifies job creation at/in support of Spaceport America, then pays out (no upfront cash). Exos already has an active tenant relationship at Spaceport America (existing launch site), which is a fast-path fit \u2014 SpinLaunch got M LEDA (2020) and BlackVe got .5M LEDA (2026) under the same program. Draft is ready: drafts/NM_LEDA_Expression_of_Interest.md (revised to name Sierra County, not Albuquerque, as local-government co-applicant). Spaceport America is hosting its 20th Anniversary Open House on Sept 26, 2026 (9AM-1PM, Truth or Consequences, NM) \u2014 filing before then sets up a natural in-person follow-on with NM EDD / Sierra County contacts who are likely to attend. This has no hard external deadline (LEDA applications are rolling), but the Sept 26 Open House is a real, time-boxed relationship window that closes if unfiled.",
-    "proposedAction": "Reply with: (1) Go \u2014 file the LEDA expression of interest now, ahead of Sept 26, or (2) Not now \u2014 hold this track, or (3) Send me the draft to review first.",
-    "type": "choice",
-    "options": [
-      "Go \u2014 file it now",
-      "Hold \u2014 not now",
-      "Send me the draft first"
-    ],
-    "priority": "normal",
-    "dedupeKey": "nm-leda-authorization-20260914",
-    "status": "open",
-    "answer": "",
-    "note": "",
-    "answeredAt": "",
-    "agentClass": "nce-blk3-build",
-    "correlationId": "",
-    "approver": "",
-    "assignedTo": "",
-    "answeredBy": ""
+    "note": "Standing rule applied 2026-09-18: 0 payload \u2192 UTD, 0 BLK3 \u2192 Lizi. Auto-applied every run; not resurfaced to Jon."
   }
 ]

@@ -76,9 +76,15 @@ def decisions():
 # also spun up a "send/deliver" Decision during that same run, this watcher would email a SECOND,
 # redundant "[Ready to send — from you]" copy. Suppress that: one email-command → one reply. The
 # Decision still lives on the board, so answering it there later still delivers the draft normally.
-EMAIL_CMD_SOURCE_RX = re.compile(r"email[\s\-]?command", re.I)
+# D-7281739 fix #4: canonicalize the source tag to ONE recognizer. The tag had 60+ hand-typed
+# variants ("email cmd", "emailcmd", "e-mail command", "email_command", "exo (email command)") and
+# the old strict regex let several slip through → a redundant second email. Match any e-mail +
+# command/cmd form, with or without separators, so no variant escapes suppression.
+EMAIL_CMD_SOURCE_RX = re.compile(r"e[\-\s]?mail[\s\-_]?(?:command|cmd)", re.I)
 def from_email_command(it):
-    return bool(EMAIL_CMD_SOURCE_RX.search(str(it.get("source", "") or "")))
+    # check both the canonical source field and any legacy origin/basis fields
+    blob = " ".join(str(it.get(k, "") or "") for k in ("source", "origin", "channel", "via"))
+    return bool(EMAIL_CMD_SOURCE_RX.search(blob))
 
 def is_send_request(it):
     if str(it.get("status","")).lower() != "answered": return False

@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 host = "127.0.0.1"
 port = 1025
 user = "jquinnexo@pm.me"
-password = "SPqYBivj98-jyF3RujLKxA"
+password = __import__('json').load(open(__import__('os').path.expanduser('~/.openclaw/secrets.json')))['protonmail_bridge_smtp_password']
 
 from_addr = "jquinn@exosaero.com"
 to_addr = "ACSAbuDhabi@state.gov"

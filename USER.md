@@ -11,7 +11,7 @@
 
 Operator and business development lead across two companies:
 
-- **Exos Aerospace** — suborbital launch, reusable rockets, launch site development
+- **Exos Aerospace** — reusable rockets, launch site development; reusable suborbital today, with an **orbital path via BLK4 Heavy** (funded-future capability)
 - **Scorpius Space Launch Company** — launch vehicle development, propulsion
 
 **Primary levers Jon pulls:**
@@ -45,15 +45,18 @@ Operator and business development lead across two companies:
 
 ### Exos Aerospace
 - One of only **3 U.S.-licensed reusable suborbital launch companies**
+  - **Claim caveat (definitional — hold to this wording):** the "one of only three FAA-licensed reusable rocket launch providers" line is true only under a *precise* definition — FAA-licensed **vertical-takeoff reusable rockets with demonstrated recovery/reflight**. The core three = **SpaceX, Blue Origin, Exos**. Edge cases argued at the margins (do NOT count in the three): **Rocket Lab** (Electron booster recovery/reuse), **Virgin Galactic** (reusable suborbital *spaceplane*, air-launched). Watch item / likely future 4th: **Stoke Space** (fully reusable, not yet licensed). The weekly Policy & Regulatory Watch cron tracks new Part 450 licenses and will flag if the "three" changes. Also open: confirm Exos's §431→Part 450 status on the FAA AST roster (Exos was not on the public transition list).
 - Operates a licensed PSRLV (Precision Suborbital Reusable Launch Vehicle) platform
 - Strategic position: reduces risk and cost for emerging orbital launch companies globally
 - Value prop: proven reusable platform others can use to test, qualify, and derisk hardware before orbital
+- **Orbital roadmap (Jon 2026-09-07): the "Exos never does orbital" limit is removed.** Orbital reach is a **HEAVY configuration of BLK4 — three parallel sticks (3 BLK4 cores), Falcon-Heavy-style**, gated on capital. BLK4 single-stick baseline ≈ 450 km sounding-rocket class; the 3-stick heavy variant is the orbital-reach config. **External-doc guardrail holds:** frame BLK4 / BLK4 Heavy as in-development / the planned orbital path — never claim an operational or flown orbital vehicle. (Jaguar stays deprecated; orbital now routes through BLK4 Heavy.)
 
 ### Scorpius Space Launch Company
 - Holds what is believed to be the **world's only TRL 9 Type 5 cryogenic tank technology demonstrated on the moon**
-- Key applications: reusability, in-space refueling, long-duration cryogenic storage, in-space architecture
+- Key applications: reusability, in-space refueling, long-duration cryogenic storage, in-space architecture, **orbital transfer / orbital mobility (OTV) propellant tank sets**
 - Highly differentiated — no known competitor at this TRL with this heritage
 - Scorpius Type 5 cryo tanks flew as **fuel and LOX tanks on Intuitive Machines Odysseus and Athena lunar missions** — Exos helped enable this demonstration
+- **NEW expansion market (2026-08-28): Orbital Transfer Vehicles.** Scorpius tank sets are the **baseline design for Intuitive Machines' "Nebula" Orbital Transfer Vehicle**, and SSLC **has contracts for those tanks in hand** (per Markus Rufer / SMAD). Same LOX / liquid methane heritage that flew on Odysseus & Athena, now moving from lunar landers into the **orbital mobility market** — which SMAD characterizes as transitioning "from a niche to a massive market opportunity." Materially strengthens the Scorpius growth story and the post-2021 FMV case underpinning Exos's ROFR arbitrage.
 
 ### Exos / Scorpius Ownership Structure
 - Exos owns **18% of Scorpius** with a **right of first refusal on remaining ownership**
@@ -68,7 +71,7 @@ Operator and business development lead across two companies:
 Use of proceeds:
 1. Acquire remaining 82% of Scorpius (exercise ROFR at 2021 basis)
 2. Expand RDRE (Rotating Detonation Rocket Engine) development — hardware path to be down-selected in a program trade study: GTL fully-machined RDRE method vs. NASA MSFC RDRE license (Exos does NOT own the GTL tech; frame as trade-study down-select, never an owned/decided path)
-3. Build BLK4 (next-gen PSRLV) — expanded from prior "another BLK3"
+3. Build BLK4 (next-gen PSRLV) — expanded from prior "another BLK3"; single-stick baseline now, with the **3-stick BLK4 Heavy as the capital-gated orbital-reach configuration**
 4. Working capital / certification / team / contingency
 
 Recommended structure: tranched (~$10M first close + ~$15M milestone-gated second close) with valuation step-ups; layer non-dilutive SBIR/TACFI/Phase III pipeline on top.
@@ -89,6 +92,7 @@ Recommended structure: tranched (~$10M first close + ~$15M milestone-gated secon
 
 Build Exos into a credible, agile aerospace platform anchored on:
 - Reusable suborbital launch
+- **Orbital reach via BLK4 Heavy (3 parallel sticks) — the funded-future orbital path**
 - Flight test & payload services
 - Wet lease rocket capability
 - Workforce training

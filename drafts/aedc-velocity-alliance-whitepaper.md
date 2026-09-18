@@ -26,7 +26,15 @@ Internal Affiliate: Scorpius Space Launch Company
 External Teaming    Starfighters International Inc.
 Partner:            CAGE 1LZT3  |  UEI KHQBUGLMCVU1  |  Kennedy Space Center, FL
                     (Independently registered; Self-Certified Small
-                    Disadvantaged Business and Veteran-Owned Small Business)
+                    Disadvantaged Business and Veteran-Owned Small Business;
+                    above-Mach-2 airborne captive-carry test)
+
+Materials           MATECH (Global Strategic Materials, LLC d/b/a MATECH)
+Subcontractor:      CAGE 1XJY6  |  UEI HPX4PC9TMCV5  |  Westlake Village, CA
+                    (Ultra-high-temperature ceramic matrix composite and
+                    carbon-carbon materials; delivered under Exos CAGE 7EMY6,
+                    DD Form 2345, and CMMC; not an invited partner, no
+                    independent JCP required; executed mutual NDA with Exos)
 
 Point of Contact:   John Quinn, Cofounder & CEO
                     jquinn@exosaero.com  |  +1-972-740-8355
@@ -45,7 +53,13 @@ supplying an above-Mach-2 airborne test capability Exos does not hold. Scorpius
 Space Launch Company is reclassified as an internal Exos affiliate (CAGE 60ZM1)
 performing under Exos's CAGE 7EMY6, DD Form 2345, and CMMC framework, and is not
 relied upon to satisfy the external-partnership requirement. Starfighters, an
-arms-length external partner, satisfies Section 4.0, Part 4.
+arms-length external partner, satisfies Section 4.0, Part 4. MATECH (Global
+Strategic Materials, LLC d/b/a MATECH, CAGE 1XJY6) participates as an internal
+materials subcontractor to Exos, supplying ultra-high-temperature ceramic
+matrix composite and carbon-carbon materials Exos does not produce, delivered
+under Exos's CAGE 7EMY6, DD Form 2345, and CMMC framework; like Scorpius, it is
+not an external partner and is not relied upon to satisfy the Part 4
+requirement.
 
 EXECUTIVE SUMMARY
 ================================================================================
@@ -68,9 +82,14 @@ internal affiliate Scorpius Space Launch Company) and advanced propulsion
 engineering, directly applicable to AEDC cryogenic and propulsion test-stand
 modernization. Exos leads a capability team that adds above-Mach-2 airborne
 captive-carry test through external teaming partner Starfighters International
-Inc., and offers the Alliance, at no cost, bonus in-space propellant transfer
-flight research that also advances an applied-for NASA orbital experiment. This
-whitepaper responds to Section 4.0, Parts 1 through 4.
+Inc., and draws ultra-high-temperature ceramic matrix composite and carbon-carbon
+materials — for extreme-environment test articles, hypersonic thermal
+protection, and reusable propulsion hot-section and rotating-detonation
+hardware — from materials subcontractor MATECH under Exos's own compliance
+framework. Exos further offers the
+Alliance, at no cost, bonus in-space propellant transfer flight research that
+also advances an applied-for NASA orbital experiment. This whitepaper responds
+to Section 4.0, Parts 1 through 4.
 
 1.0  Mandatory Certification Requirements (Part 1)
 ================================================================================
@@ -168,6 +187,11 @@ CRITERIA 2 — CYBERSECURITY MATURITY MODEL CERTIFICATION (CMMC)
 4.1  Identified Partner And Unique Capabilities (Part 4.a)
 --------------------------------------------------------------------------------
 
+    Exos's external teaming partner is Starfighters International Inc., an
+    independently registered small business contributing a capability that
+    neither Exos nor a traditional defense contractor holds: above-Mach-2
+    airborne test.
+
     Partner:    Starfighters International Inc. (CAGE 1LZT3; UEI KHQBUGLMCVU1),
                 Kennedy Space Center, FL. Independently registered and active,
                 Self-Certified Small Disadvantaged Business and Veteran-Owned
@@ -191,12 +215,26 @@ CRITERIA 2 — CYBERSECURITY MATURITY MODEL CERTIFICATION (CMMC)
     Starfighters will independently satisfy the Alliance's CMMC and JCP
     requirements as a condition of its participation.
 
+    MATERIALS SUBCONTRACTOR (SUPPORTING CAPABILITY)
+
+    Exos additionally draws ultra-high-temperature ceramic matrix composite and
+    carbon-carbon materials from its materials subcontractor MATECH (Global
+    Strategic Materials, LLC d/b/a MATECH; CAGE 1XJY6; UEI HPX4PC9TMCV5), for
+    extreme-environment test articles, hypersonic thermal protection, and
+    reusable propulsion hot-section and rotating-detonation hardware, including
+    proprietary fast-densification CMC and carbon-carbon methods for the
+    2,200 - 6,500 °F regime. MATECH performs under Exos's CAGE 7EMY6, DD Form
+    2345, and CMMC framework; it is a subcontractor, not an external partner,
+    and requires no independent JCP or CMMC.
+
 4.2  Significant Participation Rationale (Part 4.b, Note 3)
 --------------------------------------------------------------------------------
 
     On future AEDC projects similar in scope to the propulsion and hazardous
-    high-speed test work described in Section 2.3, Starfighters participates
-    to a significant extent, satisfying Note 3 as follows:
+    high-speed test work described in Section 2.3, the external teaming partner
+    Starfighters participates to a significant extent, satisfying Note 3.
+
+    STARFIGHTERS (airborne high-speed test):
 
     - ROLE / INVOLVEMENT (a): Starfighters plans, integrates, and flies the
       airborne high-speed test campaigns; the airborne capability is delivered
@@ -211,13 +249,14 @@ CRITERIA 2 — CYBERSECURITY MATURITY MODEL CERTIFICATION (CMMC)
     - CONTROL (e): Starfighters holds operational control of the airborne test
       execution, airworthiness, and range conduct.
 
-    Both significant participants in the resulting transactions, Exos and
-    Starfighters, are small businesses and nontraditional defense contractors,
-    satisfying 10 U.S.C. 4022. Scorpius is an internal Exos affiliate, not an
-    invited partner or independent participant; it performs under Exos's CAGE
-    7EMY6, DD Form 2345, and CMMC framework, and therefore requires no separate
-    JCP or CMMC certification of its own. The external teaming partner requiring
-    independent JCP and CMMC is Starfighters, which will provide its own.
+    The significant participants in the resulting transactions — Exos and
+    Starfighters — are small businesses and nontraditional defense contractors,
+    satisfying 10 U.S.C. 4022. Scorpius (internal affiliate) and MATECH
+    (materials subcontractor) are not invited partners or independent
+    participants; they perform under Exos's CAGE 7EMY6, DD Form 2345, and CMMC
+    framework, and therefore require no separate JCP or CMMC certification of
+    their own. The external teaming partner requiring independent JCP and CMMC
+    is Starfighters, which will provide its own.
 
 4.3  Innovation Differentiator — No-Cost In-Space Propellant Transfer Research
 --------------------------------------------------------------------------------

@@ -14,7 +14,7 @@ mkdir -p "$LOG_DIR"
 # is pushed to the Decisions inbox so it lands in front of him. dedupeKey keeps a
 # still-pending item from re-posting every night until it's answered/resolved.
 DECISIONS_API="http://localhost:8080/api/decisions/ingest"
-EXO_TOKEN="33bad1599d6fdc99af6c10026cdab10c46c5a7bbcbbff18b"
+EXO_TOKEN="$(cat /Users/exomac/.openclaw/workspace/mission-control/data/.decisions-token)"
 
 # post_decision <dedupeKey> <priority> <title> <question> <proposedAction>
 post_decision() {

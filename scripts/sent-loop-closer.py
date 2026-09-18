@@ -36,7 +36,7 @@ from datetime import datetime, timedelta
 
 IMAP_HOST, IMAP_PORT = '127.0.0.1', 1143
 EMAIL_USER = 'jquinnexo@pm.me'
-EMAIL_PASS = 'SPqYBivj98-jyF3RujLKxA'
+EMAIL_PASS = __import__('json').load(open(__import__('os').path.expanduser('~/.openclaw/secrets.json')))['protonmail_bridge_smtp_password']
 SELF_DOMAIN = 'exosaero.com'                 # Jon's send identity
 LOOKBACK_DAYS = 60
 WS = os.path.expanduser('~/.openclaw/workspace')

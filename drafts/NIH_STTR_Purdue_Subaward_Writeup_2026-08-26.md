@@ -1,3 +1,5 @@
+> **[SUPERSEDED 2026-09-03 — Collicott dropped from NIH STTR PA-27-102.]** Current structure: Exos Aerospace (small-business applicant) + **Purdue University as the sole Research Institution**, **Prof. Estelle (Sunghee) Park = Contact PD/PI** and sole biomedical lead; science = **human intestinal organoid chips** (enteroids / OCTOPUS). UW / Ed Kelly (out 8/31) and Prof. Steven Collicott (dropped 9/3) are no longer on this application. Retained for record only — do not use for the submission.
+
 # Exos × Purdue — NIH STTR Subaward Write-Up
 ### Suborbital experiment methods (Collicott) + optional BME co-investigator (Park)
 

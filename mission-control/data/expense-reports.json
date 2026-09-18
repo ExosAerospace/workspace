@@ -1,17 +1,95 @@
 [
   {
+    "id": "EXP-MU4IYD5B",
+    "submitter_email": "jquinn@exosaero.com",
+    "submitter_name": "John Quinn",
+    "manager_email": "dmitchell@exosaero.com",
+    "manager_name": "David Mitchell",
+    "amount": 442.4,
+    "purpose": "NASA meeting",
+    "period": "9-14 to 9-16 2026",
+    "line_items": [
+      {
+        "date": "2026-09-14",
+        "category": "Mileage",
+        "description": "NASA meeting go",
+        "location": "Houston TX",
+        "miles": 316,
+        "amount": 221.2
+      },
+      {
+        "date": "2026-09-15",
+        "category": "Mileage",
+        "description": "NASA meeting return",
+        "location": "McKinney TX",
+        "miles": 316,
+        "amount": 221.2
+      }
+    ],
+    "file": null,
+    "screen": {
+      "flags": [],
+      "flag_count": 0,
+      "mileage_total_miles": 632,
+      "mileage_total_usd": 442.4,
+      "mileage_rate": 0.7
+    },
+    "submitted_at": "2026-09-16T19:59:42.303Z",
+    "state": "approved",
+    "approval_task_id": 2902,
+    "payment_task_id": [
+      2932
+    ]
+  },
+  {
+    "id": "EXP-MST17X06",
+    "submitter_email": "snorsworthy@exosaero.com",
+    "submitter_name": "Steve Norsworthy",
+    "manager_email": "jquinn@exosaero.com",
+    "manager_name": "John Quinn",
+    "amount": 119,
+    "purpose": "Drive to the Ft Worth Museum of Science and History",
+    "period": "Week ending 25 July 2026",
+    "line_items": [
+      {
+        "date": "2016-07-25",
+        "category": "Mileage",
+        "description": "Musuem trip",
+        "location": "",
+        "miles": 170,
+        "amount": 119
+      }
+    ],
+    "file": null,
+    "screen": {
+      "flags": [],
+      "flag_count": 0,
+      "mileage_total_miles": 170,
+      "mileage_total_usd": 119,
+      "mileage_rate": 0.7
+    },
+    "submitted_at": "2026-08-14T14:18:03.895Z",
+    "state": "paid",
+    "approval_task_id": 2027,
+    "payment_task_id": [
+      2030
+    ]
+  },
+  {
     "id": "EXP-MSNT1K5L",
     "submitter_email": "lquinn@exosaero.com",
     "submitter_name": "Lizi Quinn",
     "manager_email": "jquinn@exosaero.com",
     "manager_name": "John Quinn",
-    "amount": 90.47999999999999,
+    "amount": 90.48,
     "purpose": "Arclabs - Fort Worth",
     "period": "Week ending Aug 16, 2026",
     "file": "/uploads/expenses/EXP-MSNT1K5L_Exos_Expense_Report_8.10.26.xlsx",
     "submitted_at": "2026-08-10T22:30:19.616Z",
-    "state": "submitted",
+    "state": "paid",
     "approval_task_id": 1966,
-    "payment_task_id": null
+    "payment_task_id": [
+      1967
+    ]
   }
 ]

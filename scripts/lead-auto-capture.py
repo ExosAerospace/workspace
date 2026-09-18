@@ -201,6 +201,17 @@ def main():
         else:
             cid = screate(rec); log(f"LEAD captured: {rec['name']} <{addr}> (contact #{cid})")
             print(f"  + LEAD #{cid}: {rec['name']} <{addr}>" + (f" ({org})" if org else ""))
+            # real-time DD screen of the new company (fire-and-forget; never blocks/breaks capture)
+            try:
+                _dom = addr.split("@")[-1].lower().strip()
+                _free = {"gmail.com","yahoo.com","hotmail.com","outlook.com","proton.me","pm.me","icloud.com","aol.com"}
+                if _dom and "." in _dom and _dom not in _free:
+                    import subprocess as _sp
+                    _sp.Popen(["python3", os.path.join(os.path.dirname(os.path.abspath(__file__)), "crm_dd_engine.py"),
+                               "--domain", _dom, "--company", org or _dom],
+                              stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+            except Exception:
+                pass
         existing.add(addr); captured += 1
     m.logout()
     if not dry:

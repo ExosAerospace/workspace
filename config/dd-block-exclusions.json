@@ -1,4 +1,28 @@
 {
-  "exclude_domains": [],
-  "note": "leagueadvisors.com BLOCKED (John 2026-09-02). scentience.ai CLEARED to pass in DD registry (false positive) - no longer a fail, so no exclusion needed."
+  "exclude_domains": [
+    "ge.com",
+    "anduril.com",
+    "planet.com",
+    "umbra.space",
+    "orbital.inc",
+    "aero.org",
+    "exelisinc.com",
+    "stanford.edu",
+    "brown.edu",
+    "columbia.edu",
+    "colorado.edu",
+    "bcm.edu",
+    "kingston.ac.uk",
+    "firstcitizens.com",
+    "insideapple.apple.com",
+    "apple.com",
+    "higginbotham.net",
+    "midlandtxedc.com",
+    "certbuddyai.com",
+    "blinkmfg.com",
+    "01dd3563.bbded",
+    "navy.mi",
+    "proton.me>"
+  ],
+  "note": "leagueadvisors.com BLOCKED (John 2026-09-02) - do NOT exclude. scentience.ai CLEARED to pass in DD registry (false positive). 2026-09-04 (Exo, per Steve N IT-002 implementation): added SAM.gov name-match FALSE POSITIVES (GE, Anduril, Planet, Umbra, Orbital, Aerospace Corp, universities, First Citizens bank, Apple, Higginbotham broker, Midland EDC + CertBuddyAI partners, Blink) and malformed parse artifacts (01dd3563.bbded, navy.mi, proton.me>) so the DD-Blocked Senders auto-delete rule cannot silently trash legitimate customer/partner/gov/edu mail. Flag to Jon: DD engine SAM name-matching needs a tighter match threshold; malformed domains indicate a registry-ingest parsing bug."
 }

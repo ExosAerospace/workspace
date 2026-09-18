@@ -49,4 +49,8 @@ Exos becomes the **integrator that lets small companies bid like a prime** — F
 - **National suborbital test & qualification enterprise:** Exos (licensed reusable platform + flight ops) + Starfighters (flight-test / underutilized-company consortium) + CDT (composites) + Atomus (CMMC) + CertBuddyAI (Part 450/420). → a test-enterprise prime.
 - **Hypersonic materials-to-flight-test:** Exos (integrator + suborbital test platform) + MATECH (C/ZrOC, HfC fiber) + Super Carbon (UHDCC) + Scorpius. → materials qualification through flight, as one prime.
 
-*Exos Aerospace Systems & Technologies, Inc. — Integrator / Prime. Draft model v1, 2026-08-13.*
+---
+### Partner bench — composite structures & tooling (domestic / DIB)
+- **Southwest Composite Works, Inc. (SWC)** — Albuquerque, NM. ITAR-registered (2022) carbon-fiber/advanced-composites + in-house tooling & CNC machining shop; 30-yr heritage (Southwest Pattern Works est. 1994; composites arm 2014), ~15 employees, 1700+ projects across aerospace/UAV/medical/recreation/industrial, Sandia National Lab ties. **Consortium role:** FFP composite-structures & production-tooling scope for BLK3/BLK4; second-source / surge bench alongside Scorpius (Torrance) and Hybron. **Vehicle:** Teaming Agreement + 2-page master (MNDA + IP split + non-circumvention) → FFP subcontract; JV only if a specific DIB-scale set-aside requires it. **License gap:** none of the IP kind — SWC is a build-to-print fab capability, not an IP licensor; the "gap" it fills is domestic composite manufacturing *capacity/scale*. No export license needed (US↔US); TAA/§126.7 only if scope touches Exos Aerospace Italia or foreign end-users. **DD:** PASS 2026-08-18 (GAP-7dfab747 / /dossier.html). Qualify capacity, AS9100/Nadcap, CAGE/UEI before load-bearing scope. Fills capability-gap GAP-7dfab747.
+
+*Exos Aerospace Systems & Technologies, Inc. — Integrator / Prime. Draft model v1, 2026-08-13. SWC added 2026-08-18.*

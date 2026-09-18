@@ -239,6 +239,20 @@ function openErp(file, opts = {}) {
       return db.get('SELECT * FROM ncr WHERE id = ?', id);
     },
 
+    // ---- Timekeeping interface (BambooHR DCAA time -> ERP time_entry, read-through, audited) ----
+    upsertTimeEntry(t) {
+      if (!t || !t.id) throw new Error('upsertTimeEntry requires id');
+      const id = String(t.id);
+      const before = db.get('SELECT * FROM time_entry WHERE id = ?', id) || null;
+      writeAudited('time_entry', id, before ? 'update' : 'insert', before, t, () => {
+        db.run('INSERT INTO time_entry (id,user_id,task_id,project_id,wbs_id,work_date,hours,labor_class,notes,approved_by,approved_at,locked,raw_json) ' +
+          'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ' +
+          'ON CONFLICT(id) DO UPDATE SET user_id=excluded.user_id, task_id=excluded.task_id, project_id=excluded.project_id, wbs_id=excluded.wbs_id, work_date=excluded.work_date, hours=excluded.hours, labor_class=excluded.labor_class, notes=excluded.notes, approved_by=excluded.approved_by, approved_at=excluded.approved_at, locked=excluded.locked, raw_json=excluded.raw_json',
+          id, t.user_id ?? null, t.task_id ?? null, t.project_id ?? null, t.wbs_id ?? null, t.work_date ?? null, t.hours ?? null, t.labor_class ?? null, t.notes ?? null, t.approved_by ?? null, t.approved_at ?? null, t.locked ? 1 : 0, JSON.stringify(t));
+      });
+      return db.get('SELECT * FROM time_entry WHERE id = ?', id);
+    },
+
     // ---- Schedule integration (Teamwork -> ERP: project / task_list / task) ----
     upsertProject(p) {
       if (!p || !p.id) throw new Error('upsertProject requires id');
@@ -446,6 +460,11 @@ function openErp(file, opts = {}) {
     },
     listCdrls(contractId) {
       return db.all('SELECT id,cdrl_number,title,due_date,status FROM deliverable WHERE contract_id = ? ORDER BY due_date', String(contractId));
+    },
+    listWbs(contractId) {
+      return contractId
+        ? db.all('SELECT id,contract_id,parent_id,code,name,budget FROM wbs_element WHERE contract_id = ? ORDER BY code', String(contractId))
+        : db.all('SELECT id,contract_id,parent_id,code,name,budget FROM wbs_element ORDER BY contract_id, code');
     },
     /** Budget-vs-actual cost rollup per WBS: budget (contract), labor HOURS booked (Bamboo/DCAA
      *  time_entry), and material $ committed (po_line → purchase_order.wbs_id). Labor→$ needs the

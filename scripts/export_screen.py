@@ -75,6 +75,30 @@ def is_ally(country):
     return _matches(_norm(country), ALLY_TOKENS)
 
 
+# --- Regional BD ownership: Japan/Asia routes to Toshi (added 2026-08-12) ---
+# Marketable Asian / APAC markets (adversaries like China/N.Korea are already
+# BLOCKED upstream by classify_country, so they never reach ownership).
+ASIA_MARKETS = (
+    "japan", "japanese", "south korea", "korea, south", "korea", "taiwan",
+    "singapore", "india", "indian", "malaysia", "thailand", "indonesia",
+    "philippines", "vietnam", "australia", "new zealand", "asia", "apac",
+    "asia-pacific", "asia pacific",
+)
+REGION_OWNERS = {
+    "asia": "toshihisa@exosaero.com",   # Toshi Kumazawa — Intl BD, Japan/Asia
+}
+
+
+def region_owner(country):
+    """Return the BD owner email for a target's country, or '' for the default
+    (Jon). Japan + Asian/APAC markets route to Toshi. Used by the outreach
+    engines so Japan/Asia payload and Type-5 tank leads auto-assign to him and
+    their Decisions land in his matrix."""
+    if _matches(_norm(country), ASIA_MARKETS):
+        return REGION_OWNERS["asia"]
+    return ""
+
+
 if __name__ == "__main__":
     for t in ["France", "Germany", "Italy", "China", "Russia", "Iran",
               "North Korea", "Cuba", "United States", "Brazil", "", "Unknownistan"]:

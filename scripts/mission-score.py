@@ -266,8 +266,11 @@ def main():
         # CRITICAL overdue escalation (Jon 2026-08-29): a maxed-out task (raw >= 100) that is
         # ALSO overdue breaks above the 100 ceiling into a red-glow tier so it pins to the very
         # top of the board and cannot be missed. Scales 101..130 by how many days overdue.
-        # Blocked tasks are excluded (they're gated, not actionable).
-        if days is not None and days < 0 and raw >= 100 and not blk:
+        # Blocked (decision-gated) tasks are excluded. Critical ALSO fires on a deliberately high
+        # MANUAL priority (>=100): a task the owner explicitly flagged top-priority goes red when
+        # it slips overdue, even if its computed value/strategic score is modest.
+        manual_pri = t.get("priority") or 0
+        if days is not None and days < 0 and not blk and (raw >= 100 or manual_pri >= 100):
             computed = 100 + min(int(-days), 30)
         # Manual override: a `pin:<N>` tag hard-sets the score, beating the computed value
         # (and the blocker downgrade). Explicit human intent wins. The computed score is kept

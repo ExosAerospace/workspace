@@ -146,6 +146,40 @@
       "owner": "Toshihisa Kumazawa",
       "next_action": "Monitor only; heavy export screen before any engagement",
       "description": "Booming private ecosystem (Skyroot, Agnikul) building its own capability → less wet-lease demand; not a treaty ally → ITAR-sensitive. Payload/partnership watch only."
+    },
+    {
+      "id": "APAC-010",
+      "title": "Philippines — PhilSA sovereign suborbital (Perigee partnership)",
+      "country": "Philippines",
+      "type": "Wet-lease / Partnership",
+      "stage": "New Target — watch",
+      "status": "Watch",
+      "value_usd": 0,
+      "value_display": "TBD",
+      "payload_kg": 0,
+      "booked": false,
+      "priority": 30,
+      "owner": "Toshihisa Kumazawa",
+      "source": "auto-scan",
+      "next_action": "Monitor PhilSA suborbital roadmap; scope whether Exos reusable wet-lease/NCE fits their commercial-spaceport stepping-stone. Allied gov → route through John.",
+      "description": "PhilSA laying technical groundwork for indigenous suborbital capability, partnering with South Korea's Perigee Aerospace on its first liquid-fueled sounding rocket as a stepping stone toward a commercial spaceport (Manila Times, 5 Sep 2026). New allied SE-Asia sovereign-suborbital vector; fits the Exos NCE wet-lease thesis. Source: auto-scan."
+    },
+    {
+      "id": "APAC-011",
+      "title": "Japan — reusable/OTV licensing clarity (Space Activities Act amendment)",
+      "country": "Japan",
+      "type": "Regulatory tailwind / Market access",
+      "stage": "New — watch",
+      "status": "Watch",
+      "value_usd": 0,
+      "value_display": "Strategic (market access, non-sale)",
+      "payload_kg": 0,
+      "booked": false,
+      "priority": 33,
+      "owner": "Toshihisa Kumazawa",
+      "source": "auto-scan",
+      "next_action": "Fold into HOSPO wet-lease narrative + Scorpius OTV (Nebula) market-entry story; Japan's third-party-liability framework now explicitly covers reusable LVs & OTVs.",
+      "description": "Japan's House of Representatives passed an amendment to the Space Activities Act extending licensing, safety and third-party-liability requirements to non-satellite rockets — explicitly reusable launch vehicles and orbital transfer vehicles (Japan Earth Observer JEO 19, 2 Sep 2026). Plugs the regulatory gap for reusable + OTV models: de-risks Exos reusable suborbital wet-lease in Japan and clears a path for Scorpius Type-5 cryo OTV tanks (Nebula) into the Japanese market. Source: auto-scan."
     }
   ]
 }

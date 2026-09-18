@@ -1,7 +1,7 @@
 {
  "meta": {
   "title": "Exos Process & Procedures — Master Register",
-  "updated": "2026-09-10",
+  "updated": "2026-09-14",
   "source": "Lizi turnover → Exo (MC management); schema per Exos Procedures Master List",
   "template": "Exos-US Procedure Template",
   "doc_control": "STATUS on each doc; records in the Exos Work Management System (Mission Control / ERP)",
@@ -1302,6 +1302,22 @@
    "remarks": "Non-technical Mission Control usage guide; no CUI or export-controlled content; releasable to international staff. DRAFT pending John Quinn (CEO) approval. Key rule of thumb: use the lightweight description checklist for simple sub-items of one deliverable; use SUBTASKS when children need their own owner, due date, and status that roll up to a parent.",
    "files": [
     "08-security-cui/IT-003_Using_Subtasks_(Work-Breakdown)_in_Mission_Control.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Human Resources",
+   "area_id": "05-human-resources",
+   "procedure": "New-Employee Onboarding Procedure (Integrated — HR/BambooHR + Mission Control)",
+   "doc_no": "EXOS-HR-001-0",
+   "rev": "0",
+   "status": "Pending Approval",
+   "intl_release": "Yes",
+   "ack_required": false,
+   "owner": "Lizi Quinn / Exo",
+   "remarks": "One integrated flow so a hire is processed once, not through two parallel lists. Adding the hire to BambooHR is the trigger: a daily watcher detects the new employee, auto-creates their Mission Control onboarding task (Phases B-E), and emails the HR owner. No ITAR/EAR/CUI in Mission Control or the email intake - that content lives only in SharePoint (GCC High). Confirm the 2022-era HR steps (BBSNV / Preveil / package contents) remain current at approval.",
+   "files": [
+    "05-human-resources/EXOS-HR-001-0_New-Employee_Onboarding_Procedure_(Integrated_—_HR-BambooHR_+_Mission_Control).docx"
    ],
    "file_count": 1
   }

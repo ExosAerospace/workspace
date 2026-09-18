@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-24",
-  "source": "Capability surveys submitted by email to the intake, 2026-07-20/21",
+  "source": "Capability surveys submitted by email to the intake, 2026-07-20/21  | 2026-08-02: ingested Phil + Kyle surveys (had landed in Proton inbox Jul 29, not captured).",
   "scale": "1-5 (5=expert/lead it, 1=none); ranges reduced to midpoint, 0=left blank",
   "domains": [
     "propulsion",
@@ -110,10 +110,34 @@
     "peaton@exosaero.com": {
       "name": "Phil Eaton",
       "role": "BLK3 Vehicle Engineering & Flight Test",
-      "status": "pending_ratings",
-      "ratings": {},
-      "domain_by_assignment": "BLK3 vehicle engineering & flight test \u2014 recovery methodology, integration flight test, ~12-mo build, payload vehicle interface",
-      "constraint": "Functional-domain ratings not yet returned ('I will work on it'). Owns BLK3 flight-hardware by assignment; treat as primary for that domain until ratings land."
+      "status": "complete",
+      "ratings": {
+        "propulsion": 5,
+        "structures_tanks": 5,
+        "avionics_gnc": 3,
+        "flight_software": 2,
+        "test_integration_launchops": 5,
+        "manufacturing_supply": 5,
+        "business_development": 2,
+        "proposals_contracts": 1,
+        "finance_accounting": 2,
+        "regulatory_faa_export": 4,
+        "program_management": 3,
+        "investor_relations": 0,
+        "it_automation": 0
+      },
+      "constraint": "Rated 11 of 13 domains (investor_relations & it_automation not in his list \u2014 says he 'can support IT very well' but does not want to be the go-to for IT or sales). Health limits extended field time. Owns BLK3 flight-hardware. Wants a team of young engineers + design/propulsion focus.",
+      "superpowers": [
+        "Design of components/subsystems/systems to work together (broader than propulsion)",
+        "Proving rocket engines \u2014 25+ yrs, increasing success",
+        "Budgeting & negotiating finance/payment terms when things get tough (uses reluctantly)"
+      ],
+      "special": [
+        "25+ yr rocket-engine design & proving; can advance RDRE state of the art + design an RDRE test stand with deflagration-vs-detonation sensor suite",
+        "Runs/programs CNC machines",
+        "Range safety / large hobby-rocket event ops; could be Pad Boss (not Pad 1)"
+      ],
+      "capacity_hrs_week": "~40 (not interested in more); limited travel OK; NO extended field work (health, last 5 yrs)"
     },
     "lquinn@exosaero.com": {
       "name": "Lizi Quinn",
@@ -139,15 +163,43 @@
         "Investor relations"
       ],
       "constraint": "Strong on BD (4) and investor relations (4); low technical. Owns CRM/social. Wants to grow proposals/finance/regulatory."
+    },
+    "kballard@exosaero.com": {
+      "name": "Kyle Ballard",
+      "role": "Finance / Controller (part-time)",
+      "status": "complete",
+      "ratings": {
+        "propulsion": 1,
+        "structures_tanks": 1,
+        "avionics_gnc": 1,
+        "flight_software": 1,
+        "test_integration_launchops": 2,
+        "manufacturing_supply": 2,
+        "business_development": 2,
+        "proposals_contracts": 1,
+        "finance_accounting": 5,
+        "regulatory_faa_export": 1,
+        "program_management": 3,
+        "investor_relations": 2,
+        "it_automation": 2
+      },
+      "superpowers": [
+        "Controller / CFO functions",
+        "Tax preparation & planning"
+      ],
+      "special": [
+        "Finance & tax across industries: tax accounting, economic development, banking, livestock production, consumer packaged goods"
+      ],
+      "capacity_hrs_week": "2-3 (remote, at current engagement); happy to pitch in on tests/launches",
+      "constraint": "Part-time (2-3 hrs/wk). Clear finance lead (Finance 5) \u2014 route Finance/QuickBooks/tax there. Wants to cross-train on AI tools. Owns the QuickBooks API-key task."
     }
   },
   "missing_surveys": [
-    "rblink@exosaero.com",
-    "kballard@exosaero.com"
+    "rblink@exosaero.com"
   ],
   "issues_surfaced": [
     "Phil Eaton reports copying exosmc@proton.me does NOT create tasks/updates in Mission Control (tested 24h, nothing appeared) \u2014 email->task capture broken for him.",
     "Mike Talley's received survey email was TRUNCATED (Q5 capacity cut off) \u2014 survey-distribution truncation bug."
   ],
-  "updated": "2026-07-27"
+  "updated": "2026-08-02"
 }

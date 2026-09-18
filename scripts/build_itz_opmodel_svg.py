@@ -37,7 +37,7 @@ rect(884,gy-4,132,32,WHITE,rx=7);txt(950,gy+18,"ITZ container",13,NAVY,"bold","m
 arrow(1042,gy,1118,None)
 rect(1120,gy-28,210,56,WHITE,rx=10,stroke=LINE,sw=2)
 txt(1225,gy-4,"Launches",17,INK,"bold","middle");txt(1225,gy+15,"+ research data",15,MUTE,"normal","middle")
-txt(88,300,"Wet-lease/charter on-ramp proven at home in MONTANA. First two U.S. Nodes — Spaceport America (NM) + Montana — both need the ITZ for inbound international payloads.",15,MUTE)
+txt(88,300,"On-ramp proven at home in Montana. First two U.S. launch sites — Spaceport America (New Mexico) + Montana Spaceport & Test Range — both need the ITZ for inbound international payloads.",15,MUTE)
 
 # BAND 2 — DE-RISK VALUE
 rect(60,330,1480,178,PANEL);rect(60,330,6,178,ORANGE,rx=0)
@@ -64,7 +64,7 @@ cellW=98;rowH=32
 for j,m in enumerate(months):
     txt(330+j*cellW+cellW/2,cy+74,m,17,MUTE,"normal","middle")
 rows=[("Spaceport America · US",NAVY,[0,3,6,9]),
-      ("Montana · US",NAVY,[1,4,7,10]),
+      ("Montana Spaceport · US",NAVY,[1,4,7,10]),
       ("Japan · HOSPO",ORANGE,[2,5,8,11]),
       ("Italy + Nodes 5–12 (scale)","#8aa0b4",list(range(12)))]
 ry0=cy+90

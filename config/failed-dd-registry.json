@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-30",
+  "updated": "2026-09-13",
   "note": "Shared FAILED-DD blocklist. Any inbound from these entities is recognized as a known do-not-engage bad actor across Exos. Checked by lead-auto-capture (flags instead of creating a lead) and by DD-on-inbound (short-circuits with the known verdict). Add new entries with: python3 scripts/failed_dd.py add.",
   "entities": [
     {
@@ -75,6 +75,1112 @@
       "category": "cold-broker / advance-fee flag",
       "reason": "Delivery vector for Novus Global fake-invoice fraud; display name David Mitchell does not match generic logalty@logalty.com mailbox (likely spoofed/abused). Treat as scam relay.",
       "date": "2026-07-30",
+      "source": "manual"
+    },
+    {
+      "firm": "Adam N Eve Safety LLC",
+      "domains": [
+        "adamevellc.com"
+      ],
+      "emails": [
+        "travis@adamevellc.com"
+      ],
+      "people": [
+        "Travis Ibrar"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold-broker/bid-shopper: generalist IT & commodity gov reseller (NAICS 541519; HVAC, construction eq, IT compute) shotgunning a real Army 98mm research sounding-rocket RFQ (notice W911S226U3855, West Point). Product mismatch for Exos + solicits ITAR-controlled CAD/mass-inertia/flight-control tech data + COO/customs. Do not engage.",
+      "date": "2026-08-05",
+      "source": "manual"
+    },
+    {
+      "firm": "Kay Kay LLC",
+      "domains": [
+        "kaykayllc.com"
+      ],
+      "emails": [
+        "ronald.williams@kaykayllc.com"
+      ],
+      "people": [
+        "Ronald Williams"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold quote-broker: IT-peripheral reseller (NAICS 541519) mining manufacturers for pricing on ITAR-controlled suborbital rockets/guidance avionics for Army West Point RFQ W911S226U3945; no aerospace competency, export-control exposure, not an Exos product fit.",
+      "date": "2026-08-05",
+      "source": "manual"
+    },
+    {
+      "firm": "U.S. Contractor Administration",
+      "domains": [
+        "uscontractoradministration.com"
+      ],
+      "emails": [
+        "notifica@uscontractoradministration.com"
+      ],
+      "people": [
+        "SAM Registration (no-reply)"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "SAM.gov renewal scam: impersonates federal SAM, charges fees for the free sam.gov renewal + phishes entity admin credentials. Not a government entity.",
+      "date": "2026-08-07",
+      "source": "manual"
+    },
+    {
+      "firm": "Infinum Inc",
+      "domains": [
+        "goziply.com"
+      ],
+      "emails": [
+        "noreply@goziply.com"
+      ],
+      "people": [
+        "John Quinn (impersonated)"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "BEC/CEO-impersonation fraud: spoofed Jon to Neil 8/7/26, fake $94.5K Infinum invoice #INV-271820 w/ Citibank mule acct 70580130002372225, advance-fee 50% 'discount' pressure. Do not engage/pay.",
+      "date": "2026-08-07",
+      "source": "manual"
+    },
+    {
+      "firm": "SlightEdge Advisory",
+      "domains": [
+        "slightedgeangellink.co"
+      ],
+      "emails": [
+        "ruby@slightedgeangellink.co"
+      ],
+      "people": [
+        "Ruby Wilson"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold-broker predatory MCA/revenue-based factoring solicitor; 3-mo-old privacy-shielded domain (created 2026-05-18), firm name mismatches domain, fabricated approval stats, inconsistent rate/amount claims across spray cold emails",
+      "date": "2026-08-17",
+      "source": "manual"
+    },
+    {
+      "firm": "US Capital",
+      "domains": [
+        "uscapital.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "OFAC SDN sanctions name match ('US Capital' in a listed entity) \u2014 verify.",
+      "date": "2026-08-19",
+      "source": "manual"
+    },
+    {
+      "firm": "Ansa",
+      "domains": [
+        "ansa.co"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (2 match) \u2014 do not engage.",
+      "date": "2026-08-19",
+      "source": "manual"
+    },
+    {
+      "firm": "Go-On Group",
+      "domains": [
+        "go-on-group.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "OFAC SDN sanctions name match ('Go-On Group' in a listed entity) \u2014 verify.",
+      "date": "2026-08-19",
+      "source": "manual"
+    },
+    {
+      "firm": "Keith",
+      "domains": [
+        "innoventcapital.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (314 match) \u2014 do not engage.",
+      "date": "2026-08-19",
+      "source": "manual"
+    },
+    {
+      "firm": "ARMY",
+      "domains": [
+        "mail.mil",
+        "mda.mil",
+        "smdc-cs.army.mil",
+        "smdc.army.mil",
+        "us.army.mil"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (86 match) \u2014 do not engage.",
+      "date": "2026-08-20",
+      "source": "manual"
+    },
+    {
+      "firm": "NAMTEK CORP.",
+      "domains": [
+        "namtek.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (1 match) \u2014 do not engage.",
+      "date": "2026-08-20",
+      "source": "manual"
+    },
+    {
+      "firm": "NAVY",
+      "domains": [
+        "navy.mi",
+        "navy.mil.",
+        "navy.mil;",
+        "nsoc.health.mil",
+        "spawar.navy.mil",
+        "usmc.mil"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (3 match) \u2014 do not engage.",
+      "date": "2026-08-20",
+      "source": "manual"
+    },
+    {
+      "firm": "Space",
+      "domains": [
+        "space.texas.gov"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (20 match) \u2014 do not engage.",
+      "date": "2026-08-20",
+      "source": "manual"
+    },
+    {
+      "firm": "Space Force",
+      "domains": [
+        "spaceforce.mil"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "OFAC SDN sanctions name match ('Space Force' in a listed entity) \u2014 verify.",
+      "date": "2026-08-20",
+      "source": "manual"
+    },
+    {
+      "firm": "Principle",
+      "domains": [
+        "thia.ventures"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (1 match) \u2014 do not engage.",
+      "date": "2026-08-20",
+      "source": "manual"
+    },
+    {
+      "firm": "James Cameron",
+      "domains": [
+        "visionaryleadership.co.nz"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (2 match) \u2014 do not engage.",
+      "date": "2026-08-20",
+      "source": "manual"
+    },
+    {
+      "firm": "Oval Ventures, LLC",
+      "domains": [
+        "ovalv.io",
+        "ovalv.com"
+      ],
+      "emails": [
+        "jacob@ovalv.io",
+        "joe@ovalv.com"
+      ],
+      "people": [
+        "Jacob Dyer (Analyst)",
+        "Joseph Grodko"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Same firm as ovalv.io (Oval Ventures) - cold-broker/alternative-lender, do-not-engage for Series A equity raise.",
+      "date": "2026-08-20",
+      "source": "manual"
+    },
+    {
+      "firm": "Vortex Capital Partners (impostor)",
+      "domains": [
+        "vortexcapitalstat.com"
+      ],
+      "emails": [
+        "emilydavis@vortexcapitalstat.com"
+      ],
+      "people": [
+        "Emily Davis"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold-broker/finder from lookalike domain (not real Vortex Capital); vague flattery pitch, no named funds, unsolicited capital-intro solicitation",
+      "date": "2026-08-20",
+      "source": "manual"
+    },
+    {
+      "firm": "Oracle NetSuite",
+      "domains": [
+        "netsuite.com"
+      ],
+      "emails": [],
+      "people": [
+        "NetSuite / Oracle"
+      ],
+      "verdict": "do-not-engage",
+      "category": "failed vendor / do-not-engage",
+      "reason": "Exos spent ~$50K; system never worked; replaced wholesale by Mission Control. Do not re-engage.",
+      "date": "2026-08-21",
+      "source": "manual"
+    },
+    {
+      "firm": "Zaidwood Capital",
+      "domains": [
+        "zaidwoodmanagement.com",
+        "zaidwoodcapital.com"
+      ],
+      "emails": [
+        "r.b@zaidwoodmanagement.com",
+        "info@zaidwoodcapital.com"
+      ],
+      "people": [
+        "Rami Zeneldin",
+        "Bryann Cabral / Samuel Leung / Rami Zeneldin"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Same firm as zaidwoodmanagement.com entry \u2014 cold capital-raise broker, do-not-engage.",
+      "date": "2026-08-21",
+      "source": "manual"
+    },
+    {
+      "firm": "Zaidwood Capital LLC",
+      "domains": [
+        "zaidwoodadvisors.com"
+      ],
+      "emails": [
+        "rami.b.zeneldin@zaidwoodadvisors.com"
+      ],
+      "people": [
+        "Rami Zeneldin"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold placement-agent solicitation for capital raise (success-fee model conflicts w/ standing no-fee-on-capital policy); mislabels Exos as orbital; real firm under Finalis BD but do-not-engage",
+      "date": "2026-08-21",
+      "source": "manual"
+    },
+    {
+      "firm": "Aerovinc",
+      "domains": [
+        "aerovinc.com"
+      ],
+      "emails": [
+        "JohnBresset@Aerovinc.com"
+      ],
+      "people": [
+        "John Bresset"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold web-form solicitor on brand-new anonymous throwaway domain (registered 2026-07-31, privacy-guarded/NameSilo, no live website, no aerospace footprint; name mimics AeroVironment). Generic 'let me send you a document' lure = advance-fee/phishing pattern.",
+      "date": "2026-08-23",
+      "source": "manual"
+    },
+    {
+      "firm": "Jump Finance",
+      "domains": [
+        "jumpfinance.co"
+      ],
+      "emails": [
+        "katherine.carter@jumpfinance.co"
+      ],
+      "people": [
+        "Katherine Carter"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold unsolicited financing broker; absurd 5K-75M range, teaser 'below 1%/mo', no resolvable website, soft-close spam pattern (advance-fee/MCA broker)",
+      "date": "2026-08-24",
+      "source": "manual"
+    },
+    {
+      "firm": "FastFundsConnect",
+      "domains": [
+        "fastfundsconnect.com"
+      ],
+      "emails": [
+        "agriffin@fastfundsconnect.com"
+      ],
+      "people": [
+        "Angela Griffin"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold MCA/merchant-cash-advance lead-gen spam: fake 'underwriting review' of financials they can't access, false 'file closes' urgency, reply-bait (|MAX), tracking-link domain. Do not engage.",
+      "date": "2026-08-24",
+      "source": "manual"
+    },
+    {
+      "firm": "Lynam Partners",
+      "domains": [
+        "lynampartnersbrief.com"
+      ],
+      "emails": [
+        "dragomir_kevin@lynampartnersbrief.com"
+      ],
+      "people": [
+        "Kevin Dragomir"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold capital-raising finder/broker; success-fee model conflicts w/ Exos Reg-D/no-success-fee policy; solicited from disposable lookalike domain (lynampartnersbrief.com, reg 2026-07-15) not real lynampartners.com",
+      "date": "2026-08-25",
+      "source": "manual"
+    },
+    {
+      "firm": "Montemar Partners (aka Acquiro Revenue Advisors)",
+      "domains": [
+        "acquirorevenueadvisors.com"
+      ],
+      "emails": [
+        "machado.luis1@acquirorevenueadvisors.com"
+      ],
+      "people": [
+        "Luis Machado"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold sell-side M&A broker spray; firm-name mismatch (emails as Acquiro Revenue Advisors, signs as Montemar Partners); Sheridan WY 30 N Gould St mass registered-agent mail-drop; canned 'last 4 owners sold in 150 days' template; no verifiable BD/regulatory footprint. Do not engage.",
+      "date": "2026-08-25",
+      "source": "manual"
+    },
+    {
+      "firm": "Cove Capital Investments (misused name) / 'Christen Saiki'",
+      "domains": [
+        "seniordev.co.uk"
+      ],
+      "emails": [
+        "itssar@seniordev.co.uk"
+      ],
+      "people": [
+        "Christen Saiki"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold-broker/likely impersonation: sends from unrelated UK domain (seniordev.co.uk) using name of a real CA real-estate DST/1031 sponsor irrelevant to aerospace; fabricated 'Sixth Street / David Chen' referral + 'HPS' reference name-drops; advance-materials hook.",
+      "date": "2026-08-26",
+      "source": "manual"
+    },
+    {
+      "firm": "Air University (Islamabad, Pakistan)",
+      "domains": [
+        "au.edu.pk",
+        "mail.au.edu.pk"
+      ],
+      "emails": [
+        "ali.sarosh@mail.au.edu.pk"
+      ],
+      "people": [
+        "Dr. Ali Sarosh"
+      ],
+      "verdict": "do-not-engage",
+      "category": "export-control (ITAR/MTCR)",
+      "reason": "Pakistan Air Force-operated university; outbound BD offered flight-test of THEIR propulsion/hypersonic/scramjet/aerothermal + recoverable hardware & flight data = ITAR Cat IV / MTCR Cat I defense-service risk to a foreign military entity in an MTCR non-adherent, proliferation-sensitive state. Removed from outreach list per Lizi 2026-08-26 (export screen XCTL-E255A2). No further engagement without ITAR/EO determination (Denise Shirey / John Quinn). Nothing controlled was transmitted; Dr. Sarosh never replied.",
+      "added": "2026-08-26"
+    },
+    {
+      "firm": "Capital Group HQ (David Han)",
+      "domains": [
+        "capitalgrouphq.com"
+      ],
+      "emails": [
+        "david@capitalgrouphq.com"
+      ],
+      "people": [
+        "David Han"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold loan-broker lead-gen (SBA 7a/equipment financing); non-resolving sending domain; 'reply QUIET' cold-outreach spam tell; unsolicited.",
+      "date": "2026-08-31",
+      "source": "manual"
+    },
+    {
+      "firm": "Owner First (aka Kingsley Row Capital / OwnerFinancial)",
+      "domains": [
+        "kingsleyrowcapital.com"
+      ],
+      "emails": [
+        "mike.turner@kingsleyrowcapital.com"
+      ],
+      "people": [
+        "Mike Turner"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold buy-side M&A broker; mismatched firm names across email/signature/website, obfuscated 'OwnerFinancial com' site, no verifiable footprint, mass-mailer boilerplate. Do not engage.",
+      "date": "2026-09-01",
+      "source": "manual"
+    },
+    {
+      "firm": "Yanne Capital Group (via 'Yanne Corporate Ventures')",
+      "domains": [
+        "yannecorporateventures.com"
+      ],
+      "emails": [
+        "altamirandajordys.m@yannecorporateventures.com"
+      ],
+      "people": [
+        "Jordys Altamiranda"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold M&A/exit broker; solicited from 6-week-old lookalike domain (created 2026-07-15), not firm's real domain; false premise (claimed Exos dormant since 2022 while mid-Series-A); sender has zero footprint; firm track record is paid-wire PR only, no verifiable deals, no aerospace history",
+      "date": "2026-09-01",
+      "source": "manual"
+    },
+    {
+      "firm": "Actium Capital SA (off-domain solicitor \u2014 likely impersonation)",
+      "domains": [
+        "actium.capital"
+      ],
+      "emails": [
+        "pedro@actium.capital"
+      ],
+      "people": [
+        "Pedro Cruz"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold reverse-solicitation from lookalike domain actium.capital (Google Workspace) \u2014 genuine Portuguese family office runs actiumcapital.pt on Microsoft 365; mismatched mail infra + failed SSL + generic 'send you our term sheet on confirmation' advance-fee-style template. Do not engage.",
+      "date": "2026-09-02",
+      "source": "manual"
+    },
+    {
+      "firm": "Aero",
+      "domains": [
+        "aero.org"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (40 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "John Fuller",
+      "domains": [
+        "anduril.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (2 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Dorit",
+      "domains": [
+        "bcm.edu"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (2 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Phil",
+      "domains": [
+        "blinkmfg.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (13 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Brown",
+      "domains": [
+        "brown.edu"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (761 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Colorado",
+      "domains": [
+        "colorado.edu"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (14 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Columbia",
+      "domains": [
+        "columbia.edu"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (7 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Michael Friedman",
+      "domains": [
+        "firstcitizens.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (1 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Ge",
+      "domains": [
+        "ge.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (13 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Higginbotham",
+      "domains": [
+        "higginbotham.net"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (4 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Apple",
+      "domains": [
+        "insideapple.apple.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (5 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Kingston",
+      "domains": [
+        "kingston.ac.uk"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (8 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Mail",
+      "domains": [
+        "mail.au.edu.pk"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (4 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "MDC",
+      "domains": [
+        "midlandtxedc.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (1 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Orbital",
+      "domains": [
+        "orbital.inc"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (3 match) \u2014 do not engage.",
+      "date": "2026-09-03",
+      "source": "manual"
+    },
+    {
+      "firm": "Planet",
+      "domains": [
+        "planet.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (2 match) \u2014 do not engage.",
+      "date": "2026-09-04",
+      "source": "manual"
+    },
+    {
+      "firm": "<jquinnexo@proton.me>",
+      "domains": [
+        "proton.me>"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (139966 match) \u2014 do not engage.",
+      "date": "2026-09-04",
+      "source": "manual"
+    },
+    {
+      "firm": "Ravee",
+      "domains": [
+        "ravee.space"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (1 match) \u2014 do not engage.",
+      "date": "2026-09-04",
+      "source": "manual"
+    },
+    {
+      "firm": "Stanford",
+      "domains": [
+        "stanford.edu"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (17 match) \u2014 do not engage.",
+      "date": "2026-09-04",
+      "source": "manual"
+    },
+    {
+      "firm": "Walter",
+      "domains": [
+        "techdayhq.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (216 match) \u2014 do not engage.",
+      "date": "2026-09-04",
+      "source": "manual"
+    },
+    {
+      "firm": "Umbra",
+      "domains": [
+        "umbra.space"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (1 match) \u2014 do not engage.",
+      "date": "2026-09-04",
+      "source": "manual"
+    },
+    {
+      "firm": "Veteran",
+      "domains": [
+        "veteran.fund"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (5 match) \u2014 do not engage.",
+      "date": "2026-09-04",
+      "source": "manual"
+    },
+    {
+      "firm": "TrafficLimb",
+      "domains": [
+        "trafficlimb.com"
+      ],
+      "emails": [
+        "brandon@growth.trafficlimb.cloud"
+      ],
+      "people": [
+        "Vera / Brandon"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold SEO/backlink link-selling spam (dofollow/nofollow rate-card solicitation); no relevance to aerospace; spoofed sender domain growth.trafficlimb.cloud",
+      "date": "2026-09-08",
+      "source": "manual"
+    },
+    {
+      "firm": "Radix Financial Group",
+      "domains": [
+        "boostlaunchcore.org"
+      ],
+      "emails": [
+        "catherine@boostlaunchcore.org"
+      ],
+      "people": [
+        "Catherine Bowman"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold advance-fee/MCA-style lending broker; sender domain (boostlaunchcore.org) mismatches claimed firm (Radix Financial Group); generic no-credit-pull pitch \u2014 do not engage",
+      "date": "2026-09-08",
+      "source": "manual"
+    },
+    {
+      "firm": "White Hat Industrial (White Hat Team USA)",
+      "domains": [
+        "whitehatteamusa.com"
+      ],
+      "emails": [
+        "a.mike@whitehatteamusa.com"
+      ],
+      "people": [
+        "Mike Arnott"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold commercial roofing/facility-repair sales solicitation; no aerospace/space relevance; generic 'are you the decision-maker?' broker spam",
+      "date": "2026-09-08",
+      "source": "manual"
+    },
+    {
+      "firm": "Onramp Solutions Inc.",
+      "domains": [
+        "onrampsupport.com"
+      ],
+      "emails": [
+        "travis.morgan@onrampsupport.com"
+      ],
+      "people": [
+        "Travis Morgan"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold unsolicited MES/manufacturing-software sales spam; no fit for Exos/Scorpius",
+      "date": "2026-09-08",
+      "source": "manual"
+    },
+    {
+      "firm": "MemoHoney Research (health-scam spam)",
+      "domains": [
+        "eurobunker-arena.com"
+      ],
+      "emails": [
+        "support@eurobunker-arena.com"
+      ],
+      "people": [
+        "Brain Health Alert"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Alzheimer's cinnamon/honey 'ritual' supplement scam; spoofed CNN/Meryl Streep endorsements; payload on throwaway googleapis storage buckets; no legit business",
+      "date": "2026-09-08",
+      "source": "manual"
+    },
+    {
+      "firm": "The Wellness Review / Herz P1 Smart Ring",
+      "domains": [
+        "uploadboy.com"
+      ],
+      "emails": [
+        "support@uploadboy.com"
+      ],
+      "people": [
+        "unknown"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Consumer smart-ring spam blast; spoofed sender domain (uploadboy.com), Google Storage-hosted landing pages, fake 63%-off urgency; no Exos/Scorpius relevance",
+      "date": "2026-09-08",
+      "source": "manual"
+    },
+    {
+      "firm": "ClearCogni / Brain Health Wire",
+      "domains": [
+        "diyarbakirsoz.com"
+      ],
+      "emails": [
+        "support@diyarbakirsoz.com"
+      ],
+      "people": [
+        "unknown"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Health-supplement scam blast (fake Bill Gates '$1 honey Alzheimer's cure' / ClearCogni); spoofed news logos, googleapis-hosted landing pages; not a business contact",
+      "date": "2026-09-08",
+      "source": "manual"
+    },
+    {
+      "firm": "Whizz Bridge",
+      "domains": [
+        "whizzbridge.com"
+      ],
+      "emails": [
+        "emilycarlson.w@outlook.com"
+      ],
+      "people": [
+        "Emily Carlson"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold dev-shop solicitation (generic AI/cloud/web/mobile outsourcing); personal outlook.com sender + Salesforce tracking pixel; flagged spam by Phil Eaton 2026-09-08",
+      "date": "2026-09-08",
+      "source": "manual"
+    },
+    {
+      "firm": "Emerson",
+      "domains": [
+        "emerson.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (30 match) \u2014 do not engage.",
+      "date": "2026-09-09",
+      "source": "manual"
+    },
+    {
+      "firm": "Capjora (unverified)",
+      "domains": [
+        "capjora.cloud"
+      ],
+      "emails": [
+        "thompsonjosianne@capjora.cloud"
+      ],
+      "people": [
+        "Josianne Thompson / signs as 'Sam'"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold-broker/advance-fee 'DOD program financing' solicitation. Domain reg 2026-04-30 (~4mo old), no website (doesn't resolve), zero web footprint, sender-name mismatch (Josianne Thompson signs 'Sam'), fabricated 'colleague' referral + manufactured urgency. Do not engage.",
+      "date": "2026-09-09",
+      "source": "manual"
+    },
+    {
+      "firm": "Triple Crown Funding Solutions",
+      "domains": [
+        "triplecrownfundingsolutions.com"
+      ],
+      "emails": [
+        "scott@triplecrownfundingsolutions.com"
+      ],
+      "people": [
+        "Scott Lawson"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold-broker term-loan solicitation on brand-new (2026-06-11) lookalike domain; wrong-name mail-merge ('Hey David'), scraped-D&B pre-qual hook; not licensed Triple Crown Funding (tc-funding.com). Do not engage.",
+      "date": "2026-09-09",
+      "source": "manual"
+    },
+    {
+      "firm": "Summit Capital (summitcap.online)",
+      "domains": [
+        "summitcap.online"
+      ],
+      "emails": [
+        "ruby.darnell@summitcap.online"
+      ],
+      "people": [
+        "Ruby Darnell"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Unsolicited MCA/working-capital cold broker: fake RE: reply-chain, '$250K-$5M, barely any docs, funded in <2 days', throwaway .online domain, no verifiable regulated lender. Advance-fee/predatory-financing pattern.",
+      "date": "2026-09-10",
+      "source": "manual"
+    },
+    {
+      "firm": "Dora Fund",
+      "domains": [
+        "dorafund.store"
+      ],
+      "emails": [
+        "ruecker.ross@dorafund.store"
+      ],
+      "people": [
+        "Ross Ruecker (signs 'Sam'), 980.858.0892"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold-broker/advance-fee DOD-program-financing pitch; throwaway domain reg 2026-04-30, name mismatch, false-urgency closer",
+      "date": "2026-09-10",
+      "source": "manual"
+    },
+    {
+      "firm": "Apply Manufacture Fund",
+      "domains": [
+        "applymanufacturefund.help"
+      ],
+      "emails": [
+        "jessica.davis@applymanufacturefund.help"
+      ],
+      "people": [
+        "Jessica Davis"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold-broker/advance-fee funding spam; throwaway .help domain, no lender footprint, boilerplate $5K-$75M line pitch",
+      "date": "2026-09-10",
+      "source": "manual"
+    },
+    {
+      "firm": "ScaleNow Peak (Commercial Funding & Advisory)",
+      "domains": [
+        "scalenowpeak.info"
+      ],
+      "emails": [
+        "trish.stiles@scalenowpeak.info"
+      ],
+      "people": [
+        "Trish Stiles"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold working-capital loan broker; throwaway .info domain (reg 2026-01-21), Cloudflare-masked, fake 're:' thread subject, MCA/advance-fee lead-gen pattern, no verifiable firm",
+      "date": "2026-09-10",
+      "source": "manual"
+    },
+    {
+      "firm": "Stefan",
+      "domains": [
+        "stefan.bz"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (12 match) \u2014 do not engage.",
+      "date": "2026-09-11",
+      "source": "manual"
+    },
+    {
+      "firm": "Ali Healthcare / Alison Stark",
+      "domains": [
+        "ali-healthcare.pro"
+      ],
+      "emails": [
+        "ali@ali-healthcare.pro"
+      ],
+      "people": [
+        "Alison (Ali) Stark"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold health-insurance lead-gen broker soliciting Jon's household PII (ages/genders/zip); mismatched domains (.pro sender vs .com signature); zero Exos/Scorpius relevance",
+      "date": "2026-09-11",
+      "source": "manual"
+    },
+    {
+      "firm": "Cantor",
+      "domains": [
+        "cantor.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (4 match) \u2014 do not engage.",
+      "date": "2026-09-13",
+      "source": "manual"
+    },
+    {
+      "firm": "Roth",
+      "domains": [
+        "roth.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (24 match) \u2014 do not engage.",
+      "date": "2026-09-13",
       "source": "manual"
     }
   ]

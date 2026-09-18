@@ -17,7 +17,7 @@ def qall():
     out, off = [], 0
     while True:
         req = urllib.request.Request(
-            f"{SB}/tasks?select=id,title,state,owner,description,created_at&order=id&offset={off}&limit=1000",
+            f"{SB}/tasks?select=id,title,state,owner,description,category,created_at&order=id&offset={off}&limit=1000",
             headers={"apikey": KEY, "Authorization": f"Bearer {KEY}"})
         r = json.load(urllib.request.urlopen(req, timeout=60)); out += r
         if len(r) < 1000: return out
@@ -31,15 +31,38 @@ def patch(tid, f):
 
 def ownn(o):
     o = (o or "").strip().lower()
-    return {"john quinn": "jon", "jon+exo": "jon", "jquinn": "jon"}.get(o, o)
+    return {"john quinn": "jon", "jon+exo": "jon", "jquinn": "jon", "exo": "exo"}.get(o, o)
+
+# D-7281739 fix #1: strip "aging counters" so a re-run or a date-stamped re-send of the SAME task
+# (the Neil/TACFI blow-up: "GTL … (NEW June 17)" vs "(NEW June 20)", "…8 days overdue", "day 3",
+# "round 2", "v3") collapses to one dedup key instead of spawning a near-duplicate every time.
+# Only date/aging tokens are removed — real numerics (BLK3, PY26.2, $500K, Phase III, 137) survive.
+_MONTHS = (r"january|february|march|april|may|june|july|august|september|october|november|december|"
+           r"jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec")
+def strip_aging(s):
+    s = (s or "").lower()
+    s = re.sub(r"\(\s*new[^)]*\)", " ", s)                                  # "(NEW June 17)"
+    s = re.sub(r"\b\d{4}-\d{2}-\d{2}\b", " ", s)                            # 2026-06-17
+    s = re.sub(r"\b\d{1,2}/\d{1,2}(?:/\d{2,4})?\b", " ", s)                 # 6/17, 6/17/26
+    s = re.sub(rf"\b(?:{_MONTHS})\s+\d{{1,2}}(?:,?\s*\d{{4}})?\b", " ", s)  # "june 17", "june 17, 2026"
+    s = re.sub(r"\b\d+\s*days?\s*overdue\b", " ", s)                        # "8 days overdue"
+    s = re.sub(r"\b(?:day|round|attempt|try|rev|revision|version|v)\s*#?\d+\b", " ", s)  # "day 3","v3"
+    s = re.sub(r"\b(?:new|newly|updated?|refresh(?:ed)?)\b", " ", s)        # bare aging adjectives
+    s = re.sub(r"#\d+", " ", s)                                             # "#2"
+    s = re.sub(r"\(\s*\d+\s*\)", " ", s)                                    # "(2)"
+    return s
 
 def norm(s):
-    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]", " ", (s or "").lower())).strip()
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]", " ", strip_aging(s))).strip()
+
+def catn(c):
+    return re.sub(r"\s+", " ", (c or "general").strip().lower())
 
 tasks = [x for x in qall() if (x.get("state") or "") not in DONE]
 g = defaultdict(list)
 for x in tasks:
-    g[(norm(x["title"]), ownn(x.get("owner")))].append(x)
+    # key on category + aging-stripped normalized title + owner (was: exact-normalized title + owner)
+    g[(catn(x.get("category")), norm(x["title"]), ownn(x.get("owner")))].append(x)
 
 plan = []
 for key, v in g.items():

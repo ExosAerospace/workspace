@@ -219,6 +219,16 @@
       "sent_date": "2026-07-31",
       "signed_date": "2026-08-04",
       "deposit_date": "2026-08-24"
+    },
+    {
+      "date": "2026-08-19",
+      "investor": "Charles Webb",
+      "amount": 18200,
+      "po": "PO10",
+      "source": "Neil Milburn email confirmation 2026-09-14 (Re: PO10 packets still open) \u2014 'Charles Webb funds deposited August 19.' Not caught by auto-CC scanner (no exosmc@pm.me funds-received email sent); manually reconciled 2026-09-18.",
+      "message_id": "manual-neil-confirm-2026-09-14-webb",
+      "cc_alias_hit": null,
+      "needs_amount": false
     }
   ],
   "seen_message_ids": [
@@ -232,7 +242,7 @@
     "<BNAP110MB1917E1111652CC60DF33A853AACAA@BNAP110MB1917.NAMP110.PROD.OUTLOOK.COM>",
     "<jZBXHWCSK604OXiWrSR_bvGBIPFXhfUEYEm6klJ-djQ25WmyfpVgII1J7_GsJjEMZweeUPxCH0CQ0o8Bmc9AknJ9cUoajIxBBfIWV8ms6TI=@pm.me>"
   ],
-  "updated_at": "2026-08-25T14:25:30-05:00",
+  "updated_at": "2026-09-18T06:00:00Z",
   "scope_note": "$1M target = investor/PO10 capital for the SECOND BLK3 flight (Flight 2) + airframe #2 risk retirement. It EXCLUDES all customer flight revenue. entX (OPP-007) bought and OWNS Flight 1 \u2014 its customer flight revenue (executed LSA contract total $820,000, QB-verified $410,000 received = 50% (milestones 1+2 / invoices 0067+0069 paid, $0 balance)) is customer revenue that funds Flight-1 execution and does NOT count toward this $1M. Note: entX Flight-1 contract = $820,000 (executed LSA); do NOT confuse it with the separate Flight-2 payload oversell target of $1.0125M (135kg \u00d7 $7,500, 0 sold) \u2014 different flights, different figures. Ledger holds PO10 investor entries only; zero entX entries by design.",
   "pending_packets": [
     {
@@ -260,9 +270,9 @@
       "subscription_amount": 18200,
       "sent_date": "2026-08-03",
       "signed_date": "2026-08-10",
-      "deposit_date": null,
-      "status": "awaiting_funds",
-      "note": "Executed 8/10, funds not yet received (recent).",
+      "deposit_date": "2026-08-19",
+      "status": "received",
+      "note": "Funds deposited August 19 per Neil Milburn confirmation (2026-09-14). Reconciled into entries 2026-09-18; removed from open PO10 collection list.",
       "last_nudge": {
         "date": "2026-09-14",
         "by": "Exo\u2192Neil (email nmilburn@exosaero.com)",

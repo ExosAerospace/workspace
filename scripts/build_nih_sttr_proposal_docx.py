@@ -1,3 +1,5 @@
+# DEPRECATED 2026-09-03: generates LIVER/Collicott-era content. DO NOT RE-RUN for submission.
+# Active Research Plan is Park intestinal: drafts/Exos_NIH_STTR_PA-27-102_ResearchPlan_PURDUE_Park_2026-09-03.docx
 #!/usr/bin/env python3
 """NIH STTR (PA-27-102) Phase I proposal write-up — actual research-plan narrative,
 aligned to NIH SBIR/STTR forms (Specific Aims 1pg, Research Strategy 6pg:

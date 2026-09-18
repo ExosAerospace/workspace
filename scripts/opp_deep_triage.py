@@ -70,7 +70,7 @@ def main():
                   '"deadline":"<date or none>","next_step":"<one concrete action>"}]}\n\n'
                   + json.dumps(batch))
         # K3 is a reasoning model (~3-4k reasoning tokens/call); budget high so the JSON isn't truncated.
-        txt = kimi_bd.ask(prompt, label="opp-triage-batch", system=system, max_tokens=12000, timeout=420)
+        txt = kimi_bd.ask(prompt, label="opp-triage-batch", system=system, max_tokens=12000, timeout=600)
         m = re.search(r"\{.*\}", txt, re.S)
         try:
             return json.loads(m.group(0)).get("ranked", []) if m else []

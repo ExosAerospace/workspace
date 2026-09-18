@@ -143,6 +143,37 @@ def main():
         except Exception:
             pass
 
+    # ── Preserve DD dossiers so a rebuild never wipes them (see log_dd.py / crm_dd_engine.py). ──
+    # DD records live in two durable places: any existing dd-* dossier already in dossiers.json,
+    # plus the authoritative dd-registry.json. Merge both in (curated relationships win on id clash).
+    have_ids = {d.get("id") for d in out}
+    try:
+        prev = load_json(OUT, {}).get("dossiers", [])
+        for d in prev:
+            if str(d.get("id", "")).startswith("dd-") and d.get("id") not in have_ids:
+                out.append(d); have_ids.add(d.get("id"))
+    except Exception:
+        pass
+    try:
+        COLOR = {"pass": "#2E7D32", "caution": "#B8860B", "fail": "#B00020"}
+        reg = load_json(os.path.join(WS, "mission-control", "data", "dd-registry.json"), {})
+        for dom, v in (reg.items() if isinstance(reg, dict) else []):
+            if not isinstance(v, dict):
+                continue
+            name = v.get("company") or dom
+            sid = "dd-" + re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+            if sid in have_ids:
+                continue
+            verdict = v.get("status") or v.get("verdict") or "caution"
+            out.append({"id": sid, "name": name, "headline": (v.get("summary") or "")[:140],
+                        "stage": f"DD {verdict.title()}", "stage_color": COLOR.get(verdict, "#888"),
+                        "deals": [], "status": f"DD complete ({verdict}) {v.get('date','')}",
+                        "next_step": v.get("next_step", ""), "flags": [f"DD {verdict.upper()} {v.get('date','')}: {v.get('summary','')}"],
+                        "contacts": [], "agreements": [], "last_touch": v.get("date", ""), "dd": v})
+            have_ids.add(sid)
+    except Exception:
+        pass
+
     stamp = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
     payload = {"generated_display": stamp,
                "note": "Auto-aggregated by build-dossiers.py from config/relationships.json + opportunities.json + live email + submissions-archive.",

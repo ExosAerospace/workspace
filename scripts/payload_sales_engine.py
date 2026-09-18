@@ -44,6 +44,9 @@ WORKSPACE = "/Users/exomac/.openclaw/workspace"
 PIPELINE = os.path.join(WORKSPACE, "tasks/blk3-payload-sales-pipeline.md")
 BRIDGE = os.path.join(WORKSPACE, "scripts/payload_pipeline_to_opps.py")
 DRAFTS = os.path.join(WORKSPACE, "drafts/payload-outreach-drafts.md")
+# Student-facing capstone tracker feed (early_adopter users read this via
+# /api/capstone-program). The engine writes the ranked work queue + funnel here.
+CAPSTONE_JSON = os.path.join(WORKSPACE, "mission-control/data/capstone-program.json")
 DISCORD_CHANNEL = "channel:1501636671492460554"  # #blk3-payload
 
 # launchd has a minimal PATH; resolve the openclaw binary explicitly (same
@@ -130,6 +133,91 @@ def norm_stage(s):
     return "NEW"
 
 
+def score_prospect(rec):
+    """Heuristic 0-100 opportunity score so students work the best leads first.
+    Transparent signals from the prospect's own record: funding (can it pay for a
+    flight?), a named/verified POC (actionable), leverage (aggregator/conduit =
+    many bays), and fit strength. Returns (score, why, next_action)."""
+    b = (rec.get("block") or "").lower()
+    stage = norm_stage(rec.get("status"))
+    score, why = 0, []
+    if any(k in b for k in ("funded", "funding", "grant", "sbir", "sttr", "budget",
+                            "award", "venture", "seed round", "series a", "series b",
+                            "phase ii", "phase iii", "$")):
+        score += 35; why.append("funding signal")
+    if rec.get("has_poc"):
+        score += 20; why.append("named POC")
+    if "verified" in b:
+        score += 10; why.append("identity verified")
+    if "@" in (rec.get("block") or ""):
+        score += 8
+    if any(k in b for k in ("aggregator", "broker", "conduit", "high-value", "⭐",
+                            "fills multiple", "multiple bays", "network", "referral")):
+        score += 20; why.append("high-leverage / conduit")
+    if any(k in b for k in ("strong fit", "exceptional", "direct fit", "heritage")):
+        score += 10; why.append("strong fit")
+    if stage == "RESEARCHING":
+        score += 5  # already part-worked, closer to READY
+    score = min(score, 100)
+    if not rec.get("has_poc"):
+        action = "Find the named POC + verify who they are"
+    elif stage == "NEW":
+        action = "Research their active programs + funding, then draft outreach"
+    else:
+        action = "Finish enrichment (funding/program), then prepare the outreach draft"
+    return score, ", ".join(why[:3]) or "baseline fit", action
+
+
+def write_student_queue(records):
+    """Write the funnel snapshot + a PRIORITIZED work queue into the capstone
+    tracker feed (capstone-program.json) so UTD students open the tracker and see,
+    in plain English, what the stages mean and exactly which leads to work first.
+    Read-modify-write: only our keys are touched; all program config is preserved."""
+    counts = {}
+    for r in records:
+        st = norm_stage(r["status"])
+        counts[st] = counts.get(st, 0) + 1
+    live = sum(v for k, v in counts.items() if k not in DEAD)
+    with_poc = sum(1 for r in records if r.get("has_poc") and norm_stage(r["status"]) not in DEAD)
+
+    workable = [r for r in records if norm_stage(r["status"]) in ("NEW", "RESEARCHING")]
+    ranked = []
+    for r in workable:
+        sc, why, action = score_prospect(r)
+        ranked.append({"name": r["name"][:80], "stage": norm_stage(r["status"]),
+                       "score": sc, "has_poc": bool(r.get("has_poc")),
+                       "why": why, "next_action": action})
+    ranked.sort(key=lambda x: x["score"], reverse=True)
+    for i, item in enumerate(ranked, 1):
+        item["rank"] = i
+
+    try:
+        d = json.load(open(CAPSTONE_JSON, encoding="utf-8"))
+    except Exception as e:
+        glog("queue", status="error", detail=f"read capstone json: {str(e)[:80]}")
+        return False
+    d["payload_funnel"] = {
+        "total": len(records), "live": live, "with_poc": with_poc,
+        "NEW": counts.get("NEW", 0), "RESEARCHING": counts.get("RESEARCHING", 0),
+        "READY": counts.get("READY", 0),
+        "updated": datetime.date.today().isoformat(),
+    }
+    d["funnel_explainer"] = [
+        {"stage": "NEW", "meaning": "Freshly sourced lead — not yet worked. No point-of-contact, no research. Your job: pick it up and start."},
+        {"stage": "RESEARCHING", "meaning": "Being worked — finding the named point-of-contact, their active programs, and funding that could pay for a flight."},
+        {"stage": "READY", "meaning": "Fully worked — POC found AND a tailored outreach draft written. Exos (Lizi) reviews and sends. Your goal is to move leads to here."},
+    ]
+    d["work_queue_note"] = ("Work this list top-down — it is ranked by opportunity quality "
+                            "(funding signal, a named POC, and leverage), so the leads most "
+                            "likely to convert are first. Move each NEW → RESEARCHING → READY.")
+    d["work_queue"] = ranked[:30]
+    tmp = CAPSTONE_JSON + ".tmp"
+    json.dump(d, open(tmp, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+    os.replace(tmp, CAPSTONE_JSON)
+    glog("queue", status="info", detail=f"queue={len(ranked)} funnel N{counts.get('NEW',0)}/R{counts.get('RESEARCHING',0)}/RDY{counts.get('READY',0)}")
+    return True
+
+
 def run_bridge(dry):
     """Run the deterministic pipeline->opportunities bridge (the critical flow)."""
     if dry:
@@ -175,7 +263,7 @@ def build_summary(records, bridge_line):
         f"Pipeline: {total} prospects  ({live} live · {with_poc} with a named POC)",
         f"Funnel: {funnel}" if funnel else "Funnel: (empty)",
         f"Opportunities bridge: {bridge_line}",
-        f"Outreach drafts in drafts file, staged for Jon's review: {count_drafts()}",
+        f"Outreach drafts in drafts file, staged for Lizi's review: {count_drafts()}",
     ]
     if need:
         top = ", ".join(r["name"][:40] for r in need[:5])
@@ -236,7 +324,7 @@ def draft_prospects(records, limit):
             with open(DRAFTS, "a", encoding="utf-8") as f:
                 f.write(f"\n## {r['name']} — drafted {today}\n")
                 f.write(f"*Status: {r['status']} · review + send from "
-                        f"jquinn@exosaero.com · never auto-sent*\n\n")
+                        f"lquinn@exosaero.com · never auto-sent*\n\n")
                 f.write(body.rstrip() + "\n\n---\n")
             written += 1
             glog("draft", status="info", detail=f"drafted: {r['name'][:40]}")
@@ -274,12 +362,12 @@ def file_drafts_decision(records):
         "title": f"{n} BLK3 payload outreach draft(s) ready to review + send",
         "question": f"{n} tailored SPACEavailable outreach drafts are staged ({who}). "
                     "Send them to your inbox, ready for you to review and send?",
-        "proposedAction": "On Yes, I email the staged drafts to jquinn@exosaero.com "
+        "proposedAction": "On Yes, I email the staged drafts to lquinn@exosaero.com "
                           "for your review + send. External outreach is never auto-sent.",
         "type": "yesno",
         "options": ["Yes", "No"],
         "priority": "normal",
-        "assignedTo": "jquinn@exosaero.com",
+        "assignedTo": "lquinn@exosaero.com",
         "dedupeKey": "payload-drafts-ready",
     }).encode()
     try:
@@ -323,6 +411,13 @@ def main():
     glog("start", status="info", detail="dry" if args.dry_run else "live")
     records = parse_pipeline()
     glog("parse", status="info", detail=f"{len(records)} prospects")
+
+    # Refresh the students' prioritized work queue + funnel on the capstone tracker.
+    if not args.dry_run:
+        try:
+            write_student_queue(records)
+        except Exception as e:
+            glog("queue", status="error", detail=str(e)[:120])
 
     # Best-effort drafting (model out of the critical path). Never blocks or
     # breaks delivery: fully wrapped, and skipped entirely on --dry-run/--no-draft.

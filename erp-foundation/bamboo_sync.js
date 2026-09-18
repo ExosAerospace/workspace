@@ -50,22 +50,18 @@ async function main() {
   const emps = dir.employees || [];
   console.log(`  ${emps.length} employees in the Bamboo directory.`);
 
-  // Local overrides (dept/email corrections + extra org units not yet in Bamboo). Applied ON TOP of Bamboo.
-  let ov = { department_overrides: {}, email_overrides: {}, extra_org_units: [] };
-  try { ov = { ...ov, ...JSON.parse(fs.readFileSync(path.join(__dirname, 'hr-overrides.json'), 'utf8')) }; } catch {}
-
   // Bamboo's directory endpoint omits supervisor — pull it per employee for the manager mapping.
+  // (No local override layer: BambooHR is the single system of record; make corrections there.)
   const supByName = {};                 // "Last, First" -> that person's bamboo id
   for (const e of emps) supByName[`${e.lastName}, ${e.firstName}`] = 'bamboo-' + e.id;
   for (const e of emps) {
     try { e._supervisor = (await bambooGet(sub, key, `employees/${e.id}?fields=supervisor`)).supervisor || null; }
     catch { e._supervisor = null; }
-    e._dept = ov.department_overrides[e.displayName] || e.department || null;
-    e._email = ov.email_overrides[e.displayName] || e.workEmail || null;
+    e._dept = e.department || null;
+    e._email = e.workEmail || null;
   }
 
-  // department (incl. override depts like "C Suite") + position sets
-  const depts = [...new Set([...emps.map(e => e._dept).filter(Boolean), ...(ov.extra_org_units || [])])];
+  const depts = [...new Set(emps.map(e => e._dept).filter(Boolean))];
   const titles = [...new Set(emps.map(e => e.jobTitle).filter(Boolean))];
 
   if (!APPLY) {

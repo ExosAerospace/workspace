@@ -207,7 +207,7 @@ def main():
         "\n\nNext: confirm it's a real Call/NOFO, finalize the brief + white paper, "
         "line up the DoD champion, and send via Jon (.mil routes through Jon).")
     discord(body)
-    email(f"[TITLE III / OSC WATCH] {len(alerts)} change(s) detected", body)
+    # email() removed 2026-09-10 (Jon: watcher digests -> Discord only, not inbox); discord(body) above handles it
     print(f"ALERT sent ({len(alerts)} change(s)).")
     return 0
 

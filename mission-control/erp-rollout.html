@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exos — ERP Rollout (Program)</title>
+<title>Exos — ERP-exo3 (ERP Rollout)</title>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--blue:#0066cc;--blue2:#0080ff;--orange:#ff6b00;--orange2:#ff8c33;--text:#e8edf5;--text2:#a0aec0;--border:rgba(255,255,255,0.08);--card:#0f1e38;--green:#22c55e;--yellow:#eab308;--purple:#a855f7;--red:#ff4444}
@@ -44,8 +44,8 @@
 </style></head>
 <body>
 <header>
-  <div class="brand"><div class="brand-logo">EX</div><div class="brand-text"><h1>Exos Aerospace</h1><p>Mission Control · ERP Rollout</p></div></div>
-  <div class="header-right"><a href="/index.html">← Board</a><a href="program.html">AI Mission Desk</a><a href="gov-readiness.html">Gov/DIB Readiness</a><a href="decisions.html">🗳️ Decisions</a></div>
+  <div class="brand"><div class="brand-logo">EX</div><div class="brand-text"><h1>Exos Aerospace</h1><p>Mission Control · ERP-exo3</p></div></div>
+  <div class="header-right"><a href="/index.html">← Board</a><a href="program.html">Payloads-exo3</a><a href="gov-readiness.html">Gov/DIB Readiness</a><a href="decisions.html">🗳️ Decisions</a></div>
 </header>
 <div class="wrap">
   <div class="hero">
@@ -71,7 +71,7 @@
   <h3 class="section">📈 Program Metrics</h3>
   <div class="metric-row" id="metrics"></div>
 
-  <footer>Exos Aerospace · ERP Rollout Program · scaffolded by Exo · mirrors the AI Mission Desk program page · Mission Control login required</footer>
+  <footer>Exos Aerospace · ERP-exo3 (ERP Rollout) · scaffolded by Exo · mirrors the Payloads-exo3 program page · Mission Control login required</footer>
 </div>
 <script id="data" type="application/json">
 {
@@ -84,14 +84,15 @@
   "program_lead": "Phil Eaton",
   "process_turnover": "Lizi → Exo (COMPLETE — library live in MC; Lizi advises on revisions)",
   "started": "2026-07-20",
-  "current_phase": "Phase 1 complete (BambooHR interface live) · Phase 0 hardening + Phase 2 (Timekeeping) in progress"
+  "current_phase": "Phase 0 COMPLETE + Phase 1 complete (BambooHR interface live) · Phase 2 (Timekeeping in Bamboo — Lizi/Kyle) + Phases 4/5/5B in progress · CUI enclave & remote-backup hardening deferred to Phase 6"
  },
  "milestones": [
   {
    "id": "P0",
    "name": "Phase 0 — Foundation",
    "due": "2026-08",
-   "status": "In Progress",
+   "status": "Complete",
+   "note": "COMPLETE 2026-09-04 (Jon direction). Foundation closed: SOR + schema, migration, immutable audit, RBAC enforcement, local restore-tested backup, and crash/reboot availability all live. CMMC/CUI hosting boundary resolved by keeping HR PII in BambooHR (system of record) via the installed read-only API — MC holds NO CUI/PII, so no Azure Gov compute is required to complete Phase 0. Two hardening legs (remote/offsite backup + Azure Gov/GCC-High CUI-document boundary & warm standby) intentionally deferred to Phase 6 — see Decisions D-002 / D-003.",
    "deliverables": [
     {
      "name": "SQLite system-of-record + full schema (38 tables)",
@@ -113,27 +114,27 @@
     },
     {
      "name": "RBAC — roles & clearances",
-     "status": "in_progress",
-     "owner": "Exo",
-     "note": "role + clearance tables seeded; single /api authz middleware pending"
-    },
-    {
-     "name": "Backups (3-2-1, restore-tested)",
      "status": "done",
      "owner": "Exo",
-     "note": "backup_erp.js nightly (launchd), VACUUM-INTO snapshot + restore-verify (7 tables reconcile); remote legs (node + GCC High offsite) pending"
+     "note": "DONE 2026-09-04: role + clearance tables seeded; requireRole() authz enforcement live across /api admin routes (per-route chokepoint operational). A single global middleware refactor is a later optimization, not a Phase 0 blocker."
+    },
+    {
+     "name": "Backups — local (restore-tested)",
+     "status": "done",
+     "owner": "Exo",
+     "note": "backup_erp.js nightly (launchd com.exos.erp-backup), VACUUM-INTO snapshot + restore-verify (7 tables reconcile). Local leg of 3-2-1 satisfied. REMOTE/OFFSITE legs (node + GCC High offsite) moved out of Phase 0 → Phase 6 (Decision D-003)."
     },
     {
      "name": "Availability / failover when ExoMac is down",
-     "status": "in_progress",
+     "status": "done",
      "owner": "Exo",
-     "note": "MC launchd KeepAlive auto-restart live (crash/reboot covered); Azure Gov warm standby pending"
+     "note": "DONE for Phase 0: launchd KeepAlive auto-restart live (com.exos.missioncontrol — crash/reboot covered). Azure Gov warm standby was tied to the CUI-app hosting question, now moot since MC holds no PII — deferred to Phase 6 (Decision D-002)."
     },
     {
      "name": "CMMC 2.0 / CUI hosting boundary",
-     "status": "in_progress",
-     "owner": "Atomus",
-     "note": "GCC High confirmed; Azure Gov compute for the CUI-bearing app to be added (blocks HR PII go-live)"
+     "status": "done",
+     "owner": "Atomus / Exo",
+     "note": "RESOLVED 2026-09-04 (Jon direction): HR PII stays in BambooHR (system of record) accessed through the installed, functional read-only BambooHR API. MC holds NO CUI/HR PII, so no Azure Gov compute is required for HR PII go-live — this unblocks Phase 0. GCC High (Atomus) confirmed and remains the boundary for any future CUI *documents* stored in MC; standing up that CUI-document enclave is deferred to Phase 6 (Decision D-002). MC must hold no ITAR/CUI technical data (incl. payload tech data) until that enclave exists."
     }
    ]
   },
@@ -175,13 +176,13 @@
      "name": "DCAA timekeeping (in Bamboo — projects + cost codes + object-lock)",
      "status": "blocked",
      "owner": "Lizi Quinn (create) + Kyle Ballard (support)",
-     "note": "ASSIGNED 2026-08-08 to Lizi (create) w/ Kyle Ballard CFO support (task #1870). Stand up in BambooHR: charge codes/WBS→contracts + indirect pools, total-time accounting, object-lock+audit trail, approval/segregation of duties, written policy + floor-check readiness. Prerequisite to the Exo interface + rollup. FFP-primary limits mandatory scope."
+     "note": "Task #1870. PLAN SET 2026-09-05 (Jon): Exo does the Bamboo setup via admin login at ExoMac; PILOT = Project Hermes (FA9300-25-C-6022) to prove the system before any DCAA-required contract. Staged: DCAA Timekeeping Policy procedure EXOS-FIN-002-0, Hermes pilot setup sheet, employee quick-start, team announcement (#2657). Lizi to schedule the ExoMac session (#2656). TURNKEY CONFIG SPEC delivered 2026-09-04 (attached to #1870): Projects = contracts (FA9300-25-C-6022, Karmen D2P2) + indirect pools (OH/G&A/B&P/IR&D) + leave; Tasks = WBS cost codes; total-time accounting, supervisor approval (no self-approval), object-lock. ~30-60 min admin-console work. API canNOT create these (admin-only). DECISION for Jon: Lizi/Kyle configure vs. give Exo an admin login to drive the UI. FFP-primary limits mandatory scope."
     },
     {
      "name": "Read Bamboo project/time actuals into MC (interface)",
-     "status": "todo",
+     "status": "in_progress",
      "owner": "Exo",
-     "note": "Exo build, GATED on: (a) Lizi/Kyle DCAA setup complete, (b) Bamboo Time-Tracking API scope on the key. Extend bamboo_sync.js (read-only, audited, idempotent — apply P1 reconcile lesson)."
+     "note": "BUILT + PROVEN 2026-09-04: erp-foundation/bamboo_time_sync.js reads live Bamboo Time Tracking (250 entries / 1,380.7 hrs, 129 approved) and maps Project/Task→contract+WBS into MC time_entry via audited DAL (upsertTimeEntry), carrying approved time as locked/immutable. Idempotent. Currently 0 mapped because Bamboo projects/tasks aren't configured yet — mapping auto-activates once the DCAA setup exists. Verified the Bamboo API has NO project/task create endpoint (that structure is admin-console only)."
     },
     {
      "name": "Labor actuals → project / WBS cost rollup (feeds Phase 4)",
@@ -272,8 +273,8 @@
     {
      "name": "Quality records (NCR / CAPA / first-article)",
      "status": "in_progress",
-     "owner": "Exo",
-     "note": "NCR/CAPA/first-article table + records live (lightweight); FAI-2026-001 open."
+     "owner": "Mike Talley",
+     "note": "ASSIGNED to Mike Talley (mtalley@exosaero.com) by Jon 2026-09-05, DUE Dec 15, 2026. NCR/CAPA/first-article table + records live (lightweight); FAI-2026-001 open — Mike owns closing it out + keeping quality records current (feeds AS9100 / Gov-DIB readiness)."
     },
     {
      "name": "Closes gov-readiness gap MQ-1 (manufacturing management)",
@@ -285,9 +286,10 @@
   },
   {
    "id": "P6",
-   "name": "Phase 6 — Finance Integration + Doc Control / ITAR",
+   "name": "Phase 6 — Finance Integration + Doc Control / ITAR + Hardening",
    "due": "2027-Q2",
    "status": "Planned",
+   "note": "Also holds the Phase 0 hardening legs intentionally deferred 2026-09-04 (Decisions D-002 / D-003) — remote/offsite backup, Azure Gov/GCC-High CUI-document enclave, and warm standby.",
    "deliverables": [
     {
      "name": "QuickBooks integration (budget-vs-actual)",
@@ -298,6 +300,18 @@
      "name": "Controlled document control / ITAR",
      "status": "todo",
      "owner": "Exo"
+    },
+    {
+     "name": "Remote/offsite backup legs (complete 3-2-1)",
+     "status": "todo",
+     "owner": "Exo",
+     "note": "Deferred from Phase 0 (Decision D-003). Local restore-tested backup is live; add remote node + GCC High offsite legs to close 3-2-1. (Decision D-003)"
+    },
+    {
+     "name": "Azure Gov / GCC-High CUI-document enclave + warm standby",
+     "status": "todo",
+     "owner": "Atomus / Exo",
+     "note": "Deferred from Phase 0 (Decision D-002). INTERIM CONTROL SET 2026-09-05 (Jon): CUI/ITAR/EAR documents are stored in SharePoint (GCC High) under manual procedure SEC-CUI-STOR (Process Library) — any CUI task completes that procedure and is confirmed done in MC; MC records ONLY a reference + approved-access SharePoint link, never the file or its content. MC stays CUI/PII-free. The Azure Gov / GCC-High enclave (this deliverable) later AUTOMATES that manual control; it is required only if/when MC must hold controlled docs directly. Also provides the Azure Gov warm standby for availability."
     }
    ]
   }

@@ -29,6 +29,10 @@ KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_
 H = {"apikey": KEY, "Authorization": "Bearer " + KEY}
 USERS = os.path.join(WS, "mission-control", "users.json")
 STATE = os.path.join(WS, "logs", "assignment-notify-state.json")
+# D-7281739 fix #3: mc-email-command handling writes {tid: requester_email} here for tasks it
+# creates/assigns to the requester during a run. Those already got the email-command reply, so the
+# notifier must NOT also email the same person 5 min later. Seeded silently as already-notified.
+SUPPRESS = os.path.join(WS, "logs", "assignment-notify-suppress.json")
 LOG = os.path.join(WS, "logs", "assignment-notify.log")
 MCURL = "http://192.168.143.216:8080"
 
@@ -133,14 +137,29 @@ def main():
     baseline = state is None
     if baseline:
         state = {}
+    suppress = load_json(SUPPRESS, {}) or {}   # {tid: email} seeded by mc-email-command handling
+    # present_tids/terminal_tids drive pruning. A task that is fetched but merely FAILS to resolve
+    # this run (transient users.json read, key hiccup) stays "present" and is NOT pruned — that is
+    # the fix for the prune-then-re-add re-send loop (D-7281739 #4).
+    present_tids, terminal_tids = set(), set()
     active, sent = set(), 0
     for t in tasks:
         tid = str(t.get("id"))
+        present_tids.add(tid)
         st = (t.get("state") or "").lower()
+        if st in ("done", "cancelled", "canceled"):
+            terminal_tids.add(tid)
+            continue
         email, name = resolve(t, by_email, by_name)
-        if not email or email in EXCLUDE or st in ("done", "cancelled", "canceled"):
+        if not email or email in EXCLUDE:
             continue
         active.add(tid)
+        # D-7281739 fix #3: task assigned to this person during an email-command run already got the
+        # reply — seed state as already-notified (no second email), then drop the suppress entry.
+        if suppress.get(tid) == email and state.get(tid) != email:
+            state[tid] = email
+            log(f"suppressed (email-command reply already sent) {email} -> task {tid}")
+            continue
         if state.get(tid) == email:
             continue                      # already notified for this assignee
         if baseline:
@@ -153,9 +172,19 @@ def main():
             log(f"notified {email} -> task {tid}: {str(t.get('title'))[:50]}")
         else:
             log(f"SEND FAIL {email} task {tid}: {err}")
-    for tid in [k for k in state if k not in active]:   # prune un-assigned/closed
+    # Prune ONLY genuinely-gone tasks (no longer present) or terminal (done/cancelled). Never prune a
+    # still-present task just because it didn't resolve this run — that was the re-send bug.
+    for tid in [k for k in state if (k in terminal_tids) or (k not in present_tids)]:
         del state[tid]
     json.dump(state, open(STATE, "w"))
+    # consume suppress entries whose task is now recorded (or gone) so the file stays small
+    if suppress:
+        remaining = {tid: em for tid, em in suppress.items()
+                     if tid not in state and tid in present_tids}
+        try:
+            json.dump(remaining, open(SUPPRESS, "w"))
+        except Exception:
+            pass
     log(f"BASELINED {len(state)} assignments (no emails)." if baseline
         else f"run complete: sent={sent}")
 

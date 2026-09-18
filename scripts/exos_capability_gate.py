@@ -30,6 +30,12 @@ ALLOW = (
     "hosted payload", "payload flight", "flight test service", "microgravity",
     "rocket motor case", "solid rocket motor case", "composite overwrap",
     "hypersonic flight", "hypersonic test",
+    # suborbital life-sciences / human-performance PLATFORM vector — Exos is the
+    # flight/exposure platform provider, not the biomedical PI (glioblastoma
+    # suborbital heritage + NIH microgravity de-risk). Added 2026-09-07 after the
+    # AFRL CHEERS MAA (FA238424S2335) was missed entirely — see grants_fit_triage.py.
+    "space medicine", "aerospace medicine", "space physiology", "spaceflight biology",
+    "life sciences payload", "biomedical payload", "human research payload",
 )
 # ── Anti-patterns: reject even if an ALLOW term is present ──
 DENY = (

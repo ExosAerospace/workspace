@@ -18,6 +18,8 @@ from email.utils import getaddresses
 WS = os.path.expanduser("~/.openclaw/workspace")
 SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
 MATRIX = os.path.join(WS, "config", "capability-matrix.json")
+# Dashboard/RSI read this stale copy; keep it in lockstep with the canonical config file.
+MIRROR = os.path.join(WS, "mission-control", "data", "capability-matrix.json")
 STATE = os.path.join(WS, "logs", "survey-ingest-state.json")
 OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
 JON = "1501632195163590739"
@@ -125,6 +127,10 @@ def main():
     if APPLY and captured:
         matrix["updated"] = "auto"
         json.dump(matrix, open(MATRIX, "w"), indent=2)
+    # Self-heal: mirror canonical matrix to the dashboard/RSI copy every apply run,
+    # so the two paths can never silently diverge (root cause of the 'lost answers' scare).
+    if APPLY:
+        json.dump(matrix, open(MIRROR, "w"), indent=2)
     print(f"{'captured' if APPLY else 'would capture'}: {len(captured)} | needs manual review: {len(review)}")
     for f, s, r in captured:
         print(f"  ✓ {f}: {len(r)} domains — {s[:50]}")

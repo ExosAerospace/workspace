@@ -26,7 +26,7 @@ from email.mime.multipart import MIMEMultipart
 SMTP_HOST = '127.0.0.1'
 SMTP_PORT = 1025
 EMAIL_USER = 'jquinnexo@pm.me'
-EMAIL_PASS = 'SPqYBivj98-jyF3RujLKxA'
+EMAIL_PASS = __import__('json').load(open(__import__('os').path.expanduser('~/.openclaw/secrets.json')))['protonmail_bridge_smtp_password']
 LIZI_EMAIL = 'Lquinn@exosaero.com'
 
 msg = MIMEMultipart('alternative')

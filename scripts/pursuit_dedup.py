@@ -31,26 +31,59 @@ OPEN_STATES_EXCLUDED = {"Done", "Completed", "Closed", "Archived", "Cancelled"}
 RANK = {"In Progress": 4, "Queued": 3, "To Do": 2, "Blocked": 1}
 
 # --- Config: one entry per noisy recurring pursuit. Keep it explicit + guarded. ---
+# GLOBAL GUARDS — tokens that identify the ONE canonical hub and the genuinely-distinct
+# deliverables of the live NIH STTR job. Any task whose title carries one of these is NEVER
+# eligible for pursuit-collapse, so refreshing the keyword nets below cannot cancel the hub
+# (#2613) or a real deliverable (Neil budget #2617, biosketch, cost section, the Park send).
+_NIH_STTR_PROTECT = ["live hub", "⭐", "budget", "costing", "spreadsheet", "cost section",
+                     "biosketch", "sign-off", "sign off", "payload", "commercialization"]
+
 PURSUITS = [
     {
         "key": "nih-mg-sttr-pi-lock",
-        "label": "NIH Microgravity STTR — PI-lock / forward-Kelly decision",
+        "label": "NIH STTR — jon-owned deadline/nudge restatements (one card)",
         "owner": "jon",
         "all_of": ["nih"],
-        # nudge/status/decision restatements of the same recurring item:
+        # nudge/status/deadline restatements of the same recurring item:
         "any_of": ["pi outreach", "pi lock", "forward kelly", "nudge", "seed inquiry",
                    "shortlist", "binary decision", "final window", "sttr deadline",
-                   "days to", "days:", "still pending", "go-ahead", "roses-2026",
-                   "62 days", "gate passed", "aug 4 gate", "concept + capture"],
-        # genuinely-distinct action tasks that must NEVER be collapsed —
-        # specific deliverables and per-PI sends, not generic pursuit nudges:
-        "not_any": ["call prep", "register", "registration", "compliance",
+                   "days to", "days:", "days left", "still pending", "go-ahead", "roses-2026",
+                   "gate passed", "aug 4 gate", "concept + capture", "status check",
+                   "finalize & submit", "finalize and submit", "submit by"],
+        # genuinely-distinct action tasks that must NEVER be collapsed:
+        "not_any": _NIH_STTR_PROTECT + ["call prep", "register", "registration", "compliance",
                     "research security", "who is", "co-pi", "weldon", "estelle",
                     "tagle", "nasa rfi", "purdue path",
                     "reply-chase", "reply chase", "bd outreach", "specific aims",
                     "pre-submission", "presubmission", "warm-intro", "warm intro",
                     "han", "vunjak", "sethu", "mei he", "stanford", "columbia",
                     "tamu", "collicott"],
+    },
+    {
+        # NEW 2026-09-04: the sprawl Jon flagged came mostly from Exo-owned decision-ROUTE
+        # restatements re-spawning the same NIH STTR item (e.g. 2607/2608/2609 "[route] …").
+        # Collapse those to one; the hub and real deliverables are protected by _NIH_STTR_PROTECT.
+        "key": "nih-sttr-route-artifacts",
+        "label": "NIH STTR — Exo-owned decision/route restatements (one card)",
+        "owner": "exo",
+        "all_of": ["nih"],
+        "any_of": ["[route]", "route]", "unblock", "aims 2", "aims 3", "aims 2 & 3",
+                   "research plan back", "era username", "era commons", "send finalized",
+                   "estelle park", "park (purdue)", "assist"],
+        "not_any": _NIH_STTR_PROTECT + ["specific aims", "biosketch", "cost"],
+    },
+    {
+        # NEW 2026-09-04 (Jon): the SAM.gov watcher spawns a fresh "[SAM WATCH] N new Flight
+        # Opportunities / suborbital notice(s)" card each run. Keep ONE rolling card — canon_rank
+        # keeps the most-advanced/most-recent, cancels the older digests. Token "sam watch" is
+        # specific enough to avoid false hits; not_any protects any watch item that became a real
+        # actionable (a specific solicitation with a due date / whitepaper), which should stay.
+        "key": "sam-watch-flight-opps",
+        "label": "SAM.gov watch — Flight Opportunities / suborbital notices (single rolling card)",
+        "owner": "jon",
+        "all_of": ["sam watch"],
+        "not_any": ["whitepaper", "proposal due", "response due", "submit by", "due date",
+                    "rfp", "rfi response", "sources sought response"],
     },
 ]
 

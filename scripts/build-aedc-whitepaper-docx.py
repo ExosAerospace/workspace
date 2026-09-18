@@ -52,9 +52,9 @@ add('EXOS AEROSPACE SYSTEMS & TECHNOLOGIES, INC.', bold=True, size=15,
     align=WD_ALIGN_PARAGRAPH.CENTER, color=NAVY, after=2)
 add('AEDC Velocity Alliance — Whitepaper Submission', bold=True, size=12.5,
     align=WD_ALIGN_PARAGRAPH.CENTER, color=GRAY, after=2)
-add('Onboarding Opportunity 1', size=10.5, align=WD_ALIGN_PARAGRAPH.CENTER,
+add('Onboarding Opportunity 2', size=10.5, align=WD_ALIGN_PARAGRAPH.CENTER,
     italic=True, after=2)
-add('Solicitation FA9101-26-9-Velocity_Alliance   |   10 U.S.C. § 4022   |   June 9, 2026 (Revised)',
+add('Solicitation FA9101-26-9-Velocity_Alliance   |   10 U.S.C. § 4022   |   September 1, 2026 Window',
     size=9, align=WD_ALIGN_PARAGRAPH.CENTER, color=GRAY, after=8)
 
 i = 0

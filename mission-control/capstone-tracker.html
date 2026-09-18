@@ -169,29 +169,24 @@ function renderHero(d){
 function renderKpis(d){
   const t = d.north_star_targets || {};
   const cap = t.bay_capacity_kg != null ? t.bay_capacity_kg : 135;
-  const gate = t.kg_booked_reward_gate != null ? t.kg_booked_reward_gate : 100;
-  const highProb = has(t.high_prob_opportunities) ? t.high_prob_opportunities : '10× the current weekly run-rate';
-
-  // kg booked toward the reward gate — 0 until scorecard has data
-  const kgBooked = kgBookedFromScorecard(d);
-  const pct = gate > 0 ? Math.max(0, Math.min(100, Math.round((kgBooked / gate) * 100))) : 0;
+  const f = d.payload_funnel || {};
+  const inPlay = (Number(f.NEW)||0)+(Number(f.RESEARCHING)||0)+(Number(f.READY)||0);
 
   return `<div class="kpis">
     <div class="kpi">
-      <div class="lbl">Bay capacity to fill</div>
+      <div class="lbl">Bay capacity in play</div>
       <div class="big">${esc(cap)}<span> kg</span></div>
-      <div class="cap">Open payload mass on BLK3 Flight 2</div>
-    </div>
-    <div class="kpi gate">
-      <div class="lbl">Launch-reward gate</div>
-      <div class="big">${esc(kgBooked)}<span> / ${esc(gate)} kg</span></div>
-      <div class="bar"><i style="width:${pct}%"></i></div>
-      <div class="cap">${kgBooked>0 ? pct+'% to the reward gate' : 'Fills as kg get booked'}</div>
+      <div class="cap">Open payload mass on BLK3 Flight 2 you're building the market for</div>
     </div>
     <div class="kpi">
-      <div class="lbl">High-probability target</div>
-      <div class="big" style="font-size:20px;line-height:1.25;margin-top:9px">${esc(highProb)}</div>
-      <div class="cap">Baseline locked Week 1</div>
+      <div class="lbl">Targets to work</div>
+      <div class="big">${esc(inPlay || '—')}</div>
+      <div class="cap">Leads to research &amp; disposition in your queue</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">How you're graded</div>
+      <div class="big" style="font-size:18px;line-height:1.3;margin-top:9px">Research, strategy &amp; process</div>
+      <div class="cap">On the rigor of your work — not on sales closed</div>
     </div>
   </div>`;
 }
@@ -254,44 +249,26 @@ function renderTimeline(d){
 
 /* Rubric */
 function renderRubric(d){
-  const g = d.grading_metrics || {};
-  const dollars = Array.isArray(g.student_outcomes_real_dollars) ? g.student_outcomes_real_dollars : [];
-  const ai = Array.isArray(g.ai_effectiveness) ? g.ai_effectiveness : [];
-
-  const metric = (m, withWeight) => {
-    let w = '';
-    if(withWeight && has(m.weight)){
-      const north = /north/i.test(m.weight);
-      w = `<span class="w ${north?'north':''}">${esc(m.weight)}</span>`;
-    }
-    return `<div class="metric">
-      <div class="ml">${esc(m.label || m.key || '')} ${w}</div>
-      ${has(m.definition) ? `<div class="md">${esc(m.definition)}</div>` : ''}
-    </div>`;
-  };
-
-  const dollarCard = `<div class="rcard">
-    <h3>Graded on real payload $ <span class="tag dollars">Student outcomes</span></h3>
-    <p class="csub">Your grade tracks the pipeline and bookings you actually move — not slideware.</p>
-    ${dollars.length ? dollars.map(m=>metric(m,true)).join('') : '<div class="md" style="color:var(--muted)">Metrics loading…</div>'}
-  </div>`;
-
-  const aiCard = `<div class="rcard">
-    <h3>AI effectiveness <span class="tag ai">Human × fleet</span></h3>
-    <p class="csub">How much leverage you get from directing the EXO3 agent fleet.</p>
-    ${ai.length ? ai.map(m=>metric(m,false)).join('') : '<div class="md" style="color:var(--muted)">Metrics loading…</div>'}
-  </div>`;
-
-  const callout = (has(g.challenge) || has(g.cadence)) ? `<div class="callout">
-    ${has(g.challenge) ? `<div class="ct">The Challenge</div><p>${esc(g.challenge)}</p>` : ''}
-    ${has(g.cadence) ? `<div class="cadence"><b>Cadence:</b> ${esc(g.cadence)}</div>` : ''}
-  </div>` : '';
-
   return `<div class="section">
     <h2>How You're Graded</h2>
-    <p class="hint">Two lenses: the real dollars you generate, and how effectively you wield AI to get there.</p>
-    <div class="cards">${dollarCard}${aiCard}</div>
-    ${callout}
+    <p class="hint">On the quality of your research, strategy, and process — the rigor of your thinking, not sales closed. There is no quota.</p>
+    <div class="cards">
+      <div class="rcard">
+        <h3>Research &amp; strategy <span class="tag dollars">What counts</span></h3>
+        <p class="csub">Graded on the work, not slideware or bookings.</p>
+        <div class="metric"><div class="ml">Primary research</div><div class="md">Disposition the target pipeline against the ICP — fit / no-fit / needs-work with rationale — and give honest feedback on how well the AI scored them.</div></div>
+        <div class="metric"><div class="ml">Secondary research</div><div class="md">Market landscape, a competitive scan, and an independent value-proposition / positioning read on Exos.</div></div>
+        <div class="metric"><div class="ml">Campaign &amp; playbook</div><div class="md">A SPACEavailable…™ campaign that converts and a reusable go-to-market playbook.</div></div>
+        <div class="metric"><div class="ml">Role-fair tracks</div><div class="md">Growth/Outreach · Web &amp; Pipeline · Creative/Content · Data/Analytics · Research &amp; Positioning — each scored in its own currency.</div></div>
+      </div>
+      <div class="rcard">
+        <h3>AI effectiveness <span class="tag ai">Human × fleet</span></h3>
+        <p class="csub">How much leverage you get from directing the EXO3 agent fleet.</p>
+        <div class="metric"><div class="ml">Leverage</div><div class="md">Volume and personalization per hour vs a manual baseline.</div></div>
+        <div class="metric"><div class="ml">Judgment</div><div class="md">Where your fit calls, corrections, and positioning improved on what the AI produced.</div></div>
+        <div class="metric"><div class="ml">Process feedback</div><div class="md">Concrete ways to improve the fleet's scoring and the human-in-the-loop workflow.</div></div>
+      </div>
+    </div>
   </div>`;
 }
 
@@ -305,7 +282,7 @@ function renderScorecard(d){
   const stamp = has(sc.last_computed) ? ` · Last computed ${esc(sc.last_computed)}` : '';
   let body;
   if(!weeks.length){
-    body = `<div class="tablewrap"><div class="empty">Scorecard populates weekly once outreach begins.</div></div>`;
+    body = `<div class="tablewrap"><div class="empty">Progress fills in weekly as you work the queue.</div></div>`;
   }else{
     // Union of keys across rows, preserving first-seen order
     const cols = [];
@@ -320,8 +297,8 @@ function renderScorecard(d){
     body = `<div class="tablewrap"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
   }
   return `<div class="section">
-    <h2>Weekly Scorecard</h2>
-    <p class="hint">Week-over-week trend on the graded metrics.${stamp}</p>
+    <h2>Weekly Progress</h2>
+    <p class="hint">Week-over-week progress on research, disposition, and pipeline development.${stamp}</p>
     ${body}
   </div>`;
 }
@@ -342,15 +319,15 @@ function renderFunnelQueue(d){
     </div>` : '';
 
   const legend = ex.length ? `<div style="margin-top:12px">${ex.map(s=>`
-    <div style="margin:6px 0;padding:8px 12px;background:#0c1c36;border:1px solid var(--line);border-radius:8px">
-      <b>${esc(s.stage)}</b> — ${esc(s.meaning)}</div>`).join('')}</div>` : '';
+    <div style="margin:6px 0;padding:8px 12px;background:var(--card);border:1px solid var(--line);border-radius:8px;color:var(--ink2)">
+      <b style="color:var(--navy)">${esc(s.stage)}</b> — ${esc(s.meaning)}</div>`).join('')}</div>` : '';
 
-  const stageColor = st => st==='RESEARCHING' ? 'var(--yellow,#eab308)' : (st==='READY' ? 'var(--green,#22c55e)' : 'var(--accent)');
+  const stageColor = st => st==='RESEARCHING' ? '#b7841f' : (st==='READY' ? 'var(--green)' : 'var(--navy2)');
   const rows = q.map(item => `
-    <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin:7px 0;background:#0c1c36">
-      <div style="min-width:30px;font-weight:700;font-size:18px;color:var(--muted)">${esc(item.rank||'')}</div>
+    <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin:7px 0;background:var(--card);box-shadow:var(--shadow)">
+      <div style="min-width:30px;font-weight:800;font-size:18px;color:var(--navy2)">${esc(item.rank||'')}</div>
       <div style="flex:1">
-        <div style="font-weight:600">${esc(item.name||'')}
+        <div style="font-weight:700;color:var(--ink)">${esc(item.name||'')}
           <span class="pill" style="border-color:${stageColor(item.stage)};color:${stageColor(item.stage)}">${esc(item.stage||'')}</span>
           ${item.has_poc ? '' : '<span class="pill" style="border-color:var(--red,#ff4444);color:var(--red,#ff4444)">no POC yet</span>'}
         </div>
