@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos Aerospace — Capability-Gap Ledger</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:#0a1628; --navy2:#0d1f3c; --navy3:#112248;
+  --blue:#0066cc; --blue2:#0080ff; --orange:#ff6b00; --orange2:#ff8c33;
+  --text:#e8edf5; --text2:#a0aec0; --border:rgba(255,255,255,0.08);
+  --card:#0f1e38; --green:#22c55e; --yellow:#eab308; --red:#ff4444;
+  --purple:#a855f7; --cyan:#06b6d4;
+}
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--navy); color:var(--text); min-height:100vh; }
+header { background:linear-gradient(135deg,#0a1628 0%,#0d2050 100%); border-bottom:1px solid var(--border); padding:0 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; min-height:64px; }
+.brand { display:flex; align-items:center; gap:12px; }
+.brand-logo { width:36px; height:36px; background:linear-gradient(135deg,var(--blue) 0%,var(--orange) 100%); border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; color:#fff; letter-spacing:-1px; }
+.brand-text h1 { font-size:17px; font-weight:700; color:#fff; letter-spacing:0.5px; }
+.brand-text p { font-size:11px; color:var(--text2); letter-spacing:1.5px; text-transform:uppercase; }
+.header-right { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.nav-link { color:var(--blue2); text-decoration:none; font-size:13px; }
+.nav-link:hover { color:#fff; }
+.last-updated { font-size:11px; color:var(--text2); background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:20px; padding:4px 10px; white-space:nowrap; }
+.intro { padding:14px 24px; background:var(--navy2); border-bottom:1px solid var(--border); font-size:12.5px; color:var(--text2); line-height:1.5; max-width:1100px; }
+.intro strong { color:var(--text); }
+.stats-bar { display:flex; gap:12px; padding:14px 24px; background:var(--navy2); border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.stat-card { background:var(--navy3); border:1px solid var(--border); border-radius:8px; padding:10px 18px; text-align:center; min-width:100px; flex:1; }
+.stat-num { font-size:1.6rem; font-weight:700; }
+.stat-label { font-size:0.7rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+.controls { display:flex; gap:10px; padding:14px 24px; background:var(--navy2); border-bottom:1px solid var(--border); flex-wrap:wrap; align-items:center; }
+.chip { padding:6px 14px; font-size:12px; font-weight:600; color:var(--text2); cursor:pointer; border:1px solid var(--border); border-radius:20px; background:var(--navy3); transition:all .15s; }
+.chip:hover { color:var(--text); }
+.chip.active { color:#fff; border-color:var(--blue2); background:rgba(0,128,255,0.15); }
+#search { flex:1; min-width:200px; padding:8px 12px; background:var(--navy3); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:13px; }
+#search::placeholder { color:var(--text2); }
+.wrap { padding:20px 24px; max-width:1100px; margin:0 auto; }
+.gap { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-bottom:12px; border-left:3px solid var(--border); }
+.gap.sev-high { border-left-color:var(--red); }
+.gap.sev-medium { border-left-color:var(--yellow); }
+.gap.sev-low { border-left-color:var(--text2); }
+.gap-head { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.gap-title { font-size:15px; font-weight:700; color:#fff; flex:1; min-width:200px; }
+.badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:3px 9px; border-radius:12px; white-space:nowrap; }
+.t-build { background:rgba(6,182,212,0.15); color:var(--cyan); }
+.t-buy { background:rgba(255,107,0,0.18); color:var(--orange2); }
+.t-license { background:rgba(168,85,247,0.18); color:var(--purple); }
+.t-partner { background:rgba(34,197,94,0.16); color:var(--green); }
+.st { font-size:10px; font-weight:700; text-transform:uppercase; padding:3px 9px; border-radius:12px; background:rgba(255,255,255,0.06); color:var(--text2); }
+.desc { font-size:13px; color:var(--text); margin-top:9px; line-height:1.45; }
+.cands { margin-top:11px; }
+.cand { font-size:12.5px; color:var(--text); background:var(--navy3); border:1px solid var(--border); border-radius:8px; padding:8px 12px; margin-top:6px; }
+.cand b { color:#fff; }
+.cand span { color:var(--text2); }
+.gap-meta { font-size:11px; color:var(--text2); margin-top:11px; display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
+.gap-meta select { background:var(--navy3); border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:11px; padding:3px 6px; }
+.empty { text-align:center; color:var(--text2); padding:60px 20px; }
+.targets-wrap { padding:18px 24px 4px; max-width:1100px; margin:0 auto; }
+.targets-wrap h2 { font-size:13px; text-transform:uppercase; letter-spacing:1px; color:var(--text2); margin-bottom:12px; }
+.tgt { display:flex; align-items:flex-start; gap:12px; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:13px 16px; margin-bottom:10px; }
+.tgt-rank { font-size:20px; font-weight:800; color:var(--text2); min-width:26px; text-align:center; }
+.tgt-score { font-size:11px; font-weight:700; color:var(--blue2); background:rgba(0,128,255,0.12); border-radius:10px; padding:2px 8px; white-space:nowrap; }
+.tgt-body { flex:1; }
+.tgt-name { font-size:15px; font-weight:700; color:#fff; }
+.tgt-star { color:var(--green); font-size:12px; margin-left:6px; }
+.tgt-meta { font-size:11.5px; color:var(--text2); margin-top:3px; }
+.tgt-next { font-size:12.5px; color:var(--text); margin-top:7px; }
+.tgt-next b { color:var(--orange2); }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-logo">EX</div>
+    <div class="brand-text"><h1>CAPABILITY-GAP LEDGER</h1><p>Mission Control</p></div>
+  </div>
+  <div class="header-right">
+    <a class="nav-link" href="index.html">← Mission Control</a>
+    <a class="nav-link" href="opportunities.html">Opportunities</a>
+    <a class="nav-link" href="research.html">Research</a>
+    <span class="last-updated" id="updated">—</span>
+  </div>
+</header>
+
+<div class="intro">
+  Every gap here is a capability a deal needed that Exos couldn't cover alone — logged by the commercialization engine, classified
+  <strong>build / buy / license / partner</strong>, and pre-matched to a real target or partner. <strong>This is the corp-dev pipeline:</strong>
+  acquisitions, JVs, licensing, and consortium moves that fill the gaps and unlock the next tier of business.
+</div>
+
+<div class="stats-bar">
+  <div class="stat-card"><div class="stat-num" id="s-total">—</div><div class="stat-label">Open Gaps</div></div>
+  <div class="stat-card"><div class="stat-num" id="s-partner" style="color:var(--green)">—</div><div class="stat-label">Partner / JV</div></div>
+  <div class="stat-card"><div class="stat-num" id="s-buy" style="color:var(--orange2)">—</div><div class="stat-label">Buy / Acquire</div></div>
+  <div class="stat-card"><div class="stat-num" id="s-license" style="color:var(--purple)">—</div><div class="stat-label">License</div></div>
+  <div class="stat-card"><div class="stat-num" id="s-build" style="color:var(--cyan)">—</div><div class="stat-label">Build</div></div>
+</div>
+
+<div class="controls">
+  <div class="chip active" data-tag="all">All</div>
+  <div class="chip" data-tag="partner">Partner / JV</div>
+  <div class="chip" data-tag="buy">Buy / Acquire</div>
+  <div class="chip" data-tag="license">License</div>
+  <div class="chip" data-tag="build">Build</div>
+  <div class="chip" data-tag="open">Open only</div>
+  <input id="search" placeholder="Search gaps…" />
+</div>
+
+<div class="targets-wrap" id="targets" style="display:none;">
+  <h2>▸ Priority Targets — which move to make first</h2>
+  <div id="targets-list"></div>
+</div>
+
+<div class="wrap" id="feed"><div class="empty">Loading capability-gap ledger…</div></div>
+
+<script>
+let GAPS = [], TAG = 'all', Q = '';
+const TCLASS = { build:'t-build', buy:'t-buy', license:'t-license', partner:'t-partner' };
+const TLABEL = { build:'BUILD', buy:'BUY / ACQUIRE', license:'LICENSE', partner:'PARTNER / JV' };
+const STATUSES = ['open','matched','in_deal','filled','closed'];
+const TAGS = ['build','buy','license','partner'];
+function esc(s){ return (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+async function load(){
+  let data;
+  try { const r = await fetch('/api/capability-gaps', { credentials:'same-origin' }); if (r.ok) data = await r.json(); } catch(e){}
+  if (!data){ try { const r = await fetch('data/capability-gaps.json?_=' + Date.now()); data = await r.json(); } catch(e){} }
+  if (!data){ document.getElementById('feed').innerHTML = '<div class="empty">Could not load ledger.</div>'; return; }
+  GAPS = data.gaps || [];
+  document.getElementById('updated').textContent = 'Updated ' + ((data.generated_at||'').slice(0,16).replace('T',' '));
+  const openGaps = GAPS.filter(g => g.status !== 'closed' && g.status !== 'filled');
+  const c = t => openGaps.filter(g => g.tag===t).length;
+  document.getElementById('s-total').textContent = openGaps.length;
+  document.getElementById('s-partner').textContent = c('partner');
+  document.getElementById('s-buy').textContent = c('buy');
+  document.getElementById('s-license').textContent = c('license');
+  document.getElementById('s-build').textContent = c('build');
+  render();
+  loadTargets();
+}
+
+async function loadTargets(){
+  let d;
+  try { const r = await fetch('/api/gap-targets', { credentials:'same-origin' }); if (r.ok) d = await r.json(); } catch(e){}
+  if (!d){ try { const r = await fetch('data/gap-targets.json?_=' + Date.now()); d = await r.json(); } catch(e){} }
+  if (!d || !(d.targets||[]).length) return;
+  const box = document.getElementById('targets');
+  document.getElementById('targets-list').innerHTML = d.targets.slice(0,7).map((t,i) => {
+    const gaps = (t.gaps_filled||[]).map(g=>esc(g.capability)).join(', ');
+    return `<div class="tgt">
+      <div class="tgt-rank">${i+1}</div>
+      <div class="tgt-body">
+        <div class="tgt-name">${esc(t.target)}${t.consortium?'<span class="tgt-star">⭐ consortium</span>':''} <span class="tgt-score">${t.score}</span></div>
+        <div class="tgt-meta">${esc(t.deal_type)} · ${esc(t.stage_label)} · fills: ${gaps}</div>
+        <div class="tgt-next"><b>Next:</b> ${esc(t.next_action)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  box.style.display = 'block';
+}
+
+async function update(id, field, value){
+  try {
+    const body = { id }; body[field] = value;
+    const r = await fetch('/api/capability-gaps/update', { method:'POST', credentials:'same-origin', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    if (r.ok){ const j = await r.json(); const g = GAPS.find(x=>x.id===id); if (g && j.gap) Object.assign(g, j.gap); load(); }
+  } catch(e){}
+}
+
+function render(){
+  const feed = document.getElementById('feed');
+  let list = GAPS.slice();
+  if (TAG==='open') list = list.filter(g => g.status==='open');
+  else if (TAG!=='all') list = list.filter(g => g.tag===TAG);
+  if (Q){ const q=Q.toLowerCase(); list = list.filter(g => (g.capability+' '+(g.description||'')+' '+(g.source||'')+' '+(g.candidates||[]).map(c=>c.name).join(' ')).toLowerCase().includes(q)); }
+  if (!list.length){ feed.innerHTML = '<div class="empty">No gaps match.</div>'; return; }
+  feed.innerHTML = list.map(g => {
+    const cands = (g.candidates||[]).map(c => `<div class="cand"><b>${esc(c.name)}</b> — <span>${esc(c.why||'')}</span></div>`).join('') || '<div class="cand"><span>No pre-matched candidate — source a target/partner.</span></div>';
+    const stOpts = STATUSES.map(s => `<option value="${s}" ${g.status===s?'selected':''}>${s}</option>`).join('');
+    const tgOpts = TAGS.map(t => `<option value="${t}" ${g.tag===t?'selected':''}>${TLABEL[t]}</option>`).join('');
+    return `<div class="gap sev-${esc(g.severity||'medium')}">
+      <div class="gap-head">
+        <div class="gap-title">${esc(g.capability)}</div>
+        <span class="badge ${TCLASS[g.tag]||''}">${TLABEL[g.tag]||esc(g.tag)}</span>
+        <span class="st">${esc(g.status)}</span>
+      </div>
+      ${g.description ? `<div class="desc">${esc(g.description)}</div>` : ''}
+      <div class="cands">${cands}</div>
+      <div class="gap-meta">
+        <span>${esc(g.category||'')}</span>
+        <span>severity: ${esc(g.severity||'')}</span>
+        <span>hits: ${g.hits||1}</span>
+        <span>source: ${esc(g.source||'')}</span>
+        <span>path: <select onchange="update('${g.id}','tag',this.value)">${tgOpts}</select></span>
+        <span>status: <select onchange="update('${g.id}','status',this.value)">${stOpts}</select></span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', () => {
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); ch.classList.add('active');
+  TAG = ch.dataset.tag; render();
+}));
+document.getElementById('search').addEventListener('input', e => { Q = e.target.value; render(); });
+load();
+</script>
+</body>
+</html>

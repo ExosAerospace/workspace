@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Dashboard · Mission Control</title>
+<style>
+  :root{--bg:#0a1929;--panel:#0f2438;--panel2:#12293f;--line:#1d3a56;--ink:#e8f0f8;--mut:#8ba7c4;--accent:#3ea6ff;--accent2:#1e6fd0;--green:#37d67a;--amber:#ffb020;--red:#ff5c5c;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);}
+  /* immutable top bar */
+  .topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:14px;padding:10px 16px;background:linear-gradient(180deg,#0d2036,#0a1929);border-bottom:1px solid var(--line);}
+  .topbar .brand{font-weight:700;letter-spacing:.3px;font-size:.98rem;color:#fff;white-space:nowrap}
+  .topbar .brand span{color:var(--accent)}
+  .tabs{display:flex;gap:2px;overflow:auto;flex:1}
+  .tabs a{color:var(--mut);text-decoration:none;font-size:.82rem;padding:6px 10px;border-radius:7px;white-space:nowrap}
+  .tabs a:hover{background:var(--panel2);color:var(--ink)}
+  .tabs a.active{background:var(--accent2);color:#fff}
+  .controls{display:flex;gap:6px;align-items:center}
+  .btn{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:6px 10px;font-size:.8rem;cursor:pointer;white-space:nowrap}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent2);border-color:var(--accent2);color:#fff}
+  .btn.ghost{background:transparent}
+  .whoami{font-size:.75rem;color:var(--mut);margin-left:4px;white-space:nowrap}
+  /* layout body */
+  .wrap{display:flex;min-height:calc(100vh - 52px)}
+  .picker{width:230px;flex:0 0 230px;background:var(--panel);border-right:1px solid var(--line);padding:12px;transition:margin-left .2s;}
+  .picker.collapsed{margin-left:-230px}
+  .picker h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:6px 2px 10px}
+  .widget-opt{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);margin-bottom:8px;cursor:pointer}
+  .widget-opt:hover{border-color:var(--accent)}
+  .widget-opt .ic{font-size:1.1rem}
+  .widget-opt .nm{font-size:.82rem;font-weight:600}
+  .widget-opt .ds{font-size:.7rem;color:var(--mut)}
+  .canvas{flex:1;padding:16px;overflow:auto}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-content:start}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;min-height:150px;overflow:hidden}
+  .card.full{grid-column:1 / -1}
+  .card.drag-over{outline:2px dashed var(--accent);outline-offset:2px}
+  .card.dragging{opacity:.5}
+  .chead{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--line);background:var(--panel2);cursor:grab}
+  .chead .t{font-size:.85rem;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chead .h{color:var(--mut);cursor:grab;font-size:.9rem}
+  .icobtn{background:none;border:none;color:var(--mut);cursor:pointer;font-size:.85rem;padding:2px 5px;border-radius:6px}
+  .icobtn:hover{color:var(--ink);background:var(--panel)}
+  .cbody{padding:10px 12px;overflow:auto;flex:1}
+  .empty{color:var(--mut);text-align:center;padding:50px 20px;border:2px dashed var(--line);border-radius:12px;grid-column:1 / -1}
+  /* task list */
+  .task{display:flex;gap:8px;align-items:flex-start;padding:7px 4px;border-bottom:1px solid var(--line);font-size:.82rem}
+  .task:last-child{border-bottom:none}
+  .pri{flex:0 0 auto;width:6px;height:6px;border-radius:50%;margin-top:6px;background:var(--mut)}
+  .pri.hi{background:var(--red)}.pri.md{background:var(--amber)}.pri.lo{background:var(--green)}
+  .task .tt{flex:1}
+  .task .meta{color:var(--mut);font-size:.7rem}
+  .pill{display:inline-block;font-size:.66rem;padding:1px 6px;border-radius:20px;background:var(--panel2);color:var(--mut);border:1px solid var(--line);margin-left:4px}
+  /* chart */
+  .bar{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.78rem}
+  .bar .lbl{flex:0 0 120px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar .track{flex:1;background:var(--panel2);border-radius:6px;overflow:hidden;height:16px}
+  .bar .fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));}
+  .bar .n{flex:0 0 auto;color:var(--ink);font-variant-numeric:tabular-nums;width:34px;text-align:right}
+  select,input,textarea{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 7px;font-size:.78rem;font-family:inherit}
+  textarea{width:100%;min-height:120px;resize:vertical}
+  .cfgrow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#123;border:1px solid var(--accent);color:#fff;padding:10px 16px;border-radius:9px;font-size:.85rem;opacity:0;transition:opacity .25s;z-index:50}
+  .toast.show{opacity:1}
+  .dirty-dot{color:var(--amber);font-size:1.1rem;line-height:1}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="/index.html" class="brand" style="text-decoration:none" title="Back to Mission Control">← EXOS <span>Mission&nbsp;Control</span></a>
+  <div class="tabs" id="tabs"></div>
+  <div class="controls">
+    <button class="btn ghost" id="togglePicker" title="Show/hide widget menu">☰ Widgets</button>
+    <button class="btn" id="loadBtn" title="Reload your saved layout">Load</button>
+    <button class="btn primary" id="saveBtn" title="Save your layout">Save <span id="dirty" class="dirty-dot" style="display:none">•</span></button>
+    <select class="btn" id="themeSel" title="Color theme" style="padding:6px 8px">
+      <option value="blue">Navy (default)</option>
+      <option value="slate">Slate</option>
+      <option value="carbon">Carbon</option>
+      <option value="midnight">Midnight</option>
+    </select>
+    <button class="btn" id="resetBtn" title="Reset to the company default layout">Company&nbsp;Default</button>
+    <button class="btn" id="defaultBtn" title="Make this the company default for everyone" style="display:none">Set&nbsp;as&nbsp;Company&nbsp;Default</button>
+    <span class="whoami" id="whoami"></span>
+  </div>
+</div>
+<div class="wrap">
+  <aside class="picker" id="picker">
+    <h3>Add a widget</h3>
+    <div id="widgetOpts"></div>
+    <h3 style="margin-top:18px">Tips</h3>
+    <div style="font-size:.72rem;color:var(--mut);line-height:1.5">
+      Drag a card by its header to rearrange. Use ⤢ to toggle half/full width, ✕ to remove.
+      <b>Save</b> stores your personal layout; it loads automatically next time.
+    </div>
+  </aside>
+  <main class="canvas">
+    <div class="grid" id="grid"></div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ---- widget catalog ----------------------------------------------------------
+const CATALOG = {
+  'my-tasks':  {icon:'✅', name:'My Tasks',   desc:'Your task list, filterable', full:false},
+  'tasks-chart':{icon:'📊', name:'Task Chart', desc:'Counts by state/category/owner', full:false},
+  'notes':     {icon:'📝', name:'Notes',      desc:'A scratchpad, saved with your layout', full:false},
+  'messages':  {icon:'💬', name:'Messages',   desc:'Recent activity (preview)', full:false},
+  'erp-bom':   {icon:'🧩', name:'ERP / BOM',  desc:'ERP widget (preview)', full:true},
+};
+// primary nav tabs (the immutable top bar)
+const TABS = [
+  ['Dashboard','/dashboard.html'],['Board','/index.html'],['Program','/program.html'],
+  ['Fleet','/fleet.html'],['Opportunities','/opportunities.html'],['CRM','/crm.html'],
+  ['ERP Rollout','/erp-rollout.html'],['Research','/research.html'],['Decisions','/decisions.html'],
+];
+// built-in default used when the company has not set one yet
+const BUILTIN_DEFAULT = {theme:'blue', widgets:[
+  {id:'w1', type:'my-tasks', size:'half', config:{scope:'mine', state:'open', limit:12}},
+  {id:'w2', type:'tasks-chart', size:'half', config:{groupBy:'state', scope:'mine'}},
+  {id:'w3', type:'notes', size:'full', config:{text:''}},
+]};
+
+// color themes — swap CSS custom properties on :root
+const THEMES = {
+  blue:    {'--bg':'#0a1929','--panel':'#0f2438','--panel2':'#12293f','--line':'#1d3a56','--accent':'#3ea6ff','--accent2':'#1e6fd0'},
+  slate:   {'--bg':'#111820','--panel':'#18222c','--panel2':'#1e2a36','--line':'#2b3947','--accent':'#7fb2d9','--accent2':'#41708f'},
+  carbon:  {'--bg':'#0c0c0e','--panel':'#151518','--panel2':'#1c1c20','--line':'#2a2a30','--accent':'#ff8c42','--accent2':'#c05a1e'},
+  midnight:{'--bg':'#0a0a1a','--panel':'#12122a','--panel2':'#181838','--line':'#26264a','--accent':'#9d7bff','--accent2':'#5a3fd0'},
+};
+function applyTheme(name){
+  const t=THEMES[name]||THEMES.blue;
+  for(const k in t) document.documentElement.style.setProperty(k,t[k]);
+  const sel=document.getElementById('themeSel'); if(sel) sel.value = THEMES[name]?name:'blue';
+}
+let ME = {email:'', name:'', role:''};
+let STATE = {theme:'blue', widgets:[]};
+let TASKS = null;      // cached /api/tasks
+let dirty = false;
+const $ = s => document.querySelector(s);
+const uid = () => 'w'+Math.random().toString(36).slice(2,8);
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900);}
+function markDirty(v){dirty=v;$('#dirty').style.display=v?'inline':'none';}
+
+// ---- data --------------------------------------------------------------------
+async function getTasks(){
+  if(TASKS) return TASKS;
+  try{ const r=await fetch('/api/tasks',{credentials:'same-origin'}); TASKS = r.ok?await r.json():[]; }
+  catch(e){ TASKS=[]; }
+  return TASKS;
+}
+const DONE = new Set(['Done','Completed','Closed','Archived','Cancelled']);
+function mineFilter(t){
+  const me=(ME.email||'').toLowerCase(), nm=ME.name;
+  return (t.assigned_email||'').toLowerCase()===me || t.owner===nm || t.owner===ME.email;
+}
+
+// ---- widget renderers --------------------------------------------------------
+async function renderBody(w, el){
+  if(w.type==='my-tasks')      return renderTasks(w, el);
+  if(w.type==='tasks-chart')   return renderChart(w, el);
+  if(w.type==='notes')         return renderNotes(w, el);
+  if(w.type==='messages')      return renderMessages(w, el);
+  if(w.type==='erp-bom')       return renderErp(w, el);
+  el.textContent='Unknown widget';
+}
+function priClass(p){p=+p||0;return p>=80?'hi':p>=60?'md':'lo';}
+async function renderTasks(w, el){
+  const c=w.config||(w.config={});
+  const all=await getTasks();
+  let list=all.filter(t=>!DONE.has(t.state||'') );
+  if((c.scope||'mine')==='mine') list=list.filter(mineFilter);
+  if(c.category&&c.category!=='all') list=list.filter(t=>(t.category||'')===c.category);
+  if((c.state||'open')==='open') {} // already open-only
+  const cats=['all',...Array.from(new Set(all.map(t=>t.category).filter(Boolean))).sort()];
+  const lim=+c.limit||12;
+  const rows=list.slice(0,lim).map(t=>`<div class="task"><span class="pri ${priClass(t.priority)}"></span>
+     <div class="tt">${esc(t.title||'')}<div class="meta">${esc(t.owner||'')}${t.due_date?' · due '+String(t.due_date).slice(0,10):''}${t.category?'<span class="pill">'+esc(t.category)+'</span>':''}</div></div></div>`).join('');
+  el.innerHTML=`<div class="cfgrow">
+     <select data-k="scope"><option value="mine"${c.scope!=='all'?' selected':''}>My tasks</option><option value="all"${c.scope==='all'?' selected':''}>All tasks</option></select>
+     <select data-k="category">${cats.map(x=>`<option value="${esc(x)}"${(c.category||'all')===x?' selected':''}>${x==='all'?'All categories':esc(x)}</option>`).join('')}</select>
+     <select data-k="limit">${[8,12,20,40].map(n=>`<option${(+c.limit||12)===n?' selected':''}>${n}</option>`).join('')}</select>
+   </div><div>${rows||'<div style="color:var(--mut);font-size:.8rem">No matching open tasks.</div>'}</div>
+   <div style="color:var(--mut);font-size:.7rem;margin-top:6px">${list.length} open · showing ${Math.min(lim,list.length)}</div>`;
+  el.querySelectorAll('select[data-k]').forEach(s=>s.onchange=()=>{c[s.dataset.k]=s.value;markDirty(true);renderTasks(w,el);});
+}
+async function renderChart(w, el){
+  const c=w.config||(w.config={});
+  const all=await getTasks();
+  let list=all.filter(t=>!DONE.has(t.state||''));
+  if((c.scope||'all')==='mine') list=list.filter(mineFilter);
+  const gb=c.groupBy||'state';
+  const counts={};
+  list.forEach(t=>{const k=(t[gb]||'—');counts[k]=(counts[k]||0)+1;});
+  const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const max=Math.max(1,...entries.map(e=>e[1]));
+  el.innerHTML=`<div class="cfgrow">
+     <select data-k="groupBy">${['state','category','owner','priority'].map(x=>`<option${gb===x?' selected':''}>${x}</option>`).join('')}</select>
+     <select data-k="scope"><option value="all"${c.scope!=='mine'?' selected':''}>All</option><option value="mine"${c.scope==='mine'?' selected':''}>Mine</option></select>
+   </div>${entries.map(([k,n])=>`<div class="bar"><span class="lbl" title="${esc(k)}">${esc(k)}</span><span class="track"><span class="fill" style="width:${Math.round(n/max*100)}%"></span></span><span class="n">${n}</span></div>`).join('')||'<div style="color:var(--mut)">No data</div>'}`;
+  el.querySelectorAll('select[data-k]').forEach(s=>s.onchange=()=>{c[s.dataset.k]=s.value;markDirty(true);renderChart(w,el);});
+}
+function renderNotes(w, el){
+  const c=w.config||(w.config={});
+  el.innerHTML=`<textarea placeholder="Notes (saved with your layout)…">${esc(c.text||'')}</textarea>`;
+  const ta=el.querySelector('textarea');
+  ta.oninput=()=>{c.text=ta.value;markDirty(true);};
+}
+// RFC2047-ish subject decode for common =?utf-8?q?..?= / ?b? headers
+function decodeSubj(s){
+  if(!s) return '';
+  try{ return s.replace(/=\?[^?]+\?([QqBb])\?([^?]*)\?=/g,(m,enc,txt)=>{
+    if(enc.toLowerCase()==='b'){ try{return decodeURIComponent(escape(atob(txt)));}catch(e){return txt;} }
+    let t=txt.replace(/_/g,' ').replace(/=([0-9A-Fa-f]{2})/g,(x,h)=>String.fromCharCode(parseInt(h,16)));
+    try{return decodeURIComponent(escape(t));}catch(e){return t;}
+  }).trim(); }catch(e){ return s; }
+}
+async function renderMessages(w, el){
+  const c=w.config||(w.config={});
+  let data=[];
+  try{ const r=await fetch('/api/email-activity',{credentials:'same-origin'}); if(r.ok) data=await r.json(); else if(r.status===403){el.innerHTML='<div style="color:var(--mut);font-size:.8rem">Messages aren\'t available in your role\'s preview.</div>';return;} }
+  catch(e){ el.innerHTML='<div style="color:var(--mut);font-size:.8rem">Could not load activity.</div>'; return; }
+  let list=data.slice();
+  if((c.dir||'all')!=='all') list=list.filter(r=>(r.direction||'')===c.dir);
+  list.sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+  const lim=+c.limit||10;
+  const rows=list.slice(0,lim).map(r=>{
+    const who = r.direction==='sent' ? ('→ '+((r.to&&r.to[0])||'')) : ('← '+(r.from||''));
+    const item = r.matched_item?`<a href="/index.html?focus=${esc(r.matched_item)}" style="color:var(--accent);text-decoration:none" class="pill">#${esc(r.matched_item)}</a>`:'';
+    return `<div class="task"><span class="pri ${r.direction==='sent'?'lo':'md'}"></span><div class="tt">${esc(decodeSubj(r.subject)||'(no subject)')}
+      <div class="meta">${esc(who)} · ${esc(String(r.date||'').slice(0,10))} ${item}</div></div></div>`;
+  }).join('');
+  el.innerHTML=`<div class="cfgrow">
+     <select data-k="dir"><option value="all"${(c.dir||'all')==='all'?' selected':''}>All mail</option><option value="sent"${c.dir==='sent'?' selected':''}>Sent</option><option value="received"${c.dir==='received'?' selected':''}>Received</option></select>
+     <select data-k="limit">${[10,20,40].map(n=>`<option${(+c.limit||10)===n?' selected':''}>${n}</option>`).join('')}</select>
+   </div>${rows||'<div style="color:var(--mut);font-size:.8rem">No activity.</div>'}`;
+  el.querySelectorAll('select[data-k]').forEach(s=>s.onchange=()=>{c[s.dataset.k]=s.value;markDirty(true);renderMessages(w,el);});
+}
+async function renderErp(w, el){
+  let d=null;
+  try{ const r=await fetch('/data/erp-rollout.json',{credentials:'same-origin'}); if(r.ok) d=await r.json(); }
+  catch(e){}
+  if(!d){ el.innerHTML='<div style="color:var(--mut);font-size:.8rem">ERP rollout data unavailable in your view. <a href="/erp-rollout.html" style="color:var(--accent)">Open ERP Rollout →</a></div>'; return; }
+  const ms=Array.isArray(d.milestones)?d.milestones:[];
+  const done=ms.filter(m=>/done|complete/i.test(m.status||'')).length;
+  const metrics=d.metrics||{};
+  const mrows=ms.slice(0,6).map(m=>`<div class="bar"><span class="lbl" title="${esc(m.name||m.title||'')}">${esc(m.name||m.title||'')}</span><span class="track"><span class="fill" style="width:${/done|complete/i.test(m.status||'')?100:(/prog/i.test(m.status||'')?55:12)}%"></span></span><span class="n" style="width:auto">${esc((m.status||'').slice(0,10))}</span></div>`).join('');
+  const mets=Object.entries(metrics).slice(0,4).map(([k,v])=>`<span class="pill">${esc(k)}: ${esc(typeof v==='object'?JSON.stringify(v):v)}</span>`).join(' ');
+  el.innerHTML=`<div style="font-size:.8rem;margin-bottom:6px">ERP Rollout — <b>${done}/${ms.length}</b> milestones complete ${mets}</div>${mrows||''}
+    <div style="margin-top:8px"><a href="/erp-rollout.html" style="color:var(--accent);text-decoration:none;font-size:.78rem">Open full ERP Rollout →</a></div>`;
+}
+function esc(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+
+// ---- grid / cards ------------------------------------------------------------
+function render(){
+  const g=$('#grid'); g.innerHTML='';
+  if(!STATE.widgets.length){ g.innerHTML='<div class="empty">Empty dashboard — add widgets from the left, arrange them, then <b>Save</b>.</div>'; return; }
+  STATE.widgets.forEach(w=>{
+    const card=document.createElement('div');
+    card.className='card'+(w.size==='full'?' full':''); card.dataset.id=w.id; card.draggable=false;
+    const cat=CATALOG[w.type]||{icon:'▪',name:w.type};
+    card.innerHTML=`<div class="chead"><span class="h">⠿</span><span class="t">${cat.icon} ${esc(cat.name)}</span>
+      <button class="icobtn" data-a="size" title="Toggle width">⤢</button>
+      <button class="icobtn" data-a="remove" title="Remove">✕</button></div>
+      <div class="cbody"></div>`;
+    g.appendChild(card);
+    renderBody(w, card.querySelector('.cbody'));
+    // header actions
+    card.querySelector('[data-a="remove"]').onclick=()=>{STATE.widgets=STATE.widgets.filter(x=>x.id!==w.id);markDirty(true);render();};
+    card.querySelector('[data-a="size"]').onclick=()=>{w.size=w.size==='full'?'half':'full';markDirty(true);render();};
+    // drag to reorder (grab header)
+    const head=card.querySelector('.chead');
+    head.onmousedown=()=>{card.draggable=true;};
+    card.ondragstart=e=>{card.classList.add('dragging');e.dataTransfer.setData('text/plain',w.id);};
+    card.ondragend=()=>{card.classList.remove('dragging');card.draggable=false;document.querySelectorAll('.card').forEach(c=>c.classList.remove('drag-over'));};
+    card.ondragover=e=>{e.preventDefault();card.classList.add('drag-over');};
+    card.ondragleave=()=>card.classList.remove('drag-over');
+    card.ondrop=e=>{e.preventDefault();card.classList.remove('drag-over');
+      const from=e.dataTransfer.getData('text/plain'); if(from===w.id)return;
+      const arr=STATE.widgets; const fi=arr.findIndex(x=>x.id===from), ti=arr.findIndex(x=>x.id===w.id);
+      const [m]=arr.splice(fi,1); arr.splice(ti,0,m); markDirty(true); render();};
+  });
+}
+
+// ---- layout persistence ------------------------------------------------------
+async function loadLayout(forceDefault){
+  const r=await fetch('/api/layout'+(forceDefault?'?default=1':''),{credentials:'same-origin'});
+  const d=await r.json();
+  STATE = (d.layout && Array.isArray(d.layout.widgets)) ? d.layout : JSON.parse(JSON.stringify(BUILTIN_DEFAULT));
+  applyTheme(STATE.theme||'blue');
+  markDirty(false); render();
+  return d;
+}
+async function saveLayout(asDefault){
+  const r=await fetch('/api/layout'+(asDefault?'?default=1':''),{method:'POST',credentials:'same-origin',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify({layout:STATE})});
+  const d=await r.json();
+  if(r.ok){ markDirty(false); toast(asDefault?'Saved as company default':'Layout saved'); }
+  else toast(d.error||'Save failed');
+}
+
+// ---- boot --------------------------------------------------------------------
+function buildTabs(){
+  $('#tabs').innerHTML=TABS.map(([n,h])=>`<a href="${h}" class="${location.pathname===h?'active':''}">${n}</a>`).join('');
+}
+function buildPicker(){
+  $('#widgetOpts').innerHTML=Object.entries(CATALOG).map(([k,v])=>
+    `<div class="widget-opt" data-t="${k}"><span class="ic">${v.icon}</span><div><div class="nm">${v.name}</div><div class="ds">${v.desc}</div></div></div>`).join('');
+  document.querySelectorAll('.widget-opt').forEach(o=>o.onclick=()=>{
+    const t=o.dataset.t; STATE.widgets.push({id:uid(),type:t,size:CATALOG[t].full?'full':'half',config:{}});
+    markDirty(true); render();
+  });
+}
+async function boot(){
+  buildTabs(); buildPicker();
+  try{ const me=await (await fetch('/api/me',{credentials:'same-origin'})).json(); if(me&&me.email){ME=me;} }catch(e){}
+  $('#whoami').textContent = ME.name? (ME.name+(ME.role?' · '+ME.role:'')) : '';
+  if(ME.role==='admin') $('#defaultBtn').style.display='';
+  await loadLayout(false);
+  $('#saveBtn').onclick=()=>saveLayout(false);
+  $('#loadBtn').onclick=()=>loadLayout(false).then(()=>toast('Layout reloaded'));
+  $('#resetBtn').onclick=()=>{ if(dirty && !confirm('Discard changes and load the company default?'))return; loadLayout(true).then(()=>toast('Company default loaded (Save to keep it)')); };
+  $('#defaultBtn').onclick=()=>{ if(confirm('Make your current layout the COMPANY DEFAULT for everyone who has not customized theirs?')) saveLayout(true); };
+  $('#togglePicker').onclick=()=>$('#picker').classList.toggle('collapsed');
+  $('#themeSel').onchange=()=>{ STATE.theme=$('#themeSel').value; applyTheme(STATE.theme); markDirty(true); };
+  window.addEventListener('beforeunload',e=>{ if(dirty){e.preventDefault();e.returnValue='';} });
+}
+boot();
+</script>
+</body>
+</html>

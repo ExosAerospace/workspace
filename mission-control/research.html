@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos Aerospace — Research & Intel</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:#0a1628; --navy2:#0d1f3c; --navy3:#112248;
+  --blue:#0066cc; --blue2:#0080ff; --orange:#ff6b00; --orange2:#ff8c33;
+  --text:#e8edf5; --text2:#a0aec0; --border:rgba(255,255,255,0.08);
+  --card:#0f1e38; --green:#22c55e; --yellow:#eab308; --red:#ff4444;
+  --purple:#a855f7; --cyan:#06b6d4;
+}
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--navy); color:var(--text); min-height:100vh; }
+header { background:linear-gradient(135deg,#0a1628 0%,#0d2050 100%); border-bottom:1px solid var(--border); padding:0 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; min-height:64px; }
+.brand { display:flex; align-items:center; gap:12px; }
+.brand-logo { width:36px; height:36px; background:linear-gradient(135deg,var(--blue) 0%,var(--orange) 100%); border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; color:#fff; letter-spacing:-1px; }
+.brand-text h1 { font-size:17px; font-weight:700; color:#fff; letter-spacing:0.5px; }
+.brand-text p { font-size:11px; color:var(--text2); letter-spacing:1.5px; text-transform:uppercase; }
+.header-right { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.nav-link { color:var(--blue2); text-decoration:none; font-size:13px; }
+.nav-link:hover { color:#fff; }
+.last-updated { font-size:11px; color:var(--text2); background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:20px; padding:4px 10px; white-space:nowrap; }
+.stats-bar { display:flex; gap:12px; padding:14px 24px; background:var(--navy2); border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.stat-card { background:var(--navy3); border:1px solid var(--border); border-radius:8px; padding:10px 18px; text-align:center; min-width:110px; flex:1; }
+.stat-num { font-size:1.6rem; font-weight:700; }
+.stat-label { font-size:0.7rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+.controls { display:flex; gap:10px; padding:14px 24px; background:var(--navy2); border-bottom:1px solid var(--border); flex-wrap:wrap; align-items:center; }
+.chip { padding:6px 14px; font-size:12px; font-weight:600; color:var(--text2); cursor:pointer; border:1px solid var(--border); border-radius:20px; background:var(--navy3); transition:all .15s; }
+.chip:hover { color:var(--text); }
+.chip.active { color:#fff; border-color:var(--blue2); background:rgba(0,128,255,0.15); }
+#search { flex:1; min-width:200px; padding:8px 12px; background:var(--navy3); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:13px; }
+#search::placeholder { color:var(--text2); }
+.wrap { padding:20px 24px; max-width:1100px; margin:0 auto; }
+.brief { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-bottom:12px; }
+.brief-head { display:flex; align-items:center; gap:10px; flex-wrap:wrap; cursor:pointer; }
+.brief-title { font-size:15px; font-weight:700; color:#fff; flex:1; min-width:200px; }
+.badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:3px 9px; border-radius:12px; white-space:nowrap; }
+.b-inbox { background:rgba(6,182,212,0.15); color:var(--cyan); }
+.b-bd { background:rgba(255,107,0,0.18); color:var(--orange2); }
+.b-research { background:rgba(168,85,247,0.18); color:var(--purple); }
+.b-strategy { background:rgba(34,197,94,0.16); color:var(--green); }
+.date { font-size:12px; color:var(--text2); white-space:nowrap; }
+.highlights { margin:12px 0 0 0; padding-left:18px; }
+.highlights li { font-size:13px; color:var(--text); margin-bottom:5px; line-height:1.45; }
+.highlights li strong { color:#fff; }
+.brief-meta { font-size:11px; color:var(--text2); margin-top:10px; display:flex; gap:14px; flex-wrap:wrap; }
+.body-full { display:none; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); white-space:pre-wrap; font-size:12.5px; color:var(--text2); line-height:1.5; max-height:420px; overflow:auto; }
+.brief.open .body-full { display:block; }
+.toggle { font-size:11px; color:var(--blue2); cursor:pointer; user-select:none; }
+.empty { text-align:center; color:var(--text2); padding:60px 20px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-logo">EX</div>
+    <div class="brand-text"><h1>RESEARCH &amp; INTEL</h1><p>Mission Control</p></div>
+  </div>
+  <div class="header-right">
+    <a class="nav-link" href="index.html">← Mission Control</a>
+    <a class="nav-link" href="opportunities.html">Opportunities</a>
+    <a class="nav-link" href="crm.html">CRM</a>
+    <span class="last-updated" id="updated">—</span>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-card"><div class="stat-num" id="s-total">—</div><div class="stat-label">Briefs</div></div>
+  <div class="stat-card"><div class="stat-num" id="s-inbox" style="color:var(--cyan)">—</div><div class="stat-label">Inbox Digests</div></div>
+  <div class="stat-card"><div class="stat-num" id="s-bd" style="color:var(--orange2)">—</div><div class="stat-label">BD Intel</div></div>
+  <div class="stat-card"><div class="stat-num" id="s-research" style="color:var(--purple)">—</div><div class="stat-label">Research</div></div>
+  <div class="stat-card"><div class="stat-num" id="s-strategy" style="color:var(--green)">—</div><div class="stat-label">Strategy</div></div>
+</div>
+
+<div class="controls">
+  <div class="chip active" data-cat="all">All</div>
+  <div class="chip" data-cat="Inbox Digest">Inbox</div>
+  <div class="chip" data-cat="BD Intel">BD Intel</div>
+  <div class="chip" data-cat="Research">Research</div>
+  <div class="chip" data-cat="Strategy Brief">Strategy</div>
+  <input id="search" placeholder="Search briefs…" />
+</div>
+
+<div class="wrap" id="feed"><div class="empty">Loading research feed…</div></div>
+
+<script>
+let BRIEFS = [], CAT = 'all', Q = '';
+const BCLASS = { 'Inbox Digest':'b-inbox', 'BD Intel':'b-bd', 'Research':'b-research', 'Strategy Brief':'b-strategy' };
+
+function esc(s){ return (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+async function load(){
+  let data;
+  try {
+    const r = await fetch('/api/research', { credentials:'same-origin' });
+    if (r.ok) data = await r.json();
+  } catch(e){}
+  if (!data) {
+    try { const r = await fetch('data/research.json?_=' + Date.now()); data = await r.json(); } catch(e){}
+  }
+  if (!data){ document.getElementById('feed').innerHTML = '<div class="empty">Could not load research feed.</div>'; return; }
+  BRIEFS = data.briefs || [];
+  document.getElementById('updated').textContent = 'Updated ' + (data.generated_display || '');
+  const c = k => BRIEFS.filter(b=>b.category===k).length;
+  document.getElementById('s-total').textContent = BRIEFS.length;
+  document.getElementById('s-inbox').textContent = c('Inbox Digest');
+  document.getElementById('s-bd').textContent = c('BD Intel');
+  document.getElementById('s-research').textContent = c('Research');
+  document.getElementById('s-strategy').textContent = c('Strategy Brief');
+  render();
+}
+
+function render(){
+  const feed = document.getElementById('feed');
+  let list = BRIEFS.filter(b => CAT==='all' || b.category===CAT);
+  if (Q) { const q=Q.toLowerCase(); list = list.filter(b => (b.title+' '+(b.body||'')+' '+(b.highlights||[]).join(' ')).toLowerCase().includes(q)); }
+  if (!list.length){ feed.innerHTML = '<div class="empty">No briefs match.</div>'; return; }
+  feed.innerHTML = list.map((b,i)=>{
+    const hl = (b.highlights||[]).map(h=>'<li>'+esc(h).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')+'</li>').join('');
+    return `<div class="brief" id="b${i}">
+      <div class="brief-head" onclick="document.getElementById('b${i}').classList.toggle('open')">
+        <span class="brief-title">${esc(b.title)}</span>
+        <span class="badge ${BCLASS[b.category]||''}">${esc(b.category)}</span>
+        <span class="date">${esc(b.date||'')}</span>
+      </div>
+      ${hl ? '<ul class="highlights">'+hl+'</ul>' : ''}
+      <div class="brief-meta">
+        <span>📄 ${esc(b.source||'')}</span>
+        ${b.item_count?('<span>'+b.item_count+' items</span>'):''}
+        <span class="toggle">▾ full brief</span>
+      </div>
+      <div class="body-full">${esc(b.body||'')}</div>
+    </div>`;
+  }).join('');
+}
+
+document.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  ch.classList.add('active'); CAT=ch.dataset.cat; render();
+});
+document.getElementById('search').addEventListener('input', e=>{ Q=e.target.value; render(); });
+load();
+</script>
+</body>
+</html>

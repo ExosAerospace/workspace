@@ -1,0 +1,90 @@
+{
+  "generated": "2026-08-22",
+  "updated": "2026-08-31",
+  "source": "UTD EXO3 Payload Capstone. Members seeded from the team's 2026-08-31 intro email (bios + preliminary track lean). Skill/interest ratings are filled by the Week-1 capability survey; profiles regenerate then. Mirrors config/capability-matrix.json (Exos employee model).",
+  "scale": "skill + interest each 1-5 (5=expert/love it, 1=none/avoid). 0=blank. Empty {} = awaiting survey.",
+  "team_lead": "Roel Saenz (RCS220001@utdallas.edu) — main point of contact",
+  "roster_note": "6 students. 'Edith' = Laura Granados Lopez (LEG = Laura Edith Granados; goes by Edith).",
+  "skill_domains": [
+    "outreach_sales_comms",
+    "web_frontend_build",
+    "ai_exo3_integration",
+    "pipeline_crm_ops",
+    "creative_content_brand",
+    "data_analytics",
+    "market_research",
+    "business_finance_process"
+  ],
+  "aptitude_only_domains": [
+    "business_finance_process"
+  ],
+  "aptitude_note": "business_finance_process is an APTITUDE-DETECTION domain only. It does NOT map to an in-course track (real finance/CFO work is confidential and out of student scope). Purpose: spot finance-leaning students early, give them a COMPLIANT public financial-modeling evaluation lane during the capstone (campaign unit-economics, pricing/market-sizing from the public PUG, return-on-effort) so we can OBSERVE and EVALUATE them in a real setting, and flag strong ones as candidates for a POST-COURSE EXO3 CFO-process / finance opportunity. No in-course confidential data, no employment promise; run within the instructor's grading.",
+  "domain_to_track": {
+    "outreach_sales_comms": "Growth / Outreach",
+    "web_frontend_build": "Web & Pipeline Engineering",
+    "ai_exo3_integration": "Web & Pipeline Engineering",
+    "pipeline_crm_ops": "Data / Analytics & Ops",
+    "creative_content_brand": "Creative / Content",
+    "data_analytics": "Data / Analytics & Ops",
+    "market_research": "Research & Positioning"
+  },
+  "tracks": [
+    "Growth / Outreach",
+    "Web & Pipeline Engineering",
+    "Creative / Content",
+    "Data / Analytics & Ops",
+    "Research & Positioning"
+  ],
+  "members": {
+    "RCS220001@utdallas.edu": {
+      "name": "Roel Saenz",
+      "role": "Team lead / main POC",
+      "status": "awaiting-survey",
+      "bio": "Global Business focus, aspires to a JD in Environmental Law. Interned under a lawyer (Summer 2025); 2nd place in a Global Mobility Club competition. Strong organizational and team-building skills; motivated by encouraging, guiding, and helping peers grow.",
+      "preliminary_lean": "Leadership + Research & Positioning (legal/writing/organizing); relationship-building also suits Growth/Outreach. Confirm via survey.",
+      "skill": {},
+      "interest": {}
+    },
+    "KXV220043@utdallas.edu": {
+      "name": "Karan Vijaya Sankar",
+      "status": "awaiting-survey",
+      "bio": "Internships across public, private, and academic sectors; interested in government/civil service. Plans MBA + PhD to study data governance. Experience in case studies and AI/ML competitions; values clear communication and diligence.",
+      "preliminary_lean": "Research & Positioning and Data/Analytics (data governance, research rigor); AI/ML background = strong AI/EXO3 aptitude. Confirm via survey.",
+      "skill": {},
+      "interest": {}
+    },
+    "AXH230026@utdallas.edu": {
+      "name": "Adrian Haro",
+      "status": "awaiting-survey",
+      "bio": "Business Administration. Owner/operator of a construction company; strong analytical, critical-thinking, problem-solving skills under high pressure.",
+      "preliminary_lean": "Business/ops + likely strong business_finance_process aptitude (runs a real company) → candidate for the finance-evaluation lane. In-course track probably Data/Analytics & Ops or Growth/Outreach. Confirm via survey.",
+      "skill": {},
+      "interest": {}
+    },
+    "BXS230052@utdallas.edu": {
+      "name": "Brenda Segovia Saldana",
+      "status": "awaiting-survey",
+      "bio": "Senior Marketing student. Enjoys the creative side of marketing, organizing, and planning; task-focused. Marketing intern at URComped (casino/cruise; marketing to an older demographic). Pursuing a Master's next year.",
+      "preliminary_lean": "Creative / Content (clear fit). Confirm via survey.",
+      "skill": {},
+      "interest": {}
+    },
+    "SXM220350@utdallas.edu": {
+      "name": "Sunidhi Mathew",
+      "status": "awaiting-survey",
+      "bio": "IT with a cybersecurity focus. Interned as a Cybersecurity Consultant (client-facing security, risk management, problem-solving, communication).",
+      "preliminary_lean": "Web & Pipeline Engineering / technical (security, systems); possible AI/EXO3 integration aptitude. Confirm via survey.",
+      "skill": {},
+      "interest": {}
+    },
+    "LEG240001@utdallas.edu": {
+      "name": "Laura (Edith) Granados Lopez",
+      "goes_by": "Edith",
+      "status": "awaiting-survey",
+      "bio": "Enjoys problem-solving and building solutions; thinks about efficient, practical options. Very organized, works ahead, revises to make findings benefit the project.",
+      "preliminary_lean": "Data/Analytics & Ops or Research & Positioning (organized, methodical, solution-building). Confirm via survey.",
+      "skill": {},
+      "interest": {}
+    }
+  }
+}

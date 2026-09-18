@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacts — Exos Mission Control</title>
+<style>
+:root{--bg:#0a1428;--card:#0f1e38;--navy3:#13243f;--border:#1e3354;--text:#e8eef7;--text2:#8aa0bf;
+--blue:#0066cc;--green:#3ad29f;--orange:#ff9d4d;--cyan:#46c8ff;--red:#ff6b6b;}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:13px}
+header{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--border);background:#0c1830;position:sticky;top:0;z-index:5}
+.brand-logo{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#0066cc,#46c8ff);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+.brand-title{font-weight:700}.brand-sub{font-size:11px;color:var(--text2)}
+nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+nav a{color:var(--text2);text-decoration:none;font-size:12px;border:1px solid var(--border);border-radius:6px;padding:6px 11px}
+nav a:hover{color:var(--text);border-color:var(--blue)} nav a.active{color:#fff;background:rgba(0,102,204,.18);border-color:var(--blue)}
+.wrap{max-width:1200px;margin:0 auto;padding:18px 22px}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+input[type=text]{flex:1;min-width:240px;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--navy3);color:var(--text);font-size:13px}
+.stat{font-size:12px;color:var(--text2)} .stat b{color:var(--text)}
+label.chk{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:5px;cursor:pointer}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{border-bottom:1px solid var(--border);padding:7px 9px;text-align:left;vertical-align:top}
+th{color:var(--cyan);font-size:11px;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;position:sticky;top:62px;background:var(--bg)}
+tr:hover td{background:rgba(255,255,255,.03)}
+.pill{font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px}
+.pill.new{background:rgba(255,157,77,.16);color:var(--orange);border:1px solid rgba(255,157,77,.4)}
+.pill.known{background:rgba(58,210,159,.14);color:var(--green);border:1px solid rgba(58,210,159,.35)}
+a.mail{color:var(--cyan);text-decoration:none} .muted{color:var(--text2)}
+</style></head><body>
+<header>
+  <div class="brand-logo">EX</div>
+  <div><div class="brand-title">Contacts</div><div class="brand-sub">Auto-captured from email · grows itself as contacts are made</div></div>
+  <nav>
+    <a href="index.html">Mission Control</a>
+    <a href="dossier.html">🤝 Dossiers</a>
+    <a href="contacts.html" class="active">Contacts</a>
+    <a href="opportunities.html">Opportunities</a>
+    <a href="crm.html">Investor CRM</a>
+  </nav>
+</header>
+<div class="wrap">
+  <div class="bar">
+    <input type="text" id="q" placeholder="Search name, email, company, subject…" autocomplete="off">
+    <label class="chk"><input type="checkbox" id="untracked"> Untracked only</label>
+    <span class="stat" id="stats">Loading…</span>
+  </div>
+  <table><thead><tr>
+    <th data-k="status">Status</th><th data-k="name">Name</th><th data-k="email">Email</th>
+    <th data-k="company">Company</th><th data-k="total">Msgs</th><th data-k="last_seen">Last touch</th><th>Recent subject</th>
+  </tr></thead><tbody id="rows"></tbody></table>
+</div>
+<script>
+let ALL=[],sortK='last_seen',sortDir=-1;
+function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function row(c){
+  const pill=c.known_crm?'<span class="pill known">CRM</span>':'<span class="pill new">NEW</span>';
+  return `<tr>
+    <td>${pill}</td>
+    <td>${esc(c.name)||'<span class="muted">—</span>'}</td>
+    <td><a class="mail" href="mailto:${esc(c.email)}">${esc(c.email)}</a></td>
+    <td>${esc(c.company)}</td>
+    <td>${c.total} <span class="muted">(${c.in_count}/${c.out_count})</span></td>
+    <td>${esc(c.last_seen)}</td>
+    <td class="muted">${esc(c.last_subject||(c.subjects&&c.subjects[0])||'')}</td>
+  </tr>`;
+}
+function apply(){
+  const q=document.getElementById('q').value.toLowerCase().trim();
+  const only=document.getElementById('untracked').checked;
+  let list=ALL.filter(c=>!only||!c.known_crm);
+  if(q) list=list.filter(c=>JSON.stringify(c).toLowerCase().includes(q));
+  list.sort((a,b)=>{const x=a[sortK]??'',y=b[sortK]??'';return (x>y?1:x<y?-1:0)*sortDir;});
+  document.getElementById('rows').innerHTML=list.map(row).join('')||'<tr><td colspan="7" class="muted">No matches.</td></tr>';
+  document.getElementById('stats').innerHTML=`<b>${list.length}</b> shown · <b>${ALL.length}</b> total · <b>${ALL.filter(c=>!c.known_crm).length}</b> untracked`;
+}
+fetch('data/contacts.json?_='+Date.now()).then(r=>r.json()).then(d=>{
+  ALL=d.contacts;
+  apply();
+  document.getElementById('q').addEventListener('input',apply);
+  document.getElementById('untracked').addEventListener('change',apply);
+  document.querySelectorAll('th[data-k]').forEach(th=>th.addEventListener('click',()=>{
+    const k=th.dataset.k; if(sortK===k)sortDir*=-1; else{sortK=k;sortDir=(k==='total'||k==='last_seen')?-1:1;} apply();
+  }));
+}).catch(e=>{document.getElementById('stats').textContent='Failed to load contacts.json: '+e;});
+</script>
+</body></html>

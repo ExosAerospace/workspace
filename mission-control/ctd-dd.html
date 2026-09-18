@@ -1,0 +1,133 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CTD Due Diligence Tracker — Exos Mission Control</title>
+<style>
+:root{--bg:#0a1428;--card:#0f1e38;--navy3:#13243f;--border:#1e3354;--text:#e8eef7;--text2:#8aa0bf;
+--blue:#0066cc;--green:#3ad29f;--orange:#ff9d4d;--red:#ff6b6b;--cyan:#46c8ff;--grey:#6b7d99;}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+header{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--border);background:#0c1830;position:sticky;top:0;z-index:5}
+.brand-logo{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#0066cc,#46c8ff);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+.brand-title{font-weight:700}.brand-sub{font-size:11px;color:var(--text2)}
+nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+nav a{color:var(--text2);text-decoration:none;font-size:12px;border:1px solid var(--border);border-radius:6px;padding:6px 11px}
+nav a:hover{color:var(--text);border-color:var(--blue)}
+nav a.active{color:#fff;background:rgba(0,102,204,.18);border-color:var(--blue)}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 22px}
+.meta{font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6}
+.meta b{color:var(--text)}
+.bar{height:12px;border-radius:8px;background:var(--navy3);overflow:hidden;margin:10px 0 6px;border:1px solid var(--border)}
+.bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--cyan))}
+.counts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid var(--border)}
+.chip.o{color:var(--orange);border-color:rgba(255,157,77,.4);background:rgba(255,157,77,.12)}
+.chip.c{color:var(--cyan);border-color:rgba(70,200,255,.4);background:rgba(70,200,255,.12)}
+.chip.g{color:var(--green);border-color:rgba(58,210,159,.4);background:rgba(58,210,159,.12)}
+.chip.r{color:var(--red);border-color:rgba(255,107,107,.4);background:rgba(255,107,107,.12)}
+.chip.n{color:var(--grey);border-color:rgba(107,125,153,.4);background:rgba(107,125,153,.12)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:14px}
+.card.prio{border-color:rgba(255,157,77,.55);box-shadow:0 0 0 1px rgba(255,157,77,.15)}
+.card-top{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+.card-num{font-size:12px;font-weight:800;color:var(--cyan);min-width:22px}
+.card-name{font-size:15px;font-weight:700}
+.card-sub{font-size:11.5px;color:var(--text2);margin:0 0 10px 32px}
+.prio-badge{font-size:9.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:rgba(255,157,77,.16);color:var(--orange);border:1px solid rgba(255,157,77,.4)}
+.item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-top:1px solid rgba(30,51,84,.5)}
+.item:first-of-type{border-top:none}
+.st{flex:none;font-size:9.5px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:4px 8px;border-radius:6px;cursor:pointer;user-select:none;min-width:78px;text-align:center;border:1px solid transparent}
+.st.Requested{color:var(--orange);background:rgba(255,157,77,.13);border-color:rgba(255,157,77,.35)}
+.st.Received{color:var(--cyan);background:rgba(70,200,255,.13);border-color:rgba(70,200,255,.35)}
+.st.Reviewed{color:var(--green);background:rgba(58,210,159,.13);border-color:rgba(58,210,159,.35)}
+.st.Flag{color:var(--red);background:rgba(255,107,107,.13);border-color:rgba(255,107,107,.35)}
+.st.NA{color:var(--grey);background:rgba(107,125,153,.13);border-color:rgba(107,125,153,.35)}
+.q{flex:1;font-size:12.8px;line-height:1.45}
+.q .qid{color:var(--text2);font-size:11px;margin-right:6px}
+.note{display:block;width:100%;margin-top:5px;background:var(--navy3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:11.5px;padding:5px 8px;font-family:inherit}
+.note::placeholder{color:#5a6f92}
+.toolbar{display:flex;gap:8px;margin:4px 0 18px;flex-wrap:wrap}
+.btn{font-size:12px;font-weight:700;padding:7px 13px;border-radius:7px;border:1px solid var(--border);background:var(--navy3);color:var(--text);cursor:pointer}
+.btn:hover{border-color:var(--blue)}
+.btn.primary{background:rgba(0,102,204,.2);border-color:var(--blue)}
+.legend{font-size:11px;color:var(--text2);margin-left:auto;align-self:center}
+</style></head><body>
+<header>
+  <div class="brand-logo">EX</div>
+  <div><div class="brand-title">CTD Due Diligence Tracker</div><div class="brand-sub">Data-room response tracking — confidential</div></div>
+  <nav>
+    <a href="index.html">Mission Control</a>
+    <a href="decisions.html">Decisions</a>
+    <a href="dossier.html">Dossiers</a>
+    <a href="opportunities.html">Opportunities</a>
+    <a href="crm.html">CRM</a>
+    <a href="research.html">Research</a>
+  </nav>
+</header>
+<div class="wrap">
+  <div class="meta" id="meta"></div>
+  <div class="bar"><i id="barfill" style="width:0%"></i></div>
+  <div class="counts" id="counts"></div>
+  <div class="toolbar">
+    <button class="btn primary" onclick="exportState()">⬇ Export current state (JSON)</button>
+    <button class="btn" onclick="if(confirm('Clear all local edits and reload seed?')){localStorage.removeItem(SKEY);localStorage.removeItem(NKEY);render();}">↺ Reset</button>
+    <span class="legend">Click a status chip to cycle: Requested → Received → Reviewed → Flag → N/A</span>
+  </div>
+  <div id="sections"></div>
+</div>
+<script>
+const SKEY='ctddd-status', NKEY='ctddd-notes';
+const CYCLE=['Requested','Received','Reviewed','Flag','NA'];
+const LABEL={Requested:'Requested',Received:'Received',Reviewed:'Reviewed',Flag:'Flag',NA:'N/A'};
+let DATA=null;
+const stMap=()=>JSON.parse(localStorage.getItem(SKEY)||'{}');
+const noteMap=()=>JSON.parse(localStorage.getItem(NKEY)||'{}');
+function stOf(id){const m=stMap();return m[id]||seedStatus(id);}
+function seedStatus(id){for(const s of DATA.sections)for(const it of s.items)if(it.id===id)return (it.status==='Requested'?'Requested':it.status);return 'Requested';}
+function setSt(id,v){const m=stMap();m[id]=v;localStorage.setItem(SKEY,JSON.stringify(m));}
+function setNote(id,v){const m=noteMap();m[id]=v;localStorage.setItem(NKEY,JSON.stringify(m));}
+function cycle(id){const cur=stOf(id);const i=CYCLE.indexOf(cur);setSt(id,CYCLE[(i+1)%CYCLE.length]);render();}
+function counts(){const c={Requested:0,Received:0,Reviewed:0,Flag:0,NA:0};let tot=0;
+  for(const s of DATA.sections)for(const it of s.items){c[stOf(it.id)]++;tot++;}
+  const active=tot-c.NA; const done=c.Received+c.Reviewed;
+  return {c,tot,pct: active? Math.round(done/active*100):0};}
+function render(){
+  const m=DATA.meta;
+  document.getElementById('meta').innerHTML=
+    `<b>${m.company}</b> &nbsp;·&nbsp; Counterparty: <b>${m.counterparty}</b><br>`+
+    `Reporting window: <b>${m.window}</b> &nbsp;·&nbsp; Sequence: <b>${m.sequence}</b> &nbsp;·&nbsp; Started ${m.started}<br>`+
+    `<span style="color:#ff9d4d">${m.note}</span>`;
+  const {c,tot,pct}=counts();
+  document.getElementById('barfill').style.width=pct+'%';
+  document.getElementById('counts').innerHTML=
+    `<span class="chip">${pct}% received (${c.Received+c.Reviewed}/${tot})</span>`+
+    `<span class="chip o">Requested ${c.Requested}</span>`+
+    `<span class="chip c">Received ${c.Received}</span>`+
+    `<span class="chip g">Reviewed ${c.Reviewed}</span>`+
+    `<span class="chip r">Flag ${c.Flag}</span>`+
+    `<span class="chip n">N/A ${c.NA}</span>`;
+  const nm=noteMap();
+  document.getElementById('sections').innerHTML=DATA.sections.map(s=>`
+    <div class="card${s.priority?' prio':''}">
+      <div class="card-top"><span class="card-num">${s.id}</span><span class="card-name">${s.title}</span>
+        ${s.priority?'<span class="prio-badge">Priority</span>':''}</div>
+      <div class="card-sub">${s.subtitle}</div>
+      ${s.items.map(it=>{const st=stOf(it.id);return `
+        <div class="item">
+          <span class="st ${st}" onclick="cycle('${it.id}')">${LABEL[st]}</span>
+          <div class="q"><span class="qid">${it.id}</span>${it.q}
+            <input class="note" placeholder="notes / doc reference…" value="${(nm[it.id]||'').replace(/"/g,'&quot;')}"
+              oninput="setNote('${it.id}',this.value)">
+          </div>
+        </div>`;}).join('')}
+    </div>`).join('');
+}
+function exportState(){
+  const out=JSON.parse(JSON.stringify(DATA));const nm=noteMap();
+  for(const s of out.sections)for(const it of s.items){it.status=stOf(it.id);it.notes=nm[it.id]||'';}
+  out.meta.exported=new Date().toISOString();
+  const blob=new Blob([JSON.stringify(out,null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='ctd-dd-export.json';a.click();
+}
+fetch('data/ctd-dd.json?_='+Date.now()).then(r=>r.json()).then(d=>{DATA=d;render();})
+  .catch(e=>{document.getElementById('sections').innerHTML='<div class="card">Failed to load data/ctd-dd.json: '+e+'</div>';});
+</script></body></html>

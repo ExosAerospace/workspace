@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos Aerospace — Sign Document</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&family=Satisfy&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--navy:#0a1628;--blue:#0066cc;--green:#22c55e;--border:#dfe3ea;--muted:#6b7280}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#eef1f6;color:#1a2230;line-height:1.5}
+  header{background:linear-gradient(135deg,#0a1628,#0d2050);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:12px}
+  .logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#ff6b00,#ff8c33);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+  header h1{font-size:1rem;font-weight:700}
+  .wrap{max-width:840px;margin:24px auto;padding:0 16px}
+  .card{background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:20px}
+  .card .hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+  .card .hd h2{font-size:1.05rem;color:var(--navy)}
+  .who{font-size:.85rem;color:var(--muted)}
+  .who b{color:#1a2230}
+  .docbody{padding:24px 28px;max-height:55vh;overflow:auto;font-size:.92rem}
+  .docbody table{border-collapse:collapse;width:100%;margin:10px 0}
+  .docbody td,.docbody th{border:1px solid #ccc;padding:5px 8px;font-size:.85rem}
+  .docbody h1,.docbody h2,.docbody h3{margin:12px 0 6px}
+  .docbody p{margin:6px 0}
+  .pad{padding:20px}
+  .tabs{display:flex;gap:8px;margin-bottom:14px}
+  .tab{padding:8px 16px;border:1px solid var(--border);background:#f7f9fc;border-radius:6px;cursor:pointer;font-size:.9rem}
+  .tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+  label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:6px}
+  input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-size:1rem}
+  .preview{margin-top:14px;border:1px dashed #bbb;border-radius:8px;height:90px;display:flex;align-items:center;justify-content:center;background:#fafbfd}
+  .preview span{font-size:38px;color:#0a1628}
+  .fonts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .fontbtn{padding:8px 14px;border:1px solid var(--border);background:#fff;border-radius:6px;cursor:pointer}
+  .fontbtn.active{border-color:var(--blue);box-shadow:0 0 0 2px rgba(0,102,204,.15)}
+  canvas{border:1px dashed #bbb;border-radius:8px;background:#fafbfd;touch-action:none;width:100%;max-width:520px;height:150px}
+  .btn{padding:12px 22px;border:none;border-radius:7px;font-size:.95rem;font-weight:600;cursor:pointer}
+  .btn.green{background:var(--green);color:#fff}
+  .btn.sec{background:#eef1f6;color:#333}
+  .row{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+  .legal{font-size:.74rem;color:var(--muted);margin-top:14px;line-height:1.5}
+  .status{display:flex;gap:14px;flex-wrap:wrap;padding:14px 20px;border-top:1px solid var(--border);background:#f7f9fc;font-size:.82rem}
+  .status .s{display:flex;align-items:center;gap:6px}
+  .dot{width:9px;height:9px;border-radius:50%;background:#cbd2dc}
+  .dot.done{background:var(--green)}
+  .msg{padding:40px 24px;text-align:center}
+  .msg .big{font-size:48px}
+  .msg h2{margin:10px 0;color:var(--navy)}
+  .hidden{display:none}
+  .banner{padding:12px 20px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;color:#9a3412;font-size:.86rem;margin-bottom:16px}
+</style>
+</head>
+<body>
+<header><div class="logo">EX</div><h1>Exos Aerospace — Document Signing</h1></header>
+<div class="wrap" id="wrap">
+  <div class="card"><div class="pad">Loading…</div></div>
+</div>
+
+<canvas id="typeCanvas" width="520" height="150" class="hidden"></canvas>
+
+<script>
+const token = new URLSearchParams(location.search).get('token');
+let env = null, sigFont = 'Great Vibes', method = 'type', drawn = false;
+
+async function load() {
+  if (!token) return fail('Missing signing token.');
+  let data;
+  try {
+    const r = await fetch('/api/esign/get?token=' + encodeURIComponent(token));
+    data = await r.json();
+    if (!r.ok) return fail(data.error || 'Invalid signing link.');
+  } catch (e) { return fail('Could not load the document. ' + e.message); }
+  env = data;
+  if (data.signer.signed) return done(true);
+  render();
+}
+
+function statusBar() {
+  return '<div class="status">' + env.signers.map(s =>
+    '<div class="s"><span class="dot ' + (s.signed?'done':'') + '"></span>' + esc(s.name) + (s.signed?' · signed':' · pending') + '</div>'
+  ).join('') + '</div>';
+}
+
+function render() {
+  document.getElementById('wrap').innerHTML = `
+    <div class="banner">You're signing as <b>${esc(env.signer.name)}</b> (${esc(env.signer.email)}). Review the document, then add your signature below.</div>
+    <div class="card">
+      <div class="hd"><h2>${esc(env.title)}</h2><div class="who">Signer: <b>${esc(env.signer.name)}</b>${env.signer.role?' — '+esc(env.signer.role):''}</div></div>
+      <div class="docbody">${env.html || '<em>No content</em>'}</div>
+      ${statusBar()}
+    </div>
+    <div class="card">
+      <div class="hd"><h2>Add Your Signature</h2></div>
+      <div class="pad">
+        <div class="tabs">
+          <div class="tab active" id="tabType" onclick="setMethod('type')">Type</div>
+          <div class="tab" id="tabDraw" onclick="setMethod('draw')">Draw</div>
+        </div>
+        <div id="typeArea">
+          <label>Type your full legal name</label>
+          <input type="text" id="typedName" value="${esc(env.signer.name)}" oninput="updatePreview()">
+          <div class="preview"><span id="previewSig" style="font-family:'Great Vibes',cursive;">${esc(env.signer.name)}</span></div>
+          <div class="fonts">
+            <button class="fontbtn active" data-f="Great Vibes" style="font-family:'Great Vibes',cursive;font-size:20px" onclick="pickFont(this)">Signature</button>
+            <button class="fontbtn" data-f="Dancing Script" style="font-family:'Dancing Script',cursive;font-size:20px" onclick="pickFont(this)">Signature</button>
+            <button class="fontbtn" data-f="Satisfy" style="font-family:'Satisfy',cursive;font-size:20px" onclick="pickFont(this)">Signature</button>
+            <button class="fontbtn" data-f="Pacifico" style="font-family:'Pacifico',cursive;font-size:20px" onclick="pickFont(this)">Signature</button>
+          </div>
+        </div>
+        <div id="drawArea" class="hidden">
+          <label>Draw your signature</label>
+          <canvas id="sigCanvas" width="520" height="150"></canvas>
+          <div class="row"><button class="btn sec" onclick="clearPad()">Clear</button></div>
+        </div>
+        <div class="legal">By clicking <b>Adopt &amp; Sign</b>, you agree your electronic signature is legally binding under the U.S. E-SIGN Act (15 U.S.C. §7001 et seq.) and UETA. Your signature, name, IP address, and timestamp will be recorded.</div>
+        <div class="row"><button class="btn green" id="signBtn" onclick="submit()">Adopt &amp; Sign</button></div>
+      </div>
+    </div>`;
+  setupPad();
+  updatePreview();
+}
+
+function setMethod(m){ method=m;
+  document.getElementById('tabType').classList.toggle('active',m==='type');
+  document.getElementById('tabDraw').classList.toggle('active',m==='draw');
+  document.getElementById('typeArea').classList.toggle('hidden',m!=='type');
+  document.getElementById('drawArea').classList.toggle('hidden',m!=='draw');
+}
+function pickFont(btn){ sigFont=btn.dataset.f; document.querySelectorAll('.fontbtn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); updatePreview(); }
+function updatePreview(){ const n=document.getElementById('typedName').value||''; const p=document.getElementById('previewSig'); p.textContent=n; p.style.fontFamily="'"+sigFont+"',cursive"; }
+
+let ctx, drawing=false;
+function setupPad(){ const c=document.getElementById('sigCanvas'); if(!c)return; ctx=c.getContext('2d'); ctx.lineWidth=2.4; ctx.lineCap='round'; ctx.strokeStyle='#0a1628';
+  const pos=e=>{const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left)*(c.width/r.width),y:(t.clientY-r.top)*(c.height/r.height)};};
+  const start=e=>{drawing=true;drawn=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);e.preventDefault();};
+  const move=e=>{if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();e.preventDefault();};
+  const end=()=>{drawing=false;};
+  c.addEventListener('mousedown',start);c.addEventListener('mousemove',move);window.addEventListener('mouseup',end);
+  c.addEventListener('touchstart',start);c.addEventListener('touchmove',move);c.addEventListener('touchend',end);
+}
+function clearPad(){ const c=document.getElementById('sigCanvas'); ctx.clearRect(0,0,c.width,c.height); drawn=false; }
+
+function typedToDataURL(){
+  const c=document.getElementById('typeCanvas'); const x=c.getContext('2d');
+  x.clearRect(0,0,c.width,c.height); x.fillStyle='#0a1628'; x.textBaseline='middle'; x.textAlign='center';
+  x.font="60px '"+sigFont+"'"; x.fillText(document.getElementById('typedName').value||'',c.width/2,c.height/2+6);
+  return c.toDataURL('image/png');
+}
+
+async function submit(){
+  let sigData, sigType;
+  if(method==='type'){
+    if(!document.getElementById('typedName').value.trim()) return alert('Please type your name.');
+    sigData=typedToDataURL(); sigType='typed';
+  } else {
+    if(!drawn) return alert('Please draw your signature.');
+    sigData=document.getElementById('sigCanvas').toDataURL('image/png'); sigType='drawn';
+  }
+  const btn=document.getElementById('signBtn'); btn.disabled=true; btn.textContent='Signing…';
+  try{
+    const r=await fetch('/api/esign/sign',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token,signatureType:sigType,signatureData:sigData})});
+    const d=await r.json();
+    if(d.success) done(false,d.allSigned); else { alert('Error: '+(d.error||'failed')); btn.disabled=false; btn.textContent='Adopt & Sign'; }
+  }catch(e){ alert('Submit error: '+e.message); btn.disabled=false; btn.textContent='Adopt & Sign'; }
+}
+
+function done(already,allSigned){
+  document.getElementById('wrap').innerHTML=`<div class="card"><div class="msg">
+    <div class="big">✓</div>
+    <h2>${already?'You have already signed this document.':'Thank you — your signature has been recorded.'}</h2>
+    <p style="color:var(--muted)">${allSigned?'All parties have now signed. A fully executed copy has been emailed to everyone.':'You will receive a fully executed copy by email once all parties have signed.'}</p>
+  </div></div>`;
+}
+function fail(m){ document.getElementById('wrap').innerHTML=`<div class="card"><div class="msg"><div class="big">⚠️</div><h2>Unable to open document</h2><p style="color:var(--muted)">${esc(m)}</p></div></div>`; }
+function esc(s){ const d=document.createElement('div'); d.textContent=s==null?'':s; return d.innerHTML; }
+load();
+</script>
+</body>
+</html>
