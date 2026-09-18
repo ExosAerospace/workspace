@@ -777,6 +777,10 @@ async function sendTaskAssignmentEmail(task, assignedBy) {
   try {
     const user = findOwnerUser(task && task.owner);
     if (!user || !user.email || user.active === false) return { skipped: 'no-matching-user' };
+    // Exo is the in-system AI agent: it consumes assigned tasks directly from MC and has no
+    // deliverable mailbox. exo@exosaero.com is a GCC High address that rejects the pm.me Bridge
+    // sender (550 5.4.1), so emailing it only generates MAILER-DAEMON bounce loops. Skip it.
+    if (String(user.email).trim().toLowerCase() === 'exo@exosaero.com') return { skipped: 'exo-ai-no-mailbox' };
 
     const bridgeCert = fs.existsSync('/Users/exomac/.protonmail-bridge.crt')
       ? fs.readFileSync('/Users/exomac/.protonmail-bridge.crt') : undefined;
