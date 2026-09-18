@@ -36,7 +36,12 @@ SUPPRESS = os.path.join(WS, "logs", "assignment-notify-suppress.json")
 LOG = os.path.join(WS, "logs", "assignment-notify.log")
 MCURL = "http://192.168.143.216:8080"
 
-EXCLUDE = {"jquinn@exosaero.com"}          # monitored directly; avoid inbox flooding
+EXCLUDE = {"jquinn@exosaero.com",          # monitored directly; avoid inbox flooding
+           "exo@exosaero.com"}             # Exo AI = in-system agent, no deliverable mailbox;
+                                           # this GCC High addr rejects the pm.me sender (550 5.4.1)
+                                           # and only produces MAILER-DAEMON bounce loops. It IS a
+                                           # valid-looking email so resolve() returns it, bypassing
+                                           # the SKIP_OWNERS owner-string check — exclude by address.
 SKIP_OWNERS = {"", "system", "exo", "exomac", "both", "unassigned", "none", "team"}
 EMAIL_RX = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
