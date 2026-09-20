@@ -1,0 +1,24 @@
+{
+  "note": "Contracted/committed revenue backlog expected to report, consumed by scripts/operational_finance_exo3.py. LIVE items (entX, open A/R) are pulled from QuickBooks at run time; STATIC items are contracted/plan values maintained here — edit as contracts sign, get funded, or bill out. 'stage' controls the roll-up: booked|funded|committed count toward headline backlog; pipeline is shown separately (not yet awarded). 'expect_2026' = best-estimate USD that reports as revenue before 12/31/2026 (null = timing TBD).",
+  "live": {
+    "entx": {
+      "name": "entX (OPP-007) remaining",
+      "qb_customer_ref": "1099",
+      "contract_total": 820000,
+      "stage": "booked",
+      "note": "$820K signed LSA; remaining-to-invoice = contract_total - invoiced_to_date (M3 $328K Pre-Flight Test + M4 $82K Post-Flight)"
+    },
+    "open_ar": {
+      "name": "Open A/R (invoiced, awaiting collection)",
+      "stage": "booked",
+      "note": "AgedReceivables TOTAL — booked revenue already invoiced, not yet collected"
+    }
+  },
+  "static_backlog": [
+    {"name": "SBIR Phase II (HVRR-RDRE, FA9300-25-C-6022)", "amount": 1897824, "stage": "booked", "expect_2026": null, "note": "FFP, 5 CLINs; recognized as CLINs deliver"},
+    {"name": "Karmen (USSF D2P2, SF254-D1002)", "amount": 300000, "stage": "funded", "expect_2026": 180000, "note": "$120K kickoff + 2x$30K progress reports in 2026"},
+    {"name": "Watch pre-sale (BLK3 black-PVD)", "amount": 20250, "stage": "committed", "expect_2026": 20250, "note": "30 units x $675; securities gate D-7281743 pending Keyes review"},
+    {"name": "UTD 1U payload (Mar'27 BLK3 flight)", "amount": 8000, "stage": "committed", "expect_2026": 8000, "note": "slot-hold deposit gate mid-Dec'26"},
+    {"name": "Hermes (AFRL HVRR free-flight)", "amount": 300000, "stage": "pipeline", "expect_2026": 180000, "note": "~$300K award anticipated (not yet awarded); same kickoff structure"}
+  ]
+}

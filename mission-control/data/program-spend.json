@@ -1,0 +1,11 @@
+{
+  "note": "Program-spend KPI tracking, consumed by scripts/operational_finance_exo3.py. QuickBooks class tracking is currently OFF (only a stray 'ULS' class exists, ClassTrackingPerTxn=false), so live per-transaction program spend is NOT yet available in QB. Until Kyle (CFO) enables QB Classes and tags transactions, program LABOR is approximated live from the BambooHR department allocation ('dept_proxy'); program BUDGETS below are the contract/plan figures. When qb_class_tracking_enabled flips true and matching class names exist in QB, the script pulls real P&L-by-Class spend automatically.",
+  "qb_class_tracking_enabled": false,
+  "labor_dept_source": "BambooHR",
+  "programs": [
+    {"key": "HVRR-RDRE", "qb_class": "HVRR-RDRE", "budget": 1897824, "budget_basis": "SBIR Phase II FFP contract value (FA9300-25-C-6022)", "dept_proxy": "Operations"},
+    {"key": "BLK3", "qb_class": "BLK3", "budget": null, "budget_basis": "BLK3 carrying-cost / readiness model", "dept_proxy": "Operations"},
+    {"key": "R&D-General", "qb_class": "R&D", "budget": null, "budget_basis": "discretionary R&D", "dept_proxy": "Operations"}
+  ],
+  "enablement_note": "To go fully live: (1) Kyle turns on Class tracking in QBO (Settings > Account and Settings > Advanced > Categories > Track classes); (2) create classes HVRR-RDRE, BLK3, RDRE, R&D; (3) tag direct costs (labor, materials, subs) to the program class; (4) set qb_class_tracking_enabled=true here. The reader then reports real per-program spend from ProfitAndLoss by Class."
+}

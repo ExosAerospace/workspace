@@ -25,12 +25,16 @@ import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 WS = os.path.expanduser("~/.openclaw/workspace")
 sys.path.insert(0, os.path.join(WS, "scripts"))
 OUT = os.path.join(WS, "mission-control", "data", "operational-finance.json")
+BACKLOG_CFG = os.path.join(WS, "mission-control", "data", "finance-backlog.json")
+PROGRAM_CFG = os.path.join(WS, "mission-control", "data", "program-spend.json")
+SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
 LOG = os.path.join(WS, "logs", "operational-finance-exo3.log")
 OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
 JON = "1501632195163590739"
 
 CASH_ALERT   = float(os.environ.get("OPFIN_CASH_ALERT", "250000"))
 RUNWAY_ALERT = float(os.environ.get("OPFIN_RUNWAY_ALERT", "6"))
+BENEFITS_LOAD = float(os.environ.get("OPFIN_BENEFITS_LOAD", "1.28"))  # payroll tax/benefits load factor
 # Plan baseline: Exos FY2025 actuals (Form 1120) — the profitability line we defend against.
 BASE_FY2025 = {"revenue": 1493961.0, "ebitda": 296022.0, "net_income": 187861.0}
 
@@ -109,6 +113,110 @@ def pull_live():
     if net is None: net = income - expenses
     return {"cash": cash, "window_days": 90, "income": income, "expenses": expenses, "net": net}
 
+def _query(q):
+    import qb_client
+    acc, realm, env = qb_client.get_access_token()
+    base = qb_client._base(env)
+    url = f"{base}/v3/company/{realm}/query?" + urllib.parse.urlencode({"query": q, "minorversion": "73"})
+    req = urllib.request.Request(url, headers={"Authorization": f"Bearer {acc}", "Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return json.load(r)
+
+# ---- booked-revenue backlog (contracted, expected to report) ----
+def pull_backlog():
+    """Blend live QuickBooks pieces (open A/R, entX remaining) with the contracted
+    backlog config. Returns line items + roll-up split by stage."""
+    try:
+        cfg = json.load(open(BACKLOG_CFG))
+    except Exception as e:
+        logline(f"WARN backlog cfg: {e}"); return None
+    items = []
+    live = cfg.get("live", {})
+    # Open A/R (booked, invoiced, not collected)
+    try:
+        ar = _report("AgedReceivables", {})
+        ar_total = _summary_value(ar, "total") or 0.0
+        o = live.get("open_ar", {})
+        items.append({"name": o.get("name", "Open A/R"), "amount": round(ar_total, 2),
+                      "stage": o.get("stage", "booked"), "expect_2026": round(ar_total, 2), "note": o.get("note", "")})
+    except Exception as e:
+        logline(f"WARN A/R: {e}")
+    # entX remaining-to-invoice = contract_total - invoiced_to_date (live from QB)
+    ex = live.get("entx")
+    if ex:
+        try:
+            r = _query(f"select * from Invoice where CustomerRef='{ex['qb_customer_ref']}'")
+            invs = r.get("QueryResponse", {}).get("Invoice", [])
+            invoiced = sum(float(i.get("TotalAmt", 0)) for i in invs)
+            remaining = float(ex["contract_total"]) - invoiced
+            if remaining > 0:
+                items.append({"name": ex["name"], "amount": round(remaining, 2), "stage": ex.get("stage", "booked"),
+                              "expect_2026": None, "note": ex.get("note", "")})
+        except Exception as e:
+            logline(f"WARN entX: {e}")
+    # static contracted items
+    for s in cfg.get("static_backlog", []):
+        items.append({"name": s["name"], "amount": float(s.get("amount", 0)), "stage": s.get("stage", "booked"),
+                      "expect_2026": s.get("expect_2026"), "note": s.get("note", "")})
+    booked = sum(i["amount"] for i in items if i["stage"] in ("booked", "funded", "committed"))
+    pipeline = sum(i["amount"] for i in items if i["stage"] == "pipeline")
+    expect_2026 = sum((i["expect_2026"] or 0) for i in items if i["stage"] in ("booked", "funded", "committed"))
+    return {"items": items, "booked_total": round(booked, 2), "pipeline_total": round(pipeline, 2),
+            "expect_2026_min": round(expect_2026, 2)}
+
+# ---- wages & benefits (BambooHR = payroll/HR system of record) ----
+def pull_payroll():
+    import base64, re
+    from collections import defaultdict
+    try:
+        s = json.load(open(SECRETS)); sub = s["bamboo_subdomain"]; key = s["bamboo_api_key"]
+    except Exception as e:
+        logline(f"WARN bamboo secrets: {e}"); return None
+    def api(ep):
+        url = f"https://api.bamboohr.com/api/gateway.php/{sub}/v1/{ep}"
+        auth = base64.b64encode(f"{key}:x".encode()).decode()
+        req = urllib.request.Request(url, headers={"Authorization": f"Basic {auth}", "Accept": "application/json"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.load(r)
+    try:
+        emps = api("employees/directory").get("employees", [])
+    except Exception as e:
+        logline(f"WARN bamboo dir: {e}"); return None
+    total = 0.0
+    dept = defaultdict(float); dept_ct = defaultdict(int); headcount = 0
+    for e in emps:
+        try:
+            info = api(f"employees/{e['id']}?fields=payRate,payType,department")
+        except Exception:
+            continue
+        pr = info.get("payRate") or ""
+        m = re.search(r"([\d,]+\.?\d*)", pr.replace("USD", ""))
+        amt = float(m.group(1).replace(",", "")) if m else 0.0
+        hourly = (info.get("payType", "").lower() == "hourly") or (0 < amt < 1000)
+        annual = amt * 2080 if hourly else amt
+        total += annual; headcount += 1
+        dp = e.get("department") or info.get("department") or "Unassigned"
+        dept[dp] += annual; dept_ct[dp] += 1
+    return {"headcount": headcount, "annual_base": round(total, 2), "monthly_base": round(total / 12, 2),
+            "monthly_loaded": round(total * BENEFITS_LOAD / 12, 2), "load_factor": BENEFITS_LOAD,
+            "by_dept": {k: {"monthly": round(v / 12, 2), "people": dept_ct[k]} for k, v in dept.items()}}
+
+# ---- program-spend KPIs (HVRR-RDRE / BLK3 / R&D) ----
+def pull_program_spend(payroll):
+    try:
+        cfg = json.load(open(PROGRAM_CFG))
+    except Exception as e:
+        logline(f"WARN program cfg: {e}"); return None
+    live_class = bool(cfg.get("qb_class_tracking_enabled"))
+    by_dept = (payroll or {}).get("by_dept", {})
+    progs = []
+    for p in cfg.get("programs", []):
+        labor = by_dept.get(p.get("dept_proxy", ""), {}).get("monthly")
+        progs.append({"key": p["key"], "budget": p.get("budget"),
+                      "labor_proxy_monthly": labor, "dept_proxy": p.get("dept_proxy")})
+    return {"qb_class_tracking": live_class, "programs": progs,
+            "enablement_note": cfg.get("enablement_note", "")}
+
 def sample():
     return {"cash": 812000.0, "window_days": 90, "income": 470000.0, "expenses": 405000.0, "net": 65000.0}
 
@@ -147,7 +255,7 @@ def alerts(a):
         out.append(f"Trailing run-rate turned to a LOSS (annualized ${a['annualized_net_runrate']:,.0f}) vs FY2025 net +${BASE_FY2025['net_income']:,.0f}")
     return out
 
-def pulse_text(a, al):
+def pulse_text(a, al, backlog=None, payroll=None, program=None):
     money = lambda x: f"${x:,.0f}"
     if a["burning"]:
         run = f"{a['runway_months']} months" if a["runway_months"] is not None else "n/a"
@@ -155,29 +263,66 @@ def pulse_text(a, al):
     else:
         run = "profitable — building cash"
         burn = f"net +{money(a['monthly_net'])}/mo"
-    head = "🔴 OPERATIONAL FINANCE — ALERT" if al else "🟢 OPERATIONAL FINANCE — weekly pulse"
-    lines = [head, f"_as of {a['asof']} · source: QuickBooks (live)_", "",
+    head = "🔴 OPERATIONAL FINANCE — ALERT" if al else "🔵 OPERATIONAL FINANCE — expanded pulse"
+    lines = [head, f"_as of {a['asof']} · source: QuickBooks + BambooHR (live)_", "",
+        "*CASH & REALIZED (QB, trailing 90d)*",
         f"• Cash on hand: {money(a['cash'])}",
         f"• Trailing 90d: rev {money(a['trailing_income'])} · exp {money(a['trailing_expenses'])} · net {money(a['trailing_net'])}",
-        f"• Burn/surplus: {burn}",
-        f"• Runway: {run}",
+        f"• Burn/surplus: {burn} · Runway: {run}",
         f"• Annualized run-rate: net {money(a['annualized_net_runrate'])} (FY2025 baseline net +{money(BASE_FY2025['net_income'])})"]
+    if backlog and backlog.get("items"):
+        lines += ["", "*BOOKED REVENUE / BACKLOG (contracted, expected to report)*"]
+        for it in backlog["items"]:
+            tag = "" if it["stage"] in ("booked", "funded", "committed") else f" ({it['stage']})"
+            lines.append(f"• {it['name']}: {money(it['amount'])}{tag}")
+        lines.append(f"→ Booked/committed backlog ≈ {money(backlog['booked_total'])}"
+                     + (f" · pipeline {money(backlog['pipeline_total'])}" if backlog.get("pipeline_total") else ""))
+    if payroll:
+        lines += ["", "*COST KPIs*",
+            f"• Wages & benefits: {money(payroll['monthly_base'])}/mo base "
+            f"({money(payroll['annual_base'])}/yr, {payroll['headcount']} staff) · "
+            f"{money(payroll['monthly_loaded'])}/mo fully loaded (~{int((payroll['load_factor']-1)*100)}% load)"]
+    if program:
+        if program.get("qb_class_tracking"):
+            for p in program["programs"]:
+                sp = p.get("spend_monthly")
+                lines.append(f"• {p['key']} spend: {money(sp)}/mo" if sp is not None else f"• {p['key']} spend: n/a")
+        else:
+            prox = [f"{p['key']}~{money(p['labor_proxy_monthly'])}/mo" for p in program["programs"]
+                    if p.get("labor_proxy_monthly")]
+            # dedupe identical proxy (same dept) into one line
+            uniq = []
+            for p in program["programs"]:
+                if p.get("labor_proxy_monthly") and p["dept_proxy"] not in [u[0] for u in uniq]:
+                    uniq.append((p["dept_proxy"], p["labor_proxy_monthly"]))
+            if uniq:
+                lines.append("• Program labor (live proxy, BambooHR dept): "
+                             + " · ".join(f"{d} {money(v)}/mo" for d, v in uniq))
+            lines.append("• HVRR-RDRE / BLK3 / R&D full spend: not class-tracked in QB yet "
+                         "(enable QB classes to go live)")
     if al:
         lines += ["", "⚠️ " + "; ".join(al)]
     return "\n".join(lines)
 
-def save_json(a, al):
+def save_json(a, al, backlog=None, payroll=None, program=None):
     obj = {"generated": datetime.datetime.now().isoformat(timespec="seconds"),
-           "metrics": a, "alerts": al, "thresholds": {"cash": CASH_ALERT, "runway_months": RUNWAY_ALERT}}
+           "metrics": a, "backlog": backlog, "payroll": payroll, "program_spend": program,
+           "alerts": al, "thresholds": {"cash": CASH_ALERT, "runway_months": RUNWAY_ALERT}}
     tmp = OUT + ".tmp"; json.dump(obj, open(tmp, "w"), indent=2); os.replace(tmp, OUT)
 
 def main():
     args = set(sys.argv[1:])
-    raw = sample() if "--sample" in args else pull_live()
+    if "--sample" in args:
+        raw = sample(); backlog = payroll = program = None
+    else:
+        raw = pull_live()
+        backlog = pull_backlog()
+        payroll = pull_payroll()
+        program = pull_program_spend(payroll)
     a = analyze(raw); al = alerts(a)
     if "--sample" not in args:
-        save_json(a, al)
-    txt = pulse_text(a, al)
+        save_json(a, al, backlog, payroll, program)
+    txt = pulse_text(a, al, backlog, payroll, program)
     if "--pulse" in args:
         post_discord(txt); logline("pulse sent" + (" +alert" if al else ""))
     elif "--alerts-only" in args:
