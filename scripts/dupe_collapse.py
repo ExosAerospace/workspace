@@ -84,7 +84,14 @@ else:
     snap = [{"id": l["id"], "prev_state": l["state"], "survivor": k["id"]} for l, k in plan]
     p = os.path.join(WS, "mission-control/data", f"dupe-collapse-snapshot-{stamp}.json")
     json.dump(snap, open(p, "w"), indent=2)
+    import sys as _sys; _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from attachment_migrate import migrate_attachments
+    moved_total = 0
     for l, k in plan:
         note = (l.get("description") or "") + f"\n\n[DEDUP 2026-07-29] Duplicate of #{k['id']} (same owner + title). Closed; canonical = #{k['id']}."
         patch(l["id"], {"state": "Done", "description": note.strip()})
-    print(f"snapshot {p}\nclosed {len(plan)} duplicates")
+        moved = migrate_attachments(l["id"], k["id"])  # repoint docs onto the survivor (no more dropped attachments)
+        if moved:
+            moved_total += moved
+            print(f"    migrated {moved} attachment(s) #{l['id']} -> #{k['id']}")
+    print(f"snapshot {p}\nclosed {len(plan)} duplicates; migrated {moved_total} attachment(s)")

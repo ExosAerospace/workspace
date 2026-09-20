@@ -152,6 +152,11 @@ def main():
                              "title": t.get("title"), "pursuit": p["key"], "kept": keep["id"]})
             if APPLY:
                 patch(t["id"], {"state": "Cancelled"})
+                import sys as _sys; _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+                from attachment_migrate import migrate_attachments
+                _m = migrate_attachments(t["id"], keep["id"])  # repoint docs onto the kept task
+                if _m:
+                    print(f"      migrated {_m} attachment(s) #{t['id']} -> #{keep['id']}")
             total_cancel += 1
     if APPLY and snapshot:
         os.makedirs(f"{WS}/logs", exist_ok=True)
