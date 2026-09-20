@@ -65,6 +65,26 @@ def capture_for_investor_report(today, autos):
         f.write(block)
 
 
+def capture_notes_due(today):
+    """Standing monthly inquiry (Jon 2026-09-20): track convertible notes coming due —
+    conversion vs cash payout — and prompt David/Kyle to provide the current detail.
+    Tracked by Neil in Mission Control (task #2982)."""
+    path = os.path.join(WS, "reports", f"monthly-report-capture-{today:%Y-%m}.md")
+    block = (
+        "\n\n## NOTES DUE — CONVERTIBLE NOTE TRACKING (standing finance item)\n"
+        "[Owner: Neil Milburn (MC #2982). David Mitchell + Kyle Ballard PROVIDE the detail each month.]\n"
+        "PO7 (2021, 7% simple, 5-yr) convertible notes are reaching maturity in 2026. Jon's read: "
+        "all but ~$150K convert to equity and do NOT require cash payout.\n"
+        "REQUEST TO DAVID + KYLE this cycle — for every note now due, provide: principal, accrued interest, "
+        "maturity date, and status (CONVERTED / CASH PAYOUT DUE / PENDING ELECTION), plus the running cash-payout total.\n"
+        "→ Cash payouts reduce cash this year; conversions do not. Feeds the monthly financials report.\n")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "a") as f:
+        f.write(block)
+    return ("STANDING: Notes-due tracking — David/Kyle to provide PO7 convert-vs-payout detail "
+            "(~$150K est. payout); Neil owns MC #2982.")
+
+
 def is_day_before_last_tuesday(d):
     nxt = d + datetime.timedelta(days=1)
     return nxt.weekday() == 1 and (nxt + datetime.timedelta(days=7)).month != nxt.month
@@ -83,6 +103,12 @@ def main():
         capture_for_investor_report(today, autos)
     except Exception as e:
         print("investor-capture error:", e)
+    # standing monthly inquiry: convertible notes coming due (David/Kyle provide detail; Neil tracks)
+    notes_due_line = ""
+    try:
+        notes_due_line = capture_notes_due(today)
+    except Exception as e:
+        print("notes-due-capture error:", e)
 
     # 1) email Jon the agenda doc
     try:
@@ -93,7 +119,9 @@ def main():
         m.set_content(
             f"Hello Jon,\n\nTomorrow ({meeting_day:%A, %b %d}) is the monthly Mission Control Work Management Meeting. "
             "Agenda attached.\n\nDraft for Section 2 (what Exo automated this month), from the change log:\n"
-            + auto_txt + "\n\nReply if you want any of it reworded before the meeting.\n\nExo")
+            + auto_txt
+            + (f"\n\nStanding finance item:\n• {notes_due_line}" if notes_due_line else "")
+            + "\n\nReply if you want any of it reworded before the meeting.\n\nExo")
         if os.path.isfile(AGENDA):
             m.add_attachment(open(AGENDA, "rb").read(), maintype="application",
                              subtype="vnd.openxmlformats-officedocument.wordprocessingml.document",

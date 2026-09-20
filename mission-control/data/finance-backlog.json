@@ -15,7 +15,7 @@
     }
   },
   "static_backlog": [
-    {"name": "SBIR Phase II (HVRR-RDRE, FA9300-25-C-6022)", "amount": 1897824, "stage": "booked", "expect_2026": null, "note": "FFP, 5 CLINs; recognized as CLINs deliver"},
+    {"name": "SBIR Phase II (HVRR-RDRE, FA9300-25-C-6022)", "amount": 1897824, "stage": "booked", "expect_2026": 0, "timing": "2027", "note": "FFP, 5 CLINs $1,897,824. DELAYED on GFE delivery (Jon 2026-09-20) -> completion slips to 2027; remaining/unbilled CLINs are 2027 revenue. Early CLINs (kickoff $284,674 + materials $455,478) billed on original schedule; rest slips. QB commingles in 'Services Rendered' (no CLIN tracking) so exact billed-to-date needs Kyle/DFAS. Do NOT count as a 2026 lever."},
     {"name": "Karmen (USSF D2P2, SF254-D1002)", "amount": 300000, "stage": "funded", "expect_2026": 180000, "note": "$120K kickoff + 2x$30K progress reports in 2026"},
     {"name": "Watch pre-sale (BLK3 black-PVD)", "amount": 20250, "stage": "committed", "expect_2026": 20250, "note": "30 units x $675; securities gate D-7281743 pending Keyes review"},
     {"name": "UTD 1U payload (Mar'27 BLK3 flight)", "amount": 8000, "stage": "committed", "expect_2026": 8000, "note": "slot-hold deposit gate mid-Dec'26"},
