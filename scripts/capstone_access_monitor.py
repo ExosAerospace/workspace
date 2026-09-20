@@ -74,9 +74,16 @@ def main():
         if not line:
             continue
         try:
-            events.append(json.loads(line))
+            ev = json.loads(line)
         except Exception:
             continue
+        # This monitor is ONLY for UTD capstone (early_adopter) students. The shared audit log
+        # (mission-control/server.js auditDeny) also records dd_reviewer denials — those are the
+        # external RTO due-diligence data-room sandbox working as designed (default-deny; its own
+        # audit trail is logs/dd-activity.log). Do NOT mislabel a dd_reviewer as a "student probing."
+        if (ev.get("role") or "") != "early_adopter":
+            continue
+        events.append(ev)
     if not events:
         return
 
