@@ -829,14 +829,16 @@
   "stored_name": "1784389214563_Exos_AEDC_Velocity_Alliance_Whitepaper_PREV.docx",
   "size": 779224,
   "extension": ".docx",
-  "task_id": "561",
+  "task_id": "433",
   "project_id": null,
   "decision_id": null,
   "doc_key": "exos-aedc-velocity-alliance-whitepaper-prev",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo (backfill)",
-  "uploaded_at": "2026-07-18T15:40:14Z"
+  "uploaded_at": "2026-07-18T15:40:14Z",
+  "reconciled_from": "561",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "dcd9359638ace998",
@@ -1153,14 +1155,16 @@
   "stored_name": "1784389268504_Mission-Control-Backup-Onboarding-Email.docx",
   "size": 38877,
   "extension": ".docx",
-  "task_id": "155",
+  "task_id": "12",
   "project_id": null,
   "decision_id": null,
   "doc_key": "mission-control-backup-onboarding-email",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo (backfill)",
-  "uploaded_at": "2026-07-18T15:41:08Z"
+  "uploaded_at": "2026-07-18T15:41:08Z",
+  "reconciled_from": "155",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "a25d30de3dca4a65",
@@ -1366,14 +1370,16 @@
   "stored_name": "1784389268869_Exos_AEDC_Velocity_Alliance_Whitepaper_PREV.docx",
   "size": 779224,
   "extension": ".docx",
-  "task_id": "432",
+  "task_id": "433",
   "project_id": null,
   "decision_id": null,
   "doc_key": "exos-aedc-velocity-alliance-whitepaper-prev",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo (backfill)",
-  "uploaded_at": "2026-07-18T15:41:08Z"
+  "uploaded_at": "2026-07-18T15:41:08Z",
+  "reconciled_from": "432",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "6dda15676fe7c1ca",
@@ -2577,14 +2583,16 @@
   "stored_name": "1784639744355_sadler-report-2026-07-21-crosswalk.docx",
   "size": 38430,
   "extension": ".docx",
-  "task_id": "BD-SADLER-072126",
+  "task_id": "56",
   "project_id": null,
   "decision_id": null,
   "doc_key": "sadler-report-2026-07-21-crosswalk",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-21T13:15:44Z"
+  "uploaded_at": "2026-07-21T13:15:44Z",
+  "reconciled_from": "BD-SADLER-072126",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "7d0d69f09671e7c3",
@@ -2686,14 +2694,16 @@
   "stored_name": "1784643996939_1784245874165_Fort_Worth_EconDev_Dossier.docx",
   "size": 38999,
   "extension": ".docx",
-  "task_id": "BD-FTWORTH-001",
+  "task_id": "1136",
   "project_id": null,
   "decision_id": null,
   "doc_key": "fort-worth-econdev-dossier",
   "version": 2,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-21T14:26:36Z"
+  "uploaded_at": "2026-07-21T14:26:36Z",
+  "reconciled_from": "BD-FTWORTH-001",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "fcc530679c0f3a19",
@@ -2701,14 +2711,16 @@
   "stored_name": "1784643997013_1784245874195_fortworth-econdev-reply.docx",
   "size": 37688,
   "extension": ".docx",
-  "task_id": "BD-FTWORTH-001",
+  "task_id": "1136",
   "project_id": null,
   "decision_id": null,
   "doc_key": "fortworth-econdev-reply",
   "version": 2,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-21T14:26:37Z"
+  "uploaded_at": "2026-07-21T14:26:37Z",
+  "reconciled_from": "BD-FTWORTH-001",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "c0fdc42d56ff5b42",
@@ -2780,14 +2792,16 @@
   "stored_name": "1784643997487_1784389213826_euronext-dublin-listing-checklist.docx",
   "size": 43080,
   "extension": ".docx",
-  "task_id": "44",
+  "task_id": "58",
   "project_id": null,
   "decision_id": null,
   "doc_key": "euronext-dublin-listing-checklist",
   "version": 2,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-21T14:26:37Z"
+  "uploaded_at": "2026-07-21T14:26:37Z",
+  "reconciled_from": "44",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "42103edefb9d19ea",
@@ -2810,14 +2824,16 @@
   "stored_name": "1784643997682_1784389213876_unity-harbour-response-analysis.docx",
   "size": 42549,
   "extension": ".docx",
-  "task_id": "47",
+  "task_id": "38",
   "project_id": null,
   "decision_id": null,
   "doc_key": "unity-harbour-response-analysis",
   "version": 2,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-21T14:26:37Z"
+  "uploaded_at": "2026-07-21T14:26:37Z",
+  "reconciled_from": "47",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "76cb73ad941722dc",
@@ -3485,14 +3501,16 @@
   "stored_name": "1784644001307_1784552984072_MDB-Marlett-MNDA-Countersign-Followup-HP004.docx",
   "size": 37532,
   "extension": ".docx",
-  "task_id": "HP-004",
+  "task_id": "1220",
   "project_id": null,
   "decision_id": null,
   "doc_key": "mdb-marlett-mnda-countersign-followup-hp",
   "version": 2,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-21T14:26:41Z"
+  "uploaded_at": "2026-07-21T14:26:41Z",
+  "reconciled_from": "HP-004",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "378f39c5ef57b354",
@@ -3500,14 +3518,16 @@
   "stored_name": "1784644001397_1784553264074_NASA-FO-IDIQ4-OnRamp-Package.docx",
   "size": 42200,
   "extension": ".docx",
-  "task_id": "R-001",
+  "task_id": "1278",
   "project_id": null,
   "decision_id": null,
   "doc_key": "nasa-fo-idiq4-onramp-package",
   "version": 2,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-21T14:26:41Z"
+  "uploaded_at": "2026-07-21T14:26:41Z",
+  "reconciled_from": "R-001",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "379c03dfffa6aac0",
@@ -4417,14 +4437,16 @@
   "stored_name": "1784914305061_Veteran_Fund_Dossier.docx",
   "size": 38243,
   "extension": ".docx",
-  "task_id": "T-033",
+  "task_id": "969",
   "project_id": null,
   "decision_id": null,
   "doc_key": "veteran-fund-dossier",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-24T17:31:45Z"
+  "uploaded_at": "2026-07-24T17:31:45Z",
+  "reconciled_from": "T-033",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "3c062b25fbbc5805",
@@ -4448,14 +4470,16 @@
   "stored_name": "1784915370872_senegal-directline-webinar-rsvp.docx",
   "size": 37900,
   "extension": ".docx",
-  "task_id": "T-SEN-DIRECTLINE-0728",
+  "task_id": "1853",
   "project_id": null,
   "decision_id": null,
   "doc_key": "senegal-directline-webinar-rsvp",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-24T17:49:30Z"
+  "uploaded_at": "2026-07-24T17:49:30Z",
+  "reconciled_from": "T-SEN-DIRECTLINE-0728",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "e8b11ead693dae8f",
@@ -4463,14 +4487,16 @@
   "stored_name": "1784916141922_toshi-innovation-dojo-followup-4q.docx",
   "size": 39004,
   "extension": ".docx",
-  "task_id": "T-JP-DOJO-4Q-0724",
+  "task_id": "787",
   "project_id": null,
   "decision_id": null,
   "doc_key": "toshi-innovation-dojo-followup-4q",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-24T18:02:21Z"
+  "uploaded_at": "2026-07-24T18:02:21Z",
+  "reconciled_from": "T-JP-DOJO-4Q-0724",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "7a024dbb1076674b",
@@ -4478,14 +4504,16 @@
   "stored_name": "1784917312691_Exos_Japan_Innovation_Dojo_4Q_Response.docx",
   "size": 38791,
   "extension": ".docx",
-  "task_id": "T-JP-DOJO-4Q-0724",
+  "task_id": "787",
   "project_id": null,
   "decision_id": null,
   "doc_key": "exos-japan-innovation-dojo-4q-response",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-24T18:21:52Z"
+  "uploaded_at": "2026-07-24T18:21:52Z",
+  "reconciled_from": "T-JP-DOJO-4Q-0724",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "b3f2af0f5f61dee0",
@@ -5702,14 +5730,16 @@
   "stored_name": "1785509719312_CEA_RTO_Advisor_Call_Update_2026-07-31.docx",
   "size": 39742,
   "extension": ".docx",
-  "task_id": "BD-RTO-ADVISOR-001",
+  "task_id": "1855",
   "project_id": null,
   "decision_id": null,
   "doc_key": "cea-rto-advisor-call-update-2026-07",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-31T14:55:19Z"
+  "uploaded_at": "2026-07-31T14:55:19Z",
+  "reconciled_from": "BD-RTO-ADVISOR-001",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "c92af0c7ddb4da88",
@@ -5732,14 +5762,16 @@
   "stored_name": "1785536926581_MNDA_Exos_JivaJet_SIGNATURE_READY.docx",
   "size": 780565,
   "extension": ".docx",
-  "task_id": "BD-JIVAJET-NDA-001",
+  "task_id": "976",
   "project_id": null,
   "decision_id": null,
   "doc_key": "mnda-exos-jivajet-signature-ready",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-31T22:28:46Z"
+  "uploaded_at": "2026-07-31T22:28:46Z",
+  "reconciled_from": "BD-JIVAJET-NDA-001",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "a62567a76fab31e4",
@@ -6133,14 +6165,16 @@
   "stored_name": "1785861539323_Lizi_to_Gabi_Caswell_2026-08-04.docx",
   "size": 37877,
   "extension": ".docx",
-  "task_id": "BD-031",
+  "task_id": "1822",
   "project_id": null,
   "decision_id": null,
   "doc_key": "lizi-to-gabi-caswell-2026-08",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-04T16:38:59Z"
+  "uploaded_at": "2026-08-04T16:38:59Z",
+  "reconciled_from": "BD-031",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "ead764068f9faadd",
@@ -6206,14 +6240,16 @@
   "stored_name": "1785939883791_NextGen_Hypersonics_RFS_Assessment.docx",
   "size": 38860,
   "extension": ".docx",
-  "task_id": "BD-HYPERSONICS-NEXTGEN-001",
+  "task_id": "2570",
   "project_id": null,
   "decision_id": null,
   "doc_key": "nextgen-hypersonics-rfs-assessment",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-05T14:24:43Z"
+  "uploaded_at": "2026-08-05T14:24:43Z",
+  "reconciled_from": "BD-HYPERSONICS-NEXTGEN-001",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "3613a614b8d5d2cb",
@@ -6786,14 +6822,16 @@
   "stored_name": "1786376778767_Lesiw_exo3_Booking_Confirmation.docx",
   "size": 778842,
   "extension": ".docx",
-  "task_id": "PAY-LESIW-EXO3-001",
+  "task_id": "1144",
   "project_id": null,
   "decision_id": null,
   "doc_key": "lesiw-exo3-booking-confirmation",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-10T15:46:18Z"
+  "uploaded_at": "2026-08-10T15:46:18Z",
+  "reconciled_from": "PAY-LESIW-EXO3-001",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "c4002bd8aa8f2cb2",
@@ -6801,14 +6839,16 @@
   "stored_name": "1786376778830_Lesiw_exo3_Cover_Email.docx",
   "size": 37470,
   "extension": ".docx",
-  "task_id": "PAY-LESIW-EXO3-001",
+  "task_id": "1067",
   "project_id": null,
   "decision_id": null,
   "doc_key": "lesiw-exo3-cover-email",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-10T15:46:18Z"
+  "uploaded_at": "2026-08-10T15:46:18Z",
+  "reconciled_from": "PAY-LESIW-EXO3-001",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "1384befb266236a8",
@@ -8546,14 +8586,16 @@
   "stored_name": "1787166360492_Garza_SEARF_SenHall_LOS_push_2026-08-19.docx",
   "size": 38381,
   "extension": ".docx",
-  "task_id": "BD-SEARF-HALLLOS-001",
+  "task_id": "2151",
   "project_id": null,
   "decision_id": null,
   "doc_key": "garza-searf-senhall-los-push-2026-08",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-19T19:06:00Z"
+  "uploaded_at": "2026-08-19T19:06:00Z",
+  "reconciled_from": "BD-SEARF-HALLLOS-001",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "0e310bdd2672c8ff",
@@ -9056,14 +9098,16 @@
   "stored_name": "1787600873850_Juliano_ND_ThreeWriteups_Package_2026-08-24.docx",
   "size": 41236,
   "extension": ".docx",
-  "task_id": "P-035",
+  "task_id": "2032",
   "project_id": null,
   "decision_id": null,
   "doc_key": "juliano-nd-threewriteups-package-2026-08",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-24T19:47:53Z"
+  "uploaded_at": "2026-08-24T19:47:53Z",
+  "reconciled_from": "P-035",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "2ac6260a7e810470",
@@ -10540,14 +10584,16 @@
   "stored_name": "1788053742832_Exos_to_Wertz_SSLC_BoardMeetingRequest_2026-08-29.docx",
   "size": 779380,
   "extension": ".docx",
-  "task_id": "BD-022",
+  "task_id": "2414",
   "project_id": null,
   "decision_id": null,
   "doc_key": "wertz_sslc_board_request",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-30T01:35:42Z"
+  "uploaded_at": "2026-08-30T01:35:42Z",
+  "reconciled_from": "BD-022",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "358fbd641d3ad324",
@@ -10662,14 +10708,16 @@
   "stored_name": "1788103382125_Exos_Wertz_SSLC_BoardMeeting_IntroEmail_2026-08-30.docx",
   "size": 37754,
   "extension": ".docx",
-  "task_id": "BD-022",
+  "task_id": "2414",
   "project_id": null,
   "decision_id": null,
   "doc_key": "exos-wertz-sslc-boardmeeting-introemail",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-30T15:23:02Z"
+  "uploaded_at": "2026-08-30T15:23:02Z",
+  "reconciled_from": "BD-022",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "49ddf54fc3227e74",
@@ -10677,14 +10725,16 @@
   "stored_name": "1788103382158_Exos_to_Wertz_SSLC_BoardMeetingRequest_withTermSheet_2026-08-30.docx",
   "size": 782477,
   "extension": ".docx",
-  "task_id": "BD-022",
+  "task_id": "2414",
   "project_id": null,
   "decision_id": null,
   "doc_key": "exos-to-wertz-sslc-boardmeetingrequest-withtermsheet",
   "version": 2,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-30T15:23:02Z"
+  "uploaded_at": "2026-08-30T15:23:02Z",
+  "reconciled_from": "BD-022",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "46f2b20eb5eaaecb",
@@ -10692,14 +10742,16 @@
   "stored_name": "1788103382188_Exos_Scorpius_Acquisition_TermSheet_forSSLCBoard_2026-08-30.docx",
   "size": 780303,
   "extension": ".docx",
-  "task_id": "BD-022",
+  "task_id": "2132",
   "project_id": null,
   "decision_id": null,
   "doc_key": "exos-scorpius-acquisition-termsheet-forsslcboard",
   "version": 2,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-30T15:23:02Z"
+  "uploaded_at": "2026-08-30T15:23:02Z",
+  "reconciled_from": "BD-022",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "767f75c4601aab90",
@@ -10768,14 +10820,16 @@
   "stored_name": "1788144426158_Exos_AEDC_Velocity_Alliance_Whitepaper.pdf",
   "size": 958861,
   "extension": ".pdf",
-  "task_id": "P-028",
+  "task_id": "433",
   "project_id": null,
   "decision_id": null,
   "doc_key": "exos-aedc-velocity-alliance-whitepaper",
   "version": 2,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-31T02:47:06Z"
+  "uploaded_at": "2026-08-31T02:47:06Z",
+  "reconciled_from": "P-028",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "ad270584659747c7",
@@ -11020,14 +11074,16 @@
   "stored_name": "1788195882932_Exos_LOS_FlightProvider_ECHO_Fan_ERAU_2026-08-31.docx",
   "size": 778434,
   "extension": ".docx",
-  "task_id": "PAY-3730",
+  "task_id": "2490",
   "project_id": null,
   "decision_id": null,
   "doc_key": "exos-los-flightprovider-echo-fan-erau",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-31T17:04:42Z"
+  "uploaded_at": "2026-08-31T17:04:42Z",
+  "reconciled_from": "PAY-3730",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "8b2368c2f235e159",
@@ -11035,14 +11091,16 @@
   "stored_name": "1788195882966_Exos_CostEstimate_ECHO_Fan_ERAU_2026-08-31.docx",
   "size": 778341,
   "extension": ".docx",
-  "task_id": "PAY-3730",
+  "task_id": "2490",
   "project_id": null,
   "decision_id": null,
   "doc_key": "exos-costestimate-echo-fan-erau",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-31T17:04:42Z"
+  "uploaded_at": "2026-08-31T17:04:42Z",
+  "reconciled_from": "PAY-3730",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "78f2ca1f2b652d56",
@@ -11923,14 +11981,16 @@
   "stored_name": "1788293563252_Exos_Velocity_Alliance_Onboarding_Status.docx",
   "size": 778979,
   "extension": ".docx",
-  "task_id": "P-028",
+  "task_id": "433",
   "project_id": null,
   "decision_id": null,
   "doc_key": "velocity_alliance_onboarding_status",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-09-01T20:12:43Z"
+  "uploaded_at": "2026-09-01T20:12:43Z",
+  "reconciled_from": "P-028",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "511b3f391271f161",
@@ -11938,14 +11998,16 @@
   "stored_name": "1788293563289_Exos_Velocity_Alliance_Onboarding_Status.pdf",
   "size": 1191212,
   "extension": ".pdf",
-  "task_id": "P-028",
+  "task_id": "433",
   "project_id": null,
   "decision_id": null,
   "doc_key": "velocity_alliance_onboarding_status_pdf",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-09-01T20:12:43Z"
+  "uploaded_at": "2026-09-01T20:12:43Z",
+  "reconciled_from": "P-028",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "2dec3567f6f25aef",
@@ -12903,14 +12965,16 @@
   "stored_name": "1788442823740_AEDC_Velocity_Alliance_ThankYou_IndustryDay.docx",
   "size": 37148,
   "extension": ".docx",
-  "task_id": "P-028",
+  "task_id": "2538",
   "project_id": null,
   "decision_id": null,
   "doc_key": "aedc_velocity_thankyou_industryday",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-09-03T13:40:23Z"
+  "uploaded_at": "2026-09-03T13:40:23Z",
+  "reconciled_from": "P-028",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "80cb833ab5773a73",
@@ -12977,14 +13041,16 @@
   "stored_name": "1788526468646_Eqvista_Fairness_Opinion_Correspondence_2026-09-04.docx",
   "size": 38011,
   "extension": ".docx",
-  "task_id": "BD-022",
+  "task_id": "2627",
   "project_id": null,
   "decision_id": null,
   "doc_key": "eqvista-fairness-opinion-correspondence",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-09-04T12:54:28Z"
+  "uploaded_at": "2026-09-04T12:54:28Z",
+  "reconciled_from": "BD-022",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "e3f0823564fb5727",
@@ -13127,14 +13193,16 @@
   "stored_name": "1788535764348_SSLC_Wertz_Reply_and_Sept8_Fallback_2026-09-04.docx",
   "size": 39532,
   "extension": ".docx",
-  "task_id": "BD-022",
+  "task_id": "2414",
   "project_id": null,
   "decision_id": null,
   "doc_key": "sslc_wertz_reply_sept8_fallback",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo (email command)",
-  "uploaded_at": "2026-09-04T15:29:24Z"
+  "uploaded_at": "2026-09-04T15:29:24Z",
+  "reconciled_from": "BD-022",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "00212f139ce4deef",
@@ -13934,14 +14002,16 @@
   "stored_name": "1788804300774_Part450_117_MonteCarlo_Dispersion_Framework_2026-09-07.docx",
   "size": 40583,
   "extension": ".docx",
-  "task_id": "R-012",
+  "task_id": "2598",
   "project_id": null,
   "decision_id": null,
   "doc_key": "part450_117_montecarlo_framework",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-09-07T18:05:00Z"
+  "uploaded_at": "2026-09-07T18:05:00Z",
+  "reconciled_from": "R-012",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "4bed24e965b3d192",
@@ -14156,14 +14226,16 @@
   "stored_name": "1788876161529_Starfighters_AEDC_Velocity_Roster_Request_2026-09-08.docx",
   "size": 38172,
   "extension": ".docx",
-  "task_id": "P-028",
+  "task_id": "2538",
   "project_id": null,
   "decision_id": null,
   "doc_key": "starfighters-aedc-velocity-roster-request",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-09-08T14:02:41Z"
+  "uploaded_at": "2026-09-08T14:02:41Z",
+  "reconciled_from": "P-028",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "204ad5c45bf59fc8",
@@ -14171,14 +14243,16 @@
   "stored_name": "1788876468971_Exos_Teasley_RDRE_MeetingBrief_v2_2026-09-08.docx",
   "size": 39030,
   "extension": ".docx",
-  "task_id": "P3-002",
+  "task_id": "946",
   "project_id": null,
   "decision_id": null,
   "doc_key": "teasley-rdre-meeting-brief",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-09-08T14:07:48Z"
+  "uploaded_at": "2026-09-08T14:07:48Z",
+  "reconciled_from": "P3-002",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "610051656695f304",
@@ -14201,14 +14275,16 @@
   "stored_name": "1788879746582_Exos_Teasley_RDRE_MeetingBrief_v2_2026-09-08.docx",
   "size": 39030,
   "extension": ".docx",
-  "task_id": "P3-002",
+  "task_id": "946",
   "project_id": null,
   "decision_id": null,
   "doc_key": "teasley_rdre_meeting_brief",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-09-08T15:02:26Z"
+  "uploaded_at": "2026-09-08T15:02:26Z",
+  "reconciled_from": "P3-002",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "fd65f89849cb0ce7",
@@ -15128,14 +15204,16 @@
   "stored_name": "1789069708083_AEDC_Velocity_IndustryDay_Roster_2026-09-08.xlsx",
   "size": 8556,
   "extension": ".xlsx",
-  "task_id": "P-028",
+  "task_id": "2538",
   "project_id": null,
   "decision_id": null,
   "doc_key": "aedc_velocity_roster_xlsx",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-09-10T19:48:28Z"
+  "uploaded_at": "2026-09-10T19:48:28Z",
+  "reconciled_from": "P-028",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "94a117128ae27d1a",
@@ -17114,14 +17192,16 @@
   "stored_name": "1789916837289_Exos_Investor_Master_and_Watch_Sales_Pipeline.xlsx",
   "size": 74395,
   "extension": ".xlsx",
-  "task_id": "BD-WATCH-001",
+  "task_id": "2979",
   "project_id": null,
   "decision_id": null,
   "doc_key": "watch_investor_master_663",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-09-20T15:07:17Z"
+  "uploaded_at": "2026-09-20T15:07:17Z",
+  "reconciled_from": "BD-WATCH-001",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "ecf8a3948016e7fa",
@@ -17129,14 +17209,16 @@
   "stored_name": "1789916837328_BLK3_Watch_Marketing_and_LiziHowTo.docx",
   "size": 40818,
   "extension": ".docx",
-  "task_id": "BD-WATCH-001",
+  "task_id": "2979",
   "project_id": null,
   "decision_id": null,
   "doc_key": "watch_marketing_lizi_howto",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-09-20T15:07:17Z"
+  "uploaded_at": "2026-09-20T15:07:17Z",
+  "reconciled_from": "BD-WATCH-001",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "9ce79efe902a0f6a",
@@ -17174,14 +17256,16 @@
   "stored_name": "1789934287261_Exos_BLK3_Watch_Allocation_TDP_10sell_10employees.xlsx",
   "size": 38727,
   "extension": ".xlsx",
-  "task_id": "R-007",
+  "task_id": "2979",
   "project_id": null,
   "decision_id": null,
   "doc_key": "exos-blk3-watch-allocation-tdp-10sell-10employees",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-09-20T19:58:07Z"
+  "uploaded_at": "2026-09-20T19:58:07Z",
+  "reconciled_from": "R-007",
+  "reconciled_at": "20260920-191354"
  },
  {
   "id": "d2dc1602967f3d4f",
