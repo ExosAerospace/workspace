@@ -1074,21 +1074,6 @@
   "superseded_at": "2026-07-21T14:26:38Z"
  },
  {
-  "id": "87f55a3eff405cb9",
-  "filename": "Exos_Credit_Reference_Document_2026.04.docx",
-  "stored_name": "1784389268376_Exos_Credit_Reference_Document_2026.04.docx",
-  "size": 37548,
-  "extension": ".docx",
-  "task_id": "40",
-  "project_id": null,
-  "decision_id": null,
-  "doc_key": "exos-credit-reference-document",
-  "version": 1,
-  "current": true,
-  "uploaded_by": "Exo (backfill)",
-  "uploaded_at": "2026-07-18T15:41:08Z"
- },
- {
   "id": "eef497229e2a60b5",
   "filename": "Exos_Board_Advisory_FNEX_Ainigma_Engagement_2026-07-16.docx",
   "stored_name": "1784389268402_Exos_Board_Advisory_FNEX_Ainigma_Engagement_2026-07-16.docx",
@@ -4384,7 +4369,8 @@
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-24T16:54:49Z"
+  "uploaded_at": "2026-07-24T16:54:49Z",
+  "status": "parked \u2014 waiting on USAF contract (Jon 2026-09-20)"
  },
  {
   "id": "78b85f617e403599",
@@ -5710,21 +5696,6 @@
   "uploaded_at": "2026-07-31T14:40:16Z"
  },
  {
-  "id": "1efe7927bd14f267",
-  "filename": "Follow-up email to advisors (ready for review)",
-  "stored_name": "1785509719233_CEA_RTO_Advisor_Followup_2026-07-31.docx",
-  "size": 38114,
-  "extension": ".docx",
-  "task_id": "BD-RTO-ADVISOR-001",
-  "project_id": null,
-  "decision_id": null,
-  "doc_key": "cea-rto-advisor-followup-2026-07",
-  "version": 1,
-  "current": true,
-  "uploaded_by": "Exo",
-  "uploaded_at": "2026-07-31T14:55:19Z"
- },
- {
   "id": "06f7f4cd080e58c1",
   "filename": "7/29 advisor call \u2014 full update/brief",
   "stored_name": "1785509719312_CEA_RTO_Advisor_Call_Update_2026-07-31.docx",
@@ -6915,9 +6886,10 @@
   "decision_id": null,
   "doc_key": "exos-payload-heritage-glioblastoma-npjmicrogravity",
   "version": 1,
-  "current": true,
+  "current": false,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-10T21:03:09Z"
+  "uploaded_at": "2026-08-10T21:03:09Z",
+  "status": "closed (Jon 2026-09-20)"
  },
  {
   "id": "0d34a0eabe8f1fcd",
@@ -8146,14 +8118,16 @@
   "stored_name": "1786972333507_Scorpius_Board_Update_and_Meeting_Request_2026-08-17.docx",
   "size": 38719,
   "extension": ".docx",
-  "task_id": "BD-022",
+  "task_id": "2132",
   "project_id": null,
   "decision_id": null,
   "doc_key": "scorpius-board-update-and-meeting-request-2026-08",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-17T13:12:13Z"
+  "uploaded_at": "2026-08-17T13:12:13Z",
+  "reconciled_from": "BD-022",
+  "reconciled_at": "2026-09-21T00:23:20Z"
  },
  {
   "id": "12459741e19b4ac3",
@@ -8434,14 +8408,16 @@
   "stored_name": "1787096565558_Southwest_Composite_Works_DD_Consortium_LicenseGap.docx",
   "size": 40535,
   "extension": ".docx",
-  "task_id": "BD-SWCOMPOSITE-001",
+  "task_id": "2940",
   "project_id": null,
   "decision_id": null,
   "doc_key": "southwest-composite-works-dd-consortium-licensegap",
   "version": 1,
   "current": true,
   "uploaded_by": "Exo",
-  "uploaded_at": "2026-08-18T23:42:45Z"
+  "uploaded_at": "2026-08-18T23:42:45Z",
+  "reconciled_from": "BD-SWCOMPOSITE-001",
+  "reconciled_at": "2026-09-21T00:23:20Z"
  },
  {
   "id": "c8bf4d7a18ae50e8",
@@ -10676,7 +10652,7 @@
   "stored_name": "1788101879210_Exos_Scorpius_Acquisition_TermSheet_forSSLCBoard_2026-08-30.docx",
   "size": 780303,
   "extension": ".docx",
-  "task_id": "BD-022",
+  "task_id": "2132",
   "project_id": null,
   "decision_id": null,
   "doc_key": "exos-scorpius-acquisition-termsheet-forsslcboard",
@@ -10684,7 +10660,9 @@
   "current": false,
   "uploaded_by": "Exo",
   "uploaded_at": "2026-08-30T14:57:59Z",
-  "superseded_at": "2026-08-30T15:23:02Z"
+  "superseded_at": "2026-08-30T15:23:02Z",
+  "reconciled_from": "BD-022",
+  "reconciled_at": "2026-09-21T00:23:20Z"
  },
  {
   "id": "51ea87e0196bc78d",
@@ -10692,7 +10670,7 @@
   "stored_name": "1788101879245_Exos_to_Wertz_SSLC_BoardMeetingRequest_withTermSheet_2026-08-30.docx",
   "size": 782477,
   "extension": ".docx",
-  "task_id": "BD-022",
+  "task_id": "2132",
   "project_id": null,
   "decision_id": null,
   "doc_key": "exos-to-wertz-sslc-boardmeetingrequest-withtermsheet",
@@ -10700,7 +10678,9 @@
   "current": false,
   "uploaded_by": "Exo",
   "uploaded_at": "2026-08-30T14:57:59Z",
-  "superseded_at": "2026-08-30T15:23:02Z"
+  "superseded_at": "2026-08-30T15:23:02Z",
+  "reconciled_from": "BD-022",
+  "reconciled_at": "2026-09-21T00:23:20Z"
  },
  {
   "id": "8ae4cfaf1b799249",
