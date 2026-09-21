@@ -72,6 +72,9 @@ def main():
             _mdx = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(_mdx)
             src = _mdx.convert(a.file, os.path.join(tempfile.mkdtemp(), os.path.splitext(fname)[0] + ".docx"))
             fname = os.path.basename(src); ext = ".docx"
+            # non-silent: announce the conversion so a spreadsheet-intended .md is never quietly turned to Word
+            print(f"NOTE: converted {os.path.basename(a.file)} (.md/.txt) -> .docx before attaching. "
+                  f"If this was meant to be a spreadsheet, attach a real .xlsx instead.")
         except Exception as e:
             print("md->docx failed, storing original:", str(e)[:70]); src = a.file
     title = a.title or fname

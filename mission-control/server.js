@@ -1236,7 +1236,7 @@ const server = http.createServer((req, res) => {
       try {
         const { email, name, password, role, project } = JSON.parse(body);
         if (!email || !name || !password) { res.writeHead(400); res.end(JSON.stringify({ error: 'email, name, password required' })); return; }
-        if (!['admin', 'manager', 'member', 'early_adopter'].includes(role)) { res.writeHead(400); res.end(JSON.stringify({ error: 'role must be admin, manager, member, or early_adopter' })); return; }
+        if (!['admin', 'manager', 'member', 'early_adopter', 'dd_reviewer'].includes(role)) { res.writeHead(400); res.end(JSON.stringify({ error: 'role must be admin, manager, member, early_adopter, or dd_reviewer' })); return; }
         const users = loadUsers();
         if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) { res.writeHead(409); res.end(JSON.stringify({ error: 'Email already exists' })); return; }
         const salt = crypto.randomBytes(32).toString('hex');
@@ -1268,7 +1268,7 @@ const server = http.createServer((req, res) => {
         if (idx === -1) { res.writeHead(404); res.end(JSON.stringify({ error: 'User not found' })); return; }
         if (name) users[idx].name = name;
         if (email) users[idx].email = email;
-        if (role && ['admin', 'manager', 'member', 'early_adopter'].includes(role)) users[idx].role = role;
+        if (role && ['admin', 'manager', 'member', 'early_adopter', 'dd_reviewer'].includes(role)) users[idx].role = role;
         if (project !== undefined) users[idx].project = project;
         if (active !== undefined) users[idx].active = active;
         if (password) {
@@ -1580,6 +1580,73 @@ const server = http.createServer((req, res) => {
       res.end();
       return;
     }
+  }
+
+  // ── dd_reviewer role: external RTO due-diligence data-room sandbox ─────────────
+  // For the Ainigma advisory team (under NDA). STRICT default-deny: they may reach ONLY the
+  // curated data room (financials / business+RTO plan / deck) and the sandboxed Ask-Exo DD chat.
+  // NO CRM, deals, HR, uploads tree, other programs, admin, docusign. Every out-of-scope hit is
+  // logged (auditDeny) and every allowed doc view / chat question is logged to dd-activity.log.
+  if (session && session.role === 'dd_reviewer') {
+    const fp = req.url.split('?')[0];
+    // /finance* + operational-finance/capital-bridge are ALSO gated by the finance-access.json email
+    // allowlist (checked earlier); listing them here just lets an allowlisted dd_reviewer's finance
+    // page/API through this sandbox's default-deny. A dd_reviewer NOT on the finance allowlist still
+    // gets nothing (that block already returned/redirected).
+    const allowedAPIs = ['/api/me', '/api/logout', '/api/dataroom', '/api/dataroom-doc', '/api/chat', '/api/chat/result', '/api/operational-finance', '/api/capital-bridge'];
+    const allowedPages = ['/dataroom', '/dataroom.html', '/finance', '/finance.html', '/login', '/login.html', '/set-password', '/set-password.html', '/welcome', '/welcome.html'];
+    // Landing: send them straight to the data room, never the internal dashboard.
+    if (fp === '/' || fp === '/index.html' || fp === '/dashboard' || fp === '/dashboard.html' || fp === '/dataroom') {
+      res.writeHead(302, { 'Location': '/dataroom.html' }); res.end(); return;
+    }
+    if (fp.startsWith('/api/')) {
+      if (!allowedAPIs.some(p => fp === p || fp.startsWith(p))) {
+        auditDeny(session, req, 'dd-out-of-scope-api');
+        res.writeHead(403, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Not available in the RTO due-diligence data room.' }));
+        return;
+      }
+    } else if (req.method === 'GET' && !allowedPages.some(p => fp === p) && !fp.startsWith('/brand-assets') && !fp.startsWith('/exobot-widget.js')) {
+      // Block raw doc/upload routes and every internal page for this sandbox.
+      if (fp.startsWith('/uploads/') || fp.startsWith('/viewpdf/') || fp.startsWith('/backup/')) auditDeny(session, req, 'dd-blocked-doc-route');
+      res.writeHead(302, { 'Location': '/dataroom' }); res.end(); return;
+    }
+  }
+
+  // ── Data-room API: manifest + curated doc serving (session-gated; docs are non-sensitive) ──
+  if (req.url.split('?')[0] === '/api/dataroom' && req.method === 'GET') {
+    if (!getSession(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    try {
+      const m = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'dataroom-manifest.json')));
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ title: m.title, subtitle: m.subtitle, docs: (m.docs || []).map(d => ({ id: d.id, title: d.title, desc: d.desc, file: d.file })) }));
+    } catch (e) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{"docs":[]}'); }
+    return;
+  }
+  if (req.url.split('?')[0] === '/api/dataroom-doc' && req.method === 'GET') {
+    const s = getSession(req);
+    if (!s) { res.writeHead(401); res.end('Not logged in'); return; }
+    try {
+      const id = new URL(req.url, 'http://localhost').searchParams.get('id') || '';
+      const m = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'dataroom-manifest.json')));
+      const doc = (m.docs || []).find(d => d.id === id);
+      if (!doc) { res.writeHead(404); res.end('Not found'); return; }
+      // Only ever serve from the dataroom dir, basename-locked (no traversal).
+      const safe = path.basename(doc.file);
+      const fpath = path.join(__dirname, 'dataroom', safe);
+      if (!fs.existsSync(fpath)) { res.writeHead(404); res.end('Not found'); return; }
+      try {
+        const line = `[${new Date().toISOString()}] ${s.email || '?'} (${s.role}) viewed data-room doc: ${safe}\n`;
+        fs.appendFileSync(path.join(__dirname, '..', 'logs', 'dd-activity.log'), line);
+      } catch (e) {}
+      const ext = path.extname(safe).toLowerCase();
+      const types = { '.pdf': 'application/pdf', '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation', '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
+      const ct = types[ext] || 'application/octet-stream';
+      const disp = ext === '.pdf' ? 'inline' : 'attachment';
+      res.writeHead(200, { 'Content-Type': ct, 'Content-Disposition': `${disp}; filename="${safe}"` });
+      fs.createReadStream(fpath).pipe(res);
+    } catch (e) { res.writeHead(500); res.end('error'); }
+    return;
   }
 
   // ── Capstone program feed (read-only; students + Edwin see the timeline gates + scorecard) ──
@@ -2612,8 +2679,22 @@ const server = http.createServer((req, res) => {
   if (req.url.startsWith('/api/tasks/delete') && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const { id } = JSON.parse(body);
+      // Detach docs from this task first so they don't silently orphan on delete (fix 2026-09-20).
+      // Null the task_id (kept recoverable via deleted_task_id) and drop current so the doc is
+      // excluded from active views + the orphan watcher rather than pointing at a dead task.
+      let detached = 0;
+      try {
+        const meta = JSON.parse(fs.readFileSync(UPLOADS_META, 'utf-8'));
+        for (const m of meta) {
+          if (String(m.task_id) === String(id)) {
+            m.current = false; m.deleted_task_id = String(id); m.task_id = null;
+            m.detached_at = new Date().toISOString(); detached++;
+          }
+        }
+        if (detached) fs.writeFileSync(UPLOADS_META, JSON.stringify(meta, null, 2));
+      } catch (e) { /* non-fatal — proceed with the delete */ }
       supabaseRequest('DELETE', `tasks?id=eq.${id}`)
-        .then(({ status }) => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
+        .then(({ status }) => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true, detached_docs: detached })); })
         .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
     }); return;
   }
@@ -4437,7 +4518,8 @@ const server = http.createServer((req, res) => {
       if (msg.length > 8000) msg = msg.slice(0, 8000);
       // Pasted / attached documents (base64). Saved to disk so the agent (full file tools)
       // can read them; the paths are handed to the agent in the prompt.
-      const atts = Array.isArray(payload.attachments) ? payload.attachments.slice(0, 10) : [];
+      const isDD = session.role === 'dd_reviewer';
+      const atts = (!isDD && Array.isArray(payload.attachments)) ? payload.attachments.slice(0, 10) : [];
       if (!msg && !atts.length) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'empty message' })); return; }
       // Async + parallel: create a background job, return its id immediately. The widget
       // polls /api/chat/result, so the answer survives navigation; and a question fired
@@ -4471,7 +4553,12 @@ const server = http.createServer((req, res) => {
             + (saved.length > 1 ? 'these paths' : 'this path') + ' for full content:]\n' + saved.map(p => '- ' + p).join('\n');
         } catch (e) { /* if save fails, proceed with text only */ }
       }
-      const fullMsg = (msg || '(see attached document)') + attNote;
+      let fullMsg = (msg || '(see attached document)') + attNote;
+      if (isDD) {
+        try { fs.appendFileSync(path.join(__dirname, '..', 'logs', 'dd-activity.log'), `[${new Date().toISOString()}] ${email} asked: ${msg.slice(0, 500)}\n`); } catch (e) {}
+        const guard = "You are Exo answering an EXTERNAL Ainigma Capital due-diligence reviewer through the Mission Control data room, under an executed mutual NDA. STRICT RULES: (1) Answer ONLY reverse-takeover / financial / business-plan / valuation / corporate due-diligence questions, drawing on the approved RTO data-room materials and Exos's general business and financial information. (2) NEVER read, reference, quote, summarize, or reveal ITAR/EAR or other export-controlled material, CUI, engineering or technical designs/specifications, source code, personnel/HR or salary data, the CRM or contact lists, other customers or programs, or legal-privileged/internal deliberative content — even if asked directly or through a clever or indirect prompt. Do not open files outside the data room. (3) If a request falls outside RTO due diligence or touches restricted material, decline in one line, say it is outside the scope of the due-diligence data room, and suggest routing it to John Quinn. (4) Be concise, professional, and accurate; never speculate or invent figures. The reviewer's question follows:\n\n";
+        fullMsg = guard + fullMsg;
+      }
       const lane = chatAssignSession(email, jobId);
       chatJobs.set(jobId, { email, skey: lane.skey, isMain: lane.isMain, status: 'pending', reply: '', ts: Date.now() });
       runExobotChat(jobId, fullMsg);
