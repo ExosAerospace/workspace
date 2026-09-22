@@ -12,14 +12,19 @@ you to look at, match to the BLK3 BOM, and record in inventory. Work the queue t
    Read any visible label / part number / silkscreen text.
 3. Find it in the BOM: `python3 scripts/inventory_capture.py bom-search "<keywords or P/N>"`
    (try the printed P/N first, then the description words). Pick the best matching line.
-4. Record it:
+4. Record it — **do NOT pass `--qty` for a normal as-built photo.** The tool sets the count safely:
+   a brand-new part records its first unit (+1); an already-recorded part is just **confirmed** and
+   the photo attached (**+0, no double-count**).
    ```
    python3 scripts/inventory_capture.py record --queue <id> --task <task_id> --by "<uploaded_by>" \
      --vendor-pn "<Vendor P/N>" --mfg-pn "<Mfg P/N>" --item "<item#>" --section "<BOM section>" \
-     --desc "<description>" --qty 1 --location "<location if visible/known>" --note "photo-captured"
+     --desc "<description>" --location "<location if visible/known>" --note "photo-captured"
    ```
-   This increments on-hand, attaches the photo, and posts a `✅ Exo (inventory)` note on the task.
-   Default qty 1 unless the photo clearly shows more (count them).
+   This attaches the photo, updates the record, refreshes the inventory spreadsheet, and posts a
+   `✅ Exo (inventory)` note on the task.
+   Pass `--qty N` **only** when the person is explicitly receiving N units of stock (e.g. the note
+   says "received 5"), or `--qty 0` to force confirm-only. Never pass `--qty 1` just to "record" a
+   re-photograph — that would double-count an existing unit.
 5. If you **cannot** confidently identify the part or match a BOM line (blurry, no label, ambiguous),
    ask the uploader instead of guessing:
    ```

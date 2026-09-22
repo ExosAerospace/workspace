@@ -341,7 +341,14 @@ def cmd_record(a):
         print("ERROR: need a key (--bom-key or --vendor-pn/--mfg-pn/--desc)")
         sys.exit(2)
     rec = next((r for r in inv["records"] if r.get("key") == key), None)
-    qty = float(a.qty) if a.qty else 1
+    existed = rec is not None
+    # Safe count semantics (Jon 2026-09-22): an explicit --qty always wins (stock receipt).
+    # Otherwise a photo of a NEW part records the first unit (+1); a photo of an ALREADY-recorded
+    # part just CONFIRMS it and attaches the photo (+0) — re-photographing never double-counts.
+    if a.qty not in (None, ""):
+        qty = float(a.qty)
+    else:
+        qty = 0 if existed else 1
     entry_photo = None
     e = next((x for x in read_queue() if x.get("id") == a.queue), None) if a.queue else None
     if e:
@@ -375,8 +382,15 @@ def cmd_record(a):
         loc = f" · loc: {a.location}" if a.location else ""
         pn = a.vendor_pn or a.mfg_pn or ""
         pn = f" · P/N {pn}" if pn else ""
-        task_note(a.task, f"✅ Exo (inventory): recorded **{rec.get('description') or key}**"
-                          f"{pn} → on-hand now **{rec['qty_on_hand']} {rec['unit']}**{loc}. "
+        verb = "recorded"
+        tail = f"→ on-hand now **{rec['qty_on_hand']} {rec['unit']}**"
+        if existed and qty == 0:
+            verb = "confirmed (photo added, count unchanged)"
+            tail = f"→ on-hand stays **{rec['qty_on_hand']} {rec['unit']}**"
+        elif qty:
+            tail = f"→ +{qty:g}, on-hand now **{rec['qty_on_hand']} {rec['unit']}**"
+        task_note(a.task, f"✅ Exo (inventory): {verb} **{rec.get('description') or key}**"
+                          f"{pn} {tail}{loc}. "
                           f"(from photo by {a.by or 'team'}; BOM section {rec.get('section') or '—'})")
     build_report()
     logline(f"record key={key} +{qty} -> {rec['qty_on_hand']} task {a.task}")
