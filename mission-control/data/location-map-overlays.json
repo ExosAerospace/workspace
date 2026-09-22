@@ -1,13 +1,10 @@
 {
-  "_comment": "Durable annotations drawn onto the extracted location map PNGs on every reindex (so they survive re-uploads). Coords are fractions of image width/height. Keyed by map sheet name.",
+  "_comment": "Durable annotations drawn onto the extracted location map PNGs on every reindex (survive re-uploads). Coords are fractions of image width/height. fill: 'orange' or [r,g,b]; rotate: 0|90; text_color:[r,g,b]. Keyed by map sheet name.",
   "Parts Room Map": [
-    {
-      "label": "MC (new 9/22)",
-      "x": 0.04,
-      "y": 0.895,
-      "w": 0.24,
-      "h": 0.085,
-      "note": "MC section — south side, just west of the door (not in the original scan)"
-    }
+    { "label": "MIKE", "x": 0.0014, "y": 0.5774, "w": 0.0469, "h": 0.2057, "fill": [187,224,227], "text_color": [20,40,80], "rotate": 90, "font_px": 15 },
+    { "label": "MIKE", "x": 0.0014, "y": 0.7868, "w": 0.0469, "h": 0.2057, "fill": [187,224,227], "text_color": [20,40,80], "rotate": 90, "font_px": 15 },
+    { "label": "MIKE", "x": 0.2003, "y": 0.5887, "w": 0.0483, "h": 0.2075, "fill": [187,224,227], "text_color": [20,40,80], "rotate": 90, "font_px": 15 },
+    { "label": "VICTOR", "x": 0.7386, "y": 0.6868, "w": 0.1477, "h": 0.1189, "fill": [187,224,227], "text_color": [20,40,80], "rotate": 0, "font_px": 15 },
+    { "label": "MC 1-6.3", "x": 0.200, "y": 0.462, "w": 0.115, "h": 0.098, "fill": "orange", "text_color": [255,255,255], "rotate": 0, "font_px": 15, "note": "MC storage section, just up from (the middle) Joseph/Mike" }
   ]
 }

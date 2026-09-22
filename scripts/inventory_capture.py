@@ -433,13 +433,33 @@ def apply_map_overlays():
             for ov in ovs:
                 x0, y0 = ov["x"] * W, ov["y"] * H
                 x1, y1 = (ov["x"] + ov["w"]) * W, (ov["y"] + ov["h"]) * H
-                d.rectangle([x0, y0, x1, y1], fill=(255, 107, 0, 235), outline=(20, 20, 20, 255), width=2)
+                fill = ov.get("fill", "orange")
+                fill = (255, 107, 0, 235) if fill == "orange" else tuple(fill) + ((255,) if len(fill) == 3 else ())
+                tcol = tuple(ov.get("text_color", [255, 255, 255])) + (255,)
+                outline = (20, 20, 20, 255)
+                d.rectangle([x0, y0, x1, y1], fill=fill, outline=outline, width=2)
                 lbl = ov.get("label", "")
-                try:
-                    tb = d.textbbox((0, 0), lbl, font=font); tw, th = tb[2] - tb[0], tb[3] - tb[1]
-                except Exception:
-                    tw, th = len(lbl) * 6, 11
-                d.text((x0 + ((x1 - x0) - tw) / 2, y0 + ((y1 - y0) - th) / 2 - 2), lbl, fill=(255, 255, 255, 255), font=font)
+                fnt = font
+                fsz = ov.get("font_px")
+                if fsz:
+                    try: fnt = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial Bold.ttf", int(fsz))
+                    except Exception: fnt = font
+                if ov.get("rotate") == 90:
+                    tmp = Image.new("RGBA", (max(1, int(y1 - y0)), max(1, int(x1 - x0))), (0, 0, 0, 0))
+                    td = ImageDraw.Draw(tmp)
+                    try:
+                        tb = td.textbbox((0, 0), lbl, font=fnt); tw, th = tb[2] - tb[0], tb[3] - tb[1]
+                    except Exception:
+                        tw, th = len(lbl) * 6, 11
+                    td.text(((tmp.width - tw) / 2, (tmp.height - th) / 2 - 2), lbl, fill=tcol, font=fnt)
+                    tmp = tmp.rotate(90, expand=True)
+                    im.paste(tmp, (int(x0 + ((x1 - x0) - tmp.width) / 2), int(y0 + ((y1 - y0) - tmp.height) / 2)), tmp)
+                else:
+                    try:
+                        tb = d.textbbox((0, 0), lbl, font=fnt); tw, th = tb[2] - tb[0], tb[3] - tb[1]
+                    except Exception:
+                        tw, th = len(lbl) * 6, 11
+                    d.text((x0 + ((x1 - x0) - tw) / 2, y0 + ((y1 - y0) - th) / 2 - 2), lbl, fill=tcol, font=fnt)
             im.convert("RGB").save(p)
             logline(f"overlay applied to {mp.get('file')} ({len(ovs)})")
         except Exception as e:
