@@ -194,13 +194,40 @@ def _norm(s):
     return re.sub(r"[^a-z0-9]+", " ", str(s or "").lower()).strip()
 
 
-def build_location_index():
-    """Parse Current_Inventory_Locations.xlsx into a flat catalog (location cell forward-filled per
-    block) -> location-index.json. Then best-effort match BOM lines to a stored location by SKU or a
-    distinctive description token -> bom-location-map.json (both the report and /api/inventory read it)."""
+def resolve_location_xlsx(explicit=None):
+    """Pick the locations workbook to index: an explicit stored filename if given, else the most
+    recently uploaded .xlsx whose name looks like a locations sheet, else the known baseline file."""
+    if explicit:
+        p = explicit if os.path.isabs(explicit) else os.path.join(UPLOADS, explicit)
+        if os.path.exists(p):
+            return p
+    try:
+        meta = json.load(open(UPLOADS_META))
+    except Exception:
+        meta = []
+    cands = [m for m in meta if str(m.get("extension", "")).lower() == ".xlsx"
+             and re.search(r"location", str(m.get("filename", "")), re.I)]
+    cands.sort(key=lambda m: m.get("uploaded_at", ""), reverse=True)
+    for m in cands:
+        p = os.path.join(UPLOADS, m.get("stored_name", ""))
+        if os.path.exists(p):
+            return p
+    return LOCATION_XLSX
+
+
+def build_location_index(explicit=None):
+    """Parse a Current_Inventory_Locations workbook into a flat catalog (location cell forward-filled
+    per block) -> location-index.json. Then best-effort match BOM lines to a stored location by SKU or
+    a distinctive description token -> bom-location-map.json (both the report and /api/inventory read it).
+    Guarded: a workbook without a Parts Room / Warehouse / Trailer sheet is NOT a locations sheet and is
+    skipped so an unrelated .xlsx can never wipe the good index. Returns (catalog_n, matched_n) or None."""
     import openpyxl
-    wb = openpyxl.load_workbook(LOCATION_XLSX, data_only=True)
+    src = resolve_location_xlsx(explicit)
+    wb = openpyxl.load_workbook(src, data_only=True)
     areas = ["Parts Room", "Warehouse", "Trailer"]
+    if not any(s in wb.sheetnames for s in areas):
+        logline(f"reindex-locations SKIP: {os.path.basename(src)} has no Parts Room/Warehouse/Trailer sheet")
+        return None
     cat = []
     for sh in areas:
         if sh not in wb.sheetnames:
@@ -217,7 +244,7 @@ def build_location_index():
                 continue
             cat.append({"area": sh, "location": loc, "contents": contents, "sku": sku,
                         "qty": qty, "unit": unit, "value": val})
-    json.dump({"source": os.path.basename(LOCATION_XLSX), "generated_at": now(), "count": len(cat),
+    json.dump({"source": os.path.basename(src), "generated_at": now(), "count": len(cat),
                "entries": cat}, open(LOCATION_INDEX, "w"), indent=2)
     # ── BOM ↔ location matching ──
     by_sku = {}
@@ -252,8 +279,12 @@ def build_location_index():
 
 
 def cmd_reindex_locations(a):
-    n, m = build_location_index()
-    print(f"location catalog: {n} entries -> {LOCATION_INDEX}; BOM matched: {m} -> {BOM_LOC_MAP}")
+    res = build_location_index(getattr(a, "file", None))
+    if res is None:
+        print("skipped: not a locations sheet (no Parts Room/Warehouse/Trailer)"); return
+    n, m = res
+    build_report()   # refresh the canonical report + MC page so new locations show immediately
+    print(f"location catalog: {n} entries -> {LOCATION_INDEX}; BOM matched: {m} -> {BOM_LOC_MAP}; report refreshed")
 
 
 def cmd_bom_search(a):
@@ -586,7 +617,7 @@ def main():
         cs.add_argument("--" + f)
     sub.add_parser("status")
     sub.add_parser("report")
-    sub.add_parser("reindex-locations")
+    rl = sub.add_parser("reindex-locations"); rl.add_argument("--file")
     a = p.parse_args()
     # normalize dashed dests
     for src, dst in [("bom_key", "bom_key"), ("vendor_pn", "vendor_pn"), ("mfg_pn", "mfg_pn")]:

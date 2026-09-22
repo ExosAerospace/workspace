@@ -3905,6 +3905,19 @@ const server = http.createServer((req, res) => {
           }
         }
 
+        // A new locations sheet (Current_Inventory_Locations.xlsx or similar) -> auto-reindex the
+        // parts-room/warehouse map and refresh the report. The script guards against non-locations
+        // xlsx (skips anything without a Parts Room/Warehouse/Trailer sheet), so this is safe.
+        if (ext === '.xlsx' && /location/i.test(file.filename)) {
+          try {
+            const { execFile } = require('child_process');
+            execFile('/usr/bin/python3', [
+              path.join(__dirname, '..', 'scripts', 'inventory_capture.py'),
+              'reindex-locations', '--file', storedName,
+            ], { timeout: 120000 }, () => {});
+          } catch (e) { /* best-effort */ }
+        }
+
         res.writeHead(201, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(entry));
       } catch (e) {

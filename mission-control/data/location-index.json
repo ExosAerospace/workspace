@@ -1,7 +1,7 @@
 {
   "source": "1790085634943_Current_Inventory_Locations.xlsx",
-  "generated_at": "2026-09-22T21:48:29.716343+00:00",
-  "count": 1663,
+  "generated_at": "2026-09-22T22:13:05.569383+00:00",
+  "count": 1679,
   "entries": [
     {
       "area": "Parts Room",
@@ -6533,6 +6533,150 @@
       "location": "PB!",
       "contents": "",
       "sku": "Magnetic Touch Gage",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-6.1",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-6.2",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-6.3",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-5.1",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-5.2",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-5.3",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-4.1",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-4.2",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-4.3",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-3.1",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-3.2",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-3.3",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-2.1",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-2.2",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-2.3",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
+      "qty": "",
+      "unit": "",
+      "value": ""
+    },
+    {
+      "area": "Parts Room",
+      "location": "MC-1",
+      "contents": "(empty \u2014 available)",
+      "sku": "",
       "qty": "",
       "unit": "",
       "value": ""
@@ -14824,7 +14968,7 @@
       "sku": "Exos",
       "qty": "1",
       "unit": "Exos",
-      "value": "1900"
+      "value": ""
     },
     {
       "area": "Trailer",
@@ -14833,7 +14977,7 @@
       "sku": "Exos",
       "qty": "1",
       "unit": "Exos",
-      "value": "840"
+      "value": ""
     },
     {
       "area": "Trailer",
