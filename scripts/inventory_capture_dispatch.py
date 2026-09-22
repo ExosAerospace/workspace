@@ -67,10 +67,16 @@ def main():
               f"DO NOT create any task/decision/subtask for a photo — a photo only updates inventory "
               f"and the existing task (record/ask only).")
     try:
-        subprocess.run([OPENCLAW, "agent", "--session-key", SESSION, "-m", prompt,
-                        "--json", "--timeout", "600"],
-                       capture_output=True, text=True, timeout=660, cwd=WS)
-        logline(f"woke processor for {len(ids)} pending")
+        r = subprocess.run([OPENCLAW, "agent", "--session-key", SESSION, "-m", prompt,
+                            "--json", "--timeout", "600"],
+                           capture_output=True, text=True, timeout=660, cwd=WS)
+        if r.returncode != 0:
+            # A non-zero wake (e.g. claude-cli auth expiry — no headless renew) means the photo
+            # stays queued. Log LOUD so it's visible; the pending set is unchanged, so the next
+            # cycle after the cooldown re-wakes and retries until it drains.
+            logline(f"ERROR wake rc={r.returncode} for {len(ids)} pending: {(r.stderr or r.stdout)[:200]}")
+        else:
+            logline(f"woke processor for {len(ids)} pending")
     except Exception as e:
         logline(f"WARN wake: {e}")
     json.dump({"last_wake": time.time(), "last_ids": ids}, open(STATE, "w"))

@@ -229,6 +229,111 @@ def rec_key(vendor_pn, mfg_pn, item, desc):
     return (vendor_pn or mfg_pn or (item + ":" + desc[:24]) or desc[:24]).strip().upper()
 
 
+REPORT_NAME = "BLK3_Inventory_Report.xlsx"
+REPORT_PATH = os.path.join(UPLOADS, REPORT_NAME)
+UPLOADS_META = os.path.join(UPLOADS, "_meta.json")
+REPORT_TASK = "3024"          # the Computer-section build/review task the report is pinned to
+
+
+def build_report():
+    """Regenerate the CANONICAL inventory spreadsheet from the BOM (all sections) joined to the live
+    inventory ledger, and pin it as a document on the build task so it's always openable in MC.
+    Called after every record/ask so the spreadsheet updates on every upload."""
+    try:
+        import openpyxl
+        from openpyxl.styles import Font, PatternFill, Alignment
+    except Exception as e:
+        logline(f"WARN report openpyxl: {e}"); return
+    bom = load(BOM_INDEX, {"rows": []})
+    inv = inv_load()
+    by = {}
+    for r in inv.get("records", []):
+        for k in [r.get("vendor_pn"), r.get("mfg_pn"), r.get("key")]:
+            if k:
+                by[str(k).strip().upper()] = r
+        if r.get("section") and r.get("item"):
+            by[f"{r['section'].upper()}#{r['item']}"] = r
+    wb = openpyxl.Workbook()
+    ws = wb.active; ws.title = "Inventory"
+    cols = ["Section", "Item", "Vendor P/N", "Mfg P/N", "Description", "Req Qty",
+            "On-Hand", "Short", "Location(s)", "Photos", "Last Updated"]
+    ws.append(cols)
+    hdr = Font(bold=True, color="FFFFFF"); fill = PatternFill("solid", fgColor="1C1C1C")
+    for c in ws[1]:
+        c.font = hdr; c.fill = fill; c.alignment = Alignment(vertical="center")
+    short_fill = PatternFill("solid", fgColor="FFE0E0")
+    have_fill = PatternFill("solid", fgColor="E2F5E2")
+    rows_total = short_total = onhand_total = 0
+    for row in bom.get("rows", []):
+        sec, item = row.get("section", ""), row.get("item", "")
+        vpn, mpn, desc, qty = row.get("vendor_pn", ""), row.get("mfg_pn", ""), row.get("description", ""), row.get("qty", "")
+        rec = None
+        for k in [vpn, mpn]:
+            if k and str(k).strip().upper() in by:
+                rec = by[str(k).strip().upper()]; break
+        if rec is None and item:
+            rec = by.get(f"{sec.upper()}#{item}")
+        oh = rec.get("qty_on_hand", 0) if rec else 0
+        try:
+            req = float(str(qty).strip())
+        except Exception:
+            req = None
+        shortv = round(req - oh, 3) if (req is not None and oh < req) else 0
+        loc = ", ".join(rec.get("locations", [])) if rec else ""
+        nph = len(rec.get("photos", [])) if rec else 0
+        upd = (rec.get("updated_at", "") or "")[:19].replace("T", " ") if rec else ""
+        ws.append([sec, item, vpn, mpn, desc, qty, oh, shortv or "", loc, nph or "", upd])
+        rows_total += 1
+        onhand_total += oh
+        if shortv:
+            short_total += 1
+            for c in ws[ws.max_row]:
+                c.fill = short_fill
+        elif oh:
+            for c in ws[ws.max_row]:
+                c.fill = have_fill
+    widths = [16, 6, 18, 18, 40, 8, 8, 8, 20, 8, 20]
+    for i, w in enumerate(widths, 1):
+        ws.column_dimensions[openpyxl.utils.get_column_letter(i)].width = w
+    ws.freeze_panes = "A2"
+    ws.auto_filter.ref = f"A1:K{ws.max_row}"
+    # summary sheet
+    s = wb.create_sheet("Summary")
+    s.append(["BLK3 Inventory — canonical report"]); s["A1"].font = Font(bold=True, size=14)
+    s.append(["Generated", now()[:19].replace("T", " ")])
+    s.append(["BOM lines", rows_total])
+    s.append(["Records with on-hand", sum(1 for r in inv.get("records", []) if r.get("qty_on_hand", 0) > 0)])
+    s.append(["Lines short", short_total])
+    s.append(["Total units on-hand", round(onhand_total, 3)])
+    s.append(["Inventory records", len(inv.get("records", []))])
+    s.column_dimensions["A"].width = 24; s.column_dimensions["B"].width = 28
+    wb.save(REPORT_PATH)
+    _pin_report(rows_total, short_total)
+    logline(f"report refreshed: {rows_total} lines, {short_total} short -> {REPORT_PATH}")
+
+
+def _pin_report(rows_total, short_total):
+    """Upsert the report as a stable document on the build task so it shows (and updates in place)
+    on that task's Documents tab in Mission Control."""
+    try:
+        meta = json.load(open(UPLOADS_META)) if os.path.exists(UPLOADS_META) else []
+    except Exception:
+        meta = []
+    size = os.path.getsize(REPORT_PATH) if os.path.exists(REPORT_PATH) else 0
+    entry = next((m for m in meta if m.get("id") == "blk3-inv-report"), None)
+    if entry is None:
+        entry = {"id": "blk3-inv-report", "filename": REPORT_NAME, "stored_name": REPORT_NAME,
+                 "extension": ".xlsx", "task_id": REPORT_TASK, "project_id": None, "decision_id": None,
+                 "uploaded_by": "Exo (inventory)", "current": True}
+        meta.append(entry)
+    entry["size"] = size
+    entry["uploaded_at"] = now()
+    entry["task_id"] = REPORT_TASK
+    tmp = UPLOADS_META + ".tmp"
+    json.dump(meta, open(tmp, "w"))
+    os.replace(tmp, UPLOADS_META)
+
+
 def cmd_record(a):
     inv = inv_load()
     key = a.bom_key or rec_key(a.vendor_pn or "", a.mfg_pn or "", a.item or "", a.desc or "")
@@ -273,6 +378,7 @@ def cmd_record(a):
         task_note(a.task, f"✅ Exo (inventory): recorded **{rec.get('description') or key}**"
                           f"{pn} → on-hand now **{rec['qty_on_hand']} {rec['unit']}**{loc}. "
                           f"(from photo by {a.by or 'team'}; BOM section {rec.get('section') or '—'})")
+    build_report()
     logline(f"record key={key} +{qty} -> {rec['qty_on_hand']} task {a.task}")
     print(json.dumps({"key": key, "qty_on_hand": rec["qty_on_hand"]}, indent=2))
 
@@ -285,8 +391,14 @@ def cmd_ask(a):
         flag_awaiting(a.task)
         task_note(a.task, f"❓ Exo (inventory): @{a.uploader or 'uploader'} — I need one detail to log the part "
                           f"you photographed: {q} Reply here on this task and I'll record it.")
+    build_report()
     logline(f"ask task {a.task} uploader {a.uploader}: {q[:80]}")
     print("asked")
+
+
+def cmd_report(a):
+    build_report()
+    print(f"report -> {REPORT_PATH}")
 
 
 def cmd_status(a):
@@ -315,13 +427,14 @@ def main():
     k = sub.add_parser("ask")
     k.add_argument("--queue"); k.add_argument("--task"); k.add_argument("--uploader"); k.add_argument("--question", required=True)
     sub.add_parser("status")
+    sub.add_parser("report")
     a = p.parse_args()
     # normalize dashed dests
     for src, dst in [("bom_key", "bom_key"), ("vendor_pn", "vendor_pn"), ("mfg_pn", "mfg_pn")]:
         pass
     {"reindex-bom": cmd_reindex, "enqueue": cmd_enqueue, "pending": cmd_pending,
      "next": cmd_next, "bom-search": cmd_bom_search, "record": cmd_record,
-     "ask": cmd_ask, "status": cmd_status}[a.cmd](a)
+     "ask": cmd_ask, "status": cmd_status, "report": cmd_report}[a.cmd](a)
 
 
 if __name__ == "__main__":
