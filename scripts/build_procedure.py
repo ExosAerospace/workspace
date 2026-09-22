@@ -128,10 +128,26 @@ def build_docx(spec, out_docx):
         _run(p, text, size=10.5, color=DARK)
 
     def step(text):
+        # A step is either a plain string, or a dict {text, image, caption} for a
+        # photo-illustrated step (used by the section build procedures). Backward-compatible.
+        image = caption = None
+        if isinstance(text, dict):
+            image = text.get("image"); caption = text.get("caption"); text = text.get("text", "")
         p = doc.add_paragraph(); p.paragraph_format.left_indent = Inches(0.25)
         p.paragraph_format.space_after = Pt(3)
         _run(p, "☐  ", size=12, color=NAVY)   # ☐ ballot box
         _run(p, text, size=10.5, color=DARK)
+        if image and os.path.exists(image):
+            try:
+                ip = doc.add_paragraph(); ip.paragraph_format.left_indent = Inches(0.45)
+                ip.paragraph_format.space_before = Pt(2); ip.paragraph_format.space_after = Pt(1)
+                ip.add_run().add_picture(image, width=Inches(2.6))
+                if caption:
+                    capp = doc.add_paragraph(); capp.paragraph_format.left_indent = Inches(0.45)
+                    capp.paragraph_format.space_after = Pt(4)
+                    _run(capp, caption, size=8, italic=True, color=GREY)
+            except Exception:
+                pass  # a bad/unsupported image must never break the procedure build
 
     section("Safety / Environmental")
     body("Verify that all personnel who will be involved with this activity are familiar with this procedure, "

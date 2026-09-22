@@ -1,7 +1,7 @@
 {
  "meta": {
   "title": "Exos Process & Procedures — Master Register",
-  "updated": "2026-09-21",
+  "updated": "2026-09-22",
   "source": "Lizi turnover → Exo (MC management); schema per Exos Procedures Master List",
   "template": "Exos-US Procedure Template",
   "doc_control": "STATUS on each doc; records in the Exos Work Management System (Mission Control / ERP)",
@@ -22,7 +22,8 @@
    "Ground Operations",
    "Finance & Accounting",
    "Manufacturing / Machine Shop",
-   "IT / Mission Control"
+   "IT / Mission Control",
+   "Manufacturing / Vehicle Build"
   ]
  },
  "register": [
@@ -1334,6 +1335,22 @@
    "remarks": "Controls the respiratory/health hazard from cutting, machining, sanding, or trimming cured carbon-fiber-reinforced polymer (CFRP) and similar composites. SCOPE IS COMPOSITES ONLY. Dry HEPA vacuuming of aluminum, titanium, or magnesium fines is a fire/explosion hazard and is expressly OUT of scope (those require wet collection). This SOP controls the health hazard fully; combustible-dust ignition risk is governed by housekeeping and a Dust Hazard Analysis (Task 7) unless the DHA requires NFPA/ATEX-rated equipment.",
    "files": [
     "06-safety-ehs/EXOS-SAF-002-0_Carbon_Fiber_-_Composite_Machining_Dust_Control.docx"
+   ],
+   "file_count": 1
+  },
+  {
+   "area": "Manufacturing / Vehicle Build",
+   "area_id": "11-manufacturing-build",
+   "procedure": "BLK3 Computer Section — Build & Inventory Verification",
+   "doc_no": "EXOS-US-BUILD-BLK3-COMP",
+   "rev": "0",
+   "status": "DRAFT",
+   "intl_release": false,
+   "ack_required": false,
+   "owner": "Steve Norsworthy",
+   "remarks": "",
+   "files": [
+    "11-manufacturing-build/EXOS-US-BUILD-BLK3-COMP_BLK3_Computer_Section_—_Build_&_Inventory_Verification.docx"
    ],
    "file_count": 1
   }

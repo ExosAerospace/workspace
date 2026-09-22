@@ -282,6 +282,29 @@ def main():
                               "on the Documents tab, shoot the component, and I'll log it automatically.")
             logline(f"inv {aid} task {taskid} queued {n}"); acted += 1; continue
 
+        # 0b) section build procedure: "@exo procedure [Section]" -> regenerate that section's
+        # illustrated build/inventory procedure (BOM order + banked photos + on-hand). One doc per
+        # section, on demand — never per photo, never a new task.
+        mproc = re.match(r"(?:build\s+)?proc(?:edure)?\b\s*(.*)", low)
+        if mproc:
+            sec_arg = mproc.group(1).strip()
+            secmap = {"computer": "Computer", "engine": "Engine Bay", "engine bay": "Engine Bay",
+                      "fin": "Fin Can", "fin can": "Fin Can", "pressure": "Pressure Section",
+                      "tank": "Tanks", "tanks": "Tanks", "payload": "Payload Section",
+                      "recovery": "Recovery section", "top": "BLK3 Top Level"}
+            section = next((v for k, v in secmap.items() if sec_arg.startswith(k)), "Computer")
+            try:
+                pr = subprocess.run(["/usr/bin/python3",
+                     os.path.join(WS, "scripts", "section_build_procedure.py"), section, "--email"],
+                     capture_output=True, text=True, timeout=120)
+                tail = [l for l in pr.stdout.splitlines() if l.startswith("summary:")]
+                reply(taskid, f"✅ Exo (procedure): regenerated the **BLK3 {section}** build & inventory "
+                              f"procedure ({tail[0][8:].strip() if tail else 'done'}) — DRAFT in the Process "
+                              f"Library and emailed to John for approval.")
+            except Exception as ex:
+                reply(taskid, f"✅ Exo (procedure): couldn't rebuild the {section} procedure ({ex}).")
+            logline(f"procedure {aid} task {taskid} section {section}"); acted += 1; continue
+
         # 1) reassignment (leading verb only)
         if re.search(r"\b(reassign|assign|hand|give|have|route|delegate)\b", cmdzone):
             p = resolve_person(cmd, roster)
