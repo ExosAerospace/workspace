@@ -35,8 +35,13 @@
   table{width:100%;border-collapse:collapse;font-size:.83rem}
   th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:top}
   th{position:sticky;top:0;background:#111116;color:var(--text2);text-transform:uppercase;font-size:.68rem;letter-spacing:.5px;cursor:pointer;white-space:nowrap}
-  tr.short td{background:var(--redbg)}
-  tr.have td{background:rgba(30,120,60,.10)}
+  tr.short td{background:rgba(252,229,205,.13);box-shadow:inset 3px 0 0 #ff9900}
+  tr.have td{background:rgba(217,234,211,.13);box-shadow:inset 3px 0 0 #6aa84f}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .lg{display:flex;align-items:center;gap:7px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:.8rem}
+  .lg .sw{width:15px;height:15px;border-radius:3px;border:1px solid #0006;flex:0 0 auto}
+  .lg .cd{font-weight:700}
+  .lg .ds{color:var(--text2)}
   .pn{font-family:ui-monospace,Menlo,monospace;font-size:.78rem;color:var(--orange2)}
   td.num{text-align:right;font-variant-numeric:tabular-nums}
   .short-b{color:var(--orange);font-weight:700}
@@ -52,8 +57,16 @@
   <a class="btn" id="xlsx" href="/uploads/BLK3_Inventory_Report.xlsx">⬇ Export .xlsx</a>
   <a class="btn ghost" href="/blk3-bom.html">📋 Bill of Materials</a>
   <button class="btn ghost" id="locbtn" onclick="toggleLoc()">📍 Locations map</button>
+  <button class="btn ghost" id="keybtn" onclick="toggleKey()">🔑 Legend</button>
   <a class="back" href="/index.html">← Mission Control</a>
 </header>
+<div id="keypanel" style="display:none;padding:12px 20px;border-bottom:1px solid var(--border);background:var(--panel)">
+  <strong>Legend / Key</strong> <span class="muted">— same key used in the Excel export</span>
+  <div style="margin-top:6px;color:var(--text2);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px">Warehouse codes (Steve's key)</div>
+  <div class="legend" id="legSteve"></div>
+  <div style="margin-top:8px;color:var(--text2);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px">BLK3 inventory-view codes</div>
+  <div class="legend" id="legOps"></div>
+</div>
 <div id="locpanel" style="display:none;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--panel)">
   <div class="controls">
     <strong>📍 Current inventory locations (parts room / warehouse map)</strong>
@@ -143,6 +156,17 @@ document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{
 ['q','secsel','shortonly','haveonly'].forEach(id=>document.getElementById(id).addEventListener('input',render));
 document.getElementById('secsel').addEventListener('change',()=>{secFilter=document.getElementById('secsel').value;
   document.querySelectorAll('.sec').forEach(x=>x.classList.toggle('active',x.dataset.s===secFilter));render();});
+const LEG_STEVE=[["E6B8AF","Inventory Subset","Items go together"],["FF0000","Inventory Discrepancy","Count/record mismatch"],
+  ["00FF00","Trash","Scrap / disposal"],["FFFF00","Uncertain","Needs verification"],["6AA84F","Possible Sale","Candidate to sell"],
+  ["0000FF","Home / Resting Place","Return after use"],["FF9900","To-Do","Requires assistance"]];
+const LEG_OPS=[["FCE5CD","SHORT vs BOM","Req qty > on-hand — reorder"],["D9EAD3","On-Hand / Verified","Meets BOM requirement"],
+  ["EFEFEF","Consumed / Inactive","Used/installed; no stock"]];
+function renderLegend(){
+  const mk=a=>a.map(([c,cd,ds])=>'<span class="lg"><span class="sw" style="background:#'+c+'"></span><span class="cd">'+cd+'</span><span class="ds">'+ds+'</span></span>').join('');
+  document.getElementById('legSteve').innerHTML=mk(LEG_STEVE);
+  document.getElementById('legOps').innerHTML=mk(LEG_OPS);
+}
+function toggleKey(){const p=document.getElementById('keypanel');p.style.display=p.style.display==='none'?'block':'none';if(!document.getElementById('legSteve').innerHTML)renderLegend();}
 let LOC=null;
 async function toggleLoc(){
   const p=document.getElementById('locpanel');

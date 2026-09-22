@@ -365,13 +365,36 @@ UPLOADS_META = os.path.join(UPLOADS, "_meta.json")
 REPORT_TASK = "3024"          # the Computer-section build/review task the report is pinned to
 
 
+# ── Shared legend / key (Steve's warehouse codes + the BLK3 inventory-view codes). Used identically
+# in the Excel export and the Mission Control Inventory page so both read the same. ──
+STEVE_LEGEND = [
+    ("Light Red Berry", "E6B8AF", "Inventory Subset", "Items go together"),
+    ("Red", "FF0000", "Inventory Discrepancy", "Count / record does not match"),
+    ("Kelly Green", "00FF00", "Trash", "Scrap / disposal"),
+    ("Yellow", "FFFF00", "Uncertain", "Needs verification"),
+    ("Dark Green", "6AA84F", "Possible Sale", "Candidate to sell"),
+    ("Blue", "0000FF", "Home / Resting Place", "Put back in location after use"),
+    ("Orange", "FF9900", "To-Do", "Requires assistance"),
+]
+OPS_LEGEND = [
+    ("Light Orange", "FCE5CD", "SHORT vs BOM", "Required qty exceeds on-hand — reorder"),
+    ("Light Green", "D9EAD3", "On-Hand / Verified", "On-hand meets the BOM requirement"),
+    ("Light Grey", "EFEFEF", "Consumed / Inactive", "Used or installed; no stock held"),
+]
+HDR_GREY = "B7B7B7"
+BAND_GREY = "F3F3F3"
+SHORT_FILL = "FCE5CD"
+HAVE_FILL = "D9EAD3"
+
+
 def build_report():
-    """Regenerate the CANONICAL inventory spreadsheet from the BOM (all sections) joined to the live
-    inventory ledger, and pin it as a document on the build task so it's always openable in MC.
-    Called after every record/ask so the spreadsheet updates on every upload."""
+    """Regenerate the CANONICAL inventory spreadsheet: a Legend/key tab, multiple views (Inventory,
+    Shorts, On-Hand), the Locations map, and a Summary — mirroring the structure/key/legend/format of
+    Steve's locations workbook. Pinned on the build task so it's always openable in MC."""
     try:
         import openpyxl
-        from openpyxl.styles import Font, PatternFill, Alignment
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        from openpyxl.utils import get_column_letter
     except Exception as e:
         logline(f"WARN report openpyxl: {e}"); return
     bom = load(BOM_INDEX, {"rows": []})
@@ -384,17 +407,17 @@ def build_report():
                 by[str(k).strip().upper()] = r
         if r.get("section") and r.get("item"):
             by[f"{r['section'].upper()}#{r['item']}"] = r
-    wb = openpyxl.Workbook()
-    ws = wb.active; ws.title = "Inventory"
-    cols = ["Section", "Item", "Vendor P/N", "Mfg P/N", "Description", "Req Qty",
-            "On-Hand", "Short", "Location(s)", "Photos", "Last Updated"]
-    ws.append(cols)
-    hdr = Font(bold=True, color="FFFFFF"); fill = PatternFill("solid", fgColor="1C1C1C")
-    for c in ws[1]:
-        c.font = hdr; c.fill = fill; c.alignment = Alignment(vertical="center")
-    short_fill = PatternFill("solid", fgColor="FFE0E0")
-    have_fill = PatternFill("solid", fgColor="E2F5E2")
-    rows_total = short_total = onhand_total = 0
+
+    hdr_font = Font(bold=True, color="000000")
+    hdr_fill = PatternFill("solid", fgColor=HDR_GREY)
+    band_fill = PatternFill("solid", fgColor=BAND_GREY)
+    short_fill = PatternFill("solid", fgColor=SHORT_FILL)
+    have_fill = PatternFill("solid", fgColor=HAVE_FILL)
+    thin = Side(style="thin", color="D9D9D9"); cell_border = Border(bottom=thin)
+
+    # Build the joined data once.
+    data = []
+    onhand_total = 0
     for row in bom.get("rows", []):
         sec, item = row.get("section", ""), row.get("item", "")
         vpn, mpn, desc, qty = row.get("vendor_pn", ""), row.get("mfg_pn", ""), row.get("description", ""), row.get("qty", "")
@@ -410,59 +433,93 @@ def build_report():
         except Exception:
             req = None
         shortv = round(req - oh, 3) if (req is not None and oh < req) else 0
-        # Location: physically-confirmed (from the ledger) first; else the stored location from the
-        # parts-room / warehouse map, tagged "(map)".
         loc = ", ".join(rec.get("locations", [])) if rec else ""
         if not loc:
-            mk = rec_key(vpn, mpn, item, desc)
-            mm = locmap.get(mk)
+            mm = locmap.get(rec_key(vpn, mpn, item, desc))
             if mm:
                 loc = f"{mm['location']} ({mm['area']}, map)"
         nph = len(rec.get("photos", [])) if rec else 0
         upd = (rec.get("updated_at", "") or "")[:19].replace("T", " ") if rec else ""
-        ws.append([sec, item, vpn, mpn, desc, qty, oh, shortv or "", loc, nph or "", upd])
-        rows_total += 1
+        status = "short" if shortv else ("have" if oh > 0 else "")
         onhand_total += oh
-        if shortv:
-            short_total += 1
-            for c in ws[ws.max_row]:
-                c.fill = short_fill
-        elif oh:
-            for c in ws[ws.max_row]:
-                c.fill = have_fill
-    widths = [16, 6, 18, 18, 40, 8, 8, 8, 20, 8, 20]
-    for i, w in enumerate(widths, 1):
-        ws.column_dimensions[openpyxl.utils.get_column_letter(i)].width = w
-    ws.freeze_panes = "A2"
-    ws.auto_filter.ref = f"A1:K{ws.max_row}"
-    # summary sheet
+        data.append({"cells": [sec, item, vpn, mpn, desc, qty, oh, shortv or "", loc, nph or "", upd],
+                     "status": status})
+    short_total = sum(1 for d in data if d["status"] == "short")
+
+    INV_COLS = ["Section", "Item", "Vendor P/N", "Mfg P/N", "Description", "Req Qty",
+                "On-Hand", "Short", "Location(s)", "Photos", "Last Updated"]
+    INV_W = [16, 6, 18, 18, 42, 8, 8, 8, 22, 7, 18]
+
+    def render_table(ws, cols, widths, rows, colorby=True):
+        ws.append(cols)
+        for c in ws[1]:
+            c.font = hdr_font; c.fill = hdr_fill
+            c.alignment = Alignment(vertical="center")
+        for i, d in enumerate(rows):
+            ws.append(d["cells"] if isinstance(d, dict) else d)
+            rr = ws[ws.max_row]
+            st = d.get("status") if isinstance(d, dict) else ""
+            fillc = short_fill if (colorby and st == "short") else (have_fill if (colorby and st == "have") else (band_fill if i % 2 else None))
+            for c in rr:
+                if fillc:
+                    c.fill = fillc
+                c.border = cell_border
+        for j, w in enumerate(widths, 1):
+            ws.column_dimensions[get_column_letter(j)].width = w
+        ws.freeze_panes = "A2"
+        if ws.max_row > 1:
+            ws.auto_filter.ref = f"A1:{get_column_letter(len(cols))}{ws.max_row}"
+
+    wb = openpyxl.Workbook()
+    # 1) LEGEND / KEY (first tab, mirrors Steve's Legend)
+    lg = wb.active; lg.title = "Legend"
+    lg.append(["BLK3 Inventory — Legend / Key"]); lg["A1"].font = Font(bold=True, size=14)
+    lg.append(["Generated", now()[:19].replace("T", " ")])
+    lg.append([])
+    lg.append(["COLOR", "=", "CODE", "DESCRIPTION"])
+    for c in lg[lg.max_row]:
+        c.font = hdr_font; c.fill = hdr_fill
+    def legend_block(title, items):
+        lg.append([title]); lg[lg.max_row][0].font = Font(bold=True, italic=True)
+        for name, argb, code, desc in items:
+            lg.append([name, "=", code, desc])
+            lg[lg.max_row][0].fill = PatternFill("solid", fgColor=argb)
+            if argb in ("FF0000", "0000FF", "6AA84F"):
+                lg[lg.max_row][0].font = Font(color="FFFFFF")
+    legend_block("Warehouse codes (Steve's key)", STEVE_LEGEND)
+    lg.append([])
+    legend_block("BLK3 inventory-view codes", OPS_LEGEND)
+    for col, w in zip("ABCD", [20, 4, 24, 42]):
+        lg.column_dimensions[col].width = w
+
+    # 2) INVENTORY (master), 3) SHORTS (view), 4) ON-HAND (view)
+    render_table(wb.create_sheet("Inventory"), INV_COLS, INV_W, data)
+    render_table(wb.create_sheet("Shorts"), INV_COLS, INV_W, [d for d in data if d["status"] == "short"])
+    render_table(wb.create_sheet("On-Hand"), INV_COLS, INV_W, [d for d in data if d["status"] == "have"])
+
+    # 5) LOCATIONS map (Steve's data, by area)
+    loci = load(LOCATION_INDEX, {"entries": []})
+    render_table(wb.create_sheet("Locations"),
+                 ["Area", "Location", "Contents", "SKU", "BOM P/N", "Qty", "Unit", "Value"],
+                 [14, 12, 46, 16, 16, 7, 8, 10],
+                 [[e.get("area", ""), e.get("location", ""), e.get("contents", ""), e.get("sku", ""),
+                   e.get("bom_pn", ""), e.get("qty", ""), e.get("unit", ""), e.get("value", "")]
+                  for e in loci.get("entries", [])], colorby=False)
+
+    # 6) SUMMARY
     s = wb.create_sheet("Summary")
     s.append(["BLK3 Inventory — canonical report"]); s["A1"].font = Font(bold=True, size=14)
-    s.append(["Generated", now()[:19].replace("T", " ")])
-    s.append(["BOM lines", rows_total])
-    s.append(["Records with on-hand", sum(1 for r in inv.get("records", []) if r.get("qty_on_hand", 0) > 0)])
-    s.append(["Lines short", short_total])
-    s.append(["Total units on-hand", round(onhand_total, 3)])
-    s.append(["Inventory records", len(inv.get("records", []))])
+    for k, v in [("Generated", now()[:19].replace("T", " ")), ("BOM lines", len(data)),
+                 ("Records with on-hand", sum(1 for r in inv.get("records", []) if r.get("qty_on_hand", 0) > 0)),
+                 ("Lines short", short_total), ("Total units on-hand", round(onhand_total, 3)),
+                 ("Inventory records", len(inv.get("records", []))),
+                 ("Location-map entries", len(loci.get("entries", [])))]:
+        s.append([k, v])
     s.column_dimensions["A"].width = 24; s.column_dimensions["B"].width = 28
-    # Locations catalog sheet — the full current-inventory-locations map (parts room / warehouse).
-    loci = load(LOCATION_INDEX, {"entries": []})
-    ls = wb.create_sheet("Locations")
-    ls.append(["Area", "Location", "Contents", "SKU", "Qty", "Unit", "Value"])
-    for c in ls[1]:
-        c.font = hdr; c.fill = fill
-    for e in loci.get("entries", []):
-        ls.append([e.get("area", ""), e.get("location", ""), e.get("contents", ""),
-                   e.get("sku", ""), e.get("qty", ""), e.get("unit", ""), e.get("value", "")])
-    for i, w in enumerate([14, 12, 46, 16, 7, 8, 10], 1):
-        ls.column_dimensions[openpyxl.utils.get_column_letter(i)].width = w
-    ls.freeze_panes = "A2"
-    if ls.max_row > 1:
-        ls.auto_filter.ref = f"A1:G{ls.max_row}"
-    s.append(["Location-map entries", len(loci.get("entries", []))])
+
     wb.save(REPORT_PATH)
-    _pin_report(rows_total, short_total)
-    logline(f"report refreshed: {rows_total} lines, {short_total} short -> {REPORT_PATH}")
+    _pin_report(len(data), short_total)
+    logline(f"report refreshed: {len(data)} lines, {short_total} short -> {REPORT_PATH}")
 
 
 def _pin_report(rows_total, short_total):
