@@ -415,6 +415,55 @@ def cmd_report(a):
     print(f"report -> {REPORT_PATH}")
 
 
+def cmd_consume(a):
+    """Record a CONSUMPTION: parts used/installed leave stock. Decrements on-hand (or sets an
+    explicit --remaining), logs the transaction, refreshes the report, posts a note."""
+    inv = inv_load()
+    key = a.bom_key or rec_key(a.vendor_pn or "", a.mfg_pn or "", a.item or "", a.desc or "")
+    if not key:
+        print("ERROR: need a key (--bom-key or --vendor-pn/--mfg-pn/--desc)"); sys.exit(2)
+    rec = next((r for r in inv["records"] if r.get("key") == key), None)
+    if rec is None:
+        rec = {"key": key, "vendor_pn": a.vendor_pn or "", "mfg_pn": a.mfg_pn or "",
+               "item": a.item or "", "section": a.section or "", "description": a.desc or "",
+               "qty_on_hand": 0, "unit": "ea", "locations": [], "photos": [], "history": []}
+        inv["records"].append(rec)
+    qty = float(a.qty or 0)
+    if a.remaining not in (None, ""):
+        rec["qty_on_hand"] = round(float(a.remaining), 3)
+    else:
+        rec["qty_on_hand"] = round(rec.get("qty_on_hand", 0) - qty, 3)
+    if a.location and a.location not in rec["locations"]:
+        rec["locations"].append(a.location)
+    for fld, val in [("section", a.section), ("description", a.desc), ("vendor_pn", a.vendor_pn), ("mfg_pn", a.mfg_pn)]:
+        if val and not rec.get(fld):
+            rec[fld] = val
+    rec["history"].append({"at": now(), "by": a.by or "Exo", "delta": -qty,
+                           "note": a.note or "consumed", "location": a.location or "", "queue": None})
+    rec["updated_at"] = now()
+    inv_save(inv)
+    # short vs BOM for the note
+    bom = load(BOM_INDEX, {"rows": []})
+    req = None
+    for row in bom.get("rows", []):
+        if row.get("section", "").lower() == (rec.get("section") or "").lower() and str(row.get("item")) == str(rec.get("item")):
+            try:
+                req = float(str(row.get("qty")).strip())
+            except Exception:
+                req = None
+            break
+    shortnote = ""
+    if req is not None and rec["qty_on_hand"] < req:
+        shortnote = f" · SHORT {round(req - rec['qty_on_hand'], 3)} vs BOM (req {req:g}) → reorder"
+    build_report()
+    if a.task:
+        loc = f" at {a.location}" if a.location else ""
+        task_note(a.task, f"🔻 Exo (inventory): consumed **{qty:g} × {rec.get('description') or key}**{loc} "
+                          f"→ on-hand now **{rec['qty_on_hand']:g} {rec['unit']}**{shortnote}. (per {a.by or 'team'})")
+    logline(f"consume key={key} -{qty} -> {rec['qty_on_hand']} loc {a.location} task {a.task}")
+    print(json.dumps({"key": key, "qty_on_hand": rec["qty_on_hand"], "short_vs_bom": (round(req - rec['qty_on_hand'], 3) if req is not None else None)}, indent=2))
+
+
 def cmd_status(a):
     q = read_queue()
     inv = inv_load()
@@ -440,6 +489,9 @@ def main():
         r.add_argument("--" + f)
     k = sub.add_parser("ask")
     k.add_argument("--queue"); k.add_argument("--task"); k.add_argument("--uploader"); k.add_argument("--question", required=True)
+    cs = sub.add_parser("consume")
+    for f in ["bom-key", "vendor-pn", "mfg-pn", "item", "section", "desc", "qty", "remaining", "location", "by", "note", "task"]:
+        cs.add_argument("--" + f)
     sub.add_parser("status")
     sub.add_parser("report")
     a = p.parse_args()
@@ -448,7 +500,7 @@ def main():
         pass
     {"reindex-bom": cmd_reindex, "enqueue": cmd_enqueue, "pending": cmd_pending,
      "next": cmd_next, "bom-search": cmd_bom_search, "record": cmd_record,
-     "ask": cmd_ask, "status": cmd_status, "report": cmd_report}[a.cmd](a)
+     "ask": cmd_ask, "status": cmd_status, "report": cmd_report, "consume": cmd_consume}[a.cmd](a)
 
 
 if __name__ == "__main__":
