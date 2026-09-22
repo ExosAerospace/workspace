@@ -1,7 +1,17 @@
 {
   "source": "Current_Inventory_Locations_BOMPN_2026-09-22.xlsx",
-  "generated_at": "2026-09-22T22:17:07.822952+00:00",
+  "generated_at": "2026-09-22T23:00:22.957638+00:00",
   "count": 1679,
+  "maps": [
+    {
+      "name": "Warehouse Map",
+      "file": "Warehouse_Map.png"
+    },
+    {
+      "name": "Parts Room Map",
+      "file": "Parts_Room_Map.png"
+    }
+  ],
   "entries": [
     {
       "area": "Parts Room",

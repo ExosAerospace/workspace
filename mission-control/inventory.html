@@ -73,6 +73,7 @@
     <input type="search" id="locq" placeholder="Search location, contents, SKU…">
     <span class="muted" id="loccount"></span>
   </div>
+  <div id="locmaps" style="display:flex;flex-wrap:wrap;gap:14px;margin:6px 0 12px"></div>
   <div style="max-height:340px;overflow:auto">
     <table><thead><tr><th>Area</th><th>Location</th><th>Contents</th><th>SKU</th><th class="num">Qty</th></tr></thead>
     <tbody id="loctb"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody></table>
@@ -176,6 +177,12 @@ async function toggleLoc(){
 async function loadLoc(){
   const r=await fetch('/api/inventory?locations=1'); if(r.status===401){location='/login';return;}
   const d=await r.json(); LOC=d.entries||[];
+  const maps=d.maps||[];
+  document.getElementById('locmaps').innerHTML=maps.map(m=>{
+    const u='/uploads/location-maps/'+encodeURIComponent(m.file);
+    return '<figure style="margin:0"><figcaption class="muted" style="font-size:.78rem;margin-bottom:4px;font-weight:700">🗺️ '+esc(m.name)+'</figcaption>'+
+      '<a href="'+u+'" target="_blank"><img src="'+u+'" style="max-width:340px;max-height:240px;border:1px solid var(--border);border-radius:8px;background:#fff"></a></figure>';
+  }).join('');
   renderLoc();
 }
 function renderLoc(){

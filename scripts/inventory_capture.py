@@ -262,8 +262,9 @@ def build_location_index(explicit=None):
                 continue
             cat.append({"area": sh, "location": loc, "contents": contents, "sku": sku,
                         "qty": qty, "unit": unit, "value": val, "bom_pn": bom_pn})
+    maps = extract_location_maps(src)
     json.dump({"source": os.path.basename(src), "generated_at": now(), "count": len(cat),
-               "entries": cat}, open(LOCATION_INDEX, "w"), indent=2)
+               "maps": maps, "entries": cat}, open(LOCATION_INDEX, "w"), indent=2)
     # ── BOM ↔ location matching ──
     by_sku = {}
     by_bompn = {}
@@ -306,6 +307,98 @@ def build_location_index(explicit=None):
     json.dump({"generated_at": now(), "count": len(bmap), "authoritative": matched_authoritative,
                "map": bmap}, open(BOM_LOC_MAP, "w"), indent=2)
     return len(cat), len(bmap)
+
+
+MAPS_DIR = os.path.join(UPLOADS, "location-maps")
+
+
+def _location_candidates(primary):
+    """primary first, then other uploaded /location/i .xlsx (newest first), then the baseline —
+    used to find map images even if the current working file (e.g. the BOM-P/N copy) dropped them."""
+    out = [primary]
+    try:
+        meta = json.load(open(UPLOADS_META))
+        cands = [m for m in meta if str(m.get("extension", "")).lower() == ".xlsx"
+                 and re.search(r"location", str(m.get("filename", "")), re.I)]
+        cands.sort(key=lambda m: m.get("uploaded_at", ""), reverse=True)
+        out += [os.path.join(UPLOADS, m.get("stored_name", "")) for m in cands]
+    except Exception:
+        pass
+    out.append(LOCATION_XLSX)
+    seen, uniq = set(), []
+    for p in out:
+        if p and p not in seen and os.path.exists(p):
+            seen.add(p); uniq.append(p)
+    return uniq
+
+
+def extract_location_maps(src):
+    """Pull the physical overview map images (e.g. 'Parts Room Map', 'Warehouse Map') embedded in the
+    locations workbook out to uploads/location-maps/<Sheet>.png so MC and the export can show them.
+    Follows the OOXML rel chain: workbook -> sheet -> drawing -> image. Falls back across locations
+    files so a copy that lost its images (openpyxl strips them) still yields the maps. Returns [{name,file}]."""
+    os.makedirs(MAPS_DIR, exist_ok=True)
+    for cand in _location_candidates(src):
+        maps = _maps_from(cand)
+        if maps:
+            return maps
+    return []
+
+
+def _maps_from(src):
+    import zipfile, re as _re, shutil
+    maps = []
+    try:
+        with zipfile.ZipFile(src) as z:
+            names = set(z.namelist())
+            wbxml = z.read("xl/workbook.xml").decode("utf-8", "ignore")
+            wbrels = z.read("xl/_rels/workbook.xml.rels").decode("utf-8", "ignore")
+            # attribute order varies (Id before/after Target) — parse each <Relationship> independently
+            rid2target = {}
+            for rel in _re.findall(r"<Relationship\b[^>]*/?>", wbrels):
+                _id = _re.search(r'Id="([^"]+)"', rel); _tg = _re.search(r'Target="([^"]+)"', rel)
+                if _id and _tg:
+                    rid2target[_id.group(1)] = _tg.group(1)
+            for sheet_tag in _re.findall(r"<sheet\b[^>]*/?>", wbxml):
+                nm = _re.search(r'name="([^"]+)"', sheet_tag)
+                rid = _re.search(r'r:id="([^"]+)"', sheet_tag)
+                if not (nm and rid) or "map" not in nm.group(1).lower():
+                    continue
+                tgt = rid2target.get(rid.group(1), "")
+                if not tgt:
+                    continue
+                sheet_path = tgt.lstrip("/")
+                if not sheet_path.startswith("xl/"):
+                    sheet_path = "xl/" + sheet_path
+                base = os.path.basename(sheet_path)
+                srels = f"xl/worksheets/_rels/{base}.rels"
+                if srels not in names:
+                    continue
+                def _rel(base_dir, target):   # OOXML targets may be absolute (/xl/..) or relative (../..)
+                    if target.startswith("/"):
+                        return target.lstrip("/")
+                    return os.path.normpath(os.path.join(base_dir, target)).replace("\\", "/")
+                draw = _re.search(r'Target="([^"]*drawings/drawing[0-9]+\.xml)"', z.read(srels).decode("utf-8", "ignore"))
+                if not draw:
+                    continue
+                dpath = _rel("xl/worksheets", draw.group(1))
+                dbase = os.path.basename(dpath)
+                drels = f"xl/drawings/_rels/{dbase}.rels"
+                if drels not in names:
+                    continue
+                img = _re.search(r'Target="([^"]*media/image[0-9]+\.[a-zA-Z]+)"', z.read(drels).decode("utf-8", "ignore"))
+                if not img:
+                    continue
+                ipath = _rel("xl/drawings", img.group(1))
+                if ipath not in names:
+                    continue
+                safe = _re.sub(r"[^A-Za-z0-9]+", "_", nm.group(1)).strip("_") + os.path.splitext(ipath)[1]
+                with z.open(ipath) as fsrc, open(os.path.join(MAPS_DIR, safe), "wb") as fdst:
+                    shutil.copyfileobj(fsrc, fdst)
+                maps.append({"name": nm.group(1), "file": safe})
+    except Exception as e:
+        logline(f"WARN extract_maps: {e}")
+    return maps
 
 
 def cmd_reindex_locations(a):
@@ -505,6 +598,20 @@ def build_report():
                  [[e.get("area", ""), e.get("location", ""), e.get("contents", ""), e.get("sku", ""),
                    e.get("bom_pn", ""), e.get("qty", ""), e.get("unit", ""), e.get("value", "")]
                   for e in loci.get("entries", [])], colorby=False)
+
+    # 5b) PHYSICAL MAP sheets — the overview images embedded in Steve's workbook (re-embedded here).
+    for mp in loci.get("maps", []):
+        imgp = os.path.join(MAPS_DIR, mp.get("file", ""))
+        if not os.path.exists(imgp):
+            continue
+        try:
+            from openpyxl.drawing.image import Image as XLImage
+            msheet = wb.create_sheet(mp.get("name", "Map")[:31])
+            msheet["A1"] = mp.get("name", "Map"); msheet["A1"].font = Font(bold=True, size=13)
+            img = XLImage(imgp); img.anchor = "A3"
+            msheet.add_image(img)
+        except Exception as e:
+            logline(f"WARN embed map {mp.get('file')}: {e}")
 
     # 6) SUMMARY
     s = wb.create_sheet("Summary")
