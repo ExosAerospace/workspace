@@ -1,0 +1,13 @@
+{
+  "_comment": "Durable annotations drawn onto the extracted location map PNGs on every reindex (so they survive re-uploads). Coords are fractions of image width/height. Keyed by map sheet name.",
+  "Parts Room Map": [
+    {
+      "label": "MC (new 9/22)",
+      "x": 0.04,
+      "y": 0.895,
+      "w": 0.24,
+      "h": 0.085,
+      "note": "MC section — south side, just west of the door (not in the original scan)"
+    }
+  ]
+}

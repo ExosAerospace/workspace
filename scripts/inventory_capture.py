@@ -401,10 +401,56 @@ def _maps_from(src):
     return maps
 
 
+MAP_OVERLAYS = os.path.join(MC, "data", "location-map-overlays.json")
+
+
+def apply_map_overlays():
+    """Draw durable team annotations (e.g. the new MC section) onto the extracted map PNGs so they
+    survive re-uploads. Overlay coords are fractions of image size, keyed by map sheet name."""
+    overlays = load(MAP_OVERLAYS, {})
+    if not overlays:
+        return
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+    except Exception as e:
+        logline(f"WARN overlays PIL: {e}"); return
+    loci = load(LOCATION_INDEX, {"maps": []})
+    for mp in loci.get("maps", []):
+        ovs = overlays.get(mp.get("name", ""))
+        if not ovs:
+            continue
+        p = os.path.join(MAPS_DIR, mp.get("file", ""))
+        if not os.path.exists(p):
+            continue
+        try:
+            im = Image.open(p).convert("RGBA")
+            W, H = im.size
+            d = ImageDraw.Draw(im)
+            try:
+                font = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial Bold.ttf", max(12, int(H * 0.028)))
+            except Exception:
+                font = ImageFont.load_default()
+            for ov in ovs:
+                x0, y0 = ov["x"] * W, ov["y"] * H
+                x1, y1 = (ov["x"] + ov["w"]) * W, (ov["y"] + ov["h"]) * H
+                d.rectangle([x0, y0, x1, y1], fill=(255, 107, 0, 235), outline=(20, 20, 20, 255), width=2)
+                lbl = ov.get("label", "")
+                try:
+                    tb = d.textbbox((0, 0), lbl, font=font); tw, th = tb[2] - tb[0], tb[3] - tb[1]
+                except Exception:
+                    tw, th = len(lbl) * 6, 11
+                d.text((x0 + ((x1 - x0) - tw) / 2, y0 + ((y1 - y0) - th) / 2 - 2), lbl, fill=(255, 255, 255, 255), font=font)
+            im.convert("RGB").save(p)
+            logline(f"overlay applied to {mp.get('file')} ({len(ovs)})")
+        except Exception as e:
+            logline(f"WARN overlay {mp.get('file')}: {e}")
+
+
 def cmd_reindex_locations(a):
     res = build_location_index(getattr(a, "file", None))
     if res is None:
         print("skipped: not a locations sheet (no Parts Room/Warehouse/Trailer)"); return
+    apply_map_overlays()
     n, m = res
     build_report()   # refresh the canonical report + MC page so new locations show immediately
     print(f"location catalog: {n} entries -> {LOCATION_INDEX}; BOM matched: {m} -> {BOM_LOC_MAP}; report refreshed")
