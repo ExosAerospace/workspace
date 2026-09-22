@@ -190,6 +190,72 @@ def cmd_reindex(a):
     print(f"indexed {len(rows)} BOM lines across {len(wb.sheetnames)} sheets -> {BOM_INDEX}")
 
 
+def _norm(s):
+    return re.sub(r"[^a-z0-9]+", " ", str(s or "").lower()).strip()
+
+
+def build_location_index():
+    """Parse Current_Inventory_Locations.xlsx into a flat catalog (location cell forward-filled per
+    block) -> location-index.json. Then best-effort match BOM lines to a stored location by SKU or a
+    distinctive description token -> bom-location-map.json (both the report and /api/inventory read it)."""
+    import openpyxl
+    wb = openpyxl.load_workbook(LOCATION_XLSX, data_only=True)
+    areas = ["Parts Room", "Warehouse", "Trailer"]
+    cat = []
+    for sh in areas:
+        if sh not in wb.sheetnames:
+            continue
+        ws = wb[sh]
+        loc = ""
+        for row in ws.iter_rows(min_row=2, values_only=True):
+            r = [("" if c is None else str(c).strip()) for c in row]
+            r += [""] * (8 - len(r))
+            if r[0]:
+                loc = r[0]
+            contents, sku, qty, unit, val = r[2], (r[1] or r[3]), r[4], r[5], r[7]
+            if not contents and not sku:
+                continue
+            cat.append({"area": sh, "location": loc, "contents": contents, "sku": sku,
+                        "qty": qty, "unit": unit, "value": val})
+    json.dump({"source": os.path.basename(LOCATION_XLSX), "generated_at": now(), "count": len(cat),
+               "entries": cat}, open(LOCATION_INDEX, "w"), indent=2)
+    # ── BOM ↔ location matching ──
+    by_sku = {}
+    for e in cat:
+        if e["sku"]:
+            by_sku[e["sku"].strip().upper()] = e
+    bom = load(BOM_INDEX, {"rows": []})
+    bmap = {}
+    for row in bom.get("rows", []):
+        vpn, mpn = row.get("vendor_pn", ""), row.get("mfg_pn", "")
+        key = rec_key(vpn, mpn, row.get("item", ""), row.get("description", ""))
+        hit = None
+        for pn in [vpn, mpn]:
+            # require >=5 chars so short/generic SKUs (e.g. "2175") don't collide across parts
+            if pn and len(pn.strip()) >= 5 and pn.strip().upper() in by_sku:
+                hit = by_sku[pn.strip().upper()]; break
+        if not hit:
+            # distinctive token: alphanumeric with a digit, len>=5 (e.g. a model no) shared with contents
+            dtoks = [t for t in _norm(row.get("description", "")).split()
+                     if len(t) >= 5 and any(ch.isdigit() for ch in t)]
+            for t in dtoks:
+                for e in cat:
+                    if t in _norm(e["contents"]).split():   # whole-word match, not substring
+                        hit = e; break
+                if hit:
+                    break
+        if hit:
+            bmap[key] = {"location": hit["location"], "area": hit["area"],
+                         "contents": hit["contents"], "source": "map"}
+    json.dump({"generated_at": now(), "count": len(bmap), "map": bmap}, open(BOM_LOC_MAP, "w"), indent=2)
+    return len(cat), len(bmap)
+
+
+def cmd_reindex_locations(a):
+    n, m = build_location_index()
+    print(f"location catalog: {n} entries -> {LOCATION_INDEX}; BOM matched: {m} -> {BOM_LOC_MAP}")
+
+
 def cmd_bom_search(a):
     idx = load(BOM_INDEX, {"rows": []})
     q = " ".join(a.query).lower().strip()
@@ -229,6 +295,9 @@ def rec_key(vendor_pn, mfg_pn, item, desc):
     return (vendor_pn or mfg_pn or (item + ":" + desc[:24]) or desc[:24]).strip().upper()
 
 
+LOCATION_XLSX = os.path.join(UPLOADS, "1790085634943_Current_Inventory_Locations.xlsx")
+LOCATION_INDEX = os.path.join(MC, "data", "location-index.json")
+BOM_LOC_MAP = os.path.join(MC, "data", "bom-location-map.json")
 REPORT_NAME = "BLK3_Inventory_Report.xlsx"
 REPORT_PATH = os.path.join(UPLOADS, REPORT_NAME)
 UPLOADS_META = os.path.join(UPLOADS, "_meta.json")
@@ -246,6 +315,7 @@ def build_report():
         logline(f"WARN report openpyxl: {e}"); return
     bom = load(BOM_INDEX, {"rows": []})
     inv = inv_load()
+    locmap = load(BOM_LOC_MAP, {"map": {}}).get("map", {})
     by = {}
     for r in inv.get("records", []):
         for k in [r.get("vendor_pn"), r.get("mfg_pn"), r.get("key")]:
@@ -279,7 +349,14 @@ def build_report():
         except Exception:
             req = None
         shortv = round(req - oh, 3) if (req is not None and oh < req) else 0
+        # Location: physically-confirmed (from the ledger) first; else the stored location from the
+        # parts-room / warehouse map, tagged "(map)".
         loc = ", ".join(rec.get("locations", [])) if rec else ""
+        if not loc:
+            mk = rec_key(vpn, mpn, item, desc)
+            mm = locmap.get(mk)
+            if mm:
+                loc = f"{mm['location']} ({mm['area']}, map)"
         nph = len(rec.get("photos", [])) if rec else 0
         upd = (rec.get("updated_at", "") or "")[:19].replace("T", " ") if rec else ""
         ws.append([sec, item, vpn, mpn, desc, qty, oh, shortv or "", loc, nph or "", upd])
@@ -307,6 +384,21 @@ def build_report():
     s.append(["Total units on-hand", round(onhand_total, 3)])
     s.append(["Inventory records", len(inv.get("records", []))])
     s.column_dimensions["A"].width = 24; s.column_dimensions["B"].width = 28
+    # Locations catalog sheet — the full current-inventory-locations map (parts room / warehouse).
+    loci = load(LOCATION_INDEX, {"entries": []})
+    ls = wb.create_sheet("Locations")
+    ls.append(["Area", "Location", "Contents", "SKU", "Qty", "Unit", "Value"])
+    for c in ls[1]:
+        c.font = hdr; c.fill = fill
+    for e in loci.get("entries", []):
+        ls.append([e.get("area", ""), e.get("location", ""), e.get("contents", ""),
+                   e.get("sku", ""), e.get("qty", ""), e.get("unit", ""), e.get("value", "")])
+    for i, w in enumerate([14, 12, 46, 16, 7, 8, 10], 1):
+        ls.column_dimensions[openpyxl.utils.get_column_letter(i)].width = w
+    ls.freeze_panes = "A2"
+    if ls.max_row > 1:
+        ls.auto_filter.ref = f"A1:G{ls.max_row}"
+    s.append(["Location-map entries", len(loci.get("entries", []))])
     wb.save(REPORT_PATH)
     _pin_report(rows_total, short_total)
     logline(f"report refreshed: {rows_total} lines, {short_total} short -> {REPORT_PATH}")
@@ -494,13 +586,15 @@ def main():
         cs.add_argument("--" + f)
     sub.add_parser("status")
     sub.add_parser("report")
+    sub.add_parser("reindex-locations")
     a = p.parse_args()
     # normalize dashed dests
     for src, dst in [("bom_key", "bom_key"), ("vendor_pn", "vendor_pn"), ("mfg_pn", "mfg_pn")]:
         pass
     {"reindex-bom": cmd_reindex, "enqueue": cmd_enqueue, "pending": cmd_pending,
      "next": cmd_next, "bom-search": cmd_bom_search, "record": cmd_record,
-     "ask": cmd_ask, "status": cmd_status, "report": cmd_report, "consume": cmd_consume}[a.cmd](a)
+     "ask": cmd_ask, "status": cmd_status, "report": cmd_report, "consume": cmd_consume,
+     "reindex-locations": cmd_reindex_locations}[a.cmd](a)
 
 
 if __name__ == "__main__":

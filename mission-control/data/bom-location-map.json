@@ -1,0 +1,42 @@
+{
+  "generated_at": "2026-09-22T21:48:29.901928+00:00",
+  "count": 6,
+  "map": {
+    "D514A": {
+      "location": "2D-4",
+      "area": "Parts Room",
+      "contents": "D514A Ignition Coil with Connector Pigtail",
+      "source": "map"
+    },
+    "2026BV171T": {
+      "location": "Cab2",
+      "area": "Warehouse",
+      "contents": "JEFFERSON 12V VALVES 2026BV171T",
+      "source": "map"
+    },
+    "DMM-32DX-AT": {
+      "location": "4D-5",
+      "area": "Parts Room",
+      "contents": "Computer Drive (small)",
+      "source": "map"
+    },
+    "7442A13": {
+      "location": "Cab10.2",
+      "area": "Warehouse",
+      "contents": "Dow Corning P5200",
+      "source": "map"
+    },
+    "PE3810-36": {
+      "location": "4D-2",
+      "area": "Parts Room",
+      "contents": "SMA Male to SMB Plug Cable 36 Inch Length Using RG316 Coax, Upper Cable (17-0024)",
+      "source": "map"
+    },
+    "PE3W03014-60": {
+      "location": "4D-2",
+      "area": "Parts Room",
+      "contents": "SMA Male to SMB Plug Cable 36 Inch Length Using RG316 Coax, Upper Cable (17-0024)",
+      "source": "map"
+    }
+  }
+}

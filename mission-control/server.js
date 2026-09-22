@@ -3921,8 +3921,17 @@ const server = http.createServer((req, res) => {
   if (req.url.split('?')[0] === '/api/inventory' && req.method === 'GET') {
     try {
       const readJSON = (p, d) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return d; } };
+      // ?locations=1 → return the full parts-room / warehouse location catalog (the map).
+      if (new URL(req.url, 'http://localhost').searchParams.get('locations')) {
+        const loci = readJSON(path.join(__dirname, 'data', 'location-index.json'), { entries: [] });
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(loci));
+        return;
+      }
       const bom = readJSON(path.join(__dirname, 'data', 'bom-index.json'), { rows: [] });
       const inv = readJSON(path.join(__dirname, 'data', 'inventory.json'), { records: [] });
+      const locmap = readJSON(path.join(__dirname, 'data', 'bom-location-map.json'), { map: {} }).map || {};
+      const recKey = (v, m, i, d) => (v || m || ((i || '') + ':' + String(d || '').slice(0, 24)) || String(d || '').slice(0, 24)).trim().toUpperCase();
       const by = {};
       for (const r of (inv.records || [])) {
         for (const k of [r.vendor_pn, r.mfg_pn, r.key]) if (k) by[String(k).trim().toUpperCase()] = r;
@@ -3941,8 +3950,12 @@ const server = http.createServer((req, res) => {
         const sh = (hasReq && oh < req2) ? Math.round((req2 - oh) * 1000) / 1000 : 0;
         onhandUnits += oh; if (sh) short++;
         const photos = rec ? (rec.photos || []).map(p => ({ url: '/uploads/' + encodeURIComponent(p.file || ''), by: p.by, at: p.at })) : [];
+        const ledgerLoc = rec ? (rec.locations || []) : [];
+        // Stored location from the parts-room / warehouse map when the ledger has none.
+        const mm = ledgerLoc.length ? null : locmap[recKey(vpn, mpn, item, row.description)];
         rows.push({ section: sec, item, vendor_pn: vpn, mfg_pn: mpn, description: row.description || '',
-          req: row.qty || '', on_hand: oh, short: sh, locations: rec ? (rec.locations || []) : [],
+          req: row.qty || '', on_hand: oh, short: sh, locations: ledgerLoc,
+          map_location: mm ? `${mm.location} (${mm.area})` : '',
           photos, updated_at: rec ? (rec.updated_at || '') : '' });
         const s = secmap[sec] || (secmap[sec] = { section: sec, lines: 0, onhand_lines: 0, short_lines: 0 });
         s.lines++; if (oh > 0) s.onhand_lines++; if (sh) s.short_lines++;
@@ -3950,9 +3963,10 @@ const server = http.createServer((req, res) => {
       const sections = Object.values(secmap).map(s => ({ ...s,
         completeness_pct: s.lines ? Math.round((s.onhand_lines / s.lines) * 100) : 0 }));
       res.writeHead(200, { 'Content-Type': 'application/json' });
+      const locCount = readJSON(path.join(__dirname, 'data', 'location-index.json'), { entries: [] }).entries.length;
       res.end(JSON.stringify({ generated_at: bom.generated_at || null, source: bom.source || null,
         totals: { lines: rows.length, short, onhand_units: Math.round(onhandUnits * 1000) / 1000,
-                  records: (inv.records || []).length },
+                  records: (inv.records || []).length, location_entries: locCount },
         report_xlsx: '/uploads/BLK3_Inventory_Report.xlsx', sections, rows }));
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });

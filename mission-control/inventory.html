@@ -51,8 +51,20 @@
   <span style="flex:1"></span>
   <a class="btn" id="xlsx" href="/uploads/BLK3_Inventory_Report.xlsx">⬇ Export .xlsx</a>
   <a class="btn ghost" href="/blk3-bom.html">📋 Bill of Materials</a>
+  <button class="btn ghost" id="locbtn" onclick="toggleLoc()">📍 Locations map</button>
   <a class="back" href="/index.html">← Mission Control</a>
 </header>
+<div id="locpanel" style="display:none;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--panel)">
+  <div class="controls">
+    <strong>📍 Current inventory locations (parts room / warehouse map)</strong>
+    <input type="search" id="locq" placeholder="Search location, contents, SKU…">
+    <span class="muted" id="loccount"></span>
+  </div>
+  <div style="max-height:340px;overflow:auto">
+    <table><thead><tr><th>Area</th><th>Location</th><th>Contents</th><th>SKU</th><th class="num">Qty</th></tr></thead>
+    <tbody id="loctb"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody></table>
+  </div>
+</div>
 <div class="wrap">
   <div class="totals" id="totals"></div>
   <div class="secrow" id="secrow"></div>
@@ -81,6 +93,7 @@ async function load(){
   const t=DATA.totals;
   document.getElementById('totals').innerHTML=
     kpi(t.lines,'BOM lines')+kpi(t.records,'Parts recorded')+kpi(t.onhand_units,'Units on-hand')+
+    kpi(t.location_entries||0,'Map locations')+
     '<div class="kpi short"><div class="v">'+t.short+'</div><div class="l">Lines short</div></div>';
   const ss=DATA.sections.slice().sort((a,b)=>a.section.localeCompare(b.section));
   document.getElementById('secrow').innerHTML=ss.map(s=>
@@ -121,7 +134,7 @@ function render(){
       '<td class="pn">'+esc(r.vendor_pn||r.mfg_pn||'')+'</td><td>'+esc(r.description)+'</td>'+
       '<td class="num">'+esc(r.req)+'</td><td class="num">'+r.on_hand+'</td>'+
       '<td class="num">'+(r.short?'<span class="short-b">'+r.short+'</span>':'')+'</td>'+
-      '<td>'+esc((r.locations||[]).join(', '))+'</td><td>'+ph+'</td>'+
+      '<td>'+(((r.locations||[]).length)?esc(r.locations.join(', ')):(r.map_location?'<span class="muted">'+esc(r.map_location)+' <em>· map</em></span>':''))+'</td><td>'+ph+'</td>'+
       '<td class="muted">'+esc((r.updated_at||'').slice(0,10))+'</td></tr>';
   }).join(''):'<tr><td colspan="10" class="empty">No matching lines.</td></tr>';
 }
@@ -130,6 +143,29 @@ document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{
 ['q','secsel','shortonly','haveonly'].forEach(id=>document.getElementById(id).addEventListener('input',render));
 document.getElementById('secsel').addEventListener('change',()=>{secFilter=document.getElementById('secsel').value;
   document.querySelectorAll('.sec').forEach(x=>x.classList.toggle('active',x.dataset.s===secFilter));render();});
+let LOC=null;
+async function toggleLoc(){
+  const p=document.getElementById('locpanel');
+  if(p.style.display==='none'){p.style.display='block';if(!LOC)await loadLoc();}
+  else p.style.display='none';
+}
+async function loadLoc(){
+  const r=await fetch('/api/inventory?locations=1'); if(r.status===401){location='/login';return;}
+  const d=await r.json(); LOC=d.entries||[];
+  renderLoc();
+}
+function renderLoc(){
+  if(!LOC)return;
+  const q=document.getElementById('locq').value.toLowerCase().trim();
+  const rows=LOC.filter(e=>!q||(e.area+' '+e.location+' '+e.contents+' '+e.sku).toLowerCase().includes(q));
+  document.getElementById('loccount').textContent=rows.length+' of '+LOC.length+' entries';
+  document.getElementById('loctb').innerHTML=rows.length?rows.slice(0,600).map(e=>
+    '<tr><td>'+esc(e.area)+'</td><td class="pn">'+esc(e.location)+'</td><td>'+esc(e.contents)+
+    '</td><td class="pn">'+esc(e.sku)+'</td><td class="num">'+esc(e.qty)+'</td></tr>').join('')
+    :'<tr><td colspan="5" class="empty">No matches.</td></tr>';
+}
+document.getElementById('locq').addEventListener('input',renderLoc);
+document.getElementById('totals').addEventListener('click',()=>{});
 load(); setInterval(load,30000);
 </script>
 </body></html>
