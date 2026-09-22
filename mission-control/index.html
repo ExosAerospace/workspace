@@ -451,6 +451,13 @@
   .edit-actions { display: flex; gap: 10px; margin-top: 8px; justify-content: flex-end; }
 
   /* ── DOCUMENTS TAB ── */
+  .docs-camera-btn {
+    display: block; width: 100%; box-sizing: border-box; margin-bottom: 12px;
+    padding: 16px; font-size: 16px; font-weight: 600; cursor: pointer;
+    color: #fff; background: var(--orange); border: none; border-radius: 10px;
+    transition: background 0.2s;
+  }
+  .docs-camera-btn:hover, .docs-camera-btn:active { background: var(--orange2); }
   .docs-upload-zone {
     border: 2px dashed var(--border); border-radius: 10px; padding: 24px;
     text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 16px;
@@ -528,6 +535,12 @@
 </style>
 </head>
 <body>
+
+<a href="mtp.html" id="mtpBanner" title="Our Massive Transformative Purpose — click for details" style="display:block;text-decoration:none;background:linear-gradient(90deg,#0b0b0d,#17171b);border-bottom:2px solid #F26A21;padding:9px 20px;text-align:center;line-height:1.35;">
+  <span style="color:#8aa0bd;font-size:0.66rem;letter-spacing:2.5px;text-transform:uppercase;">Our Massive Transformative Purpose</span><br>
+  <span style="color:#fff;font-size:1.18rem;font-weight:800;letter-spacing:0.4px;">Make Every Space Vehicle Reusable</span>
+  <span style="color:#F26A21;font-size:0.8rem;font-weight:700;margin-left:10px;">details →</span>
+</a>
 
 <header>
   <div class="brand">
@@ -707,6 +720,15 @@
 
     <!-- DOCUMENTS TAB -->
     <div class="tab-content" id="tab-documents">
+      <!-- Take a photo straight onto this task. capture="environment" opens the phone's
+           native rear camera app (not an in-page stream), so it works on low-RAM phones
+           and lands the picture directly on THIS task. -->
+      <button type="button" class="docs-camera-btn"
+              onclick="document.getElementById('cameraInput').click()">
+        📷 Take Photo → this task
+      </button>
+      <input type="file" id="cameraInput" accept="image/*" capture="environment"
+             style="display:none" onchange="handleFileSelect(this.files)">
       <div class="docs-upload-zone" id="uploadZone"
            ondragover="event.preventDefault();this.classList.add('drag-active')"
            ondragleave="this.classList.remove('drag-active')"
@@ -717,7 +739,7 @@
         <div class="upload-hint">PDF, DOCX, XLSX, PPTX, PNG, JPG, CSV, ZIP — max 25 MB</div>
       </div>
       <input type="file" id="fileInput" style="display:none"
-             accept=".pdf,.docx,.xlsx,.pptx,.doc,.xls,.ppt,.png,.jpg,.jpeg,.gif,.svg,.csv,.txt,.zip,.md"
+             accept=".pdf,.docx,.xlsx,.pptx,.doc,.xls,.ppt,.png,.jpg,.jpeg,.heic,.webp,.gif,.svg,.csv,.txt,.zip,.md"
              onchange="handleFileSelect(this.files)" multiple>
       <div class="docs-upload-progress" id="uploadProgress">
         <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>

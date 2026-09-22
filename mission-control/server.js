@@ -11,7 +11,7 @@ const CRM_FILE = path.join(__dirname, 'crm-data.json');
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const UPLOADS_META = path.join(__dirname, 'uploads', '_meta.json');
 const MAX_UPLOAD_SIZE = 25 * 1024 * 1024; // 25 MB
-const ALLOWED_EXTENSIONS = ['.pdf','.docx','.xlsx','.pptx','.doc','.xls','.ppt','.png','.jpg','.jpeg','.gif','.svg','.csv','.txt','.zip','.md'];
+const ALLOWED_EXTENSIONS = ['.pdf','.docx','.xlsx','.pptx','.doc','.xls','.ppt','.png','.jpg','.jpeg','.heic','.webp','.gif','.svg','.csv','.txt','.zip','.md'];
 
 // ── DECISIONS INBOX: consolidated "Needs Jon" approval queue ──
 const DECISIONS_FILE = path.join(__dirname, 'data', 'decisions.json');
@@ -1594,7 +1594,7 @@ const server = http.createServer((req, res) => {
     // page/API through this sandbox's default-deny. A dd_reviewer NOT on the finance allowlist still
     // gets nothing (that block already returned/redirected).
     const allowedAPIs = ['/api/me', '/api/logout', '/api/dataroom', '/api/dataroom-doc', '/api/chat', '/api/chat/result', '/api/operational-finance', '/api/capital-bridge'];
-    const allowedPages = ['/dataroom', '/dataroom.html', '/finance', '/finance.html', '/login', '/login.html', '/set-password', '/set-password.html', '/welcome', '/welcome.html'];
+    const allowedPages = ['/dataroom', '/dataroom.html', '/mtp', '/mtp.html', '/finance', '/finance.html', '/login', '/login.html', '/set-password', '/set-password.html', '/welcome', '/welcome.html'];
     // Landing: send them straight to the data room, never the internal dashboard.
     if (fp === '/' || fp === '/index.html' || fp === '/dashboard' || fp === '/dashboard.html' || fp === '/dataroom') {
       res.writeHead(302, { 'Location': '/dataroom.html' }); res.end(); return;
