@@ -53,7 +53,7 @@ a.dl{color:var(--acc);font-size:12px;text-decoration:none}
   <div class="tabs" id="tabs"></div>
   <div class="search">
     <label class="ck"><input type="checkbox" id="missOnly"/> missing cost only</label>
-    <input type="text" id="q" placeholder="Filter this tab…"/>
+    <input type="text" id="q" placeholder="Search all BLK3 sections…"/>
   </div>
 </div>
 <div class="wrap">
@@ -74,22 +74,28 @@ const tabs=document.getElementById('tabs');
 DATA.sheets.forEach((s,i)=>{const b=document.createElement('div');b.className='tab'+(i==0?' active':'')+(s.missing?' hasmiss':'');b.innerHTML=s.name+' <span class="c">'+s.count+'</span>';b.onclick=()=>{cur=i;sortCol=null;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));b.classList.add('active');render();};tabs.appendChild(b);});
 function numeric(c){return c==='Quantity'||c==='Cost ea'||c==='Extended Cost';}
 function render(){
-  const s=DATA.sheets[cur];
   const q=document.getElementById('q').value.trim().toLowerCase();
   const missOnly=document.getElementById('missOnly').checked;
-  let rows=s.rows.filter(r=>{
-    if(missOnly && !(r['Extended Cost']==null)) return false;
-    if(!q) return true;
-    return COLS.some(c=>String(r[c]??'').toLowerCase().includes(q));
-  });
+  const global=!!q;                       // a query searches ALL BLK3 sections, not just this tab
+  const s=global?null:DATA.sheets[cur];
+  const activeCols=global?['Section'].concat(COLS):COLS;
+  let rows=[];
+  if(global){
+    DATA.sheets.forEach(sh=>{sh.rows.forEach(r=>{
+      if(missOnly && !(r['Extended Cost']==null)) return;
+      if(COLS.some(c=>String(r[c]??'').toLowerCase().includes(q))) rows.push(Object.assign({Section:sh.name},r));
+    });});
+  } else {
+    rows=s.rows.filter(r=>!(missOnly && !(r['Extended Cost']==null)));
+  }
   if(sortCol!=null){const c=sortCol;rows=rows.slice().sort((a,b)=>{let x=a[c],y=b[c];if(numeric(c)){x=x==null||x===''?-Infinity:+x;y=y==null||y===''?-Infinity:+y;return (x-y)*sortDir;}return String(x??'').localeCompare(String(y??''))*sortDir;});}
   const thead=document.getElementById('thead');
-  thead.innerHTML='<tr>'+COLS.map(c=>{const ar=sortCol===c?(sortDir>0?'▲':'▼'):'';return '<th data-c="'+c+'" class="'+(numeric(c)?'num':'')+'">'+c+'<span class="ar">'+ar+'</span></th>';}).join('')+'</tr>';
+  thead.innerHTML='<tr>'+activeCols.map(c=>{const ar=sortCol===c?(sortDir>0?'▲':'▼'):'';return '<th data-c="'+c+'" class="'+(numeric(c)?'num':'')+'">'+c+'<span class="ar">'+ar+'</span></th>';}).join('')+'</tr>';
   thead.querySelectorAll('th').forEach(th=>th.onclick=()=>{const c=th.dataset.c;if(sortCol===c)sortDir*=-1;else{sortCol=c;sortDir=1;}render();});
   const tb=document.getElementById('tbody');
   tb.innerHTML=rows.map(r=>{
     const miss=r['Extended Cost']==null;
-    return '<tr class="'+(miss?'miss':'')+'">'+COLS.map(c=>{
+    return '<tr class="'+(miss?'miss':'')+'">'+activeCols.map(c=>{
       let v=r[c];
       if(c==='Extended Cost') return '<td class="num">'+(v==null?'<span class="pill">no cost</span>':money(v))+'</td>';
       if(c==='Cost ea') return '<td class="num">'+(v===''||v==null?'':money(v))+'</td>';
@@ -99,9 +105,9 @@ function render(){
   }).join('');
   document.getElementById('empty').style.display=rows.length?'none':'block';
   const shown=rows.length, tot=rows.reduce((a,r)=>a+(r['Extended Cost']||0),0);
-  document.getElementById('meta').textContent=s.name+' — '+shown+' of '+s.count+' line items'+(s.missing?' · '+s.missing+' missing cost':'');
+  document.getElementById('meta').textContent=global?('BLK3-wide search — '+shown+' match'+(shown===1?'':'es')+' for “'+q+'” across all '+DATA.sheets.length+' sections'):(s.name+' — '+shown+' of '+s.count+' line items'+(s.missing?' · '+s.missing+' missing cost':''));
   const tf=document.getElementById('tfoot');
-  tf.innerHTML='<tr><td colspan="'+(COLS.length-1)+'">Subassembly total ('+shown+' shown)</td><td class="num">'+money(tot)+'</td></tr>';
+  tf.innerHTML='<tr><td colspan="'+(activeCols.length-1)+'">'+(global?'Matches':'Subassembly')+' total ('+shown+' shown)</td><td class="num">'+money(tot)+'</td></tr>';
 }
 document.getElementById('q').oninput=render;
 document.getElementById('missOnly').onchange=render;
