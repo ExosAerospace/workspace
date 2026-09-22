@@ -1597,11 +1597,21 @@ function jumpToTask() {
   if (dm) { el.value = ''; window.location = 'decisions.html?focus=D-' + dm[1]; return; }
   const task = tasks.find(t => String(t.id) === String(raw));
   if (task) { el.value = ''; openEdit(raw); return; }
-  // No task with that number — it's very likely a decision gate (e.g. D-110). Offer that.
+  // Not in the loaded board — but the board may just be stale. Do a FULL reload and re-check the
+  // live data before assuming it's a decision (this is what wrongly offered D-3024 on the iPads).
   if (/^\d+$/.test(raw)) {
-    if (confirm(`No task #${raw} on the board. Open decision D-${raw} instead?`)) {
-      el.value = ''; window.location = 'decisions.html?focus=D-' + raw; return;
-    }
+    toast(`Refreshing board to find #${raw}…`);
+    loadTasks(true).then(() => {
+      if (tasks.find(t => String(t.id) === String(raw))) { el.value = ''; openEdit(raw); return; }
+      if (confirm(`No task #${raw} on the board. Open decision D-${raw} instead?`)) {
+        el.value = ''; window.location = 'decisions.html?focus=D-' + raw;
+      }
+    }).catch(() => {
+      if (confirm(`No task #${raw} on the board. Open decision D-${raw} instead?`)) {
+        el.value = ''; window.location = 'decisions.html?focus=D-' + raw;
+      }
+    });
+    return;
   }
   toast(`#${raw} not found. Task ids are 4-digit (e.g. #1373); for a decision gate use D-${raw}.`);
 }
@@ -2147,6 +2157,19 @@ function scheduleRefresh() {
   clearTimeout(autoRefreshTimer);
   autoRefreshTimer = setTimeout(() => loadTasks(false), REFRESH_INTERVAL);
 }
+
+// Self-heal a frozen board: iOS Safari suspends timers when a tab is backgrounded / the device
+// sleeps, so an idle iPad can sit on a stale board (this is why #3024 didn't appear). When the tab
+// becomes visible again — or regains focus, or is restored from the back/forward cache — force a
+// FULL reload so it reconciles new tasks immediately instead of waiting for the next poll.
+function wakeReload() {
+  if (document.visibilityState !== 'visible' || typeof loadTasks !== 'function') return;
+  // Full reconcile on wake, unless the user is mid-edit in the detail panel (then a gentle poll).
+  try { loadTasks(!panelOpen); } catch (e) {}
+}
+document.addEventListener('visibilitychange', wakeReload);
+window.addEventListener('focus', wakeReload);
+window.addEventListener('pageshow', function (e) { if (e.persisted) wakeReload(); });
 
 // ── DOCUMENT UPLOADS ──
 
