@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Inventory — Exos Mission Control</title>
+<style>
+  :root{ --bg:#0b0b0d; --panel:#141418; --panel2:#1b1b21; --border:#2a2a31;
+         --text:#e8e8ec; --text2:#9a9aa6; --orange:#ff6b00; --orange2:#ff8c33;
+         --red:#e0524d; --redbg:#2a1514; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header{padding:16px 20px;border-bottom:2px solid var(--orange);display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  header h1{margin:0;font-size:1.15rem;font-weight:800;letter-spacing:.3px}
+  header .sub{color:var(--text2);font-size:.78rem}
+  a.back{color:var(--text2);text-decoration:none;font-weight:600}
+  .wrap{padding:16px 20px;max-width:1400px;margin:0 auto}
+  .totals{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;min-width:120px}
+  .kpi .v{font-size:1.4rem;font-weight:800}
+  .kpi .l{color:var(--text2);font-size:.72rem;text-transform:uppercase;letter-spacing:.5px}
+  .kpi.short .v{color:var(--orange)}
+  .secrow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .sec{background:var(--panel2);border:1px solid var(--border);border-radius:9px;padding:8px 12px;cursor:pointer;min-width:150px}
+  .sec:hover,.sec.active{border-color:var(--orange)}
+  .sec .n{font-weight:700}
+  .sec .bar{height:5px;background:#26262d;border-radius:4px;margin-top:5px;overflow:hidden}
+  .sec .bar>i{display:block;height:100%;background:var(--orange)}
+  .sec .m{color:var(--text2);font-size:.72rem;margin-top:4px}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+  input[type=search],select{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:.85rem}
+  input[type=search]{min-width:240px}
+  .btn{background:var(--orange);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;text-decoration:none;font-size:.85rem}
+  .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+  label.tog{display:flex;align-items:center;gap:6px;color:var(--text2);font-size:.85rem;cursor:pointer}
+  table{width:100%;border-collapse:collapse;font-size:.83rem}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{position:sticky;top:0;background:#111116;color:var(--text2);text-transform:uppercase;font-size:.68rem;letter-spacing:.5px;cursor:pointer;white-space:nowrap}
+  tr.short td{background:var(--redbg)}
+  tr.have td{background:rgba(30,120,60,.10)}
+  .pn{font-family:ui-monospace,Menlo,monospace;font-size:.78rem;color:var(--orange2)}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .short-b{color:var(--orange);font-weight:700}
+  .thumb{width:34px;height:34px;object-fit:cover;border-radius:5px;border:1px solid var(--border);margin-right:3px}
+  .muted{color:var(--text2)}
+  .empty{padding:30px;text-align:center;color:var(--text2)}
+</style></head>
+<body>
+<header>
+  <h1>📦 Inventory</h1>
+  <span class="sub" id="sub">loading…</span>
+  <span style="flex:1"></span>
+  <a class="btn" id="xlsx" href="/uploads/BLK3_Inventory_Report.xlsx">⬇ Export .xlsx</a>
+  <a class="btn ghost" href="/blk3-bom.html">📋 Bill of Materials</a>
+  <a class="back" href="/index.html">← Mission Control</a>
+</header>
+<div class="wrap">
+  <div class="totals" id="totals"></div>
+  <div class="secrow" id="secrow"></div>
+  <div class="controls">
+    <input type="search" id="q" placeholder="Search part #, description, vendor…">
+    <select id="secsel"><option value="">All sections</option></select>
+    <label class="tog"><input type="checkbox" id="shortonly"> Shorts only</label>
+    <label class="tog"><input type="checkbox" id="haveonly"> On-hand only</label>
+    <span class="muted" id="count"></span>
+  </div>
+  <table id="tbl"><thead><tr>
+    <th data-k="section">Section</th><th data-k="item">Item</th><th data-k="vendor_pn">Vendor P/N</th>
+    <th data-k="description">Description</th><th data-k="req" class="num">Req</th>
+    <th data-k="on_hand" class="num">On-Hand</th><th data-k="short" class="num">Short</th>
+    <th data-k="locations">Location</th><th>Photos</th><th data-k="updated_at">Updated</th>
+  </tr></thead><tbody id="tb"><tr><td colspan="10" class="empty">Loading…</td></tr></tbody></table>
+</div>
+<script>
+let DATA=null, sortK='section', sortDir=1, secFilter='';
+async function load(){
+  const r=await fetch('/api/inventory');
+  if(r.status===401){location='/login';return;}
+  DATA=await r.json();
+  document.getElementById('sub').textContent=
+    'BOM '+(DATA.source||'')+' · generated '+((DATA.generated_at||'').slice(0,19).replace('T',' '));
+  const t=DATA.totals;
+  document.getElementById('totals').innerHTML=
+    kpi(t.lines,'BOM lines')+kpi(t.records,'Parts recorded')+kpi(t.onhand_units,'Units on-hand')+
+    '<div class="kpi short"><div class="v">'+t.short+'</div><div class="l">Lines short</div></div>';
+  const ss=DATA.sections.slice().sort((a,b)=>a.section.localeCompare(b.section));
+  document.getElementById('secrow').innerHTML=ss.map(s=>
+    '<div class="sec" data-s="'+esc(s.section)+'"><div class="n">'+esc(s.section)+'</div>'+
+    '<div class="bar"><i style="width:'+s.completeness_pct+'%"></i></div>'+
+    '<div class="m">'+s.onhand_lines+'/'+s.lines+' on-hand · '+s.short_lines+' short · '+s.completeness_pct+'%</div></div>').join('');
+  const sel=document.getElementById('secsel');
+  sel.innerHTML='<option value="">All sections</option>'+ss.map(s=>'<option>'+esc(s.section)+'</option>').join('');
+  document.querySelectorAll('.sec').forEach(el=>el.onclick=()=>{
+    secFilter=(secFilter===el.dataset.s)?'':el.dataset.s; sel.value=secFilter;
+    document.querySelectorAll('.sec').forEach(x=>x.classList.toggle('active',x.dataset.s===secFilter)); render();});
+  render();
+}
+function kpi(v,l){return '<div class="kpi"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>';}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function render(){
+  if(!DATA)return;
+  const q=document.getElementById('q').value.toLowerCase().trim();
+  const sec=document.getElementById('secsel').value;
+  const shortOnly=document.getElementById('shortonly').checked;
+  const haveOnly=document.getElementById('haveonly').checked;
+  let rows=DATA.rows.filter(r=>{
+    if(sec&&r.section!==sec)return false;
+    if(shortOnly&&!r.short)return false;
+    if(haveOnly&&!(r.on_hand>0))return false;
+    if(q){const h=(r.vendor_pn+' '+r.mfg_pn+' '+r.description+' '+r.section+' '+r.item+' '+(r.locations||[]).join(' ')).toLowerCase();
+      if(!h.includes(q))return false;}
+    return true;});
+  rows.sort((a,b)=>{let x=a[sortK],y=b[sortK];
+    if(sortK==='item'||sortK==='on_hand'||sortK==='short'||sortK==='req'){x=parseFloat(x)||0;y=parseFloat(y)||0;}
+    else{x=String(x||'').toLowerCase();y=String(y||'').toLowerCase();}
+    return (x<y?-1:x>y?1:0)*sortDir;});
+  document.getElementById('count').textContent=rows.length+' of '+DATA.rows.length+' lines';
+  document.getElementById('tb').innerHTML=rows.length?rows.map(r=>{
+    const cls=r.short?'short':(r.on_hand>0?'have':'');
+    const ph=(r.photos||[]).slice(0,4).map(p=>'<a href="'+p.url+'" target="_blank"><img class="thumb" src="'+p.url+'" title="'+esc((p.by||'')+' '+(p.at||'').slice(0,10))+'"></a>').join('');
+    return '<tr class="'+cls+'"><td>'+esc(r.section)+'</td><td>'+esc(r.item)+'</td>'+
+      '<td class="pn">'+esc(r.vendor_pn||r.mfg_pn||'')+'</td><td>'+esc(r.description)+'</td>'+
+      '<td class="num">'+esc(r.req)+'</td><td class="num">'+r.on_hand+'</td>'+
+      '<td class="num">'+(r.short?'<span class="short-b">'+r.short+'</span>':'')+'</td>'+
+      '<td>'+esc((r.locations||[]).join(', '))+'</td><td>'+ph+'</td>'+
+      '<td class="muted">'+esc((r.updated_at||'').slice(0,10))+'</td></tr>';
+  }).join(''):'<tr><td colspan="10" class="empty">No matching lines.</td></tr>';
+}
+document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{
+  const k=th.dataset.k; if(sortK===k)sortDir*=-1;else{sortK=k;sortDir=1;} render();});
+['q','secsel','shortonly','haveonly'].forEach(id=>document.getElementById(id).addEventListener('input',render));
+document.getElementById('secsel').addEventListener('change',()=>{secFilter=document.getElementById('secsel').value;
+  document.querySelectorAll('.sec').forEach(x=>x.classList.toggle('active',x.dataset.s===secFilter));render();});
+load(); setInterval(load,30000);
+</script>
+</body></html>
