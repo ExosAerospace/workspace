@@ -233,34 +233,61 @@ def build_location_index(explicit=None):
         if sh not in wb.sheetnames:
             continue
         ws = wb[sh]
+        # Header-aware column resolution (row 1), so inserting a BOM P/N column can't shift the parse.
+        hdr = [("" if c is None else str(c).strip().lower()) for c in next(ws.iter_rows(min_row=1, max_row=1, values_only=True), ())]
+
+        def col_of(cands, default):
+            for i, h in enumerate(hdr):
+                if h in cands:
+                    return i
+            return default
+        c_src = col_of(("source/sku", "source sku", "source"), 1)
+        c_con = col_of(("contents", "description", "content"), 2)
+        c_exo = col_of(("exos sku", "exos", "sku"), 3)
+        c_qty = col_of(("qty", "quantity"), 4)
+        c_unit = col_of(("unit",), 5)
+        c_val = col_of(("value", "val"), 7)
+        c_bom = col_of(("bom p/n", "bom pn", "bom p-n", "bom part", "bom part number"), None)
+        need = max(8, (c_bom or 0) + 1, c_val + 1)
         loc = ""
         for row in ws.iter_rows(min_row=2, values_only=True):
             r = [("" if c is None else str(c).strip()) for c in row]
-            r += [""] * (8 - len(r))
+            r += [""] * (need - len(r))
             if r[0]:
                 loc = r[0]
-            contents, sku, qty, unit, val = r[2], (r[1] or r[3]), r[4], r[5], r[7]
+            contents, sku = r[c_con], (r[c_src] or r[c_exo])
+            qty, unit, val = r[c_qty], r[c_unit], r[c_val]
+            bom_pn = r[c_bom] if c_bom is not None else ""
             if not contents and not sku:
                 continue
             cat.append({"area": sh, "location": loc, "contents": contents, "sku": sku,
-                        "qty": qty, "unit": unit, "value": val})
+                        "qty": qty, "unit": unit, "value": val, "bom_pn": bom_pn})
     json.dump({"source": os.path.basename(src), "generated_at": now(), "count": len(cat),
                "entries": cat}, open(LOCATION_INDEX, "w"), indent=2)
     # ── BOM ↔ location matching ──
     by_sku = {}
+    by_bompn = {}
     for e in cat:
         if e["sku"]:
             by_sku[e["sku"].strip().upper()] = e
+        if e.get("bom_pn"):
+            by_bompn[e["bom_pn"].strip().upper()] = e   # authoritative: Steve's BOM P/N column
     bom = load(BOM_INDEX, {"rows": []})
     bmap = {}
+    matched_authoritative = 0
     for row in bom.get("rows", []):
         vpn, mpn = row.get("vendor_pn", ""), row.get("mfg_pn", "")
         key = rec_key(vpn, mpn, row.get("item", ""), row.get("description", ""))
-        hit = None
+        hit = None; authoritative = False
+        # 1) the explicit BOM P/N column wins (exact, human-verified)
         for pn in [vpn, mpn]:
-            # require >=5 chars so short/generic SKUs (e.g. "2175") don't collide across parts
-            if pn and len(pn.strip()) >= 5 and pn.strip().upper() in by_sku:
-                hit = by_sku[pn.strip().upper()]; break
+            if pn and pn.strip().upper() in by_bompn:
+                hit = by_bompn[pn.strip().upper()]; authoritative = True; break
+        # 2) else fall back to SKU exact (>=5 chars so short/generic codes don't collide)
+        if not hit:
+            for pn in [vpn, mpn]:
+                if pn and len(pn.strip()) >= 5 and pn.strip().upper() in by_sku:
+                    hit = by_sku[pn.strip().upper()]; break
         if not hit:
             # distinctive token: alphanumeric with a digit, len>=5 (e.g. a model no) shared with contents
             dtoks = [t for t in _norm(row.get("description", "")).split()
@@ -272,9 +299,12 @@ def build_location_index(explicit=None):
                 if hit:
                     break
         if hit:
+            if authoritative:
+                matched_authoritative += 1
             bmap[key] = {"location": hit["location"], "area": hit["area"],
-                         "contents": hit["contents"], "source": "map"}
-    json.dump({"generated_at": now(), "count": len(bmap), "map": bmap}, open(BOM_LOC_MAP, "w"), indent=2)
+                         "contents": hit["contents"], "source": "bom-pn" if authoritative else "map"}
+    json.dump({"generated_at": now(), "count": len(bmap), "authoritative": matched_authoritative,
+               "map": bmap}, open(BOM_LOC_MAP, "w"), indent=2)
     return len(cat), len(bmap)
 
 
