@@ -3887,6 +3887,22 @@ const server = http.createServer((req, res) => {
             owner: session ? session.name : 'System',
             status: 'completed',
           }).catch(() => {});
+
+          // Photo taken on a task -> enqueue an inventory capture. The main Exo session
+          // (woken by com.exos.inventory-capture) looks at the photo, matches it to the BLK3
+          // BOM, and records it in inventory. Non-image uploads are ignored by the script.
+          const imgExts = ['.png', '.jpg', '.jpeg', '.heic', '.webp', '.gif'];
+          if (imgExts.includes(ext)) {
+            try {
+              const { execFile } = require('child_process');
+              execFile('/usr/bin/python3', [
+                path.join(__dirname, '..', 'scripts', 'inventory_capture.py'), 'enqueue',
+                '--task', String(taskId), '--upload', entry.id, '--file', storedName,
+                '--filename', file.filename, '--by', session ? session.name : 'Unknown',
+                '--kind', 'upload',
+              ], { timeout: 15000 }, () => {});
+            } catch (e) { /* best-effort; never block the upload */ }
+          }
         }
 
         res.writeHead(201, { 'Content-Type': 'application/json' });

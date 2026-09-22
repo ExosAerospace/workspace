@@ -24,10 +24,13 @@ Every processed note gets a "✅ Exo:" confirmation reply on the task. Idempoten
 activity ids). Baseline-safe: the first run records existing @Exobot notes and does nothing, so it
 never fires on historical comments. Deterministic; local Ollama only for owner routing (bounded).
 """
-import json, os, re, urllib.request, urllib.parse
+import json, os, re, subprocess, urllib.request, urllib.parse
 from datetime import datetime, timezone, timedelta
 
 WS = "/Users/exomac/.openclaw/workspace"
+UPLOADS_META = os.path.join(WS, "mission-control", "uploads", "_meta.json")
+INVCAP = os.path.join(WS, "scripts", "inventory_capture.py")
+IMG_EXT = (".png", ".jpg", ".jpeg", ".heic", ".webp", ".gif")
 ROSTER = os.path.join(WS, "mission-control", "data", "routing-roster.json")
 STATE = os.path.join(WS, "logs", "task-note-command-state.json")
 LOG = os.path.join(WS, "logs", "task-note-command.log")
@@ -167,6 +170,32 @@ def parse_due(text):
     return None
 
 
+def enqueue_task_photos(taskid, by):
+    """@exo inv on a task -> queue that task's photo uploads for BOM/inventory matching.
+    Reads the uploads registry, takes image uploads on this task (most-recent first, cap 8),
+    and hands each to inventory_capture.py (which de-dupes by upload id)."""
+    try:
+        meta = json.load(open(UPLOADS_META))
+    except Exception:
+        meta = []
+    imgs = [m for m in meta if str(m.get("task_id")) == str(taskid)
+            and str(m.get("extension", "")).lower() in IMG_EXT and m.get("current") is not False]
+    imgs.sort(key=lambda m: m.get("uploaded_at", ""), reverse=True)
+    n = 0
+    for m in imgs[:8]:
+        try:
+            r = subprocess.run(["/usr/bin/python3", INVCAP, "enqueue",
+                 "--task", str(taskid), "--upload", str(m.get("id", "")),
+                 "--file", str(m.get("stored_name", "")), "--filename", str(m.get("filename", "")),
+                 "--by", m.get("uploaded_by") or by or "team", "--kind", "command"],
+                capture_output=True, text=True, timeout=20)
+            if r.stdout.strip() and r.stdout.strip() not in ("dup", "skip non-image"):
+                n += 1
+        except Exception as e:
+            logline(f"WARN inv enqueue {taskid}: {e}")
+    return n
+
+
 def directive_after(body):
     """Return the command text after the FIRST trigger (@exo/@exobot text OR an Exobot mention token)."""
     m = MENTION_RE.search(body or "")
@@ -240,6 +269,18 @@ def main():
         words = low.split()
         cmdzone = " ".join(words[:5])
         is_short_cmd = len(words) <= 6
+
+        # 0) inventory capture: "@exo inv" / "@exo inventory" -> queue this task's photo(s) so the
+        # main Exo session matches each to the BLK3 BOM and records it in inventory.
+        if re.match(r"(inv|inventory)\b", low):
+            n = enqueue_task_photos(taskid, owner_of_note)
+            if n:
+                reply(taskid, f"✅ Exo (inventory): queued {n} photo(s) from this task — I'll match each "
+                              f"to the BOM and record it to inventory (I'll ask you right here if I need a detail).")
+            else:
+                reply(taskid, "✅ Exo (inventory): no photo on this task yet. Tap **📷 Take Photo → this task** "
+                              "on the Documents tab, shoot the component, and I'll log it automatically.")
+            logline(f"inv {aid} task {taskid} queued {n}"); acted += 1; continue
 
         # 1) reassignment (leading verb only)
         if re.search(r"\b(reassign|assign|hand|give|have|route|delegate)\b", cmdzone):

@@ -1,0 +1,29 @@
+{
+  "records": [
+    {
+      "key": "ATH4-E3940-8G064N",
+      "vendor_pn": "ATH4-E3940-8G064N",
+      "mfg_pn": "",
+      "item": "10",
+      "section": "Computer",
+      "description": "Athena IV E3940 CPU",
+      "qty_on_hand": 1.0,
+      "unit": "ea",
+      "locations": [
+        "MC-5.3"
+      ],
+      "photos": [],
+      "history": [
+        {
+          "at": "2026-09-22T20:19:59.526382+00:00",
+          "by": "Steve/Victor (task #3024)",
+          "delta": 1.0,
+          "note": "location set to MC-5.3 via @Exobot support request on #3024",
+          "queue": null
+        }
+      ],
+      "updated_at": "2026-09-22T20:19:59.526517+00:00"
+    }
+  ],
+  "updated_at": "2026-09-22T20:19:59.526519+00:00"
+}
