@@ -63,7 +63,9 @@ def main():
               f"Follow the runbook exactly: read `{RUNBOOK}` and drain the queue to EMPTY "
               f"using `python3 scripts/inventory_capture.py next/bom-search/record/ask`. "
               f"Read each image, match it to the BLK3 BOM, record it, and ask the uploader on the "
-              f"task if you can't identify a part. Do not guess part numbers.")
+              f"task if you can't identify a part. Do not guess part numbers. "
+              f"DO NOT create any task/decision/subtask for a photo — a photo only updates inventory "
+              f"and the existing task (record/ask only).")
     try:
         subprocess.run([OPENCLAW, "agent", "--session-key", SESSION, "-m", prompt,
                         "--json", "--timeout", "600"],

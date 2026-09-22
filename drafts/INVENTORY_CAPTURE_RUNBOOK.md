@@ -31,6 +31,10 @@ you to look at, match to the BLK3 BOM, and record in inventory. Work the queue t
 6. Go back to step 1 until `EMPTY`.
 
 ## Rules
+- **NEVER create a task, decision, ticket, or subtask for a photo.** A photo is an *update* to the
+  inventory ERP (and later to the section build procedure) — nothing more. Your only writes are
+  `record` (inventory + a note on the existing task) and `ask` (a note on the existing task). Do not
+  call any task-creating tool or endpoint. (Jon 2026-09-22.)
 - Never invent a part number. If unsure, `ask`. One clear question beats a wrong record.
 - Prefer the printed P/N over a guess from shape. Vendor P/N in the BOM is the match key.
 - Keep task notes short and factual. No pricing in notes.
