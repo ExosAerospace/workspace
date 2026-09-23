@@ -77,6 +77,12 @@ ENVELOPE = (
     "create or update a task for this person, assign it to them (assigned_email={sender_email}).\n"
     "- Any document you create or revise for a task: attach it with scripts/mc-attach.py so the "
     "task carries the latest version.\n"
+    "- TO EMAIL A DOCUMENT BACK to the requester (send/attach/'get me' a file): put a line "
+    "`ATTACH: <filename or path>` (one per file) anywhere in your reply — the file is looked up by "
+    "name and attached to this reply email automatically. A bare filename works (e.g. "
+    "`ATTACH: Exos_OSC_Part1_Concept_25M_2026-09-23.pdf`). Do NOT rely on prose like 'attached' — "
+    "always emit an explicit ATTACH: line, and attach the exact format asked for (send the .pdf when "
+    "they need the PDF). If unsure the file exists, say so rather than implying it was sent.\n"
     "- DO NOT auto-send or auto-execute anything external or sensitive (external emails, "
     "gov/.mil/.gov outreach, securities/investor communications, deletions, financial actions, "
     "infra/config changes). Instead, DRAFT it and add a Decision to {first_name}'s OWN Decisions "
@@ -289,6 +295,64 @@ def collect_reply_attachments(*texts, cap=5, max_bytes=20 * 1024 * 1024):
             if sz > max_bytes or total + sz > max_bytes:
                 missed.append((rel, "too large (>20MB)")); continue
             out.append(wp); total += sz
+            if len(out) >= cap:
+                return out, missed
+    return out, missed
+
+
+# Robust attachment resolution: the agent may name a document loosely (a bare filename, or without a
+# folder prefix). resolve_artifact() finds the real file by exact path, exact basename, or fuzzy name
+# across the known artifact folders — so "ATTACH: Exos_OSC_Part1_Concept_25M_2026-09-23.pdf" works.
+_ART_DIRS = ["drafts", "mission-control/uploads", "reports", "assets", "out", "exports",
+             "data-room", "process-library", "submissions-archive", ""]
+_DIRECTIVE_RE = re.compile(r'(?im)^\s*ATTACH:\s*(.+?)\s*$')
+
+
+def resolve_artifact(ref):
+    ref = (ref or "").strip().strip('\'"`<>').strip()
+    if not ref:
+        return None
+    cand = os.path.normpath(os.path.join(WS, ref))
+    if cand.startswith(WS) and os.path.isfile(cand):
+        return cand
+    base = os.path.basename(ref)
+    fuzzy = []
+    for d in _ART_DIRS:
+        root = os.path.join(WS, d)
+        if not os.path.isdir(root):
+            continue
+        for dirpath, dirs, files in os.walk(root):
+            dirs[:] = [x for x in dirs if x not in ("node_modules", ".git", ".backups")]
+            for f in files:
+                if f == base:
+                    return os.path.join(dirpath, f)
+                if len(base) >= 6 and base.lower() in f.lower():
+                    fuzzy.append(os.path.join(dirpath, f))
+    if fuzzy:
+        fuzzy.sort(key=lambda p: os.path.getmtime(p), reverse=True)
+        return fuzzy[0]
+    return None
+
+
+def collect_attach_directives(*texts, cap=5, max_bytes=20 * 1024 * 1024, existing=None):
+    """Attach files the agent explicitly requested via `ATTACH: <name-or-path>` lines, resolved by
+    resolve_artifact() (bare filename or fuzzy name OK). Fails loud (missed list), never silent."""
+    out, total, missed = [], 0, []
+    have = set(existing or [])
+    for t in texts:
+        for ref in _DIRECTIVE_RE.findall(t or ""):
+            ap = resolve_artifact(ref)
+            if not ap:
+                missed.append((ref, "not found")); continue
+            wp = _as_word(ap)
+            if not wp or not os.path.isfile(wp):
+                missed.append((ref, "conversion failed")); continue
+            if os.path.basename(wp) in have:
+                continue
+            sz = os.path.getsize(wp)
+            if sz == 0 or sz > max_bytes or total + sz > max_bytes:
+                missed.append((ref, "too large/empty")); continue
+            out.append(wp); total += sz; have.add(os.path.basename(wp))
             if len(out) >= cap:
                 return out, missed
     return out, missed
@@ -737,10 +801,18 @@ def main():
                     log(f"[agent] NO_ACTION mid={mid} — nothing actionable; silent (no task/reply/discord)")
                 else:
                     atts, missed_atts = collect_reply_attachments(reply, instruction)
+                    _have = {os.path.basename(a) for a in atts}
+                    # Explicit `ATTACH: <name-or-path>` directives (resolved by name/fuzzy) — this is
+                    # the reliable way to email an EXISTING document (root cause of the OSC submittal
+                    # 'no attachment' drops — Jon 2026-09-23; the agent named the file, no path).
+                    _dir_atts, _dir_missed = collect_attach_directives(reply, instruction, existing=_have)
+                    for _d in _dir_atts:
+                        if len(atts) < 5:
+                            atts.append(_d); _have.add(os.path.basename(_d))
+                    missed_atts = (missed_atts or []) + (_dir_missed or [])
                     # Also attach any deliverable the agent added to a task this run (via mc-attach.py),
                     # even if the reply text didn't spell out the path — so "fill this out and return it"
                     # actually returns the file. Dedupe by basename against path-referenced attachments.
-                    _have = {os.path.basename(a) for a in atts}
                     for _d in new_task_deliverables(before_att_ids):
                         if os.path.basename(_d) not in _have and len(atts) < 5:
                             atts.append(_d); _have.add(os.path.basename(_d))
