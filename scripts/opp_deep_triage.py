@@ -63,19 +63,32 @@ def main():
     system = ("You are Exos Aerospace's chief BD strategist. Judge each opportunity for genuine fit "
               "against THIS capability profile.\n\n=== EXOS CAPABILITY PROFILE ===\n" + profile)
 
-    def rank_batch(batch):
+    def rank_batch(batch, _retries=3, _delay=30):
         prompt = ("Rank these opportunities for Exos fit. Return ONLY valid JSON: "
                   '{"ranked":[{"id":"OPP-xxx","title":"...","fit":0-100,'
                   '"verdict":"PURSUE_NOW|PURSUE|WATCH|DROP","why":"<=14 words",'
                   '"deadline":"<date or none>","next_step":"<one concrete action>"}]}\n\n'
                   + json.dumps(batch))
-        # K3 is a reasoning model (~3-4k reasoning tokens/call); budget high so the JSON isn't truncated.
-        txt = kimi_bd.ask(prompt, label="opp-triage-batch", system=system, max_tokens=12000, timeout=600)
-        m = re.search(r"\{.*\}", txt, re.S)
-        try:
-            return json.loads(m.group(0)).get("ranked", []) if m else []
-        except Exception:
-            return []
+        for attempt in range(_retries):
+            try:
+                # K3 is a reasoning model (~3-4k reasoning tokens/call); budget high so the JSON isn't truncated.
+                txt = kimi_bd.ask(prompt, label="opp-triage-batch", system=system, max_tokens=12000, timeout=600)
+                m = re.search(r"\{.*\}", txt, re.S)
+                try:
+                    return json.loads(m.group(0)).get("ranked", []) if m else []
+                except Exception:
+                    return []
+            except Exception as e:
+                err_str = str(e)
+                transient = any(c in err_str for c in ("520", "502", "503", "504", "timed out", "Connection", "Remote end"))
+                if transient and attempt < _retries - 1:
+                    wait = _delay * (2 ** attempt)
+                    print(f"  [retry {attempt+1}/{_retries-1}] transient error: {err_str[:80]}; sleeping {wait}s")
+                    time.sleep(wait)
+                    continue
+                print(f"  [skip batch] permanent error after {attempt+1} attempt(s): {err_str[:120]}")
+                return []
+        return []
 
     # Batch so each K3 call is small and fast (one 120-item generation gets killed).
     B = 40
