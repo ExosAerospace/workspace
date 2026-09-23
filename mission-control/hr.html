@@ -144,8 +144,9 @@ function printOrgChart(){
     +'@media print{.oc-card{background:#fff}@page{size:landscape}}</style></head><body>'
     +'<h1>Exos Aerospace — Organization Chart</h1><p class="sub">Live from BambooHR (read-through) · generated '+new Date().toLocaleDateString()+'</p>'
     +'<div class="tree"><ul>'+roots.map(node).join('')+'</ul></div>'
-    +'<script>window.onload=function(){window.print();}<\/script></body></html>';
+    +'</body></html>';
   const w=window.open('','_blank');w.document.write(html);w.document.close();
+  w.focus(); setTimeout(function(){ try{ w.print(); }catch(e){} }, 300);
 }
 load();
 </script>
