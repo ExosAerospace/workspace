@@ -43,22 +43,36 @@ REVIEW_HOLD = {
     "uscapital.com",
     "namtek.com",
     "beacongroup.aero",
-    # --- Held 2026-09-23 (John): real gov/edu/firm domains swept in via spoofed
-    #     senders that failed DD. Blocking the whole domain would bounce legit
-    #     inbound. Confirm truly-bad before letting any of these go live. ---
-    # Gov / .mil / .gov
-    "navy.mil", "mda.mil", "spaceforce.mil", "smdc.army.mil", "us.army.mil",
-    "usmc.mil", "mail.mil", "spawar.navy.mil", "nsoc.health.mil",
-    "space.texas.gov", "aero.org",
-    # Universities
-    "stanford.edu", "columbia.edu", "brown.edu", "colorado.edu", "bcm.edu",
-    "kingston.ac.uk",
-    # Real firms
+    # --- Held 2026-09-23 (John): real commercial/FFRDC domains swept in via
+    #     spoofed senders that failed DD. No TLD signal to auto-detect these,
+    #     so they stay on manual review. (Gov/.mil/.edu are handled
+    #     structurally below by is_protected_gov_edu — no need to list them.)
     "anduril.com", "planet.com", "umbra.space", "ge.com", "emerson.com",
     "netsuite.com", "cantor.com", "firstcitizens.com",
+    "aero.org",            # The Aerospace Corporation (FFRDC), .org TLD
     # Malformed parse artifacts (trailing punctuation / junk tokens)
     "navy.mil.", "navy.mil;", "proton.me>", "01dd3563.bbded",
 }
+
+
+def is_protected_gov_edu(entry: str) -> bool:
+    """Root-cause guard against spoofed-sender fallout.
+
+    A phisher impersonating navy.mil / stanford.edu fails DD and can land in the
+    registry as a BARE domain. Blocking that domain org-wide would bounce all
+    legit Navy / Stanford mail. So: never let a bare gov/edu/mil/ac domain go
+    active — hold it for human review. A full ADDRESS (has '@') under such a
+    domain is the actual spoofer and IS allowed to block.
+    """
+    if "@" in entry:            # specific spoofing address — block it, not the domain
+        return False
+    e = entry.strip().lower()
+    if e.endswith((".mil", ".gov", ".edu")):          # US federal / academic
+        return True
+    parts = e.split(".")                               # academic/gov ccTLDs:
+    if len(parts) >= 3 and parts[-2] in ("ac", "edu", "gov", "mil"):
+        return True                                    # ac.uk, edu.au, gov.uk, ...
+    return False
 
 
 def norm(entry: str) -> str:
@@ -114,8 +128,11 @@ def main():
     reg, n_ent = load_registry(REGISTRY)
     merged = seed | reg
 
-    active = sorted(e for e in merged if e not in REVIEW_HOLD)
-    held = sorted(e for e in merged if e in REVIEW_HOLD)
+    def is_held(e):
+        return e in REVIEW_HOLD or is_protected_gov_edu(e)
+
+    active = sorted(e for e in merged if not is_held(e))
+    held = sorted(e for e in merged if is_held(e))
 
     stamp = datetime.now().strftime("%Y-%m-%d %H:%M %Z").strip()
     lines = []
