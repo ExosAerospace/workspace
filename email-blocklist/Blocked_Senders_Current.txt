@@ -1,0 +1,192 @@
+# Exos DD — Canonical Blocked-Senders List
+# Generated: 2026-09-23 15:43 by scripts/gen_blocked_senders.py
+# Sources: failed-dd-registry.json (83 do-not-engage entities) + peaton seed
+# Active entries: 150   |   Held for review: 32
+# Format: one entry/line; domain.com | user@domain.com | @domain.com | *@domain.com
+# Lines starting with '#' are ignored by both the Outlook updater and the tenant rule.
+#
+21computech.com
+a.mike@whitehatteamusa.com
+acquirorevenueadvisors.com
+actium.capital
+adamevellc.com
+aerovinc.com
+agriffin@fastfundsconnect.com
+ali-healthcare.pro
+ali.sarosh@mail.au.edu.pk
+ali@ali-healthcare.pro
+altamirandajordys.m@yannecorporateventures.com
+ansa.co
+antiok.com
+applymanufacturefund.help
+approachventure.com
+aria.townsend@corporatewellnessintranet.com
+arron.chambers@novusglobal-usa.com
+asglobal.com
+async-nu.com
+au.edu.pk
+bancroft4vets.com
+bestech-inc.com
+blinkmfg.com
+bo4.de
+boostlaunchcore.org
+brandon@growth.trafficlimb.cloud
+capitalgrouphq.com
+capjora.cloud
+catherine@boostlaunchcore.org
+chris.berman@crestmontcapital217.com
+collectiveequity.com
+compumaticsgroup.com
+concordventuresinc.com
+corporatewellnessintranet.com
+craftcm.com
+crestmontcapital217.com
+csbconsulting.us
+david@capitalgrouphq.com
+diyarbakirsoz.com
+dorafund.store
+dragomir_kevin@lynampartnersbrief.com
+dualuseventures.com
+emilycarlson.w@outlook.com
+emilydavis@vortexcapitalstat.com
+emmatanner@larchterrace.co
+eurobunker-arena.com
+exelisinc.com
+exminvest.com
+fastfundsconnect.com
+go-on-group.com
+goziply.com
+henribrenneman@gmail.com
+higginbotham.net
+info@zaidwoodcapital.com
+innoventcapital.com
+insideapple.apple.com
+interflightglobal.com
+investfortuna.com
+isstspi.com
+itb-inc.com
+itssar@seniordev.co.uk
+ivyassetmngmt.com
+jacob@ovalv.io
+jenny@nextqfiloc.com
+jessica.davis@applymanufacturefund.help
+joe@ovalv.com
+johnbresset@aerovinc.com
+joshu@simplewealthfund.com
+jumpfinance.co
+junoventure.com
+katherine.carter@jumpfinance.co
+kaykayllc.com
+kingsleyrowcapital.com
+kisinc.net
+larchterrace.co
+logalty.com
+logalty@logalty.com
+lynampartnersbrief.com
+machado.luis1@acquirorevenueadvisors.com
+mail.au.edu.pk
+mcapital-group.com
+midlandtxedc.com
+mikalventures.com
+mike.turner@kingsleyrowcapital.com
+mnqbbs.com
+navy.mi
+nextqfiloc.com
+noreply@goziply.com
+noteinvestmentcorporatiin.com
+notifica@uscontractoradministration.com
+novusglobal-usa.com
+onrampsupport.com
+orbital.inc
+ovalv.com
+ovalv.io
+palmdrive.vc
+pedro@actium.capital
+r.b@zaidwoodmanagement.com
+rami.b.zeneldin@zaidwoodadvisors.com
+ravee.space
+riccicapitalpartners.com
+ricciglobalpartners.com
+robertsamuels.com
+rochefort.us
+rockfleetfinancial.com
+ronald.williams@kaykayllc.com
+ronbloom.com
+roth.com
+ruby.darnell@summitcap.online
+ruby@slightedgeangellink.co
+ruecker.ross@dorafund.store
+scalenowpeak.info
+scott@triplecrownfundingsolutions.com
+seafort.de
+seedford-partners.com
+sekhsaria.com
+seniordev.co.uk
+simplewealthfund.com
+slightedgeangellink.co
+smcinvest.com
+smdc-cs.army.mil
+starbridgevc.com
+stefan.bz
+summitcap.online
+support@diyarbakirsoz.com
+support@eurobunker-arena.com
+support@uploadboy.com
+techdayhq.com
+theaisinc.com
+thebooster.com
+thia.ventures
+thompsonjosianne@capjora.cloud
+trafficlimb.com
+travis.morgan@onrampsupport.com
+travis@adamevellc.com
+triplecrownfundingsolutions.com
+trish.stiles@scalenowpeak.info
+uploadboy.com
+uscontractoradministration.com
+v2axis.com
+vaztech-inc.com
+veteran.fund
+visionaryleadership.co.nz
+vortexcapitalstat.com
+whitehatteamusa.com
+whizzbridge.com
+yannecorporateventures.com
+zaidwoodadvisors.com
+zaidwoodcapital.com
+zaidwoodmanagement.com
+#
+# ---- PENDING REVIEW (look like real firms; confirm before org-wide block) ----
+# Uncomment a line (or remove it from REVIEW_HOLD in the generator) to activate.
+# 01dd3563.bbded
+# aero.org
+# anduril.com
+# bcm.edu
+# beacongroup.aero
+# brown.edu
+# cantor.com
+# capitolsupply.com
+# colorado.edu
+# columbia.edu
+# emerson.com
+# firstcitizens.com
+# ge.com
+# kingston.ac.uk
+# mail.mil
+# mda.mil
+# namtek.com
+# navy.mil.
+# navy.mil;
+# netsuite.com
+# nsoc.health.mil
+# planet.com
+# proton.me>
+# smdc.army.mil
+# space.texas.gov
+# spaceforce.mil
+# spawar.navy.mil
+# stanford.edu
+# umbra.space
+# us.army.mil
+# uscapital.com
+# usmc.mil
