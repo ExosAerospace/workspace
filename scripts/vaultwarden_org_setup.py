@@ -65,26 +65,18 @@ def main():
         access = tok["access_token"]
     except Exception as e:
         print("Auth failed — check the API key values.", e); sys.exit(1)
-    orgs = []
-    try:
-        orgs = req("GET", "/api/organizations", token=access).get("Data", []) or []
-    except Exception:
-        orgs = []
-    if not orgs:
-        try:
-            orgs = req("GET", "/api/accounts/profile", token=access).get("Organizations", []) or []
-        except Exception:
-            orgs = []
-    org = next((o for o in orgs if (o.get("Name") or "").strip().lower() == ORG_NAME.lower()), None)
+    prof = req("GET", "/api/accounts/profile", token=access)
+    orgs = prof.get("organizations") or []
+    org = next((o for o in orgs if (o.get("name") or "").strip().lower() == ORG_NAME.lower()), None)
     if not org:
-        print(f"Could not find org '{ORG_NAME}'. Orgs found: {[o.get('Name') for o in orgs]}"); sys.exit(1)
-    oid = org.get("Id") or org.get("id")
-    print(f"Org: {org.get('Name')}  (id {oid})")
+        print(f"Could not find org '{ORG_NAME}'. Orgs found: {[o.get('name') for o in orgs]}"); sys.exit(1)
+    oid = org.get("id")
+    print(f"Org: {org.get('name')}  (id {oid})")
 
     # existing groups
     try:
-        existing = {(g.get("Name") or g.get("name")): (g.get("Id") or g.get("id"))
-                    for g in req("GET", f"/api/organizations/{oid}/groups", token=access).get("Data", [])}
+        existing = {g.get("name"): g.get("id")
+                    for g in req("GET", f"/api/organizations/{oid}/groups", token=access).get("data", [])}
     except Exception:
         existing = {}
     gids = {}
@@ -95,7 +87,7 @@ def main():
             try:
                 g = req("POST", f"/api/organizations/{oid}/groups", token=access,
                         body={"name": name, "accessAll": False, "collections": [], "users": []})
-                gids[name] = g.get("Id") or g.get("id"); print(f"  group CREATED: {name}")
+                gids[name] = g.get("id"); print(f"  group CREATED: {name}")
             except Exception as e:
                 print(f"  group FAILED: {name} — {e}")
 
@@ -107,10 +99,10 @@ def main():
         print(f"  2FA policy: could not set ({e}) — toggle it in Settings → Policies → Two-step login")
 
     # collections (names are encrypted → print ids for the manual tick step)
-    cols = req("GET", f"/api/organizations/{oid}/collections", token=access).get("Data", [])
+    cols = req("GET", f"/api/organizations/{oid}/collections", token=access).get("data", [])
     print(f"\nCollections found: {len(cols)} (names are encrypted; wire these in the UI):")
     for c in cols:
-        print(f"    id {c.get('Id') or c.get('id')}")
+        print(f"    id {c.get('id')}")
     print("\nFinal step (Admin Console → Groups → each group → Collections tab, tick per this map):")
     for g, cs in MAP.items():
         print(f"    {g}  ->  {', '.join(cs)}")
