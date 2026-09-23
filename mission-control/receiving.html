@@ -50,6 +50,10 @@
 
   <div class="card" id="itemcard" style="display:none">
     <h2>2 · Items received</h2>
+    <button class="btn" style="width:100%;padding:14px;font-size:1rem" onclick="document.getElementById('camIn').click()">📷 Photo the packing list / parts</button>
+    <input type="file" id="camIn" accept="image/*" capture="environment" style="display:none" onchange="capturePhoto(this.files)">
+    <div id="capstatus" class="muted" style="margin:8px 0"></div>
+    <div class="muted" style="font-size:.82rem;margin:6px 0">…or search the BOM to add lines by hand:</div>
     <input type="search" id="partq" placeholder="Search BOM part # or description to add…">
     <div id="partresults"></div>
     <table id="lines"><thead><tr><th>Part</th><th>Qty</th><th>Unit $</th><th>Location</th><th></th></tr></thead><tbody id="linebody"></tbody></table>
@@ -138,6 +142,35 @@ async function submitReceipt(){
     else { el.className='res err'; el.textContent='Error: '+(d.error||'failed'); }
   }catch(e){ const el=document.getElementById('result'); el.className='res err'; el.textContent='Error: '+e.message; }
   btn.disabled=false; btn.textContent='✓ Check in received parts';
+}
+async function capturePhoto(files){
+  if(!files||!files.length||!SEL) return;
+  const fd=new FormData(); fd.append('file',files[0]); fd.append('po',SEL.po);
+  const s=document.getElementById('capstatus');
+  s.textContent='📷 Uploading… then reading the packing list (this takes a few moments)…';
+  document.getElementById('camIn').value='';
+  try{
+    const r=await fetch('/api/receiving/capture',{method:'POST',body:fd});
+    if(r.status===401){location='/login';return;}
+    if(!r.ok){ s.textContent='Upload failed — try again, or add lines by hand.'; return; }
+    pollDraft(0, SEL.po);
+  }catch(e){ s.textContent='Error: '+e.message; }
+}
+let pollT=null;
+function pollDraft(n, po){
+  clearTimeout(pollT);
+  if(!SEL||SEL.po!==po) return;   // PO changed; stop
+  fetch('/api/receiving/draft?po='+encodeURIComponent(po)).then(r=>r.json()).then(d=>{
+    const s=document.getElementById('capstatus');
+    if(d.status==='ready'){
+      (d.lines||[]).forEach(l=>LINES.push({vendor_pn:l.vendor_pn||'',mfg_pn:l.mfg_pn||'',item:l.item||'',section:l.section||'',desc:l.desc||'',qty:l.qty||'1',unit_cost:'',location:''}));
+      renderLines();
+      s.textContent=(d.lines&&d.lines.length)?('✓ Read '+d.lines.length+' line(s) from the photo — check the Qty, add Unit $ and Location, then Check in.'):'Read the photo but found no matchable lines — add them by hand below.';
+      return;
+    }
+    if(n<45){ s.textContent='📷 Reading the packing list… ('+(n*4)+'s)'; pollT=setTimeout(()=>pollDraft(n+1,po),4000); }
+    else s.textContent='Still reading — you can add lines by hand; they’ll fill in when ready.';
+  }).catch(()=>{ pollT=setTimeout(()=>pollDraft(n+1,po),4000); });
 }
 async function loadRecon(){
   try{ const d=await j('/api/receiving/match'); const rows=(d.pos||[]).filter(p=>p.received_lines>0).slice(0,20);

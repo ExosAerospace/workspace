@@ -4026,6 +4026,31 @@ const server = http.createServer((req, res) => {
         });
       return;
     }
+    // Photo of the packing list / parts -> queue a vision read that drafts the received lines.
+    if (rsub === '/capture' && req.method === 'POST') {
+      (async () => {
+        try {
+          const parts = await parseMultipart(req);
+          const file = parts.file; const po = (parts.po || '').toString();
+          if (!file || !file.filename || !po) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'file + po required' })); return; }
+          const stored = Date.now() + '_' + file.filename.replace(/[^a-zA-Z0-9._-]/g, '_');
+          fs.writeFileSync(path.join(UPLOADS_DIR, stored), file.data);
+          cp.execFile('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'receiving_capture.py'),
+            'enqueue', '--po', po, '--file', stored, '--by', session ? session.name : 'team'],
+            { timeout: 15000 }, () => {});
+          res.writeHead(201, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true }));
+        } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+      })();
+      return;
+    }
+    if (rsub === '/draft' && req.method === 'GET') {
+      const po = (new URL(req.url, 'http://x').searchParams.get('po') || '').toString();
+      let d = { drafts: {} };
+      try { d = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'receiving-drafts.json'), 'utf8')); } catch {}
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(d.drafts[po] || { lines: [], status: 'none' }));
+      return;
+    }
     res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'unknown receiving route' }));
     return;
   }
