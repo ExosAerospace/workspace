@@ -126,6 +126,10 @@ function printOrgChart(){
     return '<li><div class="oc-card"><b>'+esc(e.full_name)+'</b><span>'+esc(e.position_title||'')+'</span><em>'+esc(e.department||'')+'</em></div>'
       +(kids.length?'<ul>'+kids.map(node).join('')+'</ul>':'')+'</li>';};
   const roots=(byMgr['__root__']||[]).sort((a,b)=>(a.full_name||'').localeCompare(b.full_name||''));
+  // GUARD: this print-doc string must NOT contain a literal closing script tag.
+  // An inline one would terminate this page's own inline script element and leak
+  // the tail as visible page text (regression fixed in 13300c8). If a print script
+  // is ever needed here, escape the closing tag as <\/script>.
   const html='<!doctype html><html><head><meta charset="utf-8"><title>Exos Org Chart</title><style>'
     +'body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;padding:24px;color:#111}'
     +'h1{font-size:18px;margin:0 0 4px}p.sub{color:#555;margin:0 0 18px;font-size:12px}'
