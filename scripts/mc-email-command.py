@@ -294,6 +294,44 @@ def collect_reply_attachments(*texts, cap=5, max_bytes=20 * 1024 * 1024):
     return out, missed
 
 
+_UPLOADS_DIR = os.path.join(WS, "mission-control", "uploads")
+_UPLOADS_META = os.path.join(_UPLOADS_DIR, "_meta.json")
+
+
+def meta_att_ids():
+    """Snapshot the set of attachment ids in the uploads registry (call before the agent runs)."""
+    try:
+        return {m.get("id") for m in json.load(open(_UPLOADS_META))}
+    except Exception:
+        return set()
+
+
+def new_task_deliverables(before_ids, cap=5, max_bytes=20 * 1024 * 1024):
+    """Files the agent attached to a task during THIS command (via mc-attach.py) — the current
+    versions added since `before_ids` was snapshotted. This makes the @exo reply carry the actual
+    deliverable even when the reply text never names the file path (root cause of the 2026-09-21
+    AEDC agreement 'text-only reply' drop — Jon 2026-09-23)."""
+    out, total = [], 0
+    try:
+        meta = json.load(open(_UPLOADS_META))
+    except Exception:
+        return out
+    for m in meta:
+        if m.get("id") in before_ids or not m.get("current", True) or not m.get("task_id"):
+            continue
+        sn = m.get("stored_name")
+        p = os.path.join(_UPLOADS_DIR, sn) if sn else None
+        if not (p and os.path.isfile(p)):
+            continue
+        sz = os.path.getsize(p)
+        if sz == 0 or sz > max_bytes or total + sz > max_bytes:
+            continue
+        out.append(p); total += sz
+        if len(out) >= cap:
+            break
+    return out
+
+
 def email_requester(to_addr, orig_subject, instruction, reply_text, attachments=None):
     """Reply by email to the authenticated requester who sent the @Exobot command, so they
     get closure (done, or decisions awaiting them) without watching Discord. Internal only:
@@ -654,6 +692,7 @@ def main():
         log(f"[accept] mid={mid} subj={subject!r} auth={domain_auth} instr={instruction[:120]!r}")
         discord(f"📧 Authenticated email-command received{note} — handing to the agent now.\n"
                 f"Subject: {subject}\nInstruction: {instruction[:280]}")
+        before_att_ids = meta_att_ids()  # snapshot so we can attach the deliverable the agent adds to a task
         try:
             with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as tf:
                 tf.write(prompt)
@@ -698,6 +737,13 @@ def main():
                     log(f"[agent] NO_ACTION mid={mid} — nothing actionable; silent (no task/reply/discord)")
                 else:
                     atts, missed_atts = collect_reply_attachments(reply, instruction)
+                    # Also attach any deliverable the agent added to a task this run (via mc-attach.py),
+                    # even if the reply text didn't spell out the path — so "fill this out and return it"
+                    # actually returns the file. Dedupe by basename against path-referenced attachments.
+                    _have = {os.path.basename(a) for a in atts}
+                    for _d in new_task_deliverables(before_att_ids):
+                        if os.path.basename(_d) not in _have and len(atts) < 5:
+                            atts.append(_d); _have.add(os.path.basename(_d))
                     # Surface referenced-but-missing attachments instead of dropping them silently
                     # (Jon 2026-09-10 root-cause: a described .xlsx that was never written just vanished).
                     _miss_note = ""
