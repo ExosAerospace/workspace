@@ -37,7 +37,8 @@ MAP = {
 
 def req(method, path, token=None, body=None, form=None):
     url = BASE + path
-    headers = {"Accept": "application/json"}
+    headers = {"Accept": "application/json",
+               "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128 Safari/537.36"}
     data = None
     if form is not None:
         data = urllib.parse.urlencode(form).encode()
