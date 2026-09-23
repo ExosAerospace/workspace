@@ -4943,7 +4943,11 @@ const server = http.createServer((req, res) => {
         let html = fs.readFileSync(filePath, 'utf-8');
         if (html.indexOf('/exobot-widget.js') === -1) {
           const tag = '<script src="/exobot-widget.js" defer></script>';
-          html = html.indexOf('</body>') !== -1 ? html.replace('</body>', tag + '\n</body>') : html + tag;
+          // Inject before the LAST </body> — some pages contain a literal </body> inside a JS
+          // string (e.g. the HR org-chart print builder); replacing the FIRST one would splice the
+          // widget's </script> into that string and break the page's own script.
+          const bi = html.lastIndexOf('</body>');
+          html = bi !== -1 ? html.slice(0, bi) + tag + '\n' + html.slice(bi) : html + tag;
         }
         res.writeHead(200, { 'Content-Type': 'text/html', 'Cache-Control': 'no-store, must-revalidate' });
         res.end(html);
