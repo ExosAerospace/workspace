@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Receiving — Exos Mission Control</title>
+<style>
+  :root{--bg:#0b0b0d;--panel:#141418;--panel2:#1b1b21;--border:#2a2a31;--text:#e8e8ec;--text2:#9a9aa6;--orange:#ff6b00;--orange2:#ff8c33;--red:#e0524d;--green:#3fb56a}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 -apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header{padding:16px 20px;border-bottom:2px solid var(--orange);display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  header h1{margin:0;font-size:1.15rem;font-weight:800}
+  a.back{color:var(--text2);text-decoration:none;font-weight:600;margin-left:auto}
+  .wrap{padding:16px 20px;max-width:1000px;margin:0 auto}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
+  h2{font-size:1rem;margin:0 0 10px}
+  label{display:block;font-size:.72rem;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin:8px 0 3px}
+  input,select{background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:11px;font-size:1rem;width:100%}
+  .btn{background:var(--orange);color:#fff;border:none;border-radius:9px;padding:12px 16px;font-weight:700;cursor:pointer;font-size:.95rem}
+  .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .btn.sm{padding:7px 11px;font-size:.82rem}
+  .btn:disabled{opacity:.5}
+  .muted{color:var(--text2)}
+  .porow{padding:8px;border-bottom:1px solid var(--border);cursor:pointer}
+  .porow:hover{background:var(--panel2)}
+  .pill{font-size:.7rem;background:var(--panel2);border:1px solid var(--border);border-radius:20px;padding:2px 9px;color:var(--text2)}
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  td,th{padding:6px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle}
+  .pn{font-family:ui-monospace,Menlo,monospace;color:var(--orange2);font-size:.82rem}
+  .res{padding:10px;border-radius:8px;margin-top:10px}
+  .res.ok{background:rgba(63,181,106,.15);color:var(--green)}
+  .res.err{background:rgba(224,82,77,.15);color:var(--red)}
+  #partresults{max-height:240px;overflow:auto;border:1px solid var(--border);border-radius:8px;margin-top:6px}
+  .prow{padding:8px;border-bottom:1px solid var(--border);cursor:pointer;display:flex;justify-content:space-between;gap:10px}
+  .prow:hover{background:var(--panel2)}
+  input.cell{padding:7px;font-size:.9rem}
+</style></head>
+<body>
+<header>
+  <h1>📥 Receiving</h1>
+  <span class="muted" id="who"></span>
+  <a class="back" href="/index.html">← Mission Control</a>
+</header>
+<div class="wrap">
+  <div class="card">
+    <h2>1 · Pick the QuickBooks PO</h2>
+    <input type="search" id="poq" placeholder="Search PO # or vendor…">
+    <div id="polist" style="max-height:220px;overflow:auto;margin-top:8px;border:1px solid var(--border);border-radius:8px"></div>
+    <div id="posel" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card" id="itemcard" style="display:none">
+    <h2>2 · Items received</h2>
+    <input type="search" id="partq" placeholder="Search BOM part # or description to add…">
+    <div id="partresults"></div>
+    <table id="lines"><thead><tr><th>Part</th><th>Qty</th><th>Unit $</th><th>Location</th><th></th></tr></thead><tbody id="linebody"></tbody></table>
+    <div style="margin-top:12px" class="muted">Receiving to PO <b id="poref"></b> · <span id="linecount">0</span> line(s)</div>
+    <div style="margin-top:12px"><button class="btn" id="submitBtn" onclick="submitReceipt()">✓ Check in received parts</button></div>
+    <div id="result"></div>
+  </div>
+
+  <div class="card">
+    <h2>Recent receipts</h2>
+    <div id="recent" class="muted">Loading…</div>
+  </div>
+</div>
+<script>
+let POS=[], BOM=[], SEL=null, LINES=[], ME='';
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+async function j(u,o){const r=await fetch(u,o);if(r.status===401){location='/login';throw new Error('auth');}return r.json();}
+
+async function start(){
+  try{ const me=await j('/api/me'); ME=me.name||me.email||''; document.getElementById('who').textContent=ME?('receiving as '+ME):''; }catch(e){}
+  loadPOs(); loadBOM(); loadRecent();
+}
+async function loadPOs(){
+  const d=await j('/api/receiving/pos'); POS=d.pos||[]; renderPOs();
+  if(d.error) document.getElementById('polist').innerHTML='<div class="porow muted">Could not load POs: '+esc(d.error)+'</div>';
+}
+async function loadBOM(){ try{ const d=await j('/api/inventory'); BOM=d.rows||[]; }catch(e){ BOM=[]; } }
+function renderPOs(){
+  const q=document.getElementById('poq').value.toLowerCase().trim();
+  const rows=POS.filter(p=>!q||((p.po||'')+' '+(p.vendor||'')).toLowerCase().includes(q)).slice(0,60);
+  document.getElementById('polist').innerHTML=rows.length?rows.map(p=>
+    '<div class="porow" onclick="pickPO(\''+esc(p.id)+'\')"><b>PO#'+esc(p.po)+'</b> · '+esc(p.vendor)+
+    ' <span class="pill">$'+esc(p.total)+'</span> <span class="muted">'+esc(p.date)+'</span></div>').join('')
+    :'<div class="porow muted">No matching POs.</div>';
+}
+function pickPO(id){
+  SEL=POS.find(p=>String(p.id)===String(id)); if(!SEL)return;
+  document.getElementById('posel').innerHTML='<b>Selected:</b> PO#'+esc(SEL.po)+' — '+esc(SEL.vendor)+' ($'+esc(SEL.total)+')'+
+    '<div class="muted" style="font-size:.82rem;margin-top:4px">QB lines: '+esc((SEL.lines||[]).map(l=>l.category+(l.amount?' $'+l.amount:'')).join(' · '))+'</div>';
+  document.getElementById('poref').textContent='#'+SEL.po;
+  document.getElementById('itemcard').style.display='block';
+  LINES=[]; renderLines();
+}
+document.getElementById('poq').addEventListener('input',renderPOs);
+
+document.getElementById('partq').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
+  const el=document.getElementById('partresults');
+  if(!q){el.innerHTML='';return;}
+  const rows=BOM.filter(r=>((r.vendor_pn||'')+' '+(r.mfg_pn||'')+' '+(r.description||'')+' '+(r.section||'')).toLowerCase().includes(q)).slice(0,30);
+  el.innerHTML=rows.map((r,i)=>'<div class="prow" onclick="addLine('+BOM.indexOf(r)+')"><span><span class="pn">'+esc(r.vendor_pn||r.mfg_pn||'')+'</span> '+esc(r.description||'')+
+    '</span><span class="muted">'+esc(r.section)+' #'+esc(r.item)+(r.short?' · short '+r.short:'')+'</span></div>').join('')||'<div class="prow muted">No match.</div>';
+});
+function addLine(bi){
+  const r=BOM[bi]; if(!r)return;
+  LINES.push({vendor_pn:r.vendor_pn||'',mfg_pn:r.mfg_pn||'',item:r.item||'',section:r.section||'',desc:r.description||'',
+    qty:(r.short||1),unit_cost:'',location:(r.locations&&r.locations[0])||(r.map_location? r.map_location.replace(/ \(.*/,''):'')});
+  document.getElementById('partq').value=''; document.getElementById('partresults').innerHTML=''; renderLines();
+}
+function renderLines(){
+  document.getElementById('linebody').innerHTML=LINES.map((l,i)=>
+    '<tr><td><span class="pn">'+esc(l.vendor_pn||l.mfg_pn)+'</span><br><span class="muted" style="font-size:.8rem">'+esc(l.desc)+'</span></td>'+
+    '<td><input class="cell" style="width:60px" value="'+esc(l.qty)+'" onchange="upd('+i+',\'qty\',this.value)"></td>'+
+    '<td><input class="cell" style="width:80px" placeholder="$" value="'+esc(l.unit_cost)+'" onchange="upd('+i+',\'unit_cost\',this.value)"></td>'+
+    '<td><input class="cell" style="width:110px" value="'+esc(l.location)+'" onchange="upd('+i+',\'location\',this.value)"></td>'+
+    '<td><button class="btn ghost sm" onclick="rmLine('+i+')">✕</button></td></tr>').join('');
+  document.getElementById('linecount').textContent=LINES.length;
+  document.getElementById('submitBtn').disabled=LINES.length===0;
+}
+function upd(i,k,v){LINES[i][k]=v;}
+function rmLine(i){LINES.splice(i,1);renderLines();}
+async function submitReceipt(){
+  if(!SEL||!LINES.length)return;
+  const btn=document.getElementById('submitBtn'); btn.disabled=true; btn.textContent='Checking in…';
+  try{
+    const r=await fetch('/api/receiving/receive',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({po:SEL.po,vendor:SEL.vendor,received_by:ME,lines:LINES})});
+    const d=await r.json();
+    const el=document.getElementById('result');
+    if(d.ok){ el.className='res ok'; el.textContent='✓ Received '+d.applied+' line(s) against PO#'+SEL.po+' — inventory updated. Receipt '+d.receipt_id+(d.total_cost?' · $'+d.total_cost:''); LINES=[]; renderLines(); loadRecent(); }
+    else { el.className='res err'; el.textContent='Error: '+(d.error||'failed'); }
+  }catch(e){ const el=document.getElementById('result'); el.className='res err'; el.textContent='Error: '+e.message; }
+  btn.disabled=false; btn.textContent='✓ Check in received parts';
+}
+async function loadRecent(){
+  try{ const d=await j('/api/receiving/list'); const rows=(d.receipts||[]).slice(-12).reverse();
+    document.getElementById('recent').innerHTML=rows.length?rows.map(r=>
+      '<div class="porow">PO#'+esc(r.po)+' · '+esc(r.vendor||'')+' · '+(r.lines||[]).length+' line(s)'+(r.total_cost?' · $'+esc(r.total_cost):'')+
+      ' <span class="muted">'+esc((r.received_at||'').slice(0,16).replace('T',' '))+' by '+esc(r.received_by||'')+'</span></div>').join(''):'<span class="muted">No receipts yet.</span>';
+  }catch(e){}
+}
+start();
+</script>
+</body></html>

@@ -3988,6 +3988,40 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── RECEIVING (QuickBooks POs → itemize check-in → inventory/location/cost) ────────────────────
+  if (req.url.split('?')[0].startsWith('/api/receiving')) {
+    const cp = require('child_process');
+    const rsub = req.url.split('?')[0].replace('/api/receiving', '');
+    if (rsub === '/pos' && req.method === 'GET') {
+      cp.execFile('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'qb_pos.py')],
+        { timeout: 35000, maxBuffer: 8 * 1024 * 1024 }, (err, stdout) => {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(stdout || JSON.stringify({ pos: [], error: err ? String(err) : 'no data' }));
+        });
+      return;
+    }
+    if (rsub === '/list' && req.method === 'GET') {
+      let d = { receipts: [] };
+      try { d = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'receiving.json'), 'utf8')); } catch {}
+      res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(d)); return;
+    }
+    if (rsub === '/receive' && req.method === 'POST') {
+      let body = ''; req.on('data', c => body += c); req.on('end', () => {
+        const py = cp.spawn('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'receiving_apply.py')]);
+        let out = '', er = '';
+        py.stdout.on('data', d => out += d); py.stderr.on('data', d => er += d);
+        py.on('close', code => {
+          res.writeHead(code === 0 ? 200 : 500, { 'Content-Type': 'application/json' });
+          res.end(out || JSON.stringify({ error: er || 'apply failed' }));
+        });
+        py.stdin.write(body); py.stdin.end();
+      });
+      return;
+    }
+    res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'unknown receiving route' }));
+    return;
+  }
+
   // ── PASSWORD VAULT (Keeper-style, zero-knowledge) ──────────────────────────────────────────────
   // The server stores ONLY ciphertext + public keys + wrapped record keys. It never sees a master
   // password or any plaintext secret. Personal vaults are private to the user (no recovery). Shared

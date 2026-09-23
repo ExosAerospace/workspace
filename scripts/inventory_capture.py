@@ -847,6 +847,41 @@ def cmd_consume(a):
     print(json.dumps({"key": key, "qty_on_hand": rec["qty_on_hand"], "short_vs_bom": (round(req - rec['qty_on_hand'], 3) if req is not None else None)}, indent=2))
 
 
+def cmd_receive(a):
+    """Receive parts against a QuickBooks PO: increment on-hand, set location + unit cost, stamp the
+    PO#. Positive stock movement with cost/provenance (used by the Receiving module)."""
+    inv = inv_load()
+    key = a.bom_key or rec_key(a.vendor_pn or "", a.mfg_pn or "", a.item or "", a.desc or "")
+    if not key:
+        print("ERROR: need a key"); sys.exit(2)
+    rec = next((r for r in inv["records"] if r.get("key") == key), None)
+    if rec is None:
+        rec = {"key": key, "vendor_pn": a.vendor_pn or "", "mfg_pn": a.mfg_pn or "",
+               "item": a.item or "", "section": a.section or "", "description": a.desc or "",
+               "qty_on_hand": 0, "unit": "ea", "locations": [], "photos": [], "history": []}
+        inv["records"].append(rec)
+    qty = float(a.qty or 0)
+    rec["qty_on_hand"] = round(rec.get("qty_on_hand", 0) + qty, 3)
+    if a.unit_cost not in (None, ""):
+        try:
+            rec["unit_cost"] = round(float(a.unit_cost), 4)
+        except Exception:
+            pass
+    if a.location and a.location not in rec["locations"]:
+        rec["locations"].append(a.location)
+    for fld, val in [("section", a.section), ("description", a.desc), ("vendor_pn", a.vendor_pn), ("mfg_pn", a.mfg_pn)]:
+        if val and not rec.get(fld):
+            rec[fld] = val
+    rec["history"].append({"at": now(), "by": a.by or "Exo", "delta": qty,
+                           "note": f"received PO#{a.po}" if a.po else "received", "po": a.po or "",
+                           "location": a.location or "", "unit_cost": a.unit_cost or "", "queue": None})
+    rec["updated_at"] = now()
+    inv_save(inv)
+    build_report()
+    logline(f"receive key={key} +{qty} @ {a.unit_cost} PO#{a.po} loc {a.location} -> {rec['qty_on_hand']}")
+    print(json.dumps({"key": key, "qty_on_hand": rec["qty_on_hand"], "unit_cost": rec.get("unit_cost")}))
+
+
 def cmd_status(a):
     q = read_queue()
     inv = inv_load()
@@ -875,6 +910,9 @@ def main():
     cs = sub.add_parser("consume")
     for f in ["bom-key", "vendor-pn", "mfg-pn", "item", "section", "desc", "qty", "remaining", "location", "by", "note", "task"]:
         cs.add_argument("--" + f)
+    rc = sub.add_parser("receive")
+    for f in ["bom-key", "vendor-pn", "mfg-pn", "item", "section", "desc", "qty", "unit-cost", "location", "po", "by", "task"]:
+        rc.add_argument("--" + f)
     sub.add_parser("status")
     sub.add_parser("report")
     rl = sub.add_parser("reindex-locations"); rl.add_argument("--file")
@@ -885,7 +923,7 @@ def main():
     {"reindex-bom": cmd_reindex, "enqueue": cmd_enqueue, "pending": cmd_pending,
      "next": cmd_next, "bom-search": cmd_bom_search, "record": cmd_record,
      "ask": cmd_ask, "status": cmd_status, "report": cmd_report, "consume": cmd_consume,
-     "reindex-locations": cmd_reindex_locations}[a.cmd](a)
+     "reindex-locations": cmd_reindex_locations, "receive": cmd_receive}[a.cmd](a)
 
 
 if __name__ == "__main__":
