@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LVES Charter Working Group — Round 1 Survey</title>
+<style>
+  :root{--navy:#1f2a44;--accent:#0b5c8a;--line:#d9dee7;--bg:#f6f8fb;--ok:#0a7d43;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:#182233;font:16px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 18px 80px}
+  header{background:var(--navy);color:#fff;border-radius:14px;padding:26px 26px 22px;margin-bottom:22px}
+  header h1{margin:0 0 6px;font-size:22px;letter-spacing:.2px}
+  header p{margin:6px 0 0;color:#c9d4e6;font-size:14.5px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:16px 0;box-shadow:0 1px 2px rgba(20,30,60,.04)}
+  .q{font-weight:600;color:var(--navy);margin:0 0 4px;font-size:16.5px}
+  .req{color:#b4232a;font-weight:700}
+  .hint{color:#5a6b85;font-size:13.5px;margin:0 0 12px}
+  label.opt{display:block;padding:7px 0;cursor:pointer}
+  input[type=text],textarea,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff}
+  textarea{min-height:78px;resize:vertical}
+  .rankrow{display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px dashed #eef1f6}
+  .rankrow:last-child{border-bottom:0}
+  .rankrow .lbl{flex:1}
+  .rankrow select{width:120px}
+  table.grid{width:100%;border-collapse:collapse;font-size:14.5px}
+  table.grid th,table.grid td{padding:8px 6px;border-bottom:1px solid #eef1f6;text-align:center}
+  table.grid th:first-child,table.grid td:first-child{text-align:left}
+  table.grid thead th{color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.4px}
+  .anon{display:inline-flex;align-items:center;gap:8px;background:#eef4fb;border:1px solid #d6e6f5;color:var(--accent);
+        border-radius:20px;padding:5px 12px;font-size:13px;margin-top:10px}
+  .anon input{width:auto}
+  .sub{font-size:13px;color:#5a6b85;margin:2px 0 10px}
+  .btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:14px 26px;font-size:16px;font-weight:600;cursor:pointer}
+  .btn:hover{background:#094a70}
+  .footwrap{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:8px}
+  .note{font-size:12.5px;color:#7a879c}
+  .ok{background:#eaf7ef;border:1px solid #b8e2c8;color:var(--ok);padding:16px;border-radius:10px;margin-top:16px;display:none}
+  .badge{display:inline-block;background:#eef4fb;color:var(--accent);border-radius:6px;padding:2px 8px;font-size:12px;font-weight:600;margin-bottom:8px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="badge" style="background:#31507e;color:#dbe6f7">AIAA · Round 1 of 2 (light Delphi)</div>
+  <h1>LVES Charter Working Group — Round 1 Survey</h1>
+  <p>This short survey shapes the <strong>Launch Vehicles &amp; Entry Systems (LVES)</strong> Technical Committee charter. It takes about 10 minutes and is mostly ranking and multi-select. Round 1 collects the full set of scope candidates and desired outcomes; Round 2 hands back a consolidated list for you to prioritize, then a draft charter comes to the next meeting. Where a question offers an anonymous option, feel free to use it so we get candid input on boundaries. Thank you for helping keep this charter sharp rather than shelf-bound.</p>
+</header>
+
+<form id="survey">
+  <div class="card">
+    <p class="q">Your name <span class="sub">(optional — leave blank to respond anonymously overall)</span></p>
+    <input type="text" name="respondent" placeholder="Name / affiliation">
+  </div>
+
+  <!-- Q1 -->
+  <div class="card">
+    <p class="q">Q1. Purpose <span class="req">*</span></p>
+    <p class="hint">In one sentence: why should LVES exist, and who is the primary beneficiary?</p>
+    <input type="text" name="q1" required>
+  </div>
+
+  <!-- Q2 ranking: select top 5 then rank -->
+  <div class="card">
+    <p class="q">Q2. Scope inclusions — pick your top 5 and rank them <span class="req">*</span></p>
+    <p class="hint">Assign 1 (highest) to 5 to the five areas the committee should most prioritize owning. Leave the rest blank. (This "top-5-then-rank" keeps it light but preserves a real priority order.)</p>
+    <div id="q2rows"></div>
+  </div>
+
+  <!-- Q3 own/interface/out grid -->
+  <div class="card">
+    <p class="q">Q3. Own vs. interface vs. out <span class="req">*</span></p>
+    <p class="hint">For each area, mark whether LVES should OWN it, treat it as an INTERFACE (coordinate, do not absorb), or leave it OUT. This is the question that resolves the "core vs. absorb-everything" debate.</p>
+    <table class="grid" id="q3grid">
+      <thead><tr><th>Area</th><th>Own</th><th>Interface</th><th>Out</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <label class="anon"><input type="checkbox" name="anon_q3q4"> Submit my Q3 &amp; Q4 boundary answers anonymously</label>
+  </div>
+
+  <!-- Q4 exclusions -->
+  <div class="card">
+    <p class="q">Q4. Explicit exclusions <span class="sub">(optional · anonymous allowed)</span></p>
+    <p class="hint">What should be deliberately OUT of scope? Constraining the problem matters as much as defining it.</p>
+    <textarea name="q4"></textarea>
+  </div>
+
+  <!-- Q5 interfaces -->
+  <div class="card">
+    <p class="q">Q5. Interfaces &amp; boundaries <span class="sub">(optional)</span></p>
+    <p class="hint">Which existing AIAA committees or activities do we overlap, and where should the boundary sit (e.g. propulsion TCs, high-speed airbreathing, space logistics/ISAM, spaceports, range &amp; safety, GN&amp;C)?</p>
+    <textarea name="q5"></textarea>
+  </div>
+
+  <!-- Q6 deliverables multiselect -->
+  <div class="card">
+    <p class="q">Q6. Deliverables — select all this committee should produce in the next 12–24 months <span class="req">*</span></p>
+    <div id="q6opts"></div>
+    <input type="text" name="q6_other" placeholder="Other (specify)" style="margin-top:8px">
+  </div>
+
+  <!-- Q7 top deliverable -->
+  <div class="card">
+    <p class="q">Q7. Top deliverable <span class="req">*</span></p>
+    <p class="hint">Of the items in Q6, which ONE matters most in the first 12 months?</p>
+    <select name="q7" required id="q7sel"><option value="">— select —</option></select>
+  </div>
+
+  <!-- Q8 impact -->
+  <div class="card">
+    <p class="q">Q8. Impact measure <span class="req">*</span></p>
+    <p class="hint">How will we know, one year from now, that this committee mattered? Name one concrete signal.</p>
+    <input type="text" name="q8" required>
+  </div>
+
+  <!-- Q9 cadence -->
+  <div class="card">
+    <p class="q">Q9. Cadence <span class="req">*</span></p>
+    <p class="hint">How often should the full committee meet?</p>
+    <div id="q9opts"></div>
+  </div>
+
+  <!-- Q10 structure -->
+  <div class="card">
+    <p class="q">Q10. Structure — do we need standing subcommittees? Select any that should exist <span class="req">*</span></p>
+    <div id="q10opts"></div>
+    <input type="text" name="q10_other" placeholder="Other (specify)" style="margin-top:8px">
+  </div>
+
+  <!-- Q11 membership -->
+  <div class="card">
+    <p class="q">Q11. Membership &amp; participation <span class="req">*</span></p>
+    <p class="hint">Opportunity-first framing: step up activity to create participation before any roster pruning; roster changes run through the normal annual recruiting cycle.</p>
+    <p class="sub"><strong>A. What most improves participation?</strong></p>
+    <div id="q11a"></div>
+    <p class="sub" style="margin-top:12px"><strong>How often should the roster be reviewed &amp; refreshed?</strong></p>
+    <div id="q11review"></div>
+    <p class="sub" style="margin-top:12px"><strong>B. AIAA norm is a member term of up to three years, renewable at TC leadership's discretion. Adopt, shorten, or lengthen?</strong></p>
+    <div id="q11b"></div>
+    <p class="sub" style="margin-top:12px"><strong>C. If we ever need one, what should the standard be for an "active" member?</strong> <span class="sub">(informs the annual September review only, not mid-cycle removal)</span></p>
+    <input type="text" name="q11c" placeholder="e.g. attends at least half of meetings, or contributes to one deliverable/subcommittee per year">
+  </div>
+
+  <!-- Q12 gaps -->
+  <div class="card">
+    <p class="q">Q12. Gaps <span class="req">*</span></p>
+    <p class="hint">Who or what discipline is missing from the table? Name people, organizations, or expertise we should add.</p>
+    <textarea name="q12" required></textarea>
+  </div>
+
+  <div class="card">
+    <p class="note">Round 2 will return a consolidated, de-duplicated list from these responses for prioritization, and a draft charter with an already-ranked scope will come to the next meeting. Questions to John Quinn.</p>
+    <div class="footwrap">
+      <button class="btn" type="submit">Submit response</button>
+      <span class="note" id="savemode"></span>
+    </div>
+    <div class="ok" id="okmsg"></div>
+  </div>
+</form>
+</div>
+
+<script>
+// ---- Config: set CAPTURE_URL to a POST endpoint to auto-capture; otherwise responses
+// download as a .json the respondent emails to the collector (no data is ever lost). ----
+const CAPTURE_URL = "https://mc.exosaero.space/api/lves-survey"; // MC public capture endpoint (auto-records responses)
+const COLLECTOR_EMAIL = "jquinn@exosaero.com";
+
+const SCOPE = [
+  "Expendable launch vehicles (ELVs)",
+  "Reusable launch vehicles (RLVs)",
+  "Upper stages (expendable)",
+  "Reusable upper stages",
+  "In-space servicing, mobility & logistics, and refueling (SM&L / ISAM)",
+  "Entry, descent, and recovery systems",
+  "Hypersonic suborbital rockets (rocket-powered boost/test platforms)",
+  "Rocket-powered hypersonic aircraft",
+  "Airbreathing hypersonic concepts",
+  "Cross-cutting operability, reliability, and safety"
+];
+const DELIVERABLES = [
+  "Named technical sessions / panels at SciTech, AVIATION, ASCEND",
+  "A launch/entry + reusable-upper-stage technology roadmap",
+  "Standards input",
+  "Policy / regulatory input",
+  "Workshops",
+  "White papers",
+  "Lessons-learned / best-practice capture (operability, reliability, safety)",
+  "STEM / university engagement"
+];
+const CADENCE = ["Monthly","Every 6 weeks","Quarterly","Twice a year","Other"];
+const STRUCT = ["Reusable upper stages / SM&L","Operability, reliability & safety (standing theme)","Roadmap & standards","Hypersonic interface / liaison","STEM & workforce","None — keep it a single body"];
+const Q11A = ["More ways to contribute (subcommittees to form/chair, real deliverables)","A stricter roster/attendance standard","Both, in that order (opportunities first)","Other"];
+const Q11REVIEW = ["Quarterly","Annually (AIAA norm)","Annually, with a light mid-year participation check","Other"];
+const Q11B = ["Adopt the 3-year term as-is","Shorter term","Longer term","No fixed term","Other"];
+
+function el(html){const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstChild;}
+
+// Q2 rank rows
+const q2 = document.getElementById('q2rows');
+SCOPE.forEach((s,i)=>{
+  const row = el(`<div class="rankrow"><span class="lbl">${s}</span></div>`);
+  const sel = el(`<select name="q2_rank_${i}"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>`);
+  row.appendChild(sel); q2.appendChild(row);
+});
+// Q3 grid
+const q3b = document.querySelector('#q3grid tbody');
+SCOPE.forEach((s,i)=>{
+  const tr = el(`<tr><td>${s}</td>
+    <td><input type="radio" name="q3_${i}" value="Own" required></td>
+    <td><input type="radio" name="q3_${i}" value="Interface"></td>
+    <td><input type="radio" name="q3_${i}" value="Out"></td></tr>`);
+  q3b.appendChild(tr);
+});
+// Q6 + Q7
+const q6 = document.getElementById('q6opts'); const q7 = document.getElementById('q7sel');
+DELIVERABLES.forEach((d,i)=>{
+  q6.appendChild(el(`<label class="opt"><input type="checkbox" name="q6" value="${d.replace(/"/g,'&quot;')}"> ${d}</label>`));
+  q7.appendChild(el(`<option value="${d.replace(/"/g,'&quot;')}">${d}</option>`));
+});
+// Q9
+const q9 = document.getElementById('q9opts');
+CADENCE.forEach((c,i)=>q9.appendChild(el(`<label class="opt"><input type="radio" name="q9" value="${c}" ${i===0?'required':''}> ${c}</label>`)));
+// Q10
+const q10 = document.getElementById('q10opts');
+STRUCT.forEach(s=>q10.appendChild(el(`<label class="opt"><input type="checkbox" name="q10" value="${s.replace(/"/g,'&quot;')}"> ${s}</label>`)));
+// Q11
+const mk=(host,name,arr,req)=>{const h=document.getElementById(host);arr.forEach((o,i)=>h.appendChild(el(`<label class="opt"><input type="radio" name="${name}" value="${o.replace(/"/g,'&quot;')}" ${req&&i===0?'required':''}> ${o}</label>`)));};
+mk('q11a','q11a',Q11A,true); mk('q11review','q11_review',Q11REVIEW,true); mk('q11b','q11b',Q11B,true);
+
+document.getElementById('savemode').textContent = CAPTURE_URL ? "Responses are captured automatically." : "This copy will download your response as a file to email to the collector.";
+
+document.getElementById('survey').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const data = {submitted_at:new Date().toISOString(), _survey:"LVES-Round1"};
+  // scalars + multi
+  for (const [k,v] of fd.entries()){
+    if (k==='q6' || k==='q10'){ (data[k]=data[k]||[]).push(v); }
+    else data[k]=v;
+  }
+  // Q2 ranking -> ordered list
+  data.q2_ranking = SCOPE.map((s,i)=>({item:s, rank:fd.get('q2_rank_'+i)||null})).filter(x=>x.rank).sort((a,b)=>a.rank-b.rank);
+  SCOPE.forEach((s,i)=>delete data['q2_rank_'+i]);
+  // Q3 grid
+  data.q3 = SCOPE.map((s,i)=>({area:s, choice:fd.get('q3_'+i)}));
+  SCOPE.forEach((s,i)=>delete data['q3_'+i]);
+  if (data.anon_q3q4){ if(data.respondent){data._respondent_hidden_for_q3q4=true;} }
+
+  const okmsg = document.getElementById('okmsg');
+  let sent=false;
+  if (CAPTURE_URL){
+    try{ const r= await fetch(CAPTURE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); sent=r.ok; }catch(_){}
+  }
+  if (!sent){
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download='LVES_Round1_response_'+(data.respondent||'anon').replace(/\W+/g,'_')+'.json'; a.click();
+    okmsg.innerHTML='Thank you. Your response file downloaded — please email it to <a href="mailto:'+COLLECTOR_EMAIL+'?subject=LVES%20Round%201%20response">'+COLLECTOR_EMAIL+'</a> to record it.';
+  } else {
+    okmsg.textContent='Thank you — your response has been recorded.';
+  }
+  okmsg.style.display='block';
+  e.target.style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+</script>
+</body>
+</html>

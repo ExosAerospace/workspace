@@ -1422,7 +1422,7 @@ const server = http.createServer((req, res) => {
   }
 
   // ── AUTH GATE: protect all pages and APIs except login ──
-  const publicPaths = ['/api/login', '/login', '/login.html', '/api/inbound-email', '/brand-assets/', '/sign', '/sign.html', '/api/esign/get', '/api/esign/sign', '/api/decisions/ingest', '/api/research/ingest'];
+  const publicPaths = ['/api/login', '/login', '/login.html', '/api/inbound-email', '/brand-assets/', '/sign', '/sign.html', '/api/esign/get', '/api/esign/sign', '/api/decisions/ingest', '/api/research/ingest', '/survey/', '/api/lves-survey'];
   const isPublic = publicPaths.some(p => req.url.startsWith(p));
   const decisionsCronPath = req.url.split('?')[0];
   const isDecisionsCronRequest = (decisionsCronPath === '/api/decisions' || decisionsCronPath === '/api/decisions/answer') && isDecisionsCronToken(req);
@@ -4330,6 +4330,50 @@ const server = http.createServer((req, res) => {
   }
 
   // Ingest a research brief (token-protected; used by the cloud research agents / cron).
+  // ── PUBLIC SURVEY HOSTING ──────────────────────────────────────────────────
+  // Host survey pages directly on our own domain (mc.exosaero.space/survey/<slug>) so a
+  // survey goes out as a LINK, never an .html attachment — attachments get quarantined by
+  // recipient AV (McAfee flagged the emailed LVES survey as a threat). Public GET serves the
+  // page (no auth, no exobot widget); the page POSTs answers to /api/lves-survey below.
+  if (req.url.split('?')[0].startsWith('/survey/') && req.method === 'GET') {
+    const slug = path.basename(decodeURIComponent(req.url.split('?')[0])).replace(/\.html$/, '');
+    if (!/^[a-z0-9\-]+$/.test(slug)) { res.writeHead(404); res.end('Not found'); return; }
+    const file = path.join(__dirname, 'surveys', slug + '.html');
+    if (!file.startsWith(path.join(__dirname, 'surveys')) || !fs.existsSync(file)) { res.writeHead(404); res.end('Survey not found'); return; }
+    res.writeHead(200, { 'Content-Type': 'text/html', 'Cache-Control': 'no-store, must-revalidate' });
+    res.end(fs.readFileSync(file));
+    return;
+  }
+  // Public capture endpoint for the LVES Round-1 survey. Appends one JSON line per submission
+  // to data/lves_survey/responses.jsonl, which scripts/lves_survey_ingest.py normalizes and
+  // scripts/lves_survey_report.py turns into the Round-2 consolidation / charter skeleton.
+  // No token (external committee members can't hold one); guarded by a size cap, a survey-id
+  // check, and a stored-count ceiling so it can't be abused into an unbounded write.
+  if (req.url === '/api/lves-survey' && req.method === 'POST') {
+    let body = ''; let tooBig = false;
+    req.on('data', c => { body += c; if (body.length > 64 * 1024) { tooBig = true; req.destroy(); } });
+    req.on('end', () => {
+      if (tooBig) { try { res.writeHead(413, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'too large' })); } catch {} return; }
+      try {
+        const p = JSON.parse(body || '{}');
+        if (p._survey !== 'LVES-Round1') { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'unknown survey' })); return; }
+        const dir = path.join(__dirname, '..', 'data', 'lves_survey');
+        fs.mkdirSync(dir, { recursive: true });
+        const jsonl = path.join(dir, 'responses.jsonl');
+        let count = 0; try { count = fs.readFileSync(jsonl, 'utf-8').split('\n').filter(Boolean).length; } catch {}
+        if (count >= 2000) { res.writeHead(429, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'closed' })); return; }
+        const rec = Object.assign({}, p, {
+          source: 'html',
+          received_at: new Date().toISOString(),
+          _ip: (req.headers['cf-connecting-ip'] || req.socket.remoteAddress || '').toString().slice(0, 64),
+        });
+        fs.appendFileSync(jsonl, JSON.stringify(rec) + '\n');
+        res.writeHead(201, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true }));
+      } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+    });
+    return;
+  }
+
   if (req.url === '/api/research/ingest' && req.method === 'POST') {
     if ((req.headers['x-exo-token'] || '') !== decisionsToken()) {
       res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'bad token' })); return;
