@@ -43,3 +43,7 @@ service-account*.json
 
 # stale subagent worktrees (never commit)
 .claude/worktrees/
+
+# Password vault store (ciphertext, but never version secrets)
+mission-control/data/vault.json
+mission-control/data/vault.json.tmp

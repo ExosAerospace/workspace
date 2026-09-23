@@ -3988,6 +3988,123 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── PASSWORD VAULT (Keeper-style, zero-knowledge) ──────────────────────────────────────────────
+  // The server stores ONLY ciphertext + public keys + wrapped record keys. It never sees a master
+  // password or any plaintext secret. Personal vaults are private to the user (no recovery). Shared
+  // "company" folders are shared to users/groups by wrapping the folder key to each member's public
+  // key, plus (optionally) an org break-glass recovery key. All crypto happens in the browser.
+  if (req.url.split('?')[0].startsWith('/api/vault')) {
+    const VAULT_FILE = path.join(__dirname, 'data', 'vault.json');
+    const loadVault = () => { try { return JSON.parse(fs.readFileSync(VAULT_FILE, 'utf8')); } catch { return { users: {}, personal: {}, folders: [], audit: [] }; } };
+    const saveVault = (v) => { const tmp = VAULT_FILE + '.tmp'; fs.writeFileSync(tmp, JSON.stringify(v, null, 2)); fs.renameSync(tmp, VAULT_FILE); };
+    const vaudit = (v, ev) => { v.audit = (v.audit || []).concat([{ at: new Date().toISOString(), by: (session && session.email) || 'unknown', ...ev }]).slice(-5000); };
+    if (!session || !session.email) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    const me = session.email.toLowerCase();
+    const readBody = () => new Promise((resolve) => { let b = ''; req.on('data', c => b += c); req.on('end', () => { try { resolve(JSON.parse(b || '{}')); } catch { resolve({}); } }); });
+    const sub = req.url.split('?')[0].replace('/api/vault', '');
+
+    // Bootstrap: my key material (or null), everyone's public keys (to share to), and the groups.
+    if (sub === '/bootstrap' && req.method === 'GET') {
+      const v = loadVault();
+      const users = loadUsers().filter(u => u.active !== false);
+      const pubkeys = {}; users.forEach(u => { const e = (u.email || '').toLowerCase(); if (v.users[e]) pubkeys[e] = { public_key: v.users[e].public_key, name: u.name }; });
+      const roles = {}, depts = {};
+      users.forEach(u => { const e = (u.email || '').toLowerCase(); if (u.role) (roles[u.role] = roles[u.role] || []).push(e); (u.departments || []).forEach(d => (depts[d] = depts[d] || []).push(e)); });
+      const groups = [...Object.keys(roles).map(r => ({ id: 'role:' + r, label: 'Role: ' + r, members: roles[r] })),
+                      ...Object.keys(depts).map(d => ({ id: 'dept:' + d, label: 'Dept: ' + d, members: depts[d] })),
+                      { id: 'role:all', label: 'Everyone', members: users.map(u => (u.email || '').toLowerCase()) }];
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ me: v.users[me] || null, me_email: me, org_public_key: (v.org_recovery && v.org_recovery.public_key) || null,
+        directory: users.map(u => ({ email: (u.email || '').toLowerCase(), name: u.name, enrolled: !!v.users[(u.email || '').toLowerCase()] })),
+        pubkeys, groups }));
+      return;
+    }
+    // One-time enrolment: store my public key + my private key ENCRYPTED under my master key + kdf salt.
+    if (sub === '/setup' && req.method === 'POST') {
+      readBody().then(bd => {
+        if (!bd.public_key || !bd.enc_private_key || !bd.kdf_salt) { res.writeHead(400); res.end(JSON.stringify({ error: 'missing key material' })); return; }
+        const v = loadVault();
+        if (v.users[me]) { res.writeHead(409); res.end(JSON.stringify({ error: 'vault already set up' })); return; }
+        v.users[me] = { public_key: bd.public_key, enc_private_key: bd.enc_private_key, kdf_salt: bd.kdf_salt, created_at: new Date().toISOString() };
+        v.personal[me] = v.personal[me] || [];
+        vaudit(v, { action: 'vault-setup' }); saveVault(v);
+        res.writeHead(201, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true }));
+      });
+      return;
+    }
+    // My data: personal ciphertext items + shared folders I'm a member of (with my wrapped key).
+    if (sub === '/data' && req.method === 'GET') {
+      const v = loadVault();
+      const folders = (v.folders || []).filter(f => f.members && f.members[me]).map(f => ({ id: f.id, name: f.name, owner: f.owner, wrapped_key: f.members[me], member_emails: Object.keys(f.members || {}), groups: f.groups || [], items: f.items || [] }));
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ personal: v.personal[me] || [], folders }));
+      return;
+    }
+    // Upsert / delete a personal (private) ciphertext item.
+    if (sub === '/personal' && req.method === 'POST') {
+      readBody().then(bd => {
+        if (!bd.ciphertext || !bd.iv) { res.writeHead(400); res.end(JSON.stringify({ error: 'missing ciphertext' })); return; }
+        const v = loadVault(); v.personal[me] = v.personal[me] || [];
+        const id = bd.id || crypto.randomBytes(8).toString('hex');
+        const idx = v.personal[me].findIndex(i => i.id === id);
+        const item = { id, ciphertext: bd.ciphertext, iv: bd.iv, updated_at: new Date().toISOString() };
+        if (idx >= 0) v.personal[me][idx] = item; else v.personal[me].push(item);
+        vaudit(v, { action: 'personal-upsert', id }); saveVault(v);
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(item));
+      });
+      return;
+    }
+    if (sub.startsWith('/personal/') && req.method === 'DELETE') {
+      const id = sub.split('/')[2]; const v = loadVault();
+      v.personal[me] = (v.personal[me] || []).filter(i => i.id !== id);
+      vaudit(v, { action: 'personal-delete', id }); saveVault(v);
+      res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true })); return;
+    }
+    // Create a shared/company folder: caller supplies the folder key wrapped for each member's pubkey.
+    if (sub === '/folder' && req.method === 'POST') {
+      readBody().then(bd => {
+        if (!bd.name || !bd.members || typeof bd.members !== 'object') { res.writeHead(400); res.end(JSON.stringify({ error: 'name + members required' })); return; }
+        const v = loadVault();
+        const f = { id: bd.id || crypto.randomBytes(8).toString('hex'), name: String(bd.name).slice(0, 80), owner: me,
+          created_at: new Date().toISOString(), members: bd.members, groups: bd.groups || [], items: [], recovery_wrapped: bd.recovery_wrapped || null };
+        v.folders = v.folders || []; v.folders.push(f);
+        vaudit(v, { action: 'folder-create', id: f.id, name: f.name, members: Object.keys(bd.members) }); saveVault(v);
+        res.writeHead(201, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ id: f.id })); return;
+      });
+      return;
+    }
+    // Add / update an encrypted item inside a shared folder (must be a member).
+    const mItem = sub.match(/^\/folder\/([^/]+)\/item$/);
+    if (mItem && req.method === 'POST') {
+      readBody().then(bd => {
+        const v = loadVault(); const f = (v.folders || []).find(x => x.id === mItem[1]);
+        if (!f || !f.members[me]) { res.writeHead(403); res.end(JSON.stringify({ error: 'not a member' })); return; }
+        if (!bd.ciphertext || !bd.iv) { res.writeHead(400); res.end(JSON.stringify({ error: 'missing ciphertext' })); return; }
+        const id = bd.id || crypto.randomBytes(8).toString('hex');
+        const idx = (f.items || []).findIndex(i => i.id === id);
+        const item = { id, ciphertext: bd.ciphertext, iv: bd.iv, updated_by: me, updated_at: new Date().toISOString() };
+        f.items = f.items || []; if (idx >= 0) f.items[idx] = item; else f.items.push(item);
+        vaudit(v, { action: 'folder-item-upsert', folder: f.id, id }); saveVault(v);
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(item)); return;
+      });
+      return;
+    }
+    // Share an existing folder to more members: caller supplies the folder key wrapped for each new pubkey.
+    const mShare = sub.match(/^\/folder\/([^/]+)\/share$/);
+    if (mShare && req.method === 'POST') {
+      readBody().then(bd => {
+        const v = loadVault(); const f = (v.folders || []).find(x => x.id === mShare[1]);
+        if (!f || !f.members[me]) { res.writeHead(403); res.end(JSON.stringify({ error: 'not a member' })); return; }
+        Object.assign(f.members, bd.members || {}); if (bd.groups) f.groups = Array.from(new Set((f.groups || []).concat(bd.groups)));
+        vaudit(v, { action: 'folder-share', folder: f.id, added: Object.keys(bd.members || {}) }); saveVault(v);
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true })); return;
+      });
+      return;
+    }
+    res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'unknown vault route' }));
+    return;
+  }
+
   // List uploads for a task or project
   if (req.url.startsWith('/api/uploads') && req.method === 'GET') {
     const urlObj = new URL(req.url, 'http://localhost');
@@ -4764,7 +4881,7 @@ const server = http.createServer((req, res) => {
       const ext = path.extname(filePath);
       // Auto-inject the global Exobot chat widget into every real MC page (except the
       // public/sandbox pages) so the conversation persists across navigation.
-      const NO_WIDGET = ['login.html', 'set-password.html', 'sign.html', 'docusign.html', 'welcome.html', 'exobot-widget.js'];
+      const NO_WIDGET = ['login.html', 'set-password.html', 'sign.html', 'docusign.html', 'welcome.html', 'vault.html', 'exobot-widget.js'];
       const base = path.basename(filePath);
       // App pages + scripts must never be served stale: a code deploy has to take effect on the
       // next load, not after a manual hard-refresh. (This is what left Phil on the old "Save Note"

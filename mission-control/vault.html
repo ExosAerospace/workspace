@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Vault — Exos Mission Control</title>
+<style>
+  :root{--bg:#0b0b0d;--panel:#141418;--panel2:#1b1b21;--border:#2a2a31;--text:#e8e8ec;--text2:#9a9aa6;--orange:#ff6b00;--orange2:#ff8c33;--red:#e0524d;--green:#3fb56a}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header{padding:16px 20px;border-bottom:2px solid var(--orange);display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  header h1{margin:0;font-size:1.15rem;font-weight:800}
+  header .sub{color:var(--text2);font-size:.78rem}
+  a.back{color:var(--text2);text-decoration:none;font-weight:600;margin-left:auto}
+  .wrap{padding:18px 20px;max-width:1100px;margin:0 auto}
+  .btn{background:var(--orange);color:#fff;border:none;border-radius:8px;padding:9px 15px;font-weight:700;cursor:pointer;font-size:.86rem}
+  .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .btn.sm{padding:5px 9px;font-size:.78rem}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  input,select,textarea{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:.88rem;width:100%}
+  label{display:block;font-size:.72rem;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin:8px 0 3px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
+  .gate{max-width:420px;margin:8vh auto}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  h2{font-size:1rem;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+  .tag{font-size:.68rem;background:var(--panel2);border:1px solid var(--border);border-radius:20px;padding:2px 9px;color:var(--text2)}
+  .item{border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-bottom:8px;background:var(--panel2)}
+  .item .t{font-weight:700}
+  .item .m{color:var(--text2);font-size:.8rem;margin-top:2px;word-break:break-all}
+  .mono{font-family:ui-monospace,Menlo,monospace}
+  .muted{color:var(--text2)}
+  .err{color:var(--red);font-size:.82rem;margin-top:8px}
+  .ok{color:var(--green)}
+  .modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+  .modal .box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;max-width:520px;width:100%;max-height:90vh;overflow:auto}
+  .chip{display:inline-flex;align-items:center;gap:5px;background:var(--panel2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:.78rem;margin:3px 4px 0 0;cursor:pointer}
+  .chip.on{background:var(--orange);color:#fff;border-color:var(--orange)}
+  .pw{letter-spacing:2px}
+</style></head>
+<body>
+<header>
+  <h1>🔐 Vault</h1>
+  <span class="sub" id="who"></span>
+  <a class="back" href="/index.html">← Mission Control</a>
+</header>
+<div class="wrap" id="app"><div class="muted">Loading…</div></div>
+
+<div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
+
+<script>
+const enc=new TextEncoder(), dec=new TextDecoder();
+const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b)));
+const ub64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0)).buffer;
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+async function api(path,opts){const r=await fetch('/api/vault'+path,opts);if(r.status===401){location='/login';throw new Error('auth');}return r;}
+
+// ── crypto helpers (all client-side; master password never leaves this page) ──
+async function deriveUserKey(pw,saltB64){
+  const base=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt:new Uint8Array(ub64(saltB64)),iterations:210000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function aesEnc(key,obj){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(JSON.stringify(obj)));return {ciphertext:b64(ct),iv:b64(iv)};}
+async function aesDec(key,ct,iv){const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(ub64(iv))},key,ub64(ct));return JSON.parse(dec.decode(pt));}
+async function importPub(spkiB64){return crypto.subtle.importKey('spki',ub64(spkiB64),{name:'RSA-OAEP',hash:'SHA-256'},false,['encrypt']);}
+async function wrapFolderKey(pub,folderKey){const raw=await crypto.subtle.exportKey('raw',folderKey);return b64(await crypto.subtle.encrypt({name:'RSA-OAEP'},pub,raw));}
+async function unwrapFolderKey(priv,wrappedB64){const raw=await crypto.subtle.decrypt({name:'RSA-OAEP'},priv,ub64(wrappedB64));return crypto.subtle.importKey('raw',raw,{name:'AES-GCM'},true,['encrypt','decrypt']);}
+
+// ── state ──
+let BOOT=null, USERKEY=null, MYPRIV=null, DATA=null;
+
+async function start(){
+  BOOT=await (await api('/bootstrap')).json();
+  document.getElementById('who').textContent = BOOT.me ? 'zero-knowledge · encrypted in your browser' : 'not set up yet';
+  if(!BOOT.me) renderSetup(); else renderUnlock();
+}
+
+function renderSetup(){
+  document.getElementById('app').innerHTML=`
+   <div class="card gate"><h2>🔐 Create your vault</h2>
+   <p class="muted">Choose a <b>master password</b>. It never leaves this device — the server only stores encrypted data. There is <b>no recovery</b> for your personal vault if you forget it, so store it safely.</p>
+   <label>Master password</label><input type="password" id="mp1">
+   <label>Confirm</label><input type="password" id="mp2">
+   <div class="row" style="margin-top:12px"><button class="btn" id="setupBtn">Create vault</button></div>
+   <div class="err" id="setupErr"></div></div>`;
+  document.getElementById('setupBtn').onclick=doSetup;
+}
+async function doSetup(){
+  const p1=document.getElementById('mp1').value, p2=document.getElementById('mp2').value;
+  const err=document.getElementById('setupErr');
+  if(p1.length<8){err.textContent='Use at least 8 characters.';return;}
+  if(p1!==p2){err.textContent='Passwords do not match.';return;}
+  err.textContent='Generating keys…';
+  const salt=crypto.getRandomValues(new Uint8Array(16)); const saltB64=b64(salt);
+  const userKey=await deriveUserKey(p1,saltB64);
+  const kp=await crypto.subtle.generateKey({name:'RSA-OAEP',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['encrypt','decrypt']);
+  const pub=b64(await crypto.subtle.exportKey('spki',kp.publicKey));
+  const privRaw=await crypto.subtle.exportKey('pkcs8',kp.privateKey);
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const encPriv=await crypto.subtle.encrypt({name:'AES-GCM',iv},userKey,privRaw);
+  const enc_private_key=b64(iv)+':'+b64(encPriv);
+  const r=await api('/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({public_key:pub,enc_private_key,kdf_salt:saltB64})});
+  if(!r.ok){err.textContent='Setup failed: '+((await r.json()).error||r.status);return;}
+  USERKEY=userKey; MYPRIV=kp.privateKey; BOOT.me={public_key:pub,enc_private_key,kdf_salt:saltB64}; BOOT.pubkeys[myEmail()]={public_key:pub};
+  await loadAndRender();
+}
+function myEmail(){ return (BOOT.me_email||'').toLowerCase(); }
+
+function renderUnlock(){
+  document.getElementById('app').innerHTML=`
+   <div class="card gate"><h2>🔐 Unlock your vault</h2>
+   <label>Master password</label><input type="password" id="mp" autofocus>
+   <div class="row" style="margin-top:12px"><button class="btn" id="unlockBtn">Unlock</button></div>
+   <div class="err" id="unlockErr"></div></div>`;
+  const go=()=>doUnlock(); document.getElementById('unlockBtn').onclick=go;
+  document.getElementById('mp').addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+}
+async function doUnlock(){
+  const err=document.getElementById('unlockErr'); err.textContent='Unlocking…';
+  try{
+    const userKey=await deriveUserKey(document.getElementById('mp').value,BOOT.me.kdf_salt);
+    const [ivB,ctB]=BOOT.me.enc_private_key.split(':');
+    const privRaw=await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(ub64(ivB))},userKey,ub64(ctB));
+    MYPRIV=await crypto.subtle.importKey('pkcs8',privRaw,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);
+    USERKEY=userKey; await loadAndRender();
+  }catch(e){ err.textContent='Incorrect master password.'; }
+}
+
+async function loadAndRender(){
+  DATA=await (await api('/data')).json();
+  // decrypt personal
+  const personal=[];
+  for(const it of DATA.personal){ try{ personal.push({id:it.id,rec:await aesDec(USERKEY,it.ciphertext,it.iv),updated_at:it.updated_at}); }catch(e){} }
+  // decrypt folders
+  const folders=[];
+  for(const f of DATA.folders){
+    let fkey=null; try{ fkey=await unwrapFolderKey(MYPRIV,f.wrapped_key);}catch(e){}
+    const items=[];
+    if(fkey) for(const it of f.items){ try{ items.push({id:it.id,rec:await aesDec(fkey,it.ciphertext,it.iv),updated_at:it.updated_at}); }catch(e){} }
+    folders.push({...f,fkey,items});
+  }
+  renderVault(personal,folders);
+}
+
+function itemHtml(kind,fid,it){
+  const r=it.rec||{};
+  return `<div class="item"><div class="row" style="justify-content:space-between"><div class="t">${esc(r.title||'(untitled)')}</div>
+    <div><button class="btn ghost sm" onclick="editItem('${kind}','${fid||''}','${it.id}')">Edit</button></div></div>
+    ${r.username?`<div class="m">👤 ${esc(r.username)} <button class="btn ghost sm" onclick="copyv('${esc(r.username).replace(/'/g,"\\'")}')">copy</button></div>`:''}
+    <div class="m">🔑 <span class="pw" id="pw_${it.id}">••••••••</span>
+      <button class="btn ghost sm" onclick="revealv('${it.id}',this)">show</button>
+      <button class="btn ghost sm" onclick="copyv(atob('${btoa(unescape(encodeURIComponent(r.password||'')))}'))">copy</button></div>
+    ${r.url?`<div class="m">🌐 <a href="${esc(r.url)}" target="_blank" style="color:var(--orange2)">${esc(r.url)}</a></div>`:''}
+    ${r.notes?`<div class="m">📝 ${esc(r.notes)}</div>`:''}</div>`;
+}
+window.__pwcache={};
+function revealv(id,btn){const el=document.getElementById('pw_'+id);if(el.dataset.shown){el.textContent='••••••••';el.classList.add('pw');delete el.dataset.shown;btn.textContent='show';}else{el.textContent=window.__pwcache[id]||'';el.classList.remove('pw');el.dataset.shown='1';btn.textContent='hide';}}
+function copyv(v){navigator.clipboard.writeText(v);}
+
+function renderVault(personal,folders){
+  window.__pwcache={}; personal.forEach(it=>window.__pwcache[it.id]=(it.rec||{}).password||''); folders.forEach(f=>f.items.forEach(it=>window.__pwcache[it.id]=(it.rec||{}).password||''));
+  const fol=folders.map(f=>`<div class="card"><h2>🗂️ ${esc(f.name)} <span class="tag">${f.member_emails.length} member(s)</span>${f.fkey?'':' <span class="tag" style="color:var(--red)">no access</span>'}</h2>
+    <div class="row" style="margin-bottom:8px"><button class="btn sm" onclick="addItem('folder','${f.id}')">＋ Add code</button>
+    <button class="btn ghost sm" onclick="shareFolder('${f.id}')">Share…</button>
+    <span class="muted" style="font-size:.78rem">shared to: ${(f.groups||[]).map(esc).join(', ')||'individuals'}</span></div>
+    ${f.items.map(it=>itemHtml('folder',f.id,it)).join('')||'<div class="muted">No codes yet.</div>'}</div>`).join('');
+  document.getElementById('app').innerHTML=`
+    <div class="row" style="margin-bottom:14px">
+      <button class="btn" onclick="addItem('personal','')">＋ Personal password</button>
+      <button class="btn ghost" onclick="createFolder()">＋ New shared vault</button>
+      <span class="muted" style="font-size:.8rem">🔒 zero-knowledge — encrypted in your browser; the server only stores ciphertext</span>
+    </div>
+    <div class="card"><h2>👤 My personal vault <span class="tag">${personal.length}</span></h2>
+      ${personal.map(it=>itemHtml('personal','',it)).join('')||'<div class="muted">No personal passwords yet.</div>'}</div>
+    ${fol||''}`;
+  window.__personal=personal; window.__folders=folders;
+}
+
+// ── add / edit item ──
+function itemForm(r){r=r||{};return `
+  <label>Title</label><input id="f_title" value="${esc(r.title||'')}">
+  <label>Username / login</label><input id="f_user" value="${esc(r.username||'')}">
+  <label>Password / code</label><div class="row"><input id="f_pass" value="${esc(r.password||'')}"><button class="btn ghost sm" onclick="genpw()">gen</button></div>
+  <label>URL</label><input id="f_url" value="${esc(r.url||'')}">
+  <label>Notes</label><textarea id="f_notes" rows="2">${esc(r.notes||'')}</textarea>`;}
+function readForm(){return {title:v('f_title'),username:v('f_user'),password:v('f_pass'),url:v('f_url'),notes:v('f_notes')};}
+function v(id){return document.getElementById(id).value;}
+function genpw(){const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*';let s='';const a=crypto.getRandomValues(new Uint8Array(20));for(const x of a)s+=c[x%c.length];document.getElementById('f_pass').value=s;}
+function modal(html){document.getElementById('modalBox').innerHTML=html;document.getElementById('modal').style.display='flex';}
+function closeModal(){document.getElementById('modal').style.display='none';}
+
+function addItem(kind,fid){modal(`<h2>New ${kind==='folder'?'shared code':'personal password'}</h2>${itemForm()}<div class="row" style="margin-top:12px"><button class="btn" onclick="saveItem('${kind}','${fid}','')">Save</button><button class="btn ghost" onclick="closeModal()">Cancel</button></div><div class="err" id="mErr"></div>`);}
+function editItem(kind,fid,id){const src=kind==='folder'?window.__folders.find(f=>f.id===fid).items:window.__personal;const it=src.find(x=>x.id===id);modal(`<h2>Edit</h2>${itemForm(it.rec)}<div class="row" style="margin-top:12px"><button class="btn" onclick="saveItem('${kind}','${fid}','${id}')">Save</button><button class="btn ghost" onclick="closeModal()">Cancel</button></div><div class="err" id="mErr"></div>`);}
+async function saveItem(kind,fid,id){
+  const rec=readForm(); if(!rec.title&&!rec.password){document.getElementById('mErr').textContent='Enter at least a title or password.';return;}
+  try{
+    if(kind==='personal'){const blob=await aesEnc(USERKEY,rec);await api('/personal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id||undefined,...blob})});}
+    else{const f=window.__folders.find(x=>x.id===fid);if(!f.fkey){document.getElementById('mErr').textContent='No access to this vault.';return;}const blob=await aesEnc(f.fkey,rec);await api('/folder/'+fid+'/item',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id||undefined,...blob})});}
+    closeModal();await loadAndRender();
+  }catch(e){document.getElementById('mErr').textContent='Save failed: '+e.message;}
+}
+
+// ── create shared vault + share to groups/users ──
+function pickerHtml(){
+  const groups=BOOT.groups.map(g=>`<span class="chip" data-grp="${esc(g.id)}" onclick="this.classList.toggle('on')">${esc(g.label)} <span class="muted">(${g.members.filter(e=>BOOT.pubkeys[e]).length})</span></span>`).join('');
+  const people=BOOT.directory.filter(u=>u.enrolled).map(u=>`<span class="chip" data-em="${esc(u.email)}" onclick="this.classList.toggle('on')">${esc(u.name||u.email)}</span>`).join('');
+  const notEnrolled=BOOT.directory.filter(u=>!u.enrolled).length;
+  return `<label>Share to groups</label><div>${groups||'<span class="muted">none</span>'}</div>
+    <label style="margin-top:10px">Or specific people (enrolled only)</label><div>${people||'<span class="muted">no one enrolled yet</span>'}</div>
+    ${notEnrolled?`<div class="muted" style="font-size:.76rem;margin-top:6px">${notEnrolled} teammate(s) haven't set up their vault yet — share to them once they enrol.</div>`:''}`;
+}
+function selectedRecipients(){
+  const emails=new Set();
+  document.querySelectorAll('.chip.on[data-grp]').forEach(c=>{const g=BOOT.groups.find(x=>x.id===c.dataset.grp);(g?g.members:[]).forEach(e=>{if(BOOT.pubkeys[e])emails.add(e);});});
+  document.querySelectorAll('.chip.on[data-em]').forEach(c=>emails.add(c.dataset.em));
+  const groups=[...document.querySelectorAll('.chip.on[data-grp]')].map(c=>{const g=BOOT.groups.find(x=>x.id===c.dataset.grp);return g?g.label:c.dataset.grp;});
+  return {emails:[...emails],groups};
+}
+function createFolder(){modal(`<h2>New shared vault</h2><label>Name</label><input id="f_name" placeholder="e.g. IT Admin Codes">${pickerHtml()}<div class="row" style="margin-top:12px"><button class="btn" onclick="doCreateFolder()">Create & share</button><button class="btn ghost" onclick="closeModal()">Cancel</button></div><div class="err" id="mErr"></div>`);}
+async function doCreateFolder(){
+  const name=v('f_name'); if(!name){document.getElementById('mErr').textContent='Name required.';return;}
+  const {emails,groups}=selectedRecipients(); const set=new Set(emails); set.add(myEmail());
+  const members={}; const folderKey=await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']);
+  for(const em of set){const pk=BOOT.pubkeys[em]; if(!pk)continue; members[em]=await wrapFolderKey(await importPub(pk.public_key),folderKey);}
+  let recovery_wrapped=null; if(BOOT.org_public_key){recovery_wrapped=await wrapFolderKey(await importPub(BOOT.org_public_key),folderKey);}
+  const r=await api('/folder',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,members,groups,recovery_wrapped})});
+  if(!r.ok){document.getElementById('mErr').textContent='Create failed: '+((await r.json()).error||r.status);return;}
+  closeModal();await loadAndRender();
+}
+function shareFolder(fid){const f=window.__folders.find(x=>x.id===fid);if(!f.fkey){alert('You do not have access to re-share this vault.');return;}modal(`<h2>Share “${esc(f.name)}”</h2>${pickerHtml()}<div class="row" style="margin-top:12px"><button class="btn" onclick="doShare('${fid}')">Add members</button><button class="btn ghost" onclick="closeModal()">Cancel</button></div><div class="err" id="mErr"></div>`);}
+async function doShare(fid){
+  const f=window.__folders.find(x=>x.id===fid); const {emails,groups}=selectedRecipients();
+  const members={};
+  for(const em of emails){if(f.member_emails.includes(em))continue;const pk=BOOT.pubkeys[em];if(!pk)continue;members[em]=await wrapFolderKey(await importPub(pk.public_key),f.fkey);}
+  await api('/folder/'+fid+'/share',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({members,groups})});
+  closeModal();await loadAndRender();
+}
+
+start().catch(e=>{document.getElementById('app').innerHTML='<div class="err">Vault error: '+esc(e.message)+'</div>';});
+</script>
+</body></html>
