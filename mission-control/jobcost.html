@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Job Costing — Exos Mission Control</title>
+<style>
+  :root{--bg:#0b0b0d;--panel:#141418;--panel2:#1b1b21;--border:#2a2a31;--text:#e8e8ec;--text2:#9a9aa6;--orange:#ff6b00}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header{padding:16px 20px;border-bottom:2px solid var(--orange);display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  header h1{margin:0;font-size:1.15rem;font-weight:800}
+  a.back{color:var(--text2);text-decoration:none;font-weight:600;margin-left:auto}
+  .wrap{padding:18px 20px;max-width:1000px;margin:0 auto}
+  .kpi{display:inline-block;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 16px;margin:0 10px 14px 0}
+  .kpi .v{font-size:1.5rem;font-weight:800}
+  .kpi .l{color:var(--text2);font-size:.72rem;text-transform:uppercase;letter-spacing:.5px}
+  table{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left}
+  th{background:#111116;color:var(--text2);text-transform:uppercase;font-size:.68rem;letter-spacing:.5px}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .muted{color:var(--text2)}
+</style></head>
+<body>
+<header>
+  <h1>💰 Job Costing</h1>
+  <span class="muted" id="sub"></span>
+  <a class="back" href="/index.html">← Mission Control</a>
+</header>
+<div class="wrap">
+  <div id="kpis"></div>
+  <table><thead><tr><th>Job</th><th>Section</th><th>Vehicle</th><th class="num">Material $</th><th class="num">Mat. lines</th><th class="num">Labor hrs</th><th class="num">Total $</th></tr></thead>
+  <tbody id="rows"><tr><td colspan="7" class="muted" style="padding:24px;text-align:center">Loading…</td></tr></tbody></table>
+  <div class="muted" id="note" style="margin-top:12px;font-size:.82rem"></div>
+</div>
+<script>
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+async function load(){
+  const r=await fetch('/api/jobcost'); if(r.status===401){location='/login';return;}
+  const d=await r.json();
+  document.getElementById('kpis').innerHTML=
+    '<div class="kpi"><div class="v">$'+esc(d.total_material||0)+'</div><div class="l">Material to date</div></div>'+
+    '<div class="kpi"><div class="v">'+((d.jobs||[]).length)+'</div><div class="l">Active jobs</div></div>';
+  const rows=d.jobs||[];
+  document.getElementById('rows').innerHTML=rows.length?rows.map(j=>
+    '<tr><td><b>'+esc(j.name)+'</b>'+(j.task?' <span class="muted">#'+esc(j.task)+'</span>':'')+'</td>'+
+    '<td>'+esc(j.section||'')+'</td><td>'+esc(j.vehicle||'')+'</td>'+
+    '<td class="num">$'+esc(j.material_cost)+(j.material_unpriced?' <span class="muted">('+j.material_unpriced+' unpriced)</span>':'')+'</td>'+
+    '<td class="num">'+esc(j.material_lines)+'</td>'+
+    '<td class="num">'+(j.labor_hours||0)+(j.labor_note?' <span class="muted">*</span>':'')+'</td>'+
+    '<td class="num"><b>$'+esc(j.total_cost)+'</b></td></tr>').join('')
+    :'<tr><td colspan="7" class="muted" style="padding:24px;text-align:center">No jobs yet. Material posts here as parts are consumed against a job.</td></tr>';
+  document.getElementById('note').textContent=(d.note||'')+' Labor hrs marked * have no WBS mapped yet.';
+}
+load();
+</script>
+</body></html>

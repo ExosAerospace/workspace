@@ -50,3 +50,5 @@ mission-control/data/vault.json.tmp
 
 mission-control/data/receiving.json
 mission-control/data/qb-pos-cache.json
+mission-control/data/job-costs.json
+mission-control/data/qb-bills-cache.json

@@ -4018,7 +4018,25 @@ const server = http.createServer((req, res) => {
       });
       return;
     }
+    if (rsub === '/match' && req.method === 'GET') {
+      cp.execFile('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'reconcile.py')],
+        { timeout: 60000, maxBuffer: 8 * 1024 * 1024 }, (err, stdout) => {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(stdout || JSON.stringify({ pos: [], error: err ? String(err) : 'no data' }));
+        });
+      return;
+    }
     res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'unknown receiving route' }));
+    return;
+  }
+
+  // ── JOB COSTING (per-job material from consume postings + labor hours by WBS) ───────────────────
+  if (req.url.split('?')[0].startsWith('/api/jobcost') && req.method === 'GET') {
+    require('child_process').execFile('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'job_cost.py')],
+      { timeout: 30000, maxBuffer: 4 * 1024 * 1024 }, (err, stdout) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(stdout || JSON.stringify({ jobs: [], error: err ? String(err) : 'no data' }));
+      });
     return;
   }
 

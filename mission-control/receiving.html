@@ -59,6 +59,11 @@
   </div>
 
   <div class="card">
+    <h2>3-way reconciliation <span class="muted" style="font-size:.8rem">— ordered · received · billed</span></h2>
+    <div id="recon" class="muted">Loading…</div>
+  </div>
+
+  <div class="card">
     <h2>Recent receipts</h2>
     <div id="recent" class="muted">Loading…</div>
   </div>
@@ -70,7 +75,7 @@ async function j(u,o){const r=await fetch(u,o);if(r.status===401){location='/log
 
 async function start(){
   try{ const me=await j('/api/me'); ME=me.name||me.email||''; document.getElementById('who').textContent=ME?('receiving as '+ME):''; }catch(e){}
-  loadPOs(); loadBOM(); loadRecent();
+  loadPOs(); loadBOM(); loadRecent(); loadRecon();
 }
 async function loadPOs(){
   const d=await j('/api/receiving/pos'); POS=d.pos||[]; renderPOs();
@@ -129,10 +134,21 @@ async function submitReceipt(){
       body:JSON.stringify({po:SEL.po,vendor:SEL.vendor,received_by:ME,lines:LINES})});
     const d=await r.json();
     const el=document.getElementById('result');
-    if(d.ok){ el.className='res ok'; el.textContent='✓ Received '+d.applied+' line(s) against PO#'+SEL.po+' — inventory updated. Receipt '+d.receipt_id+(d.total_cost?' · $'+d.total_cost:''); LINES=[]; renderLines(); loadRecent(); }
+    if(d.ok){ el.className='res ok'; el.textContent='✓ Received '+d.applied+' line(s) against PO#'+SEL.po+' — inventory updated. Receipt '+d.receipt_id+(d.total_cost?' · $'+d.total_cost:''); LINES=[]; renderLines(); loadRecent(); loadRecon(); }
     else { el.className='res err'; el.textContent='Error: '+(d.error||'failed'); }
   }catch(e){ const el=document.getElementById('result'); el.className='res err'; el.textContent='Error: '+e.message; }
   btn.disabled=false; btn.textContent='✓ Check in received parts';
+}
+async function loadRecon(){
+  try{ const d=await j('/api/receiving/match'); const rows=(d.pos||[]).filter(p=>p.received_lines>0).slice(0,20);
+    document.getElementById('recon').innerHTML=rows.length?('<table><thead><tr><th>PO</th><th>Vendor</th><th>Ordered</th><th>Received</th><th>Billed</th><th>Status</th></tr></thead><tbody>'+
+      rows.map(p=>'<tr><td><b>#'+esc(p.po)+'</b></td><td>'+esc(p.vendor||'')+'</td><td>$'+esc(p.ordered)+'</td>'+
+        '<td>'+p.received_lines+' ln · $'+esc(p.received_cost)+'</td>'+
+        '<td>'+(p.billed!=null?'$'+esc(p.billed):(p.candidate_bills&&p.candidate_bills.length?'<span class="muted">~$'+esc(p.candidate_bills[0].total)+' (Bill '+esc(p.candidate_bills[0].bill)+'?)</span>':'<span class="muted">—</span>'))+'</td>'+
+        '<td>'+esc(p.status)+'</td></tr>').join('')+'</tbody></table>'+
+      '<div class="muted" style="font-size:.78rem;margin-top:8px">Bills aren’t PO-linked in QuickBooks, so "Billed" shows same-vendor candidate Bills for manual match. Only POs with received parts are shown.</div>')
+      :'<span class="muted">No received POs yet — check something in above.</span>';
+  }catch(e){ document.getElementById('recon').innerHTML='<span class="muted">Reconciliation unavailable.</span>'; }
 }
 async function loadRecent(){
   try{ const d=await j('/api/receiving/list'); const rows=(d.receipts||[]).slice(-12).reverse();

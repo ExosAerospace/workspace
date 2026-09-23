@@ -822,9 +822,25 @@ def cmd_consume(a):
         if val and not rec.get(fld):
             rec[fld] = val
     rec["history"].append({"at": now(), "by": a.by or "Exo", "delta": -qty,
-                           "note": a.note or "consumed", "location": a.location or "", "queue": None})
+                           "note": a.note or "consumed", "location": a.location or "",
+                           "job": getattr(a, "job", "") or "", "queue": None})
     rec["updated_at"] = now()
     inv_save(inv)
+    # Job costing: consuming a part posts its material cost to a job/WBS (Phase 4).
+    job = getattr(a, "job", None)
+    if job:
+        unit = rec.get("unit_cost")
+        cost = round(qty * float(unit), 2) if unit not in (None, "") else None
+        jc_path = os.path.join(MC, "data", "job-costs.json")
+        try:
+            jc = json.load(open(jc_path)) if os.path.exists(jc_path) else {"postings": []}
+        except Exception:
+            jc = {"postings": []}
+        jc["postings"].append({"at": now(), "job": job, "type": "material",
+                               "part": rec.get("vendor_pn") or rec.get("mfg_pn") or key,
+                               "description": rec.get("description", ""), "section": rec.get("section", ""),
+                               "qty": qty, "unit_cost": unit, "cost": cost, "by": a.by or "team"})
+        tmp = jc_path + ".tmp"; json.dump(jc, open(tmp, "w"), indent=2); os.replace(tmp, jc_path)
     # short vs BOM for the note
     bom = load(BOM_INDEX, {"rows": []})
     req = None
@@ -908,7 +924,7 @@ def main():
     k = sub.add_parser("ask")
     k.add_argument("--queue"); k.add_argument("--task"); k.add_argument("--uploader"); k.add_argument("--question", required=True)
     cs = sub.add_parser("consume")
-    for f in ["bom-key", "vendor-pn", "mfg-pn", "item", "section", "desc", "qty", "remaining", "location", "by", "note", "task"]:
+    for f in ["bom-key", "vendor-pn", "mfg-pn", "item", "section", "desc", "qty", "remaining", "location", "by", "note", "task", "job"]:
         cs.add_argument("--" + f)
     rc = sub.add_parser("receive")
     for f in ["bom-key", "vendor-pn", "mfg-pn", "item", "section", "desc", "qty", "unit-cost", "location", "po", "by", "task"]:
