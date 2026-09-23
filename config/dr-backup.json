@@ -4,6 +4,7 @@
   "dest_is_remote": false,
   "workspace_src": "/Users/exomac/.openclaw/workspace/",
   "openclaw_config_src": "/Users/exomac/.openclaw/",
+  "vaultwarden_backup_src": "/Users/exomac/exos-asset-backups/vaultwarden/",
   "max_age_hours": 26,
   "git_push": false,
   "git_push_note": "flip to true at migration once the Studio has the git remote + creds; pre-migration we don't want the mini pushing on a test",

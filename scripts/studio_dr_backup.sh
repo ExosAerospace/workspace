@@ -59,6 +59,13 @@ run_rsync "$WS_SRC" "workspace/"
 #    Exclude the big regenerable model cache; models are backed up separately (2 copies/2 sites).
 run_rsync "$CFG_SRC" "openclaw-config/"
 
+# 2a) Vaultwarden nightly backup tarballs (encrypted vaults) -> offsite. Uses the consistent
+#     nightly snapshots (com.exos.vaultwarden-backup), not the live sqlite that may be mid-write.
+VW_SRC=$(j vaultwarden_backup_src)
+if [ -n "$VW_SRC" ] && [ -d "$VW_SRC" ]; then
+  run_rsync "$VW_SRC" "vaultwarden/"
+fi
+
 # 2b) home-level credentials that live OUTSIDE ~/.openclaw (Bridge cert, msmtp config).
 #     Needed for failover email; the failover drill flagged these were being missed.
 for f in "$HOME/.protonmail-bridge.crt" "$HOME/.msmtprc"; do
