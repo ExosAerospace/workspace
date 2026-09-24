@@ -263,6 +263,10 @@
   .task-card.critical .ms-chip { background:#ff2d2d; color:#fff; border-color:#ff2d2d; }
   .await-chip { font-size:10px; font-weight:700; color:#0a1628; background:#f5a623; border-radius:4px; padding:1px 6px; margin-right:2px; }
   .task-card.awaiting-answer { border-color:#f5a623; box-shadow:0 0 6px rgba(245,166,35,0.55), inset 0 0 6px rgba(245,166,35,0.10); }
+  /* Red ❓ = a decision is owed on this task; green ✅ = resolved/Done. Matches the Decisions surface. */
+  .decide-chip { font-size:10px; font-weight:700; color:#fff; background:#ff4444; border-radius:4px; padding:1px 6px; margin-right:2px; }
+  .task-card.needs-decision { border-color:#ff4444; box-shadow:0 0 6px rgba(255,68,68,0.5), inset 0 0 6px rgba(255,68,68,0.10); }
+  .done-check { color:#22c55e; margin-right:5px; }
   .funding-flag {
     font-size:10px; font-weight:800; letter-spacing:0.4px; color:#0a0f1a;
     background:#39ff14; border-radius:4px; padding:2px 6px; text-transform:uppercase;
@@ -1522,13 +1526,22 @@ function buildCard(task) {
     awaitingHtml = '<span class="await-chip">❓ Awaiting Exo answer</span>';
   }
 
+  // Red ❓ where a call is owed (task blocked, needs a decision); it clears when resolved,
+  // and a Done task shows a green ✅. Same red→green grammar as the Decisions surface.
+  let decideHtml = '';
+  if (ms && ms.blocked && task.state !== 'Done') {
+    div.classList.add('needs-decision');
+    decideHtml = '<span class="decide-chip" title="Blocked — needs your decision">🔴 ❓ Needs a decision</span>';
+  }
+  const doneCheck = task.state === 'Done' ? '<span class="done-check" title="Resolved">✅</span>' : '';
+
   div.innerHTML = `
     <div class="task-top">
-      <div class="task-title" onclick="openEdit('${task.id}')">${escHtml(task.title)}</div>
+      <div class="task-title" onclick="openEdit('${task.id}')">${doneCheck}${escHtml(task.title)}</div>
       <div class="owner-badges" style="flex-shrink:0" title="Assigned to: ${escHtml(ownerNames(task.owner).join(', '))}">${ownerBadgesHtml(task.owner)}</div>
     </div>
     <div class="task-meta">
-      ${awaitingHtml}${projectHtml}${(() => { const s = subSummary(task.id); return s.total ? `<span class="subtask-badge" title="Subtasks">▸ ${s.done}/${s.total}</span>` : ''; })()}${msHtml}${fundingFlagHtml}${catHtml}${srcHtml}${priHtml}${dueDateHtml}
+      ${decideHtml}${awaitingHtml}${projectHtml}${(() => { const s = subSummary(task.id); return s.total ? `<span class="subtask-badge" title="Subtasks">▸ ${s.done}/${s.total}</span>` : ''; })()}${msHtml}${fundingFlagHtml}${catHtml}${srcHtml}${priHtml}${dueDateHtml}
       ${assignSelect}
     </div>
     <div class="move-btns">${moveBtns}</div>

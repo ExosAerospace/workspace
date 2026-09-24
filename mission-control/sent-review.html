@@ -40,7 +40,10 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','
 let ITEMS=[];
 fetch('/api/sent-review',{credentials:'same-origin'}).then(r=>r.json()).then(d=>{
   ITEMS=d.items||[];
-  document.getElementById('note').textContent = ITEMS.length+' sends awaiting a task link — '+ITEMS.filter(i=>i.suggested_task_id).length+' have a suggested match.';
+  const n=ITEMS.length;
+  document.getElementById('note').textContent = n
+    ? '🔴 ❓ '+n+' sends awaiting a task link — '+ITEMS.filter(i=>i.suggested_task_id).length+' have a suggested match.'
+    : '✅ Nothing awaiting a task link.';
   render();
 }).catch(()=>{document.getElementById('note').textContent='Could not load.';});
 function render(){
@@ -51,7 +54,7 @@ function render(){
     const linkBtn = i.suggested_task_id
       ? `<button class="link" onclick="doLink(${ix},${i.suggested_task_id})">✓ Link #${i.suggested_task_id}</button>` : '';
     return `<tr id="r${ix}">
-      <td class="muted" style="white-space:nowrap">${esc(i.last_sent)}${i.replied?' ✅':''}</td>
+      <td class="muted" style="white-space:nowrap"><span title="Needs your link or dismiss" style="color:#ff4444;font-weight:700">❓</span> ${esc(i.last_sent)}${i.replied?' ✅':''}</td>
       <td>${esc(i.name)}<div class="muted" style="font-size:11px">${esc(i.contact)}</div></td>
       <td>${esc(i.subj).slice(0,60)}</td>
       <td>${sug}</td>
@@ -63,7 +66,7 @@ function render(){
 }
 function post(url,payload,ix){
   return fetch(url,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
-    .then(r=>r.json()).then(res=>{ if(res.error){alert(res.error);return;} const tr=document.getElementById('r'+ix); if(tr){tr.classList.add('gone');setTimeout(()=>tr.remove(),400);} });
+    .then(r=>r.json()).then(res=>{ if(res.error){alert(res.error);return;} const tr=document.getElementById('r'+ix); if(tr){const c=tr.querySelector('td');if(c)c.innerHTML='<span style="color:#22c55e;font-weight:700">✅ Resolved</span>';tr.classList.add('gone');setTimeout(()=>tr.remove(),600);} });
 }
 function doLink(ix,tid){ post('/api/sent-review/link',{contact:ITEMS[ix].contact,task_id:tid},ix); }
 function doLinkManual(ix){ const v=(document.getElementById('t'+ix).value||'').replace(/[^0-9]/g,''); if(!v){alert('Enter a task #');return;} post('/api/sent-review/link',{contact:ITEMS[ix].contact,task_id:+v},ix); }
