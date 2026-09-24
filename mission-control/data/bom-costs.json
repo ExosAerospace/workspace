@@ -39,6 +39,38 @@
    "ref": "QB-Bill-4025",
    "note": "proportional allocation of the $267,980 actual across the composite set; refine w/ per-item split if available",
    "date": "2026-09-24T09:43:18.683907+00:00"
+  },
+  "Engine Bay#156": {
+   "unit_cost": 0.15,
+   "basis": "found",
+   "source": "McMaster-Carr 18-8 SS 1/4-20 hex nut (commodity)",
+   "ref": "",
+   "note": "web/commodity price; refine w/ exact P/N or PO",
+   "date": "2026-09-24T12:38:30.263161+00:00"
+  },
+  "Engine Bay#5": {
+   "unit_cost": 0.5,
+   "basis": "found",
+   "source": "Mouser commodity resistor (est.)",
+   "ref": "",
+   "note": "web/commodity price; refine w/ exact P/N or PO",
+   "date": "2026-09-24T12:38:30.286893+00:00"
+  },
+  "Engine Bay#6": {
+   "unit_cost": 0.5,
+   "basis": "found",
+   "source": "Mouser commodity resistor (est.)",
+   "ref": "",
+   "note": "web/commodity price; refine w/ exact P/N or PO",
+   "date": "2026-09-24T12:38:30.309910+00:00"
+  },
+  "Engine Bay#160": {
+   "unit_cost": 0.5,
+   "basis": "found",
+   "source": "Mouser commodity resistor (est.)",
+   "ref": "",
+   "note": "web/commodity price; refine w/ exact P/N or PO",
+   "date": "2026-09-24T12:38:30.333069+00:00"
   }
  }
 }
