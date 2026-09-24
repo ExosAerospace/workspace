@@ -1,3 +1,64 @@
 {
- "commitments": []
+ "commitments": [
+  {
+   "id": "blk3-cost-fill",
+   "title": "BLK3 cost-fill: cost the 33 uncosted lines (basis:found) + Paid/Found/BOM display",
+   "check": "python3 scripts/bom_cost_fill.py report",
+   "resume": "Continue the BLK3 cost-fill task for John. Repo /Users/exomac/.openclaw/workspace. GOAL: every BLK3 BOM line costed, basis tagged (paid/found/bom-sheet), displayed distinctly. TOOL: scripts/bom_cost_fill.py (subcmds: uncosted | set --section S --item I --cost C --basis found|paid --source SRC [--ref R] | report). STEPS: (1) run 'python3 scripts/bom_cost_fill.py uncosted'; (2) for each remaining line research a real unit cost from the named vendor/web (Mouser, McMaster, Aircraft Spruce, Bally Ribbon Mills, CSR, Paragear, Performance Titanium, Offray, JP Composites; Exos-made/labor = reasonable internal estimate) and record with 'set ... --basis found --source <vendor-or-url>'; use --basis paid ONLY for QuickBooks/actual amounts, never for a guess; (3) git add mission-control/data/bom-costs.json and commit after each batch, ending the message with: Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>; (4) wire the display: edit mission-control/server.js /api/inventory to include each line's cost + basis + source from bom-costs.json (overlay) and update inventory.html (BLK3 Build Shortfall) + blk3-bom.html to show a Cost / Basis / Source column colored Paid=green Found=orange BOM=grey; node -c mission-control/server.js and commit; (5) DONE when 'python3 scripts/bom_cost_fill.py report' exits 0 AND the display shows basis. Work in-session, commit each stage, verify commits landed. Do NOT email anyone or restart the gateway.",
+   "session": "agent:main:auto-resume",
+   "channel": "channel:1501636614034821320",
+   "max_attempts": 6,
+   "cooldown_min": 20,
+   "attempts": 0,
+   "status": "open",
+   "created": "2026-09-24T09:37:07.352065+00:00",
+   "last_attempt": 0,
+   "last_check": "2026-09-24T13:14:04.691073+00:00"
+  },
+  {
+   "id": "inv-bom-editable",
+   "title": "Inventory + BLK3 BOM pages: inline-editable (values+description) with who/when attribution and confirm step",
+   "check": "grep -q \"/api/bom/edit\" mission-control/server.js && grep -q \"bom-edits.json\" mission-control/server.js && grep -q \"bomEdit\" mission-control/inventory.html && grep -q \"bomEdit\" mission-control/blk3-bom.html",
+   "resume": "Continue the inventory+BLK3-BOM editable-pages build. Data model: both pages derive from mission-control/data/bom-index.json (rows keyed by section#item, fields description/qty/cost). Plan: (1) server.js POST /api/bom/edit session-gated, writes data/bom-edits.json keyed by \"section#item\" with fields {description,req,on_hand,note}, attribution {_by name/email,_at} + history[]; apply these overrides in the /api/inventory GET handler after building each row (override description/req/on_hand, recompute short, attach edited_by/edited_at). (2) inventory.html: inline edit + CONFIRM modal + attribution display, POSTs to /api/bom/edit, fn name bomEdit. (3) blk3-bom.html: same inline edit+confirm+attribution (fn bomEdit). Commit per stage. Verify: curl an edit logged-in, confirm attribution + survives a bom-index rebuild. Restart: launchctl kickstart -k gui/$(id -u)/com.exos.missioncontrol. DONE when the --check passes.",
+   "session": "agent:main:auto-resume",
+   "channel": "channel:1501932041963573409",
+   "max_attempts": 3,
+   "cooldown_min": 20,
+   "attempts": 1,
+   "status": "done",
+   "created": "2026-09-24T12:58:40.543334+00:00",
+   "last_attempt": 1790254741.100971,
+   "last_check": "2026-09-24T12:59:01.093519+00:00"
+  },
+  {
+   "id": "exo3-gate",
+   "title": "Enforced exo3 compliance gate (pre-commit) + self-register in agent registry",
+   "check": "test -f scripts/exo3_gate.py && test -f .git/hooks/pre-commit && grep -q exo3_gate .git/hooks/pre-commit && grep -q \"exo3-gate\" mission-control/data/agent-registry.json",
+   "resume": "Continue the enforced exo3 gate build. Build scripts/exo3_gate.py: classify staged git changes; BLOCK (exit 1) only when a new com.exos.<id> agent appears in added lines but is not in mission-control/data/agent-registry.json (missing owner+eval); WARN (non-blocking) on new AI-managed page/module lacking -exo3 naming or DECIDE/GOVERN file changed without decision-trace/eval; fail-open (exit 0) on any internal error; support override via EXO3_GATE_OVERRIDE env or [exo3-skip: reason] in commit msg; log every run to logs/exo3-gate.jsonl via fleet_log corr-ID. Install .git/hooks/pre-commit calling python3 scripts/exo3_gate.py --staged (robust: fail-open if python/script missing). Register the gate itself in agent-registry.json (GOVERN layer, owner=John Quinn, eval) + config/agent-evals.json. Add memory feedback rule. Commit in stages, verify pass on clean + block on synthetic new-agent violation. DONE when --check passes.",
+   "session": "agent:main:auto-resume",
+   "channel": "channel:1501932041963573409",
+   "max_attempts": 3,
+   "cooldown_min": 20,
+   "attempts": 0,
+   "status": "done",
+   "created": "2026-09-24T13:08:35.823232+00:00",
+   "last_attempt": 0,
+   "last_check": null
+  },
+  {
+   "id": "shop-inv-edit-and-location",
+   "title": "Shop-inventory inline edit + add editable location to all 3 inventory/BOM pages (confirm+attribution)",
+   "check": "grep -q \"/api/shop/edit\" mission-control/server.js && grep -q \"shopEdit\" mission-control/shop-inventory.html && grep -q \"location\" <(python3 -c \"import re;print(open(\\\"mission-control/server.js\\\").read())\" | grep -A3 \"ALLOWED = \\[.*description.*req.*on_hand\")",
+   "resume": "Continue: add editable location everywhere + shop-inventory editing. (1) Extend POST /api/bom/edit ALLOWED to include location; apply it in /api/inventory (override row.locations display). Add a Location input to the confirm-modal in inventory.html and blk3-bom.html (fn bomEdit). (2) New POST /api/shop/edit session-gated -> data/shop-edits.json keyed by a stable shop id (exos_sku||source_sku||id), fields {description,qty,location,note}, who/when + history; apply overrides where shop-inventory is served/read. shop-inventory.html: add inline edit + Review->Confirm modal + attribution (fn shopEdit). Commit per stage; verify; restart launchctl kickstart -k gui/$(id -u)/com.exos.missioncontrol.",
+   "session": "agent:main:auto-resume",
+   "channel": "channel:1501932041963573409",
+   "max_attempts": 3,
+   "cooldown_min": 20,
+   "attempts": 0,
+   "status": "done",
+   "created": "2026-09-24T13:15:12.012629+00:00",
+   "last_attempt": 0,
+   "last_check": null
+  }
+ ]
 }

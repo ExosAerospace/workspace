@@ -32,7 +32,7 @@ LOG = os.path.join(WS, "logs", "auto-resume.log")
 LOCK = os.path.join(WS, "logs", "auto-resume.lock")
 OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/shims/openclaw"
 DEFAULT_CHANNEL = "channel:1501636614034821320"   # #rd-team (requester)
-DEFAULT_SESSION = "agent:auto-resume"             # dedicated full-tool session for re-drives
+DEFAULT_SESSION = "agent:main:auto-resume"        # dedicated full-tool session for re-drives (MUST be agent:<agent-id>:<key> — 3 parts)
 DEFAULT_MAX = 3
 DEFAULT_COOLDOWN_MIN = 20
 CHECK_TIMEOUT = 90
@@ -85,7 +85,10 @@ def wake(session, prompt):
         r = subprocess.run([OPENCLAW, "agent", "--session-key", session, "-m", prompt],
                            capture_output=True, text=True, timeout=WAKE_TIMEOUT)
         if r.returncode != 0:
-            log(f"wake rc={r.returncode}: {(r.stderr or r.stdout)[:200]}")
+            # Log the FULL stderr tail (not first 200 chars) — a leading advisory line
+            # (e.g. the plugins.allow notice) was previously masking the real fatal error.
+            err = (r.stderr or r.stdout or "").strip()
+            log(f"wake rc={r.returncode}: ...{err[-600:]}")
         return r.returncode == 0
     except Exception as e:
         log(f"wake error: {e}")
