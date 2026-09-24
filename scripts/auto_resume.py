@@ -19,6 +19,12 @@ CLI:
 """
 import json, os, sys, subprocess, shutil, time, argparse
 from datetime import datetime, timezone
+# ExO3 Pillar 2 — correlation-ID logging (govlog). Safe-optional; never breaks the checker.
+try:
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "governance"))
+    import govlog
+except Exception:
+    govlog = None
 
 WS = "/Users/exomac/.openclaw/workspace"
 LEDGER = os.path.join(WS, "governance", "commitments.json")
@@ -126,6 +132,8 @@ def cmd_run(a):
         pass
     d = load()
     changed = False
+    grun = govlog.new_run("auto-resume-exo3") if govlog else None
+    if grun: govlog.event(grun, "start", open_count=sum(1 for c in d.get("commitments", []) if c["status"] == "open"))
     for c in d.get("commitments", []):
         if c["status"] != "open":
             continue
@@ -134,21 +142,29 @@ def cmd_run(a):
             c["status"] = "done"; changed = True
             notify(c["channel"], f"✅ Auto-resume: **{c['title']}** is complete (verified). Closing it out.")
             log(f"DONE {c['id']}")
+            if grun: govlog.event(grun, "commitment_done", detail=c["id"], outcome="done")
             continue
         if c["attempts"] >= c["max_attempts"]:
             if c["status"] != "stuck":
                 c["status"] = "stuck"; changed = True
                 notify(c["channel"], f"⚠️ Auto-resume: **{c['title']}** is STUCK after {c['attempts']} attempts — needs a human. (id {c['id']})")
                 log(f"STUCK {c['id']}")
+                if grun: govlog.event(grun, "commitment_stuck", status="error", detail=c["id"])
             continue
         if (time.time() - (c.get("last_attempt") or 0)) < c["cooldown_min"] * 60:
             continue
         c["attempts"] += 1; c["last_attempt"] = time.time(); changed = True
         log(f"RESUME {c['id']} attempt {c['attempts']}/{c['max_attempts']}")
-        wake(c["session"], c["resume"])
+        ok = wake(c["session"], c["resume"])
+        if grun: govlog.event(grun, "commitment_resume", detail=c["id"], attempt=c["attempts"],
+                              status="ok" if ok else "error",
+                              note="" if ok else "wake failed (often claude-cli auth expiry overnight — no headless renew)")
         save(d)  # persist attempt count before the long wake completes cycle
     if changed:
         save(d)
+    if grun:
+        opn = sum(1 for c in d.get("commitments", []) if c["status"] == "open")
+        govlog.event(grun, "end", status="ok", open_remaining=opn)
     try:
         os.remove(LOCK)
     except Exception:
