@@ -241,7 +241,7 @@
   .due-date.due-soon { color: var(--orange); }
   /* Green highlight: ANY task due within the next 5 days (including today) */
   .task-card.due-5d { border-color: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,0.20); }
-  /* Blue border: proposal / solicitation submission tasks (proposal, whitepaper, RFP/RFI/BAA, SBIR/STTR/TACFI/STRATFI/D2P2 …) */
+  /* Blue border: gov/funded solicitations where a package is still owed (see isProposalSubmission) */
   .task-card.proposal-submission { border: 1.5px solid #3b82f6; box-shadow: 0 0 8px rgba(59,130,246,0.40); }
   /* Neon block: funding submittal due within 5 days */
   .task-card.funding-due {
@@ -1415,13 +1415,17 @@ function isFundingSubmittal(task) {
   return FUNDING_RE.test(hay);
 }
 
-// Proposal / solicitation submission detector — blue border. Keyed on the TITLE/CATEGORY
-// only (precise, avoids passing mentions in descriptions); excludes abandoned/declined items.
-const PROPOSAL_SUB_RE = /\b(proposal|white\s?paper|whitepaper|RFP|RFI|BAA|SBIR|STTR|TACFI|STRATFI|D2P2|NOFO|NOFA|OSP-?4)\b/i;
+// Proposal-submission detector — blue border. Marks gov/funded opportunities where we
+// still owe a package. Two-signal gate: a solicitation VEHICLE (SBIR/STTR/TACFI/BAA/…)
+// AND a package/deliverable word (proposal/whitepaper/submit/…), on title+category+desc.
+// Skips Done/Cancelled and abandoned/declined/withdrawn so won or dead pursuits drop off.
+const PROPOSAL_VEHICLE_RE = /\b(SBIR|STTR|TACFI|STRATFI|D2P2|BAA|RFP|RFI|NOFO|NOFA|OSP-?4|SpaceWERX|AFWERX|broad\s+agency|solicitation|phase\s?(?:ii|iii|2|3))\b/i;
+const PROPOSAL_PKG_RE = /\b(proposal|white\s?paper|whitepaper|submit|submission|submittal|package|application)\b/i;
 function isProposalSubmission(task) {
-  const hay = `${task.title || ''} ${task.category || ''}`;
-  if (/\b(abandoned|declin)/i.test(hay)) return false;
-  return PROPOSAL_SUB_RE.test(hay);
+  if (task.state === 'Done' || task.state === 'Cancelled') return false;
+  const hay = `${task.title || ''} ${task.category || ''} ${task.description || ''}`;
+  if (/\b(abandon|declin|withdrawn)/i.test(hay)) return false;
+  return PROPOSAL_VEHICLE_RE.test(hay) && PROPOSAL_PKG_RE.test(hay);
 }
 
 function buildCard(task) {
