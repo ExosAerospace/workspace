@@ -1,1 +1,44 @@
-{"costs":{}}
+{
+ "costs": {
+  "Tanks#91": {
+   "unit_cost": 93279.38,
+   "basis": "paid",
+   "source": "QuickBooks Bill 4025 (Scorpius, 2026-04-14 entry; $267,980 carbon-composite tanks+skins bundle)",
+   "ref": "QB-Bill-4025",
+   "note": "proportional allocation of the $267,980 actual across the composite set; refine w/ per-item split if available",
+   "date": "2026-09-24T09:43:18.586229+00:00"
+  },
+  "Tanks#92": {
+   "unit_cost": 93279.38,
+   "basis": "paid",
+   "source": "QuickBooks Bill 4025 (Scorpius, 2026-04-14 entry; $267,980 carbon-composite tanks+skins bundle)",
+   "ref": "QB-Bill-4025",
+   "note": "proportional allocation of the $267,980 actual across the composite set; refine w/ per-item split if available",
+   "date": "2026-09-24T09:43:18.613188+00:00"
+  },
+  "Fin Can#29": {
+   "unit_cost": 27505.76,
+   "basis": "paid",
+   "source": "QuickBooks Bill 4025 (Scorpius, 2026-04-14 entry; $267,980 carbon-composite tanks+skins bundle)",
+   "ref": "QB-Bill-4025",
+   "note": "proportional allocation of the $267,980 actual across the composite set; refine w/ per-item split if available",
+   "date": "2026-09-24T09:43:18.637013+00:00"
+  },
+  "Payload Section#1": {
+   "unit_cost": 20987.86,
+   "basis": "paid",
+   "source": "QuickBooks Bill 4025 (Scorpius, 2026-04-14 entry; $267,980 carbon-composite tanks+skins bundle)",
+   "ref": "QB-Bill-4025",
+   "note": "proportional allocation of the $267,980 actual across the composite set; refine w/ per-item split if available",
+   "date": "2026-09-24T09:43:18.660767+00:00"
+  },
+  "Pressure Section#1": {
+   "unit_cost": 32927.62,
+   "basis": "paid",
+   "source": "QuickBooks Bill 4025 (Scorpius, 2026-04-14 entry; $267,980 carbon-composite tanks+skins bundle)",
+   "ref": "QB-Bill-4025",
+   "note": "proportional allocation of the $267,980 actual across the composite set; refine w/ per-item split if available",
+   "date": "2026-09-24T09:43:18.683907+00:00"
+  }
+ }
+}
