@@ -438,7 +438,10 @@ function runExobotChat(jobId, msg) {
 // path with a textutil fallback (mammoth is .docx-only / may be absent).
 const DOCX2HTML = path.join(__dirname, '..', 'scripts', 'docx2html.py');
 const PPTX2HTML = path.join(__dirname, '..', 'scripts', 'pptx2html.py');
-function ensurePdfRendition(storedName) {
+// Coalesce concurrent renders of the SAME file: 10 dashboard tabs opening one preview must not
+// spawn 10 Chrome/python processes — they all await the single in-flight render. Keyed by storedName.
+const _pdfInFlight = new Map();
+async function ensurePdfRendition(storedName) {
   const ext = path.extname(storedName).toLowerCase();
   if (!PDF_CONVERTIBLE.includes(ext)) return null;
   const src = path.join(UPLOADS_DIR, storedName);
@@ -450,32 +453,42 @@ function ensurePdfRendition(storedName) {
   try {
     if (fs.existsSync(pdfPath) && fs.statSync(pdfPath).mtimeMs >= fs.statSync(src).mtimeMs) return pdfPath;
   } catch {}
-  const tmpHtml = path.join(PDF_CACHE_DIR, storedName + '.html');
-  try {
-    // PPTX/PPT: python-pptx → content HTML (soffice hangs here, so we render a content view,
-    // not a pixel-perfect one — enough to review ordering/figures/narrative before approving).
-    if (ext === '.pptx' || ext === '.ppt') {
-      execFileSync('/usr/bin/python3', [PPTX2HTML, src, tmpHtml], { timeout: 90000, stdio: 'ignore' });
-      if (!(fs.existsSync(tmpHtml) && fs.statSync(tmpHtml).size > 0)) throw new Error('empty pptx html');
-    } else {
-      // Primary: mammoth (embeds images). Fallback: textutil (text only) for .doc or if mammoth fails.
-      try {
-        execFileSync('/usr/bin/python3', [DOCX2HTML, src, tmpHtml], { timeout: 60000, stdio: 'ignore' });
-        if (!(fs.existsSync(tmpHtml) && fs.statSync(tmpHtml).size > 0)) throw new Error('empty html');
-      } catch (mErr) {
-        execFileSync('textutil', ['-convert', 'html', '-output', tmpHtml, src], { timeout: 30000, stdio: 'ignore' });
+  if (_pdfInFlight.has(storedName)) return _pdfInFlight.get(storedName);
+  const job = (async () => {
+    const t0 = Date.now();
+    const tmpHtml = path.join(PDF_CACHE_DIR, storedName + '.html');
+    try {
+      // PPTX/PPT: python-pptx → content HTML (soffice hangs here, so we render a content view,
+      // not a pixel-perfect one — enough to review ordering/figures/narrative before approving).
+      if (ext === '.pptx' || ext === '.ppt') {
+        await execFileP('/usr/bin/python3', [PPTX2HTML, src, tmpHtml], { timeout: 90000 });
+        if (!(fs.existsSync(tmpHtml) && fs.statSync(tmpHtml).size > 0)) throw new Error('empty pptx html');
+      } else {
+        // Primary: mammoth (embeds images). Fallback: textutil (text only) for .doc or if mammoth fails.
+        try {
+          await execFileP('/usr/bin/python3', [DOCX2HTML, src, tmpHtml], { timeout: 60000 });
+          if (!(fs.existsSync(tmpHtml) && fs.statSync(tmpHtml).size > 0)) throw new Error('empty html');
+        } catch (mErr) {
+          await execFileP('textutil', ['-convert', 'html', '-output', tmpHtml, src], { timeout: 30000 });
+        }
       }
+      await execFileP(CHROME_BIN, ['--headless=new', '--disable-gpu', '--no-sandbox',
+        '--no-pdf-header-footer', `--print-to-pdf=${pdfPath}`, 'file://' + tmpHtml],
+        { timeout: 60000 });
+      try { fs.unlinkSync(tmpHtml); } catch {}
+      if (fs.existsSync(pdfPath) && fs.statSync(pdfPath).size > 0) {
+        glog('mc-pdf-render', 'render', 'ok', storedName, { ms: Date.now() - t0, ext });
+        return pdfPath;
+      }
+    } catch (e) {
+      try { fs.unlinkSync(tmpHtml); } catch {}
+      console.log('pdf rendition failed for', storedName, e.message);
+      glog('mc-pdf-render', 'render', 'error', storedName, { ms: Date.now() - t0, ext, err: String(e.message).slice(0, 200) });
     }
-    execFileSync(CHROME_BIN, ['--headless=new', '--disable-gpu', '--no-sandbox',
-      '--no-pdf-header-footer', `--print-to-pdf=${pdfPath}`, 'file://' + tmpHtml],
-      { timeout: 60000, stdio: 'ignore' });
-    try { fs.unlinkSync(tmpHtml); } catch {}
-    if (fs.existsSync(pdfPath) && fs.statSync(pdfPath).size > 0) return pdfPath;
-  } catch (e) {
-    try { fs.unlinkSync(tmpHtml); } catch {}
-    console.log('pdf rendition failed for', storedName, e.message);
-  }
-  return null;
+    return null;
+  })();
+  _pdfInFlight.set(storedName, job);
+  try { return await job; } finally { _pdfInFlight.delete(storedName); }
 }
 
 // Build an RFC 6266 / 5987-safe Content-Disposition value. A raw non-ASCII byte (e.g. an em-dash
@@ -4364,18 +4377,24 @@ const server = http.createServer((req, res) => {
     }
     const meta = loadUploadsMeta().find(m => m.stored_name === fileName);
     const origBase = (meta ? meta.filename : fileName).replace(/\.[^.]+$/, '');
-    const pdfPath = ensurePdfRendition(fileName);
-    if (pdfPath) {
-      res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': safeContentDisposition(origBase + '.pdf', 'inline'),
-      });
-      res.end(fs.readFileSync(pdfPath));
-    } else {
-      // Conversion not possible — serve original inline as a fallback.
-      res.writeHead(200, { 'Content-Type': 'application/octet-stream', 'Content-Disposition': safeContentDisposition(fileName, 'inline') });
-      res.end(fs.readFileSync(filePath));
-    }
+    // Async render (non-blocking) + stream the result so a big PDF never buffers into memory and
+    // the event loop is free while Chrome/python run.
+    ensurePdfRendition(fileName).then(pdfPath => {
+      if (pdfPath) {
+        res.writeHead(200, {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': safeContentDisposition(origBase + '.pdf', 'inline'),
+        });
+        fs.createReadStream(pdfPath).on('error', () => { try { res.end(); } catch (e) {} }).pipe(res);
+      } else {
+        // Conversion not possible — serve original inline as a fallback.
+        res.writeHead(200, { 'Content-Type': 'application/octet-stream', 'Content-Disposition': safeContentDisposition(fileName, 'inline') });
+        fs.createReadStream(filePath).on('error', () => { try { res.end(); } catch (e) {} }).pipe(res);
+      }
+    }).catch(e => {
+      try { res.writeHead(500, { 'Content-Type': 'text/plain' }); res.end('preview failed'); } catch (er) {}
+      console.log('viewpdf error', fileName, e && e.message);
+    });
     return;
   }
 
