@@ -25,6 +25,23 @@ tr:hover td{background:#191b1e}
 .tag{display:inline-block;background:#222;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:.68rem;color:var(--text2)}
 .wrap{padding:0 20px 40px}
 .muted{color:var(--text2)}
+.ebtn{background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:2px 8px;cursor:pointer;font-size:.85rem}
+.ebtn:hover{border-color:var(--orange);color:var(--orange)}
+.etag{color:var(--orange);cursor:help}
+.ovl{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:50}
+.ovl.on{display:flex}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;width:92%;max-width:520px;max-height:90vh;overflow:auto}
+.modal h3{margin:0 0 4px;font-size:1rem}
+.modal .k{color:var(--text2);font-size:.75rem;margin-bottom:10px;font-family:ui-monospace,Menlo,monospace}
+.modal label{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin:10px 0 4px}
+.modal input,.modal textarea{width:100%;background:#0b0c0e;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font:inherit}
+.modal textarea{min-height:52px;resize:vertical}
+.modal .row2{display:flex;gap:10px}.modal .row2>div{flex:1}
+.modal .acts{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.diffbox{background:#0b0c0e;border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:12px;font-size:.82rem}
+.diffbox .d{margin:4px 0}.diffbox .o{color:#e0524d;text-decoration:line-through}.diffbox .n2{color:#4caf50;font-weight:700}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12331a;border:1px solid #4caf50;color:#d7ffd7;padding:10px 16px;border-radius:8px;z-index:60;display:none}
+.toast.on{display:block}
 </style></head><body>
 <header>
   <h1>📦 Shop Inventory <span class="muted" style="font-weight:400;font-size:.8rem">— inventory of record</span></h1>
@@ -45,8 +62,8 @@ tr:hover td{background:#191b1e}
 <div class="wrap"><table id="tbl"><thead><tr>
   <th data-k="category">Category</th><th data-k="location">Location</th><th data-k="contents">Contents</th>
   <th data-k="description">Description</th><th data-k="exos_sku">Exos SKU</th><th data-k="source_sku">Source/SKU</th>
-  <th data-k="qty">Qty</th><th data-k="unit">Unit</th><th data-k="value">Value</th><th data-k="jurisdiction">Juris.</th>
-</tr></thead><tbody id="body"><tr><td colspan="10" class="muted" style="padding:30px;text-align:center">loading…</td></tr></tbody></table></div>
+  <th data-k="qty">Qty</th><th data-k="unit">Unit</th><th data-k="value">Value</th><th data-k="jurisdiction">Juris.</th><th>Edit</th>
+</tr></thead><tbody id="body"><tr><td colspan="11" class="muted" style="padding:30px;text-align:center">loading…</td></tr></tbody></table></div>
 <script>
 let ALL=[], VIEW=[], sortK='category', sortDir=1;
 const $=id=>document.getElementById(id);
@@ -76,12 +93,13 @@ function sortAndRender(){
   VIEW.sort((a,b)=>{let x=a[sortK],y=b[sortK];if(sortK==='qty'||sortK==='value'){x=parseFloat(x)||0;y=parseFloat(y)||0;return (x-y)*sortDir}return String(x||'').localeCompare(String(y||''))*sortDir});
   $('body').innerHTML=VIEW.map(i=>`<tr>
     <td>${i.category||''}${i.sale_or_trash?' <span class="tag">S/T</span>':''}</td>
-    <td>${i.location||''}</td>
+    <td>${esc(i.location)}</td>
     <td class="${i.is_rocket?'rocket':''}">${esc(i.contents)}</td>
-    <td class="muted">${esc(i.description)}</td>
+    <td class="muted">${esc(i.description)}${i.edited_by?` <span class="etag" title="edited by ${esc(i.edited_by)} on ${esc((i.edited_at||'').slice(0,10))}${i.edit_note?' · '+esc(i.edit_note):''}">✎</span>`:''}</td>
     <td>${esc(i.exos_sku)}</td><td>${esc(i.source_sku)}</td>
     <td>${i.qty||0}</td><td>${i.unit||''}</td><td>${fmt(i.value)}</td><td>${i.jurisdiction||''}</td>
-  </tr>`).join('')||'<tr><td colspan="10" class="muted" style="padding:30px;text-align:center">no matches</td></tr>';
+    <td><button class="ebtn" title="Edit item" onclick="shopEdit('${i.id}')">✎</button></td>
+  </tr>`).join('')||'<tr><td colspan="11" class="muted" style="padding:30px;text-align:center">no matches</td></tr>';
   $('count').textContent=VIEW.length+' shown';
 }
 function esc(s){return String(s||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}
@@ -94,5 +112,78 @@ function exportCSV(){
 document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{const k=th.dataset.k;sortDir=(sortK===k)?-sortDir:1;sortK=k;sortAndRender()});
 ['cat','rocket'].forEach(id=>$(id).onchange=load);
 let t;['loc','q'].forEach(id=>$(id).oninput=()=>{clearTimeout(t);t=setTimeout(load,300)});
+// ── Inline shop-item edit with a mandatory confirm step + who/when attribution ──
+let shopRow=null;
+function shopEdit(id){
+  shopRow=ALL.find(x=>x.id===id)||VIEW.find(x=>x.id===id); if(!shopRow)return;
+  $('se_key').textContent=(shopRow.id||'')+' · '+(shopRow.category||'');
+  $('se_contents').value=shopRow.contents||'';
+  $('se_description').value=shopRow.description||'';
+  $('se_qty').value=(shopRow.qty==null?'':shopRow.qty);
+  $('se_location').value=shopRow.location||'';
+  $('se_note').value='';
+  $('se_diff').innerHTML='';
+  $('se_review').style.display='';
+  $('se_confirm').style.display='none';
+  $('se_ovl').classList.add('on');
+}
+function shopEditClose(){$('se_ovl').classList.remove('on');shopRow=null;}
+function _sef(){if(!shopRow)return{};const f={};
+  const c=$('se_contents').value,d=$('se_description').value,q=$('se_qty').value,l=$('se_location').value,n=$('se_note').value.trim();
+  if(c!==(shopRow.contents||''))f.contents=c;
+  if(d!==(shopRow.description||''))f.description=d;
+  if(String(q)!==String(shopRow.qty==null?'':shopRow.qty))f.qty=q;
+  if(l!==(shopRow.location||''))f.location=l;
+  if(n)f.note=n;return f;}
+function shopEditReview(){
+  const f=_sef();const keys=Object.keys(f).filter(k=>k!=='note');
+  if(!keys.length&&!f.note){$('se_diff').innerHTML='<div class="diffbox">No changes to confirm.</div>';return;}
+  const label={contents:'Contents',description:'Description',qty:'Qty',location:'Location'};
+  let html='<div class="diffbox"><strong>Confirm these changes:</strong>';
+  keys.forEach(k=>{const oldv=shopRow[k]==null?'':shopRow[k];
+    html+='<div class="d">'+label[k]+': <span class="o">'+esc(oldv)+'</span> → <span class="n2">'+esc(f[k])+'</span></div>';});
+  if(f.note)html+='<div class="d muted">Note: '+esc(f.note)+'</div>';
+  html+='</div>';$('se_diff').innerHTML=html;
+  $('se_review').style.display='none';$('se_confirm').style.display='';
+}
+async function shopEditConfirm(){
+  const f=_sef();if(!Object.keys(f).length){shopEditClose();return;}
+  const btn=$('se_confirm');btn.disabled=true;btn.textContent='Saving…';
+  try{
+    const r=await fetch('/api/shop/edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:shopRow.id,fields:f})});
+    const j=await r.json().catch(()=>({}));
+    if(r.status===401){location='/login';return;}
+    if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
+    if(f.contents!==undefined)shopRow.contents=f.contents;
+    if(f.description!==undefined)shopRow.description=f.description;
+    if(f.qty!==undefined)shopRow.qty=Number(f.qty);
+    if(f.location!==undefined)shopRow.location=f.location;
+    if(f.note!==undefined)shopRow.edit_note=f.note;
+    shopRow.edited_by=j.edited_by;shopRow.edited_at=j.edited_at;
+    shopEditClose();sortAndRender();
+    const t=$('se_toast');t.textContent='Saved · by '+j.edited_by;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);
+  }catch(e){btn.disabled=false;btn.textContent='✓ Confirm & save';alert('Save failed: '+e.message);}
+}
 load();
-</script></body></html>
+</script>
+<div class="ovl" id="se_ovl">
+  <div class="modal">
+    <h3>✎ Edit shop item</h3>
+    <div class="k" id="se_key"></div>
+    <label>Contents</label><input id="se_contents" type="text">
+    <label>Description</label><textarea id="se_description"></textarea>
+    <div class="row2">
+      <div><label>Qty</label><input id="se_qty" type="number" step="any"></div>
+      <div><label>Location</label><input id="se_location" type="text"></div>
+    </div>
+    <label>Note (optional — reason for the change)</label><input id="se_note" type="text" placeholder="e.g. moved to Trailer 2">
+    <div id="se_diff"></div>
+    <div class="acts">
+      <button class="btn ghost" onclick="shopEditClose()">Cancel</button>
+      <button class="btn" id="se_review" onclick="shopEditReview()">Review change →</button>
+      <button class="btn" id="se_confirm" style="display:none;background:#2e7d32;color:#fff" onclick="shopEditConfirm()">✓ Confirm &amp; save</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="se_toast"></div>
+</body></html>
