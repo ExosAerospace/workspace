@@ -586,14 +586,14 @@
     <a href="https://vault.exosaero.space" target="_blank" rel="noopener" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🔐 Vault</a>
     <span style="color:var(--muted,#8aa0bd);opacity:.4;margin:0 8px;">│</span>
     <!-- Governance & Ops -->
-    <a href="decisions.html" id="decisionsLink" style="color:var(--green,#22c55e);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🗳️ Decisions <span id="decisionsBadge" style="display:none;background:#ff4444;color:#fff;border-radius:10px;padding:0 6px;font-size:0.7rem;"></span></a>
+    <a href="decisions.html" id="decisionsLink" style="color:var(--green,#22c55e);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;"><span id="decisionsMark"></span>🗳️ Decisions <span id="decisionsBadge" style="display:none;background:#ff4444;color:#fff;border-radius:10px;padding:0 6px;font-size:0.7rem;"></span></a>
     <a href="fleet.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🤖 Fleet</a>
     <span style="color:var(--muted,#8aa0bd);opacity:.4;margin:0 8px;">│</span>
     <!-- Utility -->
     <a href="help.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🚀 Getting Started</a>
     <a href="required-reading.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📋 Required Reading</a>
     <a href="set-password.html" style="color:var(--muted,#8aa0bd);text-decoration:none;font-size:0.85rem;margin-right:4px;">🔑 Set Password</a>
-    <script>fetch('/api/me',{credentials:'same-origin'}).then(r=>r.ok?r.json():{}).then(me=>{if(me&&me.role==='early_adopter')return;fetch('/api/decisions?status=open',{credentials:'same-origin'}).then(r=>r.ok?r.json():[]).then(d=>{if(d&&d.length){var b=document.getElementById('decisionsBadge');b.textContent=d.length;b.style.display='inline-block';}}).catch(()=>{});}).catch(()=>{});</script>
+    <script>fetch('/api/me',{credentials:'same-origin'}).then(r=>r.ok?r.json():{}).then(me=>{if(me&&me.role==='early_adopter')return;fetch('/api/decisions?status=open',{credentials:'same-origin'}).then(r=>r.ok?r.json():[]).then(d=>{var m=document.getElementById('decisionsMark');if(d&&d.length){var b=document.getElementById('decisionsBadge');b.textContent=d.length;b.style.display='inline-block';if(m){m.textContent='❓ ';m.style.color='#ff4444';}}else if(m){m.textContent='✅ ';m.style.color='#22c55e';}}).catch(()=>{});}).catch(()=>{});</script>
     <a href="ctd-dd.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🔎 CTD DD</a>
     <a href="gov-readiness.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🛡️ Gov/DIB Readiness</a>
     <a href="#" onclick="fetch('/api/logout',{method:'POST'}).then(()=>location.href='/login');return false;" style="color:var(--red,#ff4444);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">Sign Out</a>

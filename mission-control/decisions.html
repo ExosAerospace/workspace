@@ -31,6 +31,10 @@
   .card.answered{opacity:.7;border-left-color:var(--green)}
   .row1{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
   .title{font-weight:700;font-size:16px;margin:0}
+  /* Decision status marker: red ❓ = needs Jon's call, green ✅ = resolved. */
+  .qmark{font-size:15px;margin-right:7px;vertical-align:-1px}
+  .qmark.open{color:var(--red)}
+  .qmark.done{color:var(--green)}
   .meta{font-size:11px;color:var(--muted);margin-top:5px}
   .pill{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;
     border:1px solid var(--line);color:var(--muted);margin-left:6px;text-transform:uppercase;letter-spacing:.5px}
@@ -84,8 +88,8 @@
   <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
     <input id="decSearch" type="text" placeholder="🔍 Search all decisions — open + answered (id, task, title, keyword…)" oninput="searchQuery=this.value;render()" style="background:#0a1830;border:1px solid #2a3f63;border-radius:8px;color:#e8edf5;padding:7px 12px;font-size:13px;outline:none;min-width:230px">
     <div class="tabs">
-      <button class="tab active" data-tab="open" onclick="setTab('open')">Open</button>
-      <button class="tab" data-tab="answered" onclick="setTab('answered')">Answered</button>
+      <button class="tab active" data-tab="open" onclick="setTab('open')"><span style="color:var(--red)">❓</span> Open</button>
+      <button class="tab" data-tab="answered" onclick="setTab('answered')"><span style="color:var(--green)">✅</span> Answered</button>
       <button class="tab" id="scopeToggle" onclick="toggleScope()" title="Admin: show open decisions for ALL owners (Phil, Neil, everyone), not just yours" style="margin-left:10px">👥 All owners</button>
     </div>
     <a class="home" href="/">← Mission Control</a>
@@ -172,11 +176,17 @@ function relatedLinks(d){
   }
   return out;
 }
+// Status marker: a red ❓ wherever a call is still owed, flipping to a green ✅ once it's resolved.
+function statusMark(resolved){
+  return resolved
+    ? '<span class="qmark done" title="Resolved">✅</span>'
+    : '<span class="qmark open" title="Needs your decision">❓</span>';
+}
 function card(d){
   const pr=d.priority||'med';
   if(d.status==='answered'){
     return `<div class="card answered ${pr}">
-      <div class="row1"><div><p class="title">${esc(d.title)}</p>
+      <div class="row1"><div><p class="title">${statusMark(true)}${esc(d.title)}</p>
       <div class="meta">${d.id}${relatedLinks(d)} · ${esc(d.source||'')}${ownerTag(d)}</div></div></div>
       <div class="q">${esc(d.question)}</div>
       <div class="answered-box">✅ ${esc(d.answer||'(noted)')}${d.note?' — '+esc(d.note):''}<div class="meta">answered ${d.answeredAt?esc(new Date(d.answeredAt).toLocaleString('en-US',{timeZone:'America/Chicago',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})+' CT'):''} by ${esc(d.answeredBy||'Jon')}</div></div>
@@ -185,7 +195,7 @@ function card(d){
   }
   const opts=(d.options&&d.options.length?d.options:['Yes','No']);
   return `<div class="card ${pr}">
-    <div class="row1"><div><p class="title">${esc(d.title)}<span class="pill ${pr}">${pr}</span></p>
+    <div class="row1"><div><p class="title">${statusMark(false)}${esc(d.title)}<span class="pill ${pr}">${pr}</span></p>
     <div class="meta">${d.id}${d.relatedItem?' · <a href="opportunities.html?focus='+encodeURIComponent(d.relatedItem)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(d.relatedItem)+'</a>':''} · ${esc(d.source||'')}${ownerTag(d)}</div></div></div>
     <div class="q"><b>${esc(d.question)}</b></div>
     ${d.context?`<div class="ctx">${esc(d.context)}</div>`:''}
