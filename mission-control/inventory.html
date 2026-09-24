@@ -220,6 +220,7 @@ document.getElementById('locq').addEventListener('input',renderLoc);
 document.getElementById('totals').addEventListener('click',()=>{});
 // ── Inline line edit with a mandatory confirm step + who/when attribution ──
 let editRow=null;
+function curLoc(r){return r.edit_location||((r.locations||[]).join(', '))||'';}
 function bomEditOpen(k){
   k=decodeURIComponent(k);
   editRow=(DATA&&DATA.rows||[]).find(r=>(r.key||'')===k); if(!editRow)return;
@@ -228,6 +229,7 @@ function bomEditOpen(k){
   document.getElementById('ed_description').value=editRow.description||'';
   document.getElementById('ed_req').value=(editRow.req===''||editRow.req==null)?'':editRow.req;
   document.getElementById('ed_on_hand').value=editRow.on_hand;
+  document.getElementById('ed_location').value=curLoc(editRow);
   document.getElementById('ed_note').value='';
   document.getElementById('editDiff').innerHTML='';
   document.getElementById('editReviewBtn').style.display='';
@@ -241,10 +243,12 @@ function bomEditFields(){
   const d=document.getElementById('ed_description').value;
   const rq=document.getElementById('ed_req').value;
   const oh=document.getElementById('ed_on_hand').value;
+  const lc=document.getElementById('ed_location').value;
   const nt=document.getElementById('ed_note').value.trim();
   if(d!==(editRow.description||''))f.description=d;
   if(String(rq)!==String(editRow.req==null?'':editRow.req))f.req=rq;
   if(String(oh)!==String(editRow.on_hand))f.on_hand=oh;
+  if(lc!==curLoc(editRow))f.location=lc;
   if(nt)f.note=nt;
   return f;
 }
@@ -252,9 +256,10 @@ function bomEditReview(){
   const f=bomEditFields();
   const keys=Object.keys(f).filter(k=>k!=='note');
   if(!keys.length&&!f.note){document.getElementById('editDiff').innerHTML='<div class="diffbox">No changes to confirm.</div>';return;}
-  const label={description:'Description',req:'Req',on_hand:'On-hand'};
+  const label={description:'Description',req:'Req',on_hand:'On-hand',location:'Location'};
+  const cur=k=>k==='description'?(editRow.description||''):k==='location'?curLoc(editRow):(editRow[k]==null?'':editRow[k]);
   let html='<div class="diffbox"><strong>Confirm these changes:</strong>';
-  keys.forEach(k=>{const oldv=k==='description'?(editRow.description||''):(editRow[k]==null?'':editRow[k]);
+  keys.forEach(k=>{const oldv=cur(k);
     html+='<div class="d">'+label[k]+': <span class="o">'+esc(oldv)+'</span> → <span class="n2">'+esc(f[k])+'</span></div>';});
   if(f.note)html+='<div class="d muted">Note: '+esc(f.note)+'</div>';
   html+='</div>';
@@ -275,6 +280,7 @@ async function bomEditConfirm(){
     if(f.description!==undefined)editRow.description=f.description;
     if(f.req!==undefined)editRow.req=f.req;
     if(f.on_hand!==undefined)editRow.on_hand=Number(f.on_hand);
+    if(f.location!==undefined){editRow.edit_location=f.location;editRow.locations=f.location?[f.location]:[];editRow.map_location='';}
     if(f.note!==undefined)editRow.edit_note=f.note;
     editRow.edited_by=j.edited_by;editRow.edited_at=j.edited_at;
     const req2=parseFloat(String(editRow.req).trim());
@@ -295,6 +301,7 @@ load(); setInterval(load,30000);
       <div><label>Required (Req)</label><input id="ed_req" type="number" step="any"></div>
       <div><label>On-hand</label><input id="ed_on_hand" type="number" step="any"></div>
     </div>
+    <label>Location</label><input id="ed_location" type="text" placeholder="e.g. Parts Room B3, Shelf 2">
     <label>Note (optional — reason for the change)</label><input id="ed_note" type="text" placeholder="e.g. recount 2026-09-24, corrected qty">
     <div id="editDiff"></div>
     <div class="acts">

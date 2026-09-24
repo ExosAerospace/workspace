@@ -141,6 +141,7 @@ async function applyBomEdits(){
     const k=sh.name+'#'+row.Item; row._key=k; const e=ov[k];
     if(e){ if(e.description!==undefined&&e.description!=='')row.Description=e.description;
            if(e.req!==undefined&&e.req!=='' ){row.Quantity=e.req;_recost(row);}
+           if(e.location!==undefined)row._loc=e.location;
            row._eby=e._by||''; row._eat=e._at||''; row._enote=e.note||''; }
   }));
   render();
@@ -153,6 +154,7 @@ function bomEdit(k){
   document.getElementById('be_key').textContent=k;
   document.getElementById('be_description').value=editRow.Description||'';
   document.getElementById('be_req').value=(editRow.Quantity==null?'':editRow.Quantity);
+  document.getElementById('be_location').value=editRow._loc||'';
   document.getElementById('be_note').value='';
   document.getElementById('be_diff').innerHTML='';
   document.getElementById('be_review').style.display='';
@@ -163,17 +165,20 @@ function bomEditClose(){document.getElementById('be_ovl').classList.remove('on')
 function _bef(){if(!editRow)return{};const f={};
   const d=document.getElementById('be_description').value;
   const rq=document.getElementById('be_req').value;
+  const lc=document.getElementById('be_location').value;
   const nt=document.getElementById('be_note').value.trim();
   if(d!==(editRow.Description||''))f.description=d;
   if(String(rq)!==String(editRow.Quantity==null?'':editRow.Quantity))f.req=rq;
+  if(lc!==(editRow._loc||''))f.location=lc;
   if(nt)f.note=nt; return f;}
 function _esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function bomEditReview(){
   const f=_bef();const keys=Object.keys(f).filter(k=>k!=='note');
   if(!keys.length&&!f.note){document.getElementById('be_diff').innerHTML='<div class="diffbox">No changes to confirm.</div>';return;}
-  const label={description:'Description',req:'Quantity'};
+  const label={description:'Description',req:'Quantity',location:'Location'};
+  const cur=k=>k==='description'?(editRow.Description||''):k==='location'?(editRow._loc||''):(editRow.Quantity==null?'':editRow.Quantity);
   let html='<div class="diffbox"><strong>Confirm these changes:</strong>';
-  keys.forEach(k=>{const oldv=k==='description'?(editRow.Description||''):(editRow.Quantity==null?'':editRow.Quantity);
+  keys.forEach(k=>{const oldv=cur(k);
     html+='<div class="d">'+label[k]+': <span class="o">'+_esc(oldv)+'</span> → <span class="n2">'+_esc(f[k])+'</span></div>';});
   if(f.note)html+='<div class="d" style="color:var(--mut)">Note: '+_esc(f.note)+'</div>';
   html+='</div>';document.getElementById('be_diff').innerHTML=html;
@@ -190,6 +195,7 @@ async function bomEditConfirm(){
     if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
     if(f.description!==undefined)editRow.Description=f.description;
     if(f.req!==undefined){editRow.Quantity=f.req;_recost(editRow);}
+    if(f.location!==undefined)editRow._loc=f.location;
     if(f.note!==undefined)editRow._enote=f.note;
     editRow._eby=j.edited_by;editRow._eat=j.edited_at;
     bomEditClose();render();
@@ -204,6 +210,7 @@ applyBomEdits();
     <div class="k" id="be_key"></div>
     <label>Description</label><textarea id="be_description"></textarea>
     <label>Quantity</label><input id="be_req" type="number" step="any">
+    <label>Location</label><input id="be_location" type="text" placeholder="e.g. Parts Room B3, Shelf 2">
     <label>Note (optional — reason for the change)</label><input id="be_note" type="text" placeholder="e.g. corrected qty per drawing rev">
     <div id="be_diff"></div>
     <div class="acts">
