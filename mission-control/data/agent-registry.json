@@ -1,6 +1,6 @@
 {
   "generated": "2026-09-20",
-  "total": 133,
+  "total": 134,
   "standing": 111,
   "ephemeral": 18,
   "service": 4,
@@ -2132,6 +2132,22 @@
       "eval_suite": "exo3-gate-selftest (python3 scripts/exo3_gate.py --selftest)",
       "telemetry": "logs/exo3-gate.jsonl",
       "reusability_scope": "repo-wide governance"
+    },
+    {
+      "label": "com.exos.mc-snapshot-export",
+      "script": "mc-snapshot-export.py",
+      "kind": "backup/redundancy (launchd interval)",
+      "schedule": "every 10 min (launchd StartInterval 600)",
+      "purpose": "DR redundancy for the Supabase-backed MC DB: dumps core tables (tasks/decisions/opportunities/contacts/activities) to <table>-snapshot-latest.json + rotating timestamped copies (paged past the 1000-row cap). Skips cleanly when the DB is unreachable so a recent read/restore point always exists. Built after the 2026-09-24 Supabase DB stall.",
+      "stack_layer": "ASSURE",
+      "autonomy_tier": "Read-only exporter (no writes to source; local files only)",
+      "human_owner": "John Quinn",
+      "permission_envelope": "read-only Supabase REST (publishable key); writes local snapshot JSON under mission-control/data/; no external actions",
+      "memory_boundary": "Supabase core tables (read) -> local snapshot files",
+      "escalation": "logs/mc-snapshot-export.log; on outage skips silently (transient-blip policy)",
+      "eval_suite": "recovery-integrity: each run logs per-table row counts + skipped tables; a healthy run captures >=1 table and counts track the live board (spot-checked on restore)",
+      "telemetry": "logs/mc-snapshot-export.log",
+      "reusability_scope": "MC disaster-recovery"
     }
   ],
   "eval_wave_1": {

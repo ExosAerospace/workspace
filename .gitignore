@@ -54,3 +54,7 @@ mission-control/data/job-costs.json
 mission-control/data/qb-bills-cache.json
 mission-control/data/receiving-drafts.json
 logs/receiving-capture-queue.jsonl
+
+# MC durable write queue (transient) + live table snapshots (runtime backups)
+mission-control/data/outbox.jsonl
+mission-control/data/*-snapshot-latest.json

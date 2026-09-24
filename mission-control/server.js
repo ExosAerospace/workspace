@@ -5,6 +5,7 @@ const { promisify } = require('util');
 const http = require('http');
 const https = require('https');
 const nodemailer = require('nodemailer');
+const outbox = require('./lib/outbox'); // durable write queue: capture writes during a DB outage, replay on recovery
 
 // ── Non-blocking child processes (ExO3 event-loop-integrity fix, 2026-09-24) ──
 // The MC server is single-threaded; every synchronous execFileSync froze the ENTIRE event loop
@@ -636,7 +637,7 @@ function _sbCacheable(pathAndQuery) {
     && !/(^|[?&])limit=1(&|$)/.test(pathAndQuery);
 }
 
-function supabaseRequest(method, pathAndQuery, body) {
+function supabaseRequest(method, pathAndQuery, body, _replay) {
   const isGet = method === 'GET';
   const cacheKey = isGet ? ('GET ' + pathAndQuery) : null;
   if (isGet && _sbCacheable(pathAndQuery)) {
@@ -675,7 +676,13 @@ function supabaseRequest(method, pathAndQuery, body) {
         resolve(payload);
       });
     });
-    req.on('error', reject);
+    req.on('error', err => {
+      // A write (POST/PATCH/DELETE) failed because the DB is unreachable/stalled: queue it
+      // to the durable outbox so it replays on recovery instead of being lost. Never queue a
+      // replay attempt (would loop) or a GET (reads have the snapshot fallback).
+      if (!isGet && !_replay) { try { outbox.enqueue(method, pathAndQuery, body); } catch (_) {} }
+      reject(err);
+    });
     // Fail fast if the Supabase DB backend stalls: without this, a hung query holds the
     // client request open forever and the board goes blank instead of falling back to the
     // cached tasks.json snapshot. 12s is well above normal (<1s) query latency.
@@ -684,6 +691,25 @@ function supabaseRequest(method, pathAndQuery, body) {
     req.end();
   });
 }
+
+// Replay any writes that were queued while the DB was down. Uses a raw supabaseRequest with
+// _replay=true so a still-failing send won't re-enqueue. Guarded so only one drain runs at a
+// time. Called on startup and on an interval; cheap no-op when the queue is empty.
+let _draining = false;
+async function drainOutbox() {
+  if (_draining) return;
+  let pending = 0;
+  try { pending = outbox.pendingCount(); } catch (_) { return; }
+  if (!pending) return;
+  _draining = true;
+  try {
+    const r = await outbox.replay((m, p, b) => supabaseRequest(m, p, b, true));
+    if (r.applied) console.log(`[outbox] replayed ${r.applied} queued write(s) on recovery; ${r.stillPending} pending, ${r.dead} dead`);
+  } catch (_) { /* DB still down — retry next tick */ }
+  finally { _draining = false; }
+}
+setInterval(drainOutbox, 45000).unref();
+setTimeout(drainOutbox, 8000).unref();
 
 // GET that pages past PostgREST's hard 1000-row response cap. Pass a query WITHOUT limit/offset;
 // returns { status, data: [...all rows] }. Use for any list that can exceed 1000 rows.
