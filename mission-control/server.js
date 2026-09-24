@@ -3975,6 +3975,9 @@ const server = http.createServer((req, res) => {
         return;
       }
       const bom = readJSON(path.join(__dirname, 'data', 'bom-index.json'), { rows: [] });
+      // Manual line edits (description / req / on_hand / note) keyed by "section#item",
+      // with who/when attribution. Applied on read so they survive any bom-index rebuild.
+      const bomEdits = readJSON(path.join(__dirname, 'data', 'bom-edits.json'), {});
       const inv = readJSON(path.join(__dirname, 'data', 'inventory.json'), { records: [] });
       const locmap = readJSON(path.join(__dirname, 'data', 'bom-location-map.json'), { map: {} }).map || {};
       // Credit real shop stock (Steve's inventory of record) into have/short, matched on SKU (>=5 chars).
@@ -4004,18 +4007,31 @@ const server = http.createServer((req, res) => {
         if (!rec && item) rec = by[`${sec.toUpperCase()}#${item}`];
         let shopOh = 0;
         for (const k of [vpn, mpn]) { const kk = String(k || '').trim().toUpperCase(); if (kk.length >= 5 && shopBy[kk] != null) { shopOh = shopBy[kk]; break; } }
-        const oh = (rec ? (rec.qty_on_hand || 0) : 0) + shopOh;
-        const req2 = parseFloat(String(row.qty).trim()); const hasReq = !isNaN(req2);
+        let oh = (rec ? (rec.qty_on_hand || 0) : 0) + shopOh;
+        let desc = row.description || '';
+        let reqVal = row.qty || '';
+        // Apply manual line edit override (keyed by section#item) + carry attribution.
+        const ekey = `${sec}#${item}`;
+        const ed = bomEdits[ekey] || null;
+        let edited_by = '', edited_at = '', edit_note = '';
+        if (ed) {
+          if (ed.description !== undefined && ed.description !== '') desc = ed.description;
+          if (ed.req !== undefined && ed.req !== '') reqVal = ed.req;
+          if (ed.on_hand !== undefined && ed.on_hand !== '') oh = Number(ed.on_hand);
+          edited_by = ed._by || ''; edited_at = ed._at || ''; edit_note = ed.note || '';
+        }
+        const req2 = parseFloat(String(reqVal).trim()); const hasReq = !isNaN(req2);
         const sh = (hasReq && oh < req2) ? Math.round((req2 - oh) * 1000) / 1000 : 0;
         onhandUnits += oh; if (sh) short++;
         const photos = rec ? (rec.photos || []).map(p => ({ url: '/uploads/' + encodeURIComponent(p.file || ''), by: p.by, at: p.at })) : [];
         const ledgerLoc = rec ? (rec.locations || []) : [];
         // Stored location from the parts-room / warehouse map when the ledger has none.
         const mm = ledgerLoc.length ? null : locmap[recKey(vpn, mpn, item, row.description)];
-        rows.push({ section: sec, item, vendor_pn: vpn, mfg_pn: mpn, description: row.description || '',
-          req: row.qty || '', on_hand: oh, shop_on_hand: shopOh, short: sh, locations: ledgerLoc,
+        rows.push({ section: sec, item, vendor_pn: vpn, mfg_pn: mpn, description: desc,
+          req: reqVal, on_hand: oh, shop_on_hand: shopOh, short: sh, locations: ledgerLoc,
           map_location: mm ? `${mm.location} (${mm.area})` : '',
-          photos, updated_at: rec ? (rec.updated_at || '') : '' });
+          photos, updated_at: rec ? (rec.updated_at || '') : '',
+          key: ekey, edited_by, edited_at, edit_note });
         const s = secmap[sec] || (secmap[sec] = { section: sec, lines: 0, onhand_lines: 0, short_lines: 0 });
         s.lines++; if (oh > 0) s.onhand_lines++; if (sh) s.short_lines++;
       }
@@ -4843,6 +4859,50 @@ const server = http.createServer((req, res) => {
           if (it) { Object.assign(it, fields); fs.writeFileSync(oppPath, JSON.stringify(oj, null, 2)); }
         } catch {}
         res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, id, fields }));
+      } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+    }); return;
+  }
+
+  // ── BLK3 BOM / Inventory inline line edit (session-gated) ──────────────────
+  // Persists per-line edits (description / req / on_hand / note) to
+  // data/bom-edits.json keyed by "section#item" — survives any bom-index rebuild —
+  // with who/when attribution + full change history. Applied on read in
+  // /api/inventory and /api/bom so both pages reflect edits immediately.
+  if (req.url === '/api/bom/edit' && req.method === 'POST') {
+    const session = getSession(req);
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const p = JSON.parse(body || '{}');
+        const key = (p.key || '').toString().trim();
+        if (!key) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'missing key' })); return; }
+        const ALLOWED = ['description', 'req', 'on_hand', 'note'];
+        const fields = {};
+        for (const k of ALLOWED) {
+          if (p.fields && p.fields[k] !== undefined && p.fields[k] !== null) {
+            fields[k] = (k === 'req' || k === 'on_hand')
+              ? (p.fields[k] === '' ? '' : Number(p.fields[k]))
+              : String(p.fields[k]);
+          }
+        }
+        if (!Object.keys(fields).length) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'no fields' })); return; }
+        const who = session.name || session.email || 'unknown';
+        const at = new Date().toISOString();
+        const ovPath = path.join(__dirname, 'data', 'bom-edits.json');
+        let ov = {}; try { ov = JSON.parse(fs.readFileSync(ovPath, 'utf-8')); } catch {}
+        const prev = ov[key] || {};
+        const changes = {};
+        for (const k of Object.keys(fields)) {
+          const pv = prev[k] === undefined ? '' : prev[k];
+          if (String(pv) !== String(fields[k])) changes[k] = { from: (prev[k] === undefined ? null : prev[k]), to: fields[k] };
+        }
+        const history = Array.isArray(prev.history) ? prev.history : [];
+        if (Object.keys(changes).length) history.push({ by: who, email: session.email || '', at, changes });
+        ov[key] = Object.assign({}, prev, fields, { _by: who, _email: session.email || '', _at: at, history });
+        fs.mkdirSync(path.dirname(ovPath), { recursive: true });
+        fs.writeFileSync(ovPath, JSON.stringify(ov, null, 2));
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, key, fields, edited_by: who, edited_at: at }));
       } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
     }); return;
   }
