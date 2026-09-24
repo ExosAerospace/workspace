@@ -241,6 +241,8 @@
   .due-date.due-soon { color: var(--orange); }
   /* Green highlight: ANY task due within the next 5 days (including today) */
   .task-card.due-5d { border-color: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,0.20); }
+  /* Blue border: proposal / solicitation submission tasks (proposal, whitepaper, RFP/RFI/BAA, SBIR/STTR/TACFI/STRATFI/D2P2 …) */
+  .task-card.proposal-submission { border: 1.5px solid #3b82f6; box-shadow: 0 0 8px rgba(59,130,246,0.40); }
   /* Neon block: funding submittal due within 5 days */
   .task-card.funding-due {
     border: 1.5px solid #39ff14;
@@ -1413,6 +1415,15 @@ function isFundingSubmittal(task) {
   return FUNDING_RE.test(hay);
 }
 
+// Proposal / solicitation submission detector — blue border. Keyed on the TITLE/CATEGORY
+// only (precise, avoids passing mentions in descriptions); excludes abandoned/declined items.
+const PROPOSAL_SUB_RE = /\b(proposal|white\s?paper|whitepaper|RFP|RFI|BAA|SBIR|STTR|TACFI|STRATFI|D2P2|NOFO|NOFA|OSP-?4)\b/i;
+function isProposalSubmission(task) {
+  const hay = `${task.title || ''} ${task.category || ''}`;
+  if (/\b(abandoned|declin)/i.test(hay)) return false;
+  return PROPOSAL_SUB_RE.test(hay);
+}
+
 function buildCard(task) {
   const div = document.createElement('div');
   div.className = 'task-card' + (task.state === 'Done' ? ' done-card' : '');
@@ -1443,6 +1454,9 @@ function buildCard(task) {
     // Green border for ANY task due within the next 5 days (funding items get the louder neon below)
     if (task.state !== 'Done' && diff <= 5 && diff > -1) div.classList.add('due-5d');
   }
+  // Blue border for proposal / solicitation submission tasks (added after due-5d so it
+  // overrides the generic green; funding-due/critical are louder and still win below).
+  if (task.state !== 'Done' && isProposalSubmission(task)) div.classList.add('proposal-submission');
   if (fundingDue) div.classList.add('funding-due');
   const fundingFlagHtml = fundingDue ? '<span class="funding-flag">⚡ Funding ≤5d</span>' : '';
 
