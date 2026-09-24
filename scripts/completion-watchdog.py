@@ -152,7 +152,11 @@ def main():
                 d["start"] = ts
             elif ev == "end":
                 d["end"] = True
-            if r.get("status") == "error" or ev == "error":
+            # Transient net/mail blips are logged as status="transient" (skips, not
+            # defects) — never page on them; sustained outages surface via cron-failure-watchdog.
+            if r.get("status") == "transient":
+                pass
+            elif r.get("status") == "error" or ev == "error":
                 d["errors"].append((r.get("detail") or r.get("event") or "error"))
 
     stalled, errored = [], []

@@ -20,13 +20,13 @@ Run: python3 scripts/role-autoassign.py [--dry-run]
 try:
     import sys as _gsys, os as _gos, atexit as _gatexit
     _gsys.path.insert(0, _gos.path.join(_gos.path.dirname(_gos.path.abspath(__file__)), ".."))
-    from governance.govlog import new_run as _gnew_run, event as _gevent
+    from governance.govlog import new_run as _gnew_run, event as _gevent, is_transient as _gis_transient
     _GRUN = _gnew_run("role-autoassign")
     _gevent(_GRUN, "start", detail=" ".join(_gsys.argv[1:])[:120])
     _gatexit.register(lambda: _gevent(_GRUN, "end"))
     _gprev_hook = _gsys.excepthook
     def _gexc(t, v, tb):
-        try: _gevent(_GRUN, "error", status="error", detail=str(v)[:160])
+        try: _gt = _gis_transient(v); _gevent(_GRUN, "transient_skip" if _gt else "error", status="transient" if _gt else "error", detail=str(v)[:160])
         except Exception: pass
         return _gprev_hook(t, v, tb)
     _gsys.excepthook = _gexc

@@ -18,13 +18,13 @@ Usage: research_agent.py --name grant-scanner [--model sonnet] [--no-discord]
 try:
     import sys as _gsys, os as _gos, atexit as _gatexit
     _gsys.path.insert(0, _gos.path.join(_gos.path.dirname(_gos.path.abspath(__file__)), ".."))
-    from governance.govlog import new_run as _gnew_run, event as _gevent
+    from governance.govlog import new_run as _gnew_run, event as _gevent, is_transient as _gis_transient
     _GRUN = _gnew_run("research")
     _gevent(_GRUN, "start", detail=" ".join(_gsys.argv[1:])[:120])
     _gatexit.register(lambda: _gevent(_GRUN, "end"))
     _gprev_hook = _gsys.excepthook
     def _gexc(t, v, tb):
-        try: _gevent(_GRUN, "error", status="error", detail=str(v)[:160])
+        try: _gt = _gis_transient(v); _gevent(_GRUN, "transient_skip" if _gt else "error", status="transient" if _gt else "error", detail=str(v)[:160])
         except Exception: pass
         return _gprev_hook(t, v, tb)
     _gsys.excepthook = _gexc
@@ -73,6 +73,15 @@ def run_claude(prompt, model):
             "'# <title>' line, then use '### ' for each finding/item. Be specific (names, "
             "numbers, links, contacts). Do not ask questions or request confirmation. "
             "If nothing materially new, say so in one line under the title.")
+    # ExO3 #3: prepend the confirmed MTP-as-protocol so the brief ladders to Exos's MTP +
+    # hard constraints + decision-priority (config/mtp-protocol.json) — capability-gated intel.
+    try:
+        import os as _os, sys as _sys
+        _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+        import mtp as _mtp
+        full = _mtp.protocol_prompt() + "\n\n" + full
+    except Exception:
+        pass
     # Pre-approve only read-only web tools so the headless run never blocks on a
     # permission prompt and can't write/exec on the box.
     p = subprocess.run(

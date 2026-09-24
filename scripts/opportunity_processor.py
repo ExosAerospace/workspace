@@ -22,13 +22,13 @@ Modes:
 try:
     import sys as _gsys, os as _gos, atexit as _gatexit
     _gsys.path.insert(0, _gos.path.join(_gos.path.dirname(_gos.path.abspath(__file__)), ".."))
-    from governance.govlog import new_run as _gnew_run, event as _gevent
+    from governance.govlog import new_run as _gnew_run, event as _gevent, is_transient as _gis_transient
     _GRUN = _gnew_run("opportunity-engine")
     _gevent(_GRUN, "start", detail=" ".join(_gsys.argv[1:])[:120])
     _gatexit.register(lambda: _gevent(_GRUN, "end"))
     _gprev_hook = _gsys.excepthook
     def _gexc(t, v, tb):
-        try: _gevent(_GRUN, "error", status="error", detail=str(v)[:160])
+        try: _gt = _gis_transient(v); _gevent(_GRUN, "transient_skip" if _gt else "error", status="transient" if _gt else "error", detail=str(v)[:160])
         except Exception: pass
         return _gprev_hook(t, v, tb)
     _gsys.excepthook = _gexc
@@ -260,6 +260,17 @@ Routing rules:
 - CLOSE = dead/not worth pursuing; explain why in blockers.
 CONSIDER THE SOURCING — do NOT manufacture speculative "maybe" decisions. NEVER route DECISION to ask whether a warm/known contact or intro path EXISTS, or to "confirm whether" a relationship or connection is available. That is premature relationship-fishing. Only propose a warm-intro step if a SPECIFIC named contact is already confirmed in our CRM/relationships. If a warm path might help but is unconfirmed, route TASK and note it can be supplied at submission time — Jon will provide the intro if and when it is actually needed. Never ask Jon to validate a hypothetical relationship.
 Rules: never overstate traction or claim relationships not confirmed. External docs say "John". Email only ever goes to Jon for approval first."""
+
+# ExO3 #3: prepend the confirmed MTP-as-protocol so opportunity decisions ladder to
+# Exos's MTP + hard constraints + decision-priority (config/mtp-protocol.json).
+try:
+    import os as _os, sys as _sys
+    _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+    import mtp as _mtp
+    AGENT_CONTRACT = _mtp.protocol_prompt() + "\n\n" + AGENT_CONTRACT
+except Exception:
+    pass
+
 
 def build_prompt(opp):
     return (f"OPPORTUNITY:\n"

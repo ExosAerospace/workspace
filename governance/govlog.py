@@ -38,6 +38,46 @@ def new_run(agent: str) -> dict:
     return {"agent": agent, "run_id": uuid.uuid4().hex[:16]}
 
 
+# Substrings that mark a transient network/service blip (ProtonMail Bridge briefly
+# down, DNS hiccup, upstream 5xx/reset/timeout) rather than a code defect. These are
+# expected — the worker just couldn't reach mail/net this cycle and should skip, not
+# page. Sustained outages still surface via cron-failure-watchdog (launchd exit!=0 x2).
+_TRANSIENT_MARKERS = (
+    "connection refused", "errno 61", "errno 8", "errno 51", "errno 54",
+    "errno 60", "errno 65", "nodename nor servname", "name or service not known",
+    "temporary failure in name resolution", "getaddrinfo failed",
+    "connection reset", "connection aborted", "network is unreachable",
+    "no route to host", "urlopen error", "max retries exceeded", "timed out",
+    "timeout", "socket error: eof", "eof occurred", "bad gateway",
+    " 502", " 503", " 504", "read timed out", "connection timed out",
+)
+
+
+def is_transient(exc) -> bool:
+    """True if `exc` (an Exception OR a text blob like captured stderr) looks like a
+    transient network/service outage that should be skipped, not flagged as broken."""
+    try:
+        import socket, urllib.error
+        if isinstance(exc, (ConnectionError, socket.gaierror, socket.timeout, TimeoutError,
+                            urllib.error.URLError)):
+            return True
+        if isinstance(exc, OSError) and getattr(exc, "errno", None) in (8, 51, 54, 60, 61, 65):
+            return True
+    except Exception:
+        pass
+    s = str(exc).lower()
+    return any(m in s for m in _TRANSIENT_MARKERS)
+
+
+def log_uncaught(run: dict, exc) -> str:
+    """Route an uncaught exception to the log: transient blips become a benign
+    'transient_skip' (status=transient, ignored by the completion watchdog); genuine
+    failures stay a real 'error'. Returns the correlation id."""
+    if is_transient(exc):
+        return event(run, "transient_skip", status="transient", detail=str(exc)[:160])
+    return event(run, "error", status="error", detail=str(exc)[:160])
+
+
 def event(run: dict, event: str, status: str = "info", detail: str = "", **fields) -> str:
     """Append one structured event. Returns the run_id (the correlation id)."""
     rid = run.get("run_id") if isinstance(run, dict) else str(run)

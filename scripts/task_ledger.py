@@ -33,8 +33,15 @@ def _emit_govlog(rec):
         name = rec.get("name") or "job"
         agent = _re.sub(r"[^a-z0-9]+", "-", str(name).lower()).strip("-")[:40] or "job"
         run = govlog.new_run(agent)
-        govlog.event(run, "run", status=(rec.get("status") or "info"),
-                     detail=str(name)[:120], exit_code=rec.get("exit_code"),
+        status = rec.get("status") or "info"
+        detail = str(name)[:120]
+        # Reclassify a transient network/service blip (mail Bridge down, DNS, 5xx) as a
+        # benign skip so the completion watchdog stays quiet; surface the real reason too.
+        if status == "error" and govlog.is_transient(rec.get("output_tail") or ""):
+            status = "transient"
+            detail = f"{name}: transient net/mail blip — {(rec.get('output_tail') or '').strip().splitlines()[-1][:80] if (rec.get('output_tail') or '').strip() else 'unreachable'}"
+        govlog.event(run, "run", status=status,
+                     detail=detail[:160], exit_code=rec.get("exit_code"),
                      duration_s=rec.get("duration_s"), source=rec.get("source"))
     except Exception:
         pass
