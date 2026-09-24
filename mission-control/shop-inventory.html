@@ -146,23 +146,35 @@ function shopEditReview(){
   html+='</div>';$('se_diff').innerHTML=html;
   $('se_review').style.display='none';$('se_confirm').style.display='';
 }
-async function shopEditConfirm(){
-  const f=_sef();if(!Object.keys(f).length){shopEditClose();return;}
-  const btn=$('se_confirm');btn.disabled=true;btn.textContent='Saving…';
-  try{
-    const r=await fetch('/api/shop/edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:shopRow.id,fields:f})});
-    const j=await r.json().catch(()=>({}));
-    if(r.status===401){location='/login';return;}
-    if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
-    if(f.contents!==undefined)shopRow.contents=f.contents;
-    if(f.description!==undefined)shopRow.description=f.description;
-    if(f.qty!==undefined)shopRow.qty=Number(f.qty);
-    if(f.location!==undefined)shopRow.location=f.location;
-    if(f.note!==undefined)shopRow.edit_note=f.note;
-    shopRow.edited_by=j.edited_by;shopRow.edited_at=j.edited_at;
-    shopEditClose();sortAndRender();
-    const t=$('se_toast');t.textContent='Saved · by '+j.edited_by;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);
-  }catch(e){btn.disabled=false;btn.textContent='✓ Confirm & save';alert('Save failed: '+e.message);}
+function shopToast(msg,ok=true){const t=$('se_toast');t.textContent=msg;t.style.borderColor=ok?'#4caf50':'#e0524d';t.style.background=ok?'#12331a':'#331214';t.style.color=ok?'#d7ffd7':'#ffd7d7';t.classList.add('on');clearTimeout(shopToast._t);shopToast._t=setTimeout(()=>t.classList.remove('on'),ok?3000:6000);}
+// Optimistic save: apply locally + close the modal IMMEDIATELY so the user is never locked out
+// while the request is in flight (the single-threaded MC server can stall for ~a minute when a
+// concurrent execFileSync — e.g. a doc/PDF preview render — blocks the event loop). The POST runs
+// in the background; on failure we revert the row and flag it, no data is silently lost.
+function shopEditConfirm(){
+  const row=shopRow;const f=_sef();
+  if(!row||!Object.keys(f).length){shopEditClose();return;}
+  const before={contents:row.contents,description:row.description,qty:row.qty,location:row.location,edit_note:row.edit_note,edited_by:row.edited_by,edited_at:row.edited_at};
+  // optimistic local apply
+  if(f.contents!==undefined)row.contents=f.contents;
+  if(f.description!==undefined)row.description=f.description;
+  if(f.qty!==undefined)row.qty=Number(f.qty);
+  if(f.location!==undefined)row.location=f.location;
+  if(f.note!==undefined)row.edit_note=f.note;
+  shopEditClose();sortAndRender();
+  shopToast('Saving…');
+  fetch('/api/shop/edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:row.id,fields:f})})
+    .then(async r=>{
+      if(r.status===401){location='/login';return;}
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
+      row.edited_by=j.edited_by;row.edited_at=j.edited_at;sortAndRender();
+      shopToast('Saved · by '+j.edited_by);
+    })
+    .catch(e=>{
+      Object.assign(row,before);sortAndRender();
+      shopToast('⚠ Save failed — reverted: '+e.message,false);
+    });
 }
 load();
 </script>

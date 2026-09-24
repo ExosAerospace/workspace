@@ -267,29 +267,35 @@ function bomEditReview(){
   document.getElementById('editReviewBtn').style.display='none';
   document.getElementById('editConfirmBtn').style.display='';
 }
-async function bomEditConfirm(){
-  const f=bomEditFields();
-  if(!Object.keys(f).length){bomEditClose();return;}
-  const btn=document.getElementById('editConfirmBtn');btn.disabled=true;btn.textContent='Saving…';
-  try{
-    const r=await fetch('/api/bom/edit',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({key:editRow.key,fields:f})});
-    const j=await r.json().catch(()=>({}));
-    if(r.status===401){location='/login';return;}
-    if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
-    if(f.description!==undefined)editRow.description=f.description;
-    if(f.req!==undefined)editRow.req=f.req;
-    if(f.on_hand!==undefined)editRow.on_hand=Number(f.on_hand);
-    if(f.location!==undefined){editRow.edit_location=f.location;editRow.locations=f.location?[f.location]:[];editRow.map_location='';}
-    if(f.note!==undefined)editRow.edit_note=f.note;
-    editRow.edited_by=j.edited_by;editRow.edited_at=j.edited_at;
-    const req2=parseFloat(String(editRow.req).trim());
-    editRow.short=(!isNaN(req2)&&editRow.on_hand<req2)?Math.round((req2-editRow.on_hand)*1000)/1000:0;
-    bomEditClose();render();
-    toast('Saved · by '+j.edited_by);
-  }catch(e){btn.disabled=false;btn.textContent='✓ Confirm & save';alert('Save failed: '+e.message);}
+// Optimistic save: apply locally + close the modal IMMEDIATELY so the user isn't locked out while
+// the request is in flight (the single-threaded MC server can stall ~a minute when a concurrent
+// execFileSync — e.g. a doc/PDF preview render — blocks the event loop). POST runs in the
+// background; on failure we revert the row and flag it, so nothing is silently lost.
+function bomEditConfirm(){
+  const row=editRow;const f=bomEditFields();
+  if(!row||!Object.keys(f).length){bomEditClose();return;}
+  const before={description:row.description,req:row.req,on_hand:row.on_hand,edit_location:row.edit_location,locations:row.locations,map_location:row.map_location,edit_note:row.edit_note,edited_by:row.edited_by,edited_at:row.edited_at,short:row.short};
+  if(f.description!==undefined)row.description=f.description;
+  if(f.req!==undefined)row.req=f.req;
+  if(f.on_hand!==undefined)row.on_hand=Number(f.on_hand);
+  if(f.location!==undefined){row.edit_location=f.location;row.locations=f.location?[f.location]:[];row.map_location='';}
+  if(f.note!==undefined)row.edit_note=f.note;
+  const req2=parseFloat(String(row.req).trim());
+  row.short=(!isNaN(req2)&&row.on_hand<req2)?Math.round((req2-row.on_hand)*1000)/1000:0;
+  bomEditClose();render();
+  toast('Saving…');
+  fetch('/api/bom/edit',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({key:row.key,fields:f})})
+    .then(async r=>{
+      if(r.status===401){location='/login';return;}
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
+      row.edited_by=j.edited_by;row.edited_at=j.edited_at;render();
+      toast('Saved · by '+j.edited_by);
+    })
+    .catch(e=>{Object.assign(row,before);render();toast('⚠ Save failed — reverted: '+e.message,false);});
 }
-function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);}
+function toast(m,ok=true){const t=document.getElementById('toast');t.textContent=m;t.style.borderColor=ok?'':'#e0524d';t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),ok?3000:6000);}
 load(); setInterval(load,30000);
 </script>
 <div class="ovl" id="editOvl">
