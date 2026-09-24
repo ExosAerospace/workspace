@@ -1,0 +1,18 @@
+#!/bin/sh
+# ExO3 enforced design-compliance gate (scripts/exo3_gate.py).
+# Shared working tree: this must be robust. It FAILS OPEN — if python or the
+# gate script is unavailable, or the gate errors, the commit proceeds. Only the
+# gate's deliberate BLOCK (exit code 2) stops the commit.
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+GATE="$ROOT/scripts/exo3_gate.py"
+[ -f "$GATE" ] || exit 0
+PY="$(command -v python3 2>/dev/null)"
+[ -n "$PY" ] || exit 0
+"$PY" "$GATE" --staged
+rc=$?
+if [ "$rc" = "2" ]; then
+  echo ""
+  echo "commit blocked by exo3-gate (see above). Fix, or override with EXO3_GATE_OVERRIDE=\"why\"."
+  exit 1
+fi
+exit 0
