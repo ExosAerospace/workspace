@@ -1,9 +1,38 @@
 const fs = require('fs');
 const path = require('path');
-const { execSync, execFileSync } = require('child_process');
+const { execSync, execFileSync, execFile } = require('child_process');
+const { promisify } = require('util');
 const http = require('http');
 const https = require('https');
 const nodemailer = require('nodemailer');
+
+// ── Non-blocking child processes (ExO3 event-loop-integrity fix, 2026-09-24) ──
+// The MC server is single-threaded; every synchronous execFileSync froze the ENTIRE event loop
+// for the child's whole runtime (a doc/PDF preview render could block for ~a minute, stalling all
+// other requests — inventory saves, dashboards, pollers). execFileP runs the child asynchronously
+// so the loop keeps serving. `input` is written to stdin (msmtp/python stdin callers rely on it).
+const _execFileP = promisify(execFile);
+function execFileP(cmd, args, opts = {}) {
+  const { input, ...rest } = opts;
+  const child = execFile(cmd, args, rest);
+  const p = new Promise((resolve, reject) => {
+    let out = '', err = '';
+    if (child.stdout) child.stdout.on('data', d => (out += d));
+    if (child.stderr) child.stderr.on('data', d => (err += d));
+    child.on('error', reject);
+    child.on('close', code => code === 0
+      ? resolve({ stdout: out, stderr: err })
+      : reject(Object.assign(new Error(`${cmd} exited ${code}: ${err.slice(0, 300)}`), { code, stdout: out, stderr: err })));
+  });
+  if (input != null && child.stdin) { child.stdin.write(input); child.stdin.end(); }
+  return p;
+}
+// ExO3 Pillar 2 — correlation-ID logging (govlog). Safe-optional; never breaks a request.
+let govlog = null;
+try { govlog = require('../governance/govlog'); } catch (e) { govlog = null; }
+function glog(agent, evt, status, detail, fields) {
+  try { if (govlog) govlog.event(govlog.newRun(agent), evt, status || 'info', detail || '', fields || {}); } catch (e) {}
+}
 
 const PORT = 8080;
 const MD_FILE = path.join(__dirname, '../exos-mission-control.md');
@@ -3988,6 +4017,18 @@ const server = http.createServer((req, res) => {
       // Manual line edits (description / req / on_hand / note) keyed by "section#item",
       // with who/when attribution. Applied on read so they survive any bom-index rebuild.
       const bomEdits = readJSON(path.join(__dirname, 'data', 'bom-edits.json'), {});
+      // Cost + provenance overlay (data/bom-costs.json, keyed "section#item"): survives BOM rebuild.
+      // basis: paid (QuickBooks/actual) > found (researched) > bom-sheet (cost already on Steve's BOM) > none.
+      const bomCosts = (readJSON(path.join(__dirname, 'data', 'bom-costs.json'), { costs: {} }).costs) || {};
+      const numCost = v => { const n = parseFloat(String(v == null ? '' : v).replace(/[$,]/g, '')); return isNaN(n) ? 0 : n; };
+      const effCost = (sec, item, sheetCost, vendor) => {
+        const o = bomCosts[`${sec}#${item}`];
+        if (o && numCost(o.unit_cost) > 0)
+          return { unit_cost: numCost(o.unit_cost), cost_basis: o.basis || 'found', cost_source: o.source || '', cost_ref: o.ref || '' };
+        if (numCost(sheetCost) > 0)
+          return { unit_cost: numCost(sheetCost), cost_basis: 'bom-sheet', cost_source: vendor || '', cost_ref: '' };
+        return { unit_cost: 0, cost_basis: 'none', cost_source: '', cost_ref: '' };
+      };
       const inv = readJSON(path.join(__dirname, 'data', 'inventory.json'), { records: [] });
       const locmap = readJSON(path.join(__dirname, 'data', 'bom-location-map.json'), { map: {} }).map || {};
       // Credit real shop stock (Steve's inventory of record) into have/short, matched on SKU (>=5 chars).
@@ -4038,11 +4079,13 @@ const server = http.createServer((req, res) => {
         const ledgerLoc = rec ? (rec.locations || []) : [];
         // Stored location from the parts-room / warehouse map when the ledger has none.
         const mm = ledgerLoc.length ? null : locmap[recKey(vpn, mpn, item, row.description)];
+        const cost = effCost(sec, item, row.cost, row.vendor);
         rows.push({ section: sec, item, vendor_pn: vpn, mfg_pn: mpn, description: desc,
           req: reqVal, on_hand: oh, shop_on_hand: shopOh, short: sh,
           locations: edit_loc ? [edit_loc] : ledgerLoc,
           map_location: edit_loc ? '' : (mm ? `${mm.location} (${mm.area})` : ''),
           photos, updated_at: rec ? (rec.updated_at || '') : '',
+          unit_cost: cost.unit_cost, cost_basis: cost.cost_basis, cost_source: cost.cost_source, cost_ref: cost.cost_ref,
           key: ekey, edited_by, edited_at, edit_note, edit_location: edit_loc });
         const s = secmap[sec] || (secmap[sec] = { section: sec, lines: 0, onhand_lines: 0, short_lines: 0 });
         s.lines++; if (oh > 0) s.onhand_lines++; if (sh) s.short_lines++;
@@ -4881,6 +4924,14 @@ const server = http.createServer((req, res) => {
     if (!getSession(req)) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
     let ov = {}; try { ov = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'bom-edits.json'), 'utf-8')); } catch {}
     res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(ov)); return;
+  }
+
+  // Cost + provenance overlay (data/bom-costs.json, keyed "section#item") for the BOM page.
+  // paid=actual $ · found=researched · bom-sheet=on Steve's BOM · none=uncosted.
+  if (req.url.split('?')[0] === '/api/bom-costs' && req.method === 'GET') {
+    if (!getSession(req)) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    let c = { costs: {} }; try { c = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'bom-costs.json'), 'utf-8')); } catch {}
+    res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(c)); return;
   }
 
   // ── BLK3 BOM / Inventory inline line edit (session-gated) ──────────────────

@@ -111,8 +111,9 @@
     <th data-k="section">Section</th><th data-k="item">Item</th><th data-k="vendor_pn">Vendor P/N</th>
     <th data-k="description">Description</th><th data-k="req" class="num">Req</th>
     <th data-k="on_hand" class="num">On-Hand</th><th data-k="short" class="num">Short</th>
+    <th data-k="unit_cost" class="num">Cost</th><th data-k="cost_basis">Basis</th><th data-k="cost_source">Source</th>
     <th data-k="locations">Location</th><th>Photos</th><th data-k="updated_at">Updated</th><th>Edit</th>
-  </tr></thead><tbody id="tb"><tr><td colspan="11" class="empty">Loading…</td></tr></tbody></table>
+  </tr></thead><tbody id="tb"><tr><td colspan="14" class="empty">Loading…</td></tr></tbody></table>
 </div>
 <script>
 let DATA=null, sortK='section', sortDir=1, secFilter='';
@@ -142,6 +143,13 @@ async function load(){
 }
 function kpi(v,l){return '<div class="kpi"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>';}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function money(n){return n==null||n===''||!(+n>0)?'':'$'+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+// Cost-basis chip: Paid=green (actual $), Found=orange (researched), BOM=grey (on Steve's BOM).
+function basisPill(b){
+  const M={paid:['Paid','#16351f','#6ee7a0'],found:['Found','#3a2a12','#f5a742'],'bom-sheet':['BOM','#2a2a2a','#b7b7b7'],none:['—','transparent','#666']};
+  const x=M[b]||M.none;
+  return '<span style="display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;font-weight:600;background:'+x[1]+';color:'+x[2]+'">'+x[0]+'</span>';
+}
 function render(){
   if(!DATA)return;
   const q=document.getElementById('q').value.toLowerCase().trim();
@@ -156,7 +164,7 @@ function render(){
       if(!h.includes(q))return false;}
     return true;});
   rows.sort((a,b)=>{let x=a[sortK],y=b[sortK];
-    if(sortK==='item'||sortK==='on_hand'||sortK==='short'||sortK==='req'){x=parseFloat(x)||0;y=parseFloat(y)||0;}
+    if(sortK==='item'||sortK==='on_hand'||sortK==='short'||sortK==='req'||sortK==='unit_cost'){x=parseFloat(x)||0;y=parseFloat(y)||0;}
     else{x=String(x||'').toLowerCase();y=String(y||'').toLowerCase();}
     return (x<y?-1:x>y?1:0)*sortDir;});
   document.getElementById('count').textContent=rows.length+' of '+DATA.rows.length+' lines';
@@ -168,10 +176,13 @@ function render(){
       '<td class="pn">'+esc(r.vendor_pn||r.mfg_pn||'')+'</td><td>'+esc(r.description)+edtag+'</td>'+
       '<td class="num">'+esc(r.req)+'</td><td class="num">'+r.on_hand+'</td>'+
       '<td class="num">'+(r.short?'<span class="short-b">'+r.short+'</span>':'')+'</td>'+
+      '<td class="num">'+money(r.unit_cost)+'</td>'+
+      '<td>'+basisPill(r.cost_basis)+'</td>'+
+      '<td class="muted" title="'+esc(r.cost_source||'')+'">'+esc((r.cost_source||'').length>36?(r.cost_source.slice(0,34)+'…'):(r.cost_source||''))+'</td>'+
       '<td>'+(((r.locations||[]).length)?esc(r.locations.join(', ')):(r.map_location?'<span class="muted">'+esc(r.map_location)+' <em>· map</em></span>':''))+'</td><td>'+ph+'</td>'+
       '<td class="muted">'+esc((r.updated_at||'').slice(0,10))+'</td>'+
       '<td><button class="editbtn" title="Edit line" onclick="bomEditOpen(\''+encodeURIComponent(r.key||'')+'\')">✎</button></td></tr>';
-  }).join(''):'<tr><td colspan="11" class="empty">No matching lines.</td></tr>';
+  }).join(''):'<tr><td colspan="14" class="empty">No matching lines.</td></tr>';
 }
 document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{
   const k=th.dataset.k; if(sortK===k)sortDir*=-1;else{sortK=k;sortDir=1;} render();});
