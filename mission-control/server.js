@@ -4863,6 +4863,14 @@ const server = http.createServer((req, res) => {
     }); return;
   }
 
+  // Return the BLK3 BOM line-edit overrides (keyed by section#item) so the BOM
+  // page can apply them client-side over its inlined data. Session-gated.
+  if (req.url.split('?')[0] === '/api/bom-edits' && req.method === 'GET') {
+    if (!getSession(req)) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    let ov = {}; try { ov = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'bom-edits.json'), 'utf-8')); } catch {}
+    res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(ov)); return;
+  }
+
   // ── BLK3 BOM / Inventory inline line edit (session-gated) ──────────────────
   // Persists per-line edits (description / req / on_hand / note) to
   // data/bom-edits.json keyed by "section#item" — survives any bom-index rebuild —

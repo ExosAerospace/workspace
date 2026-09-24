@@ -38,6 +38,25 @@ tr.miss:hover{background:#43340f}
 tfoot td{padding:9px 10px;border-top:2px solid var(--line);font-weight:700;background:var(--panel)}
 .empty{color:var(--mut);padding:30px;text-align:center}
 a.dl{color:var(--acc);font-size:12px;text-decoration:none}
+.ebtn{background:transparent;border:1px solid var(--line);color:var(--mut);border-radius:6px;padding:2px 8px;cursor:pointer;font-size:.85rem}
+.ebtn:hover{border-color:var(--acc);color:var(--acc)}
+.etag{color:var(--warn);cursor:help}
+.ecell{white-space:nowrap}
+.ovl{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:50}
+.ovl.on{display:flex}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;width:92%;max-width:520px;max-height:90vh;overflow:auto}
+.modal h3{margin:0 0 4px;font-size:1rem}
+.modal .k{color:var(--mut);font-size:.75rem;margin-bottom:10px;font-family:ui-monospace,Menlo,monospace}
+.modal label{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);margin:10px 0 4px}
+.modal input,.modal textarea{width:100%;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit}
+.modal textarea{min-height:58px;resize:vertical}
+.modal .acts{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.modal .btn{background:var(--acc);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:.85rem}
+.modal .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+.diffbox{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;margin-top:12px;font-size:.82rem}
+.diffbox .d{margin:4px 0}.diffbox .o{color:#e0524d;text-decoration:line-through}.diffbox .n2{color:var(--good);font-weight:700}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12331a;border:1px solid var(--good);color:#d7ffd7;padding:10px 16px;border-radius:8px;z-index:60;display:none}
+.toast.on{display:block}
 </style></head><body>
 <header>
   <h1>BLK3 — Bill of Materials <span style="color:var(--mut);font-weight:400">· Live View</span></h1>
@@ -90,7 +109,7 @@ function render(){
   }
   if(sortCol!=null){const c=sortCol;rows=rows.slice().sort((a,b)=>{let x=a[c],y=b[c];if(numeric(c)){x=x==null||x===''?-Infinity:+x;y=y==null||y===''?-Infinity:+y;return (x-y)*sortDir;}return String(x??'').localeCompare(String(y??''))*sortDir;});}
   const thead=document.getElementById('thead');
-  thead.innerHTML='<tr>'+activeCols.map(c=>{const ar=sortCol===c?(sortDir>0?'▲':'▼'):'';return '<th data-c="'+c+'" class="'+(numeric(c)?'num':'')+'">'+c+'<span class="ar">'+ar+'</span></th>';}).join('')+'</tr>';
+  thead.innerHTML='<tr>'+activeCols.map(c=>{const ar=sortCol===c?(sortDir>0?'▲':'▼'):'';return '<th data-c="'+c+'" class="'+(numeric(c)?'num':'')+'">'+c+'<span class="ar">'+ar+'</span></th>';}).join('')+'<th>Edit</th></tr>';
   thead.querySelectorAll('th').forEach(th=>th.onclick=()=>{const c=th.dataset.c;if(sortCol===c)sortDir*=-1;else{sortCol=c;sortDir=1;}render();});
   const tb=document.getElementById('tbody');
   tb.innerHTML=rows.map(r=>{
@@ -101,15 +120,98 @@ function render(){
       if(c==='Cost ea') return '<td class="num">'+(v===''||v==null?'':money(v))+'</td>';
       if(c==='Quantity') return '<td class="num">'+(v===''||v==null?'':v)+'</td>';
       return '<td>'+String(v??'').replace(/[<>&]/g,ch=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[ch]))+'</td>';
-    }).join('')+'</tr>';
+    }).join('')+
+      '<td class="ecell">'+(r._eby?'<span class="etag" title="edited by '+String(r._eby).replace(/"/g,'')+' on '+String(r._eat||'').slice(0,10)+(r._enote?(' · '+String(r._enote).replace(/"/g,'')):'')+'">✎</span> ':'')+
+      '<button class="ebtn" title="Edit line" onclick="bomEdit(\''+encodeURIComponent(r._key||'')+'\')">✎</button></td></tr>';
   }).join('');
   document.getElementById('empty').style.display=rows.length?'none':'block';
   const shown=rows.length, tot=rows.reduce((a,r)=>a+(r['Extended Cost']||0),0);
   document.getElementById('meta').textContent=global?('BLK3-wide search — '+shown+' match'+(shown===1?'':'es')+' for “'+q+'” across all '+DATA.sheets.length+' sections'):(s.name+' — '+shown+' of '+s.count+' line items'+(s.missing?' · '+s.missing+' missing cost':''));
   const tf=document.getElementById('tfoot');
-  tf.innerHTML='<tr><td colspan="'+(activeCols.length-1)+'">'+(global?'Matches':'Subassembly')+' total ('+shown+' shown)</td><td class="num">'+money(tot)+'</td></tr>';
+  tf.innerHTML='<tr><td colspan="'+(activeCols.length-1)+'">'+(global?'Matches':'Subassembly')+' total ('+shown+' shown)</td><td class="num">'+money(tot)+'</td><td></td></tr>';
 }
 document.getElementById('q').oninput=render;
 document.getElementById('missOnly').onchange=render;
-render();
-</script></body></html>
+// ── Apply saved line edits (description/req) over the inlined BOM, then render ──
+function _recost(row){const ce=parseFloat(row['Cost ea']);if(!isNaN(ce)&&row.Quantity!==''&&row.Quantity!=null&&!isNaN(parseFloat(row.Quantity)))row['Extended Cost']=Math.round(parseFloat(row.Quantity)*ce*100)/100;}
+async function applyBomEdits(){
+  let ov={};
+  try{const r=await fetch('/api/bom-edits');if(r.status===401){location='/login';return;}if(r.ok)ov=await r.json();}catch(e){}
+  DATA.sheets.forEach(sh=>sh.rows.forEach(row=>{
+    const k=sh.name+'#'+row.Item; row._key=k; const e=ov[k];
+    if(e){ if(e.description!==undefined&&e.description!=='')row.Description=e.description;
+           if(e.req!==undefined&&e.req!=='' ){row.Quantity=e.req;_recost(row);}
+           row._eby=e._by||''; row._eat=e._at||''; row._enote=e.note||''; }
+  }));
+  render();
+}
+// ── Inline edit with a mandatory confirm step + who/when attribution ──
+let editRow=null;
+function _findRow(k){for(const sh of DATA.sheets)for(const r of sh.rows)if(r._key===k)return r;return null;}
+function bomEdit(k){
+  k=decodeURIComponent(k); editRow=_findRow(k); if(!editRow)return;
+  document.getElementById('be_key').textContent=k;
+  document.getElementById('be_description').value=editRow.Description||'';
+  document.getElementById('be_req').value=(editRow.Quantity==null?'':editRow.Quantity);
+  document.getElementById('be_note').value='';
+  document.getElementById('be_diff').innerHTML='';
+  document.getElementById('be_review').style.display='';
+  document.getElementById('be_confirm').style.display='none';
+  document.getElementById('be_ovl').classList.add('on');
+}
+function bomEditClose(){document.getElementById('be_ovl').classList.remove('on');editRow=null;}
+function _bef(){if(!editRow)return{};const f={};
+  const d=document.getElementById('be_description').value;
+  const rq=document.getElementById('be_req').value;
+  const nt=document.getElementById('be_note').value.trim();
+  if(d!==(editRow.Description||''))f.description=d;
+  if(String(rq)!==String(editRow.Quantity==null?'':editRow.Quantity))f.req=rq;
+  if(nt)f.note=nt; return f;}
+function _esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function bomEditReview(){
+  const f=_bef();const keys=Object.keys(f).filter(k=>k!=='note');
+  if(!keys.length&&!f.note){document.getElementById('be_diff').innerHTML='<div class="diffbox">No changes to confirm.</div>';return;}
+  const label={description:'Description',req:'Quantity'};
+  let html='<div class="diffbox"><strong>Confirm these changes:</strong>';
+  keys.forEach(k=>{const oldv=k==='description'?(editRow.Description||''):(editRow.Quantity==null?'':editRow.Quantity);
+    html+='<div class="d">'+label[k]+': <span class="o">'+_esc(oldv)+'</span> → <span class="n2">'+_esc(f[k])+'</span></div>';});
+  if(f.note)html+='<div class="d" style="color:var(--mut)">Note: '+_esc(f.note)+'</div>';
+  html+='</div>';document.getElementById('be_diff').innerHTML=html;
+  document.getElementById('be_review').style.display='none';
+  document.getElementById('be_confirm').style.display='';
+}
+async function bomEditConfirm(){
+  const f=_bef();if(!Object.keys(f).length){bomEditClose();return;}
+  const btn=document.getElementById('be_confirm');btn.disabled=true;btn.textContent='Saving…';
+  try{
+    const r=await fetch('/api/bom/edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:editRow._key,fields:f})});
+    const j=await r.json().catch(()=>({}));
+    if(r.status===401){location='/login';return;}
+    if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
+    if(f.description!==undefined)editRow.Description=f.description;
+    if(f.req!==undefined){editRow.Quantity=f.req;_recost(editRow);}
+    if(f.note!==undefined)editRow._enote=f.note;
+    editRow._eby=j.edited_by;editRow._eat=j.edited_at;
+    bomEditClose();render();
+    const t=document.getElementById('be_toast');t.textContent='Saved · by '+j.edited_by;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);
+  }catch(e){btn.disabled=false;btn.textContent='✓ Confirm & save';alert('Save failed: '+e.message);}
+}
+applyBomEdits();
+</script>
+<div class="ovl" id="be_ovl">
+  <div class="modal">
+    <h3>✎ Edit BOM line</h3>
+    <div class="k" id="be_key"></div>
+    <label>Description</label><textarea id="be_description"></textarea>
+    <label>Quantity</label><input id="be_req" type="number" step="any">
+    <label>Note (optional — reason for the change)</label><input id="be_note" type="text" placeholder="e.g. corrected qty per drawing rev">
+    <div id="be_diff"></div>
+    <div class="acts">
+      <button class="btn ghost" onclick="bomEditClose()">Cancel</button>
+      <button class="btn" id="be_review" onclick="bomEditReview()">Review change →</button>
+      <button class="btn" id="be_confirm" style="display:none;background:#2e7d32" onclick="bomEditConfirm()">✓ Confirm &amp; save</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="be_toast"></div>
+</body></html>
