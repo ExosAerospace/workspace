@@ -3915,6 +3915,10 @@ const server = http.createServer((req, res) => {
               path.join(__dirname, '..', 'scripts', 'inventory_capture.py'),
               'reindex-locations', '--file', storedName,
             ], { timeout: 120000 }, () => {});
+            // Also refresh the shop inventory of record (Warehouse/Parts Room/Trailer/Assets).
+            execFile('/usr/bin/python3', [
+              path.join(__dirname, '..', 'scripts', 'reindex_shop_inventory.py'),
+            ], { timeout: 120000 }, () => {});
           } catch (e) { /* best-effort */ }
         }
 
