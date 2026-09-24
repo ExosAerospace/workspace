@@ -391,13 +391,16 @@
   padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e8edf5">
   <div id="rrStatus" style="font-size:14px;color:#8aa0bd;min-width:220px">Required reading — starting…</div>
-  <button id="rrBtn" disabled style="background:#1c3052;color:#8aa0bd;border:1px solid #1c3052;
-    border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:not-allowed;transition:all .15s">
-    ✓ I have read and understood</button>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <a id="rrNext" href="#" style="display:none;text-decoration:none;background:#0f2a1a;color:#22c55e;border:1px solid #22c55e;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600">Next required reading →</a>
+    <button id="rrBtn" disabled style="background:#1c3052;color:#8aa0bd;border:1px solid #1c3052;
+      border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:not-allowed;transition:all .15s">
+      ✓ I have read and understood</button>
+  </div>
 </div>
 <script>
 (function(){
-  var DOC_ID='getting-started', MIN=180, SCROLL_MIN=90;
+  var DOC_ID='getting-started', MIN=90, SCROLL_MIN=90;
   var bar=document.getElementById('rrBar'), statusEl=document.getElementById('rrStatus'), btn=document.getElementById('rrBtn');
   var activeSeconds=0, scrollMaxPct=0, heartbeats=0, lastActivity=Date.now(), done=false, opened=false, ackInFlight=false;
 
@@ -470,6 +473,16 @@
       }).catch(function(){ ackInFlight=false; refreshUI(); });
   });
 
+  // Wire the "Next required reading →" jump to the next outstanding required item for this user.
+  function setupNext(data){
+    var docs=(data&&data.docs)||[], mine=(data&&data.mine)||[];
+    var doneMap={}; mine.forEach(function(m){ if(m.completed) doneMap[m.doc_id]=1; });
+    var next=null;
+    for(var i=0;i<docs.length;i++){ if(docs[i].id===DOC_ID) continue; if(!doneMap[docs[i].id]){ next=docs[i]; break; } }
+    var nb=document.getElementById('rrNext'); if(!nb) return;
+    if(next){ nb.href=next.url; nb.title='Next: '+next.title; nb.textContent='Next required reading →'; nb.style.cursor='pointer'; nb.style.display='inline-block'; }
+    else { nb.textContent='✓ All required reading complete'; nb.removeAttribute('href'); nb.style.cursor='default'; nb.style.display='inline-block'; }
+  }
   // Boot: check prior completion, then open a server-side reading record.
   fetch('/api/required-reading',{credentials:'same-origin'})
     .then(function(r){ return r.ok?r.json():null; })
@@ -477,6 +490,7 @@
       if(!data) return; // not logged in — stay silent
       var mine=(data.mine||[]).find(function(m){ return m.doc_id===DOC_ID; });
       bar.style.display='flex';
+      setupNext(data);
       if(mine && mine.completed){ setCompleted(mine.acknowledged_at?new Date(mine.acknowledged_at).toLocaleDateString():'earlier'); return; }
       updateScroll(); refreshUI();
       post('/api/required-reading/open', {doc_id:DOC_ID})
