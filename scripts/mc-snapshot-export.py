@@ -15,7 +15,9 @@ WS = "/Users/exomac/.openclaw/workspace"
 DATA = os.path.join(WS, "mission-control", "data")
 SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
 KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
-TABLES = ["tasks", "decisions", "opportunities", "contacts", "activities"]
+# Verified-existing Supabase tables in this project (probed 2026-09-24). Note: opportunities
+# live in `deals`; there is no `decisions` table (MC decisions are stored outside Postgres).
+TABLES = ["tasks", "deals", "contacts", "companies", "activities"]
 KEEP = 12            # timestamped copies to retain per table (~2h of history at 10-min cadence)
 PAGE = 1000          # PostgREST hard cap per response
 TIMEOUT = 12
