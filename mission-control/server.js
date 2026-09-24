@@ -3940,6 +3940,16 @@ const server = http.createServer((req, res) => {
     try {
       const readJSON = (p, d) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return d; } };
       const shop = readJSON(path.join(__dirname, 'data', 'shop-inventory.json'), { items: [], counts: {}, total: 0 });
+      // Apply manual item edits (keyed by item id) with who/when attribution, before filtering.
+      const shopEdits = readJSON(path.join(__dirname, 'data', 'shop-edits.json'), {});
+      for (const it of (shop.items || [])) {
+        const e = shopEdits[it.id];
+        if (!e) continue;
+        for (const k of ['contents', 'description', 'qty', 'location']) {
+          if (e[k] !== undefined && e[k] !== '') it[k] = e[k];
+        }
+        it.edited_by = e._by || ''; it.edited_at = e._at || ''; it.edit_note = e.note || '';
+      }
       const qp = new URL(req.url, 'http://localhost').searchParams;
       const cat = (qp.get('category') || '').trim().toLowerCase();
       const loc = (qp.get('location') || '').trim().toLowerCase();
@@ -4013,11 +4023,12 @@ const server = http.createServer((req, res) => {
         // Apply manual line edit override (keyed by section#item) + carry attribution.
         const ekey = `${sec}#${item}`;
         const ed = bomEdits[ekey] || null;
-        let edited_by = '', edited_at = '', edit_note = '';
+        let edited_by = '', edited_at = '', edit_note = '', edit_loc = '';
         if (ed) {
           if (ed.description !== undefined && ed.description !== '') desc = ed.description;
           if (ed.req !== undefined && ed.req !== '') reqVal = ed.req;
           if (ed.on_hand !== undefined && ed.on_hand !== '') oh = Number(ed.on_hand);
+          if (ed.location !== undefined && ed.location !== '') edit_loc = String(ed.location);
           edited_by = ed._by || ''; edited_at = ed._at || ''; edit_note = ed.note || '';
         }
         const req2 = parseFloat(String(reqVal).trim()); const hasReq = !isNaN(req2);
@@ -4028,10 +4039,11 @@ const server = http.createServer((req, res) => {
         // Stored location from the parts-room / warehouse map when the ledger has none.
         const mm = ledgerLoc.length ? null : locmap[recKey(vpn, mpn, item, row.description)];
         rows.push({ section: sec, item, vendor_pn: vpn, mfg_pn: mpn, description: desc,
-          req: reqVal, on_hand: oh, shop_on_hand: shopOh, short: sh, locations: ledgerLoc,
-          map_location: mm ? `${mm.location} (${mm.area})` : '',
+          req: reqVal, on_hand: oh, shop_on_hand: shopOh, short: sh,
+          locations: edit_loc ? [edit_loc] : ledgerLoc,
+          map_location: edit_loc ? '' : (mm ? `${mm.location} (${mm.area})` : ''),
           photos, updated_at: rec ? (rec.updated_at || '') : '',
-          key: ekey, edited_by, edited_at, edit_note });
+          key: ekey, edited_by, edited_at, edit_note, edit_location: edit_loc });
         const s = secmap[sec] || (secmap[sec] = { section: sec, lines: 0, onhand_lines: 0, short_lines: 0 });
         s.lines++; if (oh > 0) s.onhand_lines++; if (sh) s.short_lines++;
       }
@@ -4884,7 +4896,7 @@ const server = http.createServer((req, res) => {
         const p = JSON.parse(body || '{}');
         const key = (p.key || '').toString().trim();
         if (!key) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'missing key' })); return; }
-        const ALLOWED = ['description', 'req', 'on_hand', 'note'];
+        const ALLOWED = ['description', 'req', 'on_hand', 'location', 'note'];
         const fields = {};
         for (const k of ALLOWED) {
           if (p.fields && p.fields[k] !== undefined && p.fields[k] !== null) {
@@ -4911,6 +4923,48 @@ const server = http.createServer((req, res) => {
         fs.writeFileSync(ovPath, JSON.stringify(ov, null, 2));
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ ok: true, key, fields, edited_by: who, edited_at: at }));
+      } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+    }); return;
+  }
+
+  // ── Shop inventory inline line edit (session-gated) ────────────────────────
+  // Persists per-item edits (contents / description / qty / location / note) to
+  // data/shop-edits.json keyed by the item id (SHOP-#####) — survives any
+  // reindex_shop_inventory rebuild — with who/when attribution + history.
+  // Applied on read in /api/shop-inventory.
+  if (req.url === '/api/shop/edit' && req.method === 'POST') {
+    const session = getSession(req);
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const p = JSON.parse(body || '{}');
+        const id = (p.id || '').toString().trim();
+        if (!id) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'missing id' })); return; }
+        const ALLOWED = ['contents', 'description', 'qty', 'location', 'note'];
+        const fields = {};
+        for (const k of ALLOWED) {
+          if (p.fields && p.fields[k] !== undefined && p.fields[k] !== null) {
+            fields[k] = (k === 'qty') ? (p.fields[k] === '' ? '' : Number(p.fields[k])) : String(p.fields[k]);
+          }
+        }
+        if (!Object.keys(fields).length) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'no fields' })); return; }
+        const who = session.name || session.email || 'unknown';
+        const at = new Date().toISOString();
+        const ovPath = path.join(__dirname, 'data', 'shop-edits.json');
+        let ov = {}; try { ov = JSON.parse(fs.readFileSync(ovPath, 'utf-8')); } catch {}
+        const prev = ov[id] || {};
+        const changes = {};
+        for (const k of Object.keys(fields)) {
+          const pv = prev[k] === undefined ? '' : prev[k];
+          if (String(pv) !== String(fields[k])) changes[k] = { from: (prev[k] === undefined ? null : prev[k]), to: fields[k] };
+        }
+        const history = Array.isArray(prev.history) ? prev.history : [];
+        if (Object.keys(changes).length) history.push({ by: who, email: session.email || '', at, changes });
+        ov[id] = Object.assign({}, prev, fields, { _by: who, _email: session.email || '', _at: at, history });
+        fs.mkdirSync(path.dirname(ovPath), { recursive: true });
+        fs.writeFileSync(ovPath, JSON.stringify(ov, null, 2));
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, id, fields, edited_by: who, edited_at: at }));
       } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
     }); return;
   }
