@@ -2565,6 +2565,13 @@ const server = http.createServer((req, res) => {
           for (let page = 0, offset = 0; page < 50; page++) {
             const r = await supabaseRequest('GET', `tasks?select=${BOARD_COLS}&order=priority.desc.nullslast,due_date.asc.nullslast&limit=1000&offset=${offset}`);
             status = r.status;
+            // If the very first page comes back as an upstream failure (non-2xx or a non-array
+            // error payload — e.g. the DB stalled), THROW so the client falls back to the cached
+            // snapshot instead of rendering a deceptive empty board. An empty array (real empty
+            // table) is a valid 200 and is fine.
+            if (page === 0 && (r.status >= 400 || !Array.isArray(r.data))) {
+              throw new Error('tasks upstream unavailable (status ' + r.status + ')');
+            }
             const chunk = Array.isArray(r.data) ? r.data : [];
             data = data.concat(chunk);
             if (chunk.length < 1000) break;
