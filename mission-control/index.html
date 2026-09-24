@@ -1036,10 +1036,19 @@ initUserRole();
 
 // ── API ──
 async function apiFetch(path, opts = {}) {
-  const res = await fetch(path, { headers: { 'Content-Type': 'application/json' }, ...opts });
-  if (res.status === 401) { window.location = '/login'; return; }
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
+  // Bound every API call so a stalled backend (e.g. Supabase DB unresponsive) can't hang
+  // the board forever — a timeout throws, letting callers fall back to the cached snapshot.
+  const ms = opts.timeoutMs || 15000;
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), ms);
+  try {
+    const res = await fetch(path, { headers: { 'Content-Type': 'application/json' }, signal: ctl.signal, ...opts });
+    if (res.status === 401) { window.location = '/login'; return; }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 // ── STATE NORMALIZATION ──

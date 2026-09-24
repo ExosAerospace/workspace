@@ -676,6 +676,10 @@ function supabaseRequest(method, pathAndQuery, body) {
       });
     });
     req.on('error', reject);
+    // Fail fast if the Supabase DB backend stalls: without this, a hung query holds the
+    // client request open forever and the board goes blank instead of falling back to the
+    // cached tasks.json snapshot. 12s is well above normal (<1s) query latency.
+    req.setTimeout(12000, () => req.destroy(new Error('supabase request timeout (12s)')));
     if (body) req.write(JSON.stringify(body));
     req.end();
   });
