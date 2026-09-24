@@ -1,0 +1,98 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shop Inventory — Exos Mission Control</title>
+<style>
+:root{--bg:#0e0f11;--panel:#17191c;--border:#2a2d31;--text:#e8e8e8;--text2:#a6adb5;--orange:#F26A21}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+header{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--border);background:var(--panel);flex-wrap:wrap}
+h1{font-size:1.1rem;margin:0}
+.sub{color:var(--text2);font-size:.8rem}
+.btn{background:var(--orange);color:#111;border:none;border-radius:6px;padding:6px 12px;font-weight:600;text-decoration:none;font-size:.8rem;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--orange);border:1px solid var(--orange)}
+.back{color:var(--text2);text-decoration:none;font-size:.8rem}
+.kpis{display:flex;gap:10px;padding:12px 20px;flex-wrap:wrap}
+.kpi{background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:6px;padding:8px 14px;min-width:110px}
+.kpi .n{font-size:1.3rem;font-weight:800}.kpi .l{color:var(--text2);font-size:.7rem;text-transform:uppercase;letter-spacing:.4px}
+.controls{display:flex;gap:8px;padding:0 20px 12px;flex-wrap:wrap;align-items:center}
+input,select{background:#0b0c0e;color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:.85rem}
+input#q{min-width:240px}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+th{position:sticky;top:0;background:#111;color:var(--text2);text-transform:uppercase;font-size:.68rem;letter-spacing:.4px;cursor:pointer}
+tr:hover td{background:#191b1e}
+.rocket{color:var(--orange);font-weight:700}
+.tag{display:inline-block;background:#222;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:.68rem;color:var(--text2)}
+.wrap{padding:0 20px 40px}
+.muted{color:var(--text2)}
+</style></head><body>
+<header>
+  <h1>📦 Shop Inventory <span class="muted" style="font-weight:400;font-size:.8rem">— inventory of record</span></h1>
+  <span class="sub" id="sub">loading…</span>
+  <span style="flex:1"></span>
+  <button class="btn" onclick="exportCSV()">⬇ Export CSV</button>
+  <a class="btn ghost" href="/inventory.html">📋 BLK3 Build Shortfall</a>
+  <a class="back" href="/index.html">← Mission Control</a>
+</header>
+<div class="kpis" id="kpis"></div>
+<div class="controls">
+  <select id="cat"><option value="">All categories</option></select>
+  <select id="rocket"><option value="">Rocket + non-rocket</option><option value="1">Rocket only</option><option value="0">Non-rocket only</option></select>
+  <input id="loc" placeholder="location…" size="12">
+  <input id="q" placeholder="search contents / SKU / description…">
+  <span class="muted" id="count"></span>
+</div>
+<div class="wrap"><table id="tbl"><thead><tr>
+  <th data-k="category">Category</th><th data-k="location">Location</th><th data-k="contents">Contents</th>
+  <th data-k="description">Description</th><th data-k="exos_sku">Exos SKU</th><th data-k="source_sku">Source/SKU</th>
+  <th data-k="qty">Qty</th><th data-k="unit">Unit</th><th data-k="value">Value</th><th data-k="jurisdiction">Juris.</th>
+</tr></thead><tbody id="body"><tr><td colspan="10" class="muted" style="padding:30px;text-align:center">loading…</td></tr></tbody></table></div>
+<script>
+let ALL=[], VIEW=[], sortK='category', sortDir=1;
+const $=id=>document.getElementById(id);
+function fmt(n){n=parseFloat(n)||0;return n?('$'+n.toLocaleString(undefined,{maximumFractionDigits:0})):''}
+async function load(){
+  const p=new URLSearchParams();
+  if($('cat').value)p.set('category',$('cat').value);
+  if($('rocket').value)p.set('rocket',$('rocket').value);
+  if($('loc').value)p.set('location',$('loc').value);
+  if($('q').value)p.set('search',$('q').value);
+  const r=await fetch('/api/shop-inventory?'+p.toString()); const d=await r.json();
+  ALL=d.items||[]; VIEW=ALL.slice();
+  $('sub').textContent=(d.source_file||'')+' · '+(d.total_all||0)+' lines of record';
+  // KPIs
+  const cats=d.counts||{};
+  $('kpis').innerHTML=
+    kpi(d.total_all||0,'Total lines')+
+    kpi(d.filtered||0,'Filtered')+
+    kpi(fmt(d.total_value)||'$0','Filtered value')+
+    Object.entries(cats).map(([k,v])=>kpi(v,k)).join('');
+  // populate category dropdown once
+  if($('cat').options.length<=1) (d.categories||[]).forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;$('cat').appendChild(o)});
+  sortAndRender();
+}
+function kpi(n,l){return `<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`}
+function sortAndRender(){
+  VIEW.sort((a,b)=>{let x=a[sortK],y=b[sortK];if(sortK==='qty'||sortK==='value'){x=parseFloat(x)||0;y=parseFloat(y)||0;return (x-y)*sortDir}return String(x||'').localeCompare(String(y||''))*sortDir});
+  $('body').innerHTML=VIEW.map(i=>`<tr>
+    <td>${i.category||''}${i.sale_or_trash?' <span class="tag">S/T</span>':''}</td>
+    <td>${i.location||''}</td>
+    <td class="${i.is_rocket?'rocket':''}">${esc(i.contents)}</td>
+    <td class="muted">${esc(i.description)}</td>
+    <td>${esc(i.exos_sku)}</td><td>${esc(i.source_sku)}</td>
+    <td>${i.qty||0}</td><td>${i.unit||''}</td><td>${fmt(i.value)}</td><td>${i.jurisdiction||''}</td>
+  </tr>`).join('')||'<tr><td colspan="10" class="muted" style="padding:30px;text-align:center">no matches</td></tr>';
+  $('count').textContent=VIEW.length+' shown';
+}
+function esc(s){return String(s||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}
+function exportCSV(){
+  const cols=['category','location','contents','description','exos_sku','source_sku','qty','unit','value','jurisdiction','is_rocket'];
+  const rows=[cols.join(',')].concat(VIEW.map(i=>cols.map(c=>'"'+String(i[c]??'').replace(/"/g,'""')+'"').join(',')));
+  const b=new Blob([rows.join('\n')],{type:'text/csv'});const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download='shop-inventory.csv';a.click();
+}
+document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{const k=th.dataset.k;sortDir=(sortK===k)?-sortDir:1;sortK=k;sortAndRender()});
+['cat','rocket'].forEach(id=>$(id).onchange=load);
+let t;['loc','q'].forEach(id=>$(id).oninput=()=>{clearTimeout(t);t=setTimeout(load,300)});
+load();
+</script></body></html>
