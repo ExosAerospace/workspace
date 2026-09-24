@@ -2383,6 +2383,67 @@ const server = http.createServer((req, res) => {
     fs.createReadStream(full).pipe(res); return;
   }
 
+  // ── REQUIRED-READING CONTENT (tracked reader) ──────────────────────────────
+  // Renders any required-reading procedure (.doc/.docx/.pdf/.png) to SAME-ORIGIN HTML so read.html
+  // can host it in an iframe and track scroll + active-dwell (raw .doc/.pdf either download or open
+  // in a plugin viewer that can't be tracked). Converts via the async, non-blocking execFileP so a
+  // render never freezes the event loop. Cached under data/.readcache keyed by source mtime.
+  if (req.url.split('?')[0] === '/api/required-reading/content' && req.method === 'GET') {
+    if (!getSession(req)) { res.writeHead(401, { 'Content-Type': 'text/html' }); res.end('<p>Please sign in.</p>'); return; }
+    const id = (new URLSearchParams(req.url.split('?')[1] || '').get('doc') || '').trim();
+    (async () => {
+      try {
+        const rr = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'required-reading.json'), 'utf8'));
+        const docs = rr.docs || rr;
+        const doc = (docs || []).find(d => d.id === id);
+        if (!doc) { res.writeHead(404, { 'Content-Type': 'text/html' }); res.end('<p>Document not found.</p>'); return; }
+        const srcUrl = doc.file || doc.url || '';
+        if (!srcUrl.startsWith('/process-library/')) {
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.end('<!doctype html><body style="font-family:sans-serif;padding:24px">This item opens externally: <a href="' + srcUrl + '">open document</a></body>'); return;
+        }
+        const rel = decodeURIComponent(srcUrl.replace(/^\/process-library\//, '').split('?')[0]).replace(/\\/g, '/');
+        const base = path.join(__dirname, '..', 'process-library');
+        const full = path.normalize(path.join(base, rel));
+        if (!full.startsWith(base + path.sep)) { res.writeHead(403, { 'Content-Type': 'text/html' }); res.end('<p>Bad path.</p>'); return; }
+        if (/(^|\/)08-security-cui(\/|$)/i.test(rel)) { res.writeHead(403, { 'Content-Type': 'text/html' }); res.end('<p>CUI documents are handled in GCC High (CMMC boundary), not Mission Control.</p>'); return; }
+        if (!fs.existsSync(full) || !fs.statSync(full).isFile()) { res.writeHead(404, { 'Content-Type': 'text/html' }); res.end('<p>File not found.</p>'); return; }
+        const ext = path.extname(full).toLowerCase();
+        const cacheDir = path.join(__dirname, 'data', '.readcache'); fs.mkdirSync(cacheDir, { recursive: true });
+        const cacheHtml = path.join(cacheDir, id.replace(/[^a-z0-9_-]/gi, '_') + '.html');
+        let fresh = false;
+        try { fresh = fs.existsSync(cacheHtml) && fs.statSync(cacheHtml).mtimeMs >= fs.statSync(full).mtimeMs; } catch {}
+        const WRAP = inner => '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:Calibri,\'Segoe UI\',Arial,sans-serif;font-size:12pt;line-height:1.5;color:#1c1c1c;max-width:900px;margin:0 auto;padding:24px}img{max-width:100%;height:auto;display:block;margin:8px auto}pre{white-space:pre-wrap;word-wrap:break-word;font-family:ui-monospace,Menlo,monospace;font-size:10.5pt}table{border-collapse:collapse;width:100%}td,th{border:1px solid #c9d2dd;padding:4px 7px;vertical-align:top}h1,h2,h3{color:#0b2a4a}</style></head><body>' + inner + '</body></html>';
+        if (!fresh) {
+          let html = '';
+          if (ext === '.docx') {
+            const out = path.join(cacheDir, id.replace(/[^a-z0-9_-]/gi, '_') + '.tmp.html');
+            await execFileP('/usr/bin/python3', [DOCX2HTML, full, out], { timeout: 60000 });
+            html = fs.readFileSync(out, 'utf8'); try { fs.unlinkSync(out); } catch {}
+          } else if (ext === '.doc') {
+            const out = path.join(cacheDir, id.replace(/[^a-z0-9_-]/gi, '_') + '.tmp.html');
+            await execFileP('textutil', ['-convert', 'html', '-output', out, full], { timeout: 30000 });
+            html = fs.readFileSync(out, 'utf8'); try { fs.unlinkSync(out); } catch {}
+          } else if (ext === '.pdf') {
+            const r = await execFileP('pdftotext', ['-layout', '-q', full, '-'], { timeout: 60000 });
+            const esc = String(r.stdout || '').replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+            html = WRAP('<pre>' + esc + '</pre>');
+          } else if (['.png', '.jpg', '.jpeg', '.gif'].includes(ext)) {
+            html = WRAP('<img src="' + srcUrl + '" alt="">');
+          } else {
+            html = WRAP('<p>Inline preview is not available for this file type. <a href="' + srcUrl + '">Download the document</a>.</p>');
+          }
+          fs.writeFileSync(cacheHtml, html);
+        }
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        fs.createReadStream(cacheHtml).on('error', () => { try { res.end(); } catch (e) {} }).pipe(res);
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'text/html' }); res.end('<p>Could not render this document: ' + String(e.message).slice(0, 160) + '</p>');
+      }
+    })();
+    return;
+  }
+
   // ── TASKS API (Supabase-backed) ──
   // ── Global search across Mission Control (tasks, CRM, opportunities, decisions, …) ──
   if (req.url.split('?')[0] === '/api/search' && req.method === 'GET') {

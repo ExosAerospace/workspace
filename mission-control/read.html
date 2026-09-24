@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Required Reading — Mission Control</title>
+<style>
+  :root{--navy:#0a1628;--card:#0f1e38;--text:#e8edf5;--muted:#8aa0bd;--accent:#0080ff;--green:#22c55e;--red:#ff4444;--line:#1c3052;}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--navy);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;display:flex;flex-direction:column}
+  header{padding:12px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  header h1{font-size:16px;margin:0}
+  header .sub{color:var(--muted);font-size:12px;margin-top:2px}
+  a{color:var(--accent);text-decoration:none}
+  .frameWrap{flex:1;min-height:0;background:#fff}
+  iframe{width:100%;height:100%;border:0;background:#fff}
+  #rrBar{position:sticky;bottom:0;left:0;right:0;z-index:10;background:#0f1e38;border-top:1px solid #1c3052;
+    box-shadow:0 -6px 20px rgba(0,0,0,.4);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  #rrStatus{font-size:14px;color:#8aa0bd;min-width:220px}
+  .btns{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  #rrBtn{background:#1c3052;color:#8aa0bd;border:1px solid #1c3052;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:not-allowed;transition:all .15s}
+  #rrNext{display:none;text-decoration:none;background:#0f2a1a;color:#22c55e;border:1px solid #22c55e;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600}
+  .dl{color:#8aa0bd;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div><h1 id="title">Required Reading</h1><div class="sub" id="sub">loading…</div></div>
+  <div><a id="dl" class="dl" href="#" target="_blank" rel="noopener">⬇ open original</a> &nbsp; <a href="/required-reading.html">← Required Reading</a></div>
+</header>
+<div class="frameWrap"><iframe id="doc" title="Document"></iframe></div>
+<div id="rrBar">
+  <div id="rrStatus">Required reading — starting…</div>
+  <div class="btns">
+    <a id="rrNext" href="#">Next required reading →</a>
+    <button id="rrBtn" disabled>✓ I have read and understood</button>
+  </div>
+</div>
+<script>
+(function(){
+  var DOC_ID=new URLSearchParams(location.search).get('doc')||'';
+  var MIN=120, SCROLL_MIN=90;
+  var frame=document.getElementById('doc'), statusEl=document.getElementById('rrStatus'), btn=document.getElementById('rrBtn');
+  var activeSeconds=0, scrollMaxPct=0, heartbeats=0, lastActivity=Date.now(), done=false, opened=false, ackInFlight=false;
+
+  function fmt(s){ s=Math.max(0,Math.floor(s)); var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r; }
+  function post(url,payload){ return fetch(url,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload||{})}); }
+  function markActivity(){ lastActivity=Date.now(); }
+  ['mousemove','scroll','keydown','touchstart','click'].forEach(function(ev){ window.addEventListener(ev, markActivity, {passive:true}); });
+
+  // Track scroll depth + activity INSIDE the same-origin iframe (where the document actually scrolls).
+  function wireFrame(){
+    try{
+      var d=frame.contentDocument, w=frame.contentWindow; if(!d||!w) return;
+      ['mousemove','scroll','keydown','touchstart','click'].forEach(function(ev){ d.addEventListener(ev, markActivity, {passive:true}); });
+      function upd(){ try{
+        var se=d.scrollingElement||d.documentElement, sTop=se.scrollTop||0, vh=w.innerHeight||se.clientHeight, sh=se.scrollHeight||1;
+        var pct = sh>0 ? Math.min(100,(sTop+vh)/sh*100) : 100;
+        if(pct>scrollMaxPct) scrollMaxPct=pct;
+      }catch(e){} }
+      w.addEventListener('scroll', upd, {passive:true}); w.addEventListener('resize', upd, {passive:true});
+      setTimeout(upd,200); // short docs may already be fully visible
+    }catch(e){ /* cross-origin fallback: can't read scroll — dwell-only */ }
+  }
+  frame.addEventListener('load', wireFrame);
+
+  function setCompleted(dateStr){
+    done=true;
+    statusEl.innerHTML='<span style="color:#22c55e">✓ Completed — recorded '+dateStr+'</span>';
+    btn.textContent='✓ Completed'; btn.disabled=true; btn.style.cursor='default';
+    btn.style.background='#0f2a1a'; btn.style.color='#22c55e'; btn.style.border='1px solid #22c55e';
+  }
+  function refreshUI(){
+    if(done) return;
+    statusEl.textContent='Required reading — active review '+fmt(activeSeconds)+' / '+fmt(MIN)+' · scrolled '+Math.round(scrollMaxPct)+'%';
+    var ok = activeSeconds>=MIN && scrollMaxPct>=SCROLL_MIN;
+    btn.disabled=!ok;
+    if(ok){ btn.style.cursor='pointer'; btn.style.background='#0080ff'; btn.style.color='#fff'; btn.style.border='1px solid #0080ff'; }
+    else { btn.style.cursor='not-allowed'; btn.style.background='#1c3052'; btn.style.color='#8aa0bd'; btn.style.border='1px solid #1c3052'; }
+  }
+  setInterval(function(){ if(done) return; if(document.visibilityState==='visible' && (Date.now()-lastActivity)<30000) activeSeconds++; refreshUI(); }, 1000);
+
+  function sendHeartbeat(){
+    if(!opened || done) return Promise.resolve();
+    return post('/api/required-reading/heartbeat',{doc_id:DOC_ID, active_seconds:activeSeconds, scroll_max_pct:scrollMaxPct, heartbeats:++heartbeats})
+      .then(function(r){ return r.ok?r.json():null; })
+      .then(function(d){ if(d&&typeof d.active_seconds==='number'){ activeSeconds=Math.min(activeSeconds,d.active_seconds); refreshUI(); } })
+      .catch(function(){});
+  }
+  setInterval(sendHeartbeat, 15000);
+
+  btn.addEventListener('click', function(){
+    if(btn.disabled||done||ackInFlight) return;
+    ackInFlight=true; btn.disabled=true; btn.style.cursor='wait';
+    sendHeartbeat().then(function(){ return post('/api/required-reading/ack', {doc_id:DOC_ID}); })
+      .then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
+      .then(function(res){ ackInFlight=false;
+        if(res.ok && res.d && res.d.ok){ setCompleted(new Date(res.d.acknowledged_at||Date.now()).toLocaleDateString()); setupNextAfter(); }
+        else { var reason=(res.d&&(res.d.reason||res.d.error))||'Could not record — keep reading and try again.'; statusEl.innerHTML='<span style="color:#ff4444">'+reason+'</span>'; refreshUI(); }
+      }).catch(function(){ ackInFlight=false; refreshUI(); });
+  });
+
+  var RR_DATA=null;
+  function setupNext(data){
+    RR_DATA=data;
+    var docs=(data&&data.docs)||[], mine=(data&&data.mine)||[];
+    var doneMap={}; mine.forEach(function(m){ if(m.completed) doneMap[m.doc_id]=1; });
+    var next=null;
+    for(var i=0;i<docs.length;i++){ if(docs[i].id===DOC_ID) continue; if(!doneMap[docs[i].id]){ next=docs[i]; break; } }
+    var nb=document.getElementById('rrNext'); if(!nb) return;
+    if(next){ nb.href=next.url; nb.title='Next: '+next.title; nb.textContent='Next required reading →'; nb.style.cursor='pointer'; nb.style.display='inline-block'; }
+    else { nb.textContent='✓ All required reading complete'; nb.removeAttribute('href'); nb.style.cursor='default'; nb.style.display='inline-block'; }
+  }
+  function setupNextAfter(){ if(RR_DATA){ (RR_DATA.mine=RR_DATA.mine||[]).push({doc_id:DOC_ID,completed:true}); setupNext(RR_DATA); } }
+
+  // Boot: load metadata, point the iframe at the rendered content, then open the server record.
+  fetch('/api/required-reading',{credentials:'same-origin'})
+    .then(function(r){ if(r.status===401){ throw {code:401}; } return r.json(); })
+    .then(function(data){
+      var doc=(data.docs||[]).find(function(d){ return d.id===DOC_ID; });
+      if(!doc){ document.getElementById('sub').textContent='Unknown document.'; return; }
+      MIN = (typeof doc.min_active_seconds==='number') ? doc.min_active_seconds : MIN;
+      document.getElementById('title').textContent=doc.title||'Required Reading';
+      document.getElementById('sub').textContent='min active read '+fmt(MIN)+' · verified by active time + scroll, not self-reported';
+      document.getElementById('dl').href=doc.file||doc.url||'#';
+      frame.src='/api/required-reading/content?doc='+encodeURIComponent(DOC_ID);
+      setupNext(data);
+      var mine=(data.mine||[]).find(function(m){ return m.doc_id===DOC_ID; });
+      if(mine && mine.completed){ setCompleted(mine.acknowledged_at?new Date(mine.acknowledged_at).toLocaleDateString():'earlier'); return; }
+      refreshUI();
+      post('/api/required-reading/open', {doc_id:DOC_ID}).then(function(r){ if(r.ok) opened=true; }).catch(function(){});
+    })
+    .catch(function(err){ document.getElementById('sub').textContent = (err&&err.code===401) ? 'Please sign in to record your reading.' : 'Could not load this document.'; });
+})();
+</script>
+</body></html>
