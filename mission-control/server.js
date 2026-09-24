@@ -4949,6 +4949,87 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(c)); return;
   }
 
+  // ── BLK3 BOM — sheet-grouped view for blk3-bom.html ──────────────────────────
+  // Replaces the 193 KB inlined const DATA blob. Applies bom-edits + bom-costs
+  // overlays server-side so the page fetches a compact, ready-to-render structure.
+  if (req.url.split('?')[0] === '/api/bom' && req.method === 'GET') {
+    if (!getSession(req)) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    try {
+      const bom      = readJSON(path.join(__dirname, 'data', 'bom-index.json'), { rows: [] });
+      const bomEdits = readJSON(path.join(__dirname, 'data', 'bom-edits.json'), {});
+      const bomCosts = (readJSON(path.join(__dirname, 'data', 'bom-costs.json'), { costs: {} }).costs) || {};
+      const COLS = ['Item','Quantity','Vendor P/N','Manufacturer P/N','Description','Vendor',
+                    'Secondary Supplier','Tertiary Supplier','Cost ea','Extended Cost'];
+      const ncost = v => { const n = parseFloat(String(v == null ? '' : v).replace(/[$,]/g, '')); return isNaN(n) ? 0 : n; };
+      // Group flat rows by section, preserving order of first appearance.
+      const sheetOrder = [], sheetMap = {};
+      for (const row of (bom.rows || [])) {
+        const sec = row.section || '';
+        if (!sheetMap[sec]) { sheetMap[sec] = []; sheetOrder.push(sec); }
+        sheetMap[sec].push(row);
+      }
+      let grand = 0, gmiss = 0;
+      const sheets = sheetOrder.map(sec => {
+        const rawRows = sheetMap[sec];
+        let missing = 0;
+        const rows = rawRows.map(row => {
+          const item = String(row.item || '');
+          const key  = `${sec}#${item}`;
+          // Cost: start with sheet cost, then apply paid/found override.
+          let costNum = ncost(row.cost);
+          let basis   = costNum > 0 ? 'bom-sheet' : 'none';
+          let costsrc = costNum > 0 ? (row.vendor || '') : '';
+          const co    = bomCosts[key];
+          if (co && ncost(co.unit_cost) > 0) {
+            costNum = ncost(co.unit_cost);
+            basis   = co.basis || 'found';
+            costsrc = co.source || '';
+          }
+          // Quantity and extended cost.
+          let qty    = row.qty != null ? String(row.qty) : '';
+          const qNum = parseFloat(qty);
+          let extCost = (!isNaN(qNum) && costNum > 0) ? Math.round(costNum * qNum * 100) / 100 : null;
+          // Edit overlay (description / req / location).
+          const ed  = bomEdits[key] || null;
+          let desc  = row.description || '';
+          let loc   = '', eby = '', eat = '', enote = '';
+          if (ed) {
+            if (ed.description !== undefined && ed.description !== '') desc = ed.description;
+            if (ed.req !== undefined && ed.req !== '') {
+              qty = String(ed.req);
+              const qn = parseFloat(qty);
+              extCost = (!isNaN(qn) && costNum > 0) ? Math.round(costNum * qn * 100) / 100 : null;
+            }
+            if (ed.location !== undefined) loc = String(ed.location);
+            eby = ed._by || ''; eat = ed._at || ''; enote = ed.note || '';
+          }
+          if (extCost == null) missing++;
+          grand += extCost || 0;
+          return {
+            'Item': item, 'Quantity': qty,
+            'Vendor P/N': row.vendor_pn || '', 'Manufacturer P/N': row.mfg_pn || '',
+            'Description': desc, 'Vendor': row.vendor || '',
+            'Secondary Supplier': '', 'Tertiary Supplier': '',
+            'Cost ea': costNum || '', 'Extended Cost': extCost,
+            '_key': key, '_loc': loc, '_eby': eby, '_eat': eat, '_enote': enote,
+            '_basis': basis, '_costsrc': costsrc,
+          };
+        });
+        gmiss += missing;
+        return { name: sec, count: rows.length, missing, rows };
+      });
+      const gcount = (bom.rows || []).length;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        title: 'BLK3 Bill of Materials', source: bom.source || '',
+        cols: COLS, gcount, grand: Math.round(grand * 100) / 100, gmiss, sheets,
+      }));
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
   // ── BLK3 BOM / Inventory inline line edit (session-gated) ──────────────────
   // Persists per-line edits (description / req / on_hand / note) to
   // data/bom-edits.json keyed by "section#item" — survives any bom-index rebuild —
