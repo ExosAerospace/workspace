@@ -3931,6 +3931,35 @@ const server = http.createServer((req, res) => {
   // Inventory ERP feed: the BLK3 BOM (engineering requirement) joined to the live inventory ledger
   // (physical on-hand + photos). This is the materials module — BOM = what we need, inventory =
   // what we have, the join = have/short per section (drives procurement).
+  // ── SHOP INVENTORY (full inventory of record: Steve's Warehouse/Parts Room/Trailer/Assets, rocket + non-rocket) ──
+  if (req.url.split('?')[0] === '/api/shop-inventory' && req.method === 'GET') {
+    try {
+      const readJSON = (p, d) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return d; } };
+      const shop = readJSON(path.join(__dirname, 'data', 'shop-inventory.json'), { items: [], counts: {}, total: 0 });
+      const qp = new URL(req.url, 'http://localhost').searchParams;
+      const cat = (qp.get('category') || '').trim().toLowerCase();
+      const loc = (qp.get('location') || '').trim().toLowerCase();
+      const q = (qp.get('search') || '').trim().toLowerCase();
+      const rocket = qp.get('rocket'); // '1' rocket-only, '0' non-rocket-only
+      let items = shop.items || [];
+      if (cat) items = items.filter(i => String(i.category || '').toLowerCase() === cat);
+      if (loc) items = items.filter(i => String(i.location || '').toLowerCase().includes(loc));
+      if (rocket === '1') items = items.filter(i => i.is_rocket);
+      if (rocket === '0') items = items.filter(i => !i.is_rocket);
+      if (q) items = items.filter(i => [i.contents, i.description, i.exos_sku, i.source_sku, i.location, i.comments]
+        .some(v => String(v || '').toLowerCase().includes(q)));
+      let value = 0; for (const i of items) value += (parseFloat(i.total) || (parseFloat(i.value) || 0) * (parseFloat(i.qty) || 0)) || 0;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ generated_at: shop.generated_at || null, source_file: shop.source_file || null,
+        counts: shop.counts || {}, total_all: shop.total || (shop.items || []).length,
+        categories: Object.keys(shop.counts || {}), filtered: items.length,
+        total_value: Math.round(value * 100) / 100, items }));
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
   if (req.url.split('?')[0] === '/api/inventory' && req.method === 'GET') {
     try {
       const readJSON = (p, d) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return d; } };
@@ -3944,6 +3973,17 @@ const server = http.createServer((req, res) => {
       const bom = readJSON(path.join(__dirname, 'data', 'bom-index.json'), { rows: [] });
       const inv = readJSON(path.join(__dirname, 'data', 'inventory.json'), { records: [] });
       const locmap = readJSON(path.join(__dirname, 'data', 'bom-location-map.json'), { map: {} }).map || {};
+      // Credit real shop stock (Steve's inventory of record) into have/short, matched on SKU (>=5 chars).
+      const shop = readJSON(path.join(__dirname, 'data', 'shop-inventory.json'), { items: [] });
+      const shopBy = {};
+      for (const it of (shop.items || [])) {
+        for (const k of [it.exos_sku, it.source_sku]) {
+          if (k && String(k).trim().length >= 5) {
+            const kk = String(k).trim().toUpperCase();
+            shopBy[kk] = (shopBy[kk] || 0) + (parseFloat(it.qty) || 0);
+          }
+        }
+      }
       const recKey = (v, m, i, d) => (v || m || ((i || '') + ':' + String(d || '').slice(0, 24)) || String(d || '').slice(0, 24)).trim().toUpperCase();
       const by = {};
       for (const r of (inv.records || [])) {
@@ -3958,7 +3998,9 @@ const server = http.createServer((req, res) => {
         let rec = null;
         for (const k of [vpn, mpn]) if (k && by[String(k).trim().toUpperCase()]) { rec = by[String(k).trim().toUpperCase()]; break; }
         if (!rec && item) rec = by[`${sec.toUpperCase()}#${item}`];
-        const oh = rec ? (rec.qty_on_hand || 0) : 0;
+        let shopOh = 0;
+        for (const k of [vpn, mpn]) { const kk = String(k || '').trim().toUpperCase(); if (kk.length >= 5 && shopBy[kk] != null) { shopOh = shopBy[kk]; break; } }
+        const oh = (rec ? (rec.qty_on_hand || 0) : 0) + shopOh;
         const req2 = parseFloat(String(row.qty).trim()); const hasReq = !isNaN(req2);
         const sh = (hasReq && oh < req2) ? Math.round((req2 - oh) * 1000) / 1000 : 0;
         onhandUnits += oh; if (sh) short++;
@@ -3967,7 +4009,7 @@ const server = http.createServer((req, res) => {
         // Stored location from the parts-room / warehouse map when the ledger has none.
         const mm = ledgerLoc.length ? null : locmap[recKey(vpn, mpn, item, row.description)];
         rows.push({ section: sec, item, vendor_pn: vpn, mfg_pn: mpn, description: row.description || '',
-          req: row.qty || '', on_hand: oh, short: sh, locations: ledgerLoc,
+          req: row.qty || '', on_hand: oh, shop_on_hand: shopOh, short: sh, locations: ledgerLoc,
           map_location: mm ? `${mm.location} (${mm.area})` : '',
           photos, updated_at: rec ? (rec.updated_at || '') : '' });
         const s = secmap[sec] || (secmap[sec] = { section: sec, lines: 0, onhand_lines: 0, short_lines: 0 });
