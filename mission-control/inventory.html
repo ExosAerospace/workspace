@@ -48,6 +48,23 @@
   .thumb{width:34px;height:34px;object-fit:cover;border-radius:5px;border:1px solid var(--border);margin-right:3px}
   .muted{color:var(--text2)}
   .empty{padding:30px;text-align:center;color:var(--text2)}
+  .editbtn{background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:3px 9px;cursor:pointer;font-size:.85rem}
+  .editbtn:hover{border-color:var(--orange);color:var(--orange)}
+  .editedtag{display:block;color:var(--text2);font-size:.68rem;margin-top:3px}
+  .ovl{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:50}
+  .ovl.on{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;width:92%;max-width:520px;max-height:90vh;overflow:auto}
+  .modal h3{margin:0 0 4px;font-size:1rem}
+  .modal .k{color:var(--text2);font-size:.75rem;margin-bottom:10px;font-family:ui-monospace,Menlo,monospace}
+  .modal label{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin:10px 0 4px}
+  .modal input,.modal textarea{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font:inherit}
+  .modal textarea{min-height:58px;resize:vertical}
+  .modal .row2{display:flex;gap:10px}.modal .row2>div{flex:1}
+  .modal .acts{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+  .diffbox{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:12px;font-size:.82rem}
+  .diffbox .d{margin:4px 0}.diffbox .o{color:var(--red);text-decoration:line-through}.diffbox .n2{color:#6aa84f;font-weight:700}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1c3a1c;border:1px solid #3fb950;color:#d7ffd7;padding:10px 16px;border-radius:8px;z-index:60;display:none}
+  .toast.on{display:block}
 </style></head>
 <body>
 <header>
@@ -94,12 +111,13 @@
     <th data-k="section">Section</th><th data-k="item">Item</th><th data-k="vendor_pn">Vendor P/N</th>
     <th data-k="description">Description</th><th data-k="req" class="num">Req</th>
     <th data-k="on_hand" class="num">On-Hand</th><th data-k="short" class="num">Short</th>
-    <th data-k="locations">Location</th><th>Photos</th><th data-k="updated_at">Updated</th>
-  </tr></thead><tbody id="tb"><tr><td colspan="10" class="empty">Loading…</td></tr></tbody></table>
+    <th data-k="locations">Location</th><th>Photos</th><th data-k="updated_at">Updated</th><th>Edit</th>
+  </tr></thead><tbody id="tb"><tr><td colspan="11" class="empty">Loading…</td></tr></tbody></table>
 </div>
 <script>
 let DATA=null, sortK='section', sortDir=1, secFilter='';
 async function load(){
+  if(window.__bomEditing)return;   // don't clobber an open edit with the 30s auto-refresh
   const r=await fetch('/api/inventory');
   if(r.status===401){location='/login';return;}
   DATA=await r.json();
@@ -145,13 +163,15 @@ function render(){
   document.getElementById('tb').innerHTML=rows.length?rows.map(r=>{
     const cls=r.short?'short':(r.on_hand>0?'have':'');
     const ph=(r.photos||[]).slice(0,4).map(p=>'<a href="'+p.url+'" target="_blank"><img class="thumb" src="'+p.url+'" title="'+esc((p.by||'')+' '+(p.at||'').slice(0,10))+'"></a>').join('');
+    const edtag=r.edited_by?'<span class="editedtag">✎ '+esc(r.edited_by)+' · '+esc((r.edited_at||'').slice(0,10))+(r.edit_note?' · '+esc(r.edit_note):'')+'</span>':'';
     return '<tr class="'+cls+'"><td>'+esc(r.section)+'</td><td>'+esc(r.item)+'</td>'+
-      '<td class="pn">'+esc(r.vendor_pn||r.mfg_pn||'')+'</td><td>'+esc(r.description)+'</td>'+
+      '<td class="pn">'+esc(r.vendor_pn||r.mfg_pn||'')+'</td><td>'+esc(r.description)+edtag+'</td>'+
       '<td class="num">'+esc(r.req)+'</td><td class="num">'+r.on_hand+'</td>'+
       '<td class="num">'+(r.short?'<span class="short-b">'+r.short+'</span>':'')+'</td>'+
       '<td>'+(((r.locations||[]).length)?esc(r.locations.join(', ')):(r.map_location?'<span class="muted">'+esc(r.map_location)+' <em>· map</em></span>':''))+'</td><td>'+ph+'</td>'+
-      '<td class="muted">'+esc((r.updated_at||'').slice(0,10))+'</td></tr>';
-  }).join(''):'<tr><td colspan="10" class="empty">No matching lines.</td></tr>';
+      '<td class="muted">'+esc((r.updated_at||'').slice(0,10))+'</td>'+
+      '<td><button class="editbtn" title="Edit line" onclick="bomEditOpen(\''+encodeURIComponent(r.key||'')+'\')">✎</button></td></tr>';
+  }).join(''):'<tr><td colspan="11" class="empty">No matching lines.</td></tr>';
 }
 document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{
   const k=th.dataset.k; if(sortK===k)sortDir*=-1;else{sortK=k;sortDir=1;} render();});
@@ -198,6 +218,91 @@ function renderLoc(){
 }
 document.getElementById('locq').addEventListener('input',renderLoc);
 document.getElementById('totals').addEventListener('click',()=>{});
+// ── Inline line edit with a mandatory confirm step + who/when attribution ──
+let editRow=null;
+function bomEditOpen(k){
+  k=decodeURIComponent(k);
+  editRow=(DATA&&DATA.rows||[]).find(r=>(r.key||'')===k); if(!editRow)return;
+  window.__bomEditing=true;
+  document.getElementById('editKey').textContent=editRow.section+' · item '+editRow.item+'  ['+k+']';
+  document.getElementById('ed_description').value=editRow.description||'';
+  document.getElementById('ed_req').value=(editRow.req===''||editRow.req==null)?'':editRow.req;
+  document.getElementById('ed_on_hand').value=editRow.on_hand;
+  document.getElementById('ed_note').value='';
+  document.getElementById('editDiff').innerHTML='';
+  document.getElementById('editReviewBtn').style.display='';
+  document.getElementById('editConfirmBtn').style.display='none';
+  document.getElementById('editOvl').classList.add('on');
+}
+function bomEditClose(){document.getElementById('editOvl').classList.remove('on');window.__bomEditing=false;editRow=null;}
+function bomEditFields(){
+  if(!editRow)return{};
+  const f={};
+  const d=document.getElementById('ed_description').value;
+  const rq=document.getElementById('ed_req').value;
+  const oh=document.getElementById('ed_on_hand').value;
+  const nt=document.getElementById('ed_note').value.trim();
+  if(d!==(editRow.description||''))f.description=d;
+  if(String(rq)!==String(editRow.req==null?'':editRow.req))f.req=rq;
+  if(String(oh)!==String(editRow.on_hand))f.on_hand=oh;
+  if(nt)f.note=nt;
+  return f;
+}
+function bomEditReview(){
+  const f=bomEditFields();
+  const keys=Object.keys(f).filter(k=>k!=='note');
+  if(!keys.length&&!f.note){document.getElementById('editDiff').innerHTML='<div class="diffbox">No changes to confirm.</div>';return;}
+  const label={description:'Description',req:'Req',on_hand:'On-hand'};
+  let html='<div class="diffbox"><strong>Confirm these changes:</strong>';
+  keys.forEach(k=>{const oldv=k==='description'?(editRow.description||''):(editRow[k]==null?'':editRow[k]);
+    html+='<div class="d">'+label[k]+': <span class="o">'+esc(oldv)+'</span> → <span class="n2">'+esc(f[k])+'</span></div>';});
+  if(f.note)html+='<div class="d muted">Note: '+esc(f.note)+'</div>';
+  html+='</div>';
+  document.getElementById('editDiff').innerHTML=html;
+  document.getElementById('editReviewBtn').style.display='none';
+  document.getElementById('editConfirmBtn').style.display='';
+}
+async function bomEditConfirm(){
+  const f=bomEditFields();
+  if(!Object.keys(f).length){bomEditClose();return;}
+  const btn=document.getElementById('editConfirmBtn');btn.disabled=true;btn.textContent='Saving…';
+  try{
+    const r=await fetch('/api/bom/edit',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({key:editRow.key,fields:f})});
+    const j=await r.json().catch(()=>({}));
+    if(r.status===401){location='/login';return;}
+    if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
+    if(f.description!==undefined)editRow.description=f.description;
+    if(f.req!==undefined)editRow.req=f.req;
+    if(f.on_hand!==undefined)editRow.on_hand=Number(f.on_hand);
+    if(f.note!==undefined)editRow.edit_note=f.note;
+    editRow.edited_by=j.edited_by;editRow.edited_at=j.edited_at;
+    const req2=parseFloat(String(editRow.req).trim());
+    editRow.short=(!isNaN(req2)&&editRow.on_hand<req2)?Math.round((req2-editRow.on_hand)*1000)/1000:0;
+    bomEditClose();render();
+    toast('Saved · by '+j.edited_by);
+  }catch(e){btn.disabled=false;btn.textContent='✓ Confirm & save';alert('Save failed: '+e.message);}
+}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);}
 load(); setInterval(load,30000);
 </script>
+<div class="ovl" id="editOvl">
+  <div class="modal">
+    <h3>✎ Edit line</h3>
+    <div class="k" id="editKey"></div>
+    <label>Description</label><textarea id="ed_description"></textarea>
+    <div class="row2">
+      <div><label>Required (Req)</label><input id="ed_req" type="number" step="any"></div>
+      <div><label>On-hand</label><input id="ed_on_hand" type="number" step="any"></div>
+    </div>
+    <label>Note (optional — reason for the change)</label><input id="ed_note" type="text" placeholder="e.g. recount 2026-09-24, corrected qty">
+    <div id="editDiff"></div>
+    <div class="acts">
+      <button class="btn ghost" onclick="bomEditClose()">Cancel</button>
+      <button class="btn" id="editReviewBtn" onclick="bomEditReview()">Review change →</button>
+      <button class="btn" id="editConfirmBtn" style="display:none;background:#2e7d32" onclick="bomEditConfirm()">✓ Confirm &amp; save</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
 </body></html>
