@@ -115,6 +115,15 @@ def main():
                                           parse_date(i.get("completed_at")) or date(2000, 1, 1)))
         base = parse_date(latest.get("due_date")) or parse_date(latest.get("completed_at")) or date.today()
         nd = next_due(base, rr)
+        # Guard against same-date duplicate churn: if the family already has an instance
+        # (in ANY state) on the computed next-due date, do NOT spawn another. This stops the
+        # daily-regeneration loop that occurs when a cycle's due date is still in the future
+        # (next_due returns the same date) and a dedupe/sweep closes the current instance —
+        # which previously made the regenerator create a fresh duplicate every morning.
+        existing_due = {parse_date(i.get("due_date")) for i in inst}
+        if nd in existing_due:
+            print(f"  = skip '{fam_meta[nt]['title'][:40]}' — instance already exists for {nd}")
+            continue
         meta = fam_meta[nt]
         tags = [x for x in (meta.get("tags") or []) if not str(x).startswith("recur:")] + ["recur:" + rr, "recurring-auto"]
         tid = create({"title": meta["title"], "state": "To Do", "priority": 45,
