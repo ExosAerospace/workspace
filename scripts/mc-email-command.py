@@ -396,16 +396,20 @@ def new_task_deliverables(before_ids, cap=5, max_bytes=20 * 1024 * 1024):
     return out
 
 
+def _clean_subject(orig_subject):
+    """Strip Re/Fw prefixes and collapse ALL whitespace (incl. embedded CR/LF from wrapped
+    Outlook subjects) so the value is always a valid email header — a raw \\r\\n crashes
+    EmailMessage and kills the whole reply. Covered by `--selftest`."""
+    s = re.sub(r'^\s*((re|fwd?|fw)\s*:\s*)+', '', orig_subject or '', flags=re.I)
+    return re.sub(r'\s+', ' ', s).strip() or "your request"
+
+
 def email_requester(to_addr, orig_subject, instruction, reply_text, attachments=None):
     """Reply by email to the authenticated requester who sent the @Exobot command, so they
     get closure (done, or decisions awaiting them) without watching Discord. Internal only:
     to_addr is always an allowlisted Mission Control user. Any document the agent produced is
     attached to THIS email so the recipient gets the file in hand, not just a task pointer."""
-    subj = re.sub(r'^\s*((re|fwd?|fw)\s*:\s*)+', '', orig_subject or '', flags=re.I)
-    # Collapse ALL whitespace (incl. embedded CR/LF from wrapped Outlook subjects) to single
-    # spaces — a raw \r\n in a header value crashes EmailMessage ("Header values may not contain
-    # linefeed or carriage return") and kills the whole reply, so the requester never gets the draft.
-    subj = re.sub(r'\s+', ' ', subj).strip() or "your request"
+    subj = _clean_subject(orig_subject)  # strips Re/Fw + collapses CR/LF so the header is always valid
     instr1 = " ".join((instruction or "").split())[:220]
     m = EmailMessage()
     m["From"] = "Exo (Exos AI Assistant) <jquinnexo@pm.me>"
@@ -923,5 +927,53 @@ def main():
     log(f"run complete: {processed} trigger email(s) handled")
 
 
+def _selftest():
+    """Regression eval for the two 2026-09-25 Dankanich-pipeline fixes (ExO3 Trusted-Evals):
+       (a) a wrapped/CR-LF Outlook subject yields a VALID reply-Subject header (no crash);
+       (b) inbound @exo attachments are extracted (real docs saved, inline images skipped).
+    Exit 0 on pass, 1 on any failure. Run: python3 scripts/mc-email-command.py --selftest"""
+    import shutil
+    fails = []
+    # (a) subject sanitization
+    bad = 'Fw: [EXTERNAL] EXOS BLK4-RDRE NASA proposal (22.5-45k, annual\r\n spend, +BLK3 RHU) '
+    try:
+        subj = _clean_subject(bad)
+        mm = EmailMessage(); mm["Subject"] = f"Re: {subj}, Exo update"
+        hv = str(mm["Subject"])
+        assert "\r" not in hv and "\n" not in hv, "CR/LF leaked into Subject header"
+        assert "BLK4-RDRE" in hv, "subject content lost"
+        print("PASS subject-sanitize:", hv)
+    except Exception as e:
+        fails.append(f"subject-sanitize: {e}")
+    # (b) inbound attachment extraction
+    try:
+        m = EmailMessage(); m["Subject"] = "t"; m.set_content("body")
+        m.add_attachment(b"%PDF-1.4 x", maintype="application", subtype="pdf", filename="Proposal_A.pdf")
+        m.add_attachment(b"docxbytes", maintype="application",
+                         subtype="vnd.openxmlformats-officedocument.wordprocessingml.document",
+                         filename="Proposal_B.docx")
+        inl = EmailMessage(); inl.add_attachment(b"PNG", maintype="image", subtype="png",
+                                                 filename="sig001.png", disposition="inline")
+        m.attach(inl.get_payload()[0] if inl.is_multipart() else inl)
+        saved = save_inbound_attachments(m, "SELFTEST_MID")
+        base = [os.path.basename(p) for p in saved]
+        assert "Proposal_A.pdf" in base and "Proposal_B.docx" in base, f"real attachments missing: {base}"
+        assert not any("sig001" in b for b in base), f"inline image not skipped: {base}"
+        print("PASS inbound-attachments:", base)
+    except Exception as e:
+        fails.append(f"inbound-attachments: {e}")
+    finally:
+        shutil.rmtree(os.path.join(INBOUND_ATTACH_DIR, "SELFTEST_MID"), ignore_errors=True)
+    if fails:
+        print("SELFTEST FAILED:")
+        for f in fails:
+            print("  -", f)
+        return 1
+    print("SELFTEST OK")
+    return 0
+
+
 if __name__ == "__main__":
+    if "--selftest" in sys.argv[1:]:
+        raise SystemExit(_selftest())
     main()
