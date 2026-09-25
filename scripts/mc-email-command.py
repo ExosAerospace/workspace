@@ -304,7 +304,7 @@ def collect_reply_attachments(*texts, cap=5, max_bytes=20 * 1024 * 1024):
 # folder prefix). resolve_artifact() finds the real file by exact path, exact basename, or fuzzy name
 # across the known artifact folders — so "ATTACH: Exos_OSC_Part1_Concept_25M_2026-09-23.pdf" works.
 _ART_DIRS = ["drafts", "mission-control/uploads", "reports", "assets", "out", "exports",
-             "data-room", "process-library", "submissions-archive", ""]
+             "data-room", "process-library", "submissions-archive", "media/inbound/email-command", ""]
 _DIRECTIVE_RE = re.compile(r'(?im)^\s*ATTACH:\s*(.+?)\s*$')
 
 
@@ -401,7 +401,11 @@ def email_requester(to_addr, orig_subject, instruction, reply_text, attachments=
     get closure (done, or decisions awaiting them) without watching Discord. Internal only:
     to_addr is always an allowlisted Mission Control user. Any document the agent produced is
     attached to THIS email so the recipient gets the file in hand, not just a task pointer."""
-    subj = re.sub(r'^\s*((re|fwd?|fw)\s*:\s*)+', '', orig_subject or '', flags=re.I).strip() or "your request"
+    subj = re.sub(r'^\s*((re|fwd?|fw)\s*:\s*)+', '', orig_subject or '', flags=re.I)
+    # Collapse ALL whitespace (incl. embedded CR/LF from wrapped Outlook subjects) to single
+    # spaces — a raw \r\n in a header value crashes EmailMessage ("Header values may not contain
+    # linefeed or carriage return") and kills the whole reply, so the requester never gets the draft.
+    subj = re.sub(r'\s+', ' ', subj).strip() or "your request"
     instr1 = " ".join((instruction or "").split())[:220]
     m = EmailMessage()
     m["From"] = "Exo (Exos AI Assistant) <jquinnexo@pm.me>"
@@ -507,6 +511,39 @@ def save_training_certs(msg, sender):
             saved.append(out)
         except Exception as e:
             log(f"[cert] attachment save failed: {e}")
+    return saved
+
+INBOUND_ATTACH_DIR = os.path.join(WS, "media", "inbound", "email-command")
+
+def save_inbound_attachments(msg, mid, cap=10, max_bytes=25 * 1024 * 1024):
+    """Extract the REAL attachments (Content-Disposition: attachment) from an inbound @exo command
+    email and save them under media/inbound/email-command/<mid>/ so the agent can READ them (it has
+    file tools) and re-attach any it needs. Skips inline images (signatures/logos). Returns saved
+    absolute paths. Generalizes save_training_certs, which only handled [CERT] emails — before this,
+    a general @exo command's attachments were never saved, so the agent referenced files it could
+    never find ("the N documents attached to this email — not found")."""
+    safe = re.sub(r'[^A-Za-z0-9]', '_', (mid or 'noid')).strip('_')[:60] or 'noid'
+    d = os.path.join(INBOUND_ATTACH_DIR, safe)
+    saved = []
+    for part in msg.walk():
+        try:
+            if part.get_content_disposition() != 'attachment':
+                continue
+            fn = part.get_filename()
+            if not fn:
+                continue
+            data = part.get_payload(decode=True)
+            if not data or len(data) > max_bytes:
+                continue
+            os.makedirs(d, exist_ok=True)
+            out = os.path.join(d, re.sub(r'[^A-Za-z0-9._-]', '_', fn)[:120] or 'attachment')
+            with open(out, 'wb') as f:
+                f.write(data)
+            saved.append(out)
+            if len(saved) >= cap:
+                break
+        except Exception as e:
+            log(f"[inbound-attach] save failed: {e}")
     return saved
 
 def record_training_completion(sender, sender_name, cert_paths, doc_id="cui-itar-annual"):
@@ -743,6 +780,20 @@ def main():
             # @Exobot forward, DMARC-verified: pass the full body so the agent has the
             # forwarded content the directive refers to.
             instruction = body.strip()[:7000]
+        # Save any real attachments on this command email so the agent can read/re-attach them
+        # (previously only [CERT] did this → general commands lost their attachments, e.g. the
+        # 4 BLK4-RDRE proposal docs the agent then couldn't find). Give the agent the saved paths.
+        try:
+            _inbound_atts = save_inbound_attachments(msg, mid)
+        except Exception as _e:
+            _inbound_atts = []; log(f"[inbound-attach] extraction error mid={mid}: {_e}")
+        if _inbound_atts:
+            _rels = [os.path.relpath(p, WS) for p in _inbound_atts]
+            instruction = (instruction + "\n\n[The sender attached " + str(len(_rels)) +
+                           " document(s) to this email; they are saved for you to read at these paths "
+                           "(read them for full context, and use `ATTACH: <path>` for any you must include "
+                           "in a reply):\n" + "\n".join("- " + r for r in _rels) + "]").strip()
+            log(f"[inbound-attach] mid={mid} saved {len(_rels)} file(s): {_rels}")
         if not instruction:
             discord(f"📧 Authenticated email-command had no instruction (subject: {subject}).")
             processed += 1
