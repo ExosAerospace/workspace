@@ -248,6 +248,10 @@ def deliver(key, subject, body, to_line="", cc_line="", task_title=None,
     st = _load_state()
     h = hashlib.sha256(_dedup_norm(subject, body, to_line, task_title).encode()).hexdigest()[:16]
     prev = st.get(key)
+    # Permanent kill: once a key is marked killed (Jon said "kill it"), it NEVER re-delivers,
+    # regardless of content change/cooldown — a generator can keep emitting it harmlessly.
+    if prev and prev.get("killed"):
+        return {"key": key, "skipped": True, "reason": "killed", "task_id": prev.get("task_id")}
     if prev and prev.get("hash") == h:
         return {"key": key, "skipped": True, "task_id": prev.get("task_id")}
     # Jon already sent this outreach from Outlook (registry match on recipient): don't hand him a
