@@ -662,6 +662,54 @@
       "warn_grace": 2.5,
       "fail_grace": 6,
       "owner": "John Quinn"
+    },
+    "com.exos.auto-resume": {
+      "cadence_s": 900,
+      "warn_grace": 3,
+      "fail_grace": 8,
+      "owner": "John Quinn"
+    },
+    "com.exos.decision-override-rollup": {
+      "cadence_s": 604800,
+      "warn_grace": 1.5,
+      "fail_grace": 3,
+      "owner": "John Quinn"
+    },
+    "com.exos.inventory-capture": {
+      "cadence_s": 180,
+      "warn_grace": 3,
+      "fail_grace": 8,
+      "owner": "John Quinn"
+    },
+    "com.exos.lves-survey-report": {
+      "cadence_s": 1800,
+      "warn_grace": 3,
+      "fail_grace": 8,
+      "owner": "John Quinn"
+    },
+    "com.exos.orphaned-attachment-watch": {
+      "cadence_s": 86400,
+      "warn_grace": 1.5,
+      "fail_grace": 3,
+      "owner": "John Quinn"
+    },
+    "com.exos.receiving-capture": {
+      "cadence_s": 90,
+      "warn_grace": 3,
+      "fail_grace": 8,
+      "owner": "John Quinn"
+    },
+    "com.exos.supabase-diskio-maintenance": {
+      "cadence_s": 604800,
+      "warn_grace": 1.5,
+      "fail_grace": 3,
+      "owner": "John Quinn"
+    },
+    "com.exos.vaultwarden-backup": {
+      "cadence_s": 86400,
+      "warn_grace": 1.5,
+      "fail_grace": 3,
+      "owner": "John Quinn"
     }
   },
   "_eval_wave_2": {
