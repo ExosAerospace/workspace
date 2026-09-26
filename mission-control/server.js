@@ -2120,6 +2120,42 @@ const server = http.createServer((req, res) => {
       return Array.isArray(depts) && depts.includes(RR_DEPT_FOR_AUDIENCE[doc.audience] || doc.audience);
     };
 
+    // Fillable forms (Hazard ID / EAP ack / Chemical ID): validate + sanitize against doc.form (Jon 2026-09-26).
+    function rrCleanForm(doc, raw) {
+      const out = {}, missing = [];
+      for (const f of (doc.form.fields || [])) {
+        let v = raw && raw[f.id];
+        if (f.type === 'checkbox') v = v === true;
+        else v = String(v == null ? '' : v).trim().slice(0, f.type === 'textarea' ? 2000 : 300);
+        if (f.type === 'select' && v && !(f.options || []).includes(v)) v = '';
+        if (f.type === 'date' && v && !/^\d{4}-\d{2}-\d{2}$/.test(v)) v = '';
+        if (f.required && !v) missing.push(f.label.length > 60 ? f.label.slice(0, 60) + '…' : f.label);
+        out[f.id] = v;
+      }
+      return { data: out, missing };
+    }
+    // One MC task per filled disposition trigger (e.g. each reported hazard) → safety owner.
+    async function rrCreateDispositions(doc, comp) {
+      const owner = doc.disposition_owner || { name: 'John Quinn', email: 'jquinn@exosaero.com' };
+      const lbl = id => ((doc.form.fields || []).find(f => f.id === id) || {}).label || id;
+      const ids = [];
+      for (const dsp of (doc.form.dispositions || [])) {
+        if (!comp.form_data[dsp.when]) continue;
+        const title = dsp.title.replace(/\{(\w+)\}/g, (_, k) => comp.form_data[k] || '—').slice(0, 200);
+        const sev = dsp.severity_field ? comp.form_data[dsp.severity_field] : '';
+        const priority = sev === 'Imminent danger' ? 95 : sev === 'High' ? 85 : sev === 'Medium' ? 70 : 60;
+        const task = {
+          title, owner: owner.name, assigned_email: owner.email, assigned_to: owner.name,
+          state: 'To Do', priority, category: 'Safety', source: 'required-reading-form', tags: ['safety-disposition', doc.id],
+          description: `Reported by ${comp.user_name} (${comp.user_email}) on ${comp.acknowledged_at.slice(0, 10)} via Required Reading "${doc.title}".\n\n` +
+            dsp.body.map(k => `${lbl(k)}: ${comp.form_data[k] || '—'}`).join('\n') +
+            `\n\nDISPOSITION: verify the condition, then record the action taken (fixed / mitigated / accepted-with-rationale / not a hazard) in a task note and mark Done.`
+        };
+        const created = await supabaseRequest('POST', 'tasks', task).then(r => Array.isArray(r.data) ? r.data[0] : r.data).catch(() => null);
+        if (created && created.id) ids.push(created.id);
+      }
+      return ids;
+    }
     // GET /api/required-reading → docs + this user's per-doc status
     if (req.url.split('?')[0] === '/api/required-reading' && req.method === 'GET') {
       if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
@@ -2139,7 +2175,8 @@ const server = http.createServer((req, res) => {
           completed: !!comp, valid: !!comp,
           active_seconds: comp ? comp.active_seconds : (prog ? (prog.active_seconds || 0) : 0),
           scroll_max_pct: comp ? comp.scroll_max_pct : (prog ? (prog.scroll_max_pct || 0) : 0),
-          acknowledged_at: comp ? comp.acknowledged_at : null
+          acknowledged_at: comp ? comp.acknowledged_at : null,
+          form_data: comp && comp.form_data ? comp.form_data : null
         };
       });
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -2256,12 +2293,19 @@ const server = http.createServer((req, res) => {
           if (elapsed < doc.min_active_seconds) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Page not open long enough', reason: `The page has only been open ${elapsed}s; keep it open for the full review time.`, need })); return; }
           if (doc.require_scroll_complete && scroll < 90) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Document not fully scrolled', reason: `You reached ${scroll}% of the page; scroll through at least 90% before acknowledging.`, need })); return; }
           if (hb < 3) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not enough activity recorded', reason: 'The page must stay open and active long enough to record multiple check-ins.', need })); return; }
+          let formData = null;
+          if (doc.form) {
+            const { data, missing } = rrCleanForm(doc, JSON.parse(body || '{}').form);
+            if (missing.length) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Form incomplete', reason: 'Please complete: ' + missing.join(', '), need })); return; }
+            formData = data;
+          }
           const comp = {
             doc_id: doc.id, doc_version: doc.version, user_email: email, user_name: session.name || email,
             opened_at: prog.server_open_at, acknowledged_at: new Date(now).toISOString(),
             active_seconds: active, scroll_max_pct: scroll, heartbeats: hb,
             user_agent: prog.user_agent || (req.headers['user-agent'] || ''), ip: prog.ip || (req.socket.remoteAddress || ''), valid: true
           };
+          if (formData) { comp.method = 'form'; comp.form_data = formData; comp.disposition_task_ids = []; }
           rr.completions.push(comp);
           // Propagate to the same person's linked account(s) so they complete required reading once.
           for (const alias of (RR_ALIASES[email] || [])) {
@@ -2269,8 +2313,17 @@ const server = http.createServer((req, res) => {
             if (!dupe) rr.completions.push(Object.assign({}, comp, { user_email: alias, mirrored_from: email }));
           }
           rrSave(rr);
+          if (formData) {
+            // Tasks created after the response; ids written back onto the completion record.
+            rrCreateDispositions(doc, comp).then(ids => {
+              if (!ids.length) return;
+              const rr2 = rrLoad();
+              for (const c of rr2.completions) if (c.doc_id === comp.doc_id && c.doc_version === comp.doc_version && c.acknowledged_at === comp.acknowledged_at && (c.user_email === email || c.mirrored_from === email)) c.disposition_task_ids = ids;
+              rrSave(rr2);
+            }).catch(() => {});
+          }
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ ok: true, acknowledged_at: comp.acknowledged_at }));
+          res.end(JSON.stringify({ ok: true, acknowledged_at: comp.acknowledged_at, dispositions: formData ? (doc.form.dispositions || []).filter(x => formData[x.when]).length : 0 }));
         } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'bad request' })); }
       });
       return;

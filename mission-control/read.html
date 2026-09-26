@@ -21,6 +21,18 @@
   #rrBtn{background:#1c3052;color:#8aa0bd;border:1px solid #1c3052;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:not-allowed;transition:all .15s}
   #rrNext{display:none;text-decoration:none;background:#0f2a1a;color:#22c55e;border:1px solid #22c55e;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600}
   .dl{color:#8aa0bd;font-size:12px}
+  .frameWrap.hasForm{display:flex;background:var(--navy)}
+  .frameWrap.hasForm iframe{flex:1;min-width:0;background:#fff}
+  #rrForm{width:440px;flex:none;overflow-y:auto;padding:16px 18px;border-left:1px solid var(--line);background:var(--card)}
+  #rrForm h2{font-size:16px;margin:0 0 6px} #rrForm .intro{color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.45}
+  #rrForm fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 12px;padding:10px 12px}
+  #rrForm legend{color:var(--muted);font-size:12px;padding:0 4px}
+  #rrForm label{display:block;font-size:13px;margin:8px 0 4px}
+  #rrForm input[type=text],#rrForm input[type=date],#rrForm select,#rrForm textarea{width:100%;background:var(--navy);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:8px;font-size:14px;font-family:inherit}
+  #rrForm textarea{min-height:64px;resize:vertical}
+  #rrForm .req{color:var(--red)} #rrForm .chk{display:flex;gap:8px;align-items:flex-start} #rrForm .chk input{margin-top:3px;width:18px;height:18px;flex:none}
+  #rrForm .sig{font-family:'Brush Script MT','Segoe Script',cursive;font-size:20px}
+  @media (max-width:900px){.frameWrap.hasForm{flex-direction:column}.frameWrap.hasForm iframe{min-height:50vh}#rrForm{width:auto;border-left:0;border-top:1px solid var(--line)}}
 </style>
 </head>
 <body>
@@ -64,16 +76,50 @@
   }
   frame.addEventListener('load', wireFrame);
 
+  // Fillable forms: render doc.form beside the document; answers autosave locally and post with the ack.
+  var FORM=null;
+  function esc(t){ var e=document.createElement('span'); e.textContent=t==null?'':String(t); return e.innerHTML; }
+  function formKey(){ return 'rrform:'+DOC_ID; }
+  function formValues(){ var v={}; (FORM.fields||[]).forEach(function(f){ var el=document.getElementById('ff_'+f.id); if(!el) return; v[f.id]= f.type==='checkbox' ? el.checked : el.value; }); return v; }
+  function formMissing(){ var v=formValues(); return (FORM.fields||[]).filter(function(f){ return f.required && !(f.type==='checkbox' ? v[f.id] : String(v[f.id]||'').trim()); }); }
+  function setupForm(doc){
+    FORM=doc.form; var wrap=document.querySelector('.frameWrap'); wrap.classList.add('hasForm');
+    var pane=document.createElement('div'); pane.id='rrForm';
+    var h='<h2>Complete this form</h2><p class="intro">'+esc(FORM.intro||'')+'</p>', sec=null;
+    (FORM.fields||[]).forEach(function(f){
+      if((f.section||null)!==sec){ if(sec!==null) h+='</fieldset>'; sec=f.section||null; if(sec!==null) h+='<fieldset><legend>'+esc(sec)+'</legend>'; }
+      var star=f.required?' <span class="req">*</span>':'', id='ff_'+f.id;
+      if(f.type==='checkbox'){ h+='<label class="chk"><input type="checkbox" id="'+id+'"><span>'+esc(f.label)+star+'</span></label>'; return; }
+      h+='<label for="'+id+'">'+esc(f.label)+star+'</label>';
+      if(f.type==='textarea') h+='<textarea id="'+id+'"></textarea>';
+      else if(f.type==='select') h+='<select id="'+id+'"><option value="">— select —</option>'+(f.options||[]).map(function(o){ return '<option>'+esc(o)+'</option>'; }).join('')+'</select>';
+      else h+='<input type="'+(f.type==='date'?'date':'text')+'" id="'+id+'"'+(f.type==='signature'?' class="sig" placeholder="Type your full name"':'')+'>';
+    });
+    if(sec!==null) h+='</fieldset>';
+    pane.innerHTML=h; wrap.appendChild(pane);
+    var saved={}; try{ saved=JSON.parse(localStorage.getItem(formKey())||'{}'); }catch(e){}
+    (FORM.fields||[]).forEach(function(f){ var el=document.getElementById('ff_'+f.id); if(!el) return;
+      if(saved[f.id]!=null){ if(f.type==='checkbox') el.checked=!!saved[f.id]; else el.value=saved[f.id]; }
+      else if(f.type==='date') el.value=new Date().toISOString().slice(0,10);
+      el.addEventListener('input', onForm); el.addEventListener('change', onForm); });
+    btn.textContent='✓ Submit form & acknowledge';
+    pane.addEventListener('scroll', markActivity); pane.addEventListener('keydown', markActivity);
+  }
+  function onForm(){ markActivity(); try{ localStorage.setItem(formKey(), JSON.stringify(formValues())); }catch(e){} refreshUI(); }
+  function lockForm(){ if(!FORM) return; (FORM.fields||[]).forEach(function(f){ var el=document.getElementById('ff_'+f.id); if(el) el.disabled=true; }); }
+
   function setCompleted(dateStr){
     done=true;
     statusEl.innerHTML='<span style="color:#22c55e">✓ Completed — recorded '+dateStr+'</span>';
     btn.textContent='✓ Completed'; btn.disabled=true; btn.style.cursor='default';
     btn.style.background='#0f2a1a'; btn.style.color='#22c55e'; btn.style.border='1px solid #22c55e';
+    lockForm();
   }
   function refreshUI(){
     if(done||ATTEST) return;
-    statusEl.textContent='Required reading — active review '+fmt(activeSeconds)+' / '+fmt(MIN)+' · scrolled '+Math.round(scrollMaxPct)+'%';
-    var ok = activeSeconds>=MIN && scrollMaxPct>=SCROLL_MIN;
+    var miss = FORM ? formMissing() : [];
+    statusEl.textContent='Required reading — active review '+fmt(activeSeconds)+' / '+fmt(MIN)+' · scrolled '+Math.round(scrollMaxPct)+'%'+(FORM ? (miss.length ? ' · form: '+miss.length+' required field'+(miss.length>1?'s':'')+' left' : ' · form complete') : '');
+    var ok = activeSeconds>=MIN && scrollMaxPct>=SCROLL_MIN && !miss.length;
     btn.disabled=!ok;
     if(ok){ btn.style.cursor='pointer'; btn.style.background='#0080ff'; btn.style.color='#fff'; btn.style.border='1px solid #0080ff'; }
     else { btn.style.cursor='not-allowed'; btn.style.background='#1c3052'; btn.style.color='#8aa0bd'; btn.style.border='1px solid #1c3052'; }
@@ -92,10 +138,10 @@
   btn.addEventListener('click', function(){
     if(btn.disabled||done||ackInFlight) return;
     ackInFlight=true; btn.disabled=true; btn.style.cursor='wait';
-    (ATTEST ? post('/api/required-reading/ack', {doc_id:DOC_ID, attest:true}) : sendHeartbeat().then(function(){ return post('/api/required-reading/ack', {doc_id:DOC_ID}); }))
+    (ATTEST ? post('/api/required-reading/ack', {doc_id:DOC_ID, attest:true}) : sendHeartbeat().then(function(){ return post('/api/required-reading/ack', FORM ? {doc_id:DOC_ID, form:formValues()} : {doc_id:DOC_ID}); }))
       .then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
       .then(function(res){ ackInFlight=false;
-        if(res.ok && res.d && res.d.ok){ setCompleted(new Date(res.d.acknowledged_at||Date.now()).toLocaleDateString()); setupNextAfter(); }
+        if(res.ok && res.d && res.d.ok){ setCompleted(new Date(res.d.acknowledged_at||Date.now()).toLocaleDateString()); if(FORM){ try{ localStorage.removeItem(formKey()); }catch(e){} if(res.d.dispositions) statusEl.innerHTML+=' <span style="color:#8aa0bd">· '+res.d.dispositions+' item'+(res.d.dispositions>1?'s':'')+' sent to safety for disposition</span>'; } setupNextAfter(); }
         else { var reason=(res.d&&(res.d.reason||res.d.error))||'Could not record — keep reading and try again.'; statusEl.innerHTML='<span style="color:#ff4444">'+reason+'</span>'; refreshUI(); if(ATTEST){ var ab=document.getElementById('attestBox'); btn.disabled=!(ab&&ab.checked); btn.style.cursor=btn.disabled?'not-allowed':'pointer'; } }
       }).catch(function(){ ackInFlight=false; refreshUI(); });
   });
@@ -159,10 +205,12 @@
         var mA=(data.mine||[]).find(function(m){ return m.doc_id===DOC_ID; });
         if(mA && mA.completed) setCompleted(mA.acknowledged_at?new Date(mA.acknowledged_at).toLocaleDateString():'earlier');
         return; }
+      if(doc.form) setupForm(doc);
       document.getElementById('dl').href=doc.file||doc.url||'#';
       frame.src='/api/required-reading/content?doc='+encodeURIComponent(DOC_ID);
       setupNext(data);
       var mine=(data.mine||[]).find(function(m){ return m.doc_id===DOC_ID; });
+      if(mine && mine.completed && FORM && mine.form_data){ (FORM.fields||[]).forEach(function(f){ var el=document.getElementById('ff_'+f.id); if(el){ if(f.type==='checkbox') el.checked=!!mine.form_data[f.id]; else el.value=mine.form_data[f.id]||''; } }); }
       if(mine && mine.completed){ setCompleted(mine.acknowledged_at?new Date(mine.acknowledged_at).toLocaleDateString():'earlier'); return; }
       refreshUI();
       post('/api/required-reading/open', {doc_id:DOC_ID}).then(function(r){ if(r.ok) opened=true; }).catch(function(){});

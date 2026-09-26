@@ -100,7 +100,159 @@
       "doc_no": "SAFE-ANNUAL",
       "published_at": "2026-08-30T00:00:00Z",
       "description": "Safety / EHS \u2014 acknowledgment/training required.",
-      "file": "/process-library/06-safety-ehs/Hazard_Identification_Activity_Guide.docx"
+      "file": "/process-library/06-safety-ehs/Hazard_Identification_Activity_Guide.docx",
+      "form": {
+        "intro": "Walk the workplace and record at least one hazard. Each hazard you enter becomes a disposition task for the safety owner.",
+        "fields": [
+          {
+            "id": "h1_hazard",
+            "label": "Identified Hazard 1",
+            "type": "text",
+            "required": true,
+            "section": "Hazard 1"
+          },
+          {
+            "id": "h1_location",
+            "label": "Location",
+            "type": "text",
+            "required": true,
+            "section": "Hazard 1"
+          },
+          {
+            "id": "h1_severity",
+            "label": "Severity",
+            "type": "select",
+            "options": [
+              "Low",
+              "Medium",
+              "High",
+              "Imminent danger"
+            ],
+            "required": true,
+            "section": "Hazard 1"
+          },
+          {
+            "id": "h1_mitigation",
+            "label": "Suggested Mitigation",
+            "type": "textarea",
+            "required": true,
+            "section": "Hazard 1"
+          },
+          {
+            "id": "h2_hazard",
+            "label": "Identified Hazard 2",
+            "type": "text",
+            "required": false,
+            "section": "Hazard 2"
+          },
+          {
+            "id": "h2_location",
+            "label": "Location",
+            "type": "text",
+            "required": false,
+            "section": "Hazard 2"
+          },
+          {
+            "id": "h2_severity",
+            "label": "Severity",
+            "type": "select",
+            "options": [
+              "Low",
+              "Medium",
+              "High",
+              "Imminent danger"
+            ],
+            "required": false,
+            "section": "Hazard 2"
+          },
+          {
+            "id": "h2_mitigation",
+            "label": "Suggested Mitigation",
+            "type": "textarea",
+            "required": false,
+            "section": "Hazard 2"
+          },
+          {
+            "id": "h3_hazard",
+            "label": "Identified Hazard 3",
+            "type": "text",
+            "required": false,
+            "section": "Hazard 3"
+          },
+          {
+            "id": "h3_location",
+            "label": "Location",
+            "type": "text",
+            "required": false,
+            "section": "Hazard 3"
+          },
+          {
+            "id": "h3_severity",
+            "label": "Severity",
+            "type": "select",
+            "options": [
+              "Low",
+              "Medium",
+              "High",
+              "Imminent danger"
+            ],
+            "required": false,
+            "section": "Hazard 3"
+          },
+          {
+            "id": "h3_mitigation",
+            "label": "Suggested Mitigation",
+            "type": "textarea",
+            "required": false,
+            "section": "Hazard 3"
+          },
+          {
+            "id": "signature",
+            "label": "Typed signature (full name)",
+            "type": "signature",
+            "required": true
+          }
+        ],
+        "dispositions": [
+          {
+            "when": "h1_hazard",
+            "title": "Safety hazard disposition \u2014 {h1_hazard} @ {h1_location}",
+            "body": [
+              "h1_hazard",
+              "h1_location",
+              "h1_severity",
+              "h1_mitigation"
+            ],
+            "severity_field": "h1_severity"
+          },
+          {
+            "when": "h2_hazard",
+            "title": "Safety hazard disposition \u2014 {h2_hazard} @ {h2_location}",
+            "body": [
+              "h2_hazard",
+              "h2_location",
+              "h2_severity",
+              "h2_mitigation"
+            ],
+            "severity_field": "h2_severity"
+          },
+          {
+            "when": "h3_hazard",
+            "title": "Safety hazard disposition \u2014 {h3_hazard} @ {h3_location}",
+            "body": [
+              "h3_hazard",
+              "h3_location",
+              "h3_severity",
+              "h3_mitigation"
+            ],
+            "severity_field": "h3_severity"
+          }
+        ]
+      },
+      "disposition_owner": {
+        "name": "John Quinn",
+        "email": "jquinn@exosaero.com"
+      }
     },
     {
       "id": "safe-eap",
@@ -115,7 +267,55 @@
       "doc_no": "SAFE-EAP",
       "published_at": "2026-08-30T00:00:00Z",
       "description": "Safety / EHS \u2014 acknowledgment/training required.",
-      "file": "/process-library/06-safety-ehs/EAP_Employee_Acknowledgment_Form.docx"
+      "file": "/process-library/06-safety-ehs/EAP_Employee_Acknowledgment_Form.docx",
+      "form": {
+        "intro": "Complete the acknowledgment below. Company: Exos Aerospace Systems & Technologies, Inc.",
+        "fields": [
+          {
+            "id": "training_date",
+            "label": "Date EAP training received",
+            "type": "date",
+            "required": true
+          },
+          {
+            "id": "ack",
+            "label": "I have received and understood the Emergency Action Plan (EAP) Training provided by Exos Aerospace Systems & Technologies, Inc. I understand the company's emergency procedures, evacuation routes, and my role during an emergency. I agree to comply with these procedures.",
+            "type": "checkbox",
+            "required": true
+          },
+          {
+            "id": "printed_name",
+            "label": "Printed Name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "id": "signature",
+            "label": "Employee Signature (type full name)",
+            "type": "signature",
+            "required": true
+          },
+          {
+            "id": "concerns",
+            "label": "Any EAP gaps you noticed (blocked exit, missing signage, unclear route)? Optional",
+            "type": "textarea",
+            "required": false
+          }
+        ],
+        "dispositions": [
+          {
+            "when": "concerns",
+            "title": "EAP gap disposition \u2014 {concerns}",
+            "body": [
+              "concerns"
+            ]
+          }
+        ]
+      },
+      "disposition_owner": {
+        "name": "John Quinn",
+        "email": "jquinn@exosaero.com"
+      }
     },
     {
       "id": "safe-thca",
@@ -130,7 +330,164 @@
       "doc_no": "SAFE-THCA",
       "published_at": "2026-08-30T00:00:00Z",
       "description": "Safety / EHS \u2014 acknowledgment/training required.",
-      "file": "/process-library/06-safety-ehs/Chemical_Identification_Exercise.docx"
+      "file": "/process-library/06-safety-ehs/Chemical_Identification_Exercise.docx",
+      "form": {
+        "intro": "For each chemical, identify the hazard type and the proper handling/storage (see the SDS). Anything you flag at the bottom becomes a disposition task.",
+        "fields": [
+          {
+            "id": "c1_hazard",
+            "label": "Acetone \u2014 hazard type",
+            "type": "select",
+            "options": [
+              "Flammable",
+              "Corrosive",
+              "Toxic",
+              "Reactive / Oxidizer",
+              "Compressed gas",
+              "Other"
+            ],
+            "required": true,
+            "section": "Example chemicals"
+          },
+          {
+            "id": "c1_handling",
+            "label": "Acetone \u2014 proper handling & storage",
+            "type": "text",
+            "required": true,
+            "section": "Example chemicals"
+          },
+          {
+            "id": "c2_hazard",
+            "label": "Sulfuric Acid \u2014 hazard type",
+            "type": "select",
+            "options": [
+              "Flammable",
+              "Corrosive",
+              "Toxic",
+              "Reactive / Oxidizer",
+              "Compressed gas",
+              "Other"
+            ],
+            "required": true,
+            "section": "Example chemicals"
+          },
+          {
+            "id": "c2_handling",
+            "label": "Sulfuric Acid \u2014 proper handling & storage",
+            "type": "text",
+            "required": true,
+            "section": "Example chemicals"
+          },
+          {
+            "id": "c3_hazard",
+            "label": "Chlorine Gas \u2014 hazard type",
+            "type": "select",
+            "options": [
+              "Flammable",
+              "Corrosive",
+              "Toxic",
+              "Reactive / Oxidizer",
+              "Compressed gas",
+              "Other"
+            ],
+            "required": true,
+            "section": "Example chemicals"
+          },
+          {
+            "id": "c3_handling",
+            "label": "Chlorine Gas \u2014 proper handling & storage",
+            "type": "text",
+            "required": true,
+            "section": "Example chemicals"
+          },
+          {
+            "id": "c4_hazard",
+            "label": "Hydrogen Peroxide \u2014 hazard type",
+            "type": "select",
+            "options": [
+              "Flammable",
+              "Corrosive",
+              "Toxic",
+              "Reactive / Oxidizer",
+              "Compressed gas",
+              "Other"
+            ],
+            "required": true,
+            "section": "Example chemicals"
+          },
+          {
+            "id": "c4_handling",
+            "label": "Hydrogen Peroxide \u2014 proper handling & storage",
+            "type": "text",
+            "required": true,
+            "section": "Example chemicals"
+          },
+          {
+            "id": "c5_hazard",
+            "label": "Ammonia \u2014 hazard type",
+            "type": "select",
+            "options": [
+              "Flammable",
+              "Corrosive",
+              "Toxic",
+              "Reactive / Oxidizer",
+              "Compressed gas",
+              "Other"
+            ],
+            "required": true,
+            "section": "Example chemicals"
+          },
+          {
+            "id": "c5_handling",
+            "label": "Ammonia \u2014 proper handling & storage",
+            "type": "text",
+            "required": true,
+            "section": "Example chemicals"
+          },
+          {
+            "id": "site_chem",
+            "label": "Chemical at our site missing an SDS, unlabeled, or improperly stored? (name it; optional)",
+            "type": "text",
+            "required": false,
+            "section": "Site check"
+          },
+          {
+            "id": "site_chem_location",
+            "label": "Where?",
+            "type": "text",
+            "required": false,
+            "section": "Site check"
+          },
+          {
+            "id": "site_chem_issue",
+            "label": "Issue / suggested fix",
+            "type": "textarea",
+            "required": false,
+            "section": "Site check"
+          },
+          {
+            "id": "signature",
+            "label": "Typed signature (full name)",
+            "type": "signature",
+            "required": true
+          }
+        ],
+        "dispositions": [
+          {
+            "when": "site_chem",
+            "title": "HazCom disposition \u2014 {site_chem} @ {site_chem_location}",
+            "body": [
+              "site_chem",
+              "site_chem_location",
+              "site_chem_issue"
+            ]
+          }
+        ]
+      },
+      "disposition_owner": {
+        "name": "John Quinn",
+        "email": "jquinn@exosaero.com"
+      }
     },
     {
       "id": "sec-cui",
@@ -778,12 +1135,12 @@
       "doc_id": "safe-annual",
       "version": "2024-2026-08-30",
       "server_open_at": "2026-09-26T21:22:36.057Z",
-      "active_seconds": 6,
+      "active_seconds": 32,
       "scroll_max_pct": 100,
-      "heartbeats": 11,
+      "heartbeats": 16,
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0",
       "ip": "192.168.143.216",
-      "updated_at": "2026-09-26T21:37:47.193Z"
+      "updated_at": "2026-09-26T21:49:47.178Z"
     },
     {
       "user_email": "jquinn@exosaero.com",
