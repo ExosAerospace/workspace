@@ -113,6 +113,11 @@
       +'<label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer"><input type="checkbox" id="attestBox" style="margin-top:4px;width:18px;height:18px">'
       +'<span>I attest that I have read and understood <b></b> in GCC High, and I will follow it.</span></label></div>';
     wrap.querySelector('b').textContent=(doc.title||'this document')+(doc.doc_no?' ('+doc.doc_no+')':'');
+    // Where to find it in GCC High — plain text location (not a link), set per doc as gcc_location.
+    var loc=document.createElement('p'); loc.style.cssText='margin:0 0 16px;padding:10px 12px;background:#0a1628;border:1px solid #1c3052;border-radius:8px;font-size:13px';
+    loc.innerHTML='<span style="color:#8aa0bd">Where to find it in GCC High:</span> <span style="font-family:ui-monospace,Menlo,monospace"></span>';
+    loc.lastChild.textContent=doc.gcc_location||'Location to be provided — ask your manager.';
+    wrap.firstChild.insertBefore(loc, wrap.firstChild.querySelector('label'));
     statusEl.textContent='Attestation — check the box to confirm completion';
     document.getElementById('attestBox').addEventListener('change', function(e){
       if(done) return; var ok=e.target.checked; btn.disabled=!ok;
