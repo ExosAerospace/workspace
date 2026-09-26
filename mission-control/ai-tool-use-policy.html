@@ -195,10 +195,17 @@
     var docs=(data&&data.docs)||[], mine=(data&&data.mine)||[];
     var doneMap={}; mine.forEach(function(m){ if(m.completed) doneMap[m.doc_id]=1; });
     var next=null;
-    for(var i=0;i<docs.length;i++){ if(docs[i].id===DOC_ID) continue; if(!doneMap[docs[i].id]){ next=docs[i]; break; } }
+    // Only items that open in a tracked MC reader (CUI/GCC-High links + mailto cert items can't be completed here — skip them).
+    var trackable=function(d){ return /^\/(read\.html\?|help\.html|ai-tool-use-policy\.html)/.test(d.url||''); };
+    var cur=-1; for(var j=0;j<docs.length;j++){ if(docs[j].id===DOC_ID){ cur=j; break; } }
+    for(var k=1;k<=docs.length;k++){ var c=docs[(cur+k+docs.length)%docs.length]; if(!c||c.id===DOC_ID) continue; if(!doneMap[c.id] && trackable(c)){ next=c; break; } }
     var nb=document.getElementById('rrNext'); if(!nb) return;
     if(next){ nb.href=next.url; nb.title='Next: '+next.title; nb.textContent='Next required reading →'; nb.style.cursor='pointer'; nb.style.display='inline-block'; }
-    else { nb.textContent='✓ All required reading complete'; nb.removeAttribute('href'); nb.style.cursor='default'; nb.style.display='inline-block'; }
+    else {
+      var rest=docs.filter(function(d){ return d.id!==DOC_ID && !doneMap[d.id]; }).length;
+      if(rest){ nb.href='/required-reading.html'; nb.title='Remaining items are completed outside this reader (GCC High / certificate)'; nb.textContent='Remaining items ('+rest+') → Required Reading list'; nb.style.cursor='pointer'; nb.style.display='inline-block'; }
+      else { nb.textContent='✓ All required reading complete'; nb.removeAttribute('href'); nb.style.cursor='default'; nb.style.display='inline-block'; }
+    }
   }
   fetch('/api/required-reading',{credentials:'same-origin'})
     .then(function(r){ return r.ok?r.json():null; })

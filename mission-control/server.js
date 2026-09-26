@@ -2425,7 +2425,9 @@ const server = http.createServer((req, res) => {
             await execFileP('textutil', ['-convert', 'html', '-output', out, full], { timeout: 30000 });
             html = fs.readFileSync(out, 'utf8'); try { fs.unlinkSync(out); } catch {}
           } else if (ext === '.pdf') {
-            const r = await execFileP('pdftotext', ['-layout', '-q', full, '-'], { timeout: 60000 });
+            // launchd PATH has no /opt/homebrew/bin — resolve poppler's pdftotext explicitly or every PDF 500s.
+            const PDFTOTEXT = ['/opt/homebrew/bin/pdftotext', '/usr/local/bin/pdftotext'].find(p => fs.existsSync(p)) || 'pdftotext';
+            const r = await execFileP(PDFTOTEXT, ['-layout', '-q', full, '-'], { timeout: 60000 });
             const esc = String(r.stdout || '').replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
             html = WRAP('<pre>' + esc + '</pre>');
           } else if (['.png', '.jpg', '.jpeg', '.gif'].includes(ext)) {
