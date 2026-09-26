@@ -151,6 +151,12 @@ def main():
         subj = dec(msg.get("Subject"))
         frm = getaddresses([msg.get("From", "")])
         fname, faddr = (dec(frm[0][0]), (frm[0][1] or "").lower()) if frm else ("", "")
+        # Bounces / DSNs / auto-generated mail are never leads. Without this, extract_lead's body
+        # scan pulls the FAILED recipient out of the bounce text and captures a dead address as a lead.
+        if (msg.get_content_type() == "multipart/report"
+                or re.match(r"(mailer-daemon|postmaster)@", faddr)
+                or (msg.get("Auto-Submitted", "no").strip().lower() != "no")):
+            continue
         body = ""
         for p in msg.walk():
             if p.get_content_type() == "text/plain":
