@@ -39,7 +39,7 @@
       "category": "ground-operations",
       "doc_no": "GRN-001",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "Ground Operations (Greenville) \u2014 acknowledgment/training required.",
+      "description": "Ground Operations (Greenville) — acknowledgment/training required.",
       "file": "/process-library/02-ground-operations/EXOS-GRN-001-0_Crane_Operations_Procedure.doc"
     },
     {
@@ -54,7 +54,7 @@
       "category": "ground-operations",
       "doc_no": "GRN-002",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "Ground Operations (Greenville) \u2014 acknowledgment/training required.",
+      "description": "Ground Operations (Greenville) — acknowledgment/training required.",
       "file": "/process-library/02-ground-operations/EXOS-GRN-002-0_Tracking_Antenna_Training_Procedure.doc"
     },
     {
@@ -69,7 +69,7 @@
       "category": "ground-operations",
       "doc_no": "GRN-003",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "Ground Operations (Greenville) \u2014 acknowledgment/training required.",
+      "description": "Ground Operations (Greenville) — acknowledgment/training required.",
       "file": "/process-library/02-ground-operations/EXOS-GRN-003-0_Pelorus_Training_Procedure.doc"
     },
     {
@@ -84,12 +84,12 @@
       "category": "procurement",
       "doc_no": "GRN-005",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "Procurement \u2014 acknowledgment/training required.",
+      "description": "Procurement — acknowledgment/training required.",
       "file": "/process-library/04-procurement/EXOS-GRN-005-0_Purchasing_Training_Procedure.doc"
     },
     {
       "id": "safe-annual",
-      "title": "Workplace Safety \u2014 Annual Training",
+      "title": "Workplace Safety — Annual Training",
       "url": "/read.html?doc=safe-annual",
       "version": "2024-2026-08-30",
       "required": true,
@@ -99,7 +99,7 @@
       "category": "safety-ehs",
       "doc_no": "SAFE-ANNUAL",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "Safety / EHS \u2014 acknowledgment/training required.",
+      "description": "Safety / EHS — acknowledgment/training required.",
       "file": "/process-library/06-safety-ehs/Hazard_Identification_Activity_Guide.docx",
       "form": {
         "intro": "Walk the workplace and record at least one hazard. Each hazard you enter becomes a disposition task for the safety owner.",
@@ -216,7 +216,7 @@
         "dispositions": [
           {
             "when": "h1_hazard",
-            "title": "Safety hazard disposition \u2014 {h1_hazard} @ {h1_location}",
+            "title": "Safety hazard disposition — {h1_hazard} @ {h1_location}",
             "body": [
               "h1_hazard",
               "h1_location",
@@ -227,7 +227,7 @@
           },
           {
             "when": "h2_hazard",
-            "title": "Safety hazard disposition \u2014 {h2_hazard} @ {h2_location}",
+            "title": "Safety hazard disposition — {h2_hazard} @ {h2_location}",
             "body": [
               "h2_hazard",
               "h2_location",
@@ -238,7 +238,7 @@
           },
           {
             "when": "h3_hazard",
-            "title": "Safety hazard disposition \u2014 {h3_hazard} @ {h3_location}",
+            "title": "Safety hazard disposition — {h3_hazard} @ {h3_location}",
             "body": [
               "h3_hazard",
               "h3_location",
@@ -250,8 +250,8 @@
         ]
       },
       "disposition_owner": {
-        "name": "John Quinn",
-        "email": "jquinn@exosaero.com"
+        "name": "Mike Talley",
+        "email": "mtalley@exosaero.com"
       }
     },
     {
@@ -266,7 +266,7 @@
       "category": "safety-ehs",
       "doc_no": "SAFE-EAP",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "Safety / EHS \u2014 acknowledgment/training required.",
+      "description": "Safety / EHS — acknowledgment/training required.",
       "file": "/process-library/06-safety-ehs/EAP_Employee_Acknowledgment_Form.docx",
       "form": {
         "intro": "Complete the acknowledgment below. Company: Exos Aerospace Systems & Technologies, Inc.",
@@ -305,7 +305,7 @@
         "dispositions": [
           {
             "when": "concerns",
-            "title": "EAP gap disposition \u2014 {concerns}",
+            "title": "EAP gap disposition — {concerns}",
             "body": [
               "concerns"
             ]
@@ -313,8 +313,8 @@
         ]
       },
       "disposition_owner": {
-        "name": "John Quinn",
-        "email": "jquinn@exosaero.com"
+        "name": "Mike Talley",
+        "email": "mtalley@exosaero.com"
       }
     },
     {
@@ -329,14 +329,14 @@
       "category": "safety-ehs",
       "doc_no": "SAFE-THCA",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "Safety / EHS \u2014 acknowledgment/training required.",
+      "description": "Safety / EHS — acknowledgment/training required.",
       "file": "/process-library/06-safety-ehs/Chemical_Identification_Exercise.docx",
       "form": {
         "intro": "For each chemical, identify the hazard type and the proper handling/storage (see the SDS). Anything you flag at the bottom becomes a disposition task.",
         "fields": [
           {
             "id": "c1_hazard",
-            "label": "Acetone \u2014 hazard type",
+            "label": "Acetone — hazard type",
             "type": "select",
             "options": [
               "Flammable",
@@ -351,14 +351,14 @@
           },
           {
             "id": "c1_handling",
-            "label": "Acetone \u2014 proper handling & storage",
+            "label": "Acetone — proper handling & storage",
             "type": "text",
             "required": true,
             "section": "Example chemicals"
           },
           {
             "id": "c2_hazard",
-            "label": "Sulfuric Acid \u2014 hazard type",
+            "label": "Sulfuric Acid — hazard type",
             "type": "select",
             "options": [
               "Flammable",
@@ -373,14 +373,14 @@
           },
           {
             "id": "c2_handling",
-            "label": "Sulfuric Acid \u2014 proper handling & storage",
+            "label": "Sulfuric Acid — proper handling & storage",
             "type": "text",
             "required": true,
             "section": "Example chemicals"
           },
           {
             "id": "c3_hazard",
-            "label": "Chlorine Gas \u2014 hazard type",
+            "label": "Chlorine Gas — hazard type",
             "type": "select",
             "options": [
               "Flammable",
@@ -395,14 +395,14 @@
           },
           {
             "id": "c3_handling",
-            "label": "Chlorine Gas \u2014 proper handling & storage",
+            "label": "Chlorine Gas — proper handling & storage",
             "type": "text",
             "required": true,
             "section": "Example chemicals"
           },
           {
             "id": "c4_hazard",
-            "label": "Hydrogen Peroxide \u2014 hazard type",
+            "label": "Hydrogen Peroxide — hazard type",
             "type": "select",
             "options": [
               "Flammable",
@@ -417,14 +417,14 @@
           },
           {
             "id": "c4_handling",
-            "label": "Hydrogen Peroxide \u2014 proper handling & storage",
+            "label": "Hydrogen Peroxide — proper handling & storage",
             "type": "text",
             "required": true,
             "section": "Example chemicals"
           },
           {
             "id": "c5_hazard",
-            "label": "Ammonia \u2014 hazard type",
+            "label": "Ammonia — hazard type",
             "type": "select",
             "options": [
               "Flammable",
@@ -439,7 +439,7 @@
           },
           {
             "id": "c5_handling",
-            "label": "Ammonia \u2014 proper handling & storage",
+            "label": "Ammonia — proper handling & storage",
             "type": "text",
             "required": true,
             "section": "Example chemicals"
@@ -475,7 +475,7 @@
         "dispositions": [
           {
             "when": "site_chem",
-            "title": "HazCom disposition \u2014 {site_chem} @ {site_chem_location}",
+            "title": "HazCom disposition — {site_chem} @ {site_chem_location}",
             "body": [
               "site_chem",
               "site_chem_location",
@@ -485,8 +485,8 @@
         ]
       },
       "disposition_owner": {
-        "name": "John Quinn",
-        "email": "jquinn@exosaero.com"
+        "name": "Mike Talley",
+        "email": "mtalley@exosaero.com"
       }
     },
     {
@@ -500,14 +500,14 @@
       "category": "security-cui",
       "doc_no": "SEC-CUI",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CUI document \u2014 read it in GCC High (SharePoint), then attest completion here. Content is never shown in Mission Control.",
+      "description": "CUI document — read it in GCC High (SharePoint), then attest completion here. Content is never shown in Mission Control.",
       "gcc_high_path": "/process-library/08-security-cui/Exos_CUI_Policies_and_Procedures.docx",
       "url": "/read.html?doc=sec-cui",
       "fulfillment": "attestation"
     },
     {
       "id": "sec-cui-nda",
-      "title": "CUI NDA \u2014 DFARS/CFR v1",
+      "title": "CUI NDA — DFARS/CFR v1",
       "version": "1-2026-08-30",
       "required": true,
       "min_active_seconds": 0,
@@ -516,7 +516,7 @@
       "category": "security-cui",
       "doc_no": "SEC-CUI-NDA",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CUI document \u2014 read it in GCC High (SharePoint), then attest completion here. Content is never shown in Mission Control.",
+      "description": "CUI document — read it in GCC High (SharePoint), then attest completion here. Content is never shown in Mission Control.",
       "gcc_high_path": "/process-library/08-security-cui/Exos-US-CUI_NDA_-_DFARS-CFR_v1.docx",
       "url": "/read.html?doc=sec-cui-nda",
       "fulfillment": "attestation"
@@ -533,7 +533,7 @@
       "category": "payload",
       "doc_no": "SALES-001",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "Payload \u2014 acknowledgment/training required.",
+      "description": "Payload — acknowledgment/training required.",
       "file": "/process-library/03-payload/EXOS_Sales_Agent_Commission_Procedure_SALES-001.docx"
     },
     {
@@ -547,7 +547,7 @@
       "category": "security-cui",
       "doc_no": "IT-001",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CUI document \u2014 read it in GCC High (SharePoint), then attest completion here. Content is never shown in Mission Control.",
+      "description": "CUI document — read it in GCC High (SharePoint), then attest completion here. Content is never shown in Mission Control.",
       "gcc_high_path": "/process-library/08-security-cui/IT-001-0_New_Device_Provisioning_and_Endpoint_Onboarding.docx",
       "url": "/read.html?doc=it-001",
       "fulfillment": "attestation"
@@ -564,7 +564,7 @@
       "category": "2.0",
       "doc_no": "DEF-AUDITEVNTS",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/DEF-AUDITEVNTS_Audit_Events_and_Logging_Definition_v1.pdf"
     },
     {
@@ -579,7 +579,7 @@
       "category": "2.0",
       "doc_no": "DEF-BSLNCNFG",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/DEF-BSLNCNFG_Baseline_Configuration_Standard_v1.pdf"
     },
     {
@@ -594,7 +594,7 @@
       "category": "2.0",
       "doc_no": "DEF-ICF",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/DEF-ICF_Incident_Collection_Format_DIBNet_v1.pdf"
     },
     {
@@ -609,7 +609,7 @@
       "category": "2.0",
       "doc_no": "DEF-SYSENG",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/DEF-SYSENG_Security_Engineering_Principles_and_Architecture_v1.pdf"
     },
     {
@@ -624,7 +624,7 @@
       "category": "2.0",
       "doc_no": "DEF-TRNSFNCS",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/DEF-TRNSFNCS_Transactions_and_Functions_by_User_Role_v1.pdf"
     },
     {
@@ -639,7 +639,7 @@
       "category": "2.0",
       "doc_no": "PLAN-IR",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/PLAN-IR_Incident_Response_Plan_v1.pdf"
     },
     {
@@ -654,7 +654,7 @@
       "category": "2.0",
       "doc_no": "PLAN-MFA",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/PLAN-MFA_Multi-Factor_Authentication_Plan_v1.pdf"
     },
     {
@@ -669,7 +669,7 @@
       "category": "2.0",
       "doc_no": "PLAN-ROLESAR",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/PLAN-ROLESAR_Roles_and_Responsibilities_Plan_v1.pdf"
     },
     {
@@ -684,7 +684,7 @@
       "category": "2.0",
       "doc_no": "PLAN-RSKRSP",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/PLAN-RSKRSP_Risk_Response_Plan_v1.pdf"
     },
     {
@@ -699,7 +699,7 @@
       "category": "2.0",
       "doc_no": "CMMC-NETDIAG",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/CMMC_2.0_Network_Diagram_and_Assessment_Scope.png"
     },
     {
@@ -714,7 +714,7 @@
       "category": "2.0",
       "doc_no": "RISK-ANALYSIS",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/Risk_Analysis_Automox_Cloudflare_Duo_v1.pdf"
     },
     {
@@ -729,7 +729,7 @@
       "category": "2.0",
       "doc_no": "SOP-CHNGMGT",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/SOP-CHNGMGT_Change_Management_v1.pdf"
     },
     {
@@ -744,7 +744,7 @@
       "category": "2.0",
       "doc_no": "SOP-DVCSAN",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/SOP-DVCSAN_Device_and_Media_Sanitization_v1.pdf"
     },
     {
@@ -759,7 +759,7 @@
       "category": "2.0",
       "doc_no": "SOP-INFSENFLOW",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/SOP-INFSENFLOW_Information_Sensitivity_and_Data_Flow_v1.pdf"
     },
     {
@@ -774,7 +774,7 @@
       "category": "2.0",
       "doc_no": "SOP-MNTN",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/SOP-MNTN_System_Maintenance_v1.pdf"
     },
     {
@@ -789,7 +789,7 @@
       "category": "2.0",
       "doc_no": "SOP-PBLCCNTSYS",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/SOP-PBLCCNTSYS_Public_Content_Posting_v1.pdf"
     },
     {
@@ -804,7 +804,7 @@
       "category": "2.0",
       "doc_no": "SOP-RSKMRSPN",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/SOP-RSKMRSPN_Risk_Management_and_Response_v1.pdf"
     },
     {
@@ -819,7 +819,7 @@
       "category": "2.0",
       "doc_no": "SOP-TRNG",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/SOP-TRNG_Security_Awareness_and_Training_v1.pdf"
     },
     {
@@ -834,7 +834,7 @@
       "category": "2.0",
       "doc_no": "SOP-USRMGT",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/SOP-USRMGT_User_Management_Onboarding_Offboarding_v1.pdf"
     },
     {
@@ -849,7 +849,7 @@
       "category": "2.0",
       "doc_no": "SOP-VLNSCNREM",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/SOP-VLNSCNREM_Vulnerability_Scanning_and_Remediation_v1.pdf"
     },
     {
@@ -864,7 +864,7 @@
       "category": "2.0",
       "doc_no": "PLAN-RVWITMS",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/PLAN-RVWITMS_IT_Systems_Review_Items_and_Cadence_v1.pdf"
     },
     {
@@ -879,7 +879,7 @@
       "category": "2.0",
       "doc_no": "POLICY-CMPNYVAL",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/POLICY-CMPNYVAL_Company_Specific_Security_Values_v1.pdf"
     },
     {
@@ -894,7 +894,7 @@
       "category": "2.0",
       "doc_no": "POLICY-ISP",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "CMMC 2.0 \u2014 acknowledgment/training required.",
+      "description": "CMMC 2.0 — acknowledgment/training required.",
       "file": "/process-library/cmmc-2.0/POLICY-ISP_Information_Security_Policy_v1.pdf"
     },
     {
@@ -910,12 +910,12 @@
       "doc_no": "EXOS-SAF-001-0",
       "recurrence": "annual",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "Safety / EHS \u2014 cryogenic LOx handling; ANNUAL re-certification required for authorized handlers.",
+      "description": "Safety / EHS — cryogenic LOx handling; ANNUAL re-certification required for authorized handlers.",
       "file": "/process-library/06-safety-ehs/EXOS-SAF-001-0_Cryogenic_Oxygen_(LOx)_Handling_Procedure.docx"
     },
     {
       "id": "cui-itar-annual",
-      "title": "CUI & ITAR Annual Training (via Atomus) \u2014 submit certificate",
+      "title": "CUI & ITAR Annual Training (via Atomus) — submit certificate",
       "url": "mailto:exosmc@proton.me?subject=%5BCERT%5D%20CUI-ITAR%20Annual%20Training%20Certificate",
       "version": "2026",
       "required": true,
@@ -931,7 +931,7 @@
     },
     {
       "id": "airproducts-safetygram-16",
-      "title": "Air Products Safetygram-16 \u2014 Safe Handling of Cryogenic Liquids",
+      "title": "Air Products Safetygram-16 — Safe Handling of Cryogenic Liquids",
       "url": "/read.html?doc=airproducts-safetygram-16",
       "version": "2015-2026-08-30",
       "required": true,
@@ -942,7 +942,7 @@
       "require_scroll_complete": true,
       "doc_no": "REF-SG16",
       "published_at": "2026-08-30T00:00:00Z",
-      "description": "Air Products (supplier) authoritative cryogenic-liquid handling guide \u2014 read alongside the Exos LOx Handling Procedure (EXOS-SAF-001-0). Annual for LOx handlers.",
+      "description": "Air Products (supplier) authoritative cryogenic-liquid handling guide — read alongside the Exos LOx Handling Procedure (EXOS-SAF-001-0). Annual for LOx handlers.",
       "file": "/process-library/06-safety-ehs/AirProducts_Safetygram-16_Safe_Handling_of_Cryogenic_Liquids.pdf"
     }
   ],
@@ -1137,10 +1137,10 @@
       "server_open_at": "2026-09-26T21:22:36.057Z",
       "active_seconds": 32,
       "scroll_max_pct": 100,
-      "heartbeats": 16,
+      "heartbeats": 17,
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0",
       "ip": "192.168.143.216",
-      "updated_at": "2026-09-26T21:49:47.178Z"
+      "updated_at": "2026-09-26T21:53:47.114Z"
     },
     {
       "user_email": "jquinn@exosaero.com",

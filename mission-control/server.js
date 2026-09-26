@@ -2136,7 +2136,7 @@ const server = http.createServer((req, res) => {
     }
     // One MC task per filled disposition trigger (e.g. each reported hazard) → safety owner.
     async function rrCreateDispositions(doc, comp) {
-      const owner = doc.disposition_owner || { name: 'John Quinn', email: 'jquinn@exosaero.com' };
+      const owner = doc.disposition_owner || { name: 'Mike Talley', email: 'mtalley@exosaero.com' };
       const lbl = id => ((doc.form.fields || []).find(f => f.id === id) || {}).label || id;
       const ids = [];
       for (const dsp of (doc.form.dispositions || [])) {
