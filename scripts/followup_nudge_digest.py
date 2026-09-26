@@ -21,7 +21,7 @@ def dec(s):
 WS = os.path.expanduser("~/.openclaw/workspace")
 LOG = os.path.join(WS, "logs", "sent-followup-log.json")
 STATE = os.path.join(WS, "logs", "followup-nudge-state.json")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 JON = "1501632195163590739"
 # 7d before a first nudge; stop chasing past 45d; re-nudge the SAME contact at most every 10d
 # (outreach-appropriate, not aggressive); feed at most 5/day so the backlog drains gently.
@@ -30,7 +30,7 @@ MIN_DAYS, MAX_DAYS, RENUDGE, MAX_PER_DAY = 7, 45, 10, 5
 
 def env():
     e = dict(os.environ)
-    e["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.15.0/bin:/opt/homebrew/bin:"
+    e["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.21.0/bin:/opt/homebrew/bin:"
                  "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
     return e
 

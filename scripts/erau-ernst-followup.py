@@ -8,7 +8,7 @@ IMAP_HOST, IMAP_PORT = "127.0.0.1", 1143
 EMAIL_USER, EMAIL_PASS = "jquinnexo@pm.me", __import__('json').load(open(__import__('os').path.expanduser('~/.openclaw/secrets.json')))['protonmail_bridge_smtp_password']
 LIZI = "lquinn@exosaero.com"
 LIZI_DISCORD = "1506647219351060631"
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 LABEL = "com.exos.erau-ernst-followup"
 
 

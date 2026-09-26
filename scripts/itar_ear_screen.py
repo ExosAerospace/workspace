@@ -243,7 +243,7 @@ def _already(message_id):
 
 def _alert(text):
     env = dict(os.environ)
-    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.15.0/bin:"
+    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.21.0/bin:"
                    "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
     try:
         subprocess.run([OPENCLAW, "message", "send", "--channel", "discord",

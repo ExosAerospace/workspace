@@ -87,7 +87,7 @@ def send_alert(changes):
     msg = (f"From: jquinnexo@pm.me\nTo: {TO}\n"
            f"Subject: [SAM WATCH] Amendment change on {len(changes)} tracked solicitation(s)\n\n{body}\n")
     import shutil
-    _oc = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+    _oc = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/shims/openclaw"
     r = subprocess.run([_oc, "message", "send", "--channel", "discord", "--target", "1501636814849577050", "-m", f"**[SAM WATCH] Amendment change on {len(changes)} tracked solicitation(s)**\n\n" + body], capture_output=True, timeout=60)
     return r.returncode == 0
 

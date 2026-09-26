@@ -29,7 +29,7 @@ CFG = json.load(open(os.path.join(WS, "config", "dr-backup.json")))
 DEST = CFG["dest"]; REMOTE = str(CFG.get("dest_is_remote")).lower() == "true"
 LOG = os.path.join(WS, "logs", "failover-validate.log")
 REPORTS = os.path.join(WS, "reports")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 DM = CFG.get("alert_discord_dm_target", "user:1501632195163590739")
 SYSCH = CFG.get("alert_discord_system_channel")
 
@@ -105,7 +105,7 @@ def main():
 
     # 3) cold-start readiness (validate the source tree — what will be promoted)
     srv = os.path.join(WS, "mission-control", "server.js")
-    node = shutil.which("node") or "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/node"
+    node = shutil.which("node") or "/Users/exomac/.local/share/mise/installs/node/24.21.0/bin/node"
     try:
         r = subprocess.run([node, "--check", srv], capture_output=True, text=True, timeout=30)
         checks.append(("server.js syntax", r.returncode == 0, (r.stderr or "ok")[:80]))

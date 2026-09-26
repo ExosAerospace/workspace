@@ -5,7 +5,7 @@ only nudges if not Done. Emails + Discord-DMs Lizi. Self-unloads after 9/16."""
 import os, subprocess, json, urllib.request
 from datetime import datetime
 LIZI="lquinn@exosaero.com"; LIZI_DISCORD="1506647219351060631"
-OPENCLAW="/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+OPENCLAW="/Users/exomac/.local/share/mise/shims/openclaw"
 LABEL="com.exos.lizi-spec-pitchday"; SECRETS=os.path.expanduser("~/.openclaw/secrets.json")
 SUPA="https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/tasks?id=eq.2812&select=state"
 def task_done():

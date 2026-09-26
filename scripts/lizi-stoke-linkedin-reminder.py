@@ -7,7 +7,7 @@ request Andy Lapsa (CEO) — needs an alternate path."""
 import os, subprocess
 from email.message import EmailMessage
 LIZI="lquinn@exosaero.com"; LIZI_DISCORD="1506647219351060631"
-OPENCLAW="/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+OPENCLAW="/Users/exomac/.local/share/mise/shims/openclaw"
 LABEL="com.exos.lizi-stoke-linkedin"
 def self_unload():
     uid=os.getuid(); plist=os.path.expanduser(f"~/Library/LaunchAgents/{LABEL}.plist")

@@ -17,7 +17,7 @@ WS = "/Users/exomac/.openclaw/workspace"
 SEEN = os.path.join(WS, "logs", "forwarded-mail-seen.json")
 FEED = os.path.join(WS, "mission-control", "data", "forwarded-inbound.json")
 DISCORD = "channel:1501636728711282741"  # #series-a
-OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/shims/openclaw"
 # high-signal = worth a ping (gov / PI / active-pursuit); everything else just updates the feed
 HIGH = re.compile(r"nih\.gov|\.gov\b|\.mil\b|purdue\.edu|uw\.edu|noaa|nasa|era ?commons|"
                   r"institution registration|approv|kelly|park|collicott|teasley|murphy|"

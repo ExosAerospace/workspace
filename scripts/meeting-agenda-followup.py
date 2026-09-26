@@ -20,7 +20,7 @@ JOHN = "jquinn@exosaero.com"
 LIZI = "lquinn@exosaero.com"
 NEIL = "nmilburn@exosaero.com"
 JON_DISCORD = "1501632195163590739"
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 LABELS = {"nudge": "com.exos.meeting-agenda-nudge", "neil": "com.exos.meeting-agenda-neil"}
 
 AGENDA = """AGENDA — Mission Control Work Management Meeting (60 min)

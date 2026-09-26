@@ -124,7 +124,7 @@ def send_alert(new_notices):
     msg = (f"From: jquinnexo@pm.me\nTo: {TO}\nCc: {CC}\n"
            f"Subject: [SAM WATCH] {len(new_notices)} new Flight Opportunities / suborbital notice(s)\n\n{body}\n")
     import shutil
-    _oc = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+    _oc = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/shims/openclaw"
     r = subprocess.run([_oc, "message", "send", "--channel", "discord", "--target", "1501636814849577050", "-m", f"**[SAM WATCH] {len(new_notices)} new Flight Opportunities / suborbital notice(s)**\n\n" + body], capture_output=True, timeout=60)
     return r.returncode == 0
 

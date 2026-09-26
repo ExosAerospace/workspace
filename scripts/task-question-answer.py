@@ -23,7 +23,7 @@ import os, json, re, subprocess, tempfile, urllib.request, urllib.parse, hashlib
 from datetime import datetime, timezone
 
 WS = "/Users/exomac/.openclaw/workspace"
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
 KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
 STATE = os.path.join(WS, "logs", "task-question-answer-state.json")
@@ -43,7 +43,7 @@ def log(m):
 
 def sub_env():
     env = dict(os.environ)
-    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.15.0/bin:"
+    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.21.0/bin:"
                    "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
     return env
 

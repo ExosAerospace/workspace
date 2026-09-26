@@ -22,7 +22,7 @@ CFG = json.load(open(os.path.join(WS, "config", "dr-backup.json")))
 STATE_DIR = gate.STATE_DIR
 ALERT_MARK = os.path.join(STATE_DIR, "backup-watchdog-lastalert.json")
 LOG = os.path.join(WS, "logs", "backup-watchdog.log")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 REMINDER_EVERY_H = 24
 
 def logline(s):

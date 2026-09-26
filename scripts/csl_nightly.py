@@ -21,7 +21,7 @@ import csl_adjudicate as adj
 OUT = os.path.join(WS, "mission-control", "data", "csl-screening.json")
 DISPO = os.path.join(WS, "mission-control", "data", "csl-dispositions.json")
 DISCORD = "channel:1501636728711282741"  # #series-a
-OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/shims/openclaw"
 
 def load(p, d):
     try: return json.load(open(p))

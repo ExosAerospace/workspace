@@ -6,7 +6,7 @@ Checks the relevant task's state; only nudges if not Done. Emails + Discord-DMs 
 import os, subprocess, json, urllib.request
 from datetime import datetime
 LIZI="lquinn@exosaero.com"; LIZI_DISCORD="1506647219351060631"
-OPENCLAW="/Users/exomac/.local/share/mise/installs/node/24.15.0/bin/openclaw"
+OPENCLAW="/Users/exomac/.local/share/mise/shims/openclaw"
 LABEL="com.exos.lizi-erau-trip"
 SECRETS=os.path.expanduser("~/.openclaw/secrets.json")
 SUPA="https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/tasks?id=eq.{}&select=state"

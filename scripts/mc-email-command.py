@@ -446,7 +446,7 @@ def email_requester(to_addr, orig_subject, instruction, reply_text, attachments=
 
 def sub_env():
     env = dict(os.environ)
-    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.15.0/bin:"
+    env["PATH"] = ("/Users/exomac/.local/share/mise/installs/node/24.21.0/bin:"
                    "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
     return env
 
