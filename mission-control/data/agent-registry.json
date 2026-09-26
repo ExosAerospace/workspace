@@ -14,12 +14,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (exo@exosaero.com, jquinn@exosaero.com, jquinnexo@pm.me); Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 300s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.auto-promote-members",
@@ -30,12 +32,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; deletes local files (pending_path); file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.bamboo-newhire-watcher",
@@ -46,12 +50,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (exosmc@proton.me, jquinnexo@pm.me, lquinn@exosaero.com); Supabase read+WRITE; external API: bamboohr; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/bamboo_newhire_watcher.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.blocked-senders-update",
@@ -62,12 +68,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/weekly_blocked_senders_update.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.capability-gap-scan",
@@ -78,12 +86,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 21600s → WARN)",
       "telemetry": "logs/refresh_gap_pipeline.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.capital-bridge-funds",
@@ -94,12 +104,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1800s → WARN)",
       "telemetry": "logs/capital_bridge_funds.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.capital-bridge-nudge",
@@ -110,12 +122,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (dmitchell@exosaero.com, jquinnexo@pm.me); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/capital_bridge_nudge.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.capstone-access-monitor",
@@ -126,12 +140,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me, lquinn@exosaero.com); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 600s → WARN)",
       "telemetry": "logs/capstone_access_monitor.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.capstone-email-capture",
@@ -142,12 +158,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1800s → WARN)",
       "telemetry": "logs/capstone_email_capture.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.capture-action-dispatch",
@@ -158,12 +176,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Emails the READY-ACTION draft via msmtp to the owning Exos employee (active roster in erp mc.db; fallback Jon) — NEVER to the external recipient named in the draft; opens an MC task (Supabase read+WRITE: tasks); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
       "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
       "telemetry": "logs/capture-action-dispatch.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.channel-session-rotate",
@@ -174,12 +194,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "openclaw CLI: sessions compact; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/rotate-channel-sessions.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.claude-auth-keepalive",
@@ -190,12 +212,14 @@
       "stack_layer": "GOVERN/ASSURE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); deletes local files (COOLDOWN_FILE); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 9000s → WARN)",
       "telemetry": "logs/claude_auth_keepalive.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.clockout-watcher",
@@ -206,12 +230,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); external API: bamboohr; deletes local files (path); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
       "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
       "telemetry": "logs/clockout_watcher.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.completion-watchdog",
@@ -222,12 +248,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1200s → WARN)",
       "telemetry": "logs/completion-watchdog.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.cracks-digest",
@@ -238,12 +266,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/cracks-digest.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.crm-dashboard-refresh",
@@ -254,12 +284,14 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/generate-crm-dashboard.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.crm-dd-engine",
@@ -270,28 +302,32 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "LLM calls; reads mailbox via Bridge IMAP; Supabase read-only (contacts); external API: api.sam.gov, tavily; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/crm_dd_engine.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.crm-reminder-lizi",
       "script": "crm-reminder-lizi.py",
-      "kind": "recurring",
+      "kind": "retired",
       "schedule": "weekly Wd1 09:03",
       "purpose": "Biweekly reminder to Lizi to send updated CRM spreadsheet.",
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Lizi Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "RETIRED — script deleted and plist removed (no longer loaded); holds no permissions",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "n/a — retired (script + plist removed)",
       "telemetry": "logs/crm-reminder-lizi.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "NONE",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.cron-watchdog",
@@ -302,12 +338,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; openclaw CLI: cron list; deletes local files (pending_path); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1800s → WARN)",
       "telemetry": "logs/cron-failure-watchdog.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.csl-screen",
@@ -318,12 +356,14 @@
       "stack_layer": "GOVERN/ASSURE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Neil Milburn / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; Supabase read-only (contacts); file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/csl_nightly.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.daily-burndown",
@@ -334,12 +374,14 @@
       "stack_layer": "DECIDE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; Supabase read+WRITE; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/daily-burndown.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.dashboard-data-refresh",
@@ -350,12 +392,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE; file I/O: MC data JSON, memory/; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/dashboard-data-generator.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.dataroom-bd-refresh",
@@ -366,12 +410,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/refresh_dataroom_bd.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.dataroom-integrity",
@@ -382,12 +428,14 @@
       "stack_layer": "GOVERN/ASSURE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "file I/O: MC data JSON, drafts/, data-room/; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/data_room_integrity.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.dd-blocklist-monthly",
@@ -398,12 +446,14 @@
       "stack_layer": "DECIDE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me); file I/O: MC data JSON, drafts/; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/dd_blocklist_monthly.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.deadline-capture",
@@ -414,12 +464,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); reads mailbox via Bridge IMAP; Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 3600s → WARN)",
       "telemetry": "logs/deadline-capture.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.deadline-watch",
@@ -430,12 +482,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; Supabase read+WRITE (tasks); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.decision-note-router",
@@ -446,12 +500,14 @@
       "stack_layer": "DECIDE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "LLM calls; reads mailbox via Bridge IMAP; Supabase read+WRITE; external API: quickbooks; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 300s → WARN)",
       "telemetry": "logs/decision-note-router.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.decision-send-watcher",
@@ -462,12 +518,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
       "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
       "telemetry": "logs/decision-send-watcher.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.decision-triage",
@@ -478,12 +536,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1800s → WARN)",
       "telemetry": "logs/decision_triage.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.delivery-sweeper",
@@ -494,12 +554,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; deletes local files (path, pending_path); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
       "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
       "telemetry": "logs/delivery-sweeper.log + logs/fleet-events.jsonl (corr-ID)",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.derisk-orbital",
@@ -510,12 +572,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "MC local API read; external API: discord.com/api; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/derisk_orbital_outreach.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.doc-manager",
@@ -526,12 +590,14 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; deletes local files (f, tmp); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 900s → WARN)",
       "telemetry": "logs/doc_manager.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.due-date-scheduler",
@@ -542,12 +608,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.email-people-crm",
@@ -558,12 +626,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "LLM calls; reads mailbox via Bridge IMAP; Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/email_people_to_crm.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.email-tracker",
@@ -574,12 +644,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE (activities, contacts, tasks); deletes local files (filepath); file I/O: MC data JSON, memory/; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/mission-control-imap.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.entity-dedupe",
@@ -590,12 +662,14 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 21600s → WARN)",
       "telemetry": "logs/entity_dedupe.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.erau-ernst-followup",
@@ -606,12 +680,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); external addresses appear only in body text/IMAP search, not as recipients (ernstj1@erau.edu, jeremy.ernst@erau.edu); Discord post via deliver/openclaw message; reads mailbox via Bridge IMAP; self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/erau-ernst-followup.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.erp-backup",
@@ -622,12 +698,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/backup_erp.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.expense-analytics",
@@ -638,12 +716,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/expense_analytics.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.expense-workflow",
@@ -654,12 +734,14 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 300s → WARN)",
       "telemetry": "logs/expense-workflow.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.faa-rfi-followup",
@@ -670,12 +752,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); Discord post via deliver/openclaw message; self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/faa-rfi-followup.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.failover-validate",
@@ -686,12 +770,14 @@
       "stack_layer": "GOVERN/ASSURE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; external API: quickbooks; deletes local files (PAUSE); file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/failover_validate.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.file-maintenance",
@@ -702,12 +788,14 @@
       "stack_layer": "GOVERN/ASSURE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/file-maintenance.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.fleet-status",
@@ -718,12 +806,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "openclaw CLI: cron list; file I/O: MC data JSON, drafts/; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 900s → WARN)",
       "telemetry": "logs/fleet_status.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.followup-nudge-digest",
@@ -734,12 +824,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/followup_nudge_digest.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.forwarded-mail-watch",
@@ -750,12 +842,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; reads mailbox via Bridge IMAP; Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
       "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
       "telemetry": "logs/forwarded_mail_watch.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.hotel-choice-nudge",
@@ -766,12 +860,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me, lquinn@exosaero.com); Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/hotel-choice-nudge.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.japan-trip-dedupe",
@@ -782,12 +878,14 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1800s → WARN)",
       "telemetry": "logs/japan_trip_dedupe_guard.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.kyle-forms-reminder-lizi",
@@ -798,12 +896,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Lizi Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/kyle-forms-reminder-lizi.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.lead-auto-capture",
@@ -814,12 +914,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; Supabase read+WRITE; external API: docusign, quickbooks; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1200s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.legacy-triage",
@@ -830,12 +932,14 @@
       "stack_layer": "DECIDE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; MC local API read; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/legacy_triage_decisions.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.lizi-erau-trip",
@@ -846,12 +950,14 @@
       "stack_layer": "DECIDE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Lizi Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); Discord post via deliver/openclaw message; Supabase read-only (tasks); self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/lizi-erau-trip-reminder.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.lizi-oehme-linkedin",
@@ -862,12 +968,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Lizi Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); Discord post via deliver/openclaw message; self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/lizi-oehme-linkedin-reminder.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.lizi-planet-linkedin",
@@ -878,12 +986,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Lizi Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/lizi-planet-linkedin-reminder.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.lizi-spec-pitchday",
@@ -894,12 +1004,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Lizi Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); external addresses appear only in body text/IMAP search, not as recipients (specopps@nstxl.org); Discord post via deliver/openclaw message; Supabase read-only (tasks); self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/lizi-spec-pitchday-reminder.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.lizi-stoke-linkedin",
@@ -910,12 +1022,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Lizi Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); Discord post via deliver/openclaw message; self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/lizi-stoke-linkedin-reminder.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.lizi-vellinger-linkedin",
@@ -926,12 +1040,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Lizi Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); external addresses appear only in body text/IMAP search, not as recipients (tere.riley@rdw.com); self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/lizi-vellinger-linkedin-reminder.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.mc-asset-backup",
@@ -942,12 +1058,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); Supabase read-only; deletes local files (latest, os.path.join(root, s, t); file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/mc-asset-backup.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.mc-briefing",
@@ -958,12 +1076,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/mc_briefing_send.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.mc-doc-reconcile",
@@ -974,12 +1094,14 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.mc-email-command",
@@ -990,12 +1112,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (exosmc+do@proton.me, exosmc@pm.me, exosmc@proton.me, jquinn@exosaero.com, jquinnexo+do@pm.me, jquinnexo@pm.me); Discord post via deliver/openclaw message; wakes a full-tool OpenClaw agent session; LLM calls; reads mailbox via Bridge IMAP; deletes local files (pf); file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
       "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
       "telemetry": "logs/mc-email-command.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.mc-email-tracker",
@@ -1006,12 +1130,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; Supabase read-only; deletes local files (tmpf); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1200s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.mc-md-export",
@@ -1022,12 +1148,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Neil Milburn / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1800s → WARN)",
       "telemetry": "logs/mc_export_md.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.mc-meeting-prep",
@@ -1038,12 +1166,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/monthly-mc-meeting-prep.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.mc-tunnel",
@@ -1054,12 +1184,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "cloudflared tunnel publishing MC (127.0.0.1:8080) at mc.exosaero.space behind Cloudflare Access; no data access of its own; config ~/.cloudflared/exos-mc.yml",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (service): FAIL if not loaded or LastExitStatus≠0; WARN if log idle > 3x 86400s",
       "telemetry": "",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.meeting-agenda-neil",
@@ -1070,12 +1202,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Neil Milburn / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me, lquinn@exosaero.com, nmilburn@exosaero.com); Discord post via deliver/openclaw message; reads mailbox via Bridge IMAP; self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/meeting-agenda-followup.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.meeting-agenda-nudge",
@@ -1086,12 +1220,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me, lquinn@exosaero.com, nmilburn@exosaero.com); Discord post via deliver/openclaw message; reads mailbox via Bridge IMAP; self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/meeting-agenda-followup.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.mission-score",
@@ -1102,12 +1238,14 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read-only; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 7200s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.missioncontrol",
@@ -1118,12 +1256,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (exo@exosaero.com, exosmc@proton.me, jquinn@exosaero.com, jquinnexo@pm.me, megawattcontrols@gmail.com, toshihisa@exosaero.com); wakes a full-tool OpenClaw agent session; Supabase read+WRITE; MC local API read; external API: bamboohr, docusign, quickbooks; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (service): FAIL if not loaded or LastExitStatus≠0; WARN if log idle > 3x 86400s",
       "telemetry": "logs/server.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.mnda-registry",
@@ -1134,12 +1274,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "external API: docusign; file I/O: MC data JSON, data-room/; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/build_mnda_registry.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.nightly-security",
@@ -1150,12 +1292,14 @@
       "stack_layer": "GOVERN/ASSURE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Neil Milburn / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me); MC local API read; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/nightly-security.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.ny-trip-cancel-reminder",
@@ -1166,12 +1310,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/ny-trip-cancel-reminder.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.opfinance-alerts",
@@ -1182,12 +1328,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; external API: bamboohr, intuit.com, quickbooks; deletes local files (STATE_PATH); file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/operational_finance_exo3.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.opfinance-pulse",
@@ -1198,12 +1346,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; external API: bamboohr, intuit.com, quickbooks; deletes local files (STATE_PATH); file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/operational_finance_exo3.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.opp-deep-triage",
@@ -1214,12 +1364,14 @@
       "stack_layer": "DECIDE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; MC local API read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.opportunities-source",
@@ -1230,12 +1382,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "MC local API read; external API: discord.com/api; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/opportunities_agent.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.opportunity-engine",
@@ -1246,12 +1400,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "LLM calls; reads mailbox via Bridge IMAP; MC local API read; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/opportunity_processor.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.outreach-autoclose",
@@ -1262,12 +1418,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1200s → WARN)",
       "telemetry": "logs/outreach-autoclose.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.outreach-reply-tracker",
@@ -1278,12 +1436,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; Supabase read+WRITE; external API: docusign, quickbooks; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1320s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.overnight-resolver",
@@ -1294,12 +1454,14 @@
       "stack_layer": "DECIDE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/overnight_resolver.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.payload-commission-trigger",
@@ -1310,12 +1472,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; external API: intuit.com, quickbooks; deletes local files (STATE_PATH); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/payload_commission_trigger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.payload-intake",
@@ -1326,12 +1490,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; reads mailbox via Bridge IMAP; MC local API read; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
       "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
       "telemetry": "logs/payload_intake_quote.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.payload-sales-engine",
@@ -1342,12 +1508,14 @@
       "stack_layer": "DECIDE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; MC local API read; file I/O: MC data JSON, drafts/; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/payload_sales_engine.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.piee-login-reminder",
@@ -1358,12 +1526,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Neil Milburn / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me, nmilburn@exosaero.com); Discord post via deliver/openclaw message; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 2592000s → WARN)",
       "telemetry": "logs/piee-login-reminder.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.priority-inbox-watcher",
@@ -1374,12 +1544,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; reads mailbox via Bridge IMAP; Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
       "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
       "telemetry": "logs/priority-inbox-watcher.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.program-state",
@@ -1390,12 +1562,14 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/program_state.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.pursuit-dedup",
@@ -1406,12 +1580,14 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/pursuit_dedup.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.qb-deposit-sync",
@@ -1422,12 +1598,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "external API: intuit.com, quickbooks; deletes local files (STATE_PATH); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/qb_deposit_sync.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.quote-close-stamp",
@@ -1438,12 +1616,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
       "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
       "telemetry": "logs/quote_close_stamp.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.ready-action-verify",
@@ -1454,12 +1634,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me, kballard@exosaero.com, lquinn@exosaero.com, nmilburn@exosaero.com, peaton@exosaero.com); Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/verify-ready-action-dispatch.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.recurring-tasks",
@@ -1470,12 +1652,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.release-lizi-followups",
@@ -1486,12 +1670,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "Lizi Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/release_lizi_followups.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.research-competitive",
@@ -1502,12 +1688,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "MC local API read; external API: discord.com/api; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/research_agent.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.research-grant-scanner",
@@ -1518,12 +1706,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "MC local API read; external API: discord.com/api; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/research_agent.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.research-investor",
@@ -1534,12 +1724,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "MC local API read; external API: discord.com/api; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/research_agent.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.research-policy",
@@ -1550,12 +1742,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "MC local API read; external API: discord.com/api; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/research_agent.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.research-rocket-report",
@@ -1566,12 +1760,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "MC local API read; external API: discord.com/api; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/research_agent.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.research-tech-ip",
@@ -1582,12 +1778,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "MC local API read; external API: discord.com/api; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/research_agent.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.role-autoassign",
@@ -1598,12 +1796,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; external API: quickbooks; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 600s → WARN)",
       "telemetry": "logs/role-autoassign.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.sam-amendment-watch",
@@ -1614,12 +1814,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); Discord post via deliver/openclaw message; external API: api.sam.gov; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/sam-amendment-watch.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.sam-flightopps-watch",
@@ -1630,12 +1832,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); Discord post via deliver/openclaw message; external API: api.sam.gov; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/sam-flightopps-watch.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.sam-osp4-watch",
@@ -1646,12 +1850,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); Discord post via deliver/openclaw message; external API: api.sam.gov; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/sam-osp4-watch.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.send-confirmation-tracker",
@@ -1662,12 +1868,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; reads mailbox via Bridge IMAP; file I/O: MC data JSON, drafts/; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
       "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
       "telemetry": "logs/send_confirmation_tracker.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.sent-followup-tracker",
@@ -1678,12 +1886,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE; external API: graph.microsoft.us; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 10800s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.sent-loop-closer",
@@ -1694,12 +1904,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
       "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
       "telemetry": "logs/sent_folder_registry.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.series-a-worklist",
@@ -1710,12 +1922,14 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/series-a-daily-worklist.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.spaceweek-prep-reminder",
@@ -1726,12 +1940,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/spaceweek-prep-reminder-lizi.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.step-grant-reminder",
@@ -1742,12 +1958,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me, lquinn@exosaero.com); Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/step-grant-tuesday-reminder.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.step-grant-sept2",
@@ -1758,12 +1976,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); Discord post via deliver/openclaw message; self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/step-grant-sept2-reminder.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.subject-dedup-scan",
@@ -1774,12 +1994,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/subject_dedup.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.supabase-backup",
@@ -1790,12 +2012,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read-only; deletes local files (p); file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/supabase-backup.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.survey-ingest",
@@ -1806,12 +2030,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; reads mailbox via Bridge IMAP; external API: quickbooks; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 21600s → WARN)",
       "telemetry": "logs/ingest_capability_surveys.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.task-attach-reconciler",
@@ -1822,12 +2048,14 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1800s → WARN)",
       "telemetry": "logs/task-attachment-reconciler.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.task-auto-reassign",
@@ -1838,12 +2066,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.task-dedupe",
@@ -1854,12 +2084,14 @@
       "stack_layer": "INTERPRET",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 21600s → WARN)",
       "telemetry": "logs/dupe_collapse.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.task-ledger-snapshot",
@@ -1870,12 +2102,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 300s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.task-note-command",
@@ -1886,12 +2120,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "LLM calls; Supabase read+WRITE; external API: quickbooks; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 300s → WARN)",
       "telemetry": "logs/task-note-command.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.task-question-answer",
@@ -1902,12 +2138,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; wakes a full-tool OpenClaw agent session; Supabase read+WRITE; deletes local files (pf); own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 300s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.team-email-task-tracker",
@@ -1918,12 +2156,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Supabase read+WRITE; external API: graph.microsoft.us; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 10800s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.title3-osc-watch",
@@ -1934,12 +2174,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); Discord post via deliver/openclaw message; external API: api.sam.gov, grants.gov; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/title3_osc_watch.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.transcript-ingest",
@@ -1950,12 +2192,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; deletes local files (tmp); file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 900s → WARN)",
       "telemetry": "logs/ingest-transcripts.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.und-student-concepts",
@@ -1966,12 +2210,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); Discord post via deliver/openclaw message; self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/und-student-concepts-reminder.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.uplink-pitch-lock",
@@ -1982,12 +2228,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); Discord post via deliver/openclaw message; self-unloads its own one-shot launchd job + removes own plist; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly (one_shot): FAIL if send crashed (msmtp check=True → LastExitStatus≠0, job stays loaded); OK/completed once it self-unloads + removes its plist",
       "telemetry": "logs/uplink-pitch-lock-reminder.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.util-metrics",
@@ -1998,12 +2246,14 @@
       "stack_layer": "LEARN",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "LLM calls; reads mailbox via Bridge IMAP; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 600s → WARN)",
       "telemetry": "logs/util_metrics.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.warm-followup",
@@ -2014,12 +2264,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "Discord post via deliver/openclaw message; Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
       "telemetry": "logs/warm-followup-cadence.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "MED",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.warm-ollama",
@@ -2030,12 +2282,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "Exo (infra) / John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "LLM calls; reads mailbox via Bridge IMAP; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (service): FAIL if not loaded or LastExitStatus≠0; WARN if log idle > 3x 86400s",
       "telemetry": "logs/warm-ollama.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "LOW",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.weekly-employee-report",
@@ -2046,12 +2300,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (exosmc@proton.me, jquinn@exosaero.com, jquinnexo@pm.me, megawattcontrols@gmail.com); Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.weekly-investor-update",
@@ -2062,12 +2318,14 @@
       "stack_layer": "SENSE",
       "autonomy_tier": "Recommends-with-Context",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinnexo@pm.me, lquinn@exosaero.com); Supabase read+WRITE; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
       "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
       "telemetry": "logs/weekly-investor-update.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.weekly-meeting-prep",
@@ -2078,12 +2336,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me, lquinn@exosaero.com, peaton@exosaero.com, snorsworthy@exosaero.com); Discord post via deliver/openclaw message; Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/weekly-meeting-prep.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.weekly-rsi",
@@ -2094,12 +2354,14 @@
       "stack_layer": "LEARN",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com); Discord post via deliver/openclaw message; LLM calls; Supabase read-only; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/task_ledger.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.weekly-team-performance",
@@ -2110,12 +2372,14 @@
       "stack_layer": "ORCHESTRATE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
-      "permission_envelope": "TBD",
+      "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (jquinn@exosaero.com, jquinnexo@pm.me); Discord post via deliver/openclaw message; Supabase read-only; MC local API read; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "MISSING",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
       "telemetry": "logs/weekly-team-performance.log",
-      "reusability_scope": "TBD"
+      "reusability_scope": "TBD",
+      "risk_tier": "HIGH",
+      "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
     },
     {
       "label": "com.exos.exo3-gate",
@@ -2399,5 +2663,16 @@
       "com.exos.vaultwarden-backup"
     ],
     "note": "live agents found unregistered by agent_eval registry-drift check (plists loaded outside git bypassed the exo3 gate)"
+  },
+  "envelope_backfill": {
+    "date": "2026-09-26",
+    "filled": 132,
+    "risk": {
+      "HIGH": 46,
+      "MED": 58,
+      "LOW": 27,
+      "NONE": 1
+    },
+    "note": "no agent sends email to external recipients; no agent controls launchd/gateway or git-commits except one-shot self-unload"
   }
 }

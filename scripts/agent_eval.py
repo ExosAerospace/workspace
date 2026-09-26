@@ -93,11 +93,17 @@ def window_events(since_ts):
 
 REGISTRY = WS / "mission-control" / "data" / "agent-registry.json"
 
-def registry_labels():
+SPEC_FIELDS = ("human_owner", "eval_suite", "permission_envelope")
+
+def _blank(v):
+    return str(v or "").strip().upper() in ("", "TBD", "MISSING", "NONE")
+
+def registry_labels(complete_only=False):
     reg = json.load(open(REGISTRY))
     agents = reg.get("agents", [])
     if isinstance(agents, dict): agents = list(agents.values())
-    return {a.get("label") for a in agents if a.get("label")}
+    return {a.get("label") for a in agents if a.get("label")
+            and not (complete_only and any(_blank(a.get(f)) for f in SPEC_FIELDS))}
 
 def live_labels():
     """Every com.exos.* agent that can run: plists in ~/Library/LaunchAgents plus
@@ -124,15 +130,20 @@ def selftest():
     assert registry_drift(live, {a, b, c}) == []
     assert registry_drift(live, {a}) == [b, c]
     assert registry_drift(set(), {a}) == []  # registered-but-gone is not drift
+    assert not (LA / "no-such-one-shot-fixture.plist").exists()  # one-shot 'done' rule keys on plist absence
     assert registry_labels(), "registry unreadable or empty"
+    assert registry_labels(complete_only=True) <= registry_labels()
     assert isinstance(live_labels(), set)
-    print("agent_eval selftest: 5/5 pass")
+    print("agent_eval selftest: 7/7 pass")
     return 0
 
 def check_registry_drift(state):
     """Returns the list of NEW unregistered labels (not yet alerted). Never raises."""
     try:
-        drift = registry_drift(live_labels(), registry_labels())
+        live = live_labels()
+        drift = registry_drift(live, registry_labels())
+        drift += [f"{l} (spec incomplete: owner/eval/permission_envelope)" for l in
+                  registry_drift(live, registry_labels(complete_only=True)) if l not in drift]
     except Exception as e:
         log(f"registry drift check skipped: {e}")
         return []
@@ -168,8 +179,11 @@ def main():
         cad_h = th["cadence_s"] / 3600
         short = label.replace("com.exos.", "")
         status, why = "OK", []
+        one_shot = th.get("one_shot", False)
         # FAIL only on reliable signals (keeps escalations trustworthy)
-        if not loaded:
+        if not loaded and one_shot and not (LA / f"{label}.plist").exists():
+            why.append("completed (one-shot self-unloaded)")  # fired + removed its own plist = done
+        elif not loaded:
             status = "FAIL"; why.append("not loaded in launchd")
         elif les not in (0, None):
             status = "FAIL"; why.append(f"LastExitStatus={les} (crashed)")
@@ -177,7 +191,7 @@ def main():
             status = "FAIL"; why.append(f"delivery_exhausted x{fails.get(short) or fails.get(label)}")
         # advisory WARN (staleness is best-effort; never escalated)
         if status == "OK":
-            if age_h is not None and age_h > cad_h * th["warn_grace"]:
+            if not one_shot and age_h is not None and age_h > cad_h * th["warn_grace"]:
                 status = "WARN"; why.append(f"possibly stale (no activity {age_h:.0f}h)")
             elif warns.get(short):
                 status = "WARN"; why.append(f"spooled x{warns.get(short)}")

@@ -710,6 +710,150 @@
       "warn_grace": 1.5,
       "fail_grace": 3,
       "owner": "John Quinn"
+    },
+    "com.exos.erau-ernst-followup": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "John Quinn",
+      "one_shot": true
+    },
+    "com.exos.faa-rfi-followup": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "John Quinn",
+      "one_shot": true
+    },
+    "com.exos.hotel-choice-nudge": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "John Quinn",
+      "one_shot": true
+    },
+    "com.exos.kyle-forms-reminder-lizi": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "Lizi Quinn",
+      "one_shot": true
+    },
+    "com.exos.lizi-erau-trip": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "Lizi Quinn",
+      "one_shot": true
+    },
+    "com.exos.lizi-oehme-linkedin": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "Lizi Quinn",
+      "one_shot": true
+    },
+    "com.exos.lizi-planet-linkedin": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "Lizi Quinn",
+      "one_shot": true
+    },
+    "com.exos.lizi-spec-pitchday": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "Lizi Quinn",
+      "one_shot": true
+    },
+    "com.exos.lizi-stoke-linkedin": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "Lizi Quinn",
+      "one_shot": true
+    },
+    "com.exos.lizi-vellinger-linkedin": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "Lizi Quinn",
+      "one_shot": true
+    },
+    "com.exos.meeting-agenda-neil": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "Neil Milburn / John Quinn",
+      "one_shot": true
+    },
+    "com.exos.meeting-agenda-nudge": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "John Quinn",
+      "one_shot": true
+    },
+    "com.exos.ny-trip-cancel-reminder": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "John Quinn",
+      "one_shot": true
+    },
+    "com.exos.spaceweek-prep-reminder": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "John Quinn",
+      "one_shot": true
+    },
+    "com.exos.step-grant-reminder": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "John Quinn",
+      "one_shot": true
+    },
+    "com.exos.step-grant-sept2": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "John Quinn",
+      "one_shot": true
+    },
+    "com.exos.und-student-concepts": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "John Quinn",
+      "one_shot": true
+    },
+    "com.exos.uplink-pitch-lock": {
+      "cadence_s": 86400,
+      "warn_grace": 999,
+      "fail_grace": 999,
+      "owner": "John Quinn",
+      "one_shot": true
+    },
+    "com.exos.missioncontrol": {
+      "cadence_s": 86400,
+      "warn_grace": 3,
+      "fail_grace": 8,
+      "owner": "Exo (infra) / John Quinn"
+    },
+    "com.exos.mc-tunnel": {
+      "cadence_s": 86400,
+      "warn_grace": 3,
+      "fail_grace": 8,
+      "owner": "Exo (infra) / John Quinn"
+    },
+    "com.exos.warm-ollama": {
+      "cadence_s": 86400,
+      "warn_grace": 3,
+      "fail_grace": 8,
+      "owner": "Exo (infra) / John Quinn"
     }
   },
   "_eval_wave_2": {
