@@ -2482,7 +2482,7 @@
       "script": "guild_channel_watchdog.py",
       "kind": "recurring",
       "schedule": "every 180s",
-      "purpose": "Self-healing guard for the wedged Discord guild-channel handler. Cron/subagent completions that announce INTO a channel route through that channel's interactive session and wake an agent turn; when that wake hangs on the claude-cli backend (120s gateway timeout) the run is left stuck-active and clogs the SHARED guild-channel path so #general/#series-a/#rd-team/#rdre stop creating turns (DMs unaffected). Detects the wedge (fingerprint within 15m + output stalled >=8m) and auto-restarts the gateway, rate-limited to 1/30m, always notifying Jon. Root fix (webhook decoupling of channel crons) tracked as a Decision.",
+      "purpose": "Self-healing guard for the wedged Discord guild-channel handler. Cron/subagent completions that announce INTO a channel route through that channel's interactive session and wake an agent turn; when that wake hangs on the claude-cli backend (120s gateway timeout) the run is left stuck-active and clogs the SHARED guild-channel path so #general/#series-a/#rd-team/#rdre stop creating turns (DMs unaffected). Detects the wedge (fingerprint within 15m + output stalled >=8m) and auto-restarts the gateway, rate-limited to 1/30m, always notifying Jon. Root fix applied 2026-09-26 (D-7281838): all 13 channel-announce crons set delivery.bestEffort=true, which skips the channel-session awareness event that woke the hanging turn. The watchdog stays as the safety net.",
       "stack_layer": "ASSURE",
       "autonomy_tier": "Execute-within-bounds",
       "human_owner": "John Quinn",
