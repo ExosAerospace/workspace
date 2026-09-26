@@ -71,7 +71,7 @@
     btn.style.background='#0f2a1a'; btn.style.color='#22c55e'; btn.style.border='1px solid #22c55e';
   }
   function refreshUI(){
-    if(done) return;
+    if(done||ATTEST) return;
     statusEl.textContent='Required reading — active review '+fmt(activeSeconds)+' / '+fmt(MIN)+' · scrolled '+Math.round(scrollMaxPct)+'%';
     var ok = activeSeconds>=MIN && scrollMaxPct>=SCROLL_MIN;
     btn.disabled=!ok;
@@ -92,13 +92,34 @@
   btn.addEventListener('click', function(){
     if(btn.disabled||done||ackInFlight) return;
     ackInFlight=true; btn.disabled=true; btn.style.cursor='wait';
-    sendHeartbeat().then(function(){ return post('/api/required-reading/ack', {doc_id:DOC_ID}); })
+    (ATTEST ? post('/api/required-reading/ack', {doc_id:DOC_ID, attest:true}) : sendHeartbeat().then(function(){ return post('/api/required-reading/ack', {doc_id:DOC_ID}); }))
       .then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
       .then(function(res){ ackInFlight=false;
         if(res.ok && res.d && res.d.ok){ setCompleted(new Date(res.d.acknowledged_at||Date.now()).toLocaleDateString()); setupNextAfter(); }
-        else { var reason=(res.d&&(res.d.reason||res.d.error))||'Could not record — keep reading and try again.'; statusEl.innerHTML='<span style="color:#ff4444">'+reason+'</span>'; refreshUI(); }
+        else { var reason=(res.d&&(res.d.reason||res.d.error))||'Could not record — keep reading and try again.'; statusEl.innerHTML='<span style="color:#ff4444">'+reason+'</span>'; refreshUI(); if(ATTEST){ var ab=document.getElementById('attestBox'); btn.disabled=!(ab&&ab.checked); btn.style.cursor=btn.disabled?'not-allowed':'pointer'; } }
       }).catch(function(){ ackInFlight=false; refreshUI(); });
   });
+
+  // CUI (GCC High) docs: MC never shows content — the employee attests they completed it there.
+  var ATTEST=false;
+  function setupAttest(doc){
+    ATTEST=true;
+    document.getElementById('sub').textContent='CUI document — read in GCC High (SharePoint), then attest here';
+    var dl=document.getElementById('dl'); dl.style.display='none';
+    var wrap=document.querySelector('.frameWrap'); wrap.style.background='var(--navy)';
+    wrap.innerHTML='<div style="max-width:720px;margin:40px auto;padding:24px;background:#0f1e38;border:1px solid #1c3052;border-radius:10px;line-height:1.55">'
+      +'<h2 style="margin:0 0 8px;font-size:18px">Employee attestation</h2>'
+      +'<p style="color:#8aa0bd;margin:0 0 16px">This is a CUI document. It is kept in GCC High (SharePoint) under the CMMC boundary and is never displayed in Mission Control. Read it there, then record your completion below.</p>'
+      +'<label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer"><input type="checkbox" id="attestBox" style="margin-top:4px;width:18px;height:18px">'
+      +'<span>I attest that I have read and understood <b></b> in GCC High, and I will follow it.</span></label></div>';
+    wrap.querySelector('b').textContent=(doc.title||'this document')+(doc.doc_no?' ('+doc.doc_no+')':'');
+    statusEl.textContent='Attestation — check the box to confirm completion';
+    document.getElementById('attestBox').addEventListener('change', function(e){
+      if(done) return; var ok=e.target.checked; btn.disabled=!ok;
+      btn.style.cursor=ok?'pointer':'not-allowed'; btn.style.background=ok?'#0080ff':'#1c3052'; btn.style.color=ok?'#fff':'#8aa0bd'; btn.style.border='1px solid '+(ok?'#0080ff':'#1c3052');
+    });
+    btn.textContent='✓ I attest I completed this';
+  }
 
   var RR_DATA=null;
   function setupNext(data){
@@ -129,6 +150,10 @@
       MIN = (typeof doc.min_active_seconds==='number') ? doc.min_active_seconds : MIN;
       document.getElementById('title').textContent=doc.title||'Required Reading';
       document.getElementById('sub').textContent='min active read '+fmt(MIN)+' · verified by active time + scroll, not self-reported';
+      if(doc.fulfillment==='attestation'){ setupAttest(doc); setupNext(data);
+        var mA=(data.mine||[]).find(function(m){ return m.doc_id===DOC_ID; });
+        if(mA && mA.completed) setCompleted(mA.acknowledged_at?new Date(mA.acknowledged_at).toLocaleDateString():'earlier');
+        return; }
       document.getElementById('dl').href=doc.file||doc.url||'#';
       frame.src='/api/required-reading/content?doc='+encodeURIComponent(DOC_ID);
       setupNext(data);

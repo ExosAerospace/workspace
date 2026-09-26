@@ -2224,6 +2224,26 @@ const server = http.createServer((req, res) => {
           // Already recorded for this version → idempotent success, don't nag.
           const existing = rr.completions.find(c => c.user_email === email && c.doc_id === doc.id && c.doc_version === doc.version && c.valid);
           if (existing) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, already: true, acknowledged_at: existing.acknowledged_at })); return; }
+          // CUI docs live in GCC High (CMMC boundary) — MC never shows them. Completion is an explicit
+          // employee attestation that they read the document there (Jon 2026-09-26).
+          if (doc.fulfillment === 'attestation') {
+            const { attest } = JSON.parse(body || '{}');
+            if (attest !== true) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Attestation required', reason: 'Check the attestation box to confirm you completed this document in GCC High.' })); return; }
+            const comp = {
+              doc_id: doc.id, doc_version: doc.version, user_email: email, user_name: session.name || email,
+              acknowledged_at: new Date().toISOString(), method: 'attestation',
+              attestation: `I attest that I have read and understood "${doc.title}" (${doc.doc_no || doc.id}) in GCC High.`,
+              active_seconds: 0, scroll_max_pct: 0, heartbeats: 0,
+              user_agent: req.headers['user-agent'] || '', ip: req.socket.remoteAddress || '', valid: true
+            };
+            rr.completions.push(comp);
+            for (const alias of (RR_ALIASES[email] || [])) {
+              const dupe = rr.completions.find(c => c.user_email === alias && c.doc_id === doc.id && c.doc_version === doc.version && c.valid);
+              if (!dupe) rr.completions.push(Object.assign({}, comp, { user_email: alias, mirrored_from: email }));
+            }
+            rrSave(rr);
+            res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, acknowledged_at: comp.acknowledged_at, method: 'attestation' })); return;
+          }
           const prog = rr.progress.find(p => p.user_email === email && p.doc_id === doc.id && p.version === doc.version);
           if (!prog || !prog.server_open_at) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Reading not started', reason: 'No open record for this document.', need: { min_active_seconds: doc.min_active_seconds, have_active_seconds: 0, scroll_max_pct: 0 } })); return; }
           const now = Date.now();
@@ -2397,6 +2417,7 @@ const server = http.createServer((req, res) => {
         const docs = rr.docs || rr;
         const doc = (docs || []).find(d => d.id === id);
         if (!doc) { res.writeHead(404, { 'Content-Type': 'text/html' }); res.end('<p>Document not found.</p>'); return; }
+        if (doc.fulfillment === 'attestation') { res.writeHead(200, { 'Content-Type': 'text/html' }); res.end('<!doctype html><body style="font-family:sans-serif;padding:24px">This CUI document is read in GCC High (SharePoint), not Mission Control. Attest completion below.</body>'); return; }
         const srcUrl = doc.file || doc.url || '';
         if (!srcUrl.startsWith('/process-library/')) {
           res.writeHead(200, { 'Content-Type': 'text/html' });

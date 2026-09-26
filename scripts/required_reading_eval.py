@@ -82,6 +82,8 @@ def render(doc):
 
 def completion_path(doc):
     url = doc.get("url", "")
+    if doc.get("fulfillment") == "attestation":
+        return "attestation (CUI read in GCC High)"
     if url.startswith("/read.html?"):
         return "tracked reader"
     if url.startswith(PAGE_READERS):
@@ -111,6 +113,9 @@ def main():
         path = completion_path(d)
         if path in ("tracked reader",):
             rs, rd = render(d)
+        elif path.startswith("attestation"):
+            leak = bool(d.get("file")) or "08-security-cui" in d.get("url", "")
+            rs, rd = ("FAIL", "CUI path exposed to MC") if leak else ("PASS", "no CUI content in MC")
         elif path == "page reader":
             rs, rd = ("PASS" if (WS / "mission-control" / d["url"].lstrip("/").split("?")[0]).exists() else "FAIL"), "static page"
         else:
