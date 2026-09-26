@@ -2434,18 +2434,14 @@ const server = http.createServer((req, res) => {
   }
 
   // ── PROCESS LIBRARY documents (session-gated) ── serves files from the workspace
-  // process-library/ folder, EXCEPT Security/CUI (08), which is handled in GCC High and never
-  // served here. Path-traversal safe.
+  // process-library/ folder. Security/CUI (08) procedures are served too: they describe CUI
+  // handling but are not CUI/ITAR themselves (Jon 2026-09-26). Path-traversal safe.
   if (req.url.startsWith('/process-library/') && req.method === 'GET') {
     if (!getSession(req)) { res.writeHead(302, { Location: '/login' }); res.end(); return; }
     let rel = decodeURIComponent(req.url.replace(/^\/process-library\//, '').split('?')[0]).replace(/\\/g, '/');
     const base = path.join(__dirname, '..', 'process-library');
     const full = path.normalize(path.join(base, rel));
     if (!full.startsWith(base + path.sep)) { res.writeHead(403, { 'Content-Type': 'text/plain' }); res.end('bad path'); return; }
-    if (/(^|\/)08-security-cui(\/|$)/i.test(rel)) {
-      res.writeHead(403, { 'Content-Type': 'text/plain' });
-      res.end('CUI documents are handled in GCC High (CMMC boundary), not Mission Control.'); return;
-    }
     if (!fs.existsSync(full) || !fs.statSync(full).isFile()) { res.writeHead(404, { 'Content-Type': 'text/plain' }); res.end('not found'); return; }
     const ext = path.extname(full).toLowerCase();
     const ct = { '.pdf': 'application/pdf', '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -2480,7 +2476,6 @@ const server = http.createServer((req, res) => {
         const base = path.join(__dirname, '..', 'process-library');
         const full = path.normalize(path.join(base, rel));
         if (!full.startsWith(base + path.sep)) { res.writeHead(403, { 'Content-Type': 'text/html' }); res.end('<p>Bad path.</p>'); return; }
-        if (/(^|\/)08-security-cui(\/|$)/i.test(rel)) { res.writeHead(403, { 'Content-Type': 'text/html' }); res.end('<p>CUI documents are handled in GCC High (CMMC boundary), not Mission Control.</p>'); return; }
         if (!fs.existsSync(full) || !fs.statSync(full).isFile()) { res.writeHead(404, { 'Content-Type': 'text/html' }); res.end('<p>File not found.</p>'); return; }
         const ext = path.extname(full).toLowerCase();
         const cacheDir = path.join(__dirname, 'data', '.readcache'); fs.mkdirSync(cacheDir, { recursive: true });

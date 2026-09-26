@@ -46,8 +46,6 @@ def words(html):
 def render(doc):
     src = doc.get("file") or doc.get("url") or ""
     rel = src[len("/process-library/"):]
-    if "08-security-cui" in rel:
-        return "SKIP", "CUI — GCC High only (by design)"
     full = LIB / rel
     if not full.is_file():
         return "FAIL", f"file missing: {rel}"

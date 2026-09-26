@@ -1463,14 +1463,14 @@ const CUI_HTML=`<div style="border:1px solid #5a3030;background:#241618;border-r
     <li><b>Program:</b> managed under <b>CMMC 2.0</b> with <b>Atomus</b> (GCC High / Azure Gov); CUI-handling training + sign-off via Atomus.</li>
     <li><b>Marking:</b> we do <b>not</b> self-designate CUI — the government designates it. Exos trade-secret material is marked <b>"Proprietary — Unclassified,"</b> never CUI.</li>
   </ul>
-  <p style="margin:0;color:var(--text2);font-size:.85em">The Security/CUI procedures below are catalogued here for reference only — the controlled documents are opened in GCC High, not downloaded from Mission Control.</p>
+  <p style="margin:0;color:var(--text2);font-size:.85em">The Security/CUI <b>procedures</b> below describe how we handle CUI/ITAR — they are not CUI or ITAR themselves, so they open here like any other procedure. Actual CUI/ITAR material stays in GCC High.</p>
 </div>`;
 const fileCell=r=>(r.files&&r.files.length)
   ? r.files.map(f=>`<a class="dl" href="/process-library/${encodeURI(f)}" target="_blank" title="${(f.split('/').pop()||'').replace(/"/g,'')}" style="text-decoration:none;font-size:1.05em;margin-right:3px">📄</a>`).join('')
   : '<span style="color:var(--text2);font-style:italic;font-size:.85em">no document yet</span>';
-// Make the procedure NAME open its doc when there's exactly one (non-CUI) file — clicking the
+// Make the procedure NAME open its doc when there's exactly one file — clicking the
 // row name is what users reach for. Multi-file entries keep the per-file icons in the Files column.
-const procName=(r,isCUI)=>(!isCUI && r.files && r.files.length===1)
+const procName=(r)=>(r.files && r.files.length===1)
   ? `<a href="/process-library/${encodeURI(r.files[0])}" target="_blank" style="color:var(--text);text-decoration:none;border-bottom:1px dotted var(--accent,#7fd1ff)">${r.procedure}</a>`
   : r.procedure;
 const applyBtn=r=>r.apply_link?`<div style="margin-top:6px"><a href="${r.apply_link}" style="display:inline-block;background:linear-gradient(135deg,#0066cc,#ff6b00);color:#fff;text-decoration:none;font-size:.78rem;font-weight:700;border-radius:8px;padding:4px 12px">${r.apply_label||'Open →'}</a></div>`:'';
@@ -1499,7 +1499,7 @@ function render(q){
     html+=`<table><thead><tr><th>Doc #</th><th>Procedure</th><th>Rev</th><th>Status</th><th>Intl</th><th>Ack</th><th>Files</th></tr></thead><tbody>`;
     for(const r of rows){
       const flag=(r.status==='Needs Update'||r.status==='Rebuild')?` <span class="flag">⚠ ${r.remarks||''}</span>`:(r.remarks?` <span style="color:var(--text2);font-size:.75em">— ${r.remarks}</span>`:'');
-      const files=isCUI?'<span title="Access in GCC High, not Mission Control" style="color:#ff9b9b;font-size:.8em">🔒 GCC High</span>':fileCell(r);
+      const files=fileCell(r);
       html+=`<tr><td class="doc">${r.doc_no}</td><td>${procName(r,isCUI)}${flag}${applyBtn(r)}</td><td>${r.rev}</td><td>${badge(r.status)}</td><td>${r.intl_release==='Yes'?'🌐':'—'}</td><td>${r.ack_required?'✍️':'—'}</td><td class="files">${files}</td></tr>`;
     }
     html+='</tbody></table>';
