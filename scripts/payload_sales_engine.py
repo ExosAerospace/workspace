@@ -52,7 +52,7 @@ DISCORD_CHANNEL = "channel:1501636671492460554"  # #blk3-payload
 # launchd has a minimal PATH; resolve the openclaw binary explicitly (same
 # pattern as scripts/cron-failure-watchdog.py).
 OPENCLAW = shutil.which("openclaw") or \
-    "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+    "/Users/exomac/.local/share/mise/shims/openclaw"
 
 # Status vocabulary from the pipeline legend, ordered by funnel stage.
 STAGES = ["NEW", "RESEARCHING", "READY", "OUTREACH SENT", "IN DISCUSSION",

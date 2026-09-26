@@ -38,7 +38,7 @@ OLLAMA = "http://localhost:11434/api/generate"
 MODEL = "qwen3.6:35b-a3b"
 DM_TARGET = "user:1501632195163590739"
 OPENCLAW = shutil.which("openclaw") or \
-    "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+    "/Users/exomac/.local/share/mise/shims/openclaw"
 
 
 def now():

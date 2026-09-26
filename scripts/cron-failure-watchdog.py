@@ -36,7 +36,7 @@ THRESHOLD = 2
 
 # launchd has a minimal PATH; resolve the openclaw binary explicitly.
 OPENCLAW = shutil.which("openclaw") or \
-    "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+    "/Users/exomac/.local/share/mise/shims/openclaw"
 
 
 def now_iso():

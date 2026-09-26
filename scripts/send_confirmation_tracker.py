@@ -36,7 +36,7 @@ GRACE_DAYS = 2                                    # nudge if unsent this long
 NUDGE_MAX_DAYS = 21                               # don't nudge on ancient backlog (likely handled off-BCC)
 NUDGE_EVERY_HRS = 22
 OPENCLAW = shutil.which("openclaw") or \
-    "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+    "/Users/exomac/.local/share/mise/shims/openclaw"
 
 INTERNAL = re.compile(r"(exosaero\.com|jquinnexo@|exosmc@|@pm\.me|@proton\.me|noreply|no-reply|mailer-daemon)", re.I)
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")

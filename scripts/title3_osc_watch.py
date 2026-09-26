@@ -39,7 +39,7 @@ SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
 STATE = os.path.join(WS, "data", "title3_osc_watch_state.json")
 TO = "jquinn@exosaero.com"
 DISCORD_CHANNEL = "channel:1501636728711282741"   # #series-a
-OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/shims/openclaw"
 
 SAM_API = "https://api.sam.gov/opportunities/v2/search"
 GRANTS_API = "https://api.grants.gov/v1/api/search2"

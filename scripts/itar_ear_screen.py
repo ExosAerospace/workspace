@@ -37,7 +37,7 @@ except Exception:
 WS = "/Users/exomac/.openclaw/workspace"
 QLOG = os.path.join(WS, "logs", "itar-ear-quarantine.jsonl")
 DECISIONS_FILE = os.path.join(WS, "mission-control", "data", "decisions.json")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 JON_DISCORD = "1501632195163590739"
 
 # Layer 1 = genuine control MARKINGS only (the item declares/marks ITSELF controlled).

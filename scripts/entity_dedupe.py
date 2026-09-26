@@ -20,7 +20,7 @@ from collections import defaultdict
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
 K = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
 WS = os.path.expanduser("~/.openclaw/workspace")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 JON = "1501632195163590739"
 LOG = os.path.join(WS, "logs", "entity-dedupe.jsonl")
 APPLY = "--apply" in sys.argv

@@ -16,7 +16,7 @@ except Exception:
     ee = None
 
 WS = os.path.expanduser("~/.openclaw/workspace")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 CHANNEL = "channel:1501636814849577050"
 AGENDA = os.path.join(WS, "drafts", "MC_Work_Management_Meeting_Agenda.docx")
 FORCE = "--force" in sys.argv

@@ -30,7 +30,7 @@ DECISIONS = os.path.join(WS, "mission-control/data/decisions.json")
 OPPS = os.path.join(WS, "mission-control/data/opportunities.json")
 DRAFTS = os.path.join(WS, "drafts/payload-outreach-drafts.md")
 OPENCLAW = shutil.which("openclaw") or \
-    "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+    "/Users/exomac/.local/share/mise/shims/openclaw"
 DEAD = ("DROP", "DEAD", "LOST", "CLOSED", "KILL")
 
 

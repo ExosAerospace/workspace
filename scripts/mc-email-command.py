@@ -62,7 +62,7 @@ TASK_TO_ADDR = {"exosmc@pm.me", "exosmc@proton.me", "jquinnexo+do@pm.me", "exosm
 LOG_ADDR = {"jquinnexo@pm.me", "jquinnexo@proton.me", "exosmc@pm.me", "exosmc@proton.me",
             "jquinnexo+do@pm.me", "exosmc+do@proton.me"}
 JON_DISCORD = "1501632195163590739"
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 MAX_PER_RUN = int(os.environ.get("MCC_MAX_PER_RUN", "3"))
 # Matches @exo AND @exobot (+ common typos: exbot / exobto). Fires from the body regardless of line.
 EXOBOT_RE = re.compile(r'@\s*ex(?:o(?:bot|bto|boto|bott)?|bot)\b', re.I)

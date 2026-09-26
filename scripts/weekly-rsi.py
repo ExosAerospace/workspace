@@ -34,7 +34,7 @@ CAPMATRIX = os.path.join(DATA, "capability-matrix.json")
 WATCHDOG_LOG = os.path.join(WS, "logs", "cron-watchdog.log")
 REPORTS = os.path.join(WS, "reports")
 SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 JON = "1501632195163590739"
 
 

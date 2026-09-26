@@ -11,7 +11,7 @@ import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 WS = os.path.expanduser("~/.openclaw/workspace")
 LOGS = os.path.join(WS, "logs")
 REPORT = os.path.join(LOGS, "file-maintenance-report.txt")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 CHANNEL = "channel:1501636814849577050"
 KEY_FILES = ["exos-mission-control.md", "opportunities-tracker.md", "AGENTS.md", "MEMORY.md"]
 STALE_DAYS = 7

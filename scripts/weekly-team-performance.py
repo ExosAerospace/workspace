@@ -31,7 +31,7 @@ from email.message import EmailMessage
 WS = "/Users/exomac/.openclaw/workspace"
 USERS = os.path.join(WS, "mission-control", "users.json")
 SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
 JON_EMAIL = "jquinn@exosaero.com"
 JON_DISCORD = "1501632195163590739"

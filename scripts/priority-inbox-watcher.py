@@ -50,7 +50,7 @@ IMAP_HOST, IMAP_PORT = "127.0.0.1", 1143
 EMAIL_USER = "jquinnexo@pm.me"
 
 OPENCLAW = shutil.which("openclaw") or \
-    "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+    "/Users/exomac/.local/share/mise/shims/openclaw"
 
 
 def now_iso():

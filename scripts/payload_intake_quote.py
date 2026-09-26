@@ -25,7 +25,7 @@ IMAP_HOST, IMAP_PORT = "127.0.0.1", 1143
 EMAIL_USER = "jquinnexo@pm.me"
 LANE = {"info@exosaero.com", "exosmc@pm.me", "exosmc@proton.me", "jquinnexo@pm.me", "jquinnexo@proton.me"}
 STATE = os.path.join(WS, "logs", "payload-intake-state.json")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 JON = "1501632195163590739"
 APPLY = "--apply" in sys.argv
 

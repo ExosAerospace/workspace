@@ -39,7 +39,7 @@ def is_send_class(dec):
     return bool(_SEND_RX.search(blob))
 
 OPENCLAW = shutil.which("openclaw") or \
-    "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+    "/Users/exomac/.local/share/mise/shims/openclaw"
 
 EMAIL_RX = re.compile(r"^[^@\s]+@exosaero\.com$", re.IGNORECASE)
 

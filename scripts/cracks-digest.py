@@ -27,7 +27,7 @@ WS = "/Users/exomac/.openclaw/workspace"
 EVENTS = os.path.join(WS, "governance", "events.jsonl")
 LOG = os.path.join(WS, "logs", "cracks-digest.log")
 DISCORD_CHANNEL = "channel:1501636814849577050"  # #exomac-system
-OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/shims/openclaw"
 
 STALL_MIN = 30
 CADENCE_DAYS = int(os.environ.get("CD_CADENCE_DAYS", "14"))     # history window for cadence

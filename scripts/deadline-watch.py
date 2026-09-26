@@ -38,7 +38,7 @@ SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/tasks"
 LOG = os.path.join(WS, "logs", "deadline-watch.log")
 OLLAMA_URL = "http://localhost:11434/api/generate"
 LLM_MODEL = "qwen3.6:35b-a3b"
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 JON_DISCORD = "1501632195163590739"
 NEAR_DAYS = 21
 

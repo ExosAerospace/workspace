@@ -37,7 +37,7 @@ IMAP_HOST, IMAP_PORT, EMAIL_USER = "127.0.0.1", 1143, "jquinnexo@pm.me"
 INTERNAL_DOMAINS = {"exosaero.com", "pm.me", "proton.me"}
 JON_DISCORD = "user:1501632195163590739"
 OPENCLAW = shutil.which("openclaw") or \
-    "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+    "/Users/exomac/.local/share/mise/shims/openclaw"
 
 # Automated / marketing senders that are never real outreach replies (mirrors lead-auto-capture).
 NOREPLY = re.compile(

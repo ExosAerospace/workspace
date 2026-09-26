@@ -33,7 +33,7 @@ STATE = os.path.join(WS, "logs", "completion-watchdog-state.json")
 LOG = os.path.join(WS, "logs", "completion-watchdog.log")
 QUEUE = os.path.join(WS, "tasks", "exomac-system.md")
 DISCORD_CHANNEL = "channel:1501636814849577050"  # #exomac-system
-OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/shims/openclaw"
 
 STALL_MIN = int(os.environ.get("CW_STALL_MIN", "30"))     # start w/o end older than this = stalled
 LOOKBACK_H = int(os.environ.get("CW_LOOKBACK_H", "24"))    # only consider recent runs
@@ -41,7 +41,7 @@ MAX_ALERT = int(os.environ.get("CW_MAX_ALERT", "12"))      # cap items per alert
 TASK_STALL_MIN = int(os.environ.get("CW_TASK_STALL_MIN", "45"))  # running/queued task older than this = stalled
 # agents that legitimately run long / stream and should not be stall-flagged
 STALL_EXEMPT = {a for a in os.environ.get("CW_STALL_EXEMPT", "").split(",") if a}
-OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/shims/openclaw"
 
 
 def scan_tasks():

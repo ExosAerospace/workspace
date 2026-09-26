@@ -11,7 +11,7 @@ from email.message import EmailMessage
 WS = os.path.expanduser("~/.openclaw/workspace")
 MARK = os.path.join(WS, "logs", "crm-dd-announced.flag")
 FLAG = os.path.join(WS, "logs", "crm-dd-complete.flag")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 CHAN = "1501635980975804590"   # #general team channel
 TEAM = ["snorsworthy@exosaero.com", "peaton@exosaero.com", "lquinn@exosaero.com", "jquinn@exosaero.com"]
 FORCE = "--force" in sys.argv

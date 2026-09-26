@@ -21,7 +21,7 @@ MATRIX = os.path.join(WS, "config", "capability-matrix.json")
 # Dashboard/RSI read this stale copy; keep it in lockstep with the canonical config file.
 MIRROR = os.path.join(WS, "mission-control", "data", "capability-matrix.json")
 STATE = os.path.join(WS, "logs", "survey-ingest-state.json")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 JON = "1501632195163590739"
 APPLY = "--apply" in sys.argv
 

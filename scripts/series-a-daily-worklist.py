@@ -14,7 +14,7 @@ import dd_screen  # shared DD gate (CRM engine verdicts + do-not-engage blocklis
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 CRM = os.path.join(WS, "mission-control", "data", "crm.json")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 JON = "1501632195163590739"
 TOPN = 10
 SEND = "--send" in sys.argv
