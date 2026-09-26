@@ -30,7 +30,8 @@ MAX_MODEL_CALLS = 4              # bound per-run runtime; excess unresolved note
 ACTION = re.compile(r"\b(handle|take care of|manage|order|buy|purchase|procure|source|renew|prepare|"
                     r"draft|send|fix|schedule|call|contact|reach\s?out|follow\s?up|investigate|"
                     r"resolve|create|build|arrange|coordinate|set\s?up|research|file|submit|pay|book|"
-                    r"have\s+\w+)\b", re.I)
+                    r"have\s+\w+|analy[sz]e|evaluate|assess|review|model|compare|calculate|estimate|"
+                    r"quantify|rework|revise|redo|update|explain|summari[sz]e|recommend)\b", re.I)
 # High-confidence domain -> owner email (fast path before the model).
 DOMAIN = [
     (r"expense|invoice|reimburs|payment|payroll|budget|accounting|quickbooks|finance|\bap\b", "kballard@exosaero.com"),
@@ -97,6 +98,15 @@ def ollama_owner(note, roster, by_email):
     prompt = (f"You route Exos Aerospace action items to the single best owner. Team:\n{team}\n\n"
               f"Action item: \"{note}\"\n\nReply with ONLY the owner's email from the list, or the word "
               f"unsure. No other text.")
+    # ExO3 #3: prepend the confirmed MTP-as-protocol so owner-routing ladders to Exos's MTP +
+    # hard constraints + decision-priority (config/mtp-protocol.json).
+    try:
+        import os as _os, sys as _sys
+        _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+        import mtp as _mtp
+        prompt = _mtp.protocol_prompt() + "\n\n" + prompt
+    except Exception:
+        pass
     try:
         req = urllib.request.Request(OLLAMA, method="POST",
             data=json.dumps({"model": OLLAMA_MODEL, "prompt": prompt, "stream": False,
@@ -145,10 +155,17 @@ def main():
                  "body": f"[from decision {d['id']}] {note}", "owner": "Decisions note", "status": "completed"}); did.append("note")
             logline(f"{d['id']}: #{taskid} {did}"); state[d["id"]] = nh; acted += 1; continue
 
-        if not ACTION.search(note):                      # plain comment, not a directive
+        # An explicit "📝 Instruction" answer is ALWAYS a directive (a missing verb once dropped
+        # Jon's D-7281837 "Analyze it on the basis of..." note silently, 2026-09-26).
+        instr = "instruction" in str(d.get("answer") or "").lower()
+        if not instr and not ACTION.search(note):        # plain comment, not a directive
             state[d["id"]] = nh; continue
 
-        owner = explicit_name(note, roster) or domain_owner(note, by_email) or ollama_owner(note, roster, by_email)
+        # Exo-authored decisions: follow-up direction on Exo's own analysis comes back to Exo,
+        # not to a domain owner (e.g. an investor-dilution ask must not land on finance/AP).
+        exo_src = str(d.get("source") or "").lower().startswith("exo")
+        owner = (explicit_name(note, roster) or
+                 (None if exo_src else (domain_owner(note, by_email) or ollama_owner(note, roster, by_email))))
         if owner:
             mktask({"title": f"{note[:70]}", "owner": owner["name"], "assigned_email": owner["email"],
                     "assigned_to": owner["name"], "state": "To Do", "priority": 72, "category": "Decision",
