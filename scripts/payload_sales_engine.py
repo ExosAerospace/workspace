@@ -110,9 +110,11 @@ def parse_pipeline():
     for b in blocks[1:]:
         name = b.splitlines()[0].strip()
         status = None
-        m = re.search(r"\*\*Status:\*\*\s*([A-Z /]+)", b)
+        # Keep the whole status line: entries read "NEW → **READY** ✅ Draft R",
+        # and norm_stage() takes the LATEST stage named, not the first.
+        m = re.search(r"\*\*Status:\*\*\s*(.+)", b)
         if m:
-            status = m.group(1).strip().rstrip("/").strip()
+            status = m.group(1).strip()
         pm = re.search(r"\*\*POC:\*\*\s*(.+)", b)
         poc_txt = pm.group(1).strip() if pm else ""
         has_poc = bool(poc_txt) and "TBD" not in poc_txt.upper()
@@ -126,11 +128,49 @@ def parse_pipeline():
 
 
 def norm_stage(s):
+    # Status lines record transitions ("NEW → RESEARCHING → **READY**"); the stage
+    # is the last one named. (Reading only the first token froze the funnel at
+    # 50 NEW / 14 RESEARCHING / 2 READY while leads had actually moved on.)
     s = (s or "NEW").upper()
-    for stage in STAGES:
-        if s.startswith(stage):
-            return stage
-    return "NEW"
+    hits = [(m.start(), stage) for stage in STAGES
+            for m in re.finditer(r"\b" + re.escape(stage) + r"\b", s)]
+    return max(hits)[1] if hits else "NEW"
+
+
+# --- UTD capstone lead cards ---------------------------------------------------
+# Each lead assigned to a student is a Supabase task tagged "utd-lead" plus
+# "lead:<pipeline heading prefix>". The card's board column IS the stage the
+# student reports: In Progress = RESEARCHING, Done = READY (student-verified).
+# Overlaid on the pipeline's own status, never downgrading it.
+SB_REST = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
+CARD_STAGE = {"In Progress": "RESEARCHING", "Done": "READY"}
+
+
+def fetch_lead_cards():
+    try:
+        key = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
+        req = urllib.request.Request(
+            SB_REST + "/tasks?select=id,state,owner,tags&tags=cs.%7Butd-lead%7D",
+            headers={"apikey": key, "Authorization": "Bearer " + key})
+        return json.load(urllib.request.urlopen(req, timeout=20))
+    except Exception as e:
+        glog("lead-cards", status="error", detail=str(e)[:120])
+        return []
+
+
+def apply_lead_cards(records, cards):
+    for c in cards:
+        key = next((t[5:] for t in (c.get("tags") or []) if t.startswith("lead:")), None)
+        if not key:
+            continue
+        for r in records:
+            if r["name"].startswith(key):
+                r["owner"] = c.get("owner")
+                r["card"] = c.get("id")
+                card_stage = CARD_STAGE.get(c.get("state"))
+                if card_stage and STAGES.index(card_stage) > STAGES.index(norm_stage(r["status"])):
+                    r["status"] = card_stage + " (student card #%s)" % c.get("id")
+    return records
 
 
 def score_prospect(rec):
@@ -184,9 +224,14 @@ def write_student_queue(records):
     ranked = []
     for r in workable:
         sc, why, action = score_prospect(r)
-        ranked.append({"name": r["name"][:80], "stage": norm_stage(r["status"]),
-                       "score": sc, "has_poc": bool(r.get("has_poc")),
-                       "why": why, "next_action": action})
+        item = {"name": r["name"][:80], "stage": norm_stage(r["status"]),
+                "score": sc, "has_poc": bool(r.get("has_poc")),
+                "why": why, "next_action": action}
+        if r.get("owner"):
+            item["owner"] = r["owner"]
+            item["card"] = r.get("card")
+            item["next_action"] = f"{r['owner']} — work card #{r.get('card')} on your board"
+        ranked.append(item)
     ranked.sort(key=lambda x: x["score"], reverse=True)
     for i, item in enumerate(ranked, 1):
         item["rank"] = i
@@ -204,12 +249,12 @@ def write_student_queue(records):
     }
     d["funnel_explainer"] = [
         {"stage": "NEW", "meaning": "Freshly sourced lead — not yet worked. No point-of-contact, no research. Your job: pick it up and start."},
-        {"stage": "RESEARCHING", "meaning": "Being worked — finding the named point-of-contact, their active programs, and funding that could pay for a flight."},
-        {"stage": "READY", "meaning": "Fully worked — POC found AND a tailored outreach draft written. Exos (Lizi) reviews and sends. Your goal is to move leads to here."},
+        {"stage": "RESEARCHING", "meaning": "Being worked. Most leads here already have an AI-written first draft that no human has verified yet. Drag your lead card to In Progress when you start."},
+        {"stage": "READY", "meaning": "Verified by a person: POC confirmed current, facts checked, draft corrected. Drag your lead card to Done. Sunidhi spot-checks it, then Lizi reviews and sends."},
     ]
-    d["work_queue_note"] = ("Work this list top-down — it is ranked by opportunity quality "
-                            "(funding signal, a named POC, and leverage), so the leads most "
-                            "likely to convert are first. Move each NEW → RESEARCHING → READY.")
+    d["work_queue_note"] = ("Your assigned leads are cards on your Payload Sales board. Work those first; "
+                            "each card has the steps. This list is ranked by opportunity quality "
+                            "(funding signal, named POC, leverage). Unassigned leads go to Roel to hand out.")
     d["work_queue"] = ranked[:30]
     tmp = CAPSTONE_JSON + ".tmp"
     json.dump(d, open(tmp, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
@@ -404,6 +449,8 @@ def main():
     ap.add_argument("--no-draft", action="store_true", help="skip the model draft step")
     ap.add_argument("--draft-only", action="store_true",
                     help="only run the best-effort drafting step, then exit")
+    ap.add_argument("--queue-only", action="store_true",
+                    help="only refresh the capstone tracker funnel + queue, then exit")
     ap.add_argument("--limit", type=int, default=DRAFT_LIMIT_DEFAULT,
                     help="max new drafts per run")
     args = ap.parse_args()
@@ -411,6 +458,13 @@ def main():
     glog("start", status="info", detail="dry" if args.dry_run else "live")
     records = parse_pipeline()
     glog("parse", status="info", detail=f"{len(records)} prospects")
+    apply_lead_cards(records, fetch_lead_cards())
+
+    # Lightweight refresh of the students' tracker only (hourly launchd job).
+    if args.queue_only:
+        ok = write_student_queue(records)
+        print("queue refreshed" if ok else "queue refresh failed")
+        return 0 if ok else 1
 
     # Refresh the students' prioritized work queue + funnel on the capstone tracker.
     if not args.dry_run:
