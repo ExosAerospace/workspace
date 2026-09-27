@@ -52,7 +52,9 @@ settext(s, 'TextBox 15', 'Roll into an Exos U.S. liquidity event: Series A close
 s = S[6]
 settext(s, 'TextBox 13', 'Seeking Japanese technical partners for licensed production of TRL-9 Type-5 '
                          'tanks in Japan. BLK3-for-Japan production commences upon international '
-                         'approvals (incl. U.S. export).')
+                         'approvals (incl. U.S. export), with potential reallocation of U.S. BLK3 '
+                         'assets to match the speed of those approvals.')
 shape(s, 'TextBox 13').width = Inches(5.34)
+shape(s, 'TextBox 13').text_frame.paragraphs[0].runs[0].font.size = Pt(11.5)  # 4 lines fit the card
 
 prs.save(OUT); print('SAVED', OUT)
