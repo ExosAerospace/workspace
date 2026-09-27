@@ -161,7 +161,7 @@ ty=3.55
 t=tb(s,ux,ty,8.1,0.35); para(t,"PATH TO RETURNS — GROW, THEN EXIT",11,MUTE,True,first=True)
 steps=[("SEED (now)","Fund Japan stand-up + first wet-lease flights"),
        ("SCALE","Recurring revenue: wet-lease flights · Type-5 tank & engine sales · verification & consulting"),
-       ("EXIT","Roll into an Exos U.S. liquidity event: Series A close (raising now), public listing, or acquisition. Horizon ~3+ yrs.")]
+       ("EXIT","Liquidity paths: acquisition of the K.K. stake by Exos U.S. or a strategic buyer, or a K.K.-level listing. Horizon ~3+ yrs.")]
 sw=2.55; sg=0.18; sx=ux
 for i,(hd,bd) in enumerate(steps):
     x=sx+i*(sw+sg)
@@ -178,6 +178,7 @@ t=tb(s,0.95,by+0.16,11.6,0.35); para(t,[("ALSO ON THE TABLE — non-dilutive lay
 chip(s,0.95,by+0.55,3.6,"Payload pre-sales — reserve BLK3 flight capacity",PANEL2,GREY,ORANGED)
 chip(s,4.75,by+0.55,3.6,"Crowdfunding — community & fan participation",PANEL2,GREY,ORANGED)
 chip(s,8.55,by+0.55,3.9,"Staged equity rounds — realistic financing",PANEL2,GREY,ORANGED)
+t=tb(s,0.66,6.86,12,0.3); para(t,"Not an offer of securities of Exos Aerospace Systems & Technologies, Inc. Any offering by Exos Aerospace Japan K.K. will be made only through definitive documents to eligible investors.",8.5,MUTE,False,first=True)
 
 # ============================================================ SLIDE 6 — TRACTION (milestone tiles)
 s=slide(); chrome(s,"Traction & the path forward",kick="Real signal, on the ground")
@@ -190,7 +191,7 @@ def milestone(x,y,tag,title,body):
 milestone(gx,gy,"DEMAND","LOI + inbound inquiry","Letter of intent for a fuel-tank order from a Japanese space-development company; an engine-specification inquiry as well.")
 milestone(gx+mw+gp,gy,"PARTNER","HOSPO discussions underway","Collaboration talks in progress with Hokkaido Spaceport (HOSPO / Space Cotan).")
 milestone(gx,gy+mh+gp,"IN-PERSON","CEO in Japan — October 2026","John Quinn will meet HOSPO, the LOI client, other space-development companies, and prospective investors.")
-milestone(gx+mw+gp,gy+mh+gp,"LOCALIZE","JP production partners","Seeking Japanese technical partners for licensed production of TRL-9 Type-5 tanks in Japan. BLK3-for-Japan production commences upon international approvals (incl. U.S. export).")
+milestone(gx+mw+gp,gy+mh+gp,"LOCALIZE","JP production partners","Seeking Japanese technical partners for licensed production of TRL-9 Type-5 tanks in Japan. BLK3-for-Japan production commences upon international approvals (incl. U.S. export), with potential reallocation of U.S. BLK3 assets to match the speed of those approvals.")
 
 # ============================================================ SLIDE 7 — THANK YOU
 s=slide(); herobg(s)

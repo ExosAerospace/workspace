@@ -139,7 +139,7 @@ ty=3.55
 s+=box(ux,ty,8.1,0.35,"mut","font-size:11px;font-weight:700;","PATH TO RETURNS — GROW, THEN EXIT")
 steps=[("SEED (now)","Fund Japan stand-up + first wet-lease flights"),
        ("SCALE","Recurring revenue: wet-lease flights · Type-5 tank &amp; engine sales · verification &amp; consulting"),
-       ("EXIT",'Roll into an Exos U.S. liquidity event: Series A close (raising now), public listing, or acquisition. Horizon ~3+ yrs.')]
+       ("EXIT",'Liquidity paths: acquisition of the K.K. stake by Exos U.S. or a strategic buyer, or a K.K.-level listing. Horizon ~3+ yrs.')]
 sw=2.55;sg=0.18
 for i,(hd,bd) in enumerate(steps):
     x=ux+i*(sw+sg)
@@ -156,6 +156,7 @@ s+=box(0.95,by+0.16,11.6,0.35,"","font-size:11.5px;",'<span class="org" style="f
 s+=chip(0.95,by+0.55,3.6,"Payload pre-sales — reserve BLK3 flight capacity",True)
 s+=chip(4.75,by+0.55,3.6,"Crowdfunding — community &amp; fan participation",True)
 s+=chip(8.55,by+0.55,3.9,"Staged equity rounds — realistic financing",True)
+s+=box(0.66,6.86,12,0.3,"","font-size:8.5px;color:#8a8f98;font-style:italic;","Not an offer of securities of Exos Aerospace Systems &amp; Technologies, Inc. Any offering by Exos Aerospace Japan K.K. will be made only through definitive documents to eligible investors.")
 slides.append(s)
 
 # SLIDE 6 traction
@@ -170,7 +171,7 @@ def mile(x,y,tag,title,body):
 s+=mile(gx,gy,"DEMAND","LOI + inbound inquiry","Letter of intent for a fuel-tank order from a Japanese space-development company; an engine-specification inquiry as well.")
 s+=mile(gx+mw+gp,gy,"PARTNER","HOSPO discussions underway","Collaboration talks in progress with Hokkaido Spaceport (HOSPO / Space Cotan).")
 s+=mile(gx,gy+mh+gp,"IN-PERSON","CEO in Japan — October 2026","John Quinn will meet HOSPO, the LOI client, other space-development companies, and prospective investors.")
-s+=mile(gx+mw+gp,gy+mh+gp,"LOCALIZE","JP production partners",'Seeking Japanese technical partners for licensed production of TRL-9 Type-5 tanks in Japan. BLK3-for-Japan production commences upon international approvals (incl. U.S. export).')
+s+=mile(gx+mw+gp,gy+mh+gp,"LOCALIZE","JP production partners",'Seeking Japanese technical partners for licensed production of TRL-9 Type-5 tanks in Japan. BLK3-for-Japan production commences upon international approvals (incl. U.S. export), with potential reallocation of U.S. BLK3 assets to match the speed of those approvals.')
 slides.append(s)
 
 # SLIDE 7 thank you

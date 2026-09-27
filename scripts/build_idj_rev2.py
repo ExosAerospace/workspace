@@ -45,8 +45,22 @@ settext(s, 'TextBox 32', 'at ~¥157 / US$ (27 Sep 2026)', color_from='TextBox 39
 
 # Slide 6 — exit line
 s = S[5]
-settext(s, 'TextBox 15', 'Roll into an Exos U.S. liquidity event: Series A close (raising now), '
-                         'public listing, or acquisition. Horizon ~3+ years.', color_from='TextBox 11')
+settext(s, 'TextBox 15', 'Liquidity paths: acquisition of the K.K. stake by Exos U.S. or a strategic '
+                         'buyer, or a K.K.-level listing. Horizon ~3+ years.', color_from='TextBox 11')
+
+# Securities disclaimer (Jon 9/27): K.K. raise stays separate from the U.S. parent's Reg D 504 offering
+DISCLAIMER = ('Not an offer of securities of Exos Aerospace Systems & Technologies, Inc. Any offering by '
+              'Exos Aerospace Japan K.K. will be made only through definitive documents to eligible investors.')
+for si in (4, 5):
+    sl = S[si]
+    el = copy.deepcopy(shape(sl, 'TextBox 3')._element); sl.shapes._spTree.append(el)
+    d = sl.shapes[-1]; d.name = 'Securities disclaimer'
+    d.left, d.top, d.width, d.height = Inches(0.65), Inches(6.78), Inches(11.5), Inches(0.25)
+    tf = d.text_frame
+    for pp in list(tf.paragraphs[1:]): pp._p.getparent().remove(pp._p)
+    rr = tf.paragraphs[0].runs
+    for r in rr[1:]: r._r.getparent().remove(r._r)
+    rr[0].text = DISCLAIMER; rr[0].font.size = Pt(8.5); rr[0].font.italic = True
 
 # Slide 7 — BLK3-for-Japan status
 s = S[6]
