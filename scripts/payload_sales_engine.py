@@ -33,6 +33,8 @@ import os
 import re
 import sys
 import json
+import time
+import signal
 import shutil
 import datetime
 import subprocess
@@ -66,6 +68,7 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 DRAFT_MODEL = "qwen3.6:35b-a3b"
 DRAFT_TIMEOUT = 240         # seconds; generous enough to cover a cold weight-load
 DRAFT_LIMIT_DEFAULT = 3     # max new drafts per run (bounds runtime)
+DRAFT_BUDGET = 600          # seconds; total wall-clock cap across all drafts in a run
 
 DRAFT_SYSTEM = (
     "You write concise B2B outreach emails for Exos Aerospace's BLK3 suborbital "
@@ -360,7 +363,11 @@ def draft_prospects(records, limit):
     written = 0
     today = datetime.date.today().isoformat()
     os.makedirs(os.path.dirname(DRAFTS), exist_ok=True)
+    t0 = time.monotonic()
     for r in cands[:limit]:
+        if time.monotonic() - t0 > DRAFT_BUDGET:
+            glog("draft", status="info", detail=f"budget {DRAFT_BUDGET}s hit; deferring rest")
+            break
         try:
             body = ollama_draft(r["block"])
             if not body:
@@ -442,7 +449,15 @@ def post_discord(text):
         return False
 
 
+def _on_kill(signum, _frame):
+    # Close the run in the event log so a killed run reads as killed, not hung.
+    glog("end", status="error", detail=f"killed by signal {signum}")
+    sys.exit(128 + signum)
+
+
 def main():
+    for _sig in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):
+        signal.signal(_sig, _on_kill)
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true",
                     help="no bridge write, no draft, no post; print summary")
