@@ -58,3 +58,8 @@ logs/receiving-capture-queue.jsonl
 # MC durable write queue (transient) + live table snapshots (runtime backups)
 mission-control/data/outbox.jsonl
 mission-control/data/*-snapshot-latest.json
+
+# MC Guard (2026-09-26): secrets + live lockout state never go in git
+mission-control/data/.guard-secret
+mission-control/data/.guard-admin-token
+mission-control/data/guard-state.json

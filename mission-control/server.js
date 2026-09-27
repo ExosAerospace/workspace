@@ -1017,6 +1017,10 @@ function getSession(req) {
   return null;
 }
 
+// MC Guard — tripwires, behavior scoring, lockout, traceable downloads (lib/guard.js, Jon 9/26).
+const guard = require('./lib/guard');
+guard.init({ get sessions() { return sessions; }, saveSessions, loadUsers, saveUsers });
+
 // ── SEGREGATED DOCUSIGN ENTRY ──────────────────────────────────────────────
 // A public link (/docusign) gated by its OWN passcode, granting access ONLY to
 // the document send/assign actions — fully isolated from CRM, admin, tasks,
@@ -1170,6 +1174,22 @@ const server = http.createServer((req, res) => {
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
     res.end();
+    return;
+  }
+
+  // MC Guard runs before everything else: blocklist, tripwires, behavior scoring.
+  if (guard.check(req, res, getSession(req))) return;
+
+  // Jon-only guard controls: status + unlock (nobody else can release a lockout).
+  if (req.url.split('?')[0] === '/api/admin/guard/status' || req.url.split('?')[0] === '/api/admin/guard/unlock') {
+    const gs = getSession(req);
+    const onBox = guard.isOnBoxAdmin(req);
+    if (!onBox && (!gs || !guard.JON_EMAILS.has((gs.email || '').toLowerCase()))) { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end('{"error":"Forbidden"}'); return; }
+    if (req.method === 'GET') { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(guard.status())); return; }
+    let body = ''; req.on('data', c => body += c); req.on('end', async () => {
+      try { const { key } = JSON.parse(body || '{}'); const r = await guard.unlock(key, gs ? gs.email : 'exo (on Jon instruction, on-box)'); res.writeHead(r.ok ? 200 : 404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(r)); }
+      catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+    });
     return;
   }
 
@@ -1716,7 +1736,9 @@ const server = http.createServer((req, res) => {
       const ct = types[ext] || 'application/octet-stream';
       const disp = ext === '.pdf' ? 'inline' : 'attachment';
       res.writeHead(200, { 'Content-Type': ct, 'Content-Disposition': `${disp}; filename="${safe}"` });
-      fs.createReadStream(fpath).pipe(res);
+      const traced = guard.traceBuffer(fs.readFileSync(fpath), ext, s, req, 'dataroom/' + safe);
+      res._guardBytes = traced.length;
+      res.end(traced);
     } catch (e) { res.writeHead(500); res.end('error'); }
     return;
   }
@@ -4551,7 +4573,14 @@ const server = http.createServer((req, res) => {
           'Content-Type': 'application/pdf',
           'Content-Disposition': safeContentDisposition(origBase + '.pdf', 'inline'),
         });
-        fs.createReadStream(pdfPath).on('error', () => { try { res.end(); } catch (e) {} }).pipe(res);
+        // Trace-mark the served copy (small/typical PDFs); very large renditions still stream.
+        if (fs.statSync(pdfPath).size < 80 * 1024 * 1024) {
+          fs.readFile(pdfPath, (err, buf) => {
+            if (err) { try { res.end(); } catch (e) {} return; }
+            const traced = guard.traceBuffer(buf, '.pdf', getSession(req), req, fileName);
+            res._guardBytes = traced.length; res.end(traced);
+          });
+        } else fs.createReadStream(pdfPath).on('error', () => { try { res.end(); } catch (e) {} }).pipe(res);
       } else {
         // Conversion not possible — serve original inline as a fallback.
         res.writeHead(200, { 'Content-Type': 'application/octet-stream', 'Content-Disposition': safeContentDisposition(fileName, 'inline') });
@@ -4593,7 +4622,9 @@ const server = http.createServer((req, res) => {
         'Content-Type': mimeTypes[ext] || 'application/octet-stream',
         'Content-Disposition': safeContentDisposition(origName, inlineOk ? 'inline' : 'attachment'),
       });
-      res.end(fs.readFileSync(filePath));
+      const traced = guard.traceBuffer(fs.readFileSync(filePath), ext, getSession(req), req, fileName);
+      res._guardBytes = traced.length;
+      res.end(traced);
     } else {
       res.writeHead(404); res.end('Not Found');
     }
@@ -5502,6 +5533,7 @@ const server = http.createServer((req, res) => {
           const bi = html.lastIndexOf('</body>');
           html = bi !== -1 ? html.slice(0, bi) + tag + '\n' + html.slice(bi) : html + tag;
         }
+        html = guard.injectBait(html);
         res.writeHead(200, { 'Content-Type': 'text/html', 'Cache-Control': 'no-store, must-revalidate' });
         res.end(html);
       } else {

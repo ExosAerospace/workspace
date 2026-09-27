@@ -1,6 +1,6 @@
 {
   "generated": "2026-09-25T23:19:20.307166-05:00",
-  "total": 148,
+  "total": 150,
   "standing": 112,
   "ephemeral": 18,
   "service": 5,
@@ -2636,6 +2636,42 @@
       "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 + staleness vs cadence); FAIL escalates to system channel",
       "telemetry": "launchd stdout/err logs (wrapper --source launchd)",
       "reusability_scope": "asset backup jobs"
+    },
+    {
+      "label": "com.exos.mc-guard-weekly",
+      "script": "mc_guard.py",
+      "kind": "recurring",
+      "schedule": "weekly Sat 08:00",
+      "purpose": "Weekly MC Guard report: top data users (7d), locked identities, evidence-chain integrity, and watch-mode threshold tuning numbers for Jon's approval.",
+      "stack_layer": "GOVERN/ASSURE",
+      "autonomy_tier": "Notify-only",
+      "human_owner": "John Quinn",
+      "permission_envelope": "read logs/mc-guard/* + GET /api/admin/guard/status (loopback token); DM Jon only; cannot lock, unlock, or change thresholds",
+      "memory_boundary": "reads guard hourly aggregates + evidence log; writes launchd log only",
+      "escalation": "DM Jon weekly; broken evidence chain or selftest FAIL flagged red + non-zero exit → agent_eval FAIL",
+      "eval_suite": "mc_guard.py selftest (robots bait, status API, tripwire 404, evidence hash chain) + agent_eval hourly liveness (config/agent-evals.json)",
+      "telemetry": "logs/mc-guard-weekly.launchd.log",
+      "reusability_scope": "access-monitoring reports",
+      "risk_tier": "LOW",
+      "envelope_source": "Jon approval 2026-09-26 (MC anti-scraping build)"
+    },
+    {
+      "label": "com.exos.missioncontrol:mc-guard",
+      "script": "mission-control/lib/guard.js",
+      "kind": "service",
+      "schedule": "in-process (every MC request)",
+      "purpose": "MC anti-scraping/exfiltration guard: tripwires (enforced), per-identity behavior scoring (watch-only until Jon approves thresholds), lockout, traceable downloads, hash-chained evidence log.",
+      "stack_layer": "GOVERN/ASSURE",
+      "autonomy_tier": "Execute-within-bounds",
+      "human_owner": "John Quinn",
+      "permission_envelope": "may deactivate a NON-exempt MC user, kill their sessions, remove their email from the Cloudflare 'approved users' policy + revoke their Access sessions; NEVER Jon or on-box automation (alert only); behavior-score lockouts only when scoring_mode=enforce (Jon-approved); unlock is Jon-only (session or on-box token on his instruction)",
+      "memory_boundary": "reads request metadata; writes data/guard-state.json, users.json (active flag only), sessions, logs/mc-guard/*",
+      "escalation": "Every lockout → immediate Discord DM to Jon with evidence; watch-mode HIGH scores → DM tagged watch-only",
+      "eval_suite": "mc_guard.py selftest (weekly + on demand); sandboxed harness test 2026-09-26 (tripwire lockout, exemptions, watch vs enforce, unlock, trace marks valid)",
+      "telemetry": "logs/mc-guard/{evidence,hourly,trace-ledger}.jsonl",
+      "reusability_scope": "any session-gated internal web app",
+      "risk_tier": "HIGH",
+      "envelope_source": "Jon approval 2026-09-26 ('build it — no ack doc required')"
     }
   ],
   "eval_wave_1": {
