@@ -109,10 +109,11 @@ Write-Host 'Connected.' -ForegroundColor Green
 Write-Host ''
 
 # --- Remove existing rule with the same name (safe to re-run) ----------------
-$existing = Get-TransportRule -Identity $RuleName -ErrorAction SilentlyContinue
-if ($existing) {
-    Write-Host "Removing existing rule '$RuleName'..." -ForegroundColor Yellow
-    Remove-TransportRule -Identity $RuleName -Confirm:$false
+# Match the base name AND the '(domains)' / '(addresses)' split rules created below.
+$existing = Get-TransportRule | Where-Object { $_.Name -like "$RuleName*" }
+foreach ($r in $existing) {
+    Write-Host "Removing existing rule '$($r.Name)'..." -ForegroundColor Yellow
+    Remove-TransportRule -Identity $r.Identity -Confirm:$false
 }
 
 # --- Build condition hash (domains and/or full addresses) --------------------
