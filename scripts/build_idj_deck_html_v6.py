@@ -123,12 +123,12 @@ s=chrome("The investment opportunity","Slide 5 · structured round · returns ·
 ax,ay,aw,ah=0.66,1.95,3.55,3.05
 s+=box(ax,ay,aw,ah,"panel")
 s+=f'<div class="spine" style="left:{px(ax)}px;top:{px(ay)}px;width:{px(aw)}px;height:{px(0.09)}px;"></div>'
-s+=box(ax+0.3,ay+0.28,aw-0.6,0.4,"mut","font-size:11px;font-weight:700;","SEED ROUND — INTO THE K.K.")
+s+=box(ax+0.3,ay+0.28,aw-0.6,0.4,"mut","font-size:11px;font-weight:700;","JAPAN ROUND — VIA EXOS U.S.")
 s+=box(ax+0.3,ay+0.66,aw-0.6,0.9,"num","","¥790M")
 s+=box(ax+0.3,ay+1.5,aw-0.6,0.4,"org","font-size:12.5px;font-weight:700;",'≈ US$5.0M target&nbsp;&nbsp;(at ~¥157 / US$)')
 s+=box(ax+0.3,ay+1.95,aw-0.6,1.0,"","",
-       '<div class="gry" style="font-size:12.5px;line-height:1.1;">Capital goes into the Japan entity — the U.S. parent keeps majority + control.</div>'
-       '<div class="mut" style="font-size:12px;margin-top:6px;line-height:1.1;">Clean for both Japan FDI (FEFTA) and U.S. (CFIUS).</div>')
+       '<div class="gry" style="font-size:12.5px;line-height:1.1;">Invest through the Exos U.S. offering vehicle; proceeds fund the Japan K.K. build-out.</div>'
+       '<div class="mut" style="font-size:12px;margin-top:6px;line-height:1.1;">Exos Aerospace Japan K.K. is a wholly-owned subsidiary of Exos U.S.</div>')
 ux=4.5;uy=1.9
 s+=box(ux,uy,8.1,0.35,"mut","font-size:11px;font-weight:700;","USE OF FUNDS")
 uf=["Stand up Japan operations","Secure a wet-lease BLK3 for HOSPO","Open the Japan office (2026)","Build the local team"]
@@ -137,9 +137,9 @@ for i,label in enumerate(uf):
     cx=ccols[i%2];cy=uy+0.38+(i//2)*0.6;s+=chip(cx,cy,cwid[i%2] if i%2 else cwid[0],label)
 ty=3.55
 s+=box(ux,ty,8.1,0.35,"mut","font-size:11px;font-weight:700;","PATH TO RETURNS — GROW, THEN EXIT")
-steps=[("SEED (now)","Fund Japan stand-up + first wet-lease flights"),
+steps=[("ROUND (now)","Fund Japan stand-up + first wet-lease flights"),
        ("SCALE","Recurring revenue: wet-lease flights · Type-5 tank &amp; engine sales · verification &amp; consulting"),
-       ("EXIT",'Liquidity paths: acquisition of the K.K. stake by Exos U.S. or a strategic buyer, or a K.K.-level listing. Horizon ~3+ yrs.')]
+       ("EXIT",'Liquidity through an Exos U.S. event: public listing or acquisition. Horizon ~3+ yrs.')]
 sw=2.55;sg=0.18
 for i,(hd,bd) in enumerate(steps):
     x=ux+i*(sw+sg)
@@ -156,7 +156,7 @@ s+=box(0.95,by+0.16,11.6,0.35,"","font-size:11.5px;",'<span class="org" style="f
 s+=chip(0.95,by+0.55,3.6,"Payload pre-sales — reserve BLK3 flight capacity",True)
 s+=chip(4.75,by+0.55,3.6,"Crowdfunding — community &amp; fan participation",True)
 s+=chip(8.55,by+0.55,3.9,"Staged equity rounds — realistic financing",True)
-s+=box(0.66,6.86,12,0.3,"","font-size:8.5px;color:#8a8f98;font-style:italic;","Not an offer of securities of Exos Aerospace Systems &amp; Technologies, Inc. Any offering by Exos Aerospace Japan K.K. will be made only through definitive documents to eligible investors.")
+s+=box(0.66,6.86,12,0.3,"","font-size:8.5px;color:#8a8f98;font-style:italic;","This presentation is not an offer to sell or a solicitation of an offer to buy securities. Any offering will be made only through definitive offering documents to eligible investors.")
 slides.append(s)
 
 # SLIDE 6 traction
