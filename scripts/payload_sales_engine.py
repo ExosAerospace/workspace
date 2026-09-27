@@ -478,6 +478,8 @@ def main():
     # Lightweight refresh of the students' tracker only (hourly launchd job).
     if args.queue_only:
         ok = write_student_queue(records)
+        glog("end", status="info" if ok else "error",
+             detail="queue-only: refreshed" if ok else "queue-only: refresh failed")
         print("queue refreshed" if ok else "queue refresh failed")
         return 0 if ok else 1
 
