@@ -43,29 +43,28 @@ settext(s, 'TextBox 30', '¥790M')
 settext(s, 'TextBox 31', '≈ US$5.0M target')
 settext(s, 'TextBox 32', 'at ~¥157 / US$ (27 Sep 2026)', color_from='TextBox 39')
 settext(s, 'TextBox 2', 'A structured raise to build Exos Aerospace Japan')
-settext(s, 'TextBox 3', 'Investors invest through the Exos U.S. offering vehicle; proceeds fund the build-out of '
+settext(s, 'TextBox 3', 'Investors buy units in Exos Aerospace Investments, LLC (offshore Reg S); proceeds fund '
                         'Exos Aerospace Japan (K.K.), a wholly-owned subsidiary.')
-settext(s, 'TextBox 29', 'JAPAN ROUND — VIA EXOS U.S.')
-settext(s, 'TextBox 34', 'Japan round now via Exos U.S.  →  proceeds fund the K.K. build-out  →  growth as Japan '
+settext(s, 'TextBox 29', 'JAPAN ROUND — REG S, VIA EAI LLC')
+settext(s, 'TextBox 34', 'Offshore Reg S round into EAI LLC now  →  proceeds fund the K.K. build-out  →  growth as Japan '
                          'revenue scales. Priced off the Exos U.S. valuation.')
-settext(s, 'TextBox 53', 'Exos Aerospace Japan K.K. is a wholly-owned subsidiary of Exos U.S., modeled on the '
-                         'established Exos Aerospace Italia subsidiary. Investors hold a minority interest in Exos U.S.')
+settext(s, 'TextBox 53', 'Investors hold units in Exos Aerospace Investments, LLC, which holds a minority interest in Exos U.S. '
+                         'Exos Aerospace Japan K.K. is a wholly-owned subsidiary of Exos U.S., modeled on Exos Aerospace Italia.')
 
 # Slide 6 — exit line
 s = S[5]
-settext(s, 'TextBox 15', 'Liquidity through an Exos U.S. event: public listing or acquisition. '
+settext(s, 'TextBox 15', 'Liquidity through an Exos U.S. event (public listing or acquisition), realized via EAI LLC. '
                          'Horizon ~3+ years.', color_from='TextBox 11')
 settext(s, 'TextBox 6', 'ROUND (NOW)')
 
-# Securities disclaimer (Jon 9/27): K.K. raise stays separate from the U.S. parent's Reg D 504 offering
-DISCLAIMER = ('This presentation is not an offer to sell or a solicitation of an offer to buy securities. '
-              'Any offering will be made only through definitive offering documents to eligible investors.')
+# Securities disclaimer (Jon 9/27): Japan round = sale of EAI LLC units, offshore Reg S, separate from the U.S. Rule 504 offering
+DISCLAIMER = 'Not an offer to sell or a solicitation of an offer to buy securities. Units of Exos Aerospace Investments, LLC are offered only to non-U.S. persons in offshore transactions under Regulation S, separate from any U.S. offering, and only through definitive offering documents. Not registered under the U.S. Securities Act; may not be offered or sold in the U.S. or to U.S. persons absent registration or an exemption.'
 for si in (4, 5):
     sl = S[si]
     el = copy.deepcopy(shape(sl, 'TextBox 3')._element); sl.shapes._spTree.append(el)
     d = sl.shapes[-1]; d.name = 'Securities disclaimer'
-    d.left, d.top, d.width, d.height = Inches(0.65), Inches(6.78), Inches(11.5), Inches(0.25)
-    tf = d.text_frame
+    d.left, d.top, d.width, d.height = Inches(0.65), Inches(6.62), Inches(11.5), Inches(0.45)
+    tf = d.text_frame; tf.word_wrap = True
     for pp in list(tf.paragraphs[1:]): pp._p.getparent().remove(pp._p)
     rr = tf.paragraphs[0].runs
     for r in rr[1:]: r._r.getparent().remove(r._r)
