@@ -2958,11 +2958,16 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/tasks/updates' && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const { task_id, body: updateBody, owner } = JSON.parse(body);
+      // The board client hardcodes owner 'Jon'. For sandboxed early_adopter users
+      // (UTD capstone) the author MUST come from the session, so their notes aren't
+      // attributed to Jon (capture/ack loop + @Exobot router key off the author).
+      const sess = getSession(req);
+      const author = (sess && sess.role === 'early_adopter' && sess.name) ? sess.name : (owner || 'Jon');
       const activity = {
         type: 'task_note',
         subject: `task:${task_id}`,
         body: updateBody || '',
-        owner: owner || 'Jon',
+        owner: author,
         status: 'completed',
       };
       supabaseRequest('POST', 'activities', activity)

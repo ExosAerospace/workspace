@@ -50,6 +50,15 @@ QM_SINCE = "2026-09-10T17:00:00+00:00"
 
 # Skip notes authored by automation (prevent loops / only act on human commands).
 SKIP_OWNERS = re.compile(r"^(exo|decisions|mission control|mc\b|expense-workflow|.*-router|.*-watcher)", re.I)
+# Sandboxed early_adopter users (UTD capstone). Their notes are captured + acked by
+# scripts/capstone_capture.py instead of this router.
+try:
+    _u = json.load(open(os.path.join("/Users/exomac/.openclaw/workspace", "mission-control", "users.json")))
+    _u = _u if isinstance(_u, list) else (_u.get("users") or list(_u.values()))
+    SANDBOX_AUTHORS = {(x.get("name") or "").strip().lower() for x in _u
+                       if isinstance(x, dict) and x.get("role") == "early_adopter" and x.get("name")}
+except Exception:
+    SANDBOX_AUTHORS = set()
 ACTION = re.compile(r"\b(handle|take care of|manage|order|buy|purchase|procure|source|renew|prepare|"
                     r"draft|send|fix|schedule|call|contact|reach\s?out|follow\s?up|investigate|"
                     r"resolve|create|build|arrange|coordinate|set\s?up|research|file|submit|pay|book|"
@@ -240,6 +249,9 @@ def main():
         owner_of_note = (r.get("owner") or "")
         if SKIP_OWNERS.match(owner_of_note.strip()):
             continue  # automation-authored, not a human command
+        if owner_of_note.strip().lower() in SANDBOX_AUTHORS:
+            continue  # UTD capstone (early_adopter): handled by capstone_capture.py, never
+                      # free-form routed (would create staff tasks / answer with internal context)
         taskid = taskid_of(r)
         body = r.get("body") or ""
         # Question-mark auto-answer: a note WITHOUT @exo that contains "?" is routed straight to

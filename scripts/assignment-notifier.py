@@ -76,6 +76,11 @@ def build_user_index():
 
 def resolve(task, by_email, by_name):
     """Return (email, display_name) for the current assignee, or (None, None)."""
+    # UTD capstone tasks are created in batches (dozens at once) and the students get
+    # ONE consolidated prompter email from Exo instead. Per-task mail flooded them
+    # (38 emails on 2026-09-27) and linked a LAN-only MC address they can't reach.
+    if (task.get("source") or "").startswith("exo-capstone"):
+        return None, None
     ae = (task.get("assigned_email") or "").strip().lower()
     owner = (task.get("owner") or "").strip()
     if ae and EMAIL_RX.match(ae):
@@ -98,7 +103,7 @@ def fetch_tasks():
     # offset until a short page. Without this, tasks beyond the first 1000 (high ids,
     # newly created) are invisible and their assignees never get notified.
     sel = ("select=id,title,description,state,priority,due_date,"
-           "category,owner,assigned_to,assigned_email&order=id&limit=1000")
+           "category,owner,assigned_to,assigned_email,source&order=id&limit=1000")
     out, off = [], 0
     while True:
         req = urllib.request.Request(f"{SB}/tasks?{sel}&offset={off}", headers=H)
