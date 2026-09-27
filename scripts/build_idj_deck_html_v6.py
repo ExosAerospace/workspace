@@ -127,7 +127,7 @@ s+=box(ax+0.3,ay+0.28,aw-0.6,0.4,"mut","font-size:11px;font-weight:700;","JAPAN 
 s+=box(ax+0.3,ay+0.66,aw-0.6,0.9,"num","","¥790M")
 s+=box(ax+0.3,ay+1.5,aw-0.6,0.4,"org","font-size:12.5px;font-weight:700;",'≈ US$5.0M target&nbsp;&nbsp;(at ~¥157 / US$)')
 s+=box(ax+0.3,ay+1.95,aw-0.6,1.0,"","",
-       '<div class="gry" style="font-size:12.5px;line-height:1.1;">Purchase units in Exos Aerospace Investments, LLC (EAI), which holds Exos U.S. equity; proceeds fund the wholly-owned Japan K.K.</div>'
+       '<div class="gry" style="font-size:12.5px;line-height:1.1;">Purchase units in Exos Aerospace Investments, LLC (EAI); EAI units mirror Exos U.S. shares, and proceeds fund the wholly-owned Japan K.K.</div>'
        '<div class="mut" style="font-size:12px;margin-top:6px;line-height:1.1;">Offshore Regulation S offering — separate from the Exos U.S. domestic offering.</div>')
 ux=4.5;uy=1.9
 s+=box(ux,uy,8.1,0.35,"mut","font-size:11px;font-weight:700;","USE OF FUNDS")

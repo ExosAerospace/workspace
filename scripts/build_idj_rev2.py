@@ -48,7 +48,7 @@ settext(s, 'TextBox 3', 'Investors buy units in Exos Aerospace Investments, LLC 
 settext(s, 'TextBox 29', 'JAPAN ROUND — REG S, VIA EAI LLC')
 settext(s, 'TextBox 34', 'Offshore Reg S round into EAI LLC now  →  proceeds fund the K.K. build-out  →  growth as Japan '
                          'revenue scales. Priced off the Exos U.S. valuation.')
-settext(s, 'TextBox 53', 'Investors hold units in Exos Aerospace Investments, LLC, which holds a minority interest in Exos U.S. '
+settext(s, 'TextBox 53', 'Investors hold units in Exos Aerospace Investments, LLC; EAI units mirror Exos U.S. shares. '
                          'Exos Aerospace Japan K.K. is a wholly-owned subsidiary of Exos U.S., modeled on Exos Aerospace Italia.')
 
 # Slide 6 — exit line

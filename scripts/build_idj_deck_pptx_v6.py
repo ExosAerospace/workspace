@@ -147,7 +147,7 @@ t=tb(s,ax+0.3,ay+0.28,aw-0.6,0.4); para(t,"JAPAN ROUND — REG S, VIA EAI LLC",1
 t=tb(s,ax+0.3,ay+0.66,aw-0.6,0.9); para(t,[("¥790M",ORANGE,True)],38,ORANGE,True,first=True,sp=0.95)
 t=tb(s,ax+0.3,ay+1.5,aw-0.6,0.4); para(t,"≈ US$5.0M target  (at ~¥157 / US$)",12.5,ORANGE,True,first=True)
 t=tb(s,ax+0.3,ay+1.95,aw-0.6,1.0)
-para(t,"Purchase units in Exos Aerospace Investments, LLC (EAI), which holds Exos U.S. equity; proceeds fund the wholly-owned Japan K.K.",12.5,GREY,False,first=True,sp=1.1)
+para(t,"Purchase units in Exos Aerospace Investments, LLC (EAI); EAI units mirror Exos U.S. shares, and proceeds fund the wholly-owned Japan K.K.",12.5,GREY,False,first=True,sp=1.1)
 para(t,"Offshore Regulation S offering — separate from the Exos U.S. domestic offering.",12,MUTE,False,before=6,sp=1.1)
 # RIGHT TOP — use of funds chips
 ux=4.5; uy=1.9
