@@ -211,16 +211,16 @@ def update_master(spec):
     ws.append([spec.get("title"), spec.get("doc_no"), spec.get("rev", "0"),
                spec.get("reference_docs", "NA"),
                spec.get("issued", datetime.date.today().strftime("%b-%d-%Y")),
-               spec.get("intl_release", "Yes"), spec.get("charters", ""),
-               spec.get("status", "Approved")])
+               spec.get("intl_release", "No"), spec.get("charters", ""),
+               spec.get("status", "Pending Approval")])
     wb.save(MASTER)
 
 
 def register(spec, rel_docx):
     entry = {"area": spec.get("area"), "area_id": spec.get("area_id"),
              "procedure": spec.get("title"), "doc_no": spec.get("doc_no"),
-             "rev": spec.get("rev", "0"), "status": spec.get("status", "Approved"),
-             "intl_release": spec.get("intl_release", "Yes"), "ack_required": bool(spec.get("ack_required", False)),
+             "rev": spec.get("rev", "0"), "status": spec.get("status", "Pending Approval"),
+             "intl_release": spec.get("intl_release", "No"), "ack_required": bool(spec.get("ack_required", False)),
              "owner": spec.get("owner", "Exo (Lizi advising)"), "remarks": spec.get("remarks", ""),
              "files": [rel_docx], "file_count": 1}
     # optional call-to-action button on the Process Library row (e.g. self-service page)
