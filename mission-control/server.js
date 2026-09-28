@@ -2308,6 +2308,17 @@ const server = http.createServer((req, res) => {
       return Array.isArray(depts) && depts.includes(RR_DEPT_FOR_AUDIENCE[doc.audience] || doc.audience);
     };
 
+    // Current valid completion for (user, doc, version): the NEWEST one, and for recurrence:'annual'
+    // docs null once it is >365 days old (renewal due). Used by the list, ack, open and admin views.
+    const RR_YEAR_MS = 365 * 86400000;
+    const rrCurrentComp = (rr, email, d) => {
+      const all = (rr.completions || []).filter(c => c.user_email === email && c.doc_id === d.id && c.doc_version === d.version && c.valid);
+      if (!all.length) return null;
+      const last = all.reduce((a, b) => (String(b.acknowledged_at || '') > String(a.acknowledged_at || '') ? b : a));
+      if (d.recurrence === 'annual' && last.acknowledged_at && (Date.now() - new Date(last.acknowledged_at).getTime()) > RR_YEAR_MS) return null;
+      return last;
+    };
+
     // Fillable forms (Hazard ID / EAP ack / Chemical ID): validate + sanitize against doc.form (Jon 2026-09-26).
     function rrCleanForm(doc, raw) {
       const out = {}, missing = [];
@@ -2353,11 +2364,8 @@ const server = http.createServer((req, res) => {
       const myDepts = (meUser && Array.isArray(meUser.departments)) ? meUser.departments : [];
       const visibleDocs = rr.docs.filter(d => rrRequired(d, session.role, myDepts));
       const mine = visibleDocs.map(d => {
+        const comp = rrCurrentComp(rr, email, d);
         const prog = (rr.progress || []).find(p => p.user_email === email && p.doc_id === d.id && p.version === d.version) || null;
-        const comp0 = (rr.completions || []).find(c => c.user_email === email && c.doc_id === d.id && c.doc_version === d.version && c.valid) || null;
-        // Annual re-certification: a completion older than 365 days is due again.
-        const comp = (comp0 && d.recurrence === 'annual' && comp0.acknowledged_at &&
-                      (Date.now() - new Date(comp0.acknowledged_at).getTime()) > 365 * 86400000) ? null : comp0;
         return {
           doc_id: d.id, version: d.version,
           completed: !!comp, valid: !!comp,
@@ -2393,6 +2401,11 @@ const server = http.createServer((req, res) => {
               user_agent: req.headers['user-agent'] || '', ip: req.socket.remoteAddress || '', updated_at: now
             };
             rr.progress.push(prog);
+          } else if (doc.recurrence === 'annual' && !rrCurrentComp(rr, email, doc) &&
+                     (rr.completions || []).some(c => c.user_email === email && c.doc_id === doc.id && c.doc_version === doc.version && c.valid && String(c.acknowledged_at || '') >= String(prog.server_open_at || ''))) {
+            // Annual renewal: last cycle's reading record was consumed by last year's signature — start a fresh one.
+            Object.assign(prog, { server_open_at: now, active_seconds: 0, scroll_max_pct: 0, heartbeats: 0,
+              user_agent: req.headers['user-agent'] || '', ip: req.socket.remoteAddress || '', updated_at: now });
           } else if (!prog.server_open_at) {
             prog.server_open_at = now;
             prog.user_agent = req.headers['user-agent'] || prog.user_agent;
@@ -2447,7 +2460,7 @@ const server = http.createServer((req, res) => {
           if (!doc) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'unknown doc' })); return; }
           rr.progress = rr.progress || []; rr.completions = rr.completions || [];
           // Already recorded for this version → idempotent success, don't nag.
-          const existing = rr.completions.find(c => c.user_email === email && c.doc_id === doc.id && c.doc_version === doc.version && c.valid);
+          const existing = rrCurrentComp(rr, email, doc);
           if (existing) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, already: true, acknowledged_at: existing.acknowledged_at })); return; }
           // CUI docs live in GCC High (CMMC boundary) — MC never shows them. Completion is an explicit
           // employee attestation that they read the document there (Jon 2026-09-26).
@@ -2463,7 +2476,7 @@ const server = http.createServer((req, res) => {
             };
             rr.completions.push(comp);
             for (const alias of (RR_ALIASES[email] || [])) {
-              const dupe = rr.completions.find(c => c.user_email === alias && c.doc_id === doc.id && c.doc_version === doc.version && c.valid);
+              const dupe = rrCurrentComp(rr, alias, doc);
               if (!dupe) rr.completions.push(Object.assign({}, comp, { user_email: alias, mirrored_from: email }));
             }
             rrSave(rr);
@@ -2497,7 +2510,7 @@ const server = http.createServer((req, res) => {
           rr.completions.push(comp);
           // Propagate to the same person's linked account(s) so they complete required reading once.
           for (const alias of (RR_ALIASES[email] || [])) {
-            const dupe = rr.completions.find(c => c.user_email === alias && c.doc_id === doc.id && c.doc_version === doc.version && c.valid);
+            const dupe = rrCurrentComp(rr, alias, doc);
             if (!dupe) rr.completions.push(Object.assign({}, comp, { user_email: alias, mirrored_from: email }));
           }
           rrSave(rr);
@@ -2526,7 +2539,9 @@ const server = http.createServer((req, res) => {
       const matrix = rr.docs.map(d => {
         const rows = users.filter(u => rrRequired(d, u.role, u.departments)).map(u => {
           const email = (u.email || '').toLowerCase();
-          const comp = (rr.completions || []).find(c => c.user_email === email && c.doc_id === d.id && c.doc_version === d.version);
+          // Valid current completion first (annual docs lapse after 365 days); else any invalid one → flagged.
+          const comp = rrCurrentComp(rr, email, d) ||
+            (rr.completions || []).find(c => c.user_email === email && c.doc_id === d.id && c.doc_version === d.version && !c.valid && !(d.recurrence === 'annual' && (Date.now() - new Date(c.acknowledged_at || 0).getTime()) > RR_YEAR_MS)) || null;
           const prog = (rr.progress || []).find(p => p.user_email === email && p.doc_id === d.id && p.version === d.version);
           let status;
           if (comp && comp.valid) status = 'completed';
