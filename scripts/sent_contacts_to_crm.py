@@ -14,6 +14,7 @@ LOG = os.path.join(WS, "logs", "sent-followup-log.json")
 SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
 KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 SH = {"apikey": KEY, "Authorization": "Bearer " + KEY, "Content-Type": "application/json", "Prefer": "return=representation"}
+SCRUBBED = set(json.load(open(os.path.join(WS, "config", "crm-scrubbed-emails.json"))).get("emails", {}))
 COMMON = {"gmail", "outlook", "hotmail", "yahoo", "proton", "pm", "me", "icloud", "aol", "msn", "live", "gmx"}
 
 
@@ -51,7 +52,7 @@ def main():
         a = a.lower()
         # skip internal, malformed, and Outlook/Exchange-mangled (imceamailto…@namp*.prod.outlook) addresses
         if ("@" not in a or a.endswith("@exosaero.com") or "imceamailto" in a
-                or "+40" in a or "namp" in a and "prod.outlook" in a):
+                or "+40" in a or "namp" in a and "prod.outlook" in a or a in SCRUBBED):
             skipped += 1; continue
         if a in have:
             existing += 1

@@ -55,9 +55,13 @@ def dec(s):
 
 def domain_of(a): return a.split("@")[-1].lower() if "@" in a else ""
 def is_own(a): return domain_of(a) in OWN
+try:
+    SCRUBBED = set(json.load(open(os.path.expanduser("~/.openclaw/workspace/config/crm-scrubbed-emails.json"))).get("emails", {}))
+except Exception:
+    SCRUBBED = set()
 def keep_addr(a):
     a = (a or "").lower().strip()
-    return bool(a) and "@" in a and not is_own(a) and not SKIP.search(a)
+    return bool(a) and "@" in a and not is_own(a) and not SKIP.search(a) and a not in SCRUBBED
 
 def _html_to_text(h):
     t = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", h)

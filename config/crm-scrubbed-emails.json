@@ -1,0 +1,7 @@
+{
+  "_doc": "Addresses deliberately scrubbed from the CRM. Auto-capture scripts (sent_contacts_to_crm.py, email_people_to_crm.py) must never re-create contacts for these. Remove an entry to allow re-capture.",
+  "emails": {
+    "andrew.nelson@rsandh.com": "Wrong Andrew Nelson (RS&H Chicago aviation architecture associate). Real contact = andrew.nelson2@rsandh.com (VP, Dallas). John 2026-09-28.",
+    "andrew.nelson@rsh.com": "Guessed address, rsh.com is not RS&H's domain. Real contact = andrew.nelson2@rsandh.com. 2026-09-28."
+  }
+}
