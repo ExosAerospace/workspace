@@ -1,6 +1,13 @@
 {
-  "_note": "Ethics & Compliance report routing (Handbook Sec. 2.5). reviewers see all reports except those flagged involves_ceo; those go ONLY to ceo_conflict_reviewers (Board designee — TBD by Jon).",
-  "reviewers": ["jquinn@exosaero.com"],
-  "ceo_emails": ["jquinn@exosaero.com", "megawattcontrols@gmail.com"],
-  "ceo_conflict_reviewers": []
+  "_note": "Ethics & Compliance report routing (Handbook Sec. 2.5). reviewers see all reports except those flagged involves_ceo; those go ONLY to ceo_conflict_reviewers = Board designee Neil Milburn (named by Jon 2026-09-28).",
+  "reviewers": [
+    "jquinn@exosaero.com"
+  ],
+  "ceo_emails": [
+    "jquinn@exosaero.com",
+    "megawattcontrols@gmail.com"
+  ],
+  "ceo_conflict_reviewers": [
+    "nmilburn@exosaero.com"
+  ]
 }
