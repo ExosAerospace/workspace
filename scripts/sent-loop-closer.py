@@ -289,7 +289,7 @@ def main():
         try: registry = json.load(open(REGISTRY))
         except Exception: registry = {}
 
-    cleared = []
+    cleared, untracked = [], []
     if sends:
         print("--- NEW sends detected this cycle (date | to | subject) ---")
         for m in sorted(sends, key=lambda x: x['date']):
@@ -321,6 +321,21 @@ def main():
                 if send_trackers:
                     registry[r] = {'sent_date': m['date'], 'subject': m['subject'], 'sent_to': r,
                                    'trackers': sorted(send_trackers), 'detected': datetime.now().strftime('%Y-%m-%d %H:%M')}
+            # Untracked recipients (no capture/*.md references them — e.g. john.dankanich@nasa.gov,
+            # whose lane lives in memory, not a tracker). Previously dropped on the floor, so agents
+            # kept calling a sent reply "UNSENT" (Dankanich miss, 9/25→9/28). Record every external
+            # recipient so any already-sent check sees it; never overwrite a tracker-linked entry.
+            if not send_trackers and m['date'] >= PER_SEND_FLOOR:
+                for r in m['to']:
+                    if _is_self(r) or INTERNAL.search(r):
+                        continue
+                    cur = registry.get(r)
+                    if cur and (cur.get('trackers') or cur.get('sent_date', '') >= m['date']):
+                        continue
+                    registry[r] = {'sent_date': m['date'], 'subject': m['subject'], 'sent_to': r,
+                                   'trackers': [], 'source': 'bcc-untracked',
+                                   'detected': datetime.now().strftime('%Y-%m-%d %H:%M')}
+                    untracked.append((r, m['date'], m['subject']))
         os.makedirs(os.path.dirname(REGISTRY), exist_ok=True)
         json.dump(registry, open(REGISTRY, 'w'), indent=2)
     else:
@@ -335,6 +350,10 @@ def main():
         print(f"  • {tracker}: {r} ({d})")
     if not cleared:
         print("  (none new — already recorded or no matches)")
+    if untracked:
+        print("\n--- Untracked recipients recorded THIS run (no capture tracker references them) ---")
+        for r, d, s in untracked:
+            print(f"  • {d}  {r}  |  {s[:70]}")
     print(f"\nRegistry: {REGISTRY}")
 
     # Deterministic gate (wired 2026-07-17): right after the registry refreshes, prune any
