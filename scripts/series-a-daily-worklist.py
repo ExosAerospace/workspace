@@ -27,16 +27,54 @@ def days_since(lt):
         return None
 
 
+_TASKS = None
+
+
+def task_touch(firm):
+    """Latest updated_at (YYYY-MM-DD) of a Done/Cancelled MC task whose title names the firm."""
+    global _TASKS
+    import re, urllib.request
+    if _TASKS is None:
+        _TASKS = []
+        try:
+            k = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
+            url = ("https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/tasks?select=title,state,updated_at"
+                   "&state=in.(Done,Cancelled)&order=updated_at.desc&limit=1000")
+            _TASKS = json.loads(urllib.request.urlopen(urllib.request.Request(
+                url, headers={"apikey": k, "Authorization": "Bearer " + k}), timeout=30).read())
+        except Exception as e:
+            print("task touch lookup failed (non-fatal):", e)
+    key = (firm or "").split("(")[0].split("/")[0].strip()
+    if len(key) < 5:
+        return None
+    rx = re.compile(r"\b" + re.escape(key) + r"\b", re.I)
+    ds = [t["updated_at"][:10] for t in _TASKS if rx.search(t.get("title") or "")]
+    return max(ds) if ds else None
+
+
 def main():
     try:
         data = json.load(open(CRM))
     except Exception as e:
         print("crm.json unreadable:", e); sys.exit(1)
     contacts = data.get("contacts") or []
-    # Exclude dead-ends (bounced / not a fit); rank by the score the generator already computed.
+    # Exclude dead-ends (bounced / not a fit / Jon-closed); rank by the score the generator computed.
+    # Jon 2026-09-28: "I dropped most of these". 6 of the 9/28 Top 10 had stage=Closed (9/24
+    # RTO decision), but this list only filtered on tier, so Closed firms kept coming back.
+    DEAD_STAGES = {"closed", "low-priority", "lost", "passed", "dropped", "declined", "dead", "not a fit"}
+    def is_dead(c):
+        return ((c.get("stage") or "").strip().lower() in DEAD_STAGES
+                or str(c.get("next_action") or "").lower().startswith(("closed", "dropped", "passed")))
     eligible = [c for c in contacts
                 if (c.get("tier") or "") not in ("Not a Fit",)
+                and not is_dead(c)
                 and "BOUNCED" not in [str(f).upper() for f in (c.get("flags") or [])]]
+    # "Last touched" also counts MC tasks about the firm that are Done or Cancelled. Work done
+    # through tasks never wrote back to the CRM, so worked firms showed as "never touched / overdue".
+    for c in eligible:
+        t = task_touch(c.get("firm"))
+        if t and t > str(c.get("last_touched") or ""):
+            c["last_touched"] = t
 
     # DD PRE-SCREEN (shared gate): delist any firm that FAILED DD — either the nightly
     # CRM DD engine marked it 'fail' OR it's on the hand-curated do-not-engage blocklist.
