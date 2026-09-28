@@ -245,14 +245,25 @@ def match_targets(recipient, reg):
     return matches
 
 
+PER_SEND_FLOOR = '2026-09-20'  # per-send + co-recipient annotation applies from here forward
+
+
 def annotate_tracker(basename, target, date, subject):
     """Append an idempotent auto-confirmation to a tracker's end. Returns True if newly added."""
     path = os.path.join(CAP_DIR, basename)
     if not os.path.exists(path):
         return False
     txt = open(path, encoding='utf-8', errors='ignore').read()
-    marker = f'SENT CONFIRMED (auto): {target}'
-    if marker in txt:
+    # Per-SEND marker (target + date), not per-target: a repeat send to a contact confirmed
+    # earlier (e.g. Andrew Nelson 7/28, then again 9/26) must still register as a new send.
+    # Key on the bare address so "x@y (co-recipient)" and "x@y" count as the same target.
+    base = f'SENT CONFIRMED (auto): {target.split()[0]}'
+    lines = [l for l in txt.splitlines() if base in l]
+    if any(f'** on {date} ' in l for l in lines):
+        return False
+    # Per-send markers took effect 2026-09-28; don't backfill older repeat sends to an
+    # already-confirmed target (the 60-day full sweep would otherwise bloat every tracker).
+    if date < PER_SEND_FLOOR and lines:
         return False
     block = txt.rstrip() + '\n'
     if '## AUTO SENT-CONFIRMATIONS (loop-closer)' not in txt:
@@ -285,15 +296,31 @@ def main():
             tag = ' [fwd]' if m.get('forward') else ''
             print(f"  {m['date']}{tag}  ->  {', '.join(m['to']) or '(none)'}  |  {m['subject'][:70]}")
         for m in sends:
+            send_trackers, matched_rs = set(), set()
             for r in m['to']:
                 for tgt in match_targets(r, reg):
+                    matched_rs.add(r)
                     label = tgt if tgt == r else f"{tgt} (sent to {r})"
                     for tracker in reg[tgt]:
+                        send_trackers.add(tracker)
                         newly = annotate_tracker(tracker, label, m['date'], m['subject'])
                         registry[tgt] = {'sent_date': m['date'], 'subject': m['subject'], 'sent_to': r,
                                          'trackers': reg[tgt], 'detected': datetime.now().strftime('%Y-%m-%d %H:%M')}
                         if newly:
                             cleared.append((tracker, label, m['date']))
+            # Co-recipients not yet tracked anywhere (e.g. a newly verified address like
+            # erinm@cvcog.org on the Concho send) ride along into the same tracker(s), so the
+            # capture agent sees the primary addressee was sent to — not just the cc.
+            for r in m['to']:
+                if r in matched_rs or _is_self(r) or m['date'] < PER_SEND_FLOOR:
+                    continue
+                label = f"{r} (co-recipient)"
+                for tracker in sorted(send_trackers):
+                    if annotate_tracker(tracker, label, m['date'], m['subject']):
+                        cleared.append((tracker, label, m['date']))
+                if send_trackers:
+                    registry[r] = {'sent_date': m['date'], 'subject': m['subject'], 'sent_to': r,
+                                   'trackers': sorted(send_trackers), 'detected': datetime.now().strftime('%Y-%m-%d %H:%M')}
         os.makedirs(os.path.dirname(REGISTRY), exist_ok=True)
         json.dump(registry, open(REGISTRY, 'w'), indent=2)
     else:
