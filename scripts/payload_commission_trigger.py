@@ -123,17 +123,24 @@ def attribution_clause(c):
 
 
 def accrue_if_attributed(c, pay):
-    """If an agent is attributed, run the commission tracker so it accrues + files the payout task."""
+    """If an agent is attributed, run the commission tracker so it accrues + files the payout task.
+    Returns False only when an attempted accrual failed."""
     if not c.get("attributed_agent") or DRY:
-        return
+        return True
     try:
-        subprocess.run(["node", os.path.join(WS, "erp-foundation", "record_payment.js"),
+        r = subprocess.run(["node", os.path.join(WS, "erp-foundation", "record_payment.js"),
                         "--contract", c["contract_id"], "--amount", str(pay["amount"]),
                         "--date", pay["date"], "--customer", c["qb_customer"]],
-                       cwd=os.path.join(WS, "erp-foundation"), timeout=60, capture_output=True)
+                       cwd=os.path.join(WS, "erp-foundation"), timeout=60, capture_output=True, text=True)
+        if r.returncode != 0:
+            print("  ERROR: record_payment.js rc=%d for %s: %s" % (
+                r.returncode, c["contract_id"], (r.stderr or r.stdout or "").strip()[:300]), file=sys.stderr)
+            return False
         print("  -> commission tracker accrued for %s" % c["attributed_agent"])
+        return True
     except Exception as e:
-        print("  record_payment.js failed:", e)
+        print("  ERROR: record_payment.js failed:", e, file=sys.stderr)
+        return False
 
 
 def make_task(c, pay, running, is_onboard=False):
@@ -169,6 +176,7 @@ def main():
     if not contracts:
         print("no executed-LSA payload contracts in config"); return
     filed = 0
+    accrual_failures = 0
     for c in contracts:
         cid = c.get("qb_customer_id")
         pays = qb_payments_for(cid) if cid else []
@@ -201,7 +209,8 @@ def main():
                 print("  [dry] new payment %s %s -> %s" % (p["id"], _money(p["amount"]), task["title"]))
             else:
                 file_task(task, sk)
-                accrue_if_attributed(c, p)
+                if not accrue_if_attributed(c, p):
+                    accrual_failures += 1
                 seen.add(p["id"])
             filed += 1
 
@@ -209,6 +218,10 @@ def main():
         st["seen_payment_ids"] = sorted(seen)
         save_state(st)
     print("done — %d task(s) %s" % (filed, "would fire (dry)" if DRY else "filed"))
+    if accrual_failures:
+        print("ERROR: %d commission accrual(s) failed — run record_payment.js manually" % accrual_failures,
+              file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
