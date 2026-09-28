@@ -58,8 +58,9 @@ try:
 except Exception:
     _gov = None
 AGENT_CLASS = "opportunity-engine"
-# CLOSE on an opp scoring below this is reversible bookkeeping -> execute (auto-file),
-# don't ask Jon. Above it, a CLOSE still surfaces (closing value deserves a glance).
+# CLOSE on an opp scoring below this is FLAGGED for review on the research feed (no inbox
+# decision, opp status untouched) — exo3 audit P1 #4: a model CLOSE is a proposal, never an
+# executed close. Above it, a CLOSE still surfaces as an Archive? decision.
 CLOSE_EXECUTE_FLOOR = float(os.environ.get("OPP_CLOSE_FLOOR", "35"))
 
 sys.path.insert(0, os.path.join(WORKSPACE, "scripts"))
@@ -522,18 +523,19 @@ def route_to_mc(opp, res, draft_path):
             "priority":"high" if res.get("_tier")=="top" else "med",
             "relatedItem": opp.get("title","")[:120], "source":"Opportunity Engine", "dueDate": due})
     elif route == "CLOSE":
-        # Execute-path: a low-scoring CLOSE is reversible bookkeeping. File it to the
-        # research feed (recoverable) and log it; do NOT consume an inbox decision.
+        # Low-scoring CLOSE: the model's CLOSE is a PROPOSAL (AI proposes, a human confirms).
+        # Flag it on the research feed for review; do NOT mark it archived/closed anywhere and
+        # do NOT consume an inbox decision. The opp stays live until a human archives it.
         # A higher-scoring CLOSE still escalates (closing potential value gets a glance).
         if _gov and _gov.delegation_on(AGENT_CLASS) and sc < CLOSE_EXECUTE_FLOOR:
             mc_post("/api/research/ingest", {
-                "id": f"opp-autoclose-{rel}", "title": f"Auto-triaged (low score {sc}): {opp.get('title')[:110]}",
+                "id": f"opp-autoclose-{rel}", "title": f"Proposed archive — review (low score {sc}): {opp.get('title')[:100]}",
                 "date": TODAY, "category":"BD Intel","source":"Opportunity Engine",
-                "highlights":[f"**Auto-archived** by opportunity-engine (score {sc} < {CLOSE_EXECUTE_FLOOR})",
+                "highlights":[f"**Proposed archive** by opportunity-engine (model CLOSE; score {sc} < {CLOSE_EXECUTE_FLOOR})",
                               f"**Reason:** {res.get('blockers') or 'low priority / dead'}",
-                              "Reversible: reopen from the research feed if needed."],
-                "body": f"Auto-closed low-value opportunity {rel}. Reason: {res.get('blockers') or 'n/a'}"})
-            try: _gov.executed(AGENT_CLASS, "auto-archive low-value CLOSE", rel, score=sc)
+                              "Not closed — opportunity status unchanged. Archive it in the tracker if you agree."],
+                "body": f"Model proposed closing low-value opportunity {rel} (NOT closed; pending human review). Reason: {res.get('blockers') or 'n/a'}"})
+            try: _gov.executed(AGENT_CLASS, "flagged low-value CLOSE proposal for review (not closed)", rel, score=sc)
             except Exception: pass
         else:
             _ingest_decision({
