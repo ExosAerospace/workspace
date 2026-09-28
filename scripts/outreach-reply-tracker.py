@@ -4,7 +4,7 @@ outreach-reply-tracker.py — loops Exo (and Jon) in on outreach OUTCOMES.
 
 We CC info@exosaero.com (auto-forwarded to the intake) + Lizi on outbound outreach and ask
 recipients to "reply all". When a counterparty REPLIES, this job:
-  1. reads it as positive / negative / needs-follow-up (deterministic keyword heuristic — no egress),
+  1. reads it as positive / negative / acknowledged / needs-follow-up (deterministic keyword heuristic — no egress),
   2. updates their CRM contact (last_contacted, replied tag, next action, note),
   3. DMs Jon on Discord with the outcome so he can triage in seconds.
 
@@ -209,11 +209,21 @@ def forwarded_reply(subj, msg):
     return None
 
 
-def classify(text):
+# Pure acknowledgement ("Agreed and thanks for the update.") — short, no question, no ask.
+# Before 2026-09-28 these fell through to needs-follow-up and got re-flagged to Jon for a
+# week (Edgar/Nitz). Checked on the reply body only, after NEG/POS.
+ACK = re.compile(r'\b(agreed|thanks?|thank you|got it|noted|received|acknowledged|understood|'
+                 r'will do|sounds good|perfect|appreciate)\b', re.I)
+
+
+def classify(text, body=None):
     if NEG.search(text):
         return ("negative", "🔴", "Log as declined; no further outreach unless re-engaged")
     if POS.search(text):
         return ("positive", "🟢", "Respond fast — schedule the call / send materials")
+    b = (body if body is not None else text).strip()
+    if len(b) <= 200 and '?' not in b and ACK.search(b):
+        return ("acknowledged", "⚪", "No action — acknowledgement only")
     return ("needs-follow-up", "🟡", "Read + decide next step")
 
 
@@ -280,7 +290,7 @@ def main():
             log(f"HELD (export-control) reply skip: {faddr}")
             continue
         new = fwd_reply if fwd_reply else strip_quoted(body)
-        sentiment, emoji, rec_action = classify(subj + "\n" + new)
+        sentiment, emoji, rec_action = classify(subj + "\n" + new, body=new)
         try:
             dt = parsedate_to_datetime(msg.get("Date")).date().isoformat()
         except Exception:
@@ -309,11 +319,14 @@ def main():
                          "notes": ((contact.get("notes") + "\n") if contact.get("notes") else "") + note}
                 if sentiment == "negative":
                     patch["status"] = "not-interested"
+                if sentiment == "acknowledged":  # closes the loop — no follow-up date
+                    patch.pop("next_followup", None)
                 try:
                     spatch("contacts?id=eq." + str(contact["id"]), patch)
                 except Exception as e:
                     log(f"WARN crm patch {faddr}: {e}")
-            post_discord(card)
+            if sentiment != "acknowledged":  # acks are logged to CRM, not pinged to Jon
+                post_discord(card)
             log(f"OUTCOME {sentiment} {faddr} (CRM={'y' if contact else 'n'})")
         outcomes += 1
     m.logout()
