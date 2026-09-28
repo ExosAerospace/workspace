@@ -83,8 +83,12 @@ def main():
     msg = "\n".join(lines)[:1900]
     print(msg)
     if not dry:
-        subprocess.run([OPENCLAW, "message", "send", "--channel", "discord", "--target", "user:" + JON, "-m", msg],
-                       capture_output=True, text=True, timeout=60, env=env())
+        r = subprocess.run([OPENCLAW, "message", "send", "--channel", "discord", "--target", "user:" + JON, "-m", msg],
+                           capture_output=True, text=True, timeout=60, env=env())
+        if r.returncode != 0:   # don't mark as nudged — the batch retries next run
+            print(f"ERROR: discord send failed rc={r.returncode}: {(r.stderr or r.stdout or '').strip()[:300]}",
+                  file=sys.stderr)
+            sys.exit(1)
         for age, name, a, subj, tid in batch:   # mark ONLY the 5 sent (rest reappear tomorrow)
             st[a] = now.isoformat()
         json.dump(st, open(STATE, "w"), indent=2)
