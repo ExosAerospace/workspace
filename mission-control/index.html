@@ -596,6 +596,7 @@
     <!-- Utility -->
     <a href="help.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🚀 Getting Started</a>
     <a href="required-reading.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📋 Required Reading</a>
+    <a href="report.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;" title="Ethics &amp; Compliance / whistleblower report (Handbook 2.5)">🛡️ Report a Concern</a>
     <a href="set-password.html" style="color:var(--muted,#8aa0bd);text-decoration:none;font-size:0.85rem;margin-right:4px;">🔑 Set Password</a>
     <script>fetch('/api/me',{credentials:'same-origin'}).then(r=>r.ok?r.json():{}).then(me=>{if(me&&me.role==='early_adopter')return;fetch('/api/decisions?status=open',{credentials:'same-origin'}).then(r=>r.ok?r.json():[]).then(d=>{var m=document.getElementById('decisionsMark');if(d&&d.length){var b=document.getElementById('decisionsBadge');b.textContent=d.length;b.style.display='inline-block';if(m){m.textContent='❓ ';m.style.color='#ff4444';}}else if(m){m.textContent='✅ ';m.style.color='#22c55e';}}).catch(()=>{});}).catch(()=>{});</script>
     <a href="ctd-dd.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🔎 CTD DD</a>
@@ -1021,7 +1022,7 @@ async function initUserRole() {
         const MEMBER_KEEP = ['search.html','opportunities.html','apac-opportunities.html','capability-gaps.html',
           'consortium.html','crm.html','dossier.html','program.html','research.html',
           'docusign.html','schedule.html','process-library.html','decisions.html',
-          'fleet.html','help.html','required-reading.html','set-password.html','expenses.html'];
+          'fleet.html','help.html','required-reading.html','set-password.html','expenses.html','report.html'];
         document.querySelectorAll('.header-right a, .header-right button').forEach(el => {
           const oc = el.getAttribute('onclick') || '';
           const href = (el.getAttribute('href') || '').replace(/^\//, '');

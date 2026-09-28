@@ -51,6 +51,7 @@
 <script>
 function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
 function fmtSecs(s){ s=Math.max(0,Math.floor(Number(s)||0)); var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r; }
+function dueTag(due, done){ if(!due||done) return ''; var late=new Date()>new Date(due+'T23:59:59'); return ' <span style="font-size:12px;font-weight:600;color:'+(late?'var(--red)':'var(--yellow)')+'">'+(late?'OVERDUE — was due ':'Due ')+esc(due)+'</span>'; }
 function fmtDate(d){ if(!d) return '—'; try{ return new Date(d).toLocaleString(); }catch(e){ return d; } }
 function label(st){ return {completed:'Completed',' in-progress':'In progress','in-progress':'In progress','not-started':'Not started',flagged:'Flagged'}[st]||st; }
 
@@ -71,7 +72,7 @@ fetch('/api/required-reading',{credentials:'same-origin'})
       var st = m.completed ? 'completed' : ((m.active_seconds>0||m.scroll_max_pct>0)?'in-progress':'not-started');
       if(st==='completed') done++;
       rows+='<tr class="'+(st==='completed'?'':'pending')+'">';
-      rows+='<td><a href="'+esc(d.url)+'">'+esc(d.title)+'</a>'+(d.recurrence==='annual'?' <span class="muted" style="font-size:12px">(annual)</span>':'')+'</td>';
+      rows+='<td><a href="'+esc(d.url)+'">'+esc(d.title)+'</a>'+(d.recurrence==='annual'?' <span class="muted" style="font-size:12px">(annual)</span>':'')+dueTag(d.due_date, st==='completed')+'</td>';
       rows+='<td>'+(d.file?'<a href="'+esc(encodeURI(d.file))+'" target="_blank" rel="noopener" title="Open the procedure document">📄 '+esc(d.doc_no||'Procedure')+'</a>':'<span class="muted">—</span>')+'</td>';
       rows+='<td class="st '+st+'">'+esc(label(st))+'</td>';
       rows+='<td>'+fmtSecs(m.active_seconds)+'</td>';
@@ -111,7 +112,7 @@ function loadAdminMatrix(){
         var allDone = s.pending===0 && s.total>0;
         out+='<div class="card">';
         out+='<h2>'+esc(d.title)+' '+(allDone?'<span class="pill ok">All complete</span>':'<span class="pill warn">'+s.pending+' pending</span>')+'</h2>';
-        out+='<div class="docmeta">Version '+esc(d.version)+' · min active read '+fmtSecs(d.min_active_seconds)+' · <a href="'+esc(d.url)+'">open document</a>'+(d.file?' · <a href="'+esc(encodeURI(d.file))+'" target="_blank" rel="noopener">📄 procedure file</a>':'')+(d.description?' · '+esc(d.description):'')+'</div>';
+        out+='<div class="docmeta">Version '+esc(d.version)+' · min active read '+fmtSecs(d.min_active_seconds)+' · <a href="'+esc(d.url)+'">open document</a>'+(d.file?' · <a href="'+esc(encodeURI(d.file))+'" target="_blank" rel="noopener">📄 procedure file</a>':'')+(d.due_date?' · <b>Due '+esc(d.due_date)+'</b>'+(s.pending&&new Date()>new Date(d.due_date+'T23:59:59')?' <span style="color:var(--red)">OVERDUE</span>':''):'')+(d.description?' · '+esc(d.description):'')+'</div>';
         out+='<div class="summary"><span class="done">'+s.completed+'</span> / '+s.total+' complete · <span class="pend">'+s.pending+' pending</span></div>';
         out+='<table><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Active time</th><th>Scroll</th><th>Completed</th></tr></thead><tbody>';
         (m.rows||[]).sort(function(a,b){

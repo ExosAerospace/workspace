@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ethics & Compliance Report — Mission Control</title>
+<style>
+  :root{--navy:#0a1628;--card:#0f1e38;--text:#e8edf5;--muted:#8aa0bd;--accent:#0080ff;
+    --green:#22c55e;--red:#ff4444;--yellow:#eab308;--line:#1c3052;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--navy);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.55}
+  header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;
+    align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  h1{font-size:21px;margin:0}
+  .sub{color:var(--muted);font-size:13px;margin-top:4px}
+  a.home{color:var(--muted);font-size:13px;text-decoration:none}
+  a{color:var(--accent)}
+  .wrap{max-width:860px;margin:0 auto;padding:24px 24px 10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:0 0 20px;border-left:4px solid var(--accent)}
+  .card.gov{border-left-color:var(--yellow)}
+  h2{font-size:16px;margin:0 0 8px}
+  label{display:block;font-size:13px;color:var(--muted);margin:12px 0 4px}
+  select,textarea,input[type=text]{width:100%;background:#0a1830;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:9px 10px;font:inherit}
+  textarea{min-height:130px}
+  .chk{display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:14px}
+  .chk input{margin-top:4px}
+  button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;margin-top:14px}
+  button.sec{background:#1c3052}
+  .muted{color:var(--muted);font-size:13px}
+  .warn{color:var(--yellow);font-size:13px}
+  .ok{background:#0f2a1a;border:1px solid var(--green);border-radius:8px;padding:12px 14px;margin-top:12px}
+  .err{color:var(--red);font-size:13px;margin-top:8px}
+  code{background:#0a1830;padding:2px 6px;border-radius:5px;font-size:15px;user-select:all}
+  .rep{border-top:1px solid var(--line);padding:12px 0}
+  .rep .hd{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  .pill{display:inline-block;border-radius:10px;padding:1px 9px;font-size:12px;font-weight:600;border:1px solid var(--line)}
+  pre{white-space:pre-wrap;font-family:inherit;margin:6px 0;background:#0a1830;padding:10px;border-radius:8px}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🛡️ Ethics & Compliance Report</h1>
+  <div class="sub">Handbook Section 2.5 — report fraud, waste, abuse, safety, export-control, or any violation of law or policy. Retaliation is prohibited.</div></div>
+  <a class="home" href="/">← Mission Control</a>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h2>File a report</h2>
+    <div class="muted">You can report here, to any manager, to HR, to the CEO, or directly to the government (below). You never have to report internally first.</div>
+    <label for="cat">Category</label>
+    <select id="cat"></select>
+    <label for="desc">What happened? (required)</label>
+    <textarea id="desc" placeholder="Describe the concern: what, who, how you know, and any documents or evidence that exist."></textarea>
+    <label for="ww">When and where (optional)</label>
+    <input type="text" id="ww" maxlength="1000">
+    <label for="ppl">People involved or witnesses (optional)</label>
+    <input type="text" id="ppl" maxlength="1000">
+    <div class="chk"><input type="checkbox" id="anon" checked><label for="anon" style="margin:0;color:var(--text)"><b>Submit anonymously.</b> Your name and email are not stored with the report, and only the date is recorded.</label></div>
+    <div class="chk"><input type="checkbox" id="ceo"><label for="ceo" style="margin:0;color:var(--text)">This concern involves the CEO. It will be routed to the Board designee and hidden from the CEO.</label></div>
+    <div class="warn" style="margin-top:10px">⚠ Do not enter CUI, ITAR/EAR technical data, or classified information. Describe it in general terms, or report it through an Inspector General hotline.</div>
+    <button id="send">Submit report</button>
+    <div id="out"></div>
+  </div>
+
+  <div class="card">
+    <h2>Check on a report / add information</h2>
+    <div class="muted">Enter the case key you received when you filed the report.</div>
+    <label for="ck">Case key</label>
+    <input type="text" id="ck" autocomplete="off">
+    <label for="add">Add information (optional)</label>
+    <textarea id="add" style="min-height:70px"></textarea>
+    <button class="sec" id="chk">Check status</button>
+    <div id="cout"></div>
+  </div>
+
+  <div class="card gov">
+    <h2>Report directly to the government</h2>
+    <div class="muted" style="color:var(--text)">
+      <b>DoD Hotline:</b> 1-800-424-9098 · <a href="https://www.dodig.mil/hotline" target="_blank" rel="noopener">dodig.mil/hotline</a><br>
+      <b>NASA OIG Hotline:</b> 1-800-424-9183 · <a href="https://oig.nasa.gov/hotline" target="_blank" rel="noopener">oig.nasa.gov/hotline</a><br>
+      You may also go to a Member of Congress, GAO, the Contracting Officer, DOJ/law enforcement, the SEC, EEOC, OSHA, or NLRB.
+      Protected under 10 U.S.C. § 4701 and 41 U.S.C. § 4712. You can file a reprisal complaint with the agency Inspector General within 3 years.
+      Government hotlines are the fully anonymous option. Mission Control requires a sign-in, even though anonymous reports here store no identity.
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="review"></div>
+
+<script>
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function post(u,b){ return fetch(u,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); }); }
+var $=function(id){ return document.getElementById(id); };
+
+fetch('/api/ethics-report/meta',{credentials:'same-origin'}).then(function(r){ if(r.status===401){ location.href='/login?next=/report.html'; } return r.json(); }).then(function(m){
+  $('cat').innerHTML=(m.categories||[]).map(function(c){ return '<option>'+esc(c)+'</option>'; }).join('');
+  if(m.is_reviewer) loadReview();
+});
+
+$('send').onclick=function(){
+  var b={category:$('cat').value, description:$('desc').value, when_where:$('ww').value, people:$('ppl').value, anonymous:$('anon').checked, involves_ceo:$('ceo').checked};
+  if(b.description.trim().length<10){ $('out').innerHTML='<div class="err">Please describe the concern.</div>'; return; }
+  $('send').disabled=true;
+  post('/api/ethics-report',b).then(function(res){
+    if(!res.ok){ $('send').disabled=false; $('out').innerHTML='<div class="err">'+esc(res.d.error||'Could not submit.')+'</div>'; return; }
+    ['desc','ww','ppl'].forEach(function(i){ $(i).value=''; });
+    $('out').innerHTML='<div class="ok">Report <b>'+esc(res.d.id)+'</b> received. Thank you.<br>Your case key: <code>'+esc(res.d.key)+'</code><br><span class="muted">Save this key. It is the only way to check status or add information later, and it cannot be recovered.</span></div>';
+  });
+};
+
+$('chk').onclick=function(){
+  post('/api/ethics-report/case',{key:$('ck').value.trim(), add_info:$('add').value}).then(function(res){
+    if(!res.ok){ $('cout').innerHTML='<div class="err">'+esc(res.d.error||'Not found.')+'</div>'; return; }
+    $('add').value='';
+    var d=res.d, h='<div class="ok"><b>'+esc(d.id)+'</b> · '+esc(d.category)+' · received '+esc(d.received)+'<br>Status: <b>'+esc(d.status)+'</b>';
+    (d.updates||[]).forEach(function(u){ h+='<pre>'+esc(u.at)+' · '+(u.from==='reporter'?'you':'reviewer')+': '+esc(u.text)+'</pre>'; });
+    $('cout').innerHTML=h+'</div>';
+  });
+};
+
+var STATUSES=['Received','Investigating','Referred / disclosed','Closed - substantiated','Closed - not substantiated'];
+function loadReview(){
+  fetch('/api/ethics-report/review',{credentials:'same-origin'}).then(function(r){ return r.json(); }).then(function(d){
+    var h='<div class="card" style="border-left-color:var(--red)"><h2>Reviewer queue (confidential)</h2>';
+    if(!d.ceo_conflict_routed) h+='<div class="warn">No Board designee is configured yet. Reports flagged "involves the CEO" are stored but nobody can see them until one is named.</div>';
+    if(!(d.reports||[]).length) h+='<div class="muted">No reports.</div>';
+    (d.reports||[]).forEach(function(r){
+      h+='<div class="rep"><div class="hd"><b>'+esc(r.id)+' · '+esc(r.category)+'</b><span class="pill">'+esc(r.status)+'</span></div>';
+      h+='<div class="muted">Received '+esc(String(r.received).slice(0,10))+' · '+(r.anonymous?'anonymous':('from '+esc(r.reporter&&r.reporter.name)+' &lt;'+esc(r.reporter&&r.reporter.email)+'&gt;'))+(r.involves_ceo?' · involves CEO':'')+'</div>';
+      h+='<pre>'+esc(r.description)+'</pre>';
+      if(r.when_where) h+='<div class="muted">When/where: '+esc(r.when_where)+'</div>';
+      if(r.people) h+='<div class="muted">People: '+esc(r.people)+'</div>';
+      (r.updates||[]).forEach(function(u){ h+='<pre>'+esc(String(u.at).slice(0,16))+' · '+esc(u.from)+(u.to_reporter?' (shared with reporter)':'')+': '+esc(u.text)+'</pre>'; });
+      h+='<select data-st="'+esc(r.id)+'" style="width:auto;margin-top:6px">'+STATUSES.map(function(s){ return '<option'+(s===r.status?' selected':'')+'>'+esc(s)+'</option>'; }).join('')+'</select>';
+      h+='<textarea data-nt="'+esc(r.id)+'" style="min-height:60px;margin-top:6px" placeholder="Investigation note"></textarea>';
+      h+='<div class="chk"><input type="checkbox" data-tr="'+esc(r.id)+'"><label style="margin:0">Share this note with the reporter</label></div>';
+      h+='<button class="sec" data-sv="'+esc(r.id)+'">Save</button></div>';
+    });
+    $('review').innerHTML=h+'</div>';
+    document.querySelectorAll('[data-sv]').forEach(function(btn){ btn.onclick=function(){
+      var id=btn.getAttribute('data-sv');
+      post('/api/ethics-report/review',{id:id, status:document.querySelector('[data-st="'+id+'"]').value, note:document.querySelector('[data-nt="'+id+'"]').value, to_reporter:document.querySelector('[data-tr="'+id+'"]').checked}).then(loadReview);
+    }; });
+  }).catch(function(){});
+}
+</script>
+</body>
+</html>

@@ -2171,6 +2171,112 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── ETHICS & COMPLIANCE REPORTS (Handbook Sec. 2.5 internal channel; Jon 2026-09-28) ──
+  // Any logged-in employee can file a report, named or anonymous. Anonymous reports store NO
+  // reporter identity and only a date (no timestamp), so they can't be correlated with logs.
+  // The reporter gets a case key to check status / add info later. Only designated reviewers
+  // (data/ethics-config.json) can read reports; reports flagged "involves CEO" are hidden from
+  // the CEO and routed to ceo_conflict_reviewers (the Board designee). Notification emails carry
+  // the case id + category only, never the report text.
+  {
+    const ER_FILE = path.join(__dirname, 'data', 'ethics-reports.json');
+    const ER_CFG = path.join(__dirname, 'data', 'ethics-config.json');
+    const erLoad = () => { try { return JSON.parse(fs.readFileSync(ER_FILE, 'utf8')); } catch (e) { return { reports: [] }; } };
+    const erSave = (o) => { const tmp = ER_FILE + '.tmp'; fs.writeFileSync(tmp, JSON.stringify(o, null, 2)); fs.renameSync(tmp, ER_FILE); };
+    const erCfg = () => { try { return JSON.parse(fs.readFileSync(ER_CFG, 'utf8')); } catch (e) { return { reviewers: [], ceo_emails: [], ceo_conflict_reviewers: [] }; } };
+    const lc = (s) => String(s || '').toLowerCase();
+    const canSee = (email, r, cfg) => {
+      email = lc(email);
+      if (r.involves_ceo) return (cfg.ceo_conflict_reviewers || []).map(lc).includes(email);
+      return (cfg.reviewers || []).map(lc).includes(email);
+    };
+    const isReviewer = (email, cfg) => [...(cfg.reviewers || []), ...(cfg.ceo_conflict_reviewers || [])].map(lc).includes(lc(email));
+    const erJson = (code, obj) => { res.writeHead(code, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(obj)); };
+    const erBody = (cb) => { let b = ''; req.on('data', c => { b += c; if (b.length > 50000) req.destroy(); }); req.on('end', () => { try { cb(JSON.parse(b || '{}')); } catch (e) { erJson(400, { error: 'bad request' }); } }); };
+    const CATS = ['Fraud / false claims / mischarging', 'Bribery, kickbacks, gratuities, or conflict of interest',
+      'Waste or mismanagement of government funds', 'Export control / CUI / security', 'Safety or health danger',
+      'Retaliation', 'Harassment or discrimination', 'Falsified records (time, test, inspection, quality)', 'Other violation of law or policy'];
+    const fp = req.url.split('?')[0];
+
+    if (fp === '/api/ethics-report/meta' && req.method === 'GET') {
+      if (!session) return erJson(401, { error: 'auth required' });
+      return erJson(200, { categories: CATS, is_reviewer: isReviewer(session.email, erCfg()) });
+    }
+
+    // File a report
+    if (fp === '/api/ethics-report' && req.method === 'POST') {
+      if (!session) return erJson(401, { error: 'auth required' });
+      return erBody(async (b) => {
+        const description = String(b.description || '').trim().slice(0, 8000);
+        if (description.length < 10) return erJson(400, { error: 'Please describe the concern.' });
+        const category = CATS.includes(b.category) ? b.category : 'Other violation of law or policy';
+        const anonymous = b.anonymous !== false;
+        const db = erLoad();
+        const yr = new Date().getFullYear();
+        const n = db.reports.filter(r => String(r.id).startsWith(`ER-${yr}-`)).length + 1;
+        const key = crypto.randomBytes(9).toString('base64url');
+        const r = {
+          id: `ER-${yr}-${String(n).padStart(3, '0')}`,
+          key_hash: crypto.createHash('sha256').update(key).digest('hex'),
+          received: anonymous ? new Date().toISOString().slice(0, 10) : new Date().toISOString(),
+          category, involves_ceo: b.involves_ceo === true, anonymous,
+          reporter: anonymous ? null : { name: session.name || '', email: lc(session.email) },
+          when_where: String(b.when_where || '').trim().slice(0, 1000),
+          people: String(b.people || '').trim().slice(0, 1000),
+          description,
+          status: 'Received', updates: []
+        };
+        db.reports.push(r); erSave(db);
+        const cfg = erCfg();
+        const to = r.involves_ceo ? (cfg.ceo_conflict_reviewers || []) : (cfg.reviewers || []);
+        for (const addr of to) {
+          const mail = `From: Exos Mission Control <jquinnexo@pm.me>\nTo: ${addr}\nSubject: [CONFIDENTIAL] New Ethics & Compliance report ${r.id}\n\nA new Ethics & Compliance report was filed in Mission Control.\n\nCase: ${r.id}\nCategory: ${r.category}\nAnonymous: ${r.anonymous ? 'yes' : 'no'}\n\nThe report text is not included in email. Review it at https://mc.exosaero.space/report.html#review\n\nPer Handbook Sec. 2.5: acknowledge promptly, investigate, protect the reporter's identity, and do not retaliate. Credible evidence of fraud, bribery, gratuities, conflict of interest or False Claims Act violations on a federal contract triggers mandatory disclosure (FAR 52.203-13).\n\n- Exos Mission Control`;
+          execFileP('/opt/homebrew/bin/msmtp', ['-a', 'protonmail', addr], { input: mail, timeout: 20000 }).catch(() => {});
+        }
+        return erJson(200, { ok: true, id: r.id, key, routed: to.length > 0 });
+      });
+    }
+
+    // Reporter follow-up: check status / add info with the case key (no identity needed)
+    if (fp === '/api/ethics-report/case' && (req.method === 'POST')) {
+      if (!session) return erJson(401, { error: 'auth required' });
+      return erBody((b) => {
+        const h = crypto.createHash('sha256').update(String(b.key || '')).digest('hex');
+        const db = erLoad();
+        const r = db.reports.find(x => x.key_hash === h);
+        if (!r) return erJson(404, { error: 'No case found for that key.' });
+        const add = String(b.add_info || '').trim().slice(0, 4000);
+        if (add) { r.updates.push({ at: new Date().toISOString().slice(0, 10), from: 'reporter', text: add }); erSave(db); }
+        return erJson(200, { id: r.id, status: r.status, category: r.category, received: r.received.slice(0, 10),
+          updates: r.updates.filter(u => u.from === 'reporter' || u.to_reporter).map(u => ({ at: u.at, from: u.from, text: u.text })) });
+      });
+    }
+
+    // Reviewer view: list + update
+    if (fp === '/api/ethics-report/review' && req.method === 'GET') {
+      if (!session) return erJson(401, { error: 'auth required' });
+      const cfg = erCfg();
+      if (!isReviewer(session.email, cfg)) return erJson(403, { error: 'Reviewers only' });
+      const list = erLoad().reports.filter(r => canSee(session.email, r, cfg)).map(r => { const { key_hash, ...rest } = r; return rest; }).reverse();
+      return erJson(200, { reports: list, ceo_conflict_routed: (cfg.ceo_conflict_reviewers || []).length > 0 });
+    }
+    if (fp === '/api/ethics-report/review' && req.method === 'POST') {
+      if (!session) return erJson(401, { error: 'auth required' });
+      const cfg = erCfg();
+      if (!isReviewer(session.email, cfg)) return erJson(403, { error: 'Reviewers only' });
+      return erBody((b) => {
+        const db = erLoad();
+        const r = db.reports.find(x => x.id === b.id);
+        if (!r || !canSee(session.email, r, cfg)) return erJson(404, { error: 'not found' });
+        if (['Received', 'Investigating', 'Referred / disclosed', 'Closed - substantiated', 'Closed - not substantiated'].includes(b.status)) r.status = b.status;
+        const note = String(b.note || '').trim().slice(0, 4000);
+        if (note) r.updates.push({ at: new Date().toISOString(), from: session.name || session.email, text: note, to_reporter: b.to_reporter === true });
+        erSave(db);
+        return erJson(200, { ok: true });
+      });
+    }
+  }
+
   // ── REQUIRED READING: verified-read tracker with server-side anti-gaming ──
   // A ledger of required docs (data/required-reading.json). Reading is *proven* server-side:
   // the client cannot self-certify. We store an open timestamp, clamp active-dwell to real
@@ -2194,7 +2300,9 @@ const server = http.createServer((req, res) => {
       // Early adopters (external capstone sandbox): only Mission Control Getting Started (Jon 2026-08-30).
       if (role === 'early_adopter') return doc.id === 'getting-started';
       // Members: Getting Started + the org-wide AI Tool-Use Policy — but NOT the department training set (Jon 2026-08-30).
-      if (role === 'member') return doc.id === 'getting-started' || doc.id === 'ai-tool-use-policy';
+      // Sandboxed external roles never get employee docs; doc.all_employees reaches every staff login incl. members (Jon 2026-09-28, handbook).
+      if (role === 'dd_reviewer') return false;
+      if (role === 'member') return doc.id === 'getting-started' || doc.id === 'ai-tool-use-policy' || doc.all_employees === true;
       if (!doc.audience || doc.audience === 'all') return true;
       if (role === 'admin' || role === 'manager') return true;
       return Array.isArray(depts) && depts.includes(RR_DEPT_FOR_AUDIENCE[doc.audience] || doc.audience);
@@ -2437,7 +2545,7 @@ const server = http.createServer((req, res) => {
         });
         const completed = rows.filter(r => r.status === 'completed').length;
         return {
-          doc: { id: d.id, title: d.title, version: d.version, url: d.url, min_active_seconds: d.min_active_seconds, required: d.required, description: d.description },
+          doc: { id: d.id, title: d.title, version: d.version, url: d.url, min_active_seconds: d.min_active_seconds, required: d.required, description: d.description, due_date: d.due_date || null },
           rows,
           summary: { doc_id: d.id, total: rows.length, completed, pending: rows.length - completed }
         };
@@ -5643,7 +5751,9 @@ const server = http.createServer((req, res) => {
     const pathname = decodeURIComponent(req.url.split('?')[0]);
     let filePath = path.join(__dirname, pathname === '/' ? 'index.html' : pathname);
     if (!filePath.startsWith(__dirname)) { res.writeHead(403); res.end('Forbidden'); return; }
-    const extMap = { '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.json': 'application/json' };
+    // Ethics & Compliance reports are reviewer-only via /api/ethics-report/review — never static.
+    if (/^ethics-/.test(path.basename(filePath)) && path.dirname(filePath) === path.join(__dirname, 'data')) { res.writeHead(403); res.end('Forbidden'); return; }
+    const extMap ={ '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.json': 'application/json' };
     if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
       const ext = path.extname(filePath);
       // Auto-inject the global Exobot chat widget into every real MC page (except the

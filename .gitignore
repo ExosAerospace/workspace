@@ -63,3 +63,5 @@ mission-control/data/*-snapshot-latest.json
 mission-control/data/.guard-secret
 mission-control/data/.guard-admin-token
 mission-control/data/guard-state.json
+mission-control/data/ethics-reports.json
+mission-control/data/ethics-reports.json.tmp
