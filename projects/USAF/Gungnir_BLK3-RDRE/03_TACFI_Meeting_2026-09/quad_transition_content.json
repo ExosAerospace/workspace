@@ -1,0 +1,36 @@
+{
+ "subtitle": "Refuel · Relight · Reuse: In-Space Refueling + Storable-Propellant RDRE Flight Demo for Fast Transfer Vehicles (FTV/OTV)",
+ "q4": ["<b>Success:</b> storable-RDRE ignition and restart in space, plus a µg propellant transfer, both recovered and reflown, with the flight dataset delivered to AFRL. No NASA dollars required; the path is DoD-only."],
+ "transition_ladder": [
+  ["Now: SSC SML In-Domain Orbital Logistics Challenge", "concept paper on propellant management, tank refuelability and FTV integration (Q4 CY26)", "share of $20M"],
+  ["TACFI on FA9300-25-C-6022", "resumes when guidance issues; sponsor AFRL/RQ Rocket Propulsion", "$2M + $2M TSC"],
+  ["Sole-source SBIR Phase III (15 USC 638(r))", "AFRL/RQ + RV, bridged by the SPRINT BAA", "$2–10M"],
+  ["STRATFI Government-Only ($1 SBIR : $2 DoD)", "or Strategic Breakthrough (≥20% DoW); SML as match signatory", "$9–45M"],
+  ["SpEC OTA prototype → program of record", "SAML PE 1203955SF, RG-XX refuel suppliers, 'high-thrust reusable OTV' (2030–35)", "$10–60M"]
+ ],
+ "slide2": {
+  "subtitle": "DoD-only ladder, no NASA share required. Refueling/logistics leads; storable RDRE is the FTV propulsion enabler.",
+  "left": [
+   ["Why refueling leads", [
+     "USSF Objective Force plan (Apr 2026): demonstrate refueling + augmented-maneuver tugs 2025–30; make refueling operational + <b>high-thrust reusable OTVs</b> 2030–35; on-orbit logistics architecture 2035–40.",
+     "USSPACECOM Dynamic Space Operations / <b>maneuver without regret</b> needs on-orbit resupply. RG-XX is the first NSS program with a refueling requirement ($355M FY27; >$2.7B over the FYDP).",
+     "Commercial stations as <b>refueling depots</b>: a second revenue line that helps make LEO stations sustainable. SSC's 'orbital warehousing' topic is the closest DoD demand signal today."]],
+   ["Sustainment / environment", [
+     "NOAA WB-57 sampling found spacecraft-reentry metals (Al, Cu, Li, <b>niobium</b>, hafnium) in ~10% of stratospheric aerosol particles (Murphy et al., PNAS 2023).",
+     "Models project mega-constellation reentries could exceed 360 t/yr of alumina, with open questions on ozone and upper-atmosphere effects (GRL 2024; JGR 2025).",
+     "Refuel, service and reuse on orbit lower the number of vehicles disposed of by reentry, which fits debris rules and the atmospheric concern alike."]],
+   ["Exos role", [
+     "Reusable VTVL flight testbed to 100 km+ (in-space firing + µg transfer, recovered and reflown), integration, and Type V tank / zero-loss transfer systems.",
+     "Engine: storable RDRE, government-furnished or candidate GTL build, selected by trade study. Interfaces designed to mate with SERB-approved refueling ports (RAFTI / PRM)."]]
+  ],
+  "right": [
+   ["1 · Now: SSC SML In-Domain Orbital Logistics Challenge ($20M)", ["SpaceWERX + SSC Servicing, Mobility & Logistics. Topics: propellant management, tank refuelability, transfer metering, FTV/OTV. Also: SSC Front Door intake + SpEC (NSTXL) membership."]],
+   ["2 · TACFI on FA9300-25-C-6022", ["On hold pending AFWERX/SpaceWERX guidance. Submit within the next window. Sponsor: AFRL/RQ Rocket Propulsion (GS-15 branch/division lead). Match: TX Space Commission SEARF $2M (board 11 Dec 2026)."]],
+   ["3 · Sole-source SBIR Phase III", ["15 USC 638(r) off the Phase II; no competition required. Non-SBIR funds from AFRL/RQ (PE 0602203F / USSF PE 1206601SF, Rocket Propulsion Technology) and AFRL/RV for the in-space mission. SPRINT BAA white paper as the S&T bridge."]],
+   ["4 · STRATFI, DoD-only", ["Government-Only Matching Option: $1 SBIR : $2 non-SBIR federal (e.g., $3M + $6M), no private or NASA share. Alternative: Strategic Breakthrough (up to $30M, ≥20% DoW program funds). Match signatory: SSC SML."]],
+   ["5 · OTA prototype → program of record", ["SpEC OTA prototype ($10–60M), then SAML PE 1203955SF, supplier to RG-XX refueling vendors, and the Objective Force high-thrust reusable OTV line (2030–35)."]],
+   ["Ask of the GS-15", ["(1) Sponsor TACFI when guidance posts. (2) Name the Phase III funding office. (3) Introduce us to SSC SML for the Orbital Logistics Challenge and the STRATFI match."]]
+  ],
+  "footer": "Sources: USSF Objective Force (Breaking Defense, Apr 2026); SSC SML / SpaceWERX Orbital Logistics Challenge (SSC, May 2026); AFWERX PY26.1 STRATFI Matching Funds Guidance; Murphy et al., PNAS 2023. TACFI is subject to selection; nothing is awarded. Program names and $ ranges are planning estimates."
+ }
+}
