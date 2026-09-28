@@ -100,7 +100,8 @@ def send(to, subject, body):
 def main():
     skip = optout_set()
     users = [u for u in json.load(open(USERS))
-             if (u.get("email") or "").lower() not in ALL_JON
+             if u.get("active") is not False          # deactivated/temp accounts get no digest
+             and (u.get("email") or "").lower() not in ALL_JON
              and (u.get("email") or "").lower() not in skip]
     tasks = supa("tasks?select=id,title,state,due_date,assigned_email&limit=5000")
     sent = 0
