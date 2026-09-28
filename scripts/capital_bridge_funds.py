@@ -153,6 +153,7 @@ def main():
     led = load_ledger()
     seen = set(led.get("seen_message_ids", []))
     new_entries = []
+    imap_ok = True
 
     try:
         mail = imaplib.IMAP4(IMAP_HOST, IMAP_PORT)
@@ -207,7 +208,8 @@ def main():
             log(f"NEW receipt: {entry['investor']} | ${amount if amount else 'TBD'} | alias={hit_alias} | {subject[:60]}")
         mail.logout()
     except Exception as e:
-        log(f"IMAP error: {e}")
+        log(f"ERROR: IMAP error: {e}")
+        imap_ok = False
 
     if new_entries:
         led["entries"].extend(new_entries)
@@ -222,12 +224,16 @@ def main():
     log(f"TOTAL PO10 received: ${total:,.0f} of ${target:,.0f} "
         f"({len(counted)} logged receipts, {len(pending)} awaiting amount)")
 
-    update_mc_task(led, total, target, counted, pending)
+    mc_ok = update_mc_task(led, total, target, counted, pending)
+    if not (imap_ok and mc_ok):
+        log("ERROR: run incomplete — " + ", ".join(
+            n for n, ok in (("IMAP read failed", imap_ok), ("MC task update failed", mc_ok)) if not ok))
+        sys.exit(1)
     return led, total
 
 
 def update_mc_task(led, total, target, counted, pending):
-    """Create/refresh the single MC task carrying the running total."""
+    """Create/refresh the single MC task carrying the running total. Returns False on failure."""
     pct = (total / target * 100) if target else 0
     lines = [
         "**APEX Capital Bridge — PO10 funds received (auto-tracked).**",
@@ -269,8 +275,10 @@ def update_mc_task(led, total, target, counted, pending):
         if tid and led.get("mc_task_id") != tid:
             led["mc_task_id"] = tid
             save_ledger(led)
+        return True
     except Exception as e:
-        log(f"MC task update failed: {e}")
+        log(f"ERROR: MC task update failed: {e}")
+        return False
 
 
 if __name__ == "__main__":
