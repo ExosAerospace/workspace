@@ -439,10 +439,14 @@ def file_drafts_decision(records):
 
 def post_discord(text):
     try:
-        subprocess.run(
+        r = subprocess.run(
             [OPENCLAW, "message", "send", "--channel", "discord",
              "--target", DISCORD_CHANNEL, "-m", text],
             capture_output=True, text=True, timeout=60)
+        if r.returncode != 0:
+            glog("deliver", status="error",
+                 detail=f"rc={r.returncode} {(r.stderr or r.stdout or '').strip()[:180]}")
+            return False
         return True
     except Exception as e:
         glog("deliver", status="error", detail=str(e)[:200])
