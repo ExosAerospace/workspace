@@ -15,13 +15,14 @@ Usage: research_agent.py --name grant-scanner [--model sonnet] [--no-discord]
 """
 
 # --- governance: correlation logging (auto-inserted; safe/soft) ---
+_GEND = {"status": "info", "detail": ""}   # set to error before exit so the end event isn't a false-green
 try:
     import sys as _gsys, os as _gos, atexit as _gatexit
     _gsys.path.insert(0, _gos.path.join(_gos.path.dirname(_gos.path.abspath(__file__)), ".."))
     from governance.govlog import new_run as _gnew_run, event as _gevent, is_transient as _gis_transient
     _GRUN = _gnew_run("research")
     _gevent(_GRUN, "start", detail=" ".join(_gsys.argv[1:])[:120])
-    _gatexit.register(lambda: _gevent(_GRUN, "end"))
+    _gatexit.register(lambda: _gevent(_GRUN, "end", status=_GEND["status"], detail=_GEND["detail"]))
     _gprev_hook = _gsys.excepthook
     def _gexc(t, v, tb):
         try: _gt = _gis_transient(v); _gevent(_GRUN, "transient_skip" if _gt else "error", status="transient" if _gt else "error", detail=str(v)[:160])
@@ -157,7 +158,8 @@ def main():
 
     cfg = load_json(CONFIG, {}).get("agents", {})
     if args.name not in cfg:
-        print(f"Unknown agent '{args.name}'. Available: {', '.join(cfg)}"); sys.exit(1)
+        print(f"Unknown agent '{args.name}'. Available: {', '.join(cfg)}")
+        _GEND.update(status="error", detail=f"unknown agent '{args.name}'"[:160]); sys.exit(1)
     agent = cfg[args.name]; agent["_name"] = args.name
 
     print(f"[{TODAY}] Research agent: {agent['display']} (model {args.model})")
@@ -174,6 +176,9 @@ def main():
     ok_dc = False if args.no_discord else deliver_discord(agent, title, highlights, md)
     if not args.no_discord: print(f"  Discord: {'OK' if ok_dc else 'FAIL'}")
     print("done.")
+    if not ok_mc:
+        _GEND.update(status="error", detail=f"MC deliver failed ({args.name})")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
