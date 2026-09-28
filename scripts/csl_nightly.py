@@ -45,7 +45,9 @@ def main():
         if not d:  # undispositioned = needs human review
             new_flags.append(rec)
     # --- Auto-triage (John, 2026-09-10): investigate each NEW flag before it reaches John.
-    # Auto-clear obvious name collisions (logged, reversible); escalate only genuine ambiguity. ---
+    # Auto-clear ONLY deterministic verified-registry collisions (logged, reversible).
+    # exo3 audit P1 #4: a model 'clear' is a PROPOSAL — the flag stays OPEN (no disposition
+    # written) and is routed to a human with the model rationale. Fail CLOSED. ---
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     auto_cleared, escalate = [], []
     for f in new_flags:
@@ -53,14 +55,19 @@ def main():
             r = adj.adjudicate(f)
         except Exception as e:
             r = {"verdict": "escalate", "method": "adj-error", "rationale": f"Escalated (adjudicator error: {str(e)[:60]})."}
-        if r["verdict"] == "clear":
+        if r.get("verdict") == "clear" and r.get("method") == "verified-registry":
             d = {"status": "cleared", "note": r["rationale"],
                  "by": f"Exo auto-triage ({r['method']})", "date": today}
             dispo[csl.norm(f["party"])] = d
             f["disposition"] = d
             auto_cleared.append(f)
         else:
+            if r.get("verdict") == "proposed_clear":
+                f["proposal"] = {"verdict": "proposed_clear", "method": r.get("method"),
+                                 "rationale": r.get("rationale"), "date": today,
+                                 "status": "pending human confirm"}
             escalate.append(f)
+    proposed = [f for f in escalate if f.get("proposal")]
     if auto_cleared:
         json.dump(dispo, open(DISPO, "w"), indent=2)
 
@@ -71,13 +78,14 @@ def main():
         "csl_list_date": datetime.fromtimestamp(os.path.getmtime(csl.CACHE)).strftime("%Y-%m-%d"),
         "counts": {"screened": len(parties), "flagged": len(flags),
                    "open": len(open_flags), "cleared": len(flags) - len(open_flags),
-                   "auto_cleared_today": len(auto_cleared), "clear": len(parties) - len(flags)},
+                   "auto_cleared_today": len(auto_cleared), "proposed_clear_pending_human": len(proposed),
+                   "clear": len(parties) - len(flags)},
         "flags": sorted(flags, key=lambda f: (bool(f["disposition"]), -f["score"])),
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump(report, open(OUT, "w"), indent=2)
     print(f"CSL nightly: {len(parties)} screened · {len(flags)} flagged · {len(open_flags)} open · "
-          f"{len(auto_cleared)} auto-cleared · {len(escalate)} escalated · "
+          f"{len(auto_cleared)} auto-cleared · {len(escalate)} escalated ({len(proposed)} model-proposed clear) · "
           f"{len(parties)-len(flags)} clear (CSL {report['csl_list_date']}, {len(csl._ENT)} entities)")
 
     # Only ping John for flags that genuinely need his judgment. Auto-clears are logged (MC page).
@@ -86,8 +94,10 @@ def main():
         for f in escalate[:15]:
             lines.append(f"• **{f['party']}** [{f['party_type']}] → {f['listed_name']} "
                          f"({f['list'].split(' - ')[0]}; {f['programs']}; {f['countries'] or 'n/a'}) score {f['score']}")
+            if f.get("proposal"):
+                lines.append(f"   ↳ 🤖 Exo PROPOSES clear (pending your confirm): {f['proposal']['rationale'][:220]}")
         if auto_cleared:
-            lines.append(f"\n🤖 {len(auto_cleared)} obvious name-collision(s) auto-cleared + logged (no action needed).")
+            lines.append(f"\n🤖 {len(auto_cleared)} verified-registry name-collision(s) auto-cleared + logged (no action needed).")
         lines.append("\nReview + disposition in Mission Control → /compliance-screening.html")
         try:
             subprocess.run([OPENCLAW, "message", "send", "--channel", "discord",
