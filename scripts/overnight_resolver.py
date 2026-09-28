@@ -32,7 +32,7 @@ USAGE_LOG = os.path.join(WS, "memory", "overnight-usage-log.md")
 LOG = os.path.join(WS, "logs", "overnight-resolver.log")
 SB_URL = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
 JON = "user:1501632195163590739"
-OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/shims/openclaw"
 DRY = "--dry-run" in sys.argv
 APPLY = "--apply" in sys.argv  # v2: actually mutate the board (auto-close + false-overdue fix)
 
@@ -117,17 +117,34 @@ def _protected(t):
     return any(p in blob for p in PROTECTED)
 
 
+def _cur_desc(t):
+    """Current task description for append-style notes. The board fetch does not select
+    `description`, so appending to t.get('description') would OVERWRITE the real description
+    with just the note. Fetch it fresh; raise on failure so the caller skips the PATCH."""
+    if "description" in t:
+        return t.get("description") or ""
+    rows = sb_get(f"tasks?id=eq.{t['id']}&select=description")
+    if not isinstance(rows, list) or len(rows) != 1:
+        raise RuntimeError(f"description fetch for task {t['id']} returned {rows!r:.80}")
+    t["description"] = rows[0].get("description") or ""
+    return t["description"]
+
+
 def auto_resolve(tasks, answered, apply):
-    """v2 (conservative): (1) close/cancel tasks whose linked ANSWERED decision clearly means
-    done/declined (LLM-gated); (2) fix false-overdue tasks that DECLARE no hard deadline
-    (deterministic). Returns (resolved_lines, resolved_ids). Respects PROTECTED + AUTO_CAP."""
-    resolved, ids = [], set()
+    """v2 (conservative): (1) PROPOSE close/cancel for tasks whose linked ANSWERED decision
+    appears to mean done/declined (LLM verdict = proposal only; exo3 audit P1 #4: AI proposes,
+    a human confirms — the task state is NOT changed; a proposal note is appended for the owner
+    and it is listed for Jon in the nightly DM); (2) fix false-overdue tasks that DECLARE no hard
+    deadline (deterministic). Returns (resolved_lines, resolved_ids, proposed_lines).
+    Respects PROTECTED + AUTO_CAP."""
+    resolved, ids, proposed, n_prop = [], set(), [], 0
     now = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
     by_id = {str(t["id"]): t for t in tasks}
 
-    # (1) Answered-decision -> close linked task (the entX/TruSight pattern). LLM classifies.
+    # (1) Answered-decision -> PROPOSE closing the linked task (entX/TruSight pattern). LLM
+    # classifies; the owner (or Jon) confirms by flipping the state themselves.
     for dec in answered:
-        if len(ids) >= AUTO_CAP:
+        if n_prop >= AUTO_CAP:
             break
         tid = str(dec.get("relatedItem") or "")
         if tid not in by_id:
@@ -137,7 +154,7 @@ def auto_resolve(tasks, answered, apply):
         t = by_id.get(tid)
         if not t or t.get("state") in ("Done", "Cancelled") or _protected(t):
             continue
-        verdict = ollama(
+        _decide_prompt = (
             "Decide the state of a TASK given the answer to its decision. Be very strict.\n"
             f"TASK: {t.get('title','')}\n"
             f"DECISION: {dec.get('title','') or dec.get('question','')}\n"
@@ -149,19 +166,32 @@ def auto_resolve(tasks, answered, apply):
             "(e.g. 'yes, draft it', 'go', 'approve & release', 'ready — submit now', 'yes send it') "
             "is NOT completion — that is LEAVE, because the work still has to happen.\n"
             "Reply with ONE word: DONE, CANCELLED, or LEAVE.")
+        # ExO3 #3: prepend the confirmed MTP-as-protocol so this task-state verdict ladders to
+        # Exos's MTP + hard constraints + decision-priority (config/mtp-protocol.json).
+        try:
+            import os as _os, sys as _sys
+            _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+            import mtp as _mtp
+            _decide_prompt = _mtp.protocol_prompt() + "\n\n" + _decide_prompt
+        except Exception:
+            pass
+        verdict = ollama(_decide_prompt)
         v = (verdict or "").strip().upper()
         v = "DONE" if v.startswith("DONE") else "CANCELLED" if v.startswith("CANCEL") else "LEAVE"
         if v == "LEAVE" or verdict is None:
             continue
-        note = f" [AUTO-{v} {now[:10]} by overnight-resolver: linked decision {dec.get('id')} answered '{str(dec.get('answer',''))[:40]}'. Reversible — flip state if wrong.]"
+        marker = f"[PROPOSED-{v} by overnight-resolver: linked decision {dec.get('id')}"
+        note = (f" {marker} answered '{str(dec.get('answer',''))[:40]}' ({now[:10]}). "
+                f"Model proposal only — state NOT changed. Owner: set state to {v.title()} to confirm, or ignore.]")
         if apply:
             try:
-                sb_patch(t["id"], {"state": v.title(), "completed_at": now,
-                                   "description": (t.get("description") or "") + note})
+                desc = _cur_desc(t)
+                if marker not in desc:  # don't re-append the same proposal every night
+                    sb_patch(t["id"], {"description": desc + note})
             except Exception as e:
-                logline(f"auto-close PATCH failed for {t['id']}: {e}"); continue
-        resolved.append(f"[{t['id']}] {(t.get('title') or '')[:56]} → {v} (decision {dec.get('id')} answered)")
-        ids.add(str(t["id"]))
+                logline(f"proposal-note PATCH failed for {t['id']}: {e}"); continue
+        proposed.append(f"[{t['id']}] {(t.get('title') or '')[:56]} → {v}? (decision {dec.get('id')} answered; confirm by setting state)")
+        n_prop += 1
 
     # (2) False-overdue fix: task is overdue but its OWN description says there is no hard deadline.
     d0 = today()
@@ -179,13 +209,13 @@ def auto_resolve(tasks, answered, apply):
             note = f" [AUTO-DATEFIX {d0} by overnight-resolver: was false-overdue (description declares no hard deadline); internal due bumped +30d. Reversible.]"
             if apply:
                 try:
-                    sb_patch(t["id"], {"due_date": newdue, "description": (t.get("description") or "") + note})
+                    sb_patch(t["id"], {"due_date": newdue, "description": _cur_desc(t) + note})
                 except Exception as e:
                     logline(f"date-fix PATCH failed for {t['id']}: {e}"); continue
             resolved.append(f"[{t['id']}] {(t.get('title') or '')[:56]} → due bumped +30d (was false-overdue, no hard deadline)")
             ids.add(str(t["id"]))
 
-    return resolved, ids
+    return resolved, ids, proposed
 
 
 def _subprocess_env():
@@ -276,7 +306,7 @@ def held_sync(tasks, open_decs, resolved_ids, apply):
             note = f" [HELD {now[:10]} by overnight-resolver: linked to open Decision {dec.get('id')}; awaiting Jon. Reversible — auto-reopens when decision closes.]"
             if apply:
                 try:
-                    sb_patch(t["id"], {"state": "Held", "description": (t.get("description") or "") + note})
+                    sb_patch(t["id"], {"state": "Held", "description": _cur_desc(t) + note})
                 except Exception as e:
                     logline(f"held-set PATCH failed for {tid}: {e}"); continue
             t["state"] = "Held"
@@ -285,7 +315,7 @@ def held_sync(tasks, open_decs, resolved_ids, apply):
             note = f" [UNHELD {now[:10]} by overnight-resolver: linked decision closed; reopened to To Do.]"
             if apply:
                 try:
-                    sb_patch(t["id"], {"state": "To Do", "description": (t.get("description") or "") + note})
+                    sb_patch(t["id"], {"state": "To Do", "description": _cur_desc(t) + note})
                 except Exception as e:
                     logline(f"held-revert PATCH failed for {tid}: {e}"); continue
             t["state"] = "To Do"
@@ -324,7 +354,7 @@ def main():
 
     # v2 — autonomous reversible resolution (auto-close on answered decisions + false-overdue fix).
     answered = load_answered_recent() if decisions_ok else []
-    resolved, resolved_ids = auto_resolve(tasks, answered, APPLY)
+    resolved, resolved_ids, proposed = auto_resolve(tasks, answered, APPLY)
     if resolved_ids:
         tasks = [t for t in tasks if str(t["id"]) not in resolved_ids]
         ws = [t for t in ws if str(t["id"]) not in resolved_ids]
@@ -351,9 +381,14 @@ def main():
         due = parse_due(t)
         overdue = due is not None and due < d
         dec = decision_for(t["id"], open_decs) if decisions_ok else None
-        if dec and t.get("state") == "Held" and f"[{t['id']}]" not in "".join(newly_held):
-            # Already parked on a prior run — don't re-list it every night (D-7281672 noise fix).
-            held_count += 1
+        if dec and t.get("state") == "Held":
+            # Already surfaced this run: either just listed under "NEW:" (newly_held, printed
+            # separately above) or a prior-run hold counted below. Never also double-count into
+            # NEEDS JON — that made the nightly "escalated" figure just mirror held_new instead of
+            # tracking real Jon-facing escalations (found investigating the 9/20 meta-eval's
+            # "escalation rate collapsed to 0" finding: needs_jon == held_new on every logged day).
+            if f"[{t['id']}]" not in "".join(newly_held):
+                held_count += 1
             claimed.add(t["id"])
         elif dec:
             needs_jon.append(f"[{t['id']}] {(t.get('title') or '')[:58]} — decision {dec.get('id')} awaiting you")
@@ -362,6 +397,7 @@ def main():
             needs_jon.append(f"[{t['id']}] {(t.get('title') or '')[:58]} — OVERDUE, no owner (route it)")
             claimed.add(t["id"])
 
+    radar_ids = []
     for t in ws:
         if t["id"] in claimed:
             continue
@@ -369,6 +405,7 @@ def main():
         overdue = due is not None and due < d
         tag = "OVERDUE" if overdue else (f"due {due}" if due else t.get("state"))
         advancing.append(f"[{t['id']}] {(t.get('title') or '')[:58]} — {tag}")
+        radar_ids.append(str(t["id"]))
 
     top3 = [f"{i+1}. [{t['id']}] {(t.get('title') or '')[:64]}" for i, t in enumerate(ws[:3])]
 
@@ -377,6 +414,10 @@ def main():
     if resolved:
         parts.append(f"✅ **RESOLVED/ADVANCED{'' if APPLY else ' (proposed — not applied)'}:**")
         parts += [f"• {x}" for x in resolved[:AUTO_CAP]]
+        parts.append("")
+    if proposed:
+        parts.append("🤖 **PROPOSED CLOSE — confirm (model verdict; state NOT changed):**")
+        parts += [f"• {x}" for x in proposed[:AUTO_CAP]]
         parts.append("")
     if needs_jon:
         parts.append("🗳️ **NEEDS JON:**")
@@ -404,13 +445,13 @@ def main():
         parts.append("_Note: decisions store was unreadable/implausible this run — escalation matching skipped (fail-safe). Board data above is good._")
     parts.append("")
     mode = "auto-resolve on" if APPLY else "surface-only"
-    parts.append(f"_v2 {mode}: reversible auto-close + false-overdue fixes; one-way doors always escalated. Full board: http://192.168.1.216:8080_")
+    parts.append(f"_v2 {mode}: model close/cancel = proposals only; deterministic false-overdue fixes; one-way doors always escalated. Full board: http://192.168.143.216:8080_")
     summary = "\n".join(parts)
 
     delivered = post_discord(summary)
-    logline(f"run ok: ws={len(ws)} resolved={len(resolved)} blocked={len(blocked)} needs_jon={len(needs_jon)} "
+    logline(f"run ok: ws={len(ws)} resolved={len(resolved)} proposed={len(proposed)} blocked={len(blocked)} needs_jon={len(needs_jon)} "
             f"held_new={len(newly_held)} held_reopened={len(reverted_held)} held_existing={held_count} "
-            f"radar={len(advancing)} decisions_ok={decisions_ok} apply={APPLY} delivered={delivered}{' (dry-run)' if DRY else ''}")
+            f"radar={len(advancing)} radar_ids=[{','.join(radar_ids)}] decisions_ok={decisions_ok} apply={APPLY} delivered={delivered}{' (dry-run)' if DRY else ''}")
     try:
         with open(USAGE_LOG, "a") as f:
             f.write(f"| {d} | launchd+ollama | {len(ws)} | {len(resolved)} | {len(needs_jon)} | 0 |\n")
