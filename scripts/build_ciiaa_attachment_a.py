@@ -175,6 +175,12 @@ p("6.4 Handling Controlled Information While Reporting. Protected Activity does 
   "disclosure of information protected by the Company's attorney-client privilege, except as permitted by "
   "law.")
 
+p("6.5 Separation Agreements and Releases. Section 6 applies to, and will be included in, any separation "
+  "agreement, general release or other agreement the Company asks me to sign in connection with the end of my "
+  "employment, including the release required for termination benefits under Section 6(A) of the Employment "
+  "Agreement. No such release will waive my right to receive an award from a government agency for "
+  "information provided, and any \"non-disclosure\" term in it is subject to Sections 6 and 7.")
+
 # 7 ------------------------------------------------------------------
 h("7. Defend Trade Secrets Act Immunity Notice (18 U.S.C. § 1833(b))")
 p("Pursuant to the Defend Trade Secrets Act of 2016, I will not be held criminally or civilly liable under any "
