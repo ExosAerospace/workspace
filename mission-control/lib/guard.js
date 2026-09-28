@@ -29,7 +29,8 @@ const TRACE_LEDGER = path.join(LOG_DIR, 'trace-ledger.jsonl');
 const SECRET_FILE = path.join(ROOT, 'data', '.guard-secret');
 try { fs.mkdirSync(LOG_DIR, { recursive: true }); } catch (e) {}
 
-const JON_EMAILS = new Set(['jquinn@exosaero.com', 'jquinnexo@pm.me']);
+// megawattcontrols@gmail.com = Jon's personal backup admin account (Jon 9/27), also on the Cloudflare Access policy.
+const JON_EMAILS = new Set(['jquinn@exosaero.com', 'jquinnexo@pm.me', 'megawattcontrols@gmail.com']);
 const JON_DISCORD = 'user:1501632195163590739';
 const CF_ACC = '6b178cbe1c76dfd717c07460d5c0f653';
 const CF_APP = 'e4fef0a6-7c43-42d0-91ca-ff9e22fa70ea';
