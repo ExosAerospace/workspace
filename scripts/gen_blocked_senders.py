@@ -50,6 +50,9 @@ REVIEW_HOLD = {
     "anduril.com", "planet.com", "umbra.space", "ge.com", "emerson.com",
     "netsuite.com", "cantor.com", "firstcitizens.com",
     "aero.org",            # The Aerospace Corporation (FFRDC), .org TLD
+    # --- Held 2026-09-28 (John override): Bancroft Capital re-engaged; John
+    #     chose to engage (veteran-owned BD). Keep off the org-wide block.
+    "bancroft4vets.com",
     # Malformed parse artifacts (trailing punctuation / junk tokens)
     "navy.mil.", "navy.mil;", "proton.me>", "01dd3563.bbded",
 }

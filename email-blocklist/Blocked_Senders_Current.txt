@@ -1,12 +1,13 @@
 # Exos DD — Canonical Blocked-Senders List
-# Generated: 2026-09-23 15:46 by scripts/gen_blocked_senders.py
-# Sources: failed-dd-registry.json (83 do-not-engage entities) + peaton seed
-# Active entries: 147   |   Held for review: 35
+# Generated: 2026-09-28 11:49 by scripts/gen_blocked_senders.py
+# Sources: failed-dd-registry.json (87 do-not-engage entities) + peaton seed
+# Active entries: 152   |   Held for review: 36
 # Format: one entry/line; domain.com | user@domain.com | @domain.com | *@domain.com
 # Lines starting with '#' are ignored by both the Outlook updater and the tenant rule.
 #
 21computech.com
 a.mike@whitehatteamusa.com
+aaltrindad.com
 acquirorevenueadvisors.com
 actium.capital
 adamevellc.com
@@ -24,7 +25,6 @@ aria.townsend@corporatewellnessintranet.com
 arron.chambers@novusglobal-usa.com
 asglobal.com
 async-nu.com
-bancroft4vets.com
 bestech-inc.com
 blinkmfg.com
 bo4.de
@@ -42,6 +42,7 @@ craftcm.com
 crestmontcapital217.com
 csbconsulting.us
 david@capitalgrouphq.com
+directgrowthadvisorypartnerinc.co
 diyarbakirsoz.com
 dorafund.store
 dragomir_kevin@lynampartnersbrief.com
@@ -76,6 +77,7 @@ jumpfinance.co
 junoventure.com
 katherine.carter@jumpfinance.co
 kaykayllc.com
+keyes.org
 kingsleyrowcapital.com
 kisinc.net
 larchterrace.co
@@ -84,6 +86,7 @@ logalty@logalty.com
 lynampartnersbrief.com
 machado.luis1@acquirorevenueadvisors.com
 mcapital-group.com
+melissa.vasquez@aaltrindad.com
 midlandtxedc.com
 mikalventures.com
 mike.turner@kingsleyrowcapital.com
@@ -100,6 +103,7 @@ ovalv.com
 ovalv.io
 palmdrive.vc
 pedro@actium.capital
+priveapartners.com
 r.b@zaidwoodmanagement.com
 rami.b.zeneldin@zaidwoodadvisors.com
 ravee.space
@@ -114,6 +118,7 @@ roth.com
 ruby.darnell@summitcap.online
 ruby@slightedgeangellink.co
 ruecker.ross@dorafund.store
+samantha.martin@directgrowthadvisorypartnerinc.co
 scalenowpeak.info
 scott@triplecrownfundingsolutions.com
 seafort.de
@@ -159,6 +164,7 @@ zaidwoodmanagement.com
 # aero.org
 # anduril.com
 # au.edu.pk
+# bancroft4vets.com
 # bcm.edu
 # beacongroup.aero
 # brown.edu
