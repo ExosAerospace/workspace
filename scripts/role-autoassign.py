@@ -44,7 +44,7 @@ from datetime import datetime
 
 WS = os.path.expanduser('~/.openclaw/workspace')
 SUPA = 'https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/'
-SUPA_KEY = 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp'
+SUPA_KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 MATRIX = os.path.join(WS, 'config', 'capability-matrix.json')
 LOG = os.path.join(WS, 'logs', 'role-autoassign.jsonl')
 DRY = '--dry-run' in sys.argv

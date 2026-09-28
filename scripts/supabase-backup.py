@@ -16,7 +16,7 @@ import supabase_util as _sbu; _sbu.install()
 import os, sys, json, gzip, time, urllib.request, urllib.error, datetime, shutil
 
 SB   = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
-KEY  = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+KEY  = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 ROOT = os.path.expanduser("~/.openclaw/workspace")
 BKDIR = os.path.join(ROOT, "mission-control/data/backups/supabase")
 USERS = os.path.join(ROOT, "mission-control/users.json")

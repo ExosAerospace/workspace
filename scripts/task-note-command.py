@@ -35,7 +35,7 @@ ROSTER = os.path.join(WS, "mission-control", "data", "routing-roster.json")
 STATE = os.path.join(WS, "logs", "task-note-command-state.json")
 LOG = os.path.join(WS, "logs", "task-note-command.log")
 SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
-KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 
 # Trigger recognition — accept all three forms, case-insensitively:
 #   "@exo" / "@exobot" text (any case: @Exo, @EXO, @ExoBot …)

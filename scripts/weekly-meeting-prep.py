@@ -11,7 +11,7 @@ import os, sys, json, re, datetime, urllib.request, subprocess
 import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 
 WS = os.path.expanduser("~/.openclaw/workspace")
-K = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+K = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 H = {"apikey": K, "Authorization": "Bearer " + K}
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
 OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"

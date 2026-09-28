@@ -226,6 +226,34 @@ function auditDeny(session, req, reason) {
     }) + '\n');
   } catch {}
 }
+// exo3 audit fix #4: early_adopter (UTD capstone) write/timeline access is scoped to the user's
+// assigned project, same as the board list. Returns the project name if taskId is in scope, else null.
+function eaProject(session) {
+  try { const u = loadUsers().find(x => x.id === session.userId); return (u && u.project) || null; } catch { return null; }
+}
+async function eaTaskInScope(session, taskId) {
+  const proj = eaProject(session);
+  if (!proj || taskId == null || !/^\d+$/.test(String(taskId))) return null;
+  try {
+    const r = await supabaseRequest('GET', `tasks?id=eq.${String(taskId)}&select=id,category&limit=1`);
+    const row = Array.isArray(r.data) ? r.data[0] : null;
+    return row && row.category === proj ? proj : null;
+  } catch { return null; }
+}
+async function eaOwnNote(session, activityId) {
+  if (!/^[\w-]+$/.test(String(activityId || ''))) return false;
+  try {
+    const r = await supabaseRequest('GET', `activities?id=eq.${String(activityId)}&select=id,subject,owner&limit=1`);
+    const a = Array.isArray(r.data) ? r.data[0] : null;
+    const m = a && /^task:(\d+)$/.exec(a.subject || '');
+    return !!(m && a.owner === session.name && await eaTaskInScope(session, m[1]));
+  } catch { return false; }
+}
+function eaForbid(session, req, res, reason) {
+  auditDeny(session, req, reason);
+  res.writeHead(403, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ error: 'Not permitted — outside your project.' }));
+}
 function backupToken() {
   try { return fs.readFileSync(BTOKEN_FILE, 'utf-8').trim(); }
   catch {
@@ -566,7 +594,13 @@ function parseMultipart(req) {
 
 // Supabase config
 const SUPABASE_URL = 'https://pcrgpuoljylqcumijvnw.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp';
+// exo3 audit fix #1: the server uses the PRIVATE (secret/service_role) key from ~/.openclaw/secrets.json,
+// never the publishable key — so the anon role can be revoked at the DB and a leaked publishable key
+// reads nothing. This key must never be sent to a browser.
+const SUPABASE_KEY = (() => {
+  try { return JSON.parse(fs.readFileSync(path.join(process.env.HOME || '/Users/exomac', '.openclaw', 'secrets.json'), 'utf8')).supabase_service_role_key; }
+  catch (e) { console.error('FATAL: cannot read supabase_service_role_key from ~/.openclaw/secrets.json', e.message); process.exit(1); }
+})();
 const PROTON_PW = (() => { try { return (JSON.parse(require('fs').readFileSync(require('os').homedir() + '/.openclaw/secrets.json', 'utf8')).protonmail_bridge_smtp_password) || ''; } catch (e) { return ''; } })();  // secrets.json, not hardcoded (2026-09-10)
 
 // Teamwork config (moved server-side from teamwork.html)
@@ -1226,18 +1260,26 @@ const server = http.createServer((req, res) => {
     if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       try {
-        const { newPassword } = JSON.parse(body || '{}');
+        const { newPassword, currentPassword } = JSON.parse(body || '{}');
         if (!newPassword || String(newPassword).length < 8) {
           res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Password must be at least 8 characters.' })); return;
         }
         const users = loadUsers();
         const user = users.find(u => u.id === session.userId);
         if (!user) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'User not found' })); return; }
+        // exo3 audit fix #5: a borrowed/stolen session cookie must not be able to take the account
+        // over permanently — re-prove the CURRENT password before setting a new one. (A user who
+        // has never had a password — first-time setup — is the only exception.)
+        if (user.password_hash && !verifyPassword(String(currentPassword || ''), user.password_hash, user.password_salt)) {
+          glog('mc-server', 'change_password_denied', 'warn', 'wrong current password', { email: session.email });
+          res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Current password is incorrect.' })); return;
+        }
         const salt = crypto.randomBytes(32).toString('hex');
         user.password_salt = salt;
         user.password_hash = hashPassword(newPassword, salt);
         user.password_set_at = new Date().toISOString();
         saveUsers(users);
+        glog('mc-server', 'change_password', 'ok', 'self-service password change', { email: session.email });
         res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true }));
       } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Bad request' })); }
     }); return;
@@ -2088,6 +2130,22 @@ const server = http.createServer((req, res) => {
         const LEDGER = path.join(__dirname, 'data', 'expense-reports.json');
         let led = []; try { led = JSON.parse(fs.readFileSync(LEDGER, 'utf8')); } catch (e) {}
         const entry = led.find(r => String(r.approval_task_id) === String(id));
+        // exo3 audit fix #3: only the named manager (or an admin who isn't the submitter) may
+        // decide an expense, and only for a real ledger entry — no approving your own report, and
+        // no closing arbitrary task ids through this endpoint.
+        if (!entry) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'No expense report is linked to that approval task.' })); return; }
+        {
+          const canonEmail = v => { const u = findOwnerUser(v); return ((u && u.email) || String(v || '')).trim().toLowerCase(); };
+          const me = canonEmail(session.email);
+          const isManager = !!me && me === canonEmail(entry.manager_email);
+          const isSubmitter = !!me && me === canonEmail(entry.submitter_email);
+          const ok = isManager || (session.role === 'admin' && !isSubmitter);
+          if (!ok) {
+            glog('mc-server', 'expense_decide_denied', 'warn', `${session.email} tried to ${decision} ${entry.id}`, { email: session.email, expense: entry.id });
+            res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: `Only ${entry.manager_name || entry.manager_email || 'the assigned manager'} can approve or deny this expense report.` })); return;
+          }
+          glog('mc-server', 'expense_decide', 'ok', `${decision} ${entry.id} by ${session.email}`, { email: session.email, expense: entry.id, decision });
+        }
         if (decision === 'denied') {
           if (!comment || !String(comment).trim()) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'A reason is required to deny.' })); return; }
           if (entry) { entry.state = 'denied'; entry.denied_comment = String(comment).trim(); entry.denied_by = approver; entry.denied_at = new Date().toISOString(); fs.writeFileSync(LEDGER, JSON.stringify(led, null, 2)); }
@@ -2537,6 +2595,22 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── Backup page read proxy (admin-only). backup.html used to call Supabase from the browser with
+  // the publishable key; it now reads through here so no DB key ever ships to a browser. Read-only,
+  // allow-listed tables, every pull logged (insider-exfil visibility).
+  if (req.url.startsWith('/api/backup-read/') && req.method === 'GET') {
+    const s = getSession(req);
+    if (!s || s.role !== 'admin') { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Admin only' })); return; }
+    const [pth, qs] = req.url.slice('/api/backup-read/'.length).split('?');
+    const table = decodeURIComponent(pth || '');
+    if (!['tasks', 'contacts', 'companies', 'deals', 'activities'].includes(table)) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'table not allowed' })); return; }
+    glog('mc-server', 'backup_read', 'info', `${table} by ${s.email}`, { email: s.email, table });
+    supabaseRequest('GET', `${table}${qs ? '?' + qs : ''}`)
+      .then(({ status, data }) => { res.writeHead(status >= 400 ? status : 200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); })
+      .catch(e => { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e).slice(0, 200) })); });
+    return;
+  }
+
   // ── TASKS API (Supabase-backed) ──
   // ── Global search across Mission Control (tasks, CRM, opportunities, decisions, …) ──
   if (req.url.split('?')[0] === '/api/search' && req.method === 'GET') {
@@ -2552,18 +2626,29 @@ const server = http.createServer((req, res) => {
       const readJson = f => { try { return JSON.parse(fs.readFileSync(path.join(dataDir, f), 'utf8')); } catch (e) { return null; } };
       const hit = (obj, fields) => fields.some(f => String(obj[f] == null ? '' : obj[f]).toLowerCase().includes(ql));
       const groups = [];
+      // exo3 audit fix #6: search obeys the same visibility rules as the pages it points to.
+      // Members: no deals (/api/deals is blocked for them), only their own/group tasks (board rule);
+      // non-admins: only decisions assigned to them or where they're the approver (Decisions rule).
+      const isMember = s.role === 'member', isAdmin = s.role === 'admin';
+      const canonS = v => { const u = findOwnerUser(v); return ((u && u.email) || String(v || '')).trim().toLowerCase(); };
+      const meS = canonS(s.email);
+      const taskVisible = t => !isMember || (t.assigned_email || '').toLowerCase() === (s.email || '').toLowerCase()
+        || t.owner === s.name || t.owner === s.email || t.owner === 'Team' || (Array.isArray(t.tags) && t.tags.includes('group'));
+      const decisionVisible = d => isAdmin || canonS(d.assignedTo || 'jquinn@exosaero.com') === meS || (!!d.approver && canonS(d.approver) === meS);
+      glog('mc-server', 'search', 'info', raw.slice(0, 80), { email: s.email, role: s.role });
 
       // -- Supabase-backed entities (live) --
       const sb = async (label, icon, table, cols, selectCols, mapper) => {
         try {
           const r = await supabaseRequest('GET', `${table}?select=${selectCols}&${ilikeOr(cols)}&limit=25`);
-          const rows = Array.isArray(r.data) ? r.data : [];
+          let rows = Array.isArray(r.data) ? r.data : [];
+          if (table === 'tasks') rows = rows.filter(taskVisible);
           if (rows.length) groups.push({ key: table, label, icon, results: rows.map(mapper) });
         } catch (e) { /* one source failing must not break search */ }
       };
       await Promise.all([
         sb('Tasks', '📋', 'tasks', ['title', 'owner', 'category', 'description'],
-           'id,title,owner,state,category,due_date',
+           'id,title,owner,state,category,due_date,assigned_email,tags',
            t => ({ title: t.title || '(untitled)', subtitle: [t.owner, t.category].filter(Boolean).join(' · '),
                    badge: t.state, url: `/index.html?task=${encodeURIComponent(t.id)}` })),
         sb('Contacts', '👤', 'contacts', ['name', 'email', 'organization', 'title', 'notes'],
@@ -2574,7 +2659,7 @@ const server = http.createServer((req, res) => {
            'id,name,domain,industry',
            c => ({ title: c.name || c.domain || '(company)', subtitle: [c.industry, c.domain].filter(Boolean).join(' · '),
                    badge: 'CRM', url: `/crm.html?q=${encodeURIComponent(c.name || c.domain || '')}` })),
-        sb('Deals', '💰', 'deals', ['name', 'notes', 'stage'],
+        isMember ? null : sb('Deals', '💰', 'deals', ['name', 'notes', 'stage'],
            'id,name,stage,amount',
            d => ({ title: d.name || '(deal)', subtitle: [d.stage, d.amount ? ('$' + Number(d.amount).toLocaleString()) : ''].filter(Boolean).join(' · '),
                    badge: 'Deal', url: `/crm.html?q=${encodeURIComponent(d.name || '')}` })),
@@ -2590,7 +2675,7 @@ const server = http.createServer((req, res) => {
       }
       const dec = readJson('decisions.json');
       if (Array.isArray(dec)) {
-        const r = dec.filter(d => hit(d, ['question', 'context', 'note', 'proposedAction', 'answer', 'id'])).slice(0, 25);
+        const r = dec.filter(decisionVisible).filter(d => hit(d, ['question', 'context', 'note', 'proposedAction', 'answer', 'id'])).slice(0, 25);
         if (r.length) groups.push({ key: 'decisions', label: 'Decisions', icon: '🗳️',
           results: r.map(d => ({ title: d.question || d.proposedAction || d.id, subtitle: (d.answer ? 'Answered: ' + d.answer : (d.context || '')).slice(0, 120),
             badge: d.answer ? 'answered' : 'open', url: `/decisions.html?focus=${encodeURIComponent(d.id)}` })) });
@@ -2822,6 +2907,11 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/tasks' && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const task = JSON.parse(body);
+      if (session && session.role === 'early_adopter') {
+        const proj = eaProject(session);
+        if (!proj) { eaForbid(session, req, res, 'ea-create-no-project'); return; }
+        task.category = proj;
+      }
       if (!task.state) task.state = 'To Do';
       if (!task.priority && task.priority !== 0) task.priority = 50;
       supabaseRequest('POST', 'tasks', task)
@@ -2841,6 +2931,10 @@ const server = http.createServer((req, res) => {
     let body = ''; req.on('data', c => body += c); req.on('end', async () => {
       try {
         const { id, ...fields } = JSON.parse(body);
+        if (session && session.role === 'early_adopter') {
+          const proj = await eaTaskInScope(session, id);
+          if (!proj || ('category' in fields && fields.category !== proj)) { eaForbid(session, req, res, 'out-of-scope-task-edit'); return; }
+        }
         if (fields.state === 'Done' && !fields.completed_at) fields.completed_at = new Date().toISOString();
         if (fields.state && fields.state !== 'Done') fields.completed_at = null;
         fields.updated_at = new Date().toISOString();   // stamp so delta polling reliably catches app edits
@@ -2947,8 +3041,14 @@ const server = http.createServer((req, res) => {
     const urlObj = new URL(req.url, 'http://localhost');
     const taskId = urlObj.searchParams.get('task_id');
     if (!taskId) { res.writeHead(400); res.end(JSON.stringify({ error: 'task_id required' })); return; }
-    supabaseRequest('GET', `activities?subject=eq.task:${taskId}&order=created_at.asc&limit=500`)
-      .then(({ status, data }) => {
+    (session && session.role === 'early_adopter' ? eaTaskInScope(session, taskId) : Promise.resolve(true))
+      .then(ok => {
+        if (!ok) { eaForbid(session, req, res, 'out-of-scope-task-updates'); return null; }
+        return supabaseRequest('GET', `activities?subject=eq.task:${encodeURIComponent(taskId)}&order=created_at.asc&limit=500`);
+      })
+      .then(r => {
+        if (!r) return;
+        const { status, data } = r;
         res.writeHead(status >= 400 ? status : 200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(data));
       }).catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
@@ -2956,8 +3056,9 @@ const server = http.createServer((req, res) => {
   }
 
   if (req.url === '/api/tasks/updates' && req.method === 'POST') {
-    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+    let body = ''; req.on('data', c => body += c); req.on('end', async () => {
       const { task_id, body: updateBody, owner } = JSON.parse(body);
+      if (session && session.role === 'early_adopter' && !(await eaTaskInScope(session, task_id))) { eaForbid(session, req, res, 'out-of-scope-task-note'); return; }
       // The board client hardcodes owner 'Jon'. For sandboxed early_adopter users
       // (UTD capstone) the author MUST come from the session, so their notes aren't
       // attributed to Jon (capture/ack loop + @Exobot router key off the author).
@@ -2980,10 +3081,11 @@ const server = http.createServer((req, res) => {
 
   // ── EDIT a task update (Jon 2026-09-10: edit your own timeline notes) ──
   if (req.url === '/api/tasks/updates' && req.method === 'PATCH') {
-    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+    let body = ''; req.on('data', c => body += c); req.on('end', async () => {
       try {
         const { id, body: newBody } = JSON.parse(body);
         if (!id || typeof newBody !== 'string') { res.writeHead(400); res.end(JSON.stringify({ error: 'id and body required' })); return; }
+        if (session && session.role === 'early_adopter' && !(await eaOwnNote(session, id))) { eaForbid(session, req, res, 'out-of-scope-note-edit'); return; }
         supabaseRequest('PATCH', `activities?id=eq.${encodeURIComponent(id)}`, { body: newBody })
           .then(() => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
           .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
@@ -2993,10 +3095,11 @@ const server = http.createServer((req, res) => {
 
   // ── DELETE a task update (Jon 2026-09-10: remove duplicate/own timeline notes) ──
   if (req.url === '/api/tasks/updates/delete' && req.method === 'POST') {
-    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+    let body = ''; req.on('data', c => body += c); req.on('end', async () => {
       try {
         const { id } = JSON.parse(body);
         if (!id) { res.writeHead(400); res.end(JSON.stringify({ error: 'id required' })); return; }
+        if (session && session.role === 'early_adopter' && !(await eaOwnNote(session, id))) { eaForbid(session, req, res, 'out-of-scope-note-delete'); return; }
         supabaseRequest('DELETE', `activities?id=eq.${encodeURIComponent(id)}`)
           .then(() => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
           .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
@@ -4977,14 +5080,36 @@ const server = http.createServer((req, res) => {
         const p = JSON.parse(body || '{}');
         const items = Array.isArray(p.answers) ? p.answers : [p];
         const arr = loadDecisions(); const now = new Date().toISOString(); const updated = [];
-        const who = (session && session.name) || (isDecisionsCronToken(req) ? 'Decisions Daily Update' : 'Jon');
+        // exo3 audit fix #2: a decision is answered ONLY by its assignee/approver (or an admin).
+        // The shared X-Exo-Token (Decisions Daily Update cron) may only CLOSE a stale item
+        // ("Closed …"/"Auto-closed …") — it can never render an approve/deny on a human's behalf.
+        // No more anonymous 'Jon' attribution.
+        const viaToken = !session && isDecisionsCronToken(req);
+        if (!session && !viaToken) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+        const who = session ? (session.name || session.email) : 'Decisions Daily Update (token)';
+        const canonD = v => { const u = findOwnerUser(v); return ((u && u.email) || String(v || '')).trim().toLowerCase(); };
+        const meD = session ? canonD(session.email) : '';
+        const mayAnswer = d => {
+          if (session && session.role === 'admin') return true;
+          if (!meD) return false;
+          return canonD(d.assignedTo || 'jquinn@exosaero.com') === meD || (!!d.approver && canonD(d.approver) === meD);
+        };
+        const isClose = a => /^(auto-)?closed\b/i.test(String(a || '').trim());
+        const rejected = [];
         for (const it of items) {
           const d = arr.find(x => x.id === it.id);
           if (!d) continue;
           if (it.answer === undefined && !it.note) continue;
+          if (viaToken ? !isClose(it.answer) : !mayAnswer(d)) {
+            rejected.push(d.id);
+            glog('mc-server', 'decision_answer_denied', 'warn', `${who} not authorized to answer ${d.id}`, { decision: d.id, by: session ? session.email : 'token', answer: String(it.answer || '').slice(0, 80) });
+            continue;
+          }
           d.answer = it.answer ?? d.answer; d.note = it.note || ''; d.status = 'answered';
           d.answeredAt = now; d.answeredBy = who; d.updated = now;
+          if (session) d.answeredByEmail = session.email;
           updated.push(d.id);
+          glog('mc-server', 'decision_answered', 'ok', `${d.id} → ${String(d.answer || '').slice(0, 80)}`, { decision: d.id, by: session ? session.email : 'token' });
         }
         saveDecisions(arr);
         // Fire rendered notifications async (non-blocking) for each answered decision.
@@ -5006,7 +5131,8 @@ const server = http.createServer((req, res) => {
             } catch (e) { /* notify is best-effort; never fail the answer */ }
           }
         }
-        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ updated })); return;
+        if (!updated.length && rejected.length) { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Only the person this decision is assigned to (or its approver) can answer it.', rejected })); return; }
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ updated, rejected })); return;
       } catch (e) { res.writeHead(400); res.end(JSON.stringify({ error: e.message })); }
     }); return;
   }

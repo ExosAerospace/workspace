@@ -12,6 +12,7 @@ Groups:
   3) CONTACTED NO REPLY (3-strike discontinue candidates)
 Excludes stage in {Closed Lost, Closed, Passed} and status != Active.
 """
+import json, os  # supabase secret key loader (exo3 audit fix #1)
 
 # --- supabase retry/backoff shim (auto-added) ---
 import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
@@ -22,7 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 BASE = 'https://pcrgpuoljylqcumijvnw.supabase.co'
-KEY = 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp'
+KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 TO = 'lquinn@exosaero.com'
 
 HIGH_STAGES = {'Engaged', 'Meeting Held', 'Meeting Requested', 'Meeting Scheduled',

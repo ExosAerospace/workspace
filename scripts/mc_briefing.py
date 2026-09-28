@@ -18,7 +18,8 @@ import json, urllib.request, urllib.parse, datetime, sys
 from exos_capability_gate import is_aligned, filter_new_aligned, escalate
 
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
-KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+import os  # supabase secret key loader (exo3 audit fix #1)
+KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 DONE = {"Done", "Completed", "Closed", "Archived"}
 HORIZON_DAYS = 14
 

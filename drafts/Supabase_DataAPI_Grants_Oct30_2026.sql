@@ -14,6 +14,7 @@
 -- ============================================================================
 
 -- ── (A) AUDIT: list every public table missing anon/authenticated/service_role
+--        NOTE (2026-09-27): after the publishable-key lockout, has_anon/has_authenticated = false is EXPECTED; only has_service_role = false is a problem.
 --        access (read-only; run this first). Empty result = nothing to fix.
 SELECT t.tablename,
        bool_or(g.grantee = 'anon')          AS has_anon,
@@ -33,8 +34,8 @@ ORDER BY t.tablename;
 
 -- ── (B) TEMPLATE: paste into the SAME migration that creates a new table.
 --        Replace your_table. Idempotent — safe to re-run.
--- GRANT SELECT                         ON public.your_table TO anon;
--- GRANT SELECT, INSERT, UPDATE, DELETE ON public.your_table TO authenticated;
+-- (2026-09-27: do NOT grant anon/authenticated — the publishable key is locked out;
+--  see RUN_IN_SUPABASE_STUDIO_lock_publishable_key_ONECLICK.sql. service_role only.)
 -- GRANT SELECT, INSERT, UPDATE, DELETE ON public.your_table TO service_role;
 
 -- ── (C) OPTIONAL belt-and-suspenders: grant ALL public tables in one shot.
@@ -44,8 +45,6 @@ ORDER BY t.tablename;
 -- DECLARE r record;
 -- BEGIN
 --   FOR r IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' LOOP
---     EXECUTE format('GRANT SELECT ON public.%I TO anon;', r.tablename);
---     EXECUTE format('GRANT SELECT, INSERT, UPDATE, DELETE ON public.%I TO authenticated;', r.tablename);
 --     EXECUTE format('GRANT SELECT, INSERT, UPDATE, DELETE ON public.%I TO service_role;', r.tablename);
 --   END LOOP;
 -- END $$;

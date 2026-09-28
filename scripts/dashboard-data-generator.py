@@ -883,7 +883,7 @@ def main():
     print('\n[1/3] Loading MC enrichment tasks from Supabase...')
     import urllib.request as _ur
     _SB = 'https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/'
-    _KEY = 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp'
+    _KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
     mc_tasks = None
     try:
         _req = _ur.Request(
@@ -967,7 +967,7 @@ def main():
     print('\n[3/3] Building tiered CRM view from Supabase...')
     import urllib.request as _ur
     SB_URL = 'https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/'
-    SB_KEY = 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp'
+    SB_KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
     _TIER_ORDER = {'Tier 1': 0, 'Tier 2': 1, 'Tier 3': 2, 'New Target': 3, 'Not a Fit': 9}
     contacts = []
     crm_source = 'Supabase companies (tiered view)'

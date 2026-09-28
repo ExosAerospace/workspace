@@ -166,7 +166,7 @@ def match_reason(sender_addr, subject, cfg):
 # So: detect such emails and create a DURABLE, high-priority Mission Control task (survives any
 # session change; shows on the board until Done) IN ADDITION to the Discord alert.
 _SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
-_SUPA_KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+_SUPA_KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 RESOURCE_RE = re.compile(
     r"\b(api[\s_-]?key|access[\s_-]?key|secret[\s_-]?key|\bsecret\b|\btoken\b|credential|password|"
     r"\bkey\b|\[apikey\]|resource|licen[cs]e key|service account)\b", re.I)

@@ -27,7 +27,7 @@ from datetime import datetime, timezone, date
 WS = "/Users/exomac/.openclaw/workspace"
 LOG = os.path.join(WS, "logs", "mc-asset-backup.log")
 SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
-SUPA_KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+SUPA_KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 JON = "jquinn@exosaero.com"
 DRY = "--dry-run" in sys.argv
 

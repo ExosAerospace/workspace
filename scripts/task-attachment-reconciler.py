@@ -16,7 +16,7 @@ import os, re, sys, json, subprocess, urllib.request
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
-K = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+K = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 META = os.path.join(WS, "mission-control", "uploads", "_meta.json")
 MC_ATTACH = os.path.join(WS, "scripts", "mc-attach.py")
 LOG = os.path.join(WS, "logs", "task-attach-reconciler.jsonl")

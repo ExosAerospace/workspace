@@ -20,7 +20,7 @@ USERS = os.path.join(WS, "mission-control", "users.json")
 LOG = os.path.join(WS, "logs", "team-followup-log.json")
 MARK = os.path.join(WS, "logs", "team-followup-annotated.json")
 SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
-SKEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+SKEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 SBH = {"apikey": SKEY, "Authorization": "Bearer " + SKEY, "Content-Type": "application/json", "Prefer": "return=representation"}
 LOOKBACK = 45
 EMAILRE = re.compile(r"[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}")

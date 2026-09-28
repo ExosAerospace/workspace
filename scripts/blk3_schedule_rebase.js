@@ -11,7 +11,7 @@ const START = new Date('2026-08-10T00:00:00Z');
 const END = new Date('2027-03-15T00:00:00Z');
 const APPLY = process.argv.includes('--apply');
 const SUPA = 'pcrgpuoljylqcumijvnw.supabase.co';
-const KEY = 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp';
+const KEY = JSON.parse(require('fs').readFileSync(require('path').join(process.env.HOME, '.openclaw', 'secrets.json'), 'utf8')).supabase_service_role_key;
 
 // Domain -> owner email. Russ Blink's technical/design/sim work is redirected to Neil to disposition.
 const NEIL = 'nmilburn@exosaero.com', STEVE = 'snorsworthy@exosaero.com', PHIL = 'peaton@exosaero.com',

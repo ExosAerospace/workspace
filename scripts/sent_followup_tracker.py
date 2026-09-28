@@ -28,7 +28,7 @@ def dec(s):
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
-KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 SH = {"apikey": KEY, "Authorization": "Bearer " + KEY, "Content-Type": "application/json", "Prefer": "return=representation"}
 LOG = os.path.join(WS, "logs", "sent-followup-log.json")
 REVIEW = os.path.join(WS, "logs", "sent-untracked-review.json")

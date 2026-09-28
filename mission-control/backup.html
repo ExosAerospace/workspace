@@ -232,7 +232,6 @@ tr:hover td { background: var(--surface); }
 
 // ── SUPABASE CONFIG ──
 const SUPABASE_URL = 'https://pcrgpuoljylqcumijvnw.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp';
 
 // ── DATA STORES ──
 let tasks = [], contacts = [], companies = [], deals = [], activities = [];
@@ -240,14 +239,9 @@ let currentTab = 'tasks';
 
 // ── SUPABASE REST HELPER ──
 async function supabase(table, params = '') {
-  const url = `${SUPABASE_URL}/rest/v1/${table}${params ? '?' + params : ''}`;
-  const res = await fetch(url, {
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json'
-    }
-  });
+  // Reads go through the MC server (admin-only proxy) — no DB key in the browser.
+  const url = `/api/backup-read/${table}${params ? '?' + params : ''}`;
+  const res = await fetch(url, { credentials: 'same-origin' });
   if (!res.ok) throw new Error(`Supabase ${res.status}: ${res.statusText}`);
   return res.json();
 }

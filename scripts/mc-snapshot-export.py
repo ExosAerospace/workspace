@@ -14,7 +14,7 @@ import json, os, time, urllib.request, urllib.error, glob, datetime
 WS = "/Users/exomac/.openclaw/workspace"
 DATA = os.path.join(WS, "mission-control", "data")
 SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
-KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 # Verified-existing Supabase tables in this project (probed 2026-09-24). Note: opportunities
 # live in `deals`; there is no `decisions` table (MC decisions are stored outside Postgres).
 TABLES = ["tasks", "deals", "contacts", "companies", "activities"]

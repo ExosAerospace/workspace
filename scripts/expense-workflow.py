@@ -14,7 +14,7 @@ WS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LEDGER = os.path.join(WS, "mission-control", "data", "expense-reports.json")
 ROLES = os.path.join(WS, "mission-control", "data", "expense-roles.json")
 SUPA = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
-KEY = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 APPLY = "--apply" in sys.argv
 DONE = {"done", "complete", "completed", "approved", "paid"}
 

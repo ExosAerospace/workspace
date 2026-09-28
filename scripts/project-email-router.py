@@ -34,7 +34,7 @@ EMAIL_USER = 'jquinnexo@pm.me'
 EMAIL_PASS = os.environ.get('PROTON_BRIDGE_PASS', __import__('json').load(open(__import__('os').path.expanduser('~/.openclaw/secrets.json')))['protonmail_bridge_smtp_password'])
 
 SUPABASE_URL = 'https://pcrgpuoljylqcumijvnw.supabase.co'
-SUPABASE_KEY = os.environ.get('SUPABASE_KEY', 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp')
+SUPABASE_KEY = os.environ.get('SUPABASE_KEY', json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"])
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CHANNELS_FILE = os.path.join(SCRIPT_DIR, 'project-channels.json')

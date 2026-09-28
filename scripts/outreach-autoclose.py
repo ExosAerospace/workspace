@@ -51,7 +51,7 @@ LOOKBACK_DAYS = 14
 
 WS = os.path.expanduser('~/.openclaw/workspace')
 SUPA = 'https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/'
-SUPA_KEY = 'sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp'
+SUPA_KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 LOG = os.path.join(WS, 'logs', 'outreach-autoclose.jsonl')
 STATE = os.path.join(WS, 'logs', 'outreach-autoclose-state.json')
 MAP_FILE = os.path.join(WS, 'config', 'outreach-domain-map.json')

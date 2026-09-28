@@ -12,7 +12,8 @@ import supabase_util as _sbu; _sbu.install()
 import json, urllib.request, datetime
 
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
-K  = "sb_publishable_qBnodkDgym8-xuHPy3_qcg_0h98BYWp"
+import os  # supabase secret key loader (exo3 audit fix #1)
+K  = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
 HDR = {"apikey": K, "Authorization": "Bearer " + K, "Content-Type": "application/json"}
 
 def req(method, path, body=None, prefer=None):
