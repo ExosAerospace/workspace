@@ -26,6 +26,7 @@ LOG = WS / "logs" / "agent-eval.log"
 LA = Path.home() / "Library" / "LaunchAgents"
 DRY = os.environ.get("AGENT_EVAL_DRYRUN") == "1"
 sys.path.insert(0, str(WS / "scripts"))
+import cron_telemetry  # OpenClaw cron store (read-only), interval math, cron scoring
 
 def log(m):
     ts = datetime.datetime.now().isoformat(timespec="seconds")
@@ -126,6 +127,44 @@ def registry_drift(live, registered):
     sees committed code, so a plist loaded outside git slips past it. Sorted list."""
     return sorted(l for l in live if l not in registered)
 
+def cron_drift(jobs, reg_crons):
+    """OpenClaw crons (jobs: {id: {name,...}}) with no complete openclaw-cron registry entry,
+    matched on cron_id so a rename is not drift. Returns display strings."""
+    out = []
+    for jid, j in sorted(jobs.items()):
+        e = reg_crons.get(jid)
+        name = "cron:%s (openclaw cron %s)" % (cron_telemetry.slug(j.get("name")), jid[:8])
+        if not e: out.append(name)
+        elif any(_blank(e.get(f)) for f in SPEC_FIELDS): out.append(name + " (spec incomplete: owner/eval/permission_envelope)")
+    return out
+
+def check_crons(cfg, state, now):
+    """Score every live OpenClaw cron (config entry kind openclaw-cron, else defaults).
+    Returns (results, new_fail_alerts) in the same shapes as the launchd loop. Never raises."""
+    results, new_fails = [], []
+    try:
+        jobs = cron_telemetry.load_cron_jobs()
+    except Exception as e:
+        log(f"cron checks skipped (OpenClaw state DB unreadable): {e}")
+        return results, new_fails
+    by_id = {th.get("cron_id"): (label, th) for label, th in cfg["agents"].items() if th.get("kind") == "openclaw-cron"}
+    for jid, job in jobs.items():
+        label, th = by_id.get(jid) or ("cron:" + cron_telemetry.slug(job.get("name")), {})
+        status, why = cron_telemetry.score_cron(job, th, now)
+        if status == "SKIP": continue
+        owner = th.get("owner", "John Quinn")
+        results.append((label, status, "; ".join(why) or "healthy", owner))
+        try:
+            import fleet_log
+            fleet_log.event("agent_eval", "govern", "eval", outcome=status.lower(), owner=owner,
+                            detail={"agent": label, "cron_id": jid, "why": why})
+        except Exception:
+            pass
+        if status == "FAIL" and state.get(label, {}).get("status") != "FAIL":
+            new_fails.append((label, "; ".join(why), owner))
+        state[label] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
+    return results, new_fails
+
 def selftest():
     # fixture labels built at runtime so the exo3 gate doesn't read them as new agents
     a, b, c = (".".join(["com", "exos", "fixture-" + x]) for x in "abc")
@@ -137,7 +176,23 @@ def selftest():
     assert registry_labels(), "registry unreadable or empty"
     assert registry_labels(complete_only=True) <= registry_labels()
     assert isinstance(live_labels(), set)
-    print("agent_eval selftest: 7/7 pass")
+    # openclaw cron drift (matched on cron_id; rename is not drift) + liveness scoring
+    full = {"human_owner": "x", "eval_suite": "x", "permission_envelope": "x"}
+    jobs = {"id-a": {"name": "Fixture A"}, "id-b": {"name": "Fixture B"}}
+    assert cron_drift(jobs, {"id-a": full, "id-b": full}) == []
+    d = cron_drift(jobs, {"id-a": full})
+    assert len(d) == 1 and d[0].startswith("cron:fixture-b")
+    assert "spec incomplete" in cron_drift(jobs, {"id-a": full, "id-b": dict(full, eval_suite="TBD")})[0]
+    now = time.time()
+    daily = {"enabled": 1, "schedule_kind": "cron", "schedule_expr": "0 9 * * *", "consecutive_errors": 0,
+             "last_run_at_ms": (now - 3600) * 1000}
+    th = {"warn_grace": 2.5, "fail_consecutive_errors": 2}
+    assert cron_telemetry.score_cron(daily, th, now)[0] == "OK"
+    assert cron_telemetry.score_cron(dict(daily, last_run_at_ms=(now - 4 * 86400) * 1000), th, now)[0] == "WARN"
+    assert cron_telemetry.score_cron(dict(daily, consecutive_errors=3), th, now)[0] == "FAIL"
+    assert cron_telemetry.score_cron(dict(daily, enabled=0), th, now)[0] == "SKIP"
+    assert isinstance(cron_telemetry.registry_crons(REGISTRY), dict)
+    print("agent_eval selftest: 15/15 pass")
     return 0
 
 def check_registry_drift(state):
@@ -147,6 +202,10 @@ def check_registry_drift(state):
         drift = registry_drift(live, registry_labels())
         drift += [f"{l} (spec incomplete: owner/eval/permission_envelope)" for l in
                   registry_drift(live, registry_labels(complete_only=True)) if l not in drift]
+        try:
+            drift += cron_drift(cron_telemetry.load_cron_jobs(), cron_telemetry.registry_crons(REGISTRY))
+        except Exception as e:
+            log(f"cron registry drift check skipped: {e}")
     except Exception as e:
         log(f"registry drift check skipped: {e}")
         return []
@@ -176,6 +235,7 @@ def main():
     results = []
     new_fail_alerts = []
     for label, th in cfg["agents"].items():
+        if th.get("kind") == "openclaw-cron": continue  # scored by check_crons()
         loaded, les, pid = launchctl_status(label)
         mt = best_activity_mtime(label)
         age_h = (now - mt) / 3600 if mt else None
@@ -209,6 +269,10 @@ def main():
         if status == "FAIL" and prev != "FAIL":
             new_fail_alerts.append((short, "; ".join(why), th["owner"]))
         state[label] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
+
+    cron_results, cron_fails = check_crons(cfg, state, now)
+    results += cron_results
+    new_fail_alerts += cron_fails
 
     npass = sum(1 for _, s, _, _ in results if s == "OK")
     nwarn = sum(1 for _, s, _, _ in results if s == "WARN")
