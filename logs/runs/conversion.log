@@ -58,3 +58,23 @@ converted      com.exos.kyle-forms-reminder-lizi          plist rewritten; reloa
 converted      com.exos.lead-auto-capture                 plist rewritten; reloaded
 converted      com.exos.legacy-triage                     plist rewritten; reloaded
 converted      com.exos.lizi-erau-trip                    plist rewritten; reloaded
+converted      com.exos.lizi-oehme-linkedin               plist rewritten; reloaded
+converted      com.exos.lizi-planet-linkedin              plist rewritten; reloaded
+converted      com.exos.lizi-spec-pitchday                plist rewritten; reloaded
+converted      com.exos.lizi-stoke-linkedin               plist rewritten; reloaded
+converted      com.exos.lizi-vellinger-linkedin           plist rewritten; reloaded
+converted      com.exos.lves-survey-report                plist rewritten; reloaded
+converted      com.exos.lves-survey-watcher               plist rewritten; reloaded
+converted      com.exos.mc-asset-backup                   plist rewritten; reloaded
+converted      com.exos.mc-briefing                       plist rewritten; reloaded
+converted      com.exos.mc-doc-reconcile                  plist rewritten; reloaded
+converted      com.exos.mc-email-command                  plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.mc-email-tracker                  plist rewritten; reloaded
+converted      com.exos.mc-guard-weekly                   plist rewritten; reloaded
+converted      com.exos.mc-md-export                      plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.mc-meeting-prep                   plist rewritten; reloaded
+converted      com.exos.mc-recycle-purge                  plist rewritten; reloaded
+converted      com.exos.mc-snapshot-export                plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+skipped        com.exos.mc-tunnel                         excluded (cloudflared)
+converted      com.exos.meeting-agenda-neil               plist rewritten; reloaded
+converted      com.exos.meeting-agenda-nudge              plist rewritten; reloaded

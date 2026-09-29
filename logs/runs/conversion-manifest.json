@@ -737,10 +737,254 @@
       "run_at_load": false,
       "status": "converted"
     },
+    "com.exos.lizi-oehme-linkedin": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:32-05:00",
+      "loaded_at": "2026-09-28T22:05:32-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/lizi-oehme-linkedin-reminder.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.lizi-planet-linkedin": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:32-05:00",
+      "loaded_at": "2026-09-28T22:05:32-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/lizi-planet-linkedin-reminder.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.lizi-spec-pitchday": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:32-05:00",
+      "loaded_at": "2026-09-28T22:05:32-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/lizi-spec-pitchday-reminder.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.lizi-stoke-linkedin": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:32-05:00",
+      "loaded_at": "2026-09-28T22:05:32-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/lizi-stoke-linkedin-reminder.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.lizi-vellinger-linkedin": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:32-05:00",
+      "loaded_at": "2026-09-28T22:05:32-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/lizi-vellinger-linkedin-reminder.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.lves-survey-report": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:32-05:00",
+      "loaded_at": "2026-09-28T22:05:32-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/lves_survey_ingest.py && python3 /Users/exomac/.openclaw/workspace/scripts/lves_survey_report.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.lves-survey-watcher": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:32-05:00",
+      "loaded_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/bin/sh",
+        "-c",
+        "/usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/lves_survey_watcher.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.mc-asset-backup": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:33-05:00",
+      "loaded_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/mc-asset-backup.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.mc-briefing": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:33-05:00",
+      "loaded_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.openclaw/workspace/scripts/mc_briefing_send.sh"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.mc-doc-reconcile": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:33-05:00",
+      "loaded_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name MC-Doc-Reconcile --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/mc-doc-reconcile.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.mc-email-command": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/mc-email-command.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.mc-email-tracker": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:33-05:00",
+      "loaded_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Email-to-MC-Tracker --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/mc-email-tracker.py --since-days 14 --max-msgs 20"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.mc-guard-weekly": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:33-05:00",
+      "loaded_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/mc_guard.py",
+        "weekly"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.mc-md-export": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/mc_export_md.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.mc-meeting-prep": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:33-05:00",
+      "loaded_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/monthly-mc-meeting-prep.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.mc-recycle-purge": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:33-05:00",
+      "loaded_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/mc_recycle.py",
+        "--purge",
+        "--days",
+        "90"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.mc-snapshot-export": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/mc-snapshot-export.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.mc-tunnel": {
+      "at": "2026-09-28T22:05:33-05:00",
+      "reason": "excluded (cloudflared)",
+      "status": "skipped"
+    },
+    "com.exos.meeting-agenda-neil": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:33-05:00",
+      "loaded_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/meeting-agenda-followup.py",
+        "--mode",
+        "neil"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.meeting-agenda-nudge": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:33-05:00",
+      "loaded_at": "2026-09-28T22:05:33-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/meeting-agenda-followup.py",
+        "--mode",
+        "nudge"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
     "com.exos.run-failures-report": {
       "loaded_at": "2026-09-28T22:04:39-05:00",
       "reload": "reloaded"
     }
   },
-  "updated": "2026-09-28T22:05:26-05:00"
+  "updated": "2026-09-28T22:05:33-05:00"
 }
