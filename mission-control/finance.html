@@ -56,11 +56,22 @@ async function load(){
   html+='<div class="asof">as of '+(m.asof||'')+' · source: QuickBooks (live) · Exos realm</div>';
   html+='<div class="grid">';
   html+='<div class="card"><div class="label">Cash on hand</div><div class="val cy">'+money(m.cash||0)+'</div><div class="sub">general checking + bank</div></div>';
-  html+='<div class="card"><div class="label">'+(burning?'Monthly burn':'Monthly surplus')+'</div><div class="val '+netCls+'">'+(m.monthly_net>=0?'+':'')+money(m.monthly_net||0)+'</div><div class="sub">trailing '+(m.trailing_days||90)+' days</div></div>';
+  if(m.ytd_net!=null){
+    var ytdCls=(m.ytd_profitable?'good':'bad');
+    html+='<div class="card"><div class="label">FY2026 YTD net income</div><div class="val '+ytdCls+'">'+(m.ytd_net>=0?'+':'')+money(m.ytd_net||0)+'</div><div class="sub">'+(m.ytd_margin_pct!=null?m.ytd_margin_pct+'% margin · ':'')+'Jan 1–'+(m.asof||'')+' · actuals</div></div>';
+  }
+  html+='<div class="card"><div class="label">'+(burning?'Trailing burn (90d trough)':'Monthly surplus')+'</div><div class="val '+netCls+'">'+(m.monthly_net>=0?'+':'')+money(m.monthly_net||0)+'</div><div class="sub">trailing '+(m.trailing_days||90)+'d — billing-trough artifact</div></div>';
   html+='<div class="card"><div class="label">Runway</div><div class="val '+runwayCls+'">'+runway+'</div><div class="sub">cash ÷ monthly burn</div></div>';
   html+='<div class="card"><div class="label">Annualized net run-rate</div><div class="val '+rrCls+'">'+money(m.annualized_net_runrate||0)+'</div><div class="sub">FY2025 baseline net +'+money(m.plan_baseline_net||0)+'</div></div>';
   html+='</div>';
-  html+='<div class="row"><h3>Trailing '+(m.trailing_days||90)+' days</h3><table>'+
+  if(m.ytd_net!=null){
+    html+='<div class="row"><h3>FY2026 YTD actuals (Jan 1–'+(m.asof||'')+') · LIVE-QB</h3><table>'+
+        '<tr><td>Revenue</td><td class="cy">'+money(m.ytd_income||0)+'</td></tr>'+
+        '<tr><td>Expenses</td><td>'+money(m.ytd_expenses||0)+'</td></tr>'+
+        '<tr><td>Net income'+(m.ytd_margin_pct!=null?' ('+m.ytd_margin_pct+'% margin)':'')+'</td><td class="'+(m.ytd_profitable?'good':'bad')+'">'+((m.ytd_net||0)>=0?'+':'')+money(m.ytd_net||0)+'</td></tr>'+
+        '</table></div>';
+  }
+  html+='<div class="row"><h3>Trailing '+(m.trailing_days||90)+' days <span style="font-weight:400;opacity:.7">(billing-trough artifact — not the headline)</span></h3><table>'+
         '<tr><td>Revenue</td><td class="cy">'+money(m.trailing_income||0)+'</td></tr>'+
         '<tr><td>Expenses</td><td>'+money(m.trailing_expenses||0)+'</td></tr>'+
         '<tr><td>Net</td><td class="'+((m.trailing_net||0)>=0?'good':'bad')+'">'+((m.trailing_net||0)>=0?'+':'')+money(m.trailing_net||0)+'</td></tr>'+
