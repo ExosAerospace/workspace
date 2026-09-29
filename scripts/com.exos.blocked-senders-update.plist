@@ -8,7 +8,7 @@
 
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3</string>
+        <string>/Users/exomac/.local/share/mise/installs/python/3.12/bin/python3</string>
         <string>/Users/exomac/.openclaw/workspace/scripts/weekly_blocked_senders_update.py</string>
     </array>
 
