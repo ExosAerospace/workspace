@@ -21,6 +21,8 @@ mission-control/data/*.backup-*.json
 mission-control/data/*.tmp
 mission-control/data/.backup-token
 mission-control/data/.decisions-token
+# MC recycle bin (deleted-record snapshots; may hold PII/user rows) — local only, 90-day retention
+mission-control/data/recycle-bin/
 # --- secrets / credentials (never commit) — added 2026-09-10 ---
 secrets.json
 *.secrets.json
