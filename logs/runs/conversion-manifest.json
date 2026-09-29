@@ -485,10 +485,262 @@
       "run_at_load": false,
       "status": "converted"
     },
+    "com.exos.entity-dedupe": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/entity_dedupe.py",
+        "--apply"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.erau-ernst-followup": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/erau-ernst-followup.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.erp-backup": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "node /Users/exomac/.openclaw/workspace/erp-foundation/backup_erp.js"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.expense-analytics": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/expense_analytics.py",
+        "--email",
+        "--days",
+        "31"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.expense-workflow": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/expense-workflow.py",
+        "--apply"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.faa-rfi-followup": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/faa-rfi-followup.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.failover-validate": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/failover_validate.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.file-maintenance": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/file-maintenance.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.fleet-status": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/fleet_status.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.fleet-status-heartbeat": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/bin/sh",
+        "-c",
+        "/usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/fleet_status_heartbeat.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.followup-nudge-digest": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/followup_nudge_digest.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.forwarded-mail-watch": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "cd /Users/exomac/.openclaw/workspace && python3 scripts/forwarded_mail_watch.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.guild-channel-watchdog": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/guild_channel_watchdog.py",
+        "run"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.hotel-choice-nudge": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/hotel-choice-nudge.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.inventory-capture": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Inventory-Capture --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/inventory_capture_dispatch.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.japan-trip-dedupe": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/japan_trip_dedupe_guard.py",
+        "--apply"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.kyle-forms-reminder-lizi": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/kyle-forms-reminder-lizi.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.lead-auto-capture": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Lead-Auto-Capture --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/lead-auto-capture.py --since-days 3"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.legacy-triage": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/legacy_triage_decisions.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.lizi-erau-trip": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-28T22:05:26-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/lizi-erau-trip-reminder.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
     "com.exos.run-failures-report": {
       "loaded_at": "2026-09-28T22:04:39-05:00",
       "reload": "reloaded"
     }
   },
-  "updated": "2026-09-28T22:05:22-05:00"
+  "updated": "2026-09-28T22:05:26-05:00"
 }
