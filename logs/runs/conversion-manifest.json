@@ -1710,7 +1710,124 @@
       "reload": "reloaded",
       "run_at_load": false,
       "status": "converted"
+    },
+    "com.exos.uplink-pitch-lock": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:53-05:00",
+      "loaded_at": "2026-09-28T22:05:53-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/uplink-pitch-lock-reminder.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.util-metrics": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:53-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/util_metrics.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.vaultwarden-backup": {
+      "at": "2026-09-28T22:05:53-05:00",
+      "reason": "excluded (vault)",
+      "status": "skipped"
+    },
+    "com.exos.warm-followup": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:53-05:00",
+      "loaded_at": "2026-09-28T22:05:53-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/warm-followup-cadence.py",
+        "--apply"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.warm-ollama": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:53-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.openclaw/workspace/scripts/warm-ollama.sh"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.weekly-employee-report": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:53-05:00",
+      "loaded_at": "2026-09-28T22:05:53-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Weekly-Employee-Report --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/weekly-employee-report.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.weekly-investor-update": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:53-05:00",
+      "loaded_at": "2026-09-28T22:05:53-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/weekly-investor-update.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.weekly-meeting-prep": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:53-05:00",
+      "loaded_at": "2026-09-28T22:05:53-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/weekly-meeting-prep.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.weekly-rsi": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:53-05:00",
+      "loaded_at": "2026-09-28T22:05:53-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Weekly-RSI --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/weekly-rsi.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.weekly-team-performance": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:53-05:00",
+      "loaded_at": "2026-09-28T22:05:53-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/weekly-team-performance.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
     }
   },
-  "updated": "2026-09-28T22:05:50-05:00"
+  "updated": "2026-09-28T22:05:53-05:00"
 }
