@@ -2238,6 +2238,41 @@ async function processUploadedFile(file) {
   }
 }
 
+// Locate "Sincerely" on a PDF page: returns canvas-pixel {top, bottom, left} — top = just under the
+// Sincerely line, bottom = just above the next line (the printed name), so the blank wet-ink gap is
+// replaced by the certificate. null when the page has no closing.
+async function findSincerelyCut(page, viewport) {
+  const tc = await page.getTextContent();
+  const lines = tc.items.filter(it => it.str && it.str.trim()).map(it => {
+    const [x, y] = viewport.convertToViewportPoint(it.transform[4], it.transform[5]);
+    const h = Math.abs(it.transform[3]) * viewport.scale || 12 * viewport.scale;
+    return { str: it.str, x, base: y, h };
+  });
+  const s = lines.find(l => /^\s*sincerely\s*,?\s*$/i.test(l.str)) || lines.find(l => /\bsincerely\b/i.test(l.str));
+  if (!s) return null;
+  const below = lines.filter(l => l.base > s.base + s.h * 0.6).sort((a, b) => a.base - b.base)[0];
+  const top = Math.round(s.base + s.h * 0.35);
+  const bottom = below ? Math.round(below.base - below.h * 1.1) : top;
+  return { top, bottom: Math.max(top, bottom), left: Math.max(0, Math.round(s.x)) };
+}
+
+// Longest run of (near-)white pixel rows below y0 — the blank band between a letter's signature
+// block and its footer. Returns {top, bottom} in canvas pixels (a small margin kept each side).
+function largestBlankBand(canvas, y0) {
+  const ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height;
+  const data = ctx.getImageData(0, y0, W, H - y0).data;
+  let best = null, runStart = null;
+  for (let y = 0; y <= H - y0; y++) {
+    let blank = y < H - y0;
+    if (blank) { const row = y * W * 4; for (let x = 0; x < W * 4; x += 16) { if (data[row + x] < 235 || data[row + x + 1] < 235 || data[row + x + 2] < 235) { blank = false; break; } } }
+    if (blank && runStart === null) runStart = y;
+    if (!blank && runStart !== null) { if (!best || y - runStart > best.len) best = { start: runStart, len: y - runStart }; runStart = null; }
+  }
+  if (!best || best.len < 40) return null;
+  const pad = 12;
+  return { top: y0 + best.start + pad, bottom: y0 + best.start + best.len - pad };
+}
+
 // Render a PDF into page images (data URLs) wrapped in HTML, so an uploaded
 // PDF can be viewed and signed exactly like any other document.
 async function renderPdfToHtml(file) {
@@ -2252,6 +2287,7 @@ async function renderPdfToHtml(file) {
   const pdf = await pdfjsLib.getDocument({ data }).promise;
   const scale = 1.6; // balance of crispness vs. localStorage size
   let pagesHtml = '';
+  let slotPlaced = false;
 
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
@@ -2263,6 +2299,28 @@ async function renderPdfToHtml(file) {
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     await page.render({ canvasContext: ctx, viewport }).promise;
+    // Signature placement rule (John 2026-09-29): cut the page at "Sincerely," and leave a slot
+    // where the server drops the Signature Certificate — before the printed name, not on a new page.
+    const cut = slotPlaced ? null : await findSincerelyCut(page, viewport);
+    if (cut) {
+      slotPlaced = true;
+      const slice = (y0, y1) => {
+        const c = document.createElement('canvas'); c.width = canvas.width; c.height = Math.max(1, y1 - y0);
+        c.getContext('2d').drawImage(canvas, 0, y0, canvas.width, c.height, 0, 0, canvas.width, c.height);
+        return c.toDataURL('image/jpeg', 0.82);
+      };
+      // Keep the page one sheet tall: the certificate's height comes out of the largest blank band
+      // below the name block (above the footer), so the name never gets pushed to a new page.
+      const gap = largestBlankBand(canvas, cut.bottom);
+      const img = (src) => `<img src="${src}" alt="Page ${i}" style="width:100%;height:auto;display:block;flex-shrink:0;">`;
+      pagesHtml += `<div class="pdf-page" style="margin:0 auto 16px;max-width:720px;border:1px solid #ddd;border-radius:4px;background:#fff;` +
+        `aspect-ratio:${canvas.width}/${canvas.height};display:flex;flex-direction:column;overflow:hidden;break-inside:avoid;page-break-inside:avoid;">` +
+        img(slice(0, cut.top)) +
+        `<div class="esign-sig-slot" style="margin:0 ${(cut.left / canvas.width * 100).toFixed(1)}%;padding:6px 10px;border:1px dashed #9aa5b8;color:#6b7280;font:12px Arial,sans-serif;">✍ Signature will be applied here</div>` +
+        (gap ? img(slice(cut.bottom, gap.top)) + `<div style="flex:1 1 auto;min-height:0;"></div>` + img(slice(gap.bottom, canvas.height))
+             : img(slice(cut.bottom, canvas.height))) + `</div>`;
+      continue;
+    }
     const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
     pagesHtml += `<div class="pdf-page" style="margin:0 auto 16px;max-width:720px;">` +
       `<img src="${dataUrl}" alt="Page ${i}" style="width:100%;height:auto;display:block;border:1px solid #ddd;border-radius:4px;"></div>`;

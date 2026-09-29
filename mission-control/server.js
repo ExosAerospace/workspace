@@ -356,8 +356,61 @@ function esignRequestEmail(signer, link, env) {
     <div style="background:#f5f5f5;padding:12px 24px;border-radius:0 0 8px 8px;border:1px solid #ddd;border-top:none;"><p style="font-size:11px;color:#999;margin:0;">Exos Aerospace Systems &amp; Technologies, Inc. | 299 FM 1903, Greenville, TX 75402</p></div>
   </div>`;
 }
-function esignCertificate(env) {
-  const rows = env.signers.map(s => `
+// Signature placement rule (John 2026-09-29): the Signature Certificate goes RIGHT AFTER "Sincerely,"
+// and before the signer's printed name — never on a trailing page where the letter looks unsigned.
+// Uploaded PDFs carry an <div class="esign-sig-slot"> marker (docusign.html cuts the page image at
+// "Sincerely" on upload); HTML/text letters are matched on their "Sincerely" line. Exos signers are
+// placed inline; any counterparty signers (and docs with no closing) keep the end-of-doc certificate.
+const ESIGN_SLOT_RE = /<div class="esign-sig-slot"[^>]*>[^<]*<\/div>/;
+function esignIsExosSigner(s) { return /@exosaero\.com$/i.test(s.email||'') || /\bquinn\b/i.test(s.name||''); }
+function esignInlineCertificate(env, signers) {
+  const rows = signers.map(s => `
+      <img src="${s.signatureData}" alt="signature" style="max-height:56px;display:block;margin:2px 0 2px;">
+      <div style="font-size:10px;color:#666;line-height:1.35;">Electronically signed by ${s.name} · ${s.signedAt} · IP: ${s.ip||'n/a'} · Method: ${s.signatureType||'typed'}</div>`).join('');
+  return `<div class="esign-sig-inline" style="margin:6px 0 10px;padding:6px 10px;border-left:3px solid #0a1628;font-family:Arial,sans-serif;text-align:left;">
+      <div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#0a1628;font-weight:bold;">Signature Certificate</div>${rows}
+      <div style="font-size:9px;color:#888;line-height:1.35;margin-top:2px;">E-SIGN Act (15 U.S.C. §7001) / UETA · Envelope ID: ${env.id} · Completed: ${env.completedAt||''}</div>
+    </div>`;
+}
+// Returns the executed document body with the certificate placed per the rule above.
+function esignExecutedBody(env) {
+  let html = env.html || '';
+  const exos = env.signers.filter(esignIsExosSigner);
+  const inlineSigners = exos.length ? exos : env.signers;
+  const block = esignInlineCertificate(env, inlineSigners);
+  let placed = false;
+  const slot = ESIGN_SLOT_RE.exec(html);
+  if (slot) {
+    const mg = /margin:\s*0\s+([\d.]+%)/.exec(slot[0]); // keep the PDF page's left margin
+    html = html.replace(ESIGN_SLOT_RE, () => `<div style="margin:0 ${mg ? mg[1] : '0'};">${block}</div>`); placed = true;
+  }
+  else {
+    const re = /Sincerely\s*,?/gi; let m;
+    while ((m = re.exec(html))) {
+      const before = html.slice(0, m.index);
+      if (before.lastIndexOf('<') > before.lastIndexOf('>')) continue; // inside a tag/attribute
+      const after = m.index + m[0].length;
+      const tail = html.slice(after);
+      const close = /^\s*<\/(p|div|span|strong|b|em|i)>/i.exec(tail);
+      let at;
+      if (close) {
+        // close the enclosing inline tags up to the block (p/div) end
+        const blockEnd = /<\/(p|div)>/i.exec(tail);
+        at = after + (blockEnd ? blockEnd.index + blockEnd[0].length : close[0].length);
+      } else {
+        const br = /^[ \t]*(<br\s*\/?>|\r?\n)/i.exec(tail);
+        at = after + (br ? br[0].length : 0);
+      }
+      html = html.slice(0, at) + block + html.slice(at);
+      placed = true; break;
+    }
+  }
+  if (!placed) return html + esignCertificate(env);
+  const rest = env.signers.filter(s => !inlineSigners.includes(s));
+  return rest.length ? html + esignCertificate(env, rest) : html;
+}
+function esignCertificate(env, signers) {
+  const rows = (signers || env.signers).map(s => `
     <div style="margin:14px 0;padding:12px;border:1px solid #ddd;border-radius:6px;">
       <img src="${s.signatureData}" alt="signature" style="max-height:64px;display:block;margin-bottom:6px;">
       <div style="font-weight:bold;">${s.name}${s.role ? ' — ' + s.role : ''}</div>
@@ -375,8 +428,7 @@ async function esignDeliverCompleted(env) {
       <p style="color:#333;">All parties have signed. The fully executed document and signature certificate are below.</p>
       <hr style="border:none;border-top:1px solid #eee;margin:18px 0;">
       <h3 style="color:#0a1628;">${env.title}</h3>
-      ${env.html || ''}
-      ${esignCertificate(env)}
+      ${esignExecutedBody(env)}
     </div>
   </div>`;
   const recipients = Array.from(new Set(env.signers.map(s => s.email).concat(['jquinn@exosaero.com'])));
