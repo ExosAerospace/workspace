@@ -2726,6 +2726,24 @@
    "script": "run_failures_report.py",
    "stack_layer": "GOVERN/ASSURE",
    "telemetry": "logs/run-failures-report.out.log; reports/run-failures/"
+  },
+  {
+   "label": "com.exos.mc-recycle-purge",
+   "script": "mc_recycle.py",
+   "kind": "recurring",
+   "schedule": "daily 03:40",
+   "purpose": "MC RECYCLE BIN PURGE — deterministic, zero LLM. Deletes ONLY recycle-bin day files (mission-control/data/recycle-bin/YYYY-MM-DD.jsonl) and parked upload binaries older than 90 days. Restores are human-run via scripts/mc_restore.py (exo3 remedy 2026-09-28, recoverable deletes).",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "Exo (infra) / John Quinn",
+   "permission_envelope": "deletes local files ONLY under mission-control/data/recycle-bin/ older than 90 days; no network, no Supabase, no sends; own log",
+   "memory_boundary": "mission-control/data/recycle-bin only",
+   "escalation": "Decisions board / Jon inbox",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
+   "telemetry": "logs/mc-recycle-purge.log",
+   "reusability_scope": "TBD",
+   "risk_tier": "LOW",
+   "envelope_source": "hand-written by recoverable-deletes worker 2026-09-28"
   }
  ],
  "eval_wave_1": {
