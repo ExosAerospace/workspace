@@ -151,6 +151,7 @@ def convert(path, dry, reload, manifest, loaded):
     ral = bool(p.get("RunAtLoad"))
     if is_wrapped(pa):
         status, detail = "already", "already wrapped"
+        entry.setdefault("status", "already")
     else:
         new_pa = [PY, WRAPPER, label, "--"] + pa
         if dry:

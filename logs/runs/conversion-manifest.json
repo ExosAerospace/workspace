@@ -1222,10 +1222,254 @@
       "run_at_load": true,
       "status": "converted"
     },
+    "com.exos.program-state": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/program_state.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.pursuit-dedup": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/pursuit_dedup.py --apply"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.qb-deposit-sync": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/qb_deposit_sync.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.quote-close-stamp": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/quote_close_stamp.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.ready-action-verify": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/sh",
+        "-c",
+        "/usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/verify-ready-action-dispatch.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.receiving-capture": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Receiving-Capture --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/receiving_capture_dispatch.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.recurring-tasks": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Recurring-Tasks --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/recurring-tasks.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.release-lizi-followups": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/release_lizi_followups.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.research-competitive": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/research_agent.py --name competitive"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.research-grant-scanner": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/research_agent.py --name grant-scanner"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.research-investor": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/research_agent.py --name investor"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.research-policy": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/research_agent.py --name policy"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.research-rocket-report": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/research_agent.py --name rocket-report"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.research-tech-ip": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/research_agent.py --name tech-ip"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.role-autoassign": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/role-autoassign.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
     "com.exos.run-failures-report": {
       "loaded_at": "2026-09-28T22:04:39-05:00",
-      "reload": "reloaded"
+      "reload": "reloaded",
+      "status": "already"
+    },
+    "com.exos.sam-amendment-watch": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/sam-amendment-watch.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.sam-flightopps-watch": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/sam-flightopps-watch.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.sam-osp4-watch": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/sam-osp4-watch.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.send-confirmation-tracker": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-28T22:05:42-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/send_confirmation_tracker.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
     }
   },
-  "updated": "2026-09-28T22:05:39-05:00"
+  "updated": "2026-09-28T22:05:42-05:00"
 }

@@ -98,3 +98,23 @@ converted      com.exos.payload-intake                    plist rewritten; defer
 converted      com.exos.payload-sales-engine              plist rewritten; reloaded
 converted      com.exos.piee-login-reminder               plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
 converted      com.exos.priority-inbox-watcher            plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.program-state                     plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.pursuit-dedup                     plist rewritten; reloaded
+converted      com.exos.qb-deposit-sync                   plist rewritten; reloaded
+converted      com.exos.quote-close-stamp                 plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.ready-action-verify               plist rewritten; reloaded
+converted      com.exos.receiving-capture                 plist rewritten; reloaded
+converted      com.exos.recurring-tasks                   plist rewritten; reloaded
+converted      com.exos.release-lizi-followups            plist rewritten; reloaded
+converted      com.exos.research-competitive              plist rewritten; reloaded
+converted      com.exos.research-grant-scanner            plist rewritten; reloaded
+converted      com.exos.research-investor                 plist rewritten; reloaded
+converted      com.exos.research-policy                   plist rewritten; reloaded
+converted      com.exos.research-rocket-report            plist rewritten; reloaded
+converted      com.exos.research-tech-ip                  plist rewritten; reloaded
+converted      com.exos.role-autoassign                   plist rewritten; reloaded
+already        com.exos.run-failures-report               already wrapped; reloaded
+converted      com.exos.sam-amendment-watch               plist rewritten; reloaded
+converted      com.exos.sam-flightopps-watch              plist rewritten; reloaded
+converted      com.exos.sam-osp4-watch                    plist rewritten; reloaded
+converted      com.exos.send-confirmation-tracker         plist rewritten; reloaded
