@@ -118,3 +118,23 @@ converted      com.exos.sam-amendment-watch               plist rewritten; reloa
 converted      com.exos.sam-flightopps-watch              plist rewritten; reloaded
 converted      com.exos.sam-osp4-watch                    plist rewritten; reloaded
 converted      com.exos.send-confirmation-tracker         plist rewritten; reloaded
+converted      com.exos.sent-followup-tracker             plist rewritten; reloaded
+converted      com.exos.sent-loop-closer                  plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+skipped        com.exos.series-a-worklist                 excluded label
+converted      com.exos.spaceweek-prep-reminder           plist rewritten; reloaded
+converted      com.exos.step-grant-reminder               plist rewritten; reloaded
+converted      com.exos.step-grant-sept2                  plist rewritten; reloaded
+converted      com.exos.subject-dedup-scan                plist rewritten; reloaded
+converted      com.exos.supabase-backup                   plist rewritten; reloaded
+converted      com.exos.supabase-diskio-maintenance       plist rewritten; reloaded
+converted      com.exos.survey-ingest                     plist rewritten; reloaded
+converted      com.exos.task-attach-reconciler            plist rewritten; reloaded
+converted      com.exos.task-auto-reassign                plist rewritten; reloaded
+converted      com.exos.task-dedupe                       plist rewritten; reloaded
+converted      com.exos.task-ledger-snapshot              plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.task-note-command                 plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.task-question-answer              plist rewritten; reloaded
+converted      com.exos.team-email-task-tracker           plist rewritten; reloaded
+converted      com.exos.title3-osc-watch                  plist rewritten; reloaded
+converted      com.exos.transcript-ingest                 plist rewritten; reloaded
+converted      com.exos.und-student-concepts              plist rewritten; reloaded

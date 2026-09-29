@@ -1469,7 +1469,248 @@
       "reload": "reloaded",
       "run_at_load": false,
       "status": "converted"
+    },
+    "com.exos.sent-followup-tracker": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Sent-Followup-Tracker --source launchd -- /bin/zsh -lc \"python3 /Users/exomac/.openclaw/workspace/scripts/sent_followup_tracker.py --days 10; python3 /Users/exomac/.openclaw/workspace/scripts/graph_reply_detect.py; python3 /Users/exomac/.openclaw/workspace/scripts/gen_sent_review.py; python3 /Users/exomac/.openclaw/workspace/scripts/sent_contacts_to_crm.py\""
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.sent-loop-closer": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/bin/sh",
+        "-c",
+        "/usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/sent_folder_registry.py; /usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/sent-loop-closer.py; /usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/reconcile_sent_tasks.py --apply"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.series-a-worklist": {
+      "at": "2026-09-28T22:05:50-05:00",
+      "reason": "excluded label",
+      "status": "skipped"
+    },
+    "com.exos.spaceweek-prep-reminder": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/spaceweek-prep-reminder-lizi.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.step-grant-reminder": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/step-grant-tuesday-reminder.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.step-grant-sept2": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/step-grant-sept2-reminder.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.subject-dedup-scan": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/subject_dedup.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.supabase-backup": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/supabase-backup.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.supabase-diskio-maintenance": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/supabase_diskio_maintenance.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.survey-ingest": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/ingest_capability_surveys.py --apply"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.task-attach-reconciler": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task-attachment-reconciler.py --apply"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.task-auto-reassign": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name \"Task Auto-Reassign (domain leads)\" --source launchd -- /usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/auto_reassign.py --apply"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.task-dedupe": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/dupe_collapse.py",
+        "--apply"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.task-ledger-snapshot": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py snapshot"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.task-note-command": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/task-note-command.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.task-question-answer": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Task-Question-Answer --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/task-question-answer.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.team-email-task-tracker": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Team-Email-Task-Tracker --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/team_email_task_tracker.py --go"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.title3-osc-watch": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "cd /Users/exomac/.openclaw/workspace && python3 scripts/title3_osc_watch.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.transcript-ingest": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/ingest-transcripts.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.und-student-concepts": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-28T22:05:50-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/und-student-concepts-reminder.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
     }
   },
-  "updated": "2026-09-28T22:05:42-05:00"
+  "updated": "2026-09-28T22:05:50-05:00"
 }
