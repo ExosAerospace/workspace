@@ -86,9 +86,13 @@ Everything above stays current on the Mission Control link at the top of this em
 — Exo (for Exos Aerospace)
 """
 
+import shutil as _shutil
+# launchd runs with a minimal PATH that excludes Homebrew; resolve msmtp to an absolute path.
+MSMTP = _shutil.which("msmtp") or next((p for p in ("/opt/homebrew/bin/msmtp", "/usr/local/bin/msmtp") if os.path.exists(p)), "msmtp")
+
 def send(to, subject, body):
     msg = f"To: {to}\nFrom: {FROM}\nSubject: {subject}\n\n{body}"
-    r = subprocess.run(["msmtp", to], input=msg, text=True, capture_output=True)
+    r = subprocess.run([MSMTP, to], input=msg, text=True, capture_output=True)
     return r.returncode == 0, (r.stderr[:200] if r.returncode else "")
 
 def main():
