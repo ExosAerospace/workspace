@@ -29,11 +29,15 @@ function whoOf(session) {
 }
 
 // Append one entry synchronously (durable before the caller deletes). Returns recycle_id.
-function record({ type, id, record: rec, source, who, route, extra }) {
+function newId(now) {
+  return 'rb_' + (now || new Date()).toISOString().replace(/[-:.TZ]/g, '').slice(0, 14) + '_' + crypto.randomBytes(4).toString('hex');
+}
+
+function record({ recycle_id: rid, type, id, record: rec, source, who, route, extra }) {
   if (!source || !source.kind) throw new Error('recycle: source required');
   _ensureDir(RECYCLE_DIR);
   const now = new Date();
-  const recycle_id = 'rb_' + now.toISOString().replace(/[-:.TZ]/g, '').slice(0, 14) + '_' + crypto.randomBytes(4).toString('hex');
+  const recycle_id = rid || newId(now);
   const entry = {
     recycle_id, deleted_at: now.toISOString(), type: type || source.table || 'record',
     id: id == null ? null : String(id), who: who || 'system', route: route || null,
@@ -66,11 +70,14 @@ async function recycleThenDelete(sbRequest, opts) {
   return Object.assign({}, res, { recycle_ids });
 }
 
+// Where parkFile() will put a file for a given recycle_id (relative to MC_DIR) — record this first.
+function parkedPath(absPath, recycleId) { return path.relative(MC_DIR, path.join(FILES_DIR, recycleId + '__' + path.basename(absPath))); }
+
 // Move a file into the recycle bin (instead of unlinking). Returns the parked path relative to MC_DIR.
 function parkFile(absPath, recycleId) {
   if (!absPath || !fs.existsSync(absPath)) return null;
   _ensureDir(FILES_DIR);
-  const dest = path.join(FILES_DIR, recycleId + '__' + path.basename(absPath));
+  const dest = path.join(MC_DIR, parkedPath(absPath, recycleId));
   try { fs.renameSync(absPath, dest); }
   catch (e) { fs.copyFileSync(absPath, dest); fs.unlinkSync(absPath); }
   return path.relative(MC_DIR, dest);
@@ -98,4 +105,4 @@ function purge(days) {
   return out;
 }
 
-module.exports = { RECYCLE_DIR, FILES_DIR, RETENTION_DAYS, whoOf, record, snapshotSupabase, recycleThenDelete, parkFile, purge };
+module.exports = { RECYCLE_DIR, FILES_DIR, RETENTION_DAYS, whoOf, newId, record, parkedPath, snapshotSupabase, recycleThenDelete, parkFile, purge };

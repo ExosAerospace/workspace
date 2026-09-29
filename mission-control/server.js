@@ -1436,7 +1436,13 @@ const server = http.createServer((req, res) => {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const { id } = JSON.parse(body);
       if (id === session.userId) { res.writeHead(400); res.end(JSON.stringify({ error: 'Cannot delete your own account' })); return; }
-      const users = loadUsers().filter(u => u.id !== id);
+      const all = loadUsers();
+      const victim = all.find(u => u.id === id);
+      if (victim) {
+        try { recycle.record({ type: 'users', id, record: victim, who: recycle.whoOf(session), route: '/api/admin/users/delete', source: { kind: 'json', file: 'users.json', path: [], key: 'id' } }); }
+        catch (e) { res.writeHead(500); res.end(JSON.stringify({ error: 'recycle snapshot failed; user not deleted: ' + e.message })); return; }
+      }
+      const users = all.filter(u => u.id !== id);
       saveUsers(users);
       // Kill their sessions
       for (const [token, sess] of sessions.entries()) {
@@ -2626,6 +2632,8 @@ const server = http.createServer((req, res) => {
         try {
           const { id } = JSON.parse(body);
           const doc = JSON.parse(fs.readFileSync(apacFp, 'utf8'));
+          const victim = (doc.opportunities || []).find(o => o.id === id);
+          if (victim) recycle.record({ type: 'apac-opportunities', id, record: victim, who: recycle.whoOf(s), route: '/api/apac-opportunities/delete', source: { kind: 'json', file: 'data/apac-opportunities.json', path: ['opportunities'], key: 'id' } });
           doc.opportunities = (doc.opportunities || []).filter(o => o.id !== id);
           const tmp = apacFp + '.tmp'; fs.writeFileSync(tmp, JSON.stringify(doc, null, 2)); fs.renameSync(tmp, apacFp);
           res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true }));
@@ -4724,6 +4732,11 @@ const server = http.createServer((req, res) => {
     }
     if (sub.startsWith('/personal/') && req.method === 'DELETE') {
       const id = sub.split('/')[2]; const v = loadVault();
+      const victim = (v.personal[me] || []).find(i => i.id === id);
+      if (victim) {
+        try { recycle.record({ type: 'vault-personal', id, record: victim, who: me, route: '/api/vault/personal', source: { kind: 'json', file: 'data/vault.json', path: ['personal', me], key: 'id' } }); }
+        catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'recycle snapshot failed; not deleted' })); return; }
+      }
       v.personal[me] = (v.personal[me] || []).filter(i => i.id !== id);
       vaudit(v, { action: 'personal-delete', id }); saveVault(v);
       res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true })); return;
@@ -4800,9 +4813,13 @@ const server = http.createServer((req, res) => {
         let meta = loadUploadsMeta();
         const entry = meta.find(m => m.id === id);
         if (!entry) { res.writeHead(404); res.end(JSON.stringify({ error: 'File not found' })); return; }
-        // Delete physical file
+        // Recycle bin: record the metadata entry, then MOVE the binary into the bin (was unlink).
         const filePath = path.join(UPLOADS_DIR, entry.stored_name);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        const rbSrc = { kind: 'json', file: 'uploads/_meta.json', path: [], key: 'id' };
+        const rbId = recycle.newId();
+        const hasFile = fs.existsSync(filePath);
+        recycle.record({ recycle_id: rbId, type: 'uploads', id, record: entry, who: recycle.whoOf(session), route: '/api/uploads/delete', source: rbSrc, extra: { parked_file: hasFile ? recycle.parkedPath(filePath, rbId) : null } });
+        if (hasFile) recycle.parkFile(filePath, rbId);
         // Remove metadata
         meta = meta.filter(m => m.id !== id);
         saveUploadsMeta(meta);
