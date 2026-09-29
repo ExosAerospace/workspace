@@ -78,3 +78,23 @@ converted      com.exos.mc-snapshot-export                plist rewritten; defer
 skipped        com.exos.mc-tunnel                         excluded (cloudflared)
 converted      com.exos.meeting-agenda-neil               plist rewritten; reloaded
 converted      com.exos.meeting-agenda-nudge              plist rewritten; reloaded
+converted      com.exos.mission-score                     plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+skipped        com.exos.missioncontrol                    excluded label
+converted      com.exos.mnda-registry                     plist rewritten; reloaded
+converted      com.exos.nightly-security                  plist rewritten; reloaded
+converted      com.exos.ny-trip-cancel-reminder           plist rewritten; reloaded
+converted      com.exos.opfinance-alerts                  plist rewritten; reloaded
+converted      com.exos.opfinance-pulse                   plist rewritten; reloaded
+converted      com.exos.opp-deep-triage                   plist rewritten; reloaded
+converted      com.exos.opportunities-source              plist rewritten; reloaded
+converted      com.exos.opportunity-engine                plist rewritten; reloaded
+converted      com.exos.orphaned-attachment-watch         plist rewritten; reloaded
+converted      com.exos.outreach-autoclose                plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.outreach-reply-tracker            plist rewritten; reloaded
+converted      com.exos.overnight-resolver                plist rewritten; reloaded
+converted      com.exos.part450-supabase-watch-exo3       plist rewritten; reloaded
+converted      com.exos.payload-commission-trigger        plist rewritten; reloaded
+converted      com.exos.payload-intake                    plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.payload-sales-engine              plist rewritten; reloaded
+converted      com.exos.piee-login-reminder               plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.priority-inbox-watcher            plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)

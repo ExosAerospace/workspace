@@ -981,10 +981,251 @@
       "run_at_load": false,
       "status": "converted"
     },
+    "com.exos.mission-score": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Mission-Score --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/mission-score.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.missioncontrol": {
+      "at": "2026-09-28T22:05:39-05:00",
+      "reason": "excluded label",
+      "status": "skipped"
+    },
+    "com.exos.mnda-registry": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/build_mnda_registry.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.nightly-security": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.openclaw/workspace/scripts/nightly-security.sh"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.ny-trip-cancel-reminder": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/ny-trip-cancel-reminder.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.opfinance-alerts": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/operational_finance_exo3.py",
+        "--alerts-only"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.opfinance-pulse": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/operational_finance_exo3.py",
+        "--pulse"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.opp-deep-triage": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name K3-Opp-Deep-Triage --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/opp_deep_triage.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.opportunities-source": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/opportunities_agent.py --lane payload && /Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/payload_pipeline_to_opps.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.opportunity-engine": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/opportunity_processor.py --live --limit 10 --only-prefix PAY && /Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/opportunity_processor.py --live --limit 15"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.orphaned-attachment-watch": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/orphaned_attachment_watch.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.outreach-autoclose": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/outreach-autoclose.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.outreach-reply-tracker": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Outreach-Reply-Tracker --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/outreach-reply-tracker.py --since-days 3"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.overnight-resolver": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/overnight_resolver.py",
+        "--apply"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.part450-supabase-watch-exo3": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/part450_supabase_watch.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.payload-commission-trigger": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/payload_commission_trigger.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.payload-intake": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/payload_intake_quote.py --apply"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.payload-sales-engine": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/payload_sales_engine.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.piee-login-reminder": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/piee-login-reminder.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.priority-inbox-watcher": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:39-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/priority-inbox-watcher.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
     "com.exos.run-failures-report": {
       "loaded_at": "2026-09-28T22:04:39-05:00",
       "reload": "reloaded"
     }
   },
-  "updated": "2026-09-28T22:05:33-05:00"
+  "updated": "2026-09-28T22:05:39-05:00"
 }
