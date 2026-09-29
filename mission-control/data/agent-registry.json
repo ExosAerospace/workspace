@@ -2708,6 +2708,24 @@
    "reusability_scope": "payload sales engine",
    "risk_tier": "LOW",
    "envelope_source": "Jon 2026-09-27"
+  },
+  {
+   "autonomy_tier": "Recommends-with-Context",
+   "envelope_source": "hand-written with the script, 2026-09-28 (run-logging audit worker)",
+   "escalation": "MC task (owner Exo, source run-failures-report) for human review",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
+   "human_owner": "Exo (infra) / John Quinn",
+   "kind": "recurring",
+   "label": "com.exos.run-failures-report",
+   "memory_boundary": "workspace logs/runs (read), reports/run-failures (write), MC/Supabase tasks (one upsert)",
+   "permission_envelope": "file I/O: reads logs/runs/*.jsonl + LaunchAgents plists; writes reports/run-failures/*.md; Supabase tasks read + create/update ONE task only when failures exist; NO email, NO Discord",
+   "purpose": "run_failures_report.py — daily 06:30 summary of failed and missed background-job runs from the shared run log (scripts/run_logged.py). Proposes review via one MC task; changes no job state.",
+   "reusability_scope": "TBD",
+   "risk_tier": "LOW",
+   "schedule": "daily 06:30",
+   "script": "run_failures_report.py",
+   "stack_layer": "GOVERN/ASSURE",
+   "telemetry": "logs/run-failures-report.out.log; reports/run-failures/"
   }
  ],
  "eval_wave_1": {

@@ -860,6 +860,12 @@
       "warn_grace": 3,
       "fail_grace": 8,
       "owner": "Exo (infra) / John Quinn"
+    },
+    "com.exos.run-failures-report": {
+      "cadence_s": 86400,
+      "warn_grace": 2.5,
+      "fail_grace": 6,
+      "owner": "Exo (infra) / John Quinn"
     }
   },
   "_eval_wave_2": {
