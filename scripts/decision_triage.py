@@ -188,7 +188,8 @@ def main():
     prev = next((d for d in arr if d.get("id") == BATCH_ID), None)
     prev_ans = (prev or {}).get("answer")
     prev_count = (prev or {}).get("batched_count", 0) or 0
-    standing = bool(prev and (prev.get("standing") or prev_ans))
+    # exo3 sign-off gate: the rule is standing ONLY if a human actually answered the batch card.
+    standing = bool(prev and prev_ans)
     routing = (prev or {}).get("routing_rule") or DEFAULT_ROUTING
 
     np = nb = 0
@@ -234,9 +235,10 @@ def main():
             "proposedAction": "Standing rule in effect. To change routing, answer this card again.",
             "type": "choice", "options": ["Keep rule", "Route all to Lizi", "Route all to UTD", "Send back to me"],
             "priority": "low", "status": "answered",
-            "answer": prev_ans or "Delegate: payload sales → UTD; BLK3 sales → Lizi",
-            "answeredAt": (prev or {}).get("answeredAt") or today,
-            "answeredBy": (prev or {}).get("answeredBy") or "Jon",
+            "answer": prev_ans,                       # carried forward from the human answer only
+            "answeredAt": (prev or {}).get("answeredAt"),
+            "answeredBy": (prev or {}).get("answeredBy"),
+            "answeredByEmail": (prev or {}).get("answeredByEmail"),
             "assignedTo": ROUTE_BLK3[1],           # Lizi (capstone Exos gate) — OFF Jon's board
             "dedupeKey": "routine-batch", "batched_count": len(routine),
             "standing": True, "routing_rule": routing,

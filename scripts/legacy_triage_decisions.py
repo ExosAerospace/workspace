@@ -101,6 +101,14 @@ def parse_overrides(note):
                 ov[int(i)] = rec
     return ov
 
+def human_answered(d):
+    if d.get("answeredByEmail"):
+        return True
+    users = load_json(os.path.join(WS, "mission-control", "users.json"), [])
+    names = {str(u.get("name", "")).strip().lower() for u in users if u.get("name")}
+    return str(d.get("answeredBy") or "").strip().lower() in names
+
+
 def apply_batch(batch, decision):
     ans = (decision.get("answer") or "").lower()
     if "skip" in ans:
@@ -138,7 +146,9 @@ def main():
         d = dbykey.get(b["key"])
         if not d:
             continue
-        answered = (d.get("status") == "answered") or bool(d.get("answer"))
+        # exo3 sign-off gate: execute only on a HUMAN click in MC (answeredByEmail is stamped only by
+        # a logged-in session, or answeredBy is an MC user) — never on an auto/token/agent answer.
+        answered = d.get("status") == "answered" and human_answered(d)
         if b.get("executed"):
             continue
         if answered:

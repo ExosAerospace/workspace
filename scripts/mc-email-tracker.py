@@ -526,17 +526,19 @@ def main():
                 # high-confidence llm match). Records a fact ("Sent"); never grants approval.
                 det = method == "deterministic" and any(b.startswith(("addr:", "plus-tag:", "id:")) for b in rec["basis"])
                 strong_enough = det or (conf_num is not None and conf_num >= RESOLVE_CONF)
+                # exo3 sign-off gate: the detected send is PROPOSED ("Sent") — the card stays open
+                # until a human confirms it in MC (Decisions → ✓ Confirm). Never self-answers.
                 if (direction == "sent" and exo_on_email and strong_enough
                         and str(d.get("status", "")).lower() == "open"
+                        and not d.get("proposedAnswer")
                         and is_send_decision(d)):
-                    d["status"] = "answered"
-                    d["answer"] = "Sent"
-                    d["answeredAt"] = date_iso
-                    d["answeredBy"] = "email-tracker"
+                    d["proposedAnswer"] = "Sent"
+                    d["auto_proposed"] = {"by": "email-tracker", "at": date_iso,
+                                          "basis": f"outreach detected as sent (to {', '.join(to[:3])}; msg {mid})"}
                     d["updated"] = date_iso
                     d["note"] = ((d.get("note", "") or "").strip()
-                                 + f" Auto-resolved: outreach detected as sent {date_iso[:10]} "
-                                   f"(to {', '.join(to[:3])}; msg {mid}).").strip()
+                                 + f" Proposed Sent: outreach detected as sent {date_iso[:10]} "
+                                   f"(to {', '.join(to[:3])}; msg {mid}) — awaiting human confirm.").strip()
                     auto_resolved.append(iid)
 
         if scanned % FLUSH_EVERY == 0:   # checkpoint so a kill never loses progress
@@ -554,7 +556,7 @@ def main():
     for iid, n in sorted(new_high.items(), key=lambda x: -x[1]):
         print(f"  {iid} <- {n} email(s)")
     if auto_resolved:
-        print(f"auto-resolved send-decisions: {', '.join(sorted(set(auto_resolved)))}")
+        print(f"proposed Sent (awaiting human confirm): {', '.join(sorted(set(auto_resolved)))}")
 
 
 if __name__ == "__main__":

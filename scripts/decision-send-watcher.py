@@ -236,15 +236,17 @@ def has_deliverable_content(it, draft):
 
 
 def close_decision(did, note):
-    """Mark a decision answered/auto-delivered in decisions.json (atomic), so it leaves the box."""
+    """exo3 sign-off gate: after auto-delivering the draft, PROPOSE the close — the card stays OPEN
+    with proposedAnswer until a human confirms it in MC (Decisions → ✓ Confirm). Never self-answers."""
     raw = load_json(DEC, [])
     arr = raw if isinstance(raw, list) else raw.get("decisions", [])
     from datetime import datetime, timezone
     now = datetime.now(timezone.utc).isoformat()
     for d in arr:
-        if str(d.get("id")) == str(did):
-            d["status"] = "answered"; d["answer"] = "Auto-delivered to owner's inbox (ready to send)"
-            d["note"] = (d.get("note") or "") + f" [{note}]"; d["answeredAt"] = now; d["answeredBy"] = "auto-deliver"
+        if str(d.get("id")) == str(did) and str(d.get("status") or "open").lower() == "open":
+            d["proposedAnswer"] = "Done — draft delivered to owner's inbox"
+            d["auto_proposed"] = {"by": "decision-send-watcher", "at": now, "basis": note}
+            d["note"] = (d.get("note") or "") + f" [{note}; awaiting human confirm]"; d["updated"] = now
     tmp = DEC + f".tmp.{os.getpid()}"  # per-process temp: avoid concurrent-writer race on shared .tmp
     with open(tmp, "w") as f:
         json.dump(arr if isinstance(raw, list) else {**raw, "decisions": arr}, f, indent=2)
@@ -297,7 +299,7 @@ def main():
         if ok:
             close_decision(did, "auto-delivered on request; no approval needed")
             done[key] = "1"
-            log(f"AUTO-DELIVERED to Jon + closed: {did} '{it.get('title')}'")
+            log(f"AUTO-DELIVERED to Jon; close proposed (awaiting human confirm): {did} '{it.get('title')}'")
         else:
             log(f"AUTO-DELIVER FAILED {did}: {err}")
     triggerable = [it for it in decisions() if is_send_request(it)]
