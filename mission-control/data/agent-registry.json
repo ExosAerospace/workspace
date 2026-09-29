@@ -1112,14 +1112,22 @@
    "stack_layer": "ORCHESTRATE",
    "autonomy_tier": "Execute-within-bounds",
    "human_owner": "John Quinn",
-   "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (exosmc+do@proton.me, exosmc@pm.me, exosmc@proton.me, jquinn@exosaero.com, jquinnexo+do@pm.me, jquinnexo@pm.me); Discord post via deliver/openclaw message; wakes a full-tool OpenClaw agent session; LLM calls; reads mailbox via Bridge IMAP; deletes local files (pf); file I/O: MC data JSON; own logs/state",
+   "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (exosmc+do@proton.me, exosmc@pm.me, exosmc@proton.me, jquinn@exosaero.com, jquinnexo+do@pm.me, jquinnexo@pm.me); Discord post via deliver/openclaw message; wakes a full-tool OpenClaw agent session; LLM calls; reads mailbox via Bridge IMAP; deletes local files (pf); file I/O: MC data JSON; own logs/state; attaches outgoing deliverables to the matching OPEN MC task via mc-attach.py (versioned, reversible) — deliverable→task linkage guard, 2026-09-29",
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
-   "escalation": "Decisions board / Jon inbox",
-   "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
-   "telemetry": "logs/mc-email-command.log",
-   "reusability_scope": "TBD",
+   "escalation": "Decisions board / Jon inbox; orphan deliverable → flagged in the requester's reply ('which task?') + agent_eval WARN",
+   "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates; `python3 scripts/mc-email-command.py --selftest` (c) task-linkage: PoliTo LOI replay must resolve to #3226, ties/unrelated must NOT auto-attach; runtime: every run emits fleet_log govern/deliverable_task_link — orphan = level warn → agent_eval hourly WARN",
+   "telemetry": "logs/mc-email-command.log; logs/fleet-events.jsonl (deliverable_task_link); logs/decision-traces.jsonl (auto task-match)",
+   "reusability_scope": "Pattern for any command/intake channel that returns deliverables (email, MC chat, Discord): deterministic deliverable→task linkage guard + orphan WARN",
    "risk_tier": "HIGH",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    {
+     "date": "2026-09-29",
+     "by": "Exo",
+     "approver": "John Quinn",
+     "change": "Added deterministic deliverable→MC-task linkage guard (PoliTo LOI miss). Match: cited task # → else keyword score on open tasks (top≥3, lead≥2). Else flag, never guess."
+    }
+   ]
   },
   {
    "label": "com.exos.mc-email-tracker",

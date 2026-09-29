@@ -36,6 +36,7 @@ except Exception:
 # --- /governance ---
 
 import imaplib, email, json, os, re, sys, subprocess, tempfile, fcntl, hashlib, html as _html, mimetypes
+import urllib.request
 from datetime import datetime, timezone
 import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from email.utils import getaddresses, parsedate_to_datetime
@@ -400,6 +401,155 @@ def new_task_deliverables(before_ids, cap=5, max_bytes=20 * 1024 * 1024):
         if len(out) >= cap:
             break
     return out
+
+
+# ── Deliverable → MC task linkage guard (ExO3 GOVERN; Jon 2026-09-29, PoliTo LOI miss) ──────────
+# Every file emailed back by an @exo command must land on the Mission Control task it belongs to —
+# even when the email never names the task. Deterministic, not prompt-dependent: after the agent
+# runs, each outgoing attachment not already on a task is matched (1) by a task # the agent cited,
+# else (2) by distinctive subject/instruction keywords against OPEN task titles. Exactly one
+# confident match → attach via mc-attach.py (internal, versioned, reversible). Otherwise the reply
+# flags it ("not filed — which task?"). Every outcome → fleet_log event + decision trace.
+_MC_ATTACH = os.path.join(WS, "scripts", "mc-attach.py")
+_SB_REST = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
+_LINK_STOP = set("""re fw fwd exo exobot update the and for with from your you our this that need needs
+please send sign signature signed letter doc document draft final executed attached attachment copy
+tomorrow today am pm next steps call meeting follow up followup exos aerospace inc llc task mc re:
+into onto about just make made have has will would could should here there what when also only""".split())
+
+
+def _link_tokens(*texts):
+    toks = []
+    for t in texts:
+        for w in re.findall(r"[A-Za-z][A-Za-z0-9\-]{3,}", t or ""):
+            wl = w.lower().strip("-")
+            if wl not in _LINK_STOP and wl not in toks and not re.fullmatch(r"\d+", wl):
+                toks.append(wl)
+    return toks[:8]
+
+
+def _sb_get(q):
+    key = json.load(open(SECRETS))["supabase_service_role_key"]
+    req = urllib.request.Request(f"{_SB_REST}/{q}", headers={"apikey": key, "Authorization": f"Bearer {key}"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.load(r)
+
+
+def _score_tasks(tasks, tokens, sender):
+    """Pure scorer (selftested): {id: score}. A token hit in the title = 2, in the description = 1;
+    +1 if the task is assigned to the requester."""
+    out = {}
+    for t in tasks:
+        title = (t.get("title") or "").lower(); desc = (t.get("description") or "").lower()
+        s = sum(2 if tok in title else (1 if tok in desc else 0) for tok in tokens)
+        if s and (t.get("assigned_email") or "").lower() == (sender or "").lower():
+            s += 1
+        if s:
+            out[t["id"]] = s
+    return out
+
+
+def _pick_task(scores):
+    """Confident pick only: top score ≥ 3 and strictly ahead of the runner-up by ≥ 2. Else None."""
+    if not scores:
+        return None
+    ranked = sorted(scores.items(), key=lambda kv: -kv[1])
+    top_id, top = ranked[0]
+    second = ranked[1][1] if len(ranked) > 1 else 0
+    return top_id if top >= 3 and top - second >= 2 else None
+
+
+def _file_on_task(path, meta):
+    """True if this exact file (by basename or sha256) is already a current attachment on a task."""
+    bn = os.path.basename(path)
+    try:
+        sz = os.path.getsize(path); h = None
+    except Exception:
+        return None
+    for m in meta:
+        if not m.get("task_id") or not m.get("current", True):
+            continue
+        sn = m.get("stored_name") or ""
+        if sn == bn or sn.endswith("_" + bn):
+            return m.get("task_id")
+        if m.get("size") == sz:  # same bytes under a different name (e.g. a renamed copy)
+            try:
+                if h is None:
+                    h = hashlib.sha256(open(path, "rb").read()).hexdigest()
+                if hashlib.sha256(open(os.path.join(_UPLOADS_DIR, sn), "rb").read()).hexdigest() == h:
+                    return m.get("task_id")
+            except Exception:
+                pass
+    return None
+
+
+def ensure_task_linkage(atts, reply, subject, instruction, sender, mid):
+    """Returns (linked: list[(file, task_id, method)], unlinked: list[file])."""
+    linked, unlinked = [], []
+    if not atts:
+        return linked, unlinked
+    try:
+        meta = json.load(open(_UPLOADS_META))
+    except Exception:
+        meta = []
+    corr = None
+    try:
+        import fleet_log as _fl
+        corr = _fl.new_corr()
+    except Exception:
+        _fl = None
+    cited = [int(n) for n in re.findall(r"(?:task|MC)\s*#\s*(\d{2,6})", reply or "", re.I)]
+    target, method = None, None
+    try:
+        if cited:
+            rows = _sb_get(f"tasks?select=id,state&id=in.({','.join(str(c) for c in set(cited))})")
+            live = [r["id"] for r in rows if (r.get("state") or "") not in ("Done", "Cancelled")]
+            if len(set(live)) == 1:
+                target, method = live[0], "cited"
+        if target is None:
+            toks = _link_tokens(_clean_subject(subject), instruction)
+            if toks:
+                ors = ",".join(f"title.ilike.*{t}*,description.ilike.*{t}*" for t in toks)
+                rows = _sb_get(f"tasks?select=id,title,description,state,assigned_email"
+                               f"&state=not.in.(Done,Cancelled)&or=({ors})&limit=200")
+                target = _pick_task(_score_tasks(rows, toks, sender))
+                method = "keyword" if target else None
+    except Exception as e:
+        log(f"[task-link] lookup failed mid={mid}: {e}")
+    for p in atts:
+        on = _file_on_task(p, meta)
+        if on:
+            linked.append((p, on, "already")); continue
+        if target:
+            r = subprocess.run([sys.executable, _MC_ATTACH, "--task", str(target), "--file", p,
+                                "--by", "Exo (email-command guard)"], capture_output=True, text=True, timeout=60)
+            if r.returncode == 0:
+                linked.append((p, target, method)); continue
+            log(f"[task-link] mc-attach failed {os.path.basename(p)} -> #{target}: {(r.stderr or r.stdout)[-200:]}")
+        unlinked.append(p)
+    for p, tid, how in linked:
+        log(f"[task-link] {os.path.basename(p)} -> task #{tid} ({how}) mid={mid}")
+    for p in unlinked:
+        log(f"[task-link] ⚠️ ORPHAN deliverable {os.path.basename(p)} — no confident task match mid={mid}")
+    try:
+        if _fl:
+            _fl.event("com.exos.mc-email-command", "govern", "deliverable_task_link", corr=corr,
+                      owner="John Quinn", outcome=("orphan" if unlinked else "linked"),
+                      level=("warn" if unlinked else "info"),
+                      detail={"mid": mid, "linked": [(os.path.basename(p), t, h) for p, t, h in linked],
+                              "orphans": [os.path.basename(p) for p in unlinked]})
+        import decision_trace as _dt
+        for p, tid, how in linked:
+            if how in ("cited", "keyword"):
+                _dt.emit(agent="com.exos.mc-email-command", corr=corr,
+                         inputs=[subject, os.path.basename(p)],
+                         policy_applied="deliverable→task linkage guard (Jon 2026-09-29)",
+                         chosen=f"attach to task #{tid} via {how} match",
+                         write_back="mission-control/uploads/_meta.json (mc-attach.py, versioned)",
+                         final_call="agent", approver="John Quinn")
+    except Exception:
+        pass
+    return linked, unlinked
 
 
 def _clean_subject(orig_subject):
@@ -877,6 +1027,19 @@ def main():
                     for _d in new_task_deliverables(before_att_ids):
                         if os.path.basename(_d) not in _have and len(atts) < 5:
                             atts.append(_d); _have.add(os.path.basename(_d))
+                    # ExO3 GOVERN guard: every deliverable going back must be filed on its MC task.
+                    _link_note = ""
+                    try:
+                        _linked, _orph = ensure_task_linkage(atts, reply, subject, instruction, sender, mid)
+                        _tids = sorted({t for _, t, _h in _linked})
+                        if _tids:
+                            _link_note += "\n\n📁 Filed on MC task " + ", ".join(f"#{t}" for t in _tids) + "."
+                        if _orph:
+                            _link_note += ("\n\n⚠️ Not filed on any MC task (no confident match): "
+                                           + ", ".join(os.path.basename(p) for p in _orph)
+                                           + " — reply with the task # and Exo will file it.")
+                    except Exception as _e:
+                        log(f"[task-link] guard error mid={mid}: {_e}")
                     # Surface referenced-but-missing attachments instead of dropping them silently
                     # (Jon 2026-09-10 root-cause: a described .xlsx that was never written just vanished).
                     _miss_note = ""
@@ -885,6 +1048,7 @@ def main():
                         log(f"[email-reply] ⚠️ referenced attachment(s) NOT sent: {_mw}")
                         _miss_note = ("\n\n⚠️ Referenced but NOT attached (file missing/failed): " + _mw
                                       + "\n(The document was named but no valid file was found — it was not generated or the path is wrong.)")
+                    _miss_note = _link_note + _miss_note
                     # NO DUPLICATE FOR JON (Jon 2026-09-09): when HIS own @exo task produces a Decision for
                     # him to make (agent flags it with a leading [[DECISION_ONLY]] token), the Decision is the
                     # single artifact — do NOT also email him the write-up (it was filling his inbox and making
@@ -911,7 +1075,7 @@ def main():
                         # goes to Jon's ops channel, NOT the requester — so a summary-only answer would never reach
                         # them otherwise. (This silently dropped Phil's Grant Engine DD, 2026-08-18: rc=0 but the
                         # only delivery was "discord-only", which Phil, an email user, never saw.)
-                        email_requester(sender, subject, instruction, reply, attachments=atts)
+                        email_requester(sender, subject, instruction, reply + _link_note, attachments=atts)
                         _how = (f"discord+emailed requester; attached {len(atts)} file(s)" if atts
                                 else "discord+emailed requester (summary)")
                         log(f"[agent] done rc=0 mid={mid}; {_how} {sender}")
@@ -970,6 +1134,29 @@ def _selftest():
         fails.append(f"inbound-attachments: {e}")
     finally:
         shutil.rmtree(os.path.join(INBOUND_ATTACH_DIR, "SELFTEST_MID"), ignore_errors=True)
+    # (c) deliverable→task linkage guard (2026-09-29 PoliTo LOI miss): the executed-LOI email must
+    #     resolve to the PoliTo decision task; an ambiguous/unrelated subject must NOT auto-attach.
+    try:
+        tasks = [
+            {"id": 3226, "title": "PoliTo / Roberta Fusaro: decide collaboration path + next steps (answer to Lizi by 10/2)",
+             "description": "Lizi is sending an LOI for John's signature", "assigned_email": "jquinn@exosaero.com"},
+            {"id": 1365, "title": "[Send 59] BLK3 F2 outreach: Italian Air Force / PoliTo network", "description": "", "assigned_email": "lquinn@exosaero.com"},
+            {"id": 42, "title": "DMG MORI credit application", "description": "", "assigned_email": "jquinn@exosaero.com"},
+        ]
+        toks = _link_tokens(_clean_subject("Re: Fully Executed: Letter of Intent — Exos & Politecnico di Torino / PoliTOrbital (2026-09-29)"),
+                            "insert the Signature Certificate right after Sincerely")
+        pick = _pick_task(_score_tasks(tasks, toks + ["fusaro"], "jquinn@exosaero.com"))
+        toks2 = _link_tokens("Fw: PoliTo / Roberta Fusaro - need your signature on the LOI tomorrow AM", "send me the letter for signature")
+        pick2 = _pick_task(_score_tasks(tasks, toks2, "jquinn@exosaero.com"))
+        assert pick2 == 3226, f"PoliTo LOI request did not resolve to #3226 (got {pick2}, toks={toks2})"
+        amb = _pick_task({1: 3, 2: 3})
+        assert amb is None, "ambiguous tie must not auto-attach"
+        none = _pick_task(_score_tasks(tasks, _link_tokens("Quarterly cleanup", "tidy files"), "x@y"))
+        assert none is None, f"unrelated subject auto-attached to #{none}"
+        assert "cited" and re.findall(r"(?:task|MC)\s*#\s*(\d{2,6})", "Filed on MC #3226 and task #12", re.I) == ["3226", "12"]
+        print("PASS task-linkage:", {"forward": pick2, "executed_reply": pick})
+    except Exception as e:
+        fails.append(f"task-linkage: {e}")
     if fails:
         print("SELFTEST FAILED:")
         for f in fails:
