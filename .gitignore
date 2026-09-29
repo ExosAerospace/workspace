@@ -67,3 +67,6 @@ mission-control/data/.guard-admin-token
 mission-control/data/guard-state.json
 mission-control/data/ethics-reports.json
 mission-control/data/ethics-reports.json.tmp
+
+# run_logged.py per-day run records (manifest + conversion.log stay tracked)
+logs/runs/*.jsonl
