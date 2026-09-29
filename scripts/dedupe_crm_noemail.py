@@ -12,6 +12,8 @@ Run:  python3 scripts/dedupe_crm_noemail.py            # dry-run (shows matches)
 """
 import os, sys, json, re, time, urllib.request
 from collections import defaultdict
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import mc_recycle  # noqa: E402  recoverable deletes -> mc_restore.py
 
 SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
 WS = os.path.expanduser("~/.openclaw/workspace")
@@ -86,6 +88,9 @@ def main():
         chunk = remove_ids[i:i + 100]
         idlist = ",".join(f'"{x}"' for x in chunk)
         try:
+            # Recycle bin (exo3 2026-09-28): snapshot FULL rows first; snapshot failure = no delete.
+            full = req(f"contacts?id=in.({idlist})")
+            mc_recycle.snapshot_rows("contacts", full, who="dedupe_crm_noemail.py", route="scripts/dedupe_crm_noemail.py")
             req(f"contacts?id=in.({idlist})", "DELETE"); removed += len(chunk)
         except Exception:
             failed += len(chunk)
