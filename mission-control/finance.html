@@ -114,8 +114,29 @@ async function loadCapital(){
     c.recent.forEach(function(e){ h+='<tr><td>'+(e.date||'')+' · '+(e.investor||'?')+'</td><td>'+(typeof e.amount==='number'?money(e.amount):'—')+'</td></tr>'; });
     h+='</table></div>';
   }
+  // exo3 sign-off gate: email-parsed receipts are NOT in the total until a human confirms them.
+  if(c.awaiting_confirmation&&c.awaiting_confirmation.length){
+    h+='<div style="margin-top:14px;border:1px solid var(--amber);border-radius:8px;padding:10px"><h3 style="font-size:12px;color:var(--amber);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Awaiting confirmation — parsed from email, NOT in the total</h3><table>';
+    c.awaiting_confirmation.forEach(function(e,i){ h+='<tr><td>'+esc(e.date||'')+' · '+esc(e.investor||'?')+'<div class="sub" style="color:var(--text2)">'+esc(e.source||'')+'</div></td><td>'+(typeof e.amount==='number'?money(e.amount):'—')+'</td>'+
+      '<td style="white-space:nowrap"><button onclick="cbReview('+i+',\'confirm\')">✓ Confirm</button> <button onclick="cbReview('+i+',\'reject\')">✕ Reject</button></td></tr>'; });
+    h+='</table></div>';
+  }
+  window.__cbAwaiting=c.awaiting_confirmation||[];
   h+='</div>';
   document.getElementById('capital').innerHTML=h;
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+async function cbReview(i,action){
+  const e=(window.__cbAwaiting||[])[i]; if(!e) return;
+  let amount=e.amount;
+  if(action==='confirm'){
+    const v=prompt('Confirm funds received from '+(e.investor||'?')+'. Verify the amount (USD) against the bank/deposit record:', e.amount==null?'':e.amount);
+    if(v===null) return; amount=Number(String(v).replace(/[$,]/g,''));
+  } else if(!confirm('Reject this entry? It stays in the ledger as rejected and never counts.')) return;
+  const r=await fetch('/api/capital-bridge/confirm',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({message_id:e.message_id,action:action,amount:amount})});
+  const j=await r.json().catch(function(){return {};});
+  if(!j.ok) alert('Could not save: '+(j.error||('HTTP '+r.status)));
+  loadCapital();
 }
 load();
 loadCapital();

@@ -44,7 +44,9 @@ def pdate(s):
 def compute():
     led = load(LEDGER, {})
     target = led.get("target", 0); base = led.get("baseline_amount", 0)
-    entries = [e for e in led.get("entries", []) if isinstance(e, dict)]
+    # exo3 sign-off gate: only human-confirmed entries count (pending/rejected/excluded do not).
+    entries = [e for e in led.get("entries", []) if isinstance(e, dict)
+               and e.get("status") not in ("pending_confirmation", "rejected") and not e.get("excluded_from_total")]
     received = base + sum(e.get("amount") or 0 for e in entries)
     commits = []
     for e in entries:

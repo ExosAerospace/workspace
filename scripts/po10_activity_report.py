@@ -37,7 +37,9 @@ def usd(n):
 
 
 def received(led):
-    return [e for e in led["entries"] if isinstance(e.get("amount"), (int, float))]
+    # exo3 sign-off gate: only human-confirmed entries count (pending/rejected/excluded do not).
+    return [e for e in led["entries"] if isinstance(e.get("amount"), (int, float))
+            and e.get("status") not in ("pending_confirmation", "rejected") and not e.get("excluded_from_total")]
 
 
 def running_total(led):

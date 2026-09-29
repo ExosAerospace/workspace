@@ -92,6 +92,11 @@ def save_ledger(d):
         json.dump(d, f, indent=2)
 
 
+def is_confirmed(e):
+    """Counts toward totals: not awaiting human confirmation, not rejected, not excluded."""
+    return e.get("status") not in ("pending_confirmation", "rejected") and not e.get("excluded_from_total")
+
+
 def decode(s):
     if not s:
         return ""
@@ -201,6 +206,9 @@ def main():
                 "cc_alias_hit": hit_alias,
                 "needs_amount": amount is None,
             }
+            # exo3 sign-off gate: an email-parsed money entry is PENDING until a human confirms it
+            # in MC (Finance → Capital Bridge → Confirm). Excluded from every total until then.
+            entry["status"] = "pending_confirmation"
             if amount is None:
                 entry["note"] = "No dollar figure found in email; recorded but NOT added to total. Reply with the amount to complete."
             new_entries.append(entry)
@@ -216,9 +224,10 @@ def main():
         led["seen_message_ids"] = sorted(seen)
         save_ledger(led)
 
-    # Running total = confirmed baseline + all entries with a numeric amount
-    counted = [e for e in led["entries"] if isinstance(e.get("amount"), (int, float))]
-    pending = [e for e in led["entries"] if e.get("needs_amount")]
+    # Running total = confirmed baseline + human-CONFIRMED entries with a numeric amount
+    counted = [e for e in led["entries"] if is_confirmed(e) and isinstance(e.get("amount"), (int, float))]
+    pending = [e for e in led["entries"] if e.get("status") == "pending_confirmation" or
+               (is_confirmed(e) and e.get("needs_amount"))]
     total = (led.get("baseline_amount") or 0) + sum(e["amount"] for e in counted)
     target = led.get("target") or 0
     log(f"TOTAL PO10 received: ${total:,.0f} of ${target:,.0f} "
@@ -242,7 +251,7 @@ def update_mc_task(led, total, target, counted, pending):
         f"Baseline (pre-tracker, {led.get('baseline_as_of')}): ${led.get('baseline_amount',0):,.0f} — confirm w/ Mitchell/Neil.",
         "",
         "How it fills: team CCs **exosmc@pm.me** on a 'funds received' email with the "
-        "dollar amount in it; the tracker appends it here automatically.",
+        "dollar amount in it; the tracker proposes it here and a human confirms it on MC Finance before it counts.",
         "",
         "**Logged receipts:**",
     ]
@@ -252,9 +261,10 @@ def update_mc_task(led, total, target, counted, pending):
         lines.append("- (none with a confirmed amount yet)")
     if pending:
         lines.append("")
-        lines.append("**Awaiting dollar amount:**")
+        lines.append("**Awaiting human confirmation / dollar amount (NOT in total — confirm on MC Finance):**")
         for e in pending:
-            lines.append(f"- {e['date']} — {e['investor']} ({e.get('note','amount missing')})")
+            amt = f"${e['amount']:,.0f} parsed" if isinstance(e.get("amount"), (int, float)) else "amount missing"
+            lines.append(f"- {e['date']} — {e['investor']} ({amt})")
     desc = "\n".join(lines)
 
     try:

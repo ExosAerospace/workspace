@@ -1634,7 +1634,7 @@ const server = http.createServer((req, res) => {
   // user is blocked regardless of admin/manager role (mirrors the /api/commissions allowlist).
   {
     const fp = req.url.split('?')[0];
-    if (fp === '/finance' || fp === '/finance.html' || fp === '/api/operational-finance' || fp === '/api/capital-bridge') {
+    if (fp === '/finance' || fp === '/finance.html' || fp === '/api/operational-finance' || fp === '/api/capital-bridge' || fp === '/api/capital-bridge/confirm') {
       let allow = [];
       try { allow = (JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'finance-access.json'))).allow || []); } catch (e) {}
       const allowSet = new Set(allow.map(x => String(x).toLowerCase()));
@@ -1654,7 +1654,10 @@ const server = http.createServer((req, res) => {
         try {
           const led = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'capital_bridge_ledger.json')));
           const target = led.target || 0, base = led.baseline_amount || 0;
-          const entries = (led.entries || []).filter(e => e && typeof e === 'object');
+          // exo3 sign-off gate: email-parsed entries count only after a human confirms them.
+          const all = (led.entries || []).filter(e => e && typeof e === 'object');
+          const entries = all.filter(e => !['pending_confirmation', 'rejected'].includes(e.status) && !e.excluded_from_total);
+          const awaiting = all.filter(e => e.status === 'pending_confirmation');
           let logged = 0; entries.forEach(e => { if (typeof e.amount === 'number') logged += e.amount; });
           const received = base + logged;
           const parse = s => { const d = Date.parse(s); return isNaN(d) ? null : d; };
@@ -1678,9 +1681,36 @@ const server = http.createServer((req, res) => {
             last_commitment: lastCommit ? new Date(lastCommit.t).toISOString().slice(0, 10) : null,
             last_commitment_who: lastCommit ? lastCommit.who : null, days_since_commitment: dSinceCommit,
             threshold_days: THRESH, trigger: (dSinceCommit != null && dSinceCommit >= THRESH),
-            recent: entries.slice(-6).reverse().map(e => ({ date: e.date, investor: e.investor, amount: e.amount }))
+            recent: entries.slice(-6).reverse().map(e => ({ date: e.date, investor: e.investor, amount: e.amount })),
+            awaiting_confirmation: awaiting.map(e => ({ message_id: e.message_id, date: e.date, investor: e.investor, amount: e.amount, source: e.source }))
           }));
         } catch (e) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{}'); }
+        return;
+      }
+      if (fp === '/api/capital-bridge/confirm' && req.method === 'POST') {
+        // Human sign-off on an email-parsed money entry: { message_id, action: 'confirm'|'reject', amount? }.
+        // Rejected entries are kept (status=rejected) so the email never re-imports; nothing is deleted.
+        let body = ''; req.on('data', c => body += c); req.on('end', () => {
+          try {
+            const j = JSON.parse(body || '{}');
+            const LP = path.join(__dirname, 'data', 'capital_bridge_ledger.json');
+            const led = JSON.parse(fs.readFileSync(LP, 'utf8'));
+            const e = (led.entries || []).find(x => x && x.message_id === j.message_id && x.status === 'pending_confirmation');
+            if (!e || !['confirm', 'reject'].includes(j.action)) { res.writeHead(409, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'no pending entry / bad action' })); return; }
+            if (j.action === 'confirm') {
+              const amt = (j.amount !== undefined && j.amount !== '' && j.amount !== null) ? Number(j.amount) : e.amount;
+              if (typeof amt !== 'number' || !isFinite(amt) || amt <= 0) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'a positive amount is required to confirm' })); return; }
+              if (amt !== e.amount) e.parsed_amount = e.amount;
+              e.amount = amt; e.needs_amount = false;
+            }
+            e.status = j.action === 'confirm' ? 'confirmed' : 'rejected';
+            e.reviewed_by = session.name || session.email; e.reviewed_by_email = session.email; e.reviewed_at = new Date().toISOString();
+            led.updated_at = e.reviewed_at;
+            const tmp = LP + '.tmp.' + process.pid; fs.writeFileSync(tmp, JSON.stringify(led, null, 2)); fs.renameSync(tmp, LP);
+            glog('mc-server', 'capital_bridge_' + e.status, 'ok', `${e.investor} ${e.amount}`, { by: session.email, message_id: e.message_id });
+            res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, status: e.status, amount: e.amount }));
+          } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: err.message })); }
+        });
         return;
       }
       // /finance.html → authorized; fall through to the static file server
