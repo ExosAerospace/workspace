@@ -19,7 +19,7 @@ import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 DEC = os.path.join(WS, "mission-control", "data", "decisions.json")
-OPENCLAW = "/Users/exomac/.local/share/mise/installs/node/24.14.0/bin/openclaw"
+OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 JON = "1501632195163590739"
 APPLY = "--apply" in sys.argv
 BATCH_ID = "D-ROUTINE-BATCH"
@@ -201,6 +201,17 @@ def main():
             d["owner"] = owner; d["delegatedTo"] = owner; d["delegation"] = tag
             nb += 1 if tag.startswith("BLK3") else 0
             np += 0 if tag.startswith("BLK3") else 1
+            # ExO3 #4: emit a decision trace (why-layer) for each auto-routed decision
+            try:
+                import decision_trace as _dt
+                _dt.emit(decision_id=d.get("id"), agent="decision-triage",
+                         inputs=[{"system":"MC","object":f"decision {d.get('id')}","why":"routine triage"}],
+                         policy_applied=f"standing routing rule ({tag})",
+                         options=["route to Jon","auto-delegate"], chosen=f"delegate->{owner}",
+                         write_back=f"status=delegated, assignedTo={email}",
+                         final_call="agent", approver="John Quinn")
+            except Exception:
+                pass
         else:
             d["status"] = "superseded"
 
