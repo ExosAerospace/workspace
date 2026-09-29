@@ -876,7 +876,7 @@ function findOwnerUser(owner) {
 function mcBaseUrl() {
   let u = process.env.MC_PUBLIC_URL;
   if (!u) { try { u = fs.readFileSync(path.join(__dirname, '.public-url'), 'utf-8').trim(); } catch {} }
-  return (u || 'https://mc.exosaero.space').replace(/\/+$/, '');
+  return (u || 'http://192.168.143.216:8080').replace(/\/+$/, '');
 }
 
 async function sendTaskAssignmentEmail(task, assignedBy) {

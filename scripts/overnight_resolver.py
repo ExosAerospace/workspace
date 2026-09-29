@@ -445,7 +445,7 @@ def main():
         parts.append("_Note: decisions store was unreadable/implausible this run — escalation matching skipped (fail-safe). Board data above is good._")
     parts.append("")
     mode = "auto-resolve on" if APPLY else "surface-only"
-    parts.append(f"_v2 {mode}: model close/cancel = proposals only; deterministic false-overdue fixes; one-way doors always escalated. Full board: https://mc.exosaero.space_")
+    parts.append(f"_v2 {mode}: model close/cancel = proposals only; deterministic false-overdue fixes; one-way doors always escalated. Full board: http://192.168.143.216:8080_")
     summary = "\n".join(parts)
 
     delivered = post_discord(summary)
