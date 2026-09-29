@@ -59,6 +59,9 @@ def best_activity_mtime(label):
                 sp = d.get(k)
                 if sp and os.path.exists(sp): cands.append(os.path.getmtime(sp))
             args = d.get("ProgramArguments", [])
+            # run_logged.py wrapper: [python, run_logged.py, label, --, <real cmd...>]
+            if isinstance(args, list) and len(args) > 4 and str(args[1]).endswith("/run_logged.py"):
+                args = args[4:]
             import re as _re
             m = _re.search(r'/([^/\s]+)\.(py|js|sh)', ' '.join(args) if isinstance(args, list) else str(args))
             if m: script = m.group(1)
