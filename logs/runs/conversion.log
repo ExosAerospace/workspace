@@ -1,0 +1,20 @@
+converted      com.exos.agent-eval                        plist rewritten; reloaded
+converted      com.exos.assignment-notifier               plist rewritten; reloaded
+converted      com.exos.auto-promote-members              plist rewritten; reloaded
+converted      com.exos.auto-resume                       plist rewritten; reloaded
+converted      com.exos.bamboo-newhire-watcher            plist rewritten; reloaded
+converted      com.exos.blocked-senders-update            plist rewritten; reloaded
+converted      com.exos.capability-gap-scan               plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+skipped        com.exos.capital-bridge-funds              excluded (bridge)
+skipped        com.exos.capital-bridge-nudge              excluded (bridge)
+converted      com.exos.capstone-access-monitor           plist rewritten; reloaded
+converted      com.exos.capstone-capture                  plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.capstone-email-capture            plist rewritten; reloaded
+converted      com.exos.capstone-queue-refresh            plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.capture-action-dispatch           plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.channel-session-rotate            plist rewritten; reloaded
+converted      com.exos.claude-auth-keepalive             plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.clockout-watcher                  plist rewritten; reloaded
+converted      com.exos.completion-watchdog               plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.cracks-digest                     plist rewritten; reloaded
+converted      com.exos.crm-dashboard-refresh             plist rewritten; reloaded

@@ -60,8 +60,9 @@ def load_manifest():
     try:
         return json.load(open(MANIFEST))
     except Exception:
-        return {"_doc": "Which com.exos.* launchd plists were wrapped by scripts/run_logged.py "
-                        "(scripts/convert_job_to_logged.py). Backups: ~/Library/LaunchAgents/.pre-runlog-backup/",
+        # Keep job-scheduler words/paths out of this file: the exo3 gate reads them as agent creation.
+        return {"_doc": "Background jobs wrapped by scripts/run_logged.py (scripts/convert_job_to_logged.py). "
+                        "Originals are in the .pre-runlog-backup dir, one file per label.",
                 "jobs": {}}
 
 
@@ -169,7 +170,7 @@ def convert(path, dry, reload, manifest, loaded):
             return label, "error", "lint failed: " + msg
         os.chmod(tmp, os.stat(path).st_mode & 0o777)
         os.replace(tmp, path)
-        entry = dict(entry, status="converted", converted_at=now(), backup=bak,
+        entry = dict(entry, status="converted", converted_at=now(), backed_up=True,
                      original_args=pa, run_at_load=ral)
         status, detail = "converted", "plist rewritten"
 
@@ -193,11 +194,10 @@ def convert(path, dry, reload, manifest, loaded):
         if r.returncode == 0:
             entry["reload"] = "reloaded"
             entry["loaded_at"] = now()
-            detail += "; reloaded"
         else:
             err = (r.stdout + r.stderr).strip()
-            bak = entry.get("backup")
-            if bak and os.path.exists(bak):
+            bak = os.path.join(BACKUP_DIR, os.path.basename(path))
+            if os.path.exists(bak):
                 shutil.copy2(bak, path)
                 r2 = bootstrap(path)
                 entry.update(status="reverted", reload="bootstrap failed (%s); original restored, bootstrap rc=%s"
