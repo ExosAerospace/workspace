@@ -20,8 +20,11 @@ you to look at, match to the BLK3 BOM, and record in inventory. Work the queue t
      --vendor-pn "<Vendor P/N>" --mfg-pn "<Mfg P/N>" --item "<item#>" --section "<BOM section>" \
      --desc "<description>" --location "<location if visible/known>" --note "photo-captured"
    ```
-   This attaches the photo, updates the record, refreshes the inventory spreadsheet, and posts a
-   `✅ Exo (inventory)` note on the task.
+   **exo3 sign-off gate (2026-09-28):** this does NOT change inventory. It files a PROPOSAL
+   (`data/inventory-proposals.json`, status `pending_review`) and posts a `📝 Exo (inventory)`
+   note on the task. A human approves/rejects it in MC (BLK3 Build Shortfall → Pending approval);
+   only then is the part counted, the photo attached and the spreadsheet refreshed. Never call
+   `approve` yourself — that is the human's click.
    Pass `--qty N` **only** when the person is explicitly receiving N units of stock (e.g. the note
    says "received 5"), or `--qty 0` to force confirm-only. Never pass `--qty 1` just to "record" a
    re-photograph — that would double-count an existing unit.
@@ -38,7 +41,7 @@ you to look at, match to the BLK3 BOM, and record in inventory. Work the queue t
 ## Rules
 - **NEVER create a task, decision, ticket, or subtask for a photo.** A photo is an *update* to the
   inventory ERP (and later to the section build procedure) — nothing more. Your only writes are
-  `record` (inventory + a note on the existing task) and `ask` (a note on the existing task). Do not
+  `record` (a proposal + a note on the existing task) and `ask` (a note on the existing task). Do not
   call any task-creating tool or endpoint. (Jon 2026-09-22.)
 - Never invent a part number. If unsure, `ask`. One clear question beats a wrong record.
 - Prefer the printed P/N over a guess from shape. Vendor P/N in the BOM is the match key.

@@ -98,6 +98,11 @@
   </div>
 </div>
 <div class="wrap">
+  <div id="proppanel" style="display:none;margin-bottom:14px;padding:12px;border:1px solid #f5a623;border-radius:8px;background:var(--panel)">
+    <strong>📝 Pending approval</strong> <span class="muted">— AI photo-capture proposals. Not counted in inventory until a human approves.</span>
+    <table style="margin-top:8px"><thead><tr><th>Proposed</th><th>Part</th><th>Section</th><th>Qty</th><th>Location</th><th>Photo</th><th></th></tr></thead>
+    <tbody id="proptb"></tbody></table>
+  </div>
   <div class="totals" id="totals"></div>
   <div class="secrow" id="secrow"></div>
   <div class="controls">
@@ -140,6 +145,26 @@ async function load(){
     secFilter=(secFilter===el.dataset.s)?'':el.dataset.s; sel.value=secFilter;
     document.querySelectorAll('.sec').forEach(x=>x.classList.toggle('active',x.dataset.s===secFilter)); render();});
   render();
+}
+async function loadProps(){
+  const r=await fetch('/api/inventory/proposals'); if(!r.ok)return;
+  const ps=(await r.json()).proposals||[];
+  document.getElementById('proppanel').style.display=ps.length?'':'none';
+  document.getElementById('proptb').innerHTML=ps.map(p=>{const a=p.args||{},ph=a.photo||{};
+    return '<tr><td>'+esc((p.proposed_at||'').slice(0,16).replace('T',' '))+'<br><span class="muted">'+esc(a.by||'')+'</span></td>'+
+    '<td><b>'+esc(p.description||p.key)+'</b><br><span class="muted">'+esc(a.vendor_pn||a.mfg_pn||p.key)+'</span></td>'+
+    '<td>'+esc(p.section)+'</td><td>'+esc(a.qty==null||a.qty===''?'auto (+1 new / +0 existing)':a.qty)+'</td><td>'+esc(a.location||'')+'</td>'+
+    '<td>'+(ph.file?'<a href="/uploads/'+encodeURIComponent(ph.file)+'" target="_blank">view</a>':'')+'</td>'+
+    '<td><button class="btn" style="background:#2e7d32" onclick="reviewProp(\''+esc(p.id)+'\',\'approve\')">✓ Approve</button> '+
+    '<button class="btn ghost" onclick="reviewProp(\''+esc(p.id)+'\',\'reject\')">✕ Reject</button></td></tr>';}).join('');
+}
+async function reviewProp(id,act){
+  const reason=act==='reject'?prompt('Reason for rejecting (optional)'):null;
+  if(act==='reject'&&reason===null)return;
+  const r=await fetch('/api/inventory/proposals/'+act,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,reason})});
+  const j=await r.json().catch(()=>({}));
+  toast(j.ok?(act==='approve'?'Approved — recorded in inventory':'Rejected'):'⚠ '+(j.error||('HTTP '+r.status)),!!j.ok);
+  loadProps(); load();
 }
 function kpi(v,l){return '<div class="kpi"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>';}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
@@ -307,7 +332,7 @@ function bomEditConfirm(){
     .catch(e=>{Object.assign(row,before);render();toast('⚠ Save failed — reverted: '+e.message,false);});
 }
 function toast(m,ok=true){const t=document.getElementById('toast');t.textContent=m;t.style.borderColor=ok?'':'#e0524d';t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),ok?3000:6000);}
-load(); setInterval(load,30000);
+load(); setInterval(load,30000); loadProps(); setInterval(loadProps,30000);
 </script>
 <div class="ovl" id="editOvl">
   <div class="modal">

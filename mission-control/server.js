@@ -4435,6 +4435,36 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // exo3 sign-off gate: AI photo-capture PROPOSES inventory records (data/inventory-proposals.json);
+  // they count only after a human approves here. Manual line edits (/api/bom/edit) stay direct.
+  if (req.url.split('?')[0].startsWith('/api/inventory/proposals')) {
+    const s = getSession(req);
+    if (!s) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    const psub = req.url.split('?')[0].replace('/api/inventory/proposals', '');
+    if (psub === '' && req.method === 'GET') {
+      let d = { proposals: [] };
+      try { d = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'inventory-proposals.json'), 'utf8')); } catch {}
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ proposals: (d.proposals || []).filter(p => p.status === 'pending_review') }));
+      return;
+    }
+    if ((psub === '/approve' || psub === '/reject') && req.method === 'POST') {
+      if (!['admin', 'manager'].includes(s.role)) { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Only admin/manager can approve inventory proposals' })); return; }
+      let body = ''; req.on('data', c => body += c); req.on('end', () => {
+        let j = {}; try { j = JSON.parse(body || '{}'); } catch {}
+        if (!j.id) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'id required' })); return; }
+        const args = [path.join(__dirname, '..', 'scripts', 'inventory_capture.py'), psub.slice(1),
+          '--id', String(j.id), '--by', s.name || s.email || 'MC user'];
+        if (j.reason) args.push('--reason', String(j.reason));
+        require('child_process').execFile('/usr/bin/python3', args, { timeout: 60000 }, (err, stdout, stderr) => {
+          res.writeHead(err ? 409 : 200, { 'Content-Type': 'application/json' });
+          res.end((stdout || '').trim().split('\n').pop() || JSON.stringify({ ok: false, error: String(stderr || err) }));
+        });
+      });
+      return;
+    }
+  }
+
   if (req.url.split('?')[0] === '/api/inventory' && req.method === 'GET') {
     try {
       const readJSON = (p, d) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return d; } };

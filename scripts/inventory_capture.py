@@ -19,7 +19,10 @@ Subcommands:
   bom-search "keywords"                search the BOM index; JSON matches (item/pn/desc/section)
   record --queue QID --task ID --by WHO [--bom-key K] [--vendor-pn P] [--mfg-pn P]
          [--item I] [--section S] [--desc D] [--qty N] [--location L] [--note ...]
-                                       upsert inventory record, mark entry done, post a ✅ note to the task
+                                       PROPOSE an inventory record (pending_review in data/inventory-proposals.json);
+                                       nothing counts until a human approves it in MC (exo3 sign-off gate)
+  approve|reject --id PROPOSAL --by HUMAN [--reason ...]
+                                       human review of a proposal (called by MC /api/inventory/proposals/*)
   ask --queue QID --task ID --uploader WHO --question "..."
                                        post a ❓ note to the task tagging the uploader; mark entry awaiting-reply
   status                               summary of queue + inventory
@@ -717,12 +720,87 @@ def _pin_report(rows_total, short_total):
     os.replace(tmp, UPLOADS_META)
 
 
+PROPOSALS = os.path.join(MC, "data", "inventory-proposals.json")
+REC_FIELDS = ["bom_key", "vendor_pn", "mfg_pn", "item", "section", "desc", "qty", "location", "note",
+              "queue", "task", "by"]
+
+
+def prop_load():
+    return load(PROPOSALS, {"proposals": []})
+
+
+def prop_save(d):
+    tmp = PROPOSALS + ".tmp"
+    json.dump(d, open(tmp, "w"), indent=2)
+    os.replace(tmp, PROPOSALS)
+
+
 def cmd_record(a):
-    inv = inv_load()
+    """exo3 sign-off gate: the vision session PROPOSES an inventory record; it does not count
+    until a human approves it in MC (📋 BLK3 Build Shortfall → Pending approval). Proposals live
+    in data/inventory-proposals.json and never touch inventory.json until `approve`."""
     key = a.bom_key or rec_key(a.vendor_pn or "", a.mfg_pn or "", a.item or "", a.desc or "")
     if not key:
         print("ERROR: need a key (--bom-key or --vendor-pn/--mfg-pn/--desc)")
         sys.exit(2)
+    d = prop_load()
+    pid = "invp-" + datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S%f")
+    args = {f: getattr(a, f, None) for f in REC_FIELDS}
+    args["bom_key"] = key
+    e = next((x for x in read_queue() if x.get("id") == a.queue), None) if a.queue else None
+    if e:
+        args["photo"] = {"task": e.get("task_id"), "upload": e.get("upload_id"),
+                         "file": e.get("stored_name"), "by": e.get("uploaded_by")}
+    d["proposals"].append({"id": pid, "status": "pending_review", "key": key,
+                           "description": a.desc or "", "section": a.section or "",
+                           "proposed_by": "Exo (inventory-capture)", "proposed_at": now(), "args": args})
+    prop_save(d)
+    if a.queue:
+        set_status(a.queue, "proposed", {"inventory_key": key, "proposal": pid})
+    if a.task:
+        pn = a.vendor_pn or a.mfg_pn or ""
+        pn = f" · P/N {pn}" if pn else ""
+        task_note(a.task, f"📝 Exo (inventory): proposed **{a.desc or key}**{pn} "
+                          f"(BOM section {a.section or '—'}) — pending human approval in MC "
+                          f"(BLK3 Build Shortfall → Pending approval). Not counted until approved.")
+    logline(f"propose key={key} id={pid} task {a.task}")
+    print(json.dumps({"proposal": pid, "key": key, "status": "pending_review"}, indent=2))
+
+
+def _review(a, approve):
+    d = prop_load()
+    p = next((x for x in d["proposals"] if x.get("id") == a.id), None)
+    if not p or p.get("status") != "pending_review":
+        print(json.dumps({"ok": False, "error": "no pending proposal " + str(a.id)}))
+        sys.exit(2)
+    if approve:
+        pa = argparse.Namespace(**p["args"])
+        pa.approved_by = a.by
+        out = _apply_record(pa, p["args"].get("photo"))
+    p.update({"status": "approved" if approve else "rejected", "reviewed_by": a.by, "reviewed_at": now(),
+              "review_note": a.reason or ""})
+    prop_save(d)
+    if not approve:
+        q = p["args"].get("queue")
+        if q:
+            set_status(q, "rejected", {"proposal": p["id"]})
+        logline(f"reject proposal {p['id']} key={p['key']} by {a.by}")
+        out = {"key": p["key"]}
+    print(json.dumps({"ok": True, "id": p["id"], "status": p["status"], **out}))
+
+
+def cmd_approve(a):
+    _review(a, True)
+
+
+def cmd_reject(a):
+    _review(a, False)
+
+
+def _apply_record(a, entry_photo):
+    """Apply an APPROVED proposal to the inventory of record (the pre-gate cmd_record body)."""
+    inv = inv_load()
+    key = a.bom_key
     rec = next((r for r in inv["records"] if r.get("key") == key), None)
     existed = rec is not None
     # Safe count semantics (Jon 2026-09-22): an explicit --qty always wins (stock receipt).
@@ -732,11 +810,8 @@ def cmd_record(a):
         qty = float(a.qty)
     else:
         qty = 0 if existed else 1
-    entry_photo = None
-    e = next((x for x in read_queue() if x.get("id") == a.queue), None) if a.queue else None
-    if e:
-        entry_photo = {"task": e.get("task_id"), "upload": e.get("upload_id"),
-                       "file": e.get("stored_name"), "by": e.get("uploaded_by"), "at": now()}
+    if entry_photo:
+        entry_photo = dict(entry_photo, at=now())
     if rec is None:
         rec = {"key": key, "vendor_pn": a.vendor_pn or "", "mfg_pn": a.mfg_pn or "",
                "item": a.item or "", "section": a.section or "", "description": a.desc or "",
@@ -756,7 +831,8 @@ def cmd_record(a):
     if entry_photo:
         rec["photos"].append(entry_photo)
     rec["history"].append({"at": now(), "by": a.by or "Exo", "delta": qty,
-                           "note": a.note or "photo-captured", "queue": a.queue})
+                           "note": a.note or "photo-captured", "queue": a.queue,
+                           "approved_by": a.approved_by})
     rec["updated_at"] = now()
     inv_save(inv)
     if a.queue:
@@ -774,10 +850,11 @@ def cmd_record(a):
             tail = f"→ +{qty:g}, on-hand now **{rec['qty_on_hand']} {rec['unit']}**"
         task_note(a.task, f"✅ Exo (inventory): {verb} **{rec.get('description') or key}**"
                           f"{pn} {tail}{loc}. "
-                          f"(from photo by {a.by or 'team'}; BOM section {rec.get('section') or '—'})")
+                          f"(from photo by {a.by or 'team'}; approved by {a.approved_by}; "
+                          f"BOM section {rec.get('section') or '—'})")
     build_report()
-    logline(f"record key={key} +{qty} -> {rec['qty_on_hand']} task {a.task}")
-    print(json.dumps({"key": key, "qty_on_hand": rec["qty_on_hand"]}, indent=2))
+    logline(f"record key={key} +{qty} -> {rec['qty_on_hand']} task {a.task} approved_by {a.approved_by}")
+    return {"key": key, "qty_on_hand": rec["qty_on_hand"]}
 
 
 def cmd_ask(a):
@@ -921,6 +998,9 @@ def main():
     r = sub.add_parser("record")
     for f in ["queue", "task", "by", "bom-key", "vendor-pn", "mfg-pn", "item", "section", "desc", "qty", "location", "note"]:
         r.add_argument("--" + f)
+    for nm in ("approve", "reject"):
+        ap = sub.add_parser(nm); ap.add_argument("--id", required=True); ap.add_argument("--by", required=True)
+        ap.add_argument("--reason")
     k = sub.add_parser("ask")
     k.add_argument("--queue"); k.add_argument("--task"); k.add_argument("--uploader"); k.add_argument("--question", required=True)
     cs = sub.add_parser("consume")
@@ -939,7 +1019,8 @@ def main():
     {"reindex-bom": cmd_reindex, "enqueue": cmd_enqueue, "pending": cmd_pending,
      "next": cmd_next, "bom-search": cmd_bom_search, "record": cmd_record,
      "ask": cmd_ask, "status": cmd_status, "report": cmd_report, "consume": cmd_consume,
-     "reindex-locations": cmd_reindex_locations, "receive": cmd_receive}[a.cmd](a)
+     "reindex-locations": cmd_reindex_locations, "receive": cmd_receive,
+     "approve": cmd_approve, "reject": cmd_reject}[a.cmd](a)
 
 
 if __name__ == "__main__":
