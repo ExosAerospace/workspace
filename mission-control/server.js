@@ -1053,6 +1053,12 @@ function getSession(req) {
 
 // MC Guard — tripwires, behavior scoring, lockout, traceable downloads (lib/guard.js, Jon 9/26).
 const guard = require('./lib/guard');
+// Recycle bin — every delete snapshots the full record first (lib/recycle.js, exo3 remedy 2026-09-28).
+// Restore: python3 scripts/mc_restore.py --list | --restore <recycle_id>. Fail-closed: no snapshot, no delete.
+const recycle = require('./lib/recycle');
+function sbRecycleDelete(req, session, table, filter, extra) {
+  return recycle.recycleThenDelete(supabaseRequest, { table, filter, type: table, who: recycle.whoOf(session), route: req.url.split('?')[0], extra });
+}
 guard.init({ get sessions() { return sessions; }, saveSessions, loadUsers, saveUsers });
 
 // ── SEGREGATED DOCUSIGN ENTRY ──────────────────────────────────────────────
@@ -3126,6 +3132,12 @@ const server = http.createServer((req, res) => {
   if (req.url.startsWith('/api/tasks/delete') && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const { id } = JSON.parse(body);
+      // Recycle bin: snapshot the task row (and which docs are about to be detached, so a restore
+      // can re-attach them) BEFORE touching anything. Snapshot failure => nothing is changed.
+      let preDocs = [];
+      try { preDocs = JSON.parse(fs.readFileSync(UPLOADS_META, 'utf-8')).filter(m => String(m.task_id) === String(id)).map(m => ({ id: m.id, task_id: m.task_id, ...(m.current === undefined ? {} : { current: m.current }) })); } catch (e) {}
+      const tFilter = `id=eq.${encodeURIComponent(id)}`;
+      recycle.snapshotSupabase(supabaseRequest, { table: 'tasks', filter: tFilter, type: 'tasks', who: recycle.whoOf(session), route: '/api/tasks/delete', extra: { detached_uploads: preDocs } }).then(() => {
       // Detach docs from this task first so they don't silently orphan on delete (fix 2026-09-20).
       // Null the task_id (kept recoverable via deleted_task_id) and drop current so the doc is
       // excluded from active views + the orphan watcher rather than pointing at a dead task.
@@ -3140,9 +3152,9 @@ const server = http.createServer((req, res) => {
         }
         if (detached) fs.writeFileSync(UPLOADS_META, JSON.stringify(meta, null, 2));
       } catch (e) { /* non-fatal — proceed with the delete */ }
-      supabaseRequest('DELETE', `tasks?id=eq.${id}`)
-        .then(({ status }) => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true, detached_docs: detached })); })
-        .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
+      return supabaseRequest('DELETE', `tasks?${tFilter}`)
+        .then(({ status }) => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true, detached_docs: detached })); });
+      }).catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
     }); return;
   }
 
@@ -3223,7 +3235,7 @@ const server = http.createServer((req, res) => {
         const { id } = JSON.parse(body);
         if (!id) { res.writeHead(400); res.end(JSON.stringify({ error: 'id required' })); return; }
         if (session && session.role === 'early_adopter' && !(await eaOwnNote(session, id))) { eaForbid(session, req, res, 'out-of-scope-note-delete'); return; }
-        supabaseRequest('DELETE', `activities?id=eq.${encodeURIComponent(id)}`)
+        sbRecycleDelete(req, session, 'activities', `id=eq.${encodeURIComponent(id)}`)
           .then(() => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
           .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
       } catch (e) { res.writeHead(400); res.end(JSON.stringify({ error: e.message })); }
@@ -3460,9 +3472,9 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
       const { id } = JSON.parse(body);
       const filter = id.startsWith('EXOS-')
-        ? `contacts?crm_id=eq.${encodeURIComponent(id)}`
-        : `contacts?id=eq.${encodeURIComponent(id)}`;
-      supabaseRequest('DELETE', filter)
+        ? `crm_id=eq.${encodeURIComponent(id)}`
+        : `id=eq.${encodeURIComponent(id)}`;
+      sbRecycleDelete(req, session, 'contacts', filter)
         .then(({ status }) => {
           res.writeHead(status >= 400 ? status : 200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ success: status < 400 }));
@@ -3500,7 +3512,7 @@ const server = http.createServer((req, res) => {
   if (req.url.startsWith('/api/companies/delete') && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const { id } = JSON.parse(body);
-      supabaseRequest('DELETE', `companies?id=eq.${id}`)
+      sbRecycleDelete(req, session, 'companies', `id=eq.${encodeURIComponent(id)}`)
         .then(({ status }) => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
         .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
     }); return;
@@ -3573,7 +3585,7 @@ const server = http.createServer((req, res) => {
   if (req.url.startsWith('/api/deals/delete') && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const { id } = JSON.parse(body);
-      supabaseRequest('DELETE', `deals?id=eq.${id}`)
+      sbRecycleDelete(req, session, 'deals', `id=eq.${encodeURIComponent(id)}`)
         .then(({ status }) => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
         .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
     }); return;
@@ -3631,7 +3643,7 @@ const server = http.createServer((req, res) => {
   if (req.url.startsWith('/api/templates/delete') && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const { id } = JSON.parse(body);
-      supabaseRequest('DELETE', `email_templates?id=eq.${id}`)
+      sbRecycleDelete(req, session, 'email_templates', `id=eq.${encodeURIComponent(id)}`)
         .then(({ status }) => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
         .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
     }); return;
@@ -3690,7 +3702,7 @@ const server = http.createServer((req, res) => {
   if (req.url.startsWith('/api/projects/delete') && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const { id } = JSON.parse(body);
-      supabaseRequest('DELETE', `projects?id=eq.${id}`)
+      sbRecycleDelete(req, session, 'projects', `id=eq.${encodeURIComponent(id)}`)
         .then(() => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
         .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
     }); return;
@@ -3749,7 +3761,7 @@ const server = http.createServer((req, res) => {
   if (req.url.startsWith('/api/task-lists/delete') && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const { id } = JSON.parse(body);
-      supabaseRequest('DELETE', `task_lists?id=eq.${id}`)
+      sbRecycleDelete(req, session, 'task_lists', `id=eq.${encodeURIComponent(id)}`)
         .then(() => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
         .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
     }); return;
@@ -3786,7 +3798,7 @@ const server = http.createServer((req, res) => {
   if (req.url.startsWith('/api/milestones/delete') && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const { id } = JSON.parse(body);
-      supabaseRequest('DELETE', `milestones?id=eq.${id}`)
+      sbRecycleDelete(req, session, 'milestones', `id=eq.${encodeURIComponent(id)}`)
         .then(() => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
         .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
     }); return;
@@ -3819,7 +3831,7 @@ const server = http.createServer((req, res) => {
   if (req.url.startsWith('/api/time-entries/delete') && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const { id } = JSON.parse(body);
-      supabaseRequest('DELETE', `time_entries?id=eq.${id}`)
+      sbRecycleDelete(req, session, 'time_entries', `id=eq.${encodeURIComponent(id)}`)
         .then(() => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
         .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
     }); return;
@@ -3848,7 +3860,7 @@ const server = http.createServer((req, res) => {
   if (req.url.startsWith('/api/comments/delete') && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       const { id } = JSON.parse(body);
-      supabaseRequest('DELETE', `comments?id=eq.${id}`)
+      sbRecycleDelete(req, session, 'comments', `id=eq.${encodeURIComponent(id)}`)
         .then(() => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true })); })
         .catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
     }); return;
