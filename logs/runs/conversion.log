@@ -18,3 +18,23 @@ converted      com.exos.clockout-watcher                  plist rewritten; reloa
 converted      com.exos.completion-watchdog               plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
 converted      com.exos.cracks-digest                     plist rewritten; reloaded
 converted      com.exos.crm-dashboard-refresh             plist rewritten; reloaded
+converted      com.exos.crm-dd-engine                     plist rewritten; reloaded
+converted      com.exos.cron-watchdog                     plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.csl-screen                        plist rewritten; reloaded
+converted      com.exos.daily-burndown                    plist rewritten; reloaded
+converted      com.exos.dashboard-data-refresh            plist rewritten; reloaded
+converted      com.exos.dataroom-bd-refresh               plist rewritten; reloaded
+converted      com.exos.dataroom-integrity                plist rewritten; reloaded
+converted      com.exos.dd-blocklist-monthly              plist rewritten; reloaded
+converted      com.exos.deadline-capture                  plist rewritten; reloaded
+converted      com.exos.deadline-watch                    plist rewritten; reloaded
+converted      com.exos.decision-note-router              plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.decision-override-rollup          plist rewritten; reloaded
+converted      com.exos.decision-send-watcher             plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.decision-triage                   plist rewritten; reloaded
+converted      com.exos.delivery-sweeper                  plist rewritten; deferred: RunAtLoad=true (converted, takes effect on next load)
+converted      com.exos.derisk-orbital                    plist rewritten; reloaded
+converted      com.exos.doc-manager                       plist rewritten; reloaded
+converted      com.exos.due-date-scheduler                plist rewritten; reloaded
+converted      com.exos.email-people-crm                  plist rewritten; reloaded
+converted      com.exos.email-tracker                     plist rewritten; reloaded

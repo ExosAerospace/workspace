@@ -235,10 +235,260 @@
       "run_at_load": false,
       "status": "converted"
     },
+    "com.exos.crm-dd-engine": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/crm_dd_engine.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.cron-watchdog": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/cron-failure-watchdog.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.csl-screen": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "cd /Users/exomac/.openclaw/workspace && python3 scripts/csl_nightly.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.daily-burndown": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/daily-burndown.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.dashboard-data-refresh": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/dashboard-data-generator.py; /Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/build-dossiers.py; /Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/capture-contacts.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.dataroom-bd-refresh": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "/Users/exomac/.openclaw/workspace/scripts/refresh_dataroom_bd.sh"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.dataroom-integrity": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "cd /Users/exomac/.openclaw/workspace && python3 scripts/data_room_integrity.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.dd-blocklist-monthly": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/Users/exomac/.local/share/mise/installs/python/latest/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/dd_blocklist_monthly.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.deadline-capture": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/deadline-capture.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.deadline-watch": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Deadline-Watch --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/deadline-watch.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.decision-note-router": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/usr/bin/python3",
+        "/Users/exomac/.openclaw/workspace/scripts/decision-note-router.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.decision-override-rollup": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/sh",
+        "-c",
+        "/usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/decision_override_rollup.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.decision-send-watcher": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/decision-send-watcher.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.decision-triage": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/decision_triage.py --apply"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.delivery-sweeper": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/delivery-sweeper.py"
+      ],
+      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "run_at_load": true,
+      "status": "converted"
+    },
+    "com.exos.derisk-orbital": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/Users/exomac/.local/share/mise/installs/python/3.12.13/bin/python3 /Users/exomac/.openclaw/workspace/scripts/derisk_orbital_outreach.py --model sonnet --limit 9"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.doc-manager": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/doc_manager.py --email; python3 /Users/exomac/.openclaw/workspace/scripts/doc_manager.py --inbox"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.due-date-scheduler": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "/usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name \"Due-Date Backlog Scheduler\" --source launchd -- /usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/schedule_due_dates.py --apply"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.email-people-crm": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/email_people_to_crm.py --since 3 --live"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
+    "com.exos.email-tracker": {
+      "backed_up": true,
+      "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-28T22:05:22-05:00",
+      "original_args": [
+        "/bin/zsh",
+        "-lc",
+        "python3 /Users/exomac/.openclaw/workspace/scripts/mission-control-imap.py"
+      ],
+      "reload": "reloaded",
+      "run_at_load": false,
+      "status": "converted"
+    },
     "com.exos.run-failures-report": {
       "loaded_at": "2026-09-28T22:04:39-05:00",
       "reload": "reloaded"
     }
   },
-  "updated": "2026-09-28T22:04:40-05:00"
+  "updated": "2026-09-28T22:05:22-05:00"
 }
