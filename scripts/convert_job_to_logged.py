@@ -28,6 +28,9 @@ Usage:
   convert_job_to_logged.py [--dry-run] [--reload] <label-or-plist> ...
   convert_job_to_logged.py [--dry-run] [--reload] --all [--limit N]   # next N unconverted jobs
   convert_job_to_logged.py --restore <label>                            # put the backup back (no reload)
+  convert_job_to_logged.py --reload --allow-runatload <label> ...       # deliberate reload of a RunAtLoad job
+      (named labels only, never with --all: reloading fires the job immediately, so the caller must
+       have reviewed that an extra run is harmless. Still refuses a job that is running right now.)
 """
 import datetime
 import glob
@@ -132,7 +135,7 @@ def resolve(arg):
     return os.path.join(AGENTS, arg + ".plist")
 
 
-def convert(path, dry, reload, manifest, loaded):
+def convert(path, dry, reload, manifest, loaded, allow_ral=False):
     label = os.path.basename(path)[:-len(".plist")]
     entry = manifest["jobs"].get(label, {})
     try:
@@ -185,7 +188,7 @@ def convert(path, dry, reload, manifest, loaded):
         pass  # already reloaded with the wrapper earlier
     elif not reload:
         entry["reload"] = "pending (not requested)"
-    elif ral:
+    elif ral and not allow_ral:
         entry["reload"] = "deferred: RunAtLoad=true (converted, takes effect on next load)"
     elif loaded.get(label) or launchctl_list().get(label):  # re-check right before bootout
         entry["reload"] = "deferred: running now; rerun later with this label + --reload"
@@ -193,7 +196,7 @@ def convert(path, dry, reload, manifest, loaded):
         bootout(label)
         r = bootstrap(path)
         if r.returncode == 0:
-            entry["reload"] = "reloaded"
+            entry["reload"] = "reloaded" + (" (RunAtLoad, reviewed: extra run harmless)" if ral else "")
             entry["loaded_at"] = now()
         else:
             err = (r.stdout + r.stderr).strip()
@@ -225,6 +228,10 @@ def restore(label, manifest):
 def main(argv):
     dry = "--dry-run" in argv
     reload = "--reload" in argv
+    allow_ral = "--allow-runatload" in argv
+    if allow_ral and "--all" in argv:
+        print("--allow-runatload needs explicit labels (not --all)")
+        return 2
     limit = None
     if "--limit" in argv:
         limit = int(argv[argv.index("--limit") + 1])
@@ -254,7 +261,7 @@ def main(argv):
         return 0
     rc = 0
     for path in paths:
-        label, status, detail = convert(path, dry, reload, manifest, loaded)
+        label, status, detail = convert(path, dry, reload, manifest, loaded, allow_ral)
         print("%-14s %-42s %s" % (status, label, detail))
         if status == "error":
             rc = 1

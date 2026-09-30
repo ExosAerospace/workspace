@@ -81,11 +81,12 @@
     "com.exos.capability-gap-scan": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:04:40-05:00",
+      "loaded_at": "2026-09-29T22:46:02-05:00",
       "original_args": [
         "/bin/bash",
         "/Users/exomac/.openclaw/workspace/scripts/refresh_gap_pipeline.sh"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -139,12 +140,13 @@
     "com.exos.capstone-queue-refresh": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:04:40-05:00",
+      "loaded_at": "2026-09-29T22:45:54-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "python3 /Users/exomac/.openclaw/workspace/scripts/payload_sales_engine.py --queue-only"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -362,11 +364,12 @@
     "com.exos.decision-note-router": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-29T22:45:42-05:00",
       "original_args": [
         "/usr/bin/python3",
         "/Users/exomac/.openclaw/workspace/scripts/decision-note-router.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -541,12 +544,13 @@
     "com.exos.expense-workflow": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-29T22:45:50-05:00",
       "original_args": [
         "/usr/bin/python3",
         "/Users/exomac/.openclaw/workspace/scripts/expense-workflow.py",
         "--apply"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -589,12 +593,13 @@
     "com.exos.fleet-status": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:26-05:00",
+      "loaded_at": "2026-09-29T22:45:17-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "python3 /Users/exomac/.openclaw/workspace/scripts/fleet_status.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -901,12 +906,13 @@
     "com.exos.mc-md-export": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:33-05:00",
+      "loaded_at": "2026-09-29T22:45:21-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "/usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/mc_export_md.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -940,11 +946,12 @@
     "com.exos.mc-snapshot-export": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:33-05:00",
+      "loaded_at": "2026-09-29T22:45:25-05:00",
       "original_args": [
         "/usr/bin/python3",
         "/Users/exomac/.openclaw/workspace/scripts/mc-snapshot-export.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -984,12 +991,13 @@
     "com.exos.mission-score": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-29T22:45:58-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py run --name Mission-Score --source launchd -- python3 /Users/exomac/.openclaw/workspace/scripts/mission-score.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -1225,12 +1233,13 @@
     "com.exos.program-state": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-29T22:45:33-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "python3 /Users/exomac/.openclaw/workspace/scripts/program_state.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -1263,12 +1272,13 @@
     "com.exos.quote-close-stamp": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:42-05:00",
+      "loaded_at": "2026-09-29T22:45:37-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "python3 /Users/exomac/.openclaw/workspace/scripts/quote_close_stamp.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -1627,23 +1637,25 @@
     "com.exos.task-ledger-snapshot": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-29T22:45:29-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "python3 /Users/exomac/.openclaw/workspace/scripts/task_ledger.py snapshot"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
     "com.exos.task-note-command": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-29T22:45:46-05:00",
       "original_args": [
         "/usr/bin/python3",
         "/Users/exomac/.openclaw/workspace/scripts/task-note-command.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -1726,11 +1738,12 @@
     "com.exos.util-metrics": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:53-05:00",
+      "loaded_at": "2026-09-29T22:45:00-05:00",
       "original_args": [
         "/usr/bin/python3",
         "/Users/exomac/.openclaw/workspace/scripts/util_metrics.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -1755,12 +1768,13 @@
     "com.exos.warm-ollama": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:53-05:00",
+      "loaded_at": "2026-09-29T22:45:13-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "/Users/exomac/.openclaw/workspace/scripts/warm-ollama.sh"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -1829,5 +1843,5 @@
       "status": "converted"
     }
   },
-  "updated": "2026-09-28T22:05:53-05:00"
+  "updated": "2026-09-29T22:46:02-05:00"
 }
