@@ -4613,9 +4613,12 @@ const server = http.createServer((req, res) => {
               path.join(__dirname, '..', 'scripts', 'inventory_capture.py'),
               'reindex-locations', '--file', storedName,
             ], { timeout: 120000 }, () => {});
-            // Also refresh the shop inventory of record (Warehouse/Parts Room/Trailer/Assets).
+            // Also refresh the shop inventory of record (Warehouse/Parts Room/Trailer/Assets). Permanent
+            // SHOP ids come from data/shop-id-registry.json; an upload without the Exos ID column is
+            // rejected (previous inventory kept) and a Decision is filed for Jon (exo3 shop-id-guard).
             execFile('/usr/bin/python3', [
               path.join(__dirname, '..', 'scripts', 'reindex_shop_inventory.py'),
+              '--file', filePath, '--uploader', session ? session.name : 'Unknown',
             ], { timeout: 120000 }, () => {});
           } catch (e) { /* best-effort */ }
         }
