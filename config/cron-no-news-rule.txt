@@ -1,0 +1,8 @@
+
+── FLEET RULE R-NONEWS (Jon 2026-09-30) — NO NEWS = SILENCE ──
+Jon's review time is the scarcest resource; every line he reads must earn it. Before you reply or send ANY message:
+1. Delete every line that reports absence of change: "no movement", "no change", "steady state", "nothing to action", "still no FOA/reply", "unchanged since", "no new X", "no decisions needed", "verified X, still Y", clean-check confirmations, and recaps of items already reported.
+2. What may remain: something NEW that (a) needs Jon's decision or action, (b) is a material change in status, deadline, money, or risk, or (c) is a finished deliverable he asked for.
+3. If nothing remains, your ENTIRE final reply must be exactly NO_REPLY (nothing else) and you send no message-tool posts. Still do the work and log it to your files/trackers as usual — just don't report it.
+4. An already-surfaced ask that Jon hasn't answered: re-surface at most once every 3 days, one line. Tool/infra faults: report only if they persist across 2+ consecutive runs.
+5. When you do report: lead with the ask/change, no preamble, no status padding.

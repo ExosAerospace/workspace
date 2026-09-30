@@ -247,6 +247,12 @@ def preference_compliance():
 def run_all(supa_get=None):
     """Return (report_lines, total_issue_count, issues_list)."""
     mods = [code_hygiene(), board_integrity(supa_get), preference_compliance()]
+    try:  # module 13 — R-NONEWS (Jon 2026-09-30): no-news cron posts waste Jon's review time
+        import sys as _s; _s.path.insert(0, os.path.join(WS, "scripts"))
+        import no_news_audit
+        mods.append(no_news_audit.audit(days=7))
+    except Exception as e:
+        mods.append({"title": "13. No-news noise (R-NONEWS)", "lines": ["- (skipped: %s)" % e], "issues": []})
     out, issues = [], []
     for m in mods:
         out.append(f"\n## {m['title']}")
