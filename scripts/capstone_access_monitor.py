@@ -83,6 +83,10 @@ def main():
         # audit trail is logs/dd-activity.log). Do NOT mislabel a dd_reviewer as a "student probing."
         if (ev.get("role") or "") != "early_adopter":
             continue
+        # Skip throwaway accounts minted by automated sandbox self-tests (e.g.
+        # montana_partner_access.py --selftest --live) — they probe on purpose to prove the block.
+        if (ev.get("email") or "").lower().endswith("@exos-selftest.invalid"):
+            continue
         events.append(ev)
     if not events:
         return
@@ -112,7 +116,7 @@ def main():
                 "beyond their 'Payload Sales' sandbox. The server BLOCKED every attempt (this is a "
                 "detection alert, not a breach). Review, and suspend the account if it looks intentional.\n\n"
                 + "\n\n".join(alerts)
-                + "\n\nBoard: http://192.168.1.216:8080  ·  To suspend: set the user's active=false in Mission Control admin.")
+                + "\n\nBoard: http://192.168.143.216:8080  ·  To suspend: set the user's active=false in Mission Control admin.")
         email_alert(f"⚠️ Capstone access alert — {len(alerts)} student account(s) probing", body)
 
 
