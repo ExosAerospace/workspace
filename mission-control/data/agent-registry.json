@@ -90,10 +90,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 21600s → WARN)",
-   "telemetry": "logs/refresh_gap_pipeline.log",
+   "telemetry": "logs/refresh_gap_pipeline.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "LOW",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.capital-bridge-funds",
@@ -180,10 +183,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
-   "telemetry": "logs/capture-action-dispatch.log",
+   "telemetry": "logs/capture-action-dispatch.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "HIGH",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.channel-session-rotate",
@@ -216,10 +222,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 9000s → WARN)",
-   "telemetry": "logs/claude_auth_keepalive.log",
+   "telemetry": "logs/claude_auth_keepalive.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "HIGH",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.clockout-watcher",
@@ -252,10 +261,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1200s → WARN)",
-   "telemetry": "logs/completion-watchdog.log",
+   "telemetry": "logs/completion-watchdog.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.cracks-digest",
@@ -342,10 +354,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1800s → WARN)",
-   "telemetry": "logs/cron-failure-watchdog.log",
+   "telemetry": "logs/cron-failure-watchdog.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.csl-screen",
@@ -392,14 +407,17 @@
    "stack_layer": "ORCHESTRATE",
    "autonomy_tier": "Execute-within-bounds",
    "human_owner": "John Quinn",
-   "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE; file I/O: MC data JSON, memory/; own logs/state",
+   "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE; file I/O: MC data JSON, memory/; own logs/state; guard: run_chain (no step failure masked)",
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
-   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
-   "telemetry": "logs/dashboard-data-generator.log",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN); scripts/run_chain.py --selftest (9/9, replays the false;true mask)",
+   "telemetry": "logs/dashboard-data-generator.log; fleet_log run_chain chain_step_failed per failed step + failed step named in run_logged stderr tail",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): 3 ';'-chained steps now run via scripts/run_chain.py (5727c21/6486f82): all steps still run, job exits with FIRST failing step status (was: last step only); rollback convert_chain_job.py --restore com.exos.dashboard-data-refresh; approver John Quinn; status pending Jon approval — D-7281862"
+   ]
   },
   {
    "label": "com.exos.dataroom-bd-refresh",
@@ -504,10 +522,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 300s → WARN)",
-   "telemetry": "logs/decision-note-router.log",
+   "telemetry": "logs/decision-note-router.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.decision-send-watcher",
@@ -522,10 +543,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
-   "telemetry": "logs/decision-send-watcher.log",
+   "telemetry": "logs/decision-send-watcher.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "HIGH",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.decision-triage",
@@ -558,10 +582,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
-   "telemetry": "logs/delivery-sweeper.log + logs/fleet-events.jsonl (corr-ID)",
+   "telemetry": "logs/delivery-sweeper.log + logs/fleet-events.jsonl (corr-ID); logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.derisk-orbital",
@@ -590,14 +617,17 @@
    "stack_layer": "INTERPRET",
    "autonomy_tier": "Execute-within-bounds",
    "human_owner": "John Quinn",
-   "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; deletes local files (f, tmp); own logs/state",
+   "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; reads mailbox via Bridge IMAP; deletes local files (f, tmp); own logs/state; guard: run_chain (no step failure masked)",
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
-   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 900s → WARN)",
-   "telemetry": "logs/doc_manager.log",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 900s → WARN); scripts/run_chain.py --selftest (9/9, replays the false;true mask)",
+   "telemetry": "logs/doc_manager.log; fleet_log run_chain chain_step_failed per failed step + failed step named in run_logged stderr tail",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): 2 ';'-chained steps now run via scripts/run_chain.py (5727c21/6486f82): all steps still run, job exits with FIRST failing step status (was: last step only); rollback convert_chain_job.py --restore com.exos.doc-manager; approver John Quinn; status pending Jon approval — D-7281862"
+   ]
   },
   {
    "label": "com.exos.due-date-scheduler",
@@ -738,10 +768,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 300s → WARN)",
-   "telemetry": "logs/expense-workflow.log",
+   "telemetry": "logs/expense-workflow.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.faa-rfi-followup",
@@ -810,10 +843,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 900s → WARN)",
-   "telemetry": "logs/fleet_status.log",
+   "telemetry": "logs/fleet_status.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.followup-nudge-digest",
@@ -1126,7 +1162,8 @@
      "by": "Exo",
      "approver": "John Quinn",
      "change": "Added deterministic deliverable→MC-task linkage guard (PoliTo LOI miss). Match: cited task # → else keyword score on open tasks (top≥3, lead≥2). Else flag, never guess."
-    }
+    },
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): HELD (not reloaded; replies to non-Exos MC users): proposed reload onto run_logged; approver John Quinn; status pending Jon approval — D-7281863"
    ]
   },
   {
@@ -1160,10 +1197,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1800s → WARN)",
-   "telemetry": "logs/mc_export_md.log",
+   "telemetry": "logs/mc_export_md.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "LOW",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.mc-meeting-prep",
@@ -1250,10 +1290,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 7200s → WARN)",
-   "telemetry": "logs/task_ledger.log",
+   "telemetry": "logs/task_ledger.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "LOW",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.missioncontrol",
@@ -1430,10 +1473,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1200s → WARN)",
-   "telemetry": "logs/outreach-autoclose.log",
+   "telemetry": "logs/outreach-autoclose.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.outreach-reply-tracker",
@@ -1502,10 +1548,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
-   "telemetry": "logs/payload_intake_quote.log",
+   "telemetry": "logs/payload_intake_quote.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.payload-sales-engine",
@@ -1541,7 +1590,10 @@
    "telemetry": "logs/piee-login-reminder.log",
    "reusability_scope": "TBD",
    "risk_tier": "HIGH",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): HELD (not reloaded; reload sends the due reminder email): last send 8/31, StartInterval timer reset by 9/19 load -> next fire ~10/19 vs ~10/4 lockout; proposed reload now; approver John Quinn; status pending Jon approval — D-7281864"
+   ]
   },
   {
    "label": "com.exos.priority-inbox-watcher",
@@ -1556,10 +1608,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
-   "telemetry": "logs/priority-inbox-watcher.log",
+   "telemetry": "logs/priority-inbox-watcher.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.program-state",
@@ -1574,10 +1629,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
-   "telemetry": "logs/program_state.log",
+   "telemetry": "logs/program_state.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "LOW",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.pursuit-dedup",
@@ -1613,7 +1671,10 @@
    "telemetry": "logs/qb_deposit_sync.log",
    "reusability_scope": "TBD",
    "risk_tier": "LOW",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): PROPOSED (not applied; money): propose-only gate — confident deposit matches become pending proposals, lane totals/tracker count human-confirmed entries only, existing 17 grandfathered; approver John Quinn; status pending Jon approval — D-7281865"
+   ]
   },
   {
    "label": "com.exos.quote-close-stamp",
@@ -1628,10 +1689,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
-   "telemetry": "logs/quote_close_stamp.log",
+   "telemetry": "logs/quote_close_stamp.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "LOW",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.ready-action-verify",
@@ -1897,14 +1961,17 @@
    "stack_layer": "ORCHESTRATE",
    "autonomy_tier": "Recommends-with-Context",
    "human_owner": "John Quinn",
-   "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE; external API: graph.microsoft.us; own logs/state",
+   "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE; external API: graph.microsoft.us; own logs/state; guard: run_chain (no step failure masked)",
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
-   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 10800s → WARN)",
-   "telemetry": "logs/task_ledger.log",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 10800s → WARN); scripts/run_chain.py --selftest (9/9, replays the false;true mask)",
+   "telemetry": "logs/task_ledger.log; fleet_log run_chain chain_step_failed per failed step + failed step named in run_logged stderr tail",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): 4 ';'-chained steps now run via scripts/run_chain.py (5727c21/6486f82): all steps still run, job exits with FIRST failing step status (was: last step only); rollback convert_chain_job.py --restore com.exos.sent-followup-tracker; approver John Quinn; status pending Jon approval — D-7281862"
+   ]
   },
   {
    "label": "com.exos.sent-loop-closer",
@@ -1915,14 +1982,18 @@
    "stack_layer": "SENSE",
    "autonomy_tier": "Execute-within-bounds",
    "human_owner": "John Quinn",
-   "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE; file I/O: MC data JSON; own logs/state",
+   "permission_envelope": "reads mailbox via Bridge IMAP; Supabase read+WRITE; file I/O: MC data JSON; own logs/state; guard: run_chain (no step failure masked)",
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
-   "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates",
-   "telemetry": "logs/sent_folder_registry.log",
+   "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates; scripts/run_chain.py --selftest (9/9, replays the false;true mask)",
+   "telemetry": "logs/sent_folder_registry.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run); fleet_log run_chain chain_step_failed per failed step + failed step named in run_logged stderr tail",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860",
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): 3 ';'-chained steps now run via scripts/run_chain.py (5727c21/6486f82): all steps still run, job exits with FIRST failing step status (was: last step only); rollback convert_chain_job.py --restore com.exos.sent-loop-closer; approver John Quinn; status pending Jon approval — D-7281862"
+   ]
   },
   {
    "label": "com.exos.series-a-worklist",
@@ -2117,10 +2188,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 300s → WARN)",
-   "telemetry": "logs/task_ledger.log",
+   "telemetry": "logs/task_ledger.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "LOW",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.task-note-command",
@@ -2135,10 +2209,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 300s → WARN)",
-   "telemetry": "logs/task-note-command.log",
+   "telemetry": "logs/task-note-command.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.task-question-answer",
@@ -2261,10 +2338,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 600s → WARN)",
-   "telemetry": "logs/util_metrics.log",
+   "telemetry": "logs/util_metrics.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "LOW",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.warm-followup",
@@ -2297,10 +2377,13 @@
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
    "eval_suite": "agent_eval hourly liveness (service): FAIL if not loaded or LastExitStatus≠0; WARN if log idle > 3x 86400s",
-   "telemetry": "logs/warm-ollama.log",
+   "telemetry": "logs/warm-ollama.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "LOW",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.weekly-employee-report",
@@ -2421,8 +2504,11 @@
    "memory_boundary": "Supabase core tables (read) -> local snapshot files",
    "escalation": "logs/mc-snapshot-export.log; on outage skips silently (transient-blip policy)",
    "eval_suite": "recovery-integrity: each run logs per-table row counts + skipped tables; a healthy run captures >=1 table and counts track the live board (spot-checked on restore)",
-   "telemetry": "logs/mc-snapshot-export.log",
-   "reusability_scope": "MC disaster-recovery"
+   "telemetry": "logs/mc-snapshot-export.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
+   "reusability_scope": "MC disaster-recovery",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.lves-survey-watcher",
@@ -2515,10 +2601,13 @@
    "human_owner": "John Quinn",
    "permission_envelope": "read-only: launchctl list, plists, logs/, state/, agent-registry.json; writes state/agent-eval-state.json + logs/agent-eval.log; Discord alert via deliver.py",
    "memory_boundary": "reads config/agent-evals.json, agent-registry.json, logs/fleet-events.jsonl; writes state/agent-eval-state.json, logs/agent-eval.log",
-   "escalation": "New FAIL or new registry drift → one deduped Discord alert to system channel; WARN never escalates",
-   "eval_suite": "python3 scripts/agent_eval.py --selftest (5 cases: drift detection, registry readable, launchd enumeration)",
-   "telemetry": "logs/agent-eval.log + fleet_log agent_eval events (corr ids) in logs/fleet-events.jsonl",
-   "reusability_scope": "fleet-wide eval/drift guard (any launchd fleet)"
+   "escalation": "New FAIL or new registry drift → one deduped Discord alert to system channel; WARN never escalates; mailbridge FAIL -> one-shot alert via existing FAIL path (remedy is human: sync pw + restart MC once)",
+   "eval_suite": "python3 scripts/agent_eval.py --selftest (5 cases: drift detection, registry readable, launchd enumeration); scripts/mail_bridge_guard.py --selftest (11/11, replays 9/28-29 outage)",
+   "telemetry": "logs/agent-eval.log + fleet_log agent_eval events (corr ids) in logs/fleet-events.jsonl; fleet_log agent_eval/mail_bridge event per run",
+   "reusability_scope": "fleet-wide eval/drift guard (any launchd fleet)",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): + mail-bridge checks (scripts/mail_bridge_guard.py, a93b78b): secrets.json Bridge pw drift vs ~/.config/exos/bridge-studio.pw (hash only) FAIL + multi-job IMAP auth storm in logs/runs FAIL; read-only, never logs in; rollback git revert a93b78b; approver John Quinn; status pending Jon approval — D-7281861"
+   ]
   },
   {
    "label": "com.exos.auto-resume",
@@ -2697,10 +2786,13 @@
    "memory_boundary": "reads Supabase tasks/activities for utdallas-assigned tasks + decisions API; writes capstone-experiments.jsonl, capstone-outbox.json, logs/capstone-capture*",
    "escalation": "student questions → utd-question task (Exo answers program-safe, else Lizi); send failures logged + surfaced in Thursday brief",
    "eval_suite": "end-to-end synthetic note + Done test 2026-09-27 (capture, ack, next-session, cleanup); weekly spot-check of acks vs. capture log in the Thursday brief",
-   "telemetry": "logs/capstone-capture.log, mission-control/data/capstone-experiments.jsonl",
+   "telemetry": "logs/capstone-capture.log, mission-control/data/capstone-experiments.jsonl; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "any sandboxed external-cohort program on MC",
    "risk_tier": "MEDIUM",
-   "envelope_source": "Jon 2026-09-27 (#blk3-payload): Lizi releases, Exo sends directly as the students' prompter"
+   "envelope_source": "Jon 2026-09-27 (#blk3-payload): Lizi releases, Exo sends directly as the students' prompter",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "label": "com.exos.capstone-queue-refresh",
@@ -2715,10 +2807,13 @@
    "memory_boundary": "reads pipeline md + Supabase utd-lead tasks; writes mission-control/data/capstone-program.json",
    "escalation": "none (read-mostly); failures in logs/capstone-queue-refresh.log",
    "eval_suite": "dry-run funnel check vs. hand count (4/53/9 on 2026-09-27)",
-   "telemetry": "logs/capstone-queue-refresh.log",
+   "telemetry": "logs/capstone-queue-refresh.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "payload sales engine",
    "risk_tier": "LOW",
-   "envelope_source": "Jon 2026-09-27"
+   "envelope_source": "Jon 2026-09-27",
+   "change_log": [
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+   ]
   },
   {
    "autonomy_tier": "Recommends-with-Context",
