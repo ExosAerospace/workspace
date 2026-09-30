@@ -69,3 +69,27 @@ Exos_RDRE_Capability_Statement*
 *.gbr
 *.slx
 *.mdl
+
+# --- Trajectory / 6DOF / dispersion + NASA GFE residue (added 2026-09-30, exo3 r2 r2-controlled-docs) ---
+# BLK3 6DOF sim inputs (mass/aero/inertia/damping tables, nominal mission, statistical winds), TAOS drift
+# mods, fin-resize DATCOM kits and Part 450 Monte Carlo dispersion frameworks = trajectory/performance
+# technical data; NASA RDRE GFE (Teasley DUA + AAS paper) was logged removed 6/16 but copies remain in
+# ~/.openclaw/media/inbound. Keep them OFF the DR mirror until Jon decides (Decision exo3-r2:r2-controlled-docs:controlled-data-on-mac).
+# Rollback: delete this block.
+*6DOF*
+*_6DOF_*
+BLK3_MASS_AERO_*
+BLK3_INERTIA_CG_*
+BLK3_DAMPING_*
+NOMINAL_MISSION_*
+*STATISTICAL_WINDS*
+*DRIFTMOD*
+Lazarus_Segment1_DriftMod*
+*DATCOM*
+BLK3_Fin_Resize*
+*MonteCarlo_Dispersion*
+Data_Usage_Agreement*ITAR*
+NASAs_RDRE_Dev_AAS_Teasley*
+TAOS_Manual*
+lazarus_taos/
+project-lazarus/
