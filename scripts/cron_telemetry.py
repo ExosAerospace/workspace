@@ -52,7 +52,7 @@ def load_cron_jobs(db=DB):
         con.row_factory = sqlite3.Row
         rows = con.execute(
             "select job_id, name, enabled, schedule_kind, schedule_expr, every_ms, at, created_at_ms, "
-            "last_run_at_ms, last_run_status, consecutive_errors, next_run_at_ms from cron_jobs").fetchall()
+            "last_run_at_ms, last_run_status, consecutive_errors, next_run_at_ms, delete_after_run from cron_jobs").fetchall()
         return {r["job_id"]: dict(r) for r in rows}
     finally:
         con.close()
@@ -239,15 +239,15 @@ def selftest():
         con = sqlite3.connect(db)
         con.execute("create table cron_jobs (job_id text, name text, enabled int, schedule_kind text, "
                     "schedule_expr text, every_ms int, at text, created_at_ms int, last_run_at_ms int, "
-                    "last_run_status text, consecutive_errors int, next_run_at_ms int)")
+                    "last_run_status text, consecutive_errors int, next_run_at_ms int, delete_after_run int default 0)")
         con.execute("create table cron_run_logs (store_key text, job_id text, seq int, ts int, status text, "
                     "error text, duration_ms int, model text, provider text, run_id text, delivery_status text, "
                     "total_tokens int)")
         now = 1790700000.0
         H = 3600 * 1000
-        con.execute("insert into cron_jobs values ('j1','Fixture Daily Watch',1,'cron','0 9 * * *',null,null,0,?, 'ok',0,null)",
+        con.execute("insert into cron_jobs values ('j1','Fixture Daily Watch',1,'cron','0 9 * * *',null,null,0,?, 'ok',0,null,0)",
                     (int(now * 1000 - H),))
-        con.execute("insert into cron_jobs values ('j2','Fixture Unregistered',1,'every',null,3600000,null,0,null,null,0,null)")
+        con.execute("insert into cron_jobs values ('j2','Fixture Unregistered',1,'every',null,3600000,null,0,null,null,0,null,0)")
         runs = [("j1", 1, now * 1000 - 72 * H, "ok", None), ("j1", 2, now * 1000 - 2 * H, "error", "Error: job timed out"),
                 ("j2", 1, now * 1000 - 1 * H, "ok", None)]
         for jid, seq, ts, st, err in runs:

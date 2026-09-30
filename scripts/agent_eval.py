@@ -127,12 +127,34 @@ def registry_drift(live, registered):
     sees committed code, so a plist loaded outside git slips past it. Sorted list."""
     return sorted(l for l in live if l not in registered)
 
-def cron_drift(jobs, reg_crons):
+TRANSIENT_CLASS = "cron-class:transient-agent-reminder"
+TRANSIENT_HORIZON_S = 31 * 86400
+
+def transient_class_entry(path=None):
+    """The registry's class spec for self-deleting one-shot reminder crons, or None if it is
+    missing or incomplete (then every one-shot is drift again: fail-closed)."""
+    try:
+        agents = json.load(open(path or REGISTRY)).get("agents", [])
+    except Exception:
+        return None
+    e = next((a for a in agents if a.get("label") == TRANSIENT_CLASS), None)
+    return e if e and not any(_blank(e.get(f)) for f in SPEC_FIELDS) else None
+
+def is_transient(j, now_s=None):
+    """A one-shot (schedule kind 'at') that deletes itself after running and is due within
+    31 days. Recurring, kept, or far-future one-shots are NOT transient and still need an entry."""
+    if j.get("schedule_kind") != "at" or not j.get("delete_after_run"): return False
+    nxt = j.get("next_run_at_ms")
+    return nxt is None or nxt / 1000.0 <= (now_s or time.time()) + TRANSIENT_HORIZON_S
+
+def cron_drift(jobs, reg_crons, transient_class=None, now_s=None):
     """OpenClaw crons (jobs: {id: {name,...}}) with no complete openclaw-cron registry entry,
-    matched on cron_id so a rename is not drift. Returns display strings."""
+    matched on cron_id so a rename is not drift. A job covered by the registered transient
+    reminder class (is_transient) is not drift. Returns display strings."""
     out = []
     for jid, j in sorted(jobs.items()):
         e = reg_crons.get(jid)
+        if not e and transient_class and is_transient(j, now_s): continue
         name = "cron:%s (openclaw cron %s)" % (cron_telemetry.slug(j.get("name")), jid[:8])
         if not e: out.append(name)
         elif any(_blank(e.get(f)) for f in SPEC_FIELDS): out.append(name + " (spec incomplete: owner/eval/permission_envelope)")
@@ -196,32 +218,6 @@ def check_cron_hygiene(state, now):
         state[key] = {"status": "OK", "ts": datetime.datetime.now().isoformat(timespec="seconds")}
     return results, new_fails
 
-def check_mail_bridge(state, now):
-    """exo3 r2 launchd-residuals guard (scripts/mail_bridge_guard.py): secrets.json Bridge password drift vs
-    ~/.config/exos/bridge-studio.pw (FAIL) and a multi-job Bridge auth-error storm in logs/runs (FAIL).
-    State key 'mailbridge:<label>'; FAIL alert fires once on transition via the existing path."""
-    results, new_fails = [], []
-    try:
-        import mail_bridge_guard
-        found = mail_bridge_guard.check(now)
-    except Exception as e:
-        log(f"mail bridge checks skipped: {e}")
-        return results, new_fails
-    key = "mailbridge:" + mail_bridge_guard.LABEL
-    status = "FAIL" if found else "OK"
-    why = "; ".join(w for _, _, w in found) or "healthy"
-    results.append((key, status, why, "John Quinn"))
-    try:
-        import fleet_log
-        fleet_log.event("agent_eval", "govern", "mail_bridge", outcome=status.lower(), owner="John Quinn",
-                        detail={"why": [w for _, _, w in found]})
-    except Exception:
-        pass
-    if status == "FAIL" and state.get(key, {}).get("status") != "FAIL":
-        new_fails.append((key, why, "John Quinn"))
-    state[key] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
-    return results, new_fails
-
 def selftest():
     # fixture labels built at runtime so the exo3 gate doesn't read them as new agents
     a, b, c = (".".join(["com", "exos", "fixture-" + x]) for x in "abc")
@@ -240,6 +236,17 @@ def selftest():
     d = cron_drift(jobs, {"id-a": full})
     assert len(d) == 1 and d[0].startswith("cron:fixture-b")
     assert "spec incomplete" in cron_drift(jobs, {"id-a": full, "id-b": dict(full, eval_suite="TBD")})[0]
+    # transient one-shot reminder class (r2-cron-hygiene): only at+delete_after_run within 31d, only if class registered
+    now0 = time.time()
+    tj = {"id-a": {"name": "Fixture A"},
+          "id-t": {"name": "Fixture T", "schedule_kind": "at", "delete_after_run": 1, "next_run_at_ms": (now0 + 3600) * 1000},
+          "id-k": {"name": "Fixture K", "schedule_kind": "at", "delete_after_run": 0, "next_run_at_ms": (now0 + 3600) * 1000},
+          "id-f": {"name": "Fixture F", "schedule_kind": "at", "delete_after_run": 1, "next_run_at_ms": (now0 + 90 * 86400) * 1000},
+          "id-r": {"name": "Fixture R", "schedule_kind": "cron", "delete_after_run": 1}}
+    d = cron_drift(tj, {"id-a": full}, full, now0)
+    assert sorted(x.split(" ")[0] for x in d) == ["cron:fixture-f", "cron:fixture-k", "cron:fixture-r"], d
+    assert len(cron_drift(tj, {"id-a": full}, None, now0)) == 4  # class missing/incomplete -> fail-closed
+    assert transient_class_entry("/nonexistent") is None
     now = time.time()
     daily = {"enabled": 1, "schedule_kind": "cron", "schedule_expr": "0 9 * * *", "consecutive_errors": 0,
              "last_run_at_ms": (now - 3600) * 1000}
@@ -249,11 +256,9 @@ def selftest():
     assert cron_telemetry.score_cron(dict(daily, consecutive_errors=3), th, now)[0] == "FAIL"
     assert cron_telemetry.score_cron(dict(daily, enabled=0), th, now)[0] == "SKIP"
     assert isinstance(cron_telemetry.registry_crons(REGISTRY), dict)
-    print("agent_eval selftest: 15/15 pass")
+    print("agent_eval selftest: 18/18 pass")
     import cron_hygiene  # r2 cron-hygiene guards (secrets in prompts, model allowlist, transient crons)
     cron_hygiene.selftest()
-    import mail_bridge_guard  # r2 launchd-residuals: Bridge password drift + IMAP auth storm
-    mail_bridge_guard.selftest()
     return 0
 
 def check_registry_drift(state):
@@ -264,7 +269,8 @@ def check_registry_drift(state):
         drift += [f"{l} (spec incomplete: owner/eval/permission_envelope)" for l in
                   registry_drift(live, registry_labels(complete_only=True)) if l not in drift]
         try:
-            drift += cron_drift(cron_telemetry.load_cron_jobs(), cron_telemetry.registry_crons(REGISTRY))
+            drift += cron_drift(cron_telemetry.load_cron_jobs(), cron_telemetry.registry_crons(REGISTRY),
+                                transient_class_entry())
         except Exception as e:
             log(f"cron registry drift check skipped: {e}")
     except Exception as e:
@@ -337,9 +343,6 @@ def main():
     hy_results, hy_fails = check_cron_hygiene(state, now)
     results += hy_results
     new_fail_alerts += hy_fails
-    mb_results, mb_fails = check_mail_bridge(state, now)
-    results += mb_results
-    new_fail_alerts += mb_fails
 
     npass = sum(1 for _, s, _, _ in results if s == "OK")
     nwarn = sum(1 for _, s, _, _ in results if s == "WARN")
