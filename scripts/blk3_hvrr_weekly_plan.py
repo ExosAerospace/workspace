@@ -40,6 +40,11 @@ TARGETS = [
          "Decision or gap note on #76", "#76, #1435"),
         ("Release the restricted BLK3 engineering drawings (Quinn/Eaton/Blink only). Overdue since 8/22.",
          "Drawings on #1872", "#1872"),
+        # Added by John 9/30 (Mission Score >100, quick wins).
+        ("Prior payload customer list for the UTD Capstone data request (holding up 6 people). Attach the docs.",
+         "List attached, #2631 Done", "#2631"),
+        ("$10M BLK3 vehicle-coverage adder: attach the latest building policy and reassign to Victor to make the inquiry. "
+         "Same for any other admin tasks on your plate.", "Policy on #1374, reassigned to Victor", "#1374"),
     ]),
     ("Neil Milburn", "nmilburn@exosaero.com", "HVRR / Hermes PM, BLK3 licensing", [
         ("Hermes kick-off: the contract puts CLIN0001 kick-off in 30 Sep-30 Oct 2026, but #3081 is dated 1/15/27. "
