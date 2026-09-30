@@ -1,1 +1,574 @@
-{}
+{
+  "agronauticsllc": {
+    "company": "Agronautics LLC",
+    "payloads": [
+      {
+        "payload_name": "Agronautics Hopstronautix (plant/hops experiment)",
+        "mission": "SARGE (2019 manifest)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2019",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "arete": {
+    "company": "Arete",
+    "payloads": [
+      {
+        "payload_name": "GNA High School EXOS Flight Experiment 1",
+        "mission": "SARGE (2019 manifest)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2019",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "astraxinternational": {
+    "company": "ASTRAX International",
+    "payloads": [
+      {
+        "payload_name": "Memorial pieces",
+        "mission": "SARGE (2019 manifest)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2019",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "beyondburials": {
+    "company": "Beyond Burials",
+    "payloads": [
+      {
+        "payload_name": "Beyond Burials – Stardust 1",
+        "mission": "BLK3 manifest (2024)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2024",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "centerforappliedspacetechnologiescast": {
+    "company": "Center for Applied Space Technologies (CAST)",
+    "payloads": [
+      {
+        "payload_name": "CAST SpaceMedicine-4",
+        "mission": "SARGE (2019 manifest)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2019",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "deployablescubedgmbh": {
+    "company": "Deployables Cubed GmbH",
+    "payloads": [
+      {
+        "payload_name": "D3PP",
+        "mission": "BLK3 manifest (2024)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2024",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "entxltd": {
+    "company": "entX Ltd",
+    "payloads": [
+      {
+        "payload_name": "entX RHU Demonstrator System",
+        "mission": "BLK3 (current contract)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": null,
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "hopstronautix": {
+    "company": "Hopstronautix",
+    "payloads": [
+      {
+        "payload_name": "Hopstronautix",
+        "mission": "BLK3 manifest (2024)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2024",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "lunasondeinc": {
+    "company": "LunaSonde, Inc.",
+    "payloads": [
+      {
+        "payload_name": "Gossamer Powered Picosat",
+        "mission": "SARGE (2019 manifest)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2019",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "matthewlesiw": {
+    "company": "Matthew Lesiw",
+    "payloads": [
+      {
+        "payload_name": "Artemis Mission 1",
+        "mission": "SARGE/BLK3",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": null,
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "nasa": {
+    "company": "NASA",
+    "payloads": [
+      {
+        "payload_name": "Vibration damper",
+        "mission": "SARGE (2019 manifest)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2019",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "universityofcentralfloridanasareddi": {
+    "company": "University of Central Florida (NASA REDDI)",
+    "payloads": [
+      {
+        "payload_name": "SPACE-2",
+        "mission": "SARGE (2019 manifest)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2019",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "ocullo": {
+    "company": "OCULLO",
+    "payloads": [
+      {
+        "payload_name": "MIYAX",
+        "mission": "questionnaire (2019)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2019",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "purdueuniversity": {
+    "company": "Purdue University",
+    "payloads": [
+      {
+        "payload_name": "CubeSat holder; PREFER atmospheric monitoring",
+        "mission": "SARGE (2019) + BLK3 manifest (2024) — repeat",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2019",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "reditusspace": {
+    "company": "Reditus Space",
+    "payloads": [
+      {
+        "payload_name": "MP0",
+        "mission": "BLK3 (2025 questionnaire)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2025",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "researchsat": {
+    "company": "ResearchSat",
+    "payloads": [
+      {
+        "payload_name": "ADI-Lab; Suborbital Mission-2",
+        "mission": "BLK3 manifest (2024) — repeat",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2024",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "scentienceinc": {
+    "company": "Scentience, Inc.",
+    "payloads": [
+      {
+        "payload_name": "Scentience Olfactory Processing Unit",
+        "mission": "BLK3 (questionnaire)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": null,
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "sonsoflibertygunworkssolgw": {
+    "company": "Sons of Liberty Gun Works (SOLGW)",
+    "payloads": [
+      {
+        "payload_name": "(not listed)",
+        "mission": "SARGE (2019 manifest)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2019",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "spacelabtech": {
+    "company": "Space Lab Tech",
+    "payloads": [
+      {
+        "payload_name": "(not listed)",
+        "mission": "BLK3 manifest (2024)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2024",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "spacebornunitedbv": {
+    "company": "SpaceBorn United B.V.",
+    "payloads": [
+      {
+        "payload_name": "ARTIS",
+        "mission": "BLK3 manifest (2024)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2024",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "teachersinspaceinc": {
+    "company": "Teachers in Space, Inc.",
+    "payloads": [
+      {
+        "payload_name": "Classroom CubeKit Exos01",
+        "mission": "SARGE (2019) + BLK3 manifest (2024) — repeat",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2019",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "toucanspace": {
+    "company": "Toucan Space",
+    "payloads": [
+      {
+        "payload_name": "Toucan Space 1",
+        "mission": "BLK3 manifest (2024)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2024",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "universityofcaliforniairvineuci": {
+    "company": "University of California, Irvine (UCI)",
+    "payloads": [
+      {
+        "payload_name": "CubeSat telemetry payload",
+        "mission": "BLK3 (in discussion)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": null,
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "universityofsurreysurreyspacecentre": {
+    "company": "University of Surrey (Surrey Space Centre)",
+    "payloads": [
+      {
+        "payload_name": "Radiation detector",
+        "mission": "BLK3 manifest (2024)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2024",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "upliftaerospacellc": {
+    "company": "Uplift Aerospace LLC",
+    "payloads": [
+      {
+        "payload_name": "Uplift for Good; Space Box",
+        "mission": "BLK3 manifest (2024)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2024",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  },
+  "vectorspacebiosciencesinc": {
+    "company": "Vector Space Biosciences Inc.",
+    "payloads": [
+      {
+        "payload_name": "Project Astrovex",
+        "mission": "questionnaire (2019)",
+        "paid_date": "2026-09-30",
+        "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
+        "logged": "2026-09-30",
+        "logged_by": "Exo",
+        "flight_date": null
+      }
+    ],
+    "created": "2026-09-30",
+    "is_payload_customer": true,
+    "payload_count": 1,
+    "total_contract_value_usd": 0.0,
+    "total_paid_usd": 0.0,
+    "customer_since": "2019",
+    "last_payload_date": null,
+    "updated": "2026-09-30"
+  }
+}

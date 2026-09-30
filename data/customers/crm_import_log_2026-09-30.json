@@ -1,0 +1,240 @@
+{
+ "companies_created": [
+  "54339ff7-b8d2-4508-9e80-316867a18811",
+  "80ea118d-2969-465e-8309-7b405bec5530",
+  "a00e6d52-2e9e-4915-be44-127dc907056e",
+  "80e1b7ce-36e4-4791-b866-82b393658049",
+  "2e42208e-e5df-40e1-a8a3-a5f5509cee8e",
+  "e97093f9-e645-4192-97b7-860c4d41e607",
+  "04454e75-ffef-46cb-a65c-7043120a3f66",
+  "36c6a3b6-22f5-4ac7-88f7-f9357623c2bc",
+  "68079a8f-aa7c-4d30-b0b9-512d468b7966",
+  "814d204a-521d-48ac-83fa-34dde599b873",
+  "4588a0d2-69d6-413a-90db-7ed416ac43dc",
+  "9e4108b8-9312-4a7e-a768-e820806297c6",
+  "a11276a5-5eb4-4da1-b2a0-c792ad061146",
+  "8c5293ee-b6a8-4236-bbaf-058f2fa4d0a5",
+  "38b50172-dc6a-4c69-8af6-5103fb146130",
+  "0e78c87a-2ba1-4f63-8650-6d5db7bac9ad",
+  "e92c96fd-7b06-4665-9a7c-da0cb21889dd",
+  "0a8c763d-cd88-401d-a2b3-6957d73f9658",
+  "66b68944-7ca3-425d-b08f-cb99f87a4b10",
+  "ff35800e-c5db-42f0-979f-5abe31528af5",
+  "45df2b26-1cb2-4d4c-91c0-6498dbc51658",
+  "28c21bd8-e0bb-473f-81cd-5bbad2478609",
+  "224ad5a7-faeb-4548-806d-7a27e81a3548",
+  "abd39a1d-416d-43fc-92df-dad739ec0f42",
+  "6ebe1608-c412-4402-967f-16041cb4b48b"
+ ],
+ "companies_tagged": [
+  {
+   "id": "9ac53321-4022-4d01-bfd3-f70dc4c0e11f",
+   "prev": {
+    "tags": null,
+    "description": null
+   }
+  }
+ ],
+ "contacts_created": [
+  "845d48f5-1ba5-41f5-ae13-e47b14dc042d",
+  "2b2fe2eb-13a1-4710-a925-8dc2f1b95719",
+  "5bf1be06-920b-42bc-ae17-8557108c96b4",
+  "ba736318-9f84-4d4f-b263-1aaa1bc12a93",
+  "38853363-b5c7-4393-aa45-3a3a59d2d4f0",
+  "708fe038-af3e-4c85-95d9-457c42235f71",
+  "70a78491-30ca-4eb3-979d-b029f6501da9",
+  "922e789b-cf37-45ce-add6-c231f8ef423c",
+  "31eaec1d-43ef-4e10-be2e-0409c2e81e2a",
+  "f4c8d6c6-8521-4a7e-9492-bd7d61ff2926",
+  "fe311ed0-abfc-4f2d-b8a1-69ecbff65b82",
+  "2da2e6b3-af42-431b-9c87-395d3a995c2f",
+  "56f40550-4b48-4d25-b80d-9d9d8837c4c5",
+  "2661bcfa-ac54-4593-9d3f-574b19d61621",
+  "d490e952-1fcc-4903-90c4-9c531ec739cf",
+  "d3d62f8c-b99f-4b17-94a2-5ecd27ee00f0",
+  "e9e564b6-6b6b-4cd4-9737-9fab8a5545ed",
+  "1451eca3-4b20-4f0b-9034-b55c6dbd9572",
+  "57121d2c-9497-4621-930e-7ac1901d3253",
+  "aaeb6383-5ded-4969-ab92-801ea8fcd92b",
+  "80d9d00a-fc65-40d7-ab3c-4dd3ad540d30",
+  "e5165367-d326-4b73-b2ae-4da7536243be"
+ ],
+ "contacts_tagged": [
+  {
+   "id": "f8ee033d-13c3-4371-964d-a359b64151bf",
+   "prev": {
+    "id": "f8ee033d-13c3-4371-964d-a359b64151bf",
+    "tags": null,
+    "notes": "Auto-added from Jon's outbound email (2026-07-28) \u2014 Re: Suborbital Payload Services (again) for TDP International. "
+   }
+  },
+  {
+   "id": "003f754e-781c-437f-9c76-2c405c374f52",
+   "prev": {
+    "id": "003f754e-781c-437f-9c76-2c405c374f52",
+    "tags": null,
+    "notes": "Auto-added from Jon's outbound email (2026-07-24) \u2014 Collicott warm-intro ask -> Purdue Weldon BME organ-on-chip PI?"
+   }
+  },
+  {
+   "id": "a25f9463-3f21-4c8c-a6ac-1b2883c1b4dc",
+   "prev": {
+    "id": "a25f9463-3f21-4c8c-a6ac-1b2883c1b4dc",
+    "tags": [
+     "Space",
+     "Defense",
+     "Aerospace",
+     "Advanced Manufacturing"
+    ],
+    "notes": " | 02/26/2026 | "
+   }
+  },
+  {
+   "id": "481b856e-2b9c-4b01-a8f5-f3f03e92c0ff",
+   "prev": {
+    "id": "481b856e-2b9c-4b01-a8f5-f3f03e92c0ff",
+    "tags": [
+     "inbound",
+     "lead",
+     "exo3"
+    ],
+    "notes": "Auto-captured forwarded-lead from email \u201cFW: New EXOS BLK3 Payload Questionnaire Submission\u201d on 2026-08-21.\nWorks with: John (per 'Re: Following up on your Greenville visit - BLK3 payload nex', 2026-09-09)"
+   }
+  },
+  {
+   "id": "e010a2fd-3187-468a-86de-582e401404d6",
+   "prev": {
+    "id": "e010a2fd-3187-468a-86de-582e401404d6",
+    "tags": [
+     "inbound",
+     "lead",
+     "exo3"
+    ],
+    "notes": "Auto-captured forwarded-lead from email \u201cRE: New EXOS BLK3 Payload Questionnaire Submission, Exo update\u201d on 2026-08-21."
+   }
+  },
+  {
+   "id": "d7675a0c-e806-4927-83c8-e20e08b45074",
+   "prev": {
+    "id": "d7675a0c-e806-4927-83c8-e20e08b45074",
+    "tags": [
+     "inbound",
+     "lead",
+     "exo3"
+    ],
+    "notes": "Auto-captured forwarded-lead from email \u201cFW: Appendix A, Exos Launch Services Agreement...\u201d on 2026-09-18."
+   }
+  },
+  {
+   "id": "4a0c1908-83ac-46d8-8559-a04e08e29315",
+   "prev": {
+    "id": "4a0c1908-83ac-46d8-8559-a04e08e29315",
+    "tags": null,
+    "notes": "Auto-captured from email 'Fw: UCI CubeSat Information' (2026-08-03)."
+   }
+  },
+  {
+   "id": "0c637190-49ea-491f-ada0-5c492bd68f4e",
+   "prev": {
+    "id": "0c637190-49ea-491f-ada0-5c492bd68f4e",
+    "name": "Adam Escobar",
+    "tags": null,
+    "company_id": null
+   }
+  },
+  {
+   "id": "5bf41ee6-391b-42fc-b357-278ce6968be1",
+   "prev": {
+    "id": "5bf41ee6-391b-42fc-b357-278ce6968be1",
+    "name": "Christine",
+    "tags": null,
+    "company_id": null
+   }
+  },
+  {
+   "id": "cc5baf29-aa29-4f61-9c64-6e1ed9b61692",
+   "prev": {
+    "id": "cc5baf29-aa29-4f61-9c64-6e1ed9b61692",
+    "name": "Scott Edwards | entX",
+    "tags": [
+     "inbound",
+     "lead",
+     "exo3"
+    ],
+    "company_id": null
+   }
+  },
+  {
+   "id": "248c19cd-61e5-4361-84be-414d9895135f",
+   "prev": {
+    "id": "248c19cd-61e5-4361-84be-414d9895135f",
+    "name": "Patrick Teh | entX",
+    "tags": null,
+    "company_id": null
+   }
+  },
+  {
+   "id": "edaecb5a-8817-499d-9377-d4b6bf455798",
+   "prev": {
+    "id": "edaecb5a-8817-499d-9377-d4b6bf455798",
+    "name": "bryn@entx.com.au",
+    "tags": null,
+    "company_id": null
+   }
+  },
+  {
+   "id": "c32806d9-7f1e-45c4-8ef3-881e8e5a93a3",
+   "prev": {
+    "id": "c32806d9-7f1e-45c4-8ef3-881e8e5a93a3",
+    "name": "Damien Connor | entX",
+    "tags": null,
+    "company_id": null
+   }
+  },
+  {
+   "id": "ea541b43-15cf-4469-a3a9-80fbfec6ae12",
+   "prev": {
+    "id": "ea541b43-15cf-4469-a3a9-80fbfec6ae12",
+    "name": "Jake Whittenbury | entX",
+    "tags": null,
+    "company_id": null
+   }
+  },
+  {
+   "id": "168eaed4-f8eb-4140-8e4f-754b719081d6",
+   "prev": {
+    "id": "168eaed4-f8eb-4140-8e4f-754b719081d6",
+    "name": "Allan",
+    "tags": null,
+    "company_id": null
+   }
+  },
+  {
+   "id": "1212d49c-660c-49f5-8ded-ca7a8fe444e9",
+   "prev": {
+    "id": "1212d49c-660c-49f5-8ded-ca7a8fe444e9",
+    "name": "Chanel",
+    "tags": null,
+    "company_id": null
+   }
+  },
+  {
+   "id": "09873624-79d6-4ef1-818f-c5c7b96878eb",
+   "prev": {
+    "id": "09873624-79d6-4ef1-818f-c5c7b96878eb",
+    "name": "Scott Edwards",
+    "tags": null,
+    "company_id": null
+   }
+  },
+  {
+   "id": "2514c808-887b-4614-abda-67c40382507e",
+   "prev": {
+    "id": "2514c808-887b-4614-abda-67c40382507e",
+    "name": "Scott",
+    "tags": null,
+    "company_id": null
+   }
+  }
+ ]
+}
