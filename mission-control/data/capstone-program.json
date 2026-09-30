@@ -305,13 +305,14 @@
   "scope_simplification": "No MC expense-submission build needed — Divvy/Bill natively handles cards + receipts + reports (Jon, 2026-08-16). Students' scoped MC area stays board/tracker only.",
   "launch_estimate": "Estimated April 2027.",
   "payload_funnel": {
-    "total": 66,
-    "live": 66,
-    "with_poc": 48,
-    "NEW": 50,
-    "RESEARCHING": 14,
-    "READY": 2,
-    "updated": "2026-09-17"
+    "total": 77,
+    "live": 77,
+    "with_poc": 59,
+    "NEW": 4,
+    "RESEARCHING": 64,
+    "READY": 0,
+    "AI_READY": 9,
+    "updated": "2026-09-30"
   },
   "funnel_explainer": [
     {
@@ -320,68 +321,69 @@
     },
     {
       "stage": "RESEARCHING",
-      "meaning": "Being worked — finding the named point-of-contact, their active programs, and funding that could pay for a flight."
+      "meaning": "Being worked. Most leads here already have an AI-written first draft that no human has verified yet. Drag your lead card to In Progress when you start."
     },
     {
       "stage": "READY",
-      "meaning": "Fully worked — POC found AND a tailored outreach draft written. Exos (Lizi) reviews and sends. Your goal is to move leads to here."
+      "meaning": "Verified by a person: POC confirmed current, facts checked, draft corrected. Drag your lead card to Done. Sunidhi spot-checks it, then Lizi reviews and sends."
     }
   ],
-  "work_queue_note": "Work this list top-down — it is ranked by opportunity quality (funding signal, a named POC, and leverage), so the leads most likely to convert are first. Move each NEW → RESEARCHING → READY.",
+  "work_queue_note": "Your assigned leads are cards on your Payload Sales board. Work those first; each card has the steps. This list is ranked by opportunity quality (funding signal, named POC, leverage). Unassigned leads go to Roel to hand out.",
   "work_queue": [
     {
-      "name": "UCF / Stephen W. Hawking Center for Microgravity Research — ⭐⭐⭐ WARM PRIOR CUSTO",
-      "stage": "NEW",
-      "score": 93,
+      "name": "NASA Glenn Research Center — Dr. Jason Hartwig, CFM Reduced Gravity Cryogenics ⭐",
+      "stage": "RESEARCHING",
+      "score": 98,
       "has_poc": true,
-      "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
+      "why": "funding signal, named POC, identity verified",
+      "next_action": "Jon — work card #3146 on your board",
+      "owner": "Jon",
+      "card": 3146,
       "rank": 1
     },
     {
-      "name": "NASA Glenn Research Center — Dr. Jason Hartwig, CFM Reduced Gravity Cryogenics ⭐",
-      "stage": "NEW",
-      "score": 93,
+      "name": "Astrobotic Technology — John Thornton (CEO) ⭐⭐",
+      "stage": "RESEARCHING",
+      "score": 98,
       "has_poc": true,
-      "why": "funding signal, named POC, identity verified",
-      "next_action": "Research their active programs + funding, then draft outreach",
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Adrian Haro — work card #3155 on your board",
+      "owner": "Adrian Haro",
+      "card": 3155,
       "rank": 2
     },
     {
-      "name": "Astrobotic Technology — John Thornton (CEO) ⭐⭐",
-      "stage": "NEW",
-      "score": 93,
+      "name": "LASP (Laboratory for Atmospheric and Space Physics) — Dr. Brian Fleming ⭐⭐",
+      "stage": "RESEARCHING",
+      "score": 98,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
+      "next_action": "Laura Granados Lopez — work card #3141 on your board",
+      "owner": "Laura Granados Lopez",
+      "card": 3141,
       "rank": 3
     },
     {
-      "name": "LASP (Laboratory for Atmospheric and Space Physics) — Dr. Brian Fleming ⭐⭐",
-      "stage": "NEW",
-      "score": 93,
+      "name": "Starlab Space / Voyager — Marshall Smith (CEO) ⭐⭐ NANORACKS LEGACY + ISS TRANSIT",
+      "stage": "RESEARCHING",
+      "score": 98,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
+      "next_action": "Adrian Haro — work card #3153 on your board",
+      "owner": "Adrian Haro",
+      "card": 3153,
       "rank": 4
     },
     {
-      "name": "Starlab Space / Voyager — Marshall Smith (CEO) ⭐⭐ NANORACKS LEGACY + ISS TRANSIT",
-      "stage": "NEW",
-      "score": 93,
-      "has_poc": true,
-      "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 5
-    },
-    {
       "name": "BioOrbit / Dr. Katie King — mAb Protein Crystal ISS-Launched Company ⭐⭐ NEW INTL",
-      "stage": "NEW",
-      "score": 93,
+      "stage": "RESEARCHING",
+      "score": 98,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 6
+      "next_action": "Adrian Haro — work card #3154 on your board",
+      "owner": "Adrian Haro",
+      "card": 3154,
+      "rank": 5
     },
     {
       "name": "SpaceTango (Lexington, KY) — Broker/Integrator",
@@ -390,7 +392,7 @@
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
       "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
-      "rank": 7
+      "rank": 6
     },
     {
       "name": "Texas A&M — Aerospace Engineering, Propulsion/CFM",
@@ -398,17 +400,10 @@
       "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
-      "rank": 8
-    },
-    {
-      "name": "SpaceTango (Twyman Clements) — Deepened Enrichment",
-      "stage": "RESEARCHING",
-      "score": 88,
-      "has_poc": true,
-      "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
-      "rank": 9
+      "next_action": "Laura Granados Lopez — work card #3142 on your board",
+      "owner": "Laura Granados Lopez",
+      "card": 3142,
+      "rank": 7
     },
     {
       "name": "NCATS / Tissue Chips in Space — NIH Research Continuity",
@@ -417,187 +412,405 @@
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
       "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
-      "rank": 10
+      "rank": 8
     },
     {
       "name": "NRL Space Science Division (Code 7600) — NEW PROSPECT ⭐⭐",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 11
+      "next_action": "Karan Vijaya Sankar — work card #3148 on your board",
+      "owner": "Karan Vijaya Sankar",
+      "card": 3148,
+      "rank": 9
     },
     {
       "name": "Embry-Riddle Aeronautical University — Dr. Pedro LLanos ⭐⭐⭐ TOP NEW PRIORITY",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 12
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 10
     },
     {
       "name": "Sandia National Laboratories — Ben English (High OpTempo Hypersonics Program) ⭐⭐",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 13
+      "next_action": "Jon — work card #3147 on your board",
+      "owner": "Jon",
+      "card": 3147,
+      "rank": 11
     },
     {
       "name": "Montana State University SSEL — Space Science & Engineering Laboratory ⭐",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 14
+      "next_action": "Laura Granados Lopez — work card #3143 on your board",
+      "owner": "Laura Granados Lopez",
+      "card": 3143,
+      "rank": 12
     },
     {
       "name": "Johns Hopkins APL — Joshua Wolk, BLAST Program / Targets (MDA) ⭐⭐⭐ ACTIVE BUYER",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 15
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 13
     },
     {
       "name": "Draper Laboratory — DMEN Team (Lunar GNC / Terrain Navigation) ⭐⭐",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 16
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 14
     },
     {
       "name": "Varda Space Industries — Will Bruey (CEO/Co-founder) ⭐⭐⭐ PARTNER/MULTIPLIER PLAY",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 17
+      "next_action": "Adrian Haro — work card #3151 on your board",
+      "owner": "Adrian Haro",
+      "card": 3151,
+      "rank": 15
     },
     {
       "name": "United Therapeutics — Martine Rothblatt, PhD (CEO) ⭐⭐",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 18
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 16
     },
     {
       "name": "Impulse Space — Tom Mueller, Founder/CEO/CTO ⭐⭐",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 19
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 17
     },
     {
       "name": "Rhodium Scientific — Olivia Gamez Holzhaus (CEO/Founder) ⭐⭐⭐ MULTIPLIER PLAY",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 20
+      "next_action": "Adrian Haro — work card #3152 on your board",
+      "owner": "Adrian Haro",
+      "card": 3152,
+      "rank": 18
     },
     {
       "name": "Ursa Major Technologies — Chris Spagnoletti (CEO) ⭐⭐ AFRL/DoD BRIDGE",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 21
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 19
     },
     {
       "name": "DIU HyCAT Program — Col. Nicholas Estep ⭐⭐⭐ ACTIVE COMMERCIAL SUBORBITAL BUYER",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 22
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 20
     },
     {
       "name": "Kratos Defense & Security Solutions — Josh Peterson (SVP, MACH-TB) ⭐⭐⭐ $1.45B MA",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 23
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 21
     },
     {
       "name": "Hypersonix Launch Systems USA — David Waterhouse (CEO) ⭐⭐⭐ ACTIVE HyCAT TESTBED ",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 24
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 22
     },
     {
       "name": "UAH Propulsion Research Center — Dr. David Lineberry ⭐⭐ MSFC-ADJACENT PROPULSION",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 25
+      "next_action": "Laura Granados Lopez — work card #3144 on your board",
+      "owner": "Laura Granados Lopez",
+      "card": 3144,
+      "rank": 23
     },
     {
       "name": "NCAR / ACOM — Dr. Eric Apel (Atmospheric Chemistry) ⭐⭐ BRIDGES TO SACSS/NOAA PUR",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 26
+      "next_action": "Karan Vijaya Sankar — work card #3149 on your board",
+      "owner": "Karan Vijaya Sankar",
+      "card": 3149,
+      "rank": 24
     },
     {
       "name": "Sierra Space — Tom Vice (CEO) ⭐⭐ DREAM CHASER PAYLOAD CUSTOMER BRIDGE",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 27
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 25
     },
     {
       "name": "Hermeus — AJ Piplica (CEO) ⭐⭐⭐ ALREADY AT SPACEPORT AMERICA",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 28
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
+      "rank": 26
     },
     {
       "name": "Firehawk Aerospace — Will Edwards (CEO) ⭐⭐ TEXAS NEIGHBOR + AFWERX FUNDED",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
-      "rank": 29
+      "next_action": "Roel Saenz — work card #3156 on your board",
+      "owner": "Roel Saenz",
+      "card": 3156,
+      "rank": 27
     },
     {
       "name": "Phase Four — Dr. Steve Kiser, CEO ⭐⭐ IN-SPACE PROPULSION STARTUP, SERIES C FUNDE",
-      "stage": "NEW",
-      "score": 83,
+      "stage": "RESEARCHING",
+      "score": 88,
       "has_poc": true,
       "why": "funding signal, named POC, high-leverage / conduit",
-      "next_action": "Research their active programs + funding, then draft outreach",
+      "next_action": "Roel Saenz — work card #3158 on your board",
+      "owner": "Roel Saenz",
+      "card": 3158,
+      "rank": 28
+    },
+    {
+      "name": "University of Michigan PEPL / SPAR Institute — Prof. Benjamin Jorns ⭐⭐ $35M INST",
+      "stage": "RESEARCHING",
+      "score": 88,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Laura Granados Lopez — work card #3145 on your board",
+      "owner": "Laura Granados Lopez",
+      "card": 3145,
+      "rank": 29
+    },
+    {
+      "name": "Castelion — Tactical Hypersonic Missile Startup ⭐⭐ TIMELY HYPERSONICS QUALIFIER",
+      "stage": "RESEARCHING",
+      "score": 88,
+      "has_poc": true,
+      "why": "funding signal, named POC, high-leverage / conduit",
+      "next_action": "Finish enrichment (funding/program), then prepare the outreach draft",
       "rank": 30
     }
-  ]
+  ],
+  "past_customers": {
+    "note": "Exos past payload customers, for ICP research only. DO NOT CONTACT anyone on this list; Exos handles past customers directly. Use it to spot patterns and find NEW organizations like these.",
+    "updated": "2026-09-30",
+    "rows": [
+      {
+        "org": "Scentience, Inc.",
+        "segment": "AI / sensor startup",
+        "payload": "Scentience Olfactory Processing Unit",
+        "vehicle": "BLK3 (questionnaire)",
+        "country": "USA",
+        "repeat": false
+      },
+      {
+        "org": "Agronautics LLC",
+        "segment": "Agriculture / plant science startup",
+        "payload": "Agronautics Hopstronautix (plant/hops experiment)",
+        "vehicle": "SARGE (2019 manifest)",
+        "country": "USA",
+        "repeat": false
+      },
+      {
+        "org": "Vector Space Biosciences Inc.",
+        "segment": "Biotech startup",
+        "payload": "Project Astrovex",
+        "vehicle": "questionnaire (2019)",
+        "country": "USA",
+        "repeat": false
+      },
+      {
+        "org": "Uplift Aerospace LLC",
+        "segment": "Commercial / consumer space products",
+        "payload": "Uplift for Good; Space Box",
+        "vehicle": "BLK3 manifest (2024)",
+        "country": "USA",
+        "repeat": false
+      },
+      {
+        "org": "Hopstronautix",
+        "segment": "Consumer / food & beverage",
+        "payload": "Hopstronautix",
+        "vehicle": "BLK3 manifest (2024)",
+        "country": "Germany",
+        "repeat": false
+      },
+      {
+        "org": "NASA",
+        "segment": "Government technology demo (NASA SAA)",
+        "payload": "Vibration damper",
+        "vehicle": "SARGE (2019 manifest)",
+        "country": "USA",
+        "repeat": false
+      },
+      {
+        "org": "Reditus Space",
+        "segment": "In-space manufacturing / reentry startup",
+        "payload": "MP0",
+        "vehicle": "BLK3 (2025 questionnaire)",
+        "country": "USA",
+        "repeat": false
+      },
+      {
+        "org": "Arete",
+        "segment": "K-12 education (high school experiment)",
+        "payload": "GNA High School EXOS Flight Experiment 1",
+        "vehicle": "SARGE (2019 manifest)",
+        "country": "USA",
+        "repeat": false
+      },
+      {
+        "org": "ASTRAX International",
+        "segment": "Memorial / commemorative",
+        "payload": "Memorial pieces",
+        "vehicle": "SARGE (2019 manifest)",
+        "country": "Japan",
+        "repeat": false
+      },
+      {
+        "org": "Beyond Burials",
+        "segment": "Memorial / commemorative",
+        "payload": "Beyond Burials – Stardust 1",
+        "vehicle": "BLK3 manifest (2024)",
+        "country": "USA",
+        "repeat": false
+      },
+      {
+        "org": "Teachers in Space, Inc.",
+        "segment": "STEM education nonprofit",
+        "payload": "Classroom CubeKit Exos01",
+        "vehicle": "SARGE (2019) + BLK3 manifest (2024)",
+        "country": "USA",
+        "repeat": true
+      },
+      {
+        "org": "LunaSonde, Inc.",
+        "segment": "Small satellite startup",
+        "payload": "Gossamer Powered Picosat",
+        "vehicle": "SARGE (2019 manifest)",
+        "country": "USA",
+        "repeat": false
+      },
+      {
+        "org": "Space Lab Tech",
+        "segment": "Space biology hardware",
+        "payload": "(not listed)",
+        "vehicle": "BLK3 manifest (2024)",
+        "country": "USA",
+        "repeat": false
+      },
+      {
+        "org": "ResearchSat",
+        "segment": "Space biology startup",
+        "payload": "ADI-Lab; Suborbital Mission-2",
+        "vehicle": "BLK3 manifest (2024)",
+        "country": "Australia",
+        "repeat": true
+      },
+      {
+        "org": "Deployables Cubed GmbH",
+        "segment": "Space hardware tech demo (deployable structures)",
+        "payload": "D3PP",
+        "vehicle": "BLK3 manifest (2024)",
+        "country": "Germany",
+        "repeat": false
+      },
+      {
+        "org": "Center for Applied Space Technologies (CAST)",
+        "segment": "Space medicine research (nonprofit)",
+        "payload": "CAST SpaceMedicine-4",
+        "vehicle": "SARGE (2019 manifest)",
+        "country": "USA",
+        "repeat": false
+      },
+      {
+        "org": "SpaceBorn United B.V.",
+        "segment": "Space reproductive biology research",
+        "payload": "ARTIS",
+        "vehicle": "BLK3 manifest (2024)",
+        "country": "Netherlands",
+        "repeat": false
+      },
+      {
+        "org": "Toucan Space",
+        "segment": "Space startup",
+        "payload": "Toucan Space 1",
+        "vehicle": "BLK3 manifest (2024)",
+        "country": "France",
+        "repeat": false
+      },
+      {
+        "org": "Purdue University",
+        "segment": "University research (fluid physics, atmospheric)",
+        "payload": "CubeSat holder; PREFER atmospheric monitoring",
+        "vehicle": "SARGE (2019) + BLK3 manifest (2024)",
+        "country": "USA",
+        "repeat": true
+      },
+      {
+        "org": "University of Surrey (Surrey Space Centre)",
+        "segment": "University research (radiation)",
+        "payload": "Radiation detector",
+        "vehicle": "BLK3 manifest (2024)",
+        "country": "UK",
+        "repeat": false
+      },
+      {
+        "org": "University of Central Florida (NASA REDDI)",
+        "segment": "University research, NASA-funded",
+        "payload": "SPACE-2",
+        "vehicle": "SARGE (2019 manifest)",
+        "country": "USA",
+        "repeat": false
+      }
+    ],
+    "takeaways": [
+      "Most past customers are space-tech startups, space-biology/biotech groups, and universities.",
+      "Repeat customers (Purdue, Teachers in Space, ResearchSat) are research and education groups. Look for more like them.",
+      "About a third are international (Germany, Japan, Netherlands, France, UK, Australia).",
+      "Memorial and consumer payloads are a real, smaller niche."
+    ]
+  }
 }

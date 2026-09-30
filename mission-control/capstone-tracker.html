@@ -351,12 +351,26 @@ function renderFunnelQueue(d){
   </div>`;
 }
 
+/* Past payload customers (Phil's master list, student-safe: no contact info) */
+function renderPastCustomers(d){
+  const pc = d.past_customers; if(!pc || !Array.isArray(pc.rows) || !pc.rows.length) return '';
+  const rows = pc.rows.map(r=>`<tr><td><b>${esc(r.org)}</b></td><td>${esc(r.segment)}</td><td>${esc(r.payload)}</td><td>${esc(r.vehicle)}</td><td>${esc(r.country)}</td><td>${r.repeat?'✅ Repeat':''}</td></tr>`).join('');
+  const tk = (pc.takeaways||[]).map(t=>`<li>${esc(t)}</li>`).join('');
+  return `<div class="section">
+    <h2>🛰️ Past Exos Payload Customers</h2>
+    <p class="hint"><b style="color:var(--red,#c0392b)">Research only. Do not contact.</b> ${esc(pc.note||'')}</p>
+    ${tk?`<ul style="margin:8px 0 12px 18px">${tk}</ul>`:''}
+    <div class="tablewrap"><table><thead><tr><th>Organization</th><th>Customer type</th><th>What they flew / planned</th><th>Vehicle (year)</th><th>Country</th><th>Repeat</th></tr></thead><tbody>${rows}</tbody></table></div>
+  </div>`;
+}
+
 function render(d){
   $('app').removeAttribute('aria-busy');
   $('app').innerHTML =
     renderHero(d) +
     renderKpis(d) +
     renderFunnelQueue(d) +
+    renderPastCustomers(d) +
     renderTimeline(d) +
     renderRubric(d) +
     renderScorecard(d);
