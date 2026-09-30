@@ -1,0 +1,37 @@
+{
+  "_note": "External RTO DD data room. Files live in mission-control/dataroom/ and are served ONLY to role=dd_reviewer (and admins) via /api/dataroom-doc. Curated \u2014 nothing here may be ITAR/EAR/CUI or another program's material. To add/remove a doc: drop the file in mission-control/dataroom/ and edit this list.",
+  "title": "Exos Aerospace \u2014 RTO Due-Diligence Data Room",
+  "subtitle": "Confidential \u00b7 Provided under the executed mutual NDA \u00b7 Not an offer of securities",
+  "docs": [
+    {
+      "id": "narrative",
+      "file": "Exos_Canonical_Narrative_2026-09-21.docx",
+      "title": "Exos Canonical Narrative & MTP",
+      "desc": "Purpose, IPS foundation, the de-risking flight-test service, consortium, and AI-native platform."
+    },
+    {
+      "id": "deck",
+      "file": "Exos_Investor_Deck_2026-09-19.pptx",
+      "title": "Investor Deck (tank-led)",
+      "desc": "14-slide investor presentation \u2014 moon-proven tank, roll-up, RTO."
+    },
+    {
+      "id": "model",
+      "file": "EXOS_Financial_Model_Full_Revenue_FIXED_v9_409Afinal.xlsx",
+      "title": "Financial Model (v9, 409A-final)",
+      "desc": "Full revenue model and projections."
+    },
+    {
+      "id": "valuation409a",
+      "file": "EXOS_409A_Eqvista_May2025.pdf",
+      "title": "409A Valuation (Eqvista, May 2025)",
+      "desc": "Independent 409A valuation of record."
+    },
+    {
+      "id": "rtoplan",
+      "file": "Exos_Ainigma_RTO_Progress_2026-09-19.pdf",
+      "title": "RTO Plan & Progress",
+      "desc": "RTO structure, commitments, and working relationship."
+    }
+  ]
+}
