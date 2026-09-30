@@ -165,6 +165,37 @@ def check_crons(cfg, state, now):
         state[label] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
     return results, new_fails
 
+def check_cron_hygiene(state, now):
+    """exo3 r2 cron-hygiene guards (scripts/cron_hygiene.py): credentials in cron prompts (FAIL),
+    enabled cron model not in allowlist (FAIL), anthropic cron with toolsAllow (WARN), unregistered
+    non-transient cron run (WARN). One result per (label, check); state key 'hygiene:<label>'."""
+    results, new_fails = [], []
+    try:
+        import cron_hygiene
+        found = cron_hygiene.check(now)
+    except Exception as e:
+        log(f"cron hygiene checks skipped: {e}")
+        return results, new_fails
+    merged = {}
+    for label, status, why in found:
+        st, ws = merged.get(label, ("OK", []))
+        merged[label] = ("FAIL" if "FAIL" in (st, status) else "WARN", ws + [why])
+    for label, (status, whys) in merged.items():
+        key = "hygiene:" + label
+        results.append((key, status, "; ".join(whys), "John Quinn"))
+        try:
+            import fleet_log
+            fleet_log.event("agent_eval", "govern", "cron_hygiene", outcome=status.lower(), owner="John Quinn",
+                            detail={"agent": label, "why": whys})
+        except Exception:
+            pass
+        if status == "FAIL" and state.get(key, {}).get("status") != "FAIL":
+            new_fails.append((key, "; ".join(whys), "John Quinn"))
+        state[key] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
+    for key in [k for k in state if k.startswith("hygiene:") and k[8:] not in merged]:
+        state[key] = {"status": "OK", "ts": datetime.datetime.now().isoformat(timespec="seconds")}
+    return results, new_fails
+
 def selftest():
     # fixture labels built at runtime so the exo3 gate doesn't read them as new agents
     a, b, c = (".".join(["com", "exos", "fixture-" + x]) for x in "abc")
@@ -193,6 +224,8 @@ def selftest():
     assert cron_telemetry.score_cron(dict(daily, enabled=0), th, now)[0] == "SKIP"
     assert isinstance(cron_telemetry.registry_crons(REGISTRY), dict)
     print("agent_eval selftest: 15/15 pass")
+    import cron_hygiene  # r2 cron-hygiene guards (secrets in prompts, model allowlist, transient crons)
+    cron_hygiene.selftest()
     return 0
 
 def check_registry_drift(state):
@@ -273,6 +306,9 @@ def main():
     cron_results, cron_fails = check_crons(cfg, state, now)
     results += cron_results
     new_fail_alerts += cron_fails
+    hy_results, hy_fails = check_cron_hygiene(state, now)
+    results += hy_results
+    new_fail_alerts += hy_fails
 
     npass = sum(1 for _, s, _, _ in results if s == "OK")
     nwarn = sum(1 for _, s, _, _ in results if s == "WARN")
