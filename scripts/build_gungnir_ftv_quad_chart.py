@@ -10,7 +10,7 @@ from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR
 
-OUT = 'projects/USAF/Gungnir_BLK3-RDRE/03_TACFI_Meeting_2026-09/Gungnir_FTV_Refueling_TACFI_QuadChart_2026-09-28.pptx'
+OUT = 'projects/USAF/Gungnir_BLK3-RDRE/03_TACFI_Meeting_2026-09/Gungnir_FTV_Refueling_TACFI_QuadChart_v2_2026-09-30.pptx'
 IMG = 'assets/blk3_hover.png'
 NAVY = RGBColor(0x1B, 0x3A, 0x5C); GRAY = RGBColor(0x40, 0x40, 0x40); DARK = RGBColor(0x1E, 0x1E, 0x1E)
 LIGHT = RGBColor(0xE8, 0xEE, 0xF4); WHITE = RGBColor(0xFF, 0xFF, 0xFF); ACCENT = RGBColor(0xC8, 0x6A, 0x1E)
@@ -24,14 +24,13 @@ C = {
  'q1_tagline': 'Space logistics needs FTVs that can be refueled and re-maneuvered on orbit. Exos flies the refueling and propulsion hardware in space, recovers it, and flies it again.',
  'q2': [
   ('Objective', ['Fly a <b>non-cryogenic (storable) RDRE</b> on the reusable BLK3 vehicle: hover → flights to 100 km+ → <b>in-space ignition, restart and pulsing</b>.',
-                 'In the same campaign, demonstrate <b>tank-to-tank transfer of storable propellant in microgravity</b>, the refueling function an FTV and depot need.']),
-  ('Innovation', ['Recoverable, re-flyable <b>in-space</b> test of refueling + detonation propulsion. Vacuum ignition/restart and µg propellant feed and transfer cannot be reproduced on a ground stand.',
-                  'Reusable = repeated in-space test points per campaign, not one expendable shot. Fast turnaround; pad + power/comms only.']),
-  ('Operational Impact', ['Refuelable FTVs = <b>maneuver without regret</b> for USSF mobility & logistics. Higher-efficiency, compact propulsion + on-orbit resupply extends vehicle life.',
-                          'Sustainment: refuel and service on orbit rather than dispose by reentry. Commercial stations become <b>refueling depots</b>.']),
-  ('Deliverables', ['1 hover + 2 flights to 100 km+ with in-space RDRE firings and a µg transfer demo; flight dataset (thrust, Isp, restart, transfer mass/flow) + final report.']),
+                 'Same campaign: <b>tank-to-tank storable-propellant transfer in microgravity</b>, the refueling function FTVs and depots need.']),
+  ('Innovation', ['Recoverable <b>in-space</b> test of refueling + detonation propulsion: vacuum ignition/restart and µg feed/transfer can\'t be done on a ground stand.',
+                  '<b>Beyond HVRR/Hermes</b> (atmospheric VTVL hops): GUNGNIR takes the RDRE to vacuum, coupled to µg refueling. Reusable = repeated in-space test points.']),
+  ('Operational Impact', ['Refuelable FTVs = <b>maneuver without regret</b> for USSF mobility & logistics; refuel and service on orbit instead of reentry disposal; stations as <b>refueling depots</b>.']),
+  ('Deliverables', ['1 hover + 2 flights to 100 km+ (in-space RDRE firings + µg transfer); flight dataset (thrust, Isp, restart, transfer) + final report.']),
  ],
- 'enduser': '<b>End User:</b> AFRL/RQRI (Edwards)  ·  <b>Customer:</b> AFRL — Dr. M. Harvazinski; J. Burr (RDRE lead)',
+ 'enduser': '<b>End User:</b> AFRL/RJPE (Edwards)  ·  <b>Customer:</b> AFRL — Dr. M. Harvazinski; J. Burr (RDRE lead)',
  'engine_note': 'Engine: government-furnished / candidate storable RDRE (GTL-built), selected by program trade study. Tanks: Type V composite heritage (Scorpius, flew on IM Odysseus & Athena).',
  'cost_hdr': ['$M', 'Year 1', 'Year 2', 'Total'],
  'cost_rows': [
