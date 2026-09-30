@@ -1,6 +1,6 @@
 {
  "generated": "2026-09-25T23:19:20.307166-05:00",
- "total": 215,
+ "total": 217,
  "standing": 112,
  "ephemeral": 18,
  "service": 5,
@@ -3109,13 +3109,13 @@
    "schedule": "cron '5 6 * * *' America/Chicago",
    "purpose": "Decisions Matrix Daily Update (MC task R-017): surfaces new decisions from blocked/overdue tasks, auto-closes decisions it judges resolved, DMs Jon a digest.",
    "stack_layer": "DECIDE",
-   "autonomy_tier": "Execute-within-bounds (acts WITHOUT human confirm; see human_confirm_gap)",
+   "autonomy_tier": "Propose-only (AI proposes, human confirms): token-authenticated closes become proposals; a human session Confirm closes",
    "human_owner": "John Quinn",
-   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: reads Supabase tasks (service key) + MC decisions API; POSTs up to 3 new decisions; POSTs 'Auto-closed' answers to /api/decisions/answer; mail_search evidence check; DMs Jon; announce delivery off (mode none); any message is sent by the agent itself via the message tool",
+   "permission_envelope": "agent default tools (main agent tools.profile=full); prompted actions: reads Supabase tasks + MC decisions API; POSTs up to 3 new decisions; PROPOSES closes via /api/decisions/answer (server records proposedAnswer + auto_proposed, card stays open — mission-control/lib/decision-answer.js, e13a807); MC token read from mission-control/data/.decisions-token (never pasted); mail_search evidence check; DMs Jon",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads Supabase tasks (service key) + MC decisions API; POSTs up to 3 new decisions; POSTs 'Auto-closed' answers to /api/decisions/answer; mail_search evidence check; DMs Jon",
-   "escalation": "NO human confirm before its closing/changing action (audit gap, reported to Jon 2026-09-29); output: announce delivery off (mode none); any message is sent by the agent itself via the message tool; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:decisions-matrix-daily-update-r-017'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:decisions-matrix-daily-update-r-017'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "escalation": "Every close is a proposal shown on the card; Jon/human clicks ✓ Confirm to close (server-enforced, e13a807). Guard FAIL -> agent_eval deduped alert; run failure -> consecutive_errors -> agent_eval FAIL",
+   "eval_suite": "scripts/decision_answer_selftest.js (7/7, replays R-017 STEP 4 POST); scripts/cron_prompt_guard.py (a7e78d6/5086ef1): hourly-capable deterministic prompt guard — forbidden autonomous wording or a pasted token/Supabase key -> FAIL; propose-only wording missing -> FAIL; prompt drift -> WARN, FAIL if a cron-run session used the cron tool in the window; --selftest 18/18 replays the pre-fix prompts; agent_eval hourly liveness (config/agent-evals.json)",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:decisions-matrix-daily-update-r-017'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs + cron_prompt_guard fleet_log events (event 'cron_prompt_guard', class govern, detail.agent=<label>) in logs/fleet-events.jsonl",
    "reusability_scope": "decision-surfacing pattern reusable for any board; must gain a human-confirm step before reuse",
    "risk_tier": "HIGH",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -3124,7 +3124,17 @@
    "cron_name": "Decisions Matrix Daily Update (R-017)",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "human_confirm_gap": "LLM closes open MC decisions (STEP 3b/STEP 4) on its own judgement of email evidence or task state, with no human confirm"
+   "human_confirm_gap": "CLOSED 2026-09-30 (pending D-7281852): server-side propose-only gate + propose-only prompt",
+   "prompt_embeds_credential": false,
+   "change_log": [
+    {
+     "date": "2026-09-30",
+     "by": "r2-confirm-gaps (exo3 r2 worker)",
+     "change": "Propose-only: server gate e13a807 (token closes -> proposals) + prompt 'PROPOSE closes', token read from file; guarded by cron_prompt_guard",
+     "approver": "John Quinn",
+     "status": "pending Jon approval — D-7281852"
+    }
+   ]
   },
   {
    "label": "cron:sbir-spacewerx-topic-fit-watch-exos-filtered",
@@ -3340,13 +3350,13 @@
    "schedule": "cron '0 6 * * 0'",
    "purpose": "Weekly self-improvement implementer: applies meta-eval recommendations to cron prompts, schedules and workspace files; escalates the rest to the Decisions inbox.",
    "stack_layer": "LEARN",
-   "autonomy_tier": "Execute-within-bounds (acts WITHOUT human confirm; see human_confirm_gap)",
+   "autonomy_tier": "Propose-only (AI proposes, human confirms)",
    "human_owner": "John Quinn",
-   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: cron tool get/update on other jobs' prompts and schedules; may retire duplicate jobs; edits workspace files; POSTs decisions (token embedded in prompt); DMs Jon; announces final output to Jon DM",
+   "permission_envelope": "agent default tools (main agent tools.profile=full); prompted actions: reads meta-eval output; WRITES proposals to reports/self-improvement/ only; files Decision cards (token read from mission-control/data/.decisions-token); must NOT use cron edit/update/remove or retire jobs (guard FAIL if the wording returns, FAIL if a cron-run session uses the cron tool while a guarded prompt changes); DMs Jon",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: cron tool get/update on other jobs' prompts and schedules; may retire duplicate jobs; edits workspace files; POSTs decisions (token embedded in prompt); DMs Jon",
-   "escalation": "NO human confirm before its closing/changing action (audit gap, reported to Jon 2026-09-29); output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:agent-self-improvement-implementer-weekly'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:agent-self-improvement-implementer-weekly'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "escalation": "Every proposed prompt/schedule change or retirement goes to Jon as a Decision card; a human applies it. Guard FAIL -> agent_eval deduped alert",
+   "eval_suite": "scripts/cron_prompt_guard.py (a7e78d6/5086ef1): hourly-capable deterministic prompt guard — forbidden autonomous wording or a pasted token/Supabase key -> FAIL; propose-only wording missing -> FAIL; prompt drift -> WARN, FAIL if a cron-run session used the cron tool in the window; --selftest 18/18 replays the pre-fix prompts; agent_eval hourly liveness (config/agent-evals.json 'cron:agent-self-improvement-implementer-weekly'); output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory)",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:agent-self-improvement-implementer-weekly'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs + cron_prompt_guard fleet_log events (event 'cron_prompt_guard', class govern, detail.agent=<label>) in logs/fleet-events.jsonl",
    "reusability_scope": "fleet-wide learning loop (applies to any agent class)",
    "risk_tier": "HIGH",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -3355,8 +3365,17 @@
    "cron_name": "Agent Self-Improvement Implementer (Weekly)",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "human_confirm_gap": "LLM changes other agents' prompts/schedules and can retire a job ('IMPLEMENT NOW') with no human confirm and no eval",
-   "prompt_embeds_credential": true
+   "human_confirm_gap": "CLOSED 2026-09-30 (pending D-7281853): propose-only prompt; no cron edits/retirements by the agent",
+   "prompt_embeds_credential": false,
+   "change_log": [
+    {
+     "date": "2026-09-30",
+     "by": "r2-confirm-gaps (exo3 r2 worker)",
+     "change": "Propose-only prompt: writes reports/self-improvement/ + Decision cards; no longer edits/retires other crons; token read from file",
+     "approver": "John Quinn",
+     "status": "pending Jon approval — D-7281853"
+    }
+   ]
   },
   {
    "label": "cron:apac-deal-flow-weekly-scan",
@@ -3365,13 +3384,13 @@
    "schedule": "cron '0 18 * * 0' America/Chicago",
    "purpose": "Weekly APAC deal-flow scan: appends new candidates to the APAC opportunities data, restarts Mission Control, emails Toshi a digest.",
    "stack_layer": "SENSE",
-   "autonomy_tier": "Execute-within-bounds (acts WITHOUT human confirm; see human_confirm_gap)",
+   "autonomy_tier": "Propose-only (AI proposes, human confirms): candidates are staged for Toshi to vet",
    "human_owner": "John Quinn",
-   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: main-session system event; writes mission-control/data/apac-opportunities.json; launchctl kickstart of com.exos.missioncontrol; emails toshihisa@exosaero.com; no announce delivery (main-session system event; replies in the target session)",
-   "memory_boundary": "enqueued into the main agent session (shares Jon's main-session context); data touched: main-session system event; writes mission-control/data/apac-opportunities.json; launchctl kickstart of com.exos.missioncontrol; emails toshihisa@exosaero.com",
-   "escalation": "NO human confirm before its closing/changing action (audit gap, reported to Jon 2026-09-29); output: no announce delivery (main-session system event; replies in the target session); run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:apac-deal-flow-weekly-scan'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert.",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:apac-deal-flow-weekly-scan'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "permission_envelope": "agent default tools (main-session system event); prompted actions: web search; READS mission-control/data/apac-opportunities.json; WRITES proposals only to mission-control/data/apac-candidates-staging.json; NO MC restart; emails Toshi (internal) the staged digest",
+   "memory_boundary": "enqueued into the main agent session (shares Jon's main-session context); data touched: reads apac-opportunities.json; writes apac-candidates-staging.json; emails toshihisa@exosaero.com",
+   "escalation": "Toshi/John promote vetted staged candidates into the live APAC file by hand. Guard FAIL (restart/auto-append wording, or a new auto-scan record in the live file) -> agent_eval deduped alert",
+   "eval_suite": "scripts/cron_prompt_guard.py (a7e78d6/5086ef1): hourly-capable deterministic prompt guard — forbidden autonomous wording or a pasted token/Supabase key -> FAIL; propose-only wording missing -> FAIL; prompt drift -> WARN, FAIL if a cron-run session used the cron tool in the window; --selftest 18/18 replays the pre-fix prompts + live-file check (new source:'auto-scan' record in apac-opportunities.json beyond APAC-010..013 -> FAIL); agent_eval hourly liveness",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:apac-deal-flow-weekly-scan'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs + cron_prompt_guard fleet_log events (event 'cron_prompt_guard', class govern, detail.agent=<label>) in logs/fleet-events.jsonl",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "HIGH",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -3380,7 +3399,16 @@
    "cron_name": "APAC deal-flow weekly scan",
    "model": "agent default",
    "ai_in_critical_path": true,
-   "human_confirm_gap": "LLM appends records to MC APAC data and restarts production Mission Control with no human confirm (entries are Watch/$0, but the restart is unconditional)"
+   "human_confirm_gap": "CLOSED 2026-09-30 (pending D-7281854): stages proposals; no live writes, no MC restart",
+   "change_log": [
+    {
+     "date": "2026-09-30",
+     "by": "r2-confirm-gaps (exo3 r2 worker)",
+     "change": "Stage-only: writes apac-candidates-staging.json (5086ef1), no live-file writes, no MC restart; guard + live-file check",
+     "approver": "John Quinn",
+     "status": "pending Jon approval — D-7281854"
+    }
+   ]
   },
   {
    "label": "cron:nasa-sbir-cryo-phase-i-appendix-watch",
@@ -3573,13 +3601,13 @@
    "schedule": "cron '30 2 1-31/2 * *'",
    "purpose": "Overnight Resolver Opus escalation pass (disabled): resolves items the Sonnet pass escalated.",
    "stack_layer": "DECIDE",
-   "autonomy_tier": "Execute-within-bounds (acts WITHOUT human confirm; see human_confirm_gap)",
+   "autonomy_tier": "Propose-only (AI proposes, human confirms) (DISABLED)",
    "human_owner": "John Quinn",
-   "permission_envelope": "toolsAllow 31 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes; NO exec); prompted actions: writes drafts, MC cards, opus-escalation-queue.json; POSTs decisions (token embedded in prompt); DMs Jon; announces final output to Jon DM",
+   "permission_envelope": "all agent tools (toolsAllow cleared 2026-09-30); prompted actions: reads opus-escalation-queue.json + context; drafts to drafts/; proposals to reports/overnight-resolver/YYYY-MM-DD-opus-proposals.md + ONE consolidated Decision card; one-way doors as individual cards (token read from .decisions-token); DMs Jon. NO MC card edits",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: writes drafts, MC cards, opus-escalation-queue.json; POSTs decisions (token embedded in prompt); DMs Jon",
-   "escalation": "NO human confirm before its closing/changing action (audit gap, reported to Jon 2026-09-29); output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:overnight-resolver-opus-escalation'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "escalation": "All MC changes proposed; a human confirms. Stays disabled",
+   "eval_suite": "disabled: scripts/cron_prompt_guard.py (a7e78d6/5086ef1): hourly-capable deterministic prompt guard — forbidden autonomous wording or a pasted token/Supabase key -> FAIL; propose-only wording missing -> FAIL; prompt drift -> WARN, FAIL if a cron-run session used the cron tool in the window; --selftest 18/18 replays the pre-fix prompts; agent_eval registry drift; liveness resumes if re-enabled",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:overnight-resolver-opus-escalation'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs + cron_prompt_guard fleet_log events (event 'cron_prompt_guard', class govern, detail.agent=<label>) in logs/fleet-events.jsonl",
    "reusability_scope": "decision-surfacing pattern reusable for any board; must gain a human-confirm step before reuse",
    "risk_tier": "HIGH",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -3588,8 +3616,17 @@
    "cron_name": "Overnight Resolver — Opus Escalation",
    "model": "anthropic/claude-opus-4-8",
    "ai_in_critical_path": true,
-   "human_confirm_gap": "LLM executes 'reversible' MC changes (status/owner/priority, dedupe/merge) and 'executes or stages' unblock actions with no human confirm (job disabled)",
-   "prompt_embeds_credential": true
+   "human_confirm_gap": "CLOSED 2026-09-30 (pending D-7281855): propose-only prompt; no pasted credentials",
+   "prompt_embeds_credential": false,
+   "change_log": [
+    {
+     "date": "2026-09-30",
+     "by": "r2-confirm-gaps (exo3 r2 worker)",
+     "change": "Propose-only prompt ('execute or stage' -> draft/propose); MC token read by name (pasted token removed); toolsAllow cleared; kept DISABLED",
+     "approver": "John Quinn",
+     "status": "pending Jon approval — D-7281855"
+    }
+   ]
   },
   {
    "label": "cron:heliotech-speaker-slot-teasley-follow-up",
@@ -3681,7 +3718,17 @@
    "cron_id": "3299389d-ca8d-498c-9a6e-0afd27a6faa3",
    "cron_name": "VFW Tundra AMP PowerStep — RFQ follow-up",
    "model": "agent default",
-   "ai_in_critical_path": true
+   "ai_in_critical_path": true,
+   "pending_retirement": "pending Jon approval — D-7281856",
+   "change_log": [
+    {
+     "date": "2026-09-30",
+     "by": "r2-confirm-gaps (exo3 r2 worker)",
+     "change": "Deletion requested by Jon in #exomac-system 9/30 ('Delete the sixth'); left in place (already disabled) pending confirm; on confirm: openclaw cron rm + retire this entry",
+     "approver": "John Quinn",
+     "status": "pending Jon approval — D-7281856"
+    }
+   ]
   },
   {
    "label": "cron:exomac-system-wake",
@@ -4014,13 +4061,13 @@
    "schedule": "cron '0 23 * * *' America/Chicago",
    "purpose": "Overnight Resolver (disabled): works the top-15 open MC items, executes reversible board changes, escalates one-way doors to Decisions.",
    "stack_layer": "DECIDE",
-   "autonomy_tier": "Execute-within-bounds (acts WITHOUT human confirm; see human_confirm_gap)",
+   "autonomy_tier": "Propose-only (AI proposes, human confirms) (DISABLED)",
    "human_owner": "John Quinn",
-   "permission_envelope": "toolsAllow 31 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes; NO exec); prompted actions: Supabase PATCH on tasks (state/owner/priority); dedupe/merge; POST/PATCH decisions (token embedded in prompt); writes drafts + usage log; DMs Jon; announces final output to Jon DM",
+   "permission_envelope": "all agent tools (toolsAllow cleared 2026-09-30 so a re-enable doesn't hit the claude-cli trap); prompted actions: Supabase tasks GET only (key read by name from ~/.openclaw/secrets.json supabase_service_role_key); drafts to drafts/; proposals to reports/overnight-resolver/YYYY-MM-DD-proposals.md + ONE consolidated Decision card; one-way doors as individual cards (token read from .decisions-token); DMs Jon. NO board writes",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: Supabase PATCH on tasks (state/owner/priority); dedupe/merge; POST/PATCH decisions (token embedded in prompt); writes drafts + usage log; DMs Jon",
-   "escalation": "NO human confirm before its closing/changing action (audit gap, reported to Jon 2026-09-29); output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:overnight-resolver'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "escalation": "All board changes proposed; a human confirms via the consolidated Decision card. Stays disabled (superseded by com.exos.overnight-resolver)",
+   "eval_suite": "disabled: scripts/cron_prompt_guard.py (a7e78d6/5086ef1): hourly-capable deterministic prompt guard — forbidden autonomous wording or a pasted token/Supabase key -> FAIL; propose-only wording missing -> FAIL; prompt drift -> WARN, FAIL if a cron-run session used the cron tool in the window; --selftest 18/18 replays the pre-fix prompts; agent_eval registry drift; liveness resumes if re-enabled",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:overnight-resolver'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs + cron_prompt_guard fleet_log events (event 'cron_prompt_guard', class govern, detail.agent=<label>) in logs/fleet-events.jsonl",
    "reusability_scope": "decision-surfacing pattern reusable for any board; must gain a human-confirm step before reuse",
    "risk_tier": "HIGH",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -4029,8 +4076,17 @@
    "cron_name": "Overnight Resolver",
    "model": "anthropic/claude-sonnet-4-6",
    "ai_in_critical_path": true,
-   "human_confirm_gap": "LLM changes task state/owner/priority and merges duplicates in Supabase with no human confirm (job disabled)",
-   "prompt_embeds_credential": true
+   "human_confirm_gap": "CLOSED 2026-09-30 (pending D-7281855): propose-only prompt; no pasted credentials",
+   "prompt_embeds_credential": false,
+   "change_log": [
+    {
+     "date": "2026-09-30",
+     "by": "r2-confirm-gaps (exo3 r2 worker)",
+     "change": "Propose-only prompt; MC token + Supabase key read by name (pasted token/key removed); toolsAllow cleared; kept DISABLED",
+     "approver": "John Quinn",
+     "status": "pending Jon approval — D-7281855"
+    }
+   ]
   },
   {
    "label": "cron:exos-mission-control-weekly-review",
@@ -4154,6 +4210,50 @@
    "risk_tier": "LOW",
    "change_log": [
     "2026-09-30 created; applied: 14 companies + 27 contacts inserted, 1 contact merged (Kankelborg)"
+   ]
+  },
+  {
+   "label": "cron-class:transient-agent-reminder",
+   "script": "any OpenClaw cron with schedule kind 'at' + deleteAfterRun (created ad hoc by an agent/session, e.g. 'remind Jon at 3pm')",
+   "kind": "openclaw-cron-class",
+   "schedule": "one-shot; due within 31 days; deletes itself after its run",
+   "purpose": "Class spec for transient one-time reminder crons so each ad-hoc reminder does not need its own registry entry and does not trip hourly registry drift alerts.",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Recommends-with-Context",
+   "human_owner": "John Quinn",
+   "permission_envelope": "one agentTurn run on the main agent (tools.profile=full unless the job sets toolsAllow); intended scope: post ONE reminder/nudge to the requesting Discord DM/channel. No external email, no cron/gateway edits, no MC state change. Anything beyond a reminder must be a registered cron.",
+   "memory_boundary": "fresh isolated session per run; no carry-over",
+   "escalation": "reminder goes to the requester; run failure -> OpenClaw failure alert; misuse (recurring or kept job) -> agent_eval registry drift alert",
+   "eval_suite": "deterministic class guard: agent_eval.is_transient() (schedule 'at' + delete_after_run + due <=31d) — anything else is drift (agent_eval --selftest 18/18); cron_hygiene.check(): credential-in-prompt FAIL + model allowlist FAIL + unregistered non-transient run WARN applies to class members too; config/agent-evals.json liveness does not apply (one run each)",
+   "telemetry": "scripts/cron_telemetry.py -> logs/fleet-events.jsonl cron_run events (registered:false, class-matched by cron_hygiene.transient_class_match); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "reusability_scope": "all ad-hoc one-shot reminder crons",
+   "risk_tier": "LOW",
+   "envelope_source": "r2-cron-hygiene 2026-09-30: class definition, enforced by agent_eval.cron_drift/is_transient (commit b7d2dae)",
+   "enabled": true,
+   "ai_in_critical_path": false,
+   "change_log": [
+    "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): class created; agent_eval cron_drift exempts class members only while this entry is complete (fail-closed); approver John Quinn; status pending Jon approval — D-7281857"
+   ]
+  },
+  {
+   "label": "com.exos.diu-hycat-cso-watch",
+   "script": "diu_hycat_cso_watch.py",
+   "kind": "recurring",
+   "schedule": "daily 07:10, 12:10, 17:10 (StartCalendarInterval), wrapped by run_logged.py",
+   "purpose": "diu_hycat_cso_watch.py — deterministic watcher for a DIU HyCAT / hypersonic-test CSO (MC #2488, BD-032). Parses diu.mil open solicitations + SAM.gov keyword sweep; relevant NEW item -> Discord DM to Jon; unrelated openings logged to state only. Replaced weekly LLM cron ad2b3471 (6e21acd).",
+   "stack_layer": "SENSE",
+   "autonomy_tier": "Recommends-with-Context",
+   "human_owner": "John Quinn",
+   "permission_envelope": "HTTP GET www.diu.mil + api.sam.gov (reads sam_api_key from ~/.openclaw/secrets.json); Discord DM to Jon via `openclaw message send` (internal only); writes data/diu_hycat_cso_watch_state.json; no email, no external sends, no MC writes",
+   "memory_boundary": "workspace state file data/diu_hycat_cso_watch_state.json",
+   "escalation": "new relevant CSO -> Discord DM to Jon; crash -> agent_eval FAIL alert to the system channel",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json 'com.exos.diu-hycat-cso-watch': loaded + LastExitStatus=0 -> else FAIL/escalate; staleness > 2.5x cadence 50400s -> WARN); run_logged.py records every run",
+   "telemetry": "scripts/run_logged.py -> logs/runs + fleet_log; stdout/stderr /Users/exomac/.openclaw/logs/diu-hycat-cso-watch.log",
+   "reusability_scope": "reusable deterministic solicitation-watch pattern (page parse + SAM keyword sweep + silent-unless-hit)",
+   "risk_tier": "MED",
+   "envelope_source": "r2-cron-hygiene 2026-09-30: read plist + scripts/diu_hycat_cso_watch.py by hand (urllib GET only; one openclaw message send to Jon DM)",
+   "change_log": [
+    "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): registered (was live since 6e21acd, 9/30 08:12, unregistered; drift alert every hour from 09:05); approver John Quinn; status pending Jon approval — D-7281857"
    ]
   }
  ],
