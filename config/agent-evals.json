@@ -859,6 +859,12 @@
       "fail_grace": 8,
       "owner": "Exo (infra) / John Quinn"
     },
+    "com.exos.lan-tunnel": {
+      "cadence_s": 86400,
+      "warn_grace": 3,
+      "fail_grace": 8,
+      "owner": "Exo (infra) / John Quinn"
+    },
     "com.exos.warm-ollama": {
       "cadence_s": 86400,
       "warn_grace": 3,

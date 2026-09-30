@@ -1,9 +1,9 @@
 {
  "generated": "2026-09-25T23:19:20.307166-05:00",
- "total": 219,
+ "total": 220,
  "standing": 112,
  "ephemeral": 18,
- "service": 5,
+ "service": 6,
  "agents": [
   {
    "label": "com.exos.assignment-notifier",
@@ -4422,6 +4422,24 @@
    "change_log": [
     "2026-09-30 r2-controlled-docs (exo3 r2, Jon directive 2026-09-29 22:38): created + registered; CM register/drift check D-7281870, data-room lock D-7281871, numbering scheme D-7281872, doc owners D-7281873, controlled data on Mac D-7281874; approver John Quinn; status pending Jon approval — D-7281870"
    ]
+  },
+  {
+   "label": "com.exos.lan-tunnel",
+   "script": "",
+   "kind": "service",
+   "schedule": "persistent",
+   "purpose": "Connector for the Atomus-org 'Exos Exomac tunnel' (337a6040): the Cloudflare One/WARP private-network route 192.168.143.0/24 that company laptops use to reach MC at 192.168.143.216:8080 and office RDP. It was on the Mac mini and was dropped at the 9/28 Studio cutover. The tunnel was down from 9/28 21:54 CDT to 9/30 15:28 CDT, and every enrolled laptop lost MC. Restored on the Studio 2026-09-30.",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "Exo (infra) / John Quinn",
+   "permission_envelope": "cloudflared token-run connector; routes WARP-enrolled Exos devices to 192.168.143.0/24; token file ~/.cloudflared/exos-exomac-lan.token (0600); no data access of its own",
+   "memory_boundary": "none (network connector only)",
+   "escalation": "Decisions board / Jon inbox; route/device policy changes are Atomus-managed",
+   "eval_suite": "agent_eval hourly liveness (service): FAIL if not loaded or LastExitStatus!=0; WARN if log idle > 3x 86400s",
+   "telemetry": "logs/lan-tunnel.log (cloudflared connection events)",
+   "reusability_scope": "Exos infra. Any MC host migration MUST move this connector (it was missed on 9/28).",
+   "risk_tier": "MED",
+   "envelope_source": "hand-written 2026-09-30 from plist + Cloudflare API (tunnel 337a6040, route 192.168.143.0/24)"
   }
  ],
  "eval_wave_1": {
