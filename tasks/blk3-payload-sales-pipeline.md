@@ -2526,3 +2526,94 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **ERAU next steps (they own):** (a) Jeremy Ernst meets the **CSAR Executive Director this afternoon** re: capabilities/opportunities for the sampling partnership; (b) Ernst will **generate questions from ERAU researchers and email them directly to Exos**.
 - **Exos owes (Owner Lizi/John):** confirm ERAU interest → **name ERAU in the NIH Sept 8 briefing**; send TRL-payload **pricing/booking** info (website configurator); respond to Ernst's forthcoming questions; capture Ernst + Tyler emails.
 - **KEEP SEPARATE from Siwei Fan (per Lizi 8/24):** the Siwei Fan cryo-propellant-gauging thread (FANS2@erau.edu) is a **different payload/project** — do NOT merge it under Ernst or route it through this institutional thread. Two distinct ERAU engagements. EXPORT: US university → marketing/PUG releasable; atmospheric-sampling spec + hypersonics tech are export-sensitive — keep to PUG, route technical data through Jon + export screen.
+
+### Enriched Prospects — 2026-09-30 (Montana Spaceport track — VERIFIED POCs, MC #3287)
+_Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet licensed) Montana spaceport operates. Intros via Montana Spaceport (Edgar, route-through-Jon) → Exos payload team (Lizi). POCs verified on public primary sources 2026-09-30; full sources in config/montana-payload-prospects.json + CRM tag `montana-payload-prospect`. PROSPECTS only — not in payload-customers.json. No free/in-kind flights._
+
+#### 1. Montana State University — SSEL (Space Science & Engineering Lab, Bozeman)
+- **Segment:** Montana T1 — University
+- **POC:** Larry Springer (Senior Research Engineer, Program Manager (SSEL), larry.springer@montana.edu); Charles Kankelborg (Professor (Physics); SSEL faculty; PI of the MOSES/ESIS sounding-rocket instruments, kankel@montana.edu); Brock J. LaMeres, Ph.D., PE (Professor, Electrical & Computer Engineering; Director, Montana Engineering Education Research Center; Boeing Professor; RadPC PI, email not public)
+- **Why BLK3 fits:** Strong fit. They are repeat suborbital and sounding-rocket users. Pitch: a reusable suborbital ride with intact hardware recovery for instrument and electronics qualification before orbital/lunar flights, e.g. FURST/ESIS-II subsystem pathfinders and RadPC follow-ons.
+- **Funding:** NASA Flight Opportunities / TechRise, Montana Space Grant + NASA EPSCoR (Research/ISS/Flight calls), NASA SBIR/STTR (university partner)
+- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot. UTD capstone lead card #3143 already exists for SSEL — keep one thread.
+
+#### 2. MSGC — Montana Space Grant Consortium / Montana NASA EPSCoR (BOREALIS)
+- **Segment:** Montana T1 — University
+- **POC:** Angela Des Jardins, Ph.D. (Director, Montana Space Grant Consortium and Director, Montana NASA EPSCoR, angela.desjardins@montana.edu); Amy Brown (Deputy Director, Montana NASA EPSCoR, amy.brown11@montana.edu); Chris (Christina) Flynn (Program Coordinator, MSGC / Montana NASA EPSCoR, christina.flynn1@montana.edu)
+- **Why BLK3 fits:** Strong channel partner. BOREALIS students are the natural next step from balloon to suborbital rocket payloads, and the EPSCoR Research/ISS/Flight calls could fund Montana PI payloads on BLK3. Also a gateway to all 23 member campus reps.
+- **Funding:** NASA Flight Opportunities / TechRise, Montana Space Grant + NASA EPSCoR (Research/ISS/Flight calls), NASA SBIR/STTR (university partner)
+- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+
+#### 3. MTech — Montana Technological University (Butte)
+- **Segment:** Montana T1 — University
+- **POC:** Bryce Hill, Ph.D. (Professor and Department Head, Electrical Engineering, bhill@mtech.edu); Katie Hailer, Ph.D. (Vice Chancellor for Research and Dean of the Graduate School, khailer@mtech.edu); Xiaobing Zhou, Ph.D. (Professor of Geophysics, Geological Engineering; MSGC Campus Representative for Montana Tech, xzhou@mtech.edu)
+- **Why BLK3 fits:** Moderate, emerging fit. The RockOn! team is a natural candidate for a follow-on student rocket payload (RockSat-C-style) on BLK3, and a sensor/instrument qualification flight is plausible. Lower priority than MSU.
+- **Funding:** NASA Flight Opportunities / TechRise, Montana Space Grant + NASA EPSCoR (Research/ISS/Flight calls), NASA SBIR/STTR (university partner)
+- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+
+#### 4. UMontana — University of Montana (Missoula)
+- **Segment:** Montana T1 — University
+- **POC:** Paul Lukacs, Ph.D. (Interim Vice President for Research and Creative Scholarship (from July 2, 2026), paul.lukacs@umontana.edu); Jeremy Crowley (Director, Autonomous Aerial Systems Office (AASO), jeremy.crowley@mso.umt.edu); Chani (Chantanelle) Nava (MSGC Campus Representative, University of Montana - Missoula, chantanelle.nava@mso.umt.edu)
+- **Why BLK3 fits:** Weak to moderate. Approach via the VPR's office to surface any microgravity or life-science PIs, and via AASO for sensor/remote-sensing payload testing. Do not claim prior UM space-flight heritage. Note that search results often conflate UM with MSU's SSEL.
+- **Funding:** NASA Flight Opportunities / TechRise, Montana Space Grant + NASA EPSCoR (Research/ISS/Flight calls), NASA SBIR/STTR (university partner)
+- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+
+#### 5. Salish Kootenai College (Pablo, MT — tribal college)
+- **Segment:** Montana T4 — Tribal college / education
+- **POC:** Matt Seeley (Dean, Natural Resources & Sciences Division, matt_seeley@skc.edu); Lee Slater (Faculty; Department Contact, Information Technology, Engineering & Computer Science (ITECS), lee_slater@skc.edu)
+- **Why BLK3 fits:** Education/outreach fit. Candidate for a sponsored student payload, e.g. through MSGC/NASA MUREP funding. Note: MSGC currently lists SKC as 'Seeking a Representative'. Per policy, no free flights: this must be sold or grant-funded.
+- **Funding:** Montana Space Grant / NASA MUREP, EPSCoR, sponsor co-funding (no free flights)
+- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+
+#### 6. Chief Dull Knife College (Lame Deer, MT — tribal college)
+- **Segment:** Montana T4 — Tribal college / education
+- **POC:** Jim Bertin (Math Instructor; rocket team advisor; MSGC Campus Representative, jbertin@cdkc.edu)
+- **Why BLK3 fits:** Education fit. A student payload step-up from high-power rocketry to suborbital, if funded (MSGC/NASA). Low revenue priority.
+- **Funding:** Montana Space Grant / NASA MUREP, EPSCoR, sponsor co-funding (no free flights)
+- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+
+#### 7. Bridger Photonics (Bozeman)
+- **Segment:** Montana T2 — Photonics/Sensors
+- **POC:** Ben Little (Chief Executive Officer, email not public); Dr. Peter Roos (Chief Innovation Officer (founder), email not public); Ryan Sullivan (Chief Technology Officer, email not public)
+- **Why BLK3 fits:** No space or orbital heritage was found on its public pages. Its lidar's optical amplifier came from MIT Lincoln Laboratory work. The only Exos angle is a future satellite or high-altitude methane-sensing push, where suborbital testing of the lidar or parts could help. Treat as a speculative relationship target and approach through the CTO or Chief Innovation Officer.
+- **Funding:** NASA SBIR/STTR, NASA Flight Opportunities (TechFlights), DoD SBIR, customer IR&D
+- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+
+#### 8. Resonon (Bozeman)
+- **Segment:** Montana T2 — Photonics/Sensors
+- **POC:** Rand Swanson (CEO & Co-Founder, email not public)
+- **Why BLK3 fits:** A good match for the Exos value case. Suborbital flights with recovered hardware could flight-qualify or test new space and high-altitude hyperspectral heads before CubeSat or satellite missions. It could also serve as a demo sensor on a BLK3 flight. The company is small (about 11 staff), so pitch it as a low-cost test or co-marketing opportunity.
+- **Funding:** NASA SBIR/STTR, NASA Flight Opportunities (TechFlights), DoD SBIR, customer IR&D
+- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+
+#### 9. Spectrum Lab — Montana State University (Bozeman)
+- **Segment:** Montana T2 — Photonics/Sensors
+- **POC:** Krishna Mohan Rupavatharam (Director, MSU Spectrum Lab, krishna.rupavatharam@montana.edu); Tamara Moe (Research Program & Grants Manager, MSU Spectrum Lab, tamara.moe@montana.edu)
+- **Why BLK3 fits:** Spectrum Lab could put a suborbital demo of an RF-photonic or spectral sensor, or of radiation- and vibration-qualified photonics, into a grant proposal. Pitch it as a university research flight. S2's last public news is Aug 2020 (DARPA award), so its current activity level is unverified. It shares an address (2310 University Way, Bozeman) with Bridger's building complex.
+- **Funding:** NASA SBIR/STTR, NASA Flight Opportunities (TechFlights), DoD SBIR, customer IR&D
+- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+
+#### 10. Lumibird Photonics USA — Quantel (Bozeman)
+- **Segment:** Montana T2 — Photonics/Sensors
+- **POC:** No public named lead — route via org / warm intro
+- **Why BLK3 fits:** There are two angles. (1) As a customer: flight-qualifying rugged laser heads or rangefinder or LiDAR parts. (2) As a partner: its environmental and optical test lab could complement Exos flight tests for shared customers. Lumibird is a French-listed group, so apply the foreign-parent screen for any controlled work. No Bozeman site lead is public, so start through the main line.
+- **Funding:** NASA SBIR/STTR, NASA Flight Opportunities (TechFlights), DoD SBIR, customer IR&D
+- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+
+#### 11. CACI — Belgrade MT site (ex-Ascent Vision Technologies)
+- **Segment:** Montana T2 — Photonics/Sensors
+- **POC:** No public named lead — route via org / warm intro
+- **Why BLK3 fits:** Fits the Exos test-side, missile-defense-adjacent positioning: flight-qualifying EO/IR payloads for high-altitude or space tracking. There is no named public local site lead. The route in is CACI corporate BD or the C-UAS business line, or a warm intro through the Montana High Tech Business Alliance. Lee Dingman was AVT President in 2020, but his current role is unverified and he is not included.
+- **Funding:** NASA SBIR/STTR, NASA Flight Opportunities (TechFlights), DoD SBIR, customer IR&D
+- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
