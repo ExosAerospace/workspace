@@ -314,6 +314,13 @@ def check(reg, alert=True, accept_answered=False, decisions=None):
             if f.is_file() and not f.name.startswith(".") and path not in by_path:
                 fails.append({"path": path, "why": "unlisted file in data-room folder", "set": "dataroom",
                               "sha256": sha256(f)})
+    # data-room filesystem lock (chmod a-w on manifest + files, dir 0500): loosened -> WARN
+    for d in docs:
+        p = WS / d["path"]
+        if d["set"] == "dataroom" and p.exists() and p.stat().st_mode & 0o222:
+            warns.append({"path": d["path"], "why": "data-room lock off (file is writable)"})
+    if DR_DIR.exists() and DR_DIR.stat().st_mode & 0o222:
+        warns.append({"path": rel(DR_DIR), "why": "data-room lock off (folder is writable)"})
     # process-library hygiene (WARN only)
     for d in docs:
         if d["set"] == "process-library" and not d.get("git_tracked") and not d.get("controlled_marking"):
@@ -467,9 +474,14 @@ def selftest():
         hum = {"D-T2": {"id": "D-T2", "status": "answered", "answer": "Approve these versions", "answeredBy": "Jon"}}
         res, st = check(reg, alert=False, accept_answered=True, decisions=hum); atomic_write(STATE, st)
         t("human-answered approve re-baselines exactly the listed files (incl. new data-room doc)", len(res["accepted"]) == 3)
+        for f in [DR_MANIFEST, DR_DIR / "deck.txt", DR_DIR / "new.txt"]:
+            os.chmod(f, 0o400)
+        os.chmod(DR_DIR, 0o500)
         res2, _ = check(reg, alert=False, decisions=hum)
+        t("locked data room -> no lock-off warning", not any("lock off" in w["why"] for w in res2["warn_items"]))
+        os.chmod(DR_DIR, 0o700)
         t("after human approval the same content is clean", res2["status"] != "FAIL")
-        (DR_DIR / "new.txt").unlink(); atomic_write(DR_MANIFEST, {"docs": [{"id": "deck", "file": "deck.txt"}]})
+        os.chmod(DR_MANIFEST, 0o600); (DR_DIR / "new.txt").unlink(); atomic_write(DR_MANIFEST, {"docs": [{"id": "deck", "file": "deck.txt"}]})
         atomic_write(STATE, st)
         rej = {"D-T9": {"id": "D-T9", "status": "answered", "answer": "Revert to last approved"}}
         try:
