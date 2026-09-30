@@ -1,6 +1,6 @@
 {
  "generated": "2026-09-25T23:19:20.307166-05:00",
- "total": 150,
+ "total": 214,
  "standing": 112,
  "ephemeral": 18,
  "service": 5,
@@ -4114,6 +4114,26 @@
    "risk_tier": "LOW",
    "change_log": [
     "2026-09-30 created from @Exobot note on MC #1539 (Jon: integrate under an exo3 process, no follow-up meeting)"
+   ]
+  },
+  {
+   "label": "montana-partner-access-exo3",
+   "script": "montana_partner_access.py (+ mission-control/server.js montana_partner role block + /montana-partner.html)",
+   "kind": "gate (process, on-demand; human-run CLI) + MC scoped role",
+   "schedule": "on demand — run by a person after Jon confirms a Montana partner's email (MC task #3288)",
+   "purpose": "Scoped Mission Control access for Montana Spaceport partners (Jon 2026-09-30, MC #3287/#3288). Role montana_partner is default-deny: only /montana-partner.html + /api/montana-partner/{summary,prospects,doc,tasks,notes,note} (program status, read-only Montana payload-prospect list with whitelisted fields, partner one-pager, tasks tagged montana-partner with notes on those only). The CLI grants/revokes seats: MC user with temp password + forced reset, and the Cloudflare Access 'Mission Control — approved users' include list.",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Human-confirmed (every state change DRY-RUN by default; --apply required; nothing scheduled)",
+   "human_owner": "John Quinn",
+   "permission_envelope": "Writes mission-control/users.json (one montana_partner user; refuses to touch any non-partner account; timestamped backup), mission-control/data/montana-partner-seats.json, Cloudflare Access policy 3bf75a2c include list (app-scoped PUT, add/remove ONE email, verified by re-read). No email/Discord sends; credentials are printed for Jon to deliver. Server side: role reads CRM rows tagged montana-payload-prospect (field whitelist, no email/phone/notes) and writes task_note activities only on tasks tagged montana-partner, author from session.",
+   "memory_boundary": "users.json, montana-partner-seats.json, data/montana-partner.json (partner-safe curated content), partner-docs/montana/, secrets.json cloudflare_zt_token (read). Never finance, cap table, investors, Series A, decisions, vault, dossiers, CUI/ITAR.",
+   "escalation": "Every out-of-scope partner request -> auditDeny (logs/capstone-access-audit.jsonl, role montana_partner) + glog montana_partner_deny; MC Guard scoring/lockout applies (Jon-only unlock). Cloudflare API failure -> prints the exact manual dashboard step. Seat activation = Jon's confirmation.",
+   "eval_suite": "python3 scripts/montana_partner_access.py --selftest [--live] — offline 10 checks; --live 71 checks against the running MC with throwaway partner/must-reset/admin/early_adopter users (partner denied on finance/CRM/decisions/investor/cap-table/tasks/vault/dossier/upload/admin routes + internal pages; allowed on partner view; must-reset confined; admin + early_adopter unchanged) — PASS 71/71 2026-09-30",
+   "telemetry": "logs/fleet-events.jsonl (agent montana-partner-access-exo3, kind govern: access_grant / access_revoke / selftest) + logs/montana-partner-access.jsonl + governance glog (mc-server montana_partner_view/_note/_deny, forced_reset_cleared)",
+   "reusability_scope": "Template for any external-partner scoped role (partner view + tagged-task notes + pending-seat CLI + Cloudflare include-list grant)",
+   "risk_tier": "MED",
+   "change_log": [
+    "2026-09-30 created (montana-partners exo3 worker) — role + CLI + 3 pending seats (Edgar, Sean, Isaiah); nobody activated"
    ]
   }
  ],
