@@ -218,6 +218,51 @@ def check_cron_hygiene(state, now):
         state[key] = {"status": "OK", "ts": datetime.datetime.now().isoformat(timespec="seconds")}
     return results, new_fails
 
+def check_mail_bridge(state, now):
+    """exo3 r2 launchd-residuals guard (scripts/mail_bridge_guard.py): secrets.json Bridge password drift vs
+    ~/.config/exos/bridge-studio.pw (FAIL) and a multi-job Bridge auth-error storm in logs/runs (FAIL).
+    State key 'mailbridge:<label>'; FAIL alert fires once on transition via the existing path."""
+    results, new_fails = [], []
+    try:
+        import mail_bridge_guard
+        found = mail_bridge_guard.check(now)
+    except Exception as e:
+        log(f"mail bridge checks skipped: {e}")
+        return results, new_fails
+    key = "mailbridge:" + mail_bridge_guard.LABEL
+    status = "FAIL" if found else "OK"
+    why = "; ".join(w for _, _, w in found) or "healthy"
+    results.append((key, status, why, "John Quinn"))
+    try:
+        import fleet_log
+        fleet_log.event("agent_eval", "govern", "mail_bridge", outcome=status.lower(), owner="John Quinn",
+                        detail={"why": [w for _, _, w in found]})
+    except Exception:
+        pass
+    if status == "FAIL" and state.get(key, {}).get("status") != "FAIL":
+        new_fails.append((key, why, "John Quinn"))
+    state[key] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
+    return results, new_fails
+
+def check_cron_prompt_guard(state):
+    """exo3 r2 (r2-confirm-gaps) scripts/cron_prompt_guard.py: the 5 human-confirm-gap crons must keep
+    propose-only prompts (no autonomous wording / literal credentials; APAC live file not written by the
+    scan). The guard emits its own fleet_log events. State key 'promptguard:<label>'."""
+    results, new_fails = [], []
+    try:
+        import cron_prompt_guard
+        found = cron_prompt_guard.check(dry=DRY)
+    except Exception as e:
+        log(f"cron prompt guard skipped: {e}")
+        return results, new_fails
+    for label, status, why, owner in found:
+        key = "promptguard:" + label
+        results.append((key, status, why, owner))
+        if status == "FAIL" and state.get(key, {}).get("status") != "FAIL":
+            new_fails.append((key, why, owner))
+        state[key] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
+    return results, new_fails
+
 def selftest():
     # fixture labels built at runtime so the exo3 gate doesn't read them as new agents
     a, b, c = (".".join(["com", "exos", "fixture-" + x]) for x in "abc")
@@ -259,6 +304,8 @@ def selftest():
     print("agent_eval selftest: 18/18 pass")
     import cron_hygiene  # r2 cron-hygiene guards (secrets in prompts, model allowlist, transient crons)
     cron_hygiene.selftest()
+    import mail_bridge_guard  # r2 launchd-residuals: Bridge password drift + IMAP auth storm
+    mail_bridge_guard.selftest()
     return 0
 
 def check_registry_drift(state):
@@ -343,6 +390,12 @@ def main():
     hy_results, hy_fails = check_cron_hygiene(state, now)
     results += hy_results
     new_fail_alerts += hy_fails
+    pg_results, pg_fails = check_cron_prompt_guard(state)
+    results += pg_results
+    new_fail_alerts += pg_fails
+    mb_results, mb_fails = check_mail_bridge(state, now)
+    results += mb_results
+    new_fail_alerts += mb_fails
 
     npass = sum(1 for _, s, _, _ in results if s == "OK")
     nwarn = sum(1 for _, s, _, _ in results if s == "WARN")
