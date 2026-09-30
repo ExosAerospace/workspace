@@ -115,12 +115,13 @@
     "com.exos.capstone-capture": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:04:40-05:00",
+      "loaded_at": "2026-09-30T13:05:32-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "python3 /Users/exomac/.openclaw/workspace/scripts/capstone_capture.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -153,12 +154,13 @@
     "com.exos.capture-action-dispatch": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:04:40-05:00",
+      "loaded_at": "2026-09-30T13:05:34-05:00",
       "original_args": [
         "/bin/sh",
         "-c",
         "/usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/capture-action-dispatch.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -178,11 +180,12 @@
     "com.exos.claude-auth-keepalive": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:04:40-05:00",
+      "loaded_at": "2026-09-30T13:05:37-05:00",
       "original_args": [
         "/usr/bin/python3",
         "/Users/exomac/.openclaw/workspace/scripts/claude_auth_keepalive.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -202,12 +205,13 @@
     "com.exos.completion-watchdog": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:04:40-05:00",
+      "loaded_at": "2026-09-30T13:05:39-05:00",
       "original_args": [
         "/bin/sh",
         "-c",
         "/usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/completion-watchdog.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -252,12 +256,13 @@
     "com.exos.cron-watchdog": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-30T13:05:41-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "python3 /Users/exomac/.openclaw/workspace/scripts/cron-failure-watchdog.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -389,12 +394,13 @@
     "com.exos.decision-send-watcher": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-30T13:05:43-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "python3 /Users/exomac/.openclaw/workspace/scripts/decision-send-watcher.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -414,12 +420,13 @@
     "com.exos.delivery-sweeper": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:22-05:00",
+      "loaded_at": "2026-09-30T13:05:45-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "python3 /Users/exomac/.openclaw/workspace/scripts/delivery-sweeper.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -1123,11 +1130,12 @@
     "com.exos.outreach-autoclose": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-29T22:47:07-05:00",
       "original_args": [
         "/usr/bin/python3",
         "/Users/exomac/.openclaw/workspace/scripts/outreach-autoclose.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -1185,12 +1193,13 @@
     "com.exos.payload-intake": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-30T13:05:47-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "python3 /Users/exomac/.openclaw/workspace/scripts/payload_intake_quote.py --apply"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -1221,12 +1230,13 @@
     "com.exos.priority-inbox-watcher": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:39-05:00",
+      "loaded_at": "2026-09-30T13:05:49-05:00",
       "original_args": [
         "/bin/zsh",
         "-lc",
         "python3 /Users/exomac/.openclaw/workspace/scripts/priority-inbox-watcher.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -1496,12 +1506,13 @@
     "com.exos.sent-loop-closer": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:50-05:00",
+      "loaded_at": "2026-09-29T22:47:07-05:00",
       "original_args": [
         "/bin/sh",
         "-c",
         "/usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/sent_folder_registry.py; /usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/sent-loop-closer.py; /usr/bin/python3 /Users/exomac/.openclaw/workspace/scripts/reconcile_sent_tasks.py --apply"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad, reviewed: extra run harmless)",
       "run_at_load": true,
       "status": "converted"
     },
@@ -1843,5 +1854,5 @@
       "status": "converted"
     }
   },
-  "updated": "2026-09-29T22:46:02-05:00"
+  "updated": "2026-09-30T13:05:49-05:00"
 }
