@@ -306,6 +306,8 @@ def selftest():
     cron_hygiene.selftest()
     import mail_bridge_guard  # r2 launchd-residuals: Bridge password drift + IMAP auth storm
     mail_bridge_guard.selftest()
+    import cron_prompt_guard  # r2-confirm-gaps: propose-only prompt guard for the 5 human-confirm-gap crons
+    cron_prompt_guard.selftest()
     return 0
 
 def check_registry_drift(state):
