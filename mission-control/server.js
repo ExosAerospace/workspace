@@ -5358,22 +5358,26 @@ const server = http.createServer((req, res) => {
           if (!meD) return false;
           return canonD(d.assignedTo || 'jquinn@exosaero.com') === meD || (!!d.approver && canonD(d.approver) === meD);
         };
-        const isClose = a => /^(auto-)?closed\b/i.test(String(a || '').trim());
-        const rejected = [];
+        // exo3 r2 (R-017 gate): a token close is only a PROPOSAL — card stays open with proposedAnswer
+        // + auto_proposed until a human clicks ✓ Confirm. See lib/decision-answer.js + scripts/decision_answer_selftest.js.
+        const { applyAnswer } = require('./lib/decision-answer');
+        const rejected = [], proposedIds = [];
         for (const it of items) {
           const d = arr.find(x => x.id === it.id);
-          if (!d) continue;
-          if (it.answer === undefined && !it.note) continue;
-          if (viaToken ? !isClose(it.answer) : !mayAnswer(d)) {
+          const r = applyAnswer(d, it, { viaToken, who, sessionEmail: session ? session.email : '', now, mayAnswer });
+          if (r.result === 'skipped') continue;
+          if (r.result === 'rejected') {
             rejected.push(d.id);
             glog('mc-server', 'decision_answer_denied', 'warn', `${who} not authorized to answer ${d.id}`, { decision: d.id, by: session ? session.email : 'token', answer: String(it.answer || '').slice(0, 80) });
             continue;
           }
-          d.answer = it.answer ?? d.answer; d.note = it.note || ''; d.status = 'answered';
-          d.answeredAt = now; d.answeredBy = who; d.updated = now;
-          if (session) d.answeredByEmail = session.email;
+          if (r.result === 'proposed') {
+            proposedIds.push(d.id);
+            glog('mc-server', 'decision_close_proposed', 'ok', `${d.id} close proposed (awaiting human confirm) → ${String(d.proposedAnswer || '').slice(0, 80)}`, { decision: d.id, by: 'token', basis: d.auto_proposed && d.auto_proposed.basis });
+            continue;
+          }
           updated.push(d.id);
-          glog('mc-server', 'decision_answered', 'ok', `${d.id} → ${String(d.answer || '').slice(0, 80)}`, { decision: d.id, by: session ? session.email : 'token' });
+          glog('mc-server', 'decision_answered', 'ok', `${d.id} → ${String(d.answer || '').slice(0, 80)}`, { decision: d.id, by: session ? session.email : 'token', confirmed_proposal: !!(d.proposal_resolution && d.proposal_resolution.confirmed) });
         }
         saveDecisions(arr);
         // Fire rendered notifications async (non-blocking) for each answered decision.
@@ -5395,8 +5399,8 @@ const server = http.createServer((req, res) => {
             } catch (e) { /* notify is best-effort; never fail the answer */ }
           }
         }
-        if (!updated.length && rejected.length) { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Only the person this decision is assigned to (or its approver) can answer it.', rejected })); return; }
-        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ updated, rejected })); return;
+        if (!updated.length && !proposedIds.length && rejected.length) { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Only the person this decision is assigned to (or its approver) can answer it.', rejected })); return; }
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ updated, rejected, proposed: proposedIds.length > 0, proposedIds, note: proposedIds.length ? 'Close proposed; the card stays open until a human confirms it in Mission Control.' : undefined })); return;
       } catch (e) { res.writeHead(400); res.end(JSON.stringify({ error: e.message })); }
     }); return;
   }
