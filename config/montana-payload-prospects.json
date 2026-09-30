@@ -1,0 +1,760 @@
+{
+  "_about": "Verified Montana payload-customer prospects (montana-partners exo3 worker, 2026-09-30). Loaded by scripts/montana_payload_prospects_load.py. Payload flag = PROSPECT only; paying customers live in payload-customers.json (NOT touched).",
+  "source": "Montana Spaceport payload targeting 2026-09-30",
+  "verified": "2026-09-30",
+  "orgs": [
+    {
+      "name": "Montana State University — Space Science & Engineering Lab (SSEL)",
+      "research_name": "Montana State University - Space Science & Engineering Laboratory (SSEL) / RadPC (LaMeres lab)",
+      "tier": "T1",
+      "tier_label": "Montana T1 — University",
+      "payload_prospect": true,
+      "city": "Bozeman, MT",
+      "website": "https://ssel.montana.edu/",
+      "org_type": "university",
+      "what_they_do": "Designs and builds CubeSats (HRBE 2011, FIREBIRD 2013, FIREBIRD II 2015, IT-SPINS, REAL, EXACT, IMPRESS), sounding-rocket solar instruments (MOSES, ESIS, CAPRI-SUN, FURST, ESIS-II), balloon payloads (BOOMS), ISS payloads, and supports RadPC-Lunar. Separately, the ECE lab of Brock LaMeres develops the RadPC radiation-tolerant FPGA computer.",
+      "fit_note": "Strong fit. They are repeat suborbital and sounding-rocket users. Pitch: a reusable suborbital ride with intact hardware recovery for instrument and electronics qualification before orbital/lunar flights, e.g. FURST/ESIS-II subsystem pathfinders and RadPC follow-ons.",
+      "keep_reason": "Active student-built spaceflight lab with a proven suborbital record: MOSES, ESIS and Hi-C Flare/CAPRI-SUN sounding rockets flown, and FURST and ESIS-II sounding rockets in development. LaMeres' RadPC flew twice on sounding rockets through NASA Flight Opportunities (UP Aerospace SpaceLoft 2014, NASA Terrier-Orion 2016).",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [
+        {
+          "name": "Larry Springer",
+          "title": "Senior Research Engineer, Program Manager (SSEL)",
+          "email": "larry.springer@montana.edu",
+          "email_note": "verbatim on SSEL directory",
+          "phone": "",
+          "source_url": "https://ssel.montana.edu/directory.html",
+          "evidence": "SSEL Directory, Staff: 'Larry Springer - Senior Research Engineer, Program Manager'. SSEL general line (406) 994-7321, ssel@montana.edu",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Charles Kankelborg",
+          "title": "Professor (Physics); SSEL faculty; PI of the MOSES/ESIS sounding-rocket instruments",
+          "email": "kankel@montana.edu",
+          "email_note": "verbatim on SSEL directory",
+          "phone": "",
+          "source_url": "https://ssel.montana.edu/directory.html",
+          "evidence": "Listed as SSEL faculty, Professor. NASA WFF Code 810 lists him as PI of ESIS (Terrier-Black Brant, WSMR, 30 Sep 2019): https://sites.wff.nasa.gov/code810/news/story224-36.320%20ESIS.html",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Brock J. LaMeres, Ph.D., PE",
+          "title": "Professor, Electrical & Computer Engineering; Director, Montana Engineering Education Research Center; Boeing Professor; RadPC PI",
+          "email": "",
+          "email_note": "email not public",
+          "phone": "(406) 994-2505",
+          "source_url": "https://www.montana.edu/blameres/",
+          "evidence": "Faculty page lists the current titles and phone. NASA Flight Opportunities names him PI of RadPC: https://www.nasa.gov/stmd-flight-opportunities/from-flight-test-to-the-moon-three-payloads/",
+          "verified_date": "2026-09-30"
+        }
+      ],
+      "claim_checks": [
+        {
+          "claim": "SSEL builds CubeSats; FIREBIRD flown",
+          "verdict": "CONFIRMED",
+          "correction": "Missions page lists as completed: HRBE (launched 28 Oct 2011), FIREBIRD (Dec 2013), FIREBIRD II (Jan 2015), IT-SPINS, EDSN, PrintSat, IRIS support, RadPC-Lunar, BOOMS balloon, Hi-C Flare/CAPRI-SUN, MOSES and ESIS sounding rockets. Ongoing: REAL, EXACT, IMPRESS, SFXTI/EISSFLAIX (ISS). In development: FURST, ESIS-II (sounding rockets), MUSE/ASIO, QUACKEMS.",
+          "source_url": "https://ssel.montana.edu/missions.html"
+        },
+        {
+          "claim": "David Klumpar is SSEL Director",
+          "verdict": "CORRECTED",
+          "correction": "The current directory lists Klumpar as 'Laboratory Founder' (gmail address), not Director. No current director is named, and the Program Manager is Larry Springer.",
+          "source_url": "https://ssel.montana.edu/directory.html"
+        },
+        {
+          "claim": "RadPC flew on sounding rockets",
+          "verdict": "CONFIRMED",
+          "correction": "UP Aerospace SpaceLoft (SL-9), Oct 2014, about 400,000 ft over NM; NASA Terrier-Orion from Wallops, 7 Mar 2016. Both via NASA Flight Opportunities.",
+          "source_url": "https://www.nasa.gov/centers-and-facilities/ames/suborbital-testing-puts-moon-bound-computing-system-through-its-paces/"
+        },
+        {
+          "claim": "RadPC flew on high-altitude balloons",
+          "verdict": "CONFIRMED",
+          "correction": "World View Stratollite, Sept 2019 (about 120,000 ft, NM). Raven Aerostar Thunderhead, 28 Jul and 22 Sep 2021, Sioux Falls SD (>100 h above 75,000 ft total).",
+          "source_url": "https://www.nasa.gov/centers-and-facilities/ames/suborbital-testing-puts-moon-bound-computing-system-through-its-paces/"
+        },
+        {
+          "claim": "RadPC flown on ISS",
+          "verdict": "CONFIRMED",
+          "correction": "RTcMISS on ISS 2017-2018 (12 months). RadPC-AI: two ISS payloads launched Dec 2021 (SpaceX CRS-24) and about 6 months later (NG), each about 1 yr on ISS, returned Feb 2024.",
+          "source_url": "https://www.montana.edu/blameres/research_overview.html"
+        },
+        {
+          "claim": "RadPC flown on CubeSats",
+          "verdict": "CONFIRMED",
+          "correction": "RadSat-g (3U, launched Mar 2018 on OA-9, deployed Jul 2018) and RadSat-u (launched 2 Nov 2019 on NG-12, deployed Feb 2020).",
+          "source_url": "https://www.montana.edu/blameres/research_overview.html"
+        },
+        {
+          "claim": "RadPC-Lunar flew on Intuitive Machines",
+          "verdict": "CORRECTED",
+          "correction": "RadPC-Lunar flew on Firefly Aerospace Blue Ghost Mission 1 (NASA CLPS), NOT Intuitive Machines. Launched 15 Jan 2025, landed 2 Mar 2025, operated about 14 days until lunar night.",
+          "source_url": "https://www.montana.edu/blameres/research_overview.html"
+        },
+        {
+          "claim": "SSEL/LaMeres previously flew on Blue Origin",
+          "verdict": "UNVERIFIED",
+          "correction": "No evidence of a Blue Origin/New Shepard flight. Suborbital heritage is UP Aerospace SpaceLoft, NASA Terrier-Orion, and NASA Black Brant-class sounding rockets (MOSES/ESIS).",
+          "source_url": "https://www.nasa.gov/stmd-flight-opportunities/from-flight-test-to-the-moon-three-payloads/"
+        }
+      ]
+    },
+    {
+      "name": "Montana Space Grant Consortium / Montana NASA EPSCoR",
+      "research_name": "Montana Space Grant Consortium (MSGC) + Montana NASA EPSCoR",
+      "tier": "T1",
+      "tier_label": "Montana T1 — University",
+      "payload_prospect": true,
+      "city": "Bozeman, MT (hosted at Montana State University)",
+      "website": "https://spacegrant.montana.edu/",
+      "org_type": "nasa_consortium",
+      "what_they_do": "NASA Space Grant and EPSCoR programs: BOREALIS high-altitude ballooning (flights to about 100,000 ft; 2024 night flight; 2024 eclipse livestream; LoRa radio, vent board, drones; MaxIQ ISS payload project planned for spring 2026). Also internships, including a NW Montana BOREALIS internship for SKC/Blackfeet/FVCC/UM students, research activation grants, and EPSCoR research groups.",
+      "fit_note": "Strong channel partner. BOREALIS students are the natural next step from balloon to suborbital rocket payloads, and the EPSCoR Research/ISS/Flight calls could fund Montana PI payloads on BLK3. Also a gateway to all 23 member campus reps.",
+      "keep_reason": "Statewide NASA-funded consortium (23 member institutions) that funds student and faculty space research. It runs the active BOREALIS ballooning program and is the EPSCoR gateway for Montana NASA research proposals.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [
+        {
+          "name": "Angela Des Jardins, Ph.D.",
+          "title": "Director, Montana Space Grant Consortium and Director, Montana NASA EPSCoR",
+          "email": "angela.desjardins@montana.edu",
+          "email_note": "verbatim on NASA EPSCoR contact page and MSU Physics directory; MSGC general msgc@montana.edu",
+          "phone": "(406) 994-6172",
+          "source_url": "https://nasaepscor.montana.edu/contact.html",
+          "evidence": "EPSCoR contact page: 'Director - Angela Des Jardins'. MSGC staff contacts page lists her as Director (https://spacegrant.montana.edu/spot/contacts.html).",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Amy Brown",
+          "title": "Deputy Director, Montana NASA EPSCoR",
+          "email": "amy.brown11@montana.edu",
+          "email_note": "verbatim on EPSCoR contact page",
+          "phone": "",
+          "source_url": "https://nasaepscor.montana.edu/contact.html",
+          "evidence": "Contact page: 'Deputy Director - Amy Brown, Cobleigh Hall 417'",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Chris (Christina) Flynn",
+          "title": "Program Coordinator, MSGC / Montana NASA EPSCoR",
+          "email": "christina.flynn1@montana.edu",
+          "email_note": "verbatim on both contact pages",
+          "phone": "(406) 994-4223",
+          "source_url": "https://spacegrant.montana.edu/spot/contacts.html",
+          "evidence": "Listed as Program Coordinator, Cobleigh Hall 416",
+          "verified_date": "2026-09-30"
+        }
+      ],
+      "claim_checks": [
+        {
+          "claim": "BOREALIS high-altitude balloon program exists and is active",
+          "verdict": "CONFIRMED",
+          "correction": "Active. Projects page lists 2024 accomplishments and a MaxIQ ISS payload project planned for spring 2026. 2026 paid summer internships (about 6 in Bozeman plus about 4 in NW Montana, Jul 6 to Aug 7).",
+          "source_url": "https://spacegrant.montana.edu/borealis/projects.html"
+        },
+        {
+          "claim": "Des Jardins directs both MSGC and Montana NASA EPSCoR",
+          "verdict": "CONFIRMED",
+          "correction": "",
+          "source_url": "https://nasaepscor.montana.edu/contact.html"
+        }
+      ]
+    },
+    {
+      "name": "Montana Technological University (Montana Tech)",
+      "research_name": "Montana Technological University (Montana Tech)",
+      "tier": "T1",
+      "tier_label": "Montana T1 — University",
+      "payload_prospect": true,
+      "city": "Butte, MT",
+      "website": "https://www.mtech.edu/",
+      "org_type": "university",
+      "what_they_do": "STEM university: electrical, geological/geophysical and materials engineering. Center for Advanced Materials Processing. Drone and remote-sensing geophysics (DEVCOM ARL-funded magnetic gradiometry). AISES First Nations Launch rocketry team (2024).",
+      "fit_note": "Moderate, emerging fit. The RockOn! team is a natural candidate for a follow-on student rocket payload (RockSat-C-style) on BLK3, and a sensor/instrument qualification flight is plausible. Lower priority than MSU.",
+      "keep_reason": "MSGC academic affiliate. Its EE Department Head and students attended NASA's RockOn! sounding-rocket workshop in summer 2026 (built a sensor array flown on a sounding rocket). Also UAS/satellite remote-sensing research (Zhou) and a materials-processing center.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [
+        {
+          "name": "Bryce Hill, Ph.D.",
+          "title": "Professor and Department Head, Electrical Engineering",
+          "email": "bhill@mtech.edu",
+          "email_note": "verbatim mailto on EE faculty page",
+          "phone": "406-496-4752",
+          "source_url": "https://www.mtech.edu/electrical-engineering/faculty/index.html",
+          "evidence": "EE faculty page: 'Bryce Hill, Professor, Department Head'. July 2026 news: advisor of the team at NASA RockOn! that built a sounding-rocket sensor array (https://mtech.edu/news/2026/07/montana-tech-students-and-faculty-reach-new-heights-at-nasas-rockon-workshop.html)",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Katie Hailer, Ph.D.",
+          "title": "Vice Chancellor for Research and Dean of the Graduate School",
+          "email": "khailer@mtech.edu",
+          "email_note": "verbatim mailto on Research Office staff page",
+          "phone": "406-496-4106",
+          "source_url": "https://www.mtech.edu/research/staff/index.html",
+          "evidence": "Staff page: 'Katie Hailer - Vice Chancellor of Research, Dean of the Graduate School, Museum Building 210'. Appointment announced 2026: https://mtech.edu/news/2026/03/dr-katie-hailer-named-vice-chancellor-for-research-and-dean-of-the-graduate-school.html",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Xiaobing Zhou, Ph.D.",
+          "title": "Professor of Geophysics, Geological Engineering; MSGC Campus Representative for Montana Tech",
+          "email": "xzhou@mtech.edu",
+          "email_note": "verbatim on faculty page and MSGC members page",
+          "phone": "406-496-4350",
+          "source_url": "https://spacegrant.montana.edu/members.html",
+          "evidence": "MSGC members page lists 'Montana Tech - Xiaobing Zhou'. Faculty page confirms Professor (https://www.mtech.edu/geological-engineering/faculty/xiaobing-zhou/index.html).",
+          "verified_date": "2026-09-30"
+        }
+      ],
+      "claim_checks": [
+        {
+          "claim": "Montana Tech has aerospace/space-relevant research",
+          "verdict": "CONFIRMED",
+          "correction": "Limited. There is no dedicated aerospace program. Relevant activity is the RockOn! 2026 participation (EE), satellite/UAS remote sensing (Zhou), and the AISES First Nations Launch rocketry team (2024).",
+          "source_url": "https://mtech.edu/news/2026/07/montana-tech-students-and-faculty-reach-new-heights-at-nasas-rockon-workshop.html"
+        }
+      ]
+    },
+    {
+      "name": "University of Montana",
+      "research_name": "University of Montana",
+      "tier": "T1",
+      "tier_label": "Montana T1 — University",
+      "payload_prospect": true,
+      "city": "Missoula, MT",
+      "website": "https://www.umt.edu/",
+      "org_type": "university",
+      "what_they_do": "Broad R1 research led by life sciences, ecology and remote sensing. AASO is the state's drone hub, with MSGC-funded interns in satellite and UAS remote sensing. Physics & Astronomy department.",
+      "fit_note": "Weak to moderate. Approach via the VPR's office to surface any microgravity or life-science PIs, and via AASO for sensor/remote-sensing payload testing. Do not claim prior UM space-flight heritage. Note that search results often conflate UM with MSU's SSEL.",
+      "keep_reason": "R1 university (about $150M research expenditures FY25) and MSGC affiliate. Its Autonomous Aerial Systems Office runs Space Grant-funded UAS and satellite remote-sensing work. There is no documented flight-payload (rocket/ISS/balloon) heritage, so this is a low-priority keep.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [
+        {
+          "name": "Paul Lukacs, Ph.D.",
+          "title": "Interim Vice President for Research and Creative Scholarship (from July 2, 2026)",
+          "email": "paul.lukacs@umontana.edu",
+          "email_note": "verbatim on UM news release (listed as contact)",
+          "phone": "406-243-5675",
+          "source_url": "https://www.umt.edu/news/2026/06/062526resr.php",
+          "evidence": "June 25, 2026 release: 'UM recently selected Dr. Paul Lukacs to serve as interim vice president for research and creative scholarship... Starting July 2'",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Jeremy Crowley",
+          "title": "Director, Autonomous Aerial Systems Office (AASO)",
+          "email": "jeremy.crowley@mso.umt.edu",
+          "email_note": "verbatim on AASO staff page",
+          "phone": "(406) 243-6363",
+          "source_url": "https://www.umt.edu/autonomous-aerial-systems/about-us/staff/",
+          "evidence": "'Jeremy Crowley is the Director of the Autonomous Aerial Systems Office (AASO)... current research focuses on satellite and UAS remote sensing'",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Chani (Chantanelle) Nava",
+          "title": "MSGC Campus Representative, University of Montana - Missoula",
+          "email": "chantanelle.nava@mso.umt.edu",
+          "email_note": "verbatim on MSGC members page",
+          "phone": "(406) 243-2073",
+          "source_url": "https://spacegrant.montana.edu/members.html",
+          "evidence": "MSGC members list: 'University of Montana - Missoula - Chani Nava'. The page gives no UM job title.",
+          "verified_date": "2026-09-30"
+        }
+      ],
+      "claim_checks": [
+        {
+          "claim": "UM has space-related research",
+          "verdict": "CORRECTED",
+          "correction": "No UM space-flight payload program found. Hits for 'SSEL / sounding rockets' belong to Montana State University, not UM. UM's space-adjacent work is satellite/UAS remote sensing (AASO), plus astronomy teaching and research.",
+          "source_url": "https://www.umt.edu/autonomous-aerial-systems/about-us/staff/"
+        }
+      ]
+    },
+    {
+      "name": "Salish Kootenai College",
+      "research_name": "Salish Kootenai College",
+      "tier": "T4",
+      "tier_label": "Montana T4 — Tribal college / education",
+      "payload_prospect": true,
+      "city": "Pablo, MT",
+      "website": "https://www.skc.edu/",
+      "org_type": "tribal_college",
+      "what_they_do": "Tribal college (CSKT). Natural Resources & Sciences Division covers STEM, and the ITECS department offers pre-engineering. BisonSat CubeSat (educational Earth imaging; still returning telemetry as of Feb 2021).",
+      "fit_note": "Education/outreach fit. Candidate for a sponsored student payload, e.g. through MSGC/NASA MUREP funding. Note: MSGC currently lists SKC as 'Seeking a Representative'. Per policy, no free flights: this must be sold or grant-funded.",
+      "keep_reason": "Tribal college with real flight heritage: the student-built BisonSat (Nʷist Q́ʷiq́ʷay) CubeSat launched 8 Oct 2015 on NASA ELaNa-12, first tribal-college CubeSat. SKC students are eligible for the MSGC NW Montana BOREALIS internship. It has an IT/Engineering/CS department.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [
+        {
+          "name": "Matt Seeley",
+          "title": "Dean, Natural Resources & Sciences Division",
+          "email": "matt_seeley@skc.edu",
+          "email_note": "verbatim on division page",
+          "phone": "406-275-4901",
+          "source_url": "https://www.skc.edu/natural-resources-sciences/",
+          "evidence": "Division page: 'Matt Seeley - Dean - Natural Resources & Sciences Division'",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Lee Slater",
+          "title": "Faculty; Department Contact, Information Technology, Engineering & Computer Science (ITECS)",
+          "email": "lee_slater@skc.edu",
+          "email_note": "verbatim on ITECS page",
+          "phone": "406-275-4065",
+          "source_url": "https://www.skc.edu/natural-resources-sciences/itecs/",
+          "evidence": "ITECS page 'Department Contact(s): Lee Slater'. Faculty page lists 'Faculty'. Department-head title is not stated.",
+          "verified_date": "2026-09-30"
+        }
+      ],
+      "claim_checks": [
+        {
+          "claim": "SKC participates in NASA/MSGC programs",
+          "verdict": "CONFIRMED",
+          "correction": "MSGC academic member (rep seat currently vacant). BOREALIS NW Montana internship is open to SKC students. BisonSat launched 8 Oct 2015 on ELaNa-12.",
+          "source_url": "https://cubesat.skc.edu/"
+        }
+      ]
+    },
+    {
+      "name": "Chief Dull Knife College",
+      "research_name": "Chief Dull Knife College",
+      "tier": "T4",
+      "tier_label": "Montana T4 — Tribal college / education",
+      "payload_prospect": true,
+      "city": "Lame Deer, MT",
+      "website": "https://www.cdkc.edu/",
+      "org_type": "tribal_college",
+      "what_they_do": "Tribal community college (Northern Cheyenne). Rocket club for First Nations Launch (about 35 students introduced to rocketry) and NASA MUREP-type grants.",
+      "fit_note": "Education fit. A student payload step-up from high-power rocketry to suborbital, if funded (MSGC/NASA). Low revenue priority.",
+      "keep_reason": "Tribal college with a documented NASA rocketry program. The CDKC rocket team competes in the NASA-sponsored First Nations Launch and won the Climate Change Science Payload award. MSGC member with a named rep.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [
+        {
+          "name": "Jim Bertin",
+          "title": "Math Instructor; rocket team advisor; MSGC Campus Representative",
+          "email": "jbertin@cdkc.edu",
+          "email_note": "verbatim (HTML-entity encoded) on CDKC directory and MSGC members page",
+          "phone": "(406) 477-6215",
+          "source_url": "https://www.cdkc.edu/directory",
+          "evidence": "CDKC directory: 'Math Instructor Jim Bertin'. MSGC members page lists him as CDKC rep. Billings Gazette/TCJ: Bertin directs the CDKC First Nations Launch rocket team (https://tribalcollegejournal.org/cdkc-rocket-team-wins-climate-change-experiment-award/)",
+          "verified_date": "2026-09-30"
+        }
+      ],
+      "claim_checks": [
+        {
+          "claim": "CDKC has documented Space Grant/NASA involvement",
+          "verdict": "CONFIRMED",
+          "correction": "First Nations Launch rocketry and MSGC membership. Articles on the rocketry wins are older (dates not confirmed as recent), but the rep and instructor are confirmed as current via the directory pages.",
+          "source_url": "https://spacegrant.montana.edu/members.html"
+        }
+      ]
+    },
+    {
+      "name": "Bridger Photonics",
+      "research_name": "Bridger Photonics",
+      "tier": "T2",
+      "tier_label": "Montana T2 — Photonics/Sensors",
+      "payload_prospect": true,
+      "city": "Bozeman, MT",
+      "website": "https://www.bridgerphotonics.com",
+      "org_type": "company",
+      "what_they_do": "Gas Mapping LiDAR (GML) for methane detection, carried on small aircraft and, since 2025, on drones. Sells emissions-data services to oil and gas operators.",
+      "fit_note": "No space or orbital heritage was found on its public pages. Its lidar's optical amplifier came from MIT Lincoln Laboratory work. The only Exos angle is a future satellite or high-altitude methane-sensing push, where suborbital testing of the lidar or parts could help. Treat as a speculative relationship target and approach through the CTO or Chief Innovation Officer.",
+      "keep_reason": "Real Bozeman photonics company with airborne LiDAR hardware; a plausible but low-probability customer for flight-qualifying lidar or optical parts. It is a commercial emissions-data company, not a space company.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [
+        {
+          "name": "Ben Little",
+          "title": "Chief Executive Officer",
+          "email": "",
+          "email_note": "email not public",
+          "phone": "406-585-2774 (main line)",
+          "source_url": "https://www.bridgerphotonics.com/about",
+          "evidence": "Listed as CEO on the official About/leadership page. Became CEO in Jan 2025 when founder Pete Roos moved to Chief Innovation Officer.",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Dr. Peter Roos",
+          "title": "Chief Innovation Officer (founder)",
+          "email": "",
+          "email_note": "email not public",
+          "phone": "406-585-2774 (main line)",
+          "source_url": "https://www.bridgerphotonics.com/about",
+          "evidence": "Listed as Chief Innovation Officer on the official leadership page. Best technical door for new-platform ideas.",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Ryan Sullivan",
+          "title": "Chief Technology Officer",
+          "email": "",
+          "email_note": "email not public",
+          "phone": "406-585-2774 (main line); Sales 406-522-3766",
+          "source_url": "https://www.bridgerphotonics.com/blog/bridger-photonics-appoints-ryan-sullivan-chief-technology-officer-accelerate-new-era-emissions",
+          "evidence": "Appointed CTO on May 12, 2025 per the press release, and still listed as CTO on the About page.",
+          "verified_date": "2026-09-30"
+        }
+      ],
+      "claim_checks": [
+        {
+          "claim": "Bridger Photonics is a Bozeman methane-LiDAR company",
+          "verdict": "CONFIRMED",
+          "correction": "",
+          "source_url": "https://www.bridgerphotonics.com/about"
+        },
+        {
+          "claim": "Bridger has aerospace/space heritage",
+          "verdict": "UNVERIFIED",
+          "correction": "Only airborne heritage (aircraft and drones) was found. No space or NASA flight heritage on public pages.",
+          "source_url": "https://en.wikipedia.org/wiki/Bridger_Photonics"
+        }
+      ]
+    },
+    {
+      "name": "Resonon Inc.",
+      "research_name": "Resonon Inc.",
+      "tier": "T2",
+      "tier_label": "Montana T2 — Photonics/Sensors",
+      "payload_prospect": true,
+      "city": "Bozeman, MT",
+      "website": "https://resonon.com",
+      "org_type": "company",
+      "what_they_do": "Hyperspectral imaging cameras and systems for lab, industrial, field and airborne use (UAV and manned aircraft), plus a NASA spaceflight instrument (ARCSTONE lunar-calibration spectrometer on a CubeSat).",
+      "fit_note": "A good match for the Exos value case. Suborbital flights with recovered hardware could flight-qualify or test new space and high-altitude hyperspectral heads before CubeSat or satellite missions. It could also serve as a demo sensor on a BLK3 flight. The company is small (about 11 staff), so pitch it as a low-cost test or co-marketing opportunity.",
+      "keep_reason": "The strongest T2 fit. It builds airborne hyperspectral imagers and has real space heritage: the ARCSTONE instrument it built for NASA launched to LEO on SpaceX Transporter-14 in June 2025.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [
+        {
+          "name": "Rand Swanson",
+          "title": "CEO & Co-Founder",
+          "email": "",
+          "email_note": "email not public",
+          "phone": "+1 406-586-3356 (main line)",
+          "source_url": "https://resonon.com/blog-arcstone-hyperspectral-instrument-launched",
+          "evidence": "Resonon blog (June 23, 2025) names \"Dr. Rand Swanson, CEO\", co-founder.",
+          "verified_date": "2026-09-30"
+        }
+      ],
+      "claim_checks": [
+        {
+          "claim": "Resonon is a Bozeman hyperspectral imager maker",
+          "verdict": "CONFIRMED",
+          "correction": "",
+          "source_url": "https://resonon.com/about-us"
+        },
+        {
+          "claim": "Resonon has airborne/space units",
+          "verdict": "CONFIRMED",
+          "correction": "It sells airborne systems, and the ARCSTONE instrument it built for NASA launched to LEO on SpaceX Transporter-14 (June 2025).",
+          "source_url": "https://resonon.com/blog-arcstone-hyperspectral-instrument-launched"
+        }
+      ]
+    },
+    {
+      "name": "Montana State University — Spectrum Lab",
+      "research_name": "S2 Corporation / MSU Spectrum Lab",
+      "tier": "T2",
+      "tier_label": "Montana T2 — Photonics/Sensors",
+      "payload_prospect": true,
+      "city": "Bozeman, MT",
+      "website": "https://spectrum.montana.edu",
+      "org_type": "company",
+      "what_they_do": "S2 Corp (spun out of MSU Spectrum Lab in 2004-05) builds wideband RF spectrum monitoring and receiver systems based on spatial-spectral holography. Its funders include DARPA ($9M+ award in 2020) and the National Spectrum Consortium. MSU Spectrum Lab does applied photonics, RF-photonic, and spectral-holography research. (S2 Corporation, the 2004-05 spin-out, is tracked as a note only: last public activity Aug 2020.)",
+      "fit_note": "Spectrum Lab could put a suborbital demo of an RF-photonic or spectral sensor, or of radiation- and vibration-qualified photonics, into a grant proposal. Pitch it as a university research flight. S2's last public news is Aug 2020 (DARPA award), so its current activity level is unverified. It shares an address (2310 University Way, Bozeman) with Bridger's building complex.",
+      "keep_reason": "Spectrum Lab is an active MSU research lab with a named director and published contacts. University research labs are natural paying or grant-funded payload customers, and its RF/photonic spectrum-sensing work suits a flight demo. S2 Corp is kept only as a secondary target because it may be dormant.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [
+        {
+          "name": "Krishna Mohan Rupavatharam",
+          "title": "Director, MSU Spectrum Lab",
+          "email": "krishna.rupavatharam@montana.edu",
+          "email_note": "published verbatim on the official personnel page",
+          "phone": "(406) 994-7675",
+          "source_url": "https://spectrum.montana.edu/personnel.html",
+          "evidence": "Listed as Director on the official MSU Spectrum Lab personnel page.",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Tamara Moe",
+          "title": "Research Program & Grants Manager, MSU Spectrum Lab",
+          "email": "tamara.moe@montana.edu",
+          "email_note": "published verbatim on the official personnel page",
+          "phone": "(406) 994-7596",
+          "source_url": "https://spectrum.montana.edu/personnel.html",
+          "evidence": "Listed on the official Spectrum Lab personnel page. She is the right person for grant-funded flight line items.",
+          "verified_date": "2026-09-30"
+        }
+      ],
+      "claim_checks": [
+        {
+          "claim": "S2 Corporation still exists",
+          "verdict": "UNVERIFIED",
+          "correction": "The website is still live, but its last news post is 8/31/2020 (DARPA wideband receiver contract, $9M+ with options to $20.9M). No 2021-2026 activity was confirmed.",
+          "source_url": "https://www.s2corporation.com/newsblog"
+        },
+        {
+          "claim": "MSU Spectrum Lab is active; director identified",
+          "verdict": "CONFIRMED",
+          "correction": "The current director is Krishna Mohan Rupavatharam. Earlier directors were Randy Babbitt and Zeb Barber.",
+          "source_url": "https://spectrum.montana.edu/personnel.html"
+        }
+      ]
+    },
+    {
+      "name": "Lumibird Photonics USA (Quantel, Bozeman)",
+      "research_name": "Lumibird Photonics USA (Quantel laser by Lumibird, ex-Big Sky Laser)",
+      "tier": "T2",
+      "tier_label": "Montana T2 — Photonics/Sensors",
+      "payload_prospect": true,
+      "city": "Bozeman, MT",
+      "website": "https://www.lumibird.com",
+      "org_type": "company",
+      "what_they_do": "Makes solid-state and pulsed lasers under the Quantel brand (Big Sky Laser heritage). The Bozeman site also runs an ISO-standard laser damage threshold (LIDT) and optical test lab covering optical density, reflectivity, temperature, vibration, and specialty tests from UV to far-IR.",
+      "fit_note": "There are two angles. (1) As a customer: flight-qualifying rugged laser heads or rangefinder or LiDAR parts. (2) As a partner: its environmental and optical test lab could complement Exos flight tests for shared customers. Lumibird is a French-listed group, so apply the foreign-parent screen for any controlled work. No Bozeman site lead is public, so start through the main line.",
+      "keep_reason": "A confirmed Bozeman site that makes solid-state lasers and runs an independent laser-damage and environmental test lab (including vibration testing). The parent group sells rangefinders and LiDAR for defense. There is some fit for flight-qualifying laser sources.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [],
+      "claim_checks": [
+        {
+          "claim": "Lumibird has a Bozeman site (Quantel USA / Big Sky Laser heritage)",
+          "verdict": "CONFIRMED",
+          "correction": "The entity is Lumibird Photonics USA, 49 Willow Peak Dr., Bozeman, MT 59718, main line (+1) 406-586-0131. An older address, 601 Haggerty Lane, also appears in directories.",
+          "source_url": "https://www.lumibird.com/en/contact-visiting-lumibird-2/"
+        },
+        {
+          "claim": "Named local site lead",
+          "verdict": "UNVERIFIED",
+          "correction": "No public source names a current Bozeman general manager.",
+          "source_url": "https://www.lumibird.com/en/contact-visiting-lumibird-2/"
+        }
+      ]
+    },
+    {
+      "name": "CACI — Belgrade MT site (ex-Ascent Vision Technologies)",
+      "research_name": "CACI International — Belgrade, MT site (formerly Ascent Vision Technologies)",
+      "tier": "T2",
+      "tier_label": "Montana T2 — Photonics/Sensors",
+      "payload_prospect": true,
+      "city": "Belgrade, MT",
+      "website": "https://www.caci.com",
+      "org_type": "company",
+      "what_they_do": "The former Ascent Vision Technologies builds EO/IR gimbals and sensors, counter-UAS systems, and aerial firefighting sensors. It has about 90,000 sq ft of facilities at the Belgrade airport. CACI is a large federal and defense contractor (around 23,000 employees).",
+      "fit_note": "Fits the Exos test-side, missile-defense-adjacent positioning: flight-qualifying EO/IR payloads for high-altitude or space tracking. There is no named public local site lead. The route in is CACI corporate BD or the C-UAS business line, or a warm intro through the Montana High Tech Business Alliance. Lee Dingman was AVT President in 2020, but his current role is unverified and he is not included.",
+      "keep_reason": "Confirmed large defense EO/IR and counter-UAS site near Bozeman. CACI won a $500M C-UAS IDIQ for SkyValor in July 2026. A suborbital flight of EO/IR gimbals or RF sensors is a credible test-side use case.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [],
+      "claim_checks": [
+        {
+          "claim": "CACI acquired Ascent Vision Technologies (Belgrade MT)",
+          "verdict": "CONFIRMED",
+          "correction": "Closed Aug 2020 for about $350M. AVT had said operations and employees would stay in the Gallatin Valley.",
+          "source_url": "https://virginiabusiness.com/caci-international-acquires-mont-based-aerospace-company/"
+        },
+        {
+          "claim": "Belgrade site currently focused on EO/IR gimbals and counter-UAS",
+          "verdict": "CONFIRMED",
+          "correction": "Directory listings show 'CACI (previously Ascent Vision Technologies LLC)' in Belgrade. CACI's C-UAS line is very active (SkyValor, $500M JIATF-401 IDIQ, July 2026). No public source ties SkyValor production specifically to Belgrade.",
+          "source_url": "https://investor.caci.com/2026-07-30-CACI-Secures-500M-C-UAS-IDIQ-Contract-SkyValor-Selected-as-First-Task-Order-for-JIATF-401s-Domestic-Shield-Effort"
+        }
+      ]
+    },
+    {
+      "name": "Malmstrom AFB — 341st Missile Wing (AFGSC)",
+      "research_name": "Malmstrom AFB / 341st Missile Wing (AFGSC, 20th Air Force)",
+      "tier": "T3",
+      "tier_label": "Montana T3 — Gov/Defense (relationship, not payload)",
+      "payload_prospect": false,
+      "city": "Great Falls, MT",
+      "website": "https://www.malmstrom.af.mil",
+      "org_type": "military",
+      "what_they_do": "Operates the Minuteman III ICBMs, missile alert facilities and launch facilities across more than 13,000 sq mi of central Montana. Also provides base support and security.",
+      "fit_note": "Honest assessment: not a payload customer. The value is local credibility, STEM and community events, and a possible intro to AFGSC or 20th Air Force (Maj. Gen. Stacy Jo Huser presided at the 2026 change of command). It is not a candidate for container custody, since ICBM security areas are unsuitable. Low priority.",
+      "keep_reason": "Keep only as a relationship, community, or intro target. An operational Minuteman III ICBM wing does not buy payload flights. It can, however, lead to AFGSC or 20th Air Force test and eval contacts, and its public affairs office runs community and speakers programs.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [
+        {
+          "name": "Col. David Wyrick",
+          "title": "Commander, 341st Missile Wing",
+          "email": "",
+          "email_note": "email not public",
+          "phone": "",
+          "source_url": "https://theelectricgf.com/2026/07/02/wyrick-assumes-command-of-the-341st-missile-wing-at-malmstrom/",
+          "evidence": "Took command 7/2/2026 from the retiring Col. Daniel Voorhies. DVIDS 341MWPA lists him as wing commander, with content posted through 9/23/2026.",
+          "verified_date": "2026-09-30"
+        }
+      ],
+      "claim_checks": [
+        {
+          "claim": "Current 341st MW commander",
+          "verdict": "CONFIRMED",
+          "correction": "Col. David Wyrick (since 7/2/2026).",
+          "source_url": "https://www.dvidshub.net/unit/341MWPA"
+        },
+        {
+          "claim": "ICBM wing is a potential payload customer",
+          "verdict": "CORRECTED",
+          "correction": "Not a payload customer. Keep only as a relationship, STEM, or AFGSC-intro target.",
+          "source_url": "https://theelectricgf.com/2026/07/02/wyrick-assumes-command-of-the-341st-missile-wing-at-malmstrom/"
+        }
+      ]
+    },
+    {
+      "name": "Montana National Guard / Dept. of Military Affairs",
+      "research_name": "Montana National Guard / Department of Military Affairs",
+      "tier": "T3",
+      "tier_label": "Montana T3 — Gov/Defense (relationship, not payload)",
+      "payload_prospect": false,
+      "city": "Helena (Fort William Henry Harrison), MT",
+      "website": "https://montanaguard.gov",
+      "org_type": "military",
+      "what_they_do": "Montana's Army and Air National Guard: state and federal military forces with installations including Fort Harrison (Helena) and the 120th Airlift Wing (Great Falls). It also runs the Youth Challenge Academy.",
+      "fit_note": "Ask about secure storage and custody of Exos containers or hardware at a Guard facility (for example Fort Harrison, or the 120th AW at Great Falls near Malmstrom). The Governor appoints the Adjutant General, so a Governor's-office intro would help. Start through the public affairs office or the TAG's office.",
+      "keep_reason": "Keep as a host and infrastructure partner, not a payload customer. Jon wants a military-type host (a National Guard base) for secure container custody and access, and the Adjutant General is the decision authority for Guard facilities.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [
+        {
+          "name": "Brig. Gen. Trenton J. (Trent) Gibson",
+          "title": "The Adjutant General, Montana National Guard / Director, Department of Military Affairs",
+          "email": "",
+          "email_note": "email not public",
+          "phone": "",
+          "source_url": "https://dailymontanan.com/2025/05/22/montana-national-guard-general-to-retire-in-june-governor-names-replacement/",
+          "evidence": "Appointed by Gov. Gianforte to succeed Maj. Gen. J. Peter Hronek (retired 6/7/2025). Army.mil coverage from May 2026 (163rd Infantry redesignation) shows him still serving as Adjutant General.",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "LTC Thomas Figarelle",
+          "title": "Public Affairs Officer, Montana National Guard",
+          "email": "thomas.r.figarelle.mil@army.mil",
+          "email_note": "published verbatim on the official montanaguard.gov Public Affairs page (2026 copyright)",
+          "phone": "406-324-3009",
+          "source_url": "https://montanaguard.gov/Public_Affairs/public_affairs.html",
+          "evidence": "Listed as Public Affairs Officer on the official page.",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "MSgt Michael Touchette",
+          "title": "Public Affairs Specialist, Montana National Guard",
+          "email": "michael.a.touchette2.mil@army.mil",
+          "email_note": "published verbatim on the official montanaguard.gov Public Affairs page",
+          "phone": "406-324-3007",
+          "source_url": "https://montanaguard.gov/Public_Affairs/public_affairs.html",
+          "evidence": "Listed on the official page.",
+          "verified_date": "2026-09-30"
+        }
+      ],
+      "claim_checks": [
+        {
+          "claim": "Current Montana Adjutant General",
+          "verdict": "CONFIRMED",
+          "correction": "Brig. Gen. Trenton J. Gibson, appointed June 2025 to replace Maj. Gen. J. Peter Hronek.",
+          "source_url": "https://www.army.mil/article/292865/montana_national_guard_redesignates_163rd_infantry_battalion"
+        }
+      ]
+    },
+    {
+      "name": "Montana Governor's Office + Dept. of Commerce",
+      "research_name": "Montana Governor's Office + Dept. of Commerce + Governor's Office of Economic Development",
+      "tier": "T3",
+      "tier_label": "Montana T3 — Gov/Defense (relationship, not payload)",
+      "payload_prospect": false,
+      "city": "Helena, MT",
+      "website": "https://gov.mt.gov",
+      "org_type": "government",
+      "what_they_do": "The Governor's Office sets economic-development policy, and its Office of Economic Development handles business recruitment. The Department of Commerce runs Business MT (business development, attraction and financing programs) and international relations.",
+      "fit_note": "Most useful as a door-opener, starting with Commerce's Business MT division and Business Attraction. The Governor's Office of Economic Development director seat is in transition: Mark Blasdel moved to Director of Administration (effective around late Aug/Sep 2026), and no public successor was found. Commerce Director Bertoglio's appointment was ruled unconstitutional by a district judge in April 2026, but she remains in office pending appeal. Gianforte is RGA chair for 2026.",
+      "keep_reason": "Keep as a state economic-development, business-attraction and intro target for Montana operations (payload-customer sourcing, host sites, Guard access). It is not a payload customer.",
+      "csl": "clear 2026-09-30 (scripts/csl_screen.py)",
+      "contacts": [
+        {
+          "name": "Greg Gianforte",
+          "title": "Governor of Montana",
+          "email": "",
+          "email_note": "email not public",
+          "phone": "",
+          "source_url": "https://news.mt.gov/Governors-Office/Governor_Gianforte_Convenes_Energy_Task_Force_for_First_Meeting",
+          "evidence": "Serving governor with public activity through Sep 2026 (56-county tour, education events on 9/25/2026, Columbia Falls superfund tour on 9/28/2026).",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Marta Bertoglio",
+          "title": "Director, Montana Department of Commerce",
+          "email": "marta.bertoglio@mt.gov",
+          "email_note": "published verbatim on commerce.mt.gov/about/leadership",
+          "phone": "",
+          "source_url": "https://commerce.mt.gov/about/leadership",
+          "evidence": "Listed as Director on the official leadership page and on the 7/2/2026 org chart. Caveat: a district court ruled her appointment unconstitutional in April 2026, but she remains in office pending appeal.",
+          "verified_date": "2026-09-30"
+        },
+        {
+          "name": "Mackenzie Espeland",
+          "title": "Administrator, Business MT Division, Montana Department of Commerce",
+          "email": "mackenzie.espeland@mt.gov",
+          "email_note": "published verbatim on commerce.mt.gov/about/leadership",
+          "phone": "",
+          "source_url": "https://commerce.mt.gov/about/leadership",
+          "evidence": "Listed on the official Commerce leadership page. Business MT is the right division for business development and attraction. Katie Willcockson (Senior Officer of International Relations, Business Attraction Manager, kwillcockson@mt.gov) is listed on the same page as an alternate.",
+          "verified_date": "2026-09-30"
+        }
+      ],
+      "claim_checks": [
+        {
+          "claim": "Greg Gianforte is current Governor",
+          "verdict": "CONFIRMED",
+          "correction": "",
+          "source_url": "https://news.mt.gov/Governors-Office/Governor_Gianforte_Convenes_Energy_Task_Force_for_First_Meeting"
+        },
+        {
+          "claim": "Commerce director is Marta Bertoglio",
+          "verdict": "CONFIRMED",
+          "correction": "She is serving, but her appointment was ruled unconstitutional by Judge Elizabeth Best in April 2026 and is under appeal.",
+          "source_url": "https://montanafreepress.org/2026/04/22/judge-orders-state-to-halt-paychecks-for-commerce-department-director/"
+        },
+        {
+          "claim": "Governor's Office of Economic Development director is Mark Blasdel",
+          "verdict": "CORRECTED",
+          "correction": "Blasdel was named Director of the Department of Administration (announced 7/7/2026, succeeding Misty Ann Giles, who departed 8/31/2026). No public successor at the Office of Economic Development was found.",
+          "source_url": "https://news.mt.gov/Governors-Office/Gov-Gianforte-Announces-Transition-at-the-Department-of-Administration"
+        }
+      ]
+    }
+  ],
+  "dropped_orgs": [
+    {
+      "org": "Montana Instruments (an Atlas Copco Group company)",
+      "reason": "It makes lab cryostats for quantum and physics research, and no space or aerospace customers were found. It is also now part of a large Swedish industrial group, so buying decisions sit inside Atlas Copco's Vacuum Technique area. It is not a natural payload customer.",
+      "claim_checks": [
+        {
+          "claim": "Montana Instruments is a Bozeman cryostat company",
+          "verdict": "CONFIRMED",
+          "correction": "Still operating under the Montana Instruments name at 101 Evergreen Drive, Bozeman (406-551-2796). Recent trade-show news posts are dated 2025-2026.",
+          "source_url": "https://www.montanainstruments.com/company/about"
+        },
+        {
+          "claim": "Montana Instruments was acquired (Atlas Copco / Edwards / other?)",
+          "verdict": "CONFIRMED",
+          "correction": "Acquired by Atlas Copco Group: agreed 8/24/2022, closed 11/21/2022. It sits in the Scientific Vacuum Division of Atlas Copco's Vacuum Technique business area (the area that also includes Edwards). The owner is Atlas Copco, not Edwards directly.",
+          "source_url": "https://www.atlascopcogroup.com/en/media/press-releases/2022/20221121-montana-closing"
+        },
+        {
+          "claim": "Mark Carroll is current CEO",
+          "verdict": "UNVERIFIED",
+          "correction": "The company timeline shows Carroll hired as CEO in 2020, and he is not on any current official roster. One aggregator names a General Manager (Gene Kuntz). No contact was included.",
+          "source_url": "https://www.montanainstruments.com/company/about"
+        }
+      ]
+    }
+  ],
+  "dropped_contacts": [
+    {
+      "name": "Casey Smith",
+      "org": "Resonon Inc.",
+      "reason": "role only on aggregator (theorg.com); not confirmed on a primary source"
+    },
+    {
+      "name": "Dr. Kris Merkel",
+      "org": "S2 Corporation / MSU Spectrum Lab",
+      "reason": "S2 Corporation last public activity Aug 2020 — current role/company status unverified"
+    },
+    {
+      "name": "341st Missile Wing Public Affairs (office)",
+      "org": "Malmstrom AFB / 341st Missile Wing (AFGSC, 20th Air Force)",
+      "reason": "office, not a person; email seen only in search snippets (official page 403) — unverified"
+    }
+  ]
+}

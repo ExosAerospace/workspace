@@ -1,6 +1,6 @@
 {
  "generated": "2026-09-25T23:19:20.307166-05:00",
- "total": 214,
+ "total": 215,
  "standing": 112,
  "ephemeral": 18,
  "service": 5,
@@ -4134,6 +4134,26 @@
    "risk_tier": "MED",
    "change_log": [
     "2026-09-30 created (montana-partners exo3 worker) — role + CLI + 3 pending seats (Edgar, Sean, Isaiah); nobody activated"
+   ]
+  },
+  {
+   "label": "montana-payload-prospects-load-exo3",
+   "script": "montana_payload_prospects_load.py (data: config/montana-payload-prospects.json)",
+   "kind": "process (on-demand; human-run CLI)",
+   "schedule": "on demand — re-run when the verified Montana prospect dataset changes",
+   "purpose": "Loads the web-verified Montana Spaceport payload-customer prospects (Jon 2026-09-30, MC #3287) into the Supabase CRM, tagged montana-payload-prospect / fly-exos-2027 / montana-t<N> and flagged payload-prospect. T3 gov/defense = montana-relationship-target (not a payload flag). Never touches payload-customers.json (paying customers only).",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Human-confirmed (DRY-RUN default; --apply required)",
+   "human_owner": "John Quinn",
+   "permission_envelope": "Supabase companies/contacts: INSERT new rows; on existing rows only union tags, append one provenance note line, fill blank email/title. No deletes, no overwrites, no sends.",
+   "memory_boundary": "config/montana-payload-prospects.json (public-source contacts only, each with source URL + verified date) + full paged read of companies/contacts for de-dupe.",
+   "escalation": "Dataset changes and any removal are John's call; unverified contacts stay out of the dataset (listed under dropped_contacts).",
+   "eval_suite": "python3 scripts/montana_payload_prospects_load.py --selftest — source URL + date on every contact, no guessed/aggregator emails, T3 not flagged payload, CSL clear, dedupe merges existing company/contact — PASS 10/10 2026-09-30; idempotency: re-run after --apply = 0 inserts",
+   "telemetry": "logs/fleet-events.jsonl (agent montana-payload-prospects-load-exo3, action crm_load, counts)",
+   "reusability_scope": "Pattern for any verified-prospect dataset → CRM load with paged de-dupe",
+   "risk_tier": "LOW",
+   "change_log": [
+    "2026-09-30 created; applied: 14 companies + 27 contacts inserted, 1 contact merged (Kankelborg)"
    ]
   }
  ],
