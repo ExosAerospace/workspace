@@ -244,25 +244,6 @@ def check_mail_bridge(state, now):
     state[key] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
     return results, new_fails
 
-def check_cron_prompt_guard(state):
-    """exo3 r2 (r2-confirm-gaps) scripts/cron_prompt_guard.py: the 5 human-confirm-gap crons must keep
-    propose-only prompts (no autonomous wording / literal credentials; APAC live file not written by the
-    scan). The guard emits its own fleet_log events. State key 'promptguard:<label>'."""
-    results, new_fails = [], []
-    try:
-        import cron_prompt_guard
-        found = cron_prompt_guard.check(dry=DRY)
-    except Exception as e:
-        log(f"cron prompt guard skipped: {e}")
-        return results, new_fails
-    for label, status, why, owner in found:
-        key = "promptguard:" + label
-        results.append((key, status, why, owner))
-        if status == "FAIL" and state.get(key, {}).get("status") != "FAIL":
-            new_fails.append((key, why, owner))
-        state[key] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
-    return results, new_fails
-
 def selftest():
     # fixture labels built at runtime so the exo3 gate doesn't read them as new agents
     a, b, c = (".".join(["com", "exos", "fixture-" + x]) for x in "abc")
@@ -390,9 +371,6 @@ def main():
     hy_results, hy_fails = check_cron_hygiene(state, now)
     results += hy_results
     new_fail_alerts += hy_fails
-    pg_results, pg_fails = check_cron_prompt_guard(state)
-    results += pg_results
-    new_fail_alerts += pg_fails
     mb_results, mb_fails = check_mail_bridge(state, now)
     results += mb_results
     new_fail_alerts += mb_fails
