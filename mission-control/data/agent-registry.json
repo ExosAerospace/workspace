@@ -1847,7 +1847,10 @@
    "telemetry": "logs/sam-flightopps-watch.log",
    "reusability_scope": "TBD",
    "risk_tier": "HIGH",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 alert appends the MC #1539 NASA IDIQ pre-clear block when a notice is IDIQ/NASA; points to gate nasa-idiq-preclear-exo3"
+   ]
   },
   {
    "label": "com.exos.sam-osp4-watch",
@@ -4092,6 +4095,26 @@
    "reusability_scope": "pattern reusable for mirroring any external scheduler's run history (e.g. remote triggers) into fleet_log",
    "risk_tier": "LOW",
    "envelope_source": "hand-written with the script, 2026-09-29 (cron-registry audit worker)"
+  },
+  {
+   "label": "nasa-idiq-preclear-exo3",
+   "script": "nasa_idiq_preclear_exo3.py",
+   "kind": "gate (process, on-demand + SAM-watch trigger)",
+   "schedule": "on every NASA IDIQ response before it routes to John; prompted by com.exos.sam-flightopps-watch alerts",
+   "purpose": "ExO3 GOVERN/ASSURE gate for MC #1539 (Jon 2026-07-24): pre-clears the two 2023 FO IDIQ4 disqualifiers (sol. 80AFRC23R0001) on any NASA IDIQ submission. D1 past performance must lead with the FAA-licensed, flight-qualified BLK3; D2 price volume must be year-by-year over 5 contract years with cost basis. Advisory: OSP-4 anchor (3-day, $1,017,500/flight). Replaces a debrief meeting; the 2023 data is already in hand.",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Guardrail (FAIL = hold; never edits or submits)",
+   "human_owner": "John Quinn",
+   "permission_envelope": "Read-only on the submission file; writes only logs/fleet-events.jsonl + logs/decision-traces.jsonl; no sends, no Supabase writes. Gov submission = John.",
+   "memory_boundary": "the submission file passed in + its own telemetry logs",
+   "escalation": "FAIL verdict → fix the draft; PASS → route to John for submission (John submits all gov responses)",
+   "eval_suite": "--selftest (replays the 2023 failure: AFWERX-led past performance + ROM pricing must FAIL both; compliant fixture must PASS; missing past performance must FAIL D1) — PASS 2026-09-30",
+   "telemetry": "logs/fleet-events.jsonl (agent nasa-idiq-preclear-exo3, kind govern) + logs/decision-traces.jsonl",
+   "reusability_scope": "Any NASA IDIQ / on-ramp response; pattern reusable for any gov source-selection debrief → pre-submit gate",
+   "risk_tier": "LOW",
+   "change_log": [
+    "2026-09-30 created from @Exobot note on MC #1539 (Jon: integrate under an exo3 process, no follow-up meeting)"
+   ]
   }
  ],
  "eval_wave_1": {

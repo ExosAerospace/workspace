@@ -120,6 +120,16 @@ def send_alert(new_notices):
                  "flight-services solicitation), Exos can compete to join the roster and receive assigned "
                  "payloads. Review eligibility + response window NOW — the CO (Newell) said this is the "
                  "only channel. Some hits will be noise (any 'suborbital' title); ignore non-relevant ones.")
+    # MC #1539 standing guardrail: every NASA IDIQ response is pre-cleared against the two
+    # 2023 FO IDIQ4 disqualifiers before it goes to John (exo3 gate: nasa-idiq-preclear-exo3).
+    if any('IDIQ' in f"{n.get('title','')} {n.get('type','')}".upper()
+           or 'NASA' in (n.get('fullParentPathName') or '').upper() for n in new_notices):
+        lines.append("\nNASA IDIQ PRE-CLEAR (MC #1539) — before any response routes to John:\n"
+                     "  1) Past performance LEADS with the FAA-licensed, flight-qualified BLK3 (license 3/13/26, "
+                     "heritage since 2018) — not AFWERX (2023: 'not a representative qualified launch vehicle').\n"
+                     "  2) Full year-by-year 5-contract-year Price Volume with cost basis — not ROM/summary "
+                     "(2023: 'insufficient financial detail over five contract years'). OSP-4 anchor: 3-day, $1,017,500/flight.\n"
+                     "  Gate: python3 scripts/nasa_idiq_preclear_exo3.py <response file> (must PASS).")
     body = "\n".join(lines)
     msg = (f"From: jquinnexo@pm.me\nTo: {TO}\nCc: {CC}\n"
            f"Subject: [SAM WATCH] {len(new_notices)} new Flight Opportunities / suborbital notice(s)\n\n{body}\n")
