@@ -3021,11 +3021,11 @@
    "stack_layer": "INTERPRET",
    "autonomy_tier": "Recommends-with-Context",
    "human_owner": "John Quinn",
-   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: reads workspace trackers; writes reports/monthly-investor-report-YYYY-MM.md; emails jquinnexo@pm.me via local SMTP bridge (credential embedded in prompt); announces final output to Discord channel:1501636728711282741",
+   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: reads workspace trackers; writes reports/monthly-investor-report-YYYY-MM.md; emails jquinnexo@pm.me via local SMTP bridge (credential embedded in prompt); announces final output to Discord channel:1501636728711282741; credentials: none in prompt (read by name at run time from the secrets store)",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads workspace trackers; writes reports/monthly-investor-report-YYYY-MM.md; emails jquinnexo@pm.me via local SMTP bridge (credential embedded in prompt)",
    "escalation": "external/investor/gov actions are drafted and routed to Jon; nothing sent outside Exos by the agent; output: announces final output to Discord channel:1501636728711282741; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:monthly-investor-report'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:monthly-investor-report'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:monthly-investor-report'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:monthly-investor-report'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "reusable digest/brief pattern for any audience channel",
    "risk_tier": "HIGH",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -3034,7 +3034,10 @@
    "cron_name": "Monthly Investor Report",
    "model": "anthropic/claude-opus-4-8",
    "ai_in_critical_path": true,
-   "prompt_embeds_credential": true
+   "prompt_embeds_credential": false,
+   "change_log": [
+    "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): literal SMTP/IMAP password removed from prompt; bridge password read at run time from ~/.config/exos/bridge-studio.pw / mail via scripts/send_email.py; approver John Quinn; status pending Jon approval — D-7281867 (old exposed password: D-7281868)"
+   ]
   },
   {
    "label": "cron:exos-capital-bridge-agent-1m",
@@ -3332,11 +3335,11 @@
    "stack_layer": "SENSE",
    "autonomy_tier": "Recommends-with-Context",
    "human_owner": "John Quinn",
-   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts brief to #rd-team; prompt contains a run-log append to opportunities-tracker.md (contradicted by its own no-file-access header); announces final output to Discord channel:1501636614034821320",
-   "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts brief to #rd-team; prompt contains a run-log append to opportunities-tracker.md (contradicted by its own no-file-access header)",
+   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts brief to #rd-team; announces final output to Discord channel:1501636614034821320; no local file writes (run log removed 2026-09-30; cron_telemetry records each run); empty run -> NO_REPLY (R-NONEWS)",
+   "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts brief to #rd-team",
    "escalation": "output: announces final output to Discord channel:1501636614034821320; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-technology-ip-monitor'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-technology-ip-monitor'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-technology-ip-monitor'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-technology-ip-monitor'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "MED",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -3344,7 +3347,10 @@
    "cron_id": "1cf93736-764c-42f7-879c-9eeba6b40568",
    "cron_name": "Research Team: Technology & IP Monitor",
    "model": "anthropic/claude-sonnet-5",
-   "ai_in_critical_path": true
+   "ai_in_critical_path": true,
+   "change_log": [
+    "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): contradictory instructions removed: RUN LOG file-append section dropped (isolated run cannot write files), empty-run posts (Pulse/Posture/'✅ still 3'/'no roster change') -> NO_REPLY per R-NONEWS; toolsAllow cleared (none was set); approver John Quinn; status pending Jon approval — D-7281866"
+   ]
   },
   {
    "label": "cron:exos-investor-update-weekly-feed-david",
@@ -3378,11 +3384,11 @@
    "stack_layer": "SENSE",
    "autonomy_tier": "Recommends-with-Context",
    "human_owner": "John Quinn",
-   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts brief to #rd-team; prompt contains a run-log append to opportunities-tracker.md (contradicted by its own no-file-access header); announces final output to Discord channel:1501636614034821320",
-   "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts brief to #rd-team; prompt contains a run-log append to opportunities-tracker.md (contradicted by its own no-file-access header)",
+   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts brief to #rd-team; announces final output to Discord channel:1501636614034821320; no local file writes (run log removed 2026-09-30; cron_telemetry records each run); empty run -> NO_REPLY (R-NONEWS)",
+   "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts brief to #rd-team",
    "escalation": "output: announces final output to Discord channel:1501636614034821320; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-policy-regulatory-watch'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-policy-regulatory-watch'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-policy-regulatory-watch'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-policy-regulatory-watch'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "MED",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -3390,7 +3396,10 @@
    "cron_id": "5f3b0529-ae16-41e3-adef-d0de59c7479f",
    "cron_name": "Research Team: Policy & Regulatory Watch",
    "model": "anthropic/claude-sonnet-5",
-   "ai_in_critical_path": true
+   "ai_in_critical_path": true,
+   "change_log": [
+    "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): contradictory instructions removed: RUN LOG file-append section dropped (isolated run cannot write files), empty-run posts (Pulse/Posture/'✅ still 3'/'no roster change') -> NO_REPLY per R-NONEWS; toolsAllow cleared (none was set); approver John Quinn; status pending Jon approval — D-7281866"
+   ]
   },
   {
    "label": "cron:acqbot-awards-sync-follow-up",
@@ -3560,11 +3569,11 @@
    "stack_layer": "SENSE",
    "autonomy_tier": "Recommends-with-Context",
    "human_owner": "John Quinn",
-   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts to #rd-team; prompt contains a run-log append to opportunities-tracker.md (contradicted by its own no-file-access header); announces final output to Discord channel:1501636614034821320",
-   "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts to #rd-team; prompt contains a run-log append to opportunities-tracker.md (contradicted by its own no-file-access header)",
+   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts to #rd-team; announces final output to Discord channel:1501636614034821320; no local file writes (run log removed 2026-09-30; cron_telemetry records each run); empty run -> NO_REPLY (R-NONEWS)",
+   "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts to #rd-team",
    "escalation": "output: announces final output to Discord channel:1501636614034821320; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-competitive-intelligence'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-competitive-intelligence'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-competitive-intelligence'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-competitive-intelligence'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "MED",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -3572,7 +3581,10 @@
    "cron_id": "60aed194-8587-4c9f-87bc-906b2a7ae732",
    "cron_name": "Research Team: Competitive Intelligence",
    "model": "anthropic/claude-sonnet-5",
-   "ai_in_critical_path": true
+   "ai_in_critical_path": true,
+   "change_log": [
+    "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): contradictory instructions removed: RUN LOG file-append section dropped (isolated run cannot write files), empty-run posts (Pulse/Posture/'✅ still 3'/'no roster change') -> NO_REPLY per R-NONEWS; toolsAllow cleared (none was set); approver John Quinn; status pending Jon approval — D-7281866"
+   ]
   },
   {
    "label": "cron:sam-gov-api-key-renewal-89-day-expiry",
@@ -3583,11 +3595,11 @@
    "stack_layer": "GOVERN",
    "autonomy_tier": "Notify-only",
    "human_owner": "John Quinn",
-   "permission_envelope": "toolsAllow 32 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes, node_inference; NO exec); prompted actions: announces fixed reminder to Jon DM; announces final output to Jon DM",
+   "permission_envelope": "agent default tools (main agent tools.profile=full; toolsAllow cleared 2026-09-30 because claude-cli cannot enforce it); prompted action: output ONE fixed reminder text, no tool use; announces to Jon's Discord DM. Never asks for or handles the key itself.",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: announces fixed reminder to Jon DM",
-   "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:sam-gov-api-key-renewal-89-day-expiry'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:sam-gov-api-key-renewal-89-day-expiry'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel; key status question -> Decisions board (D-7281858)",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:sam-gov-api-key-renewal-89-day-expiry'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:sam-gov-api-key-renewal-89-day-expiry'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "one-off/dated reminder; pattern only (fixed-text scheduled reminder)",
    "risk_tier": "LOW",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -3595,7 +3607,10 @@
    "cron_id": "2f914ea5-31fc-43c9-8410-74c278150d83",
    "cron_name": "SAM.gov API key renewal (89-day expiry)",
    "model": "anthropic/claude-haiku-4-5",
-   "ai_in_critical_path": true
+   "ai_in_critical_path": true,
+   "change_log": [
+    "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): model anthropic/claude-haiku-4-5 (allowlisted; dated id rejected 9/11), payload.toolsAllow cleared (claude-cli trap), reminder no longer asks Jon to send the key via Discord; approver John Quinn; status pending Jon approval — D-7281859 (key expiry check: D-7281858)"
+   ]
   },
   {
    "label": "cron:m-star-fy27-pre-position",
@@ -3979,11 +3994,11 @@
    "stack_layer": "SENSE",
    "autonomy_tier": "Recommends-with-Context",
    "human_owner": "John Quinn",
-   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: HTTP GET to Home Assistant (token embedded in prompt); posts to home channel; announces final output to Discord channel:1501636766258696333",
-   "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: HTTP GET to Home Assistant (token embedded in prompt); posts to home channel",
+   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: HTTP GET to Home Assistant (token read at run time from ~/.config/exos/home-assistant.token; never in prompt); posts to home channel; announces final output to Discord channel:1501636766258696333",
+   "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: HTTP GET to Home Assistant (token read at run time from ~/.config/exos/home-assistant.token; never in prompt); posts to home channel",
    "escalation": "output: announces final output to Discord channel:1501636766258696333; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:solar-report-7pm'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:solar-report-7pm'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "LOW",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -3992,7 +4007,10 @@
    "cron_name": "Solar Report 7pm",
    "model": "claude-sonnet-4-6",
    "ai_in_critical_path": true,
-   "prompt_embeds_credential": true
+   "prompt_embeds_credential": false,
+   "change_log": [
+    "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): Home Assistant token removed from prompt, read by file name at run time (secrets store); approver John Quinn; status pending Jon approval — D-7281867 (rotation of the exposed token: D-7281868)"
+   ]
   },
   {
    "label": "cron:karmen-watch-dow-sbir-26-bz-release-5-topics-opens-aug-26",
@@ -4049,11 +4067,11 @@
    "stack_layer": "SENSE",
    "autonomy_tier": "Recommends-with-Context",
    "human_owner": "John Quinn",
-   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: IMAP read (credential embedded in prompt); writes opportunities-tracker.md + drafts; emails Jon via SMTP; announces final output to Jon DM",
+   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: IMAP read (credential embedded in prompt); writes opportunities-tracker.md + drafts; emails Jon via SMTP; announces final output to Jon DM; credentials: none in prompt (read by name at run time from the secrets store)",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: IMAP read (credential embedded in prompt); writes opportunities-tracker.md + drafts; emails Jon via SMTP",
    "escalation": "external/investor/gov actions are drafted and routed to Jon; nothing sent outside Exos by the agent; output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:daily-email-opportunity-scanner'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:daily-email-opportunity-scanner'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "HIGH",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -4062,7 +4080,10 @@
    "cron_name": "Daily Email Opportunity Scanner",
    "model": "claude-sonnet-4-6",
    "ai_in_critical_path": true,
-   "prompt_embeds_credential": true
+   "prompt_embeds_credential": false,
+   "change_log": [
+    "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): literal SMTP/IMAP password removed from prompt; bridge password read at run time from ~/.config/exos/bridge-studio.pw / mail via scripts/send_email.py; approver John Quinn; status pending Jon approval — D-7281867 (old exposed password: D-7281868)"
+   ]
   },
   {
    "label": "cron:mission-control-email-tracker",
