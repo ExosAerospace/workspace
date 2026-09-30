@@ -53,6 +53,26 @@ def _atomic_write(fp, obj):
     os.replace(tmp, fp)
 
 
+def restore_inventory_photo(e, force):
+    """Un-delete an inventory photo: drop its `removed` marker and move a page-added file back."""
+    src, ex = e["source"], e.get("extra") or {}
+    fp = _json_path(src)
+    d = json.load(open(fp)) if os.path.exists(fp) else {}
+    gone = (d.setdefault("removed", {})).get(ex.get("key"), {})
+    if e["id"] not in gone and not force:
+        raise SystemExit(f"refusing: photo {e['id']} is not currently deleted")
+    if ex.get("parked_file"):
+        parked = os.path.join(mc_recycle.MC_DIR, ex["parked_file"])
+        dest = os.path.join(mc_recycle.MC_DIR, "uploads", "inventory-photos", (e.get("record") or {}).get("file") or "")
+        if not os.path.exists(parked):
+            raise SystemExit(f"refusing: parked binary missing: {parked}")
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        shutil.move(parked, dest)
+    gone.pop(e["id"], None)
+    _atomic_write(fp, d)
+    return f"restored inventory photo {e['id']} on {ex.get('key')}" + (" (+ file)" if ex.get("parked_file") else "")
+
+
 def restore_supabase(e, force):
     src, rec = e["source"], e["record"]
     table, key = src["table"], src.get("key", "id")
@@ -162,6 +182,8 @@ def main():
             msg = restore_supabase(e, a.force)
             if e.get("type") == "tasks":
                 msg += reattach_task_docs(e)
+        elif kind == "json" and e.get("type") == "inventory-photo":
+            msg = restore_inventory_photo(e, a.force)
         elif kind == "json":
             msg = restore_json(e, a.force)
         else:

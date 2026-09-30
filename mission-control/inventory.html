@@ -50,6 +50,17 @@
   .empty{padding:30px;text-align:center;color:var(--text2)}
   .editbtn{background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:3px 9px;cursor:pointer;font-size:.85rem}
   .editbtn:hover{border-color:var(--orange);color:var(--orange)}
+  .phbtn{background:transparent;border:1px dashed var(--border);color:var(--text2);border-radius:6px;padding:2px 7px;cursor:pointer;font-size:.78rem;vertical-align:middle}
+  .phbtn:hover{border-color:var(--orange);color:var(--orange)}
+  .phgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:10px}
+  .phcard{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--panel2)}
+  .phcard img{width:100%;height:120px;object-fit:cover;display:block;background:#000}
+  .phcard .meta{font-size:.68rem;color:var(--text2);padding:5px 7px;line-height:1.3}
+  .phcard .acts{display:flex;justify-content:flex-end;padding:0 6px 6px}
+  .phdel{background:transparent;border:1px solid var(--border);color:#e0524d;border-radius:6px;padding:2px 8px;cursor:pointer;font-size:.75rem}
+  .phconfirm{padding:6px 7px 8px;font-size:.72rem;border-top:1px solid #e0524d55;background:#e0524d14}
+  .phconfirm button{margin-top:5px;margin-right:4px;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:.72rem;border:1px solid var(--border);background:transparent;color:var(--text)}
+  .phconfirm .yes{background:#c62828;border-color:#c62828;color:#fff}
   .editedtag{display:block;color:var(--text2);font-size:.68rem;margin-top:3px}
   .ovl{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:50}
   .ovl.on{display:flex}
@@ -195,7 +206,9 @@ function render(){
   document.getElementById('count').textContent=rows.length+' of '+DATA.rows.length+' lines';
   document.getElementById('tb').innerHTML=rows.length?rows.map(r=>{
     const cls=r.short?'short':(r.on_hand>0?'have':'');
-    const ph=(r.photos||[]).slice(0,4).map(p=>'<a href="'+p.url+'" target="_blank"><img class="thumb" src="'+p.url+'" title="'+esc((p.by||'')+' '+(p.at||'').slice(0,10))+'"></a>').join('');
+    const pk=encodeURIComponent(r.key||''),np=(r.photos||[]).length;
+    const ph=(r.photos||[]).slice(-3).map(p=>'<img class="thumb" style="cursor:pointer" onclick="photoOpen(\''+pk+'\')" src="'+p.url+'" title="'+esc((p.by||'')+' '+(p.at||'').slice(0,10))+'">').join('')+
+      '<button class="phbtn" title="View / add / delete photos" onclick="photoOpen(\''+pk+'\')">'+(np>3?'+'+(np-3)+' ':'')+'📷'+(np?'':' Add')+'</button>';
     const edtag=r.edited_by?'<span class="editedtag">✎ '+esc(r.edited_by)+' · '+esc((r.edited_at||'').slice(0,10))+(r.edit_note?' · '+esc(r.edit_note):'')+'</span>':'';
     return '<tr class="'+cls+'"><td>'+esc(r.section)+'</td><td>'+esc(r.item)+'</td>'+
       '<td class="pn">'+esc(r.vendor_pn||r.mfg_pn||'')+'</td><td>'+esc(r.description)+edtag+'</td>'+
@@ -331,6 +344,54 @@ function bomEditConfirm(){
     })
     .catch(e=>{Object.assign(row,before);render();toast('⚠ Save failed — reverted: '+e.message,false);});
 }
+
+// ── Photos: several per part + delete behind an explicit confirm (Jon 2026-09-29) ──
+let phRow=null,phAsk=null;
+function photoOpen(k){
+  k=decodeURIComponent(k);
+  phRow=(DATA&&DATA.rows||[]).find(r=>(r.key||'')===k); if(!phRow)return;
+  window.__bomEditing=true; phAsk=null;
+  document.getElementById('photoKey').textContent=phRow.section+' · item '+phRow.item+' · '+(phRow.vendor_pn||phRow.mfg_pn||'')+' — '+(phRow.description||'');
+  document.getElementById('phStatus').textContent='';
+  photoRender();
+  document.getElementById('photoOvl').classList.add('on');
+}
+function photoClose(){document.getElementById('photoOvl').classList.remove('on');window.__bomEditing=false;phRow=null;phAsk=null;}
+function photoRender(){
+  if(!phRow)return;
+  const ps=phRow.photos||[];
+  document.getElementById('phGrid').innerHTML=ps.length?ps.map(p=>{
+    const conf=phAsk===p.id?'<div class="phconfirm"><strong>Delete this photo?</strong><br>'+(p.source==='task'?'It is removed from this part. The original stays on task #'+esc(p.task||'?')+'.':'It moves to the recycle bin (restorable for 90 days).')+
+      '<br><button onclick="photoAsk(null)">Cancel</button><button class="yes" onclick="photoDelete(\''+esc(p.id)+'\')">Yes, delete</button></div>'
+      :'<div class="acts"><button class="phdel" onclick="photoAsk(\''+esc(p.id)+'\')">🗑 Delete</button></div>';
+    return '<div class="phcard"><a href="'+p.url+'" target="_blank"><img src="'+p.url+'"></a><div class="meta">'+esc(p.by||'')+' · '+esc((p.at||'').slice(0,10))+
+      (p.source==='task'?' · task #'+esc(p.task||''):'')+(p.caption?'<br>'+esc(p.caption):'')+'</div>'+conf+'</div>';
+  }).join(''):'<div class="muted" style="grid-column:1/-1">No photos yet. Add as many as you like.</div>';
+}
+function photoAsk(id){phAsk=id;photoRender();}
+async function photoUpload(inp){
+  const row=phRow,files=[...(inp.files||[])]; inp.value=''; if(!row||!files.length)return;
+  const st=document.getElementById('phStatus'); let ok=0,err='';
+  for(let i=0;i<files.length;i++){
+    st.textContent='Uploading '+(i+1)+' of '+files.length+'…';
+    const fd=new FormData(); fd.append('key',row.key); fd.append('file',files[i]);
+    try{const r=await fetch('/api/inventory/photos/add',{method:'POST',body:fd});
+      if(r.status===401){location='/login';return;}
+      const j=await r.json(); if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
+      row.photos=j.photos; ok++;}catch(e){err=e.message;}
+  }
+  st.textContent=ok+' of '+files.length+' added'+(err?' · error: '+err:'');
+  if(phRow===row)photoRender(); render();
+  toast(err?('Photo upload problem: '+err):(ok+' photo'+(ok>1?'s':'')+' added'),!err);
+}
+async function photoDelete(id){
+  const row=phRow; if(!row)return;
+  try{const r=await fetch('/api/inventory/photos/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:row.key,id,confirm:true})});
+    if(r.status===401){location='/login';return;}
+    const j=await r.json(); if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
+    row.photos=j.photos; phAsk=null; if(phRow===row)photoRender(); render(); toast('Photo deleted (in recycle bin)');
+  }catch(e){toast('Delete failed: '+e.message,false);}
+}
 function toast(m,ok=true){const t=document.getElementById('toast');t.textContent=m;t.style.borderColor=ok?'':'#e0524d';t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),ok?3000:6000);}
 load(); setInterval(load,30000); loadProps(); setInterval(loadProps,30000);
 </script>
@@ -351,6 +412,19 @@ load(); setInterval(load,30000); loadProps(); setInterval(loadProps,30000);
       <button class="btn" id="editReviewBtn" onclick="bomEditReview()">Review change →</button>
       <button class="btn" id="editConfirmBtn" style="display:none;background:#2e7d32" onclick="bomEditConfirm()">✓ Confirm &amp; save</button>
     </div>
+  </div>
+</div>
+<div class="ovl" id="photoOvl" onclick="if(event.target===this)photoClose()">
+  <div class="modal" style="max-width:760px">
+    <h3>📷 Photos</h3>
+    <div class="k" id="photoKey"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <label class="btn" style="cursor:pointer;margin:0">➕ Add photos<input type="file" id="phPick" accept="image/*" multiple style="display:none" onchange="photoUpload(this)"></label>
+      <label class="btn ghost" style="cursor:pointer;margin:0">📸 Take photo<input type="file" id="phCam" accept="image/*" capture="environment" style="display:none" onchange="photoUpload(this)"></label>
+      <span class="muted" id="phStatus" style="font-size:.75rem"></span>
+    </div>
+    <div class="phgrid" id="phGrid"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn ghost" onclick="photoClose()">Close</button></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>

@@ -4567,6 +4567,61 @@ const server = http.createServer((req, res) => {
     }
   }
 
+  // ── Inventory photos: several per BOM line + delete behind a confirm (lib/inventory-photos.js) ──
+  // Add = any signed-in user. Delete = admin/manager or whoever added that photo; every delete goes
+  // to the recycle bin (restore: scripts/mc_restore.py --restore <recycle_id>).
+  if (req.url.split('?')[0].startsWith('/api/inventory/photos/')) {
+    const s = getSession(req);
+    if (!s) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    const invPhotos = require('./lib/inventory-photos');
+    const who = s.name || s.email || 'MC user';
+    const ledgerFor = key => {
+      // Ledger photos for a BOM line, found the same way /api/inventory joins them.
+      try {
+        const bom = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'bom-index.json'), 'utf8'));
+        const inv = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'inventory.json'), 'utf8'));
+        const row = (bom.rows || []).find(r => `${r.section || ''}#${r.item || ''}` === key);
+        if (!row) return [];
+        const U = v => String(v || '').trim().toUpperCase();
+        const rec = (inv.records || []).find(r => [row.vendor_pn, row.mfg_pn].some(k => k && [r.vendor_pn, r.mfg_pn, r.key].some(x => x && U(x) === U(k))))
+          || (inv.records || []).find(r => r.section && r.item && U(`${r.section}#${r.item}`) === U(key));
+        return rec ? (rec.photos || []) : [];
+      } catch { return []; }
+    };
+    const psub = req.url.split('?')[0].replace('/api/inventory/photos', '');
+    if (psub === '/add' && req.method === 'POST') {
+      (async () => {
+        try {
+          const parts = await parseMultipart(req);
+          const added = invPhotos.add(String(parts.key || ''), [parts.file], who, String(parts.caption || ''));
+          glog('mc-server', 'inventory_photo_added', 'ok', `${who} added ${added.length} photo(s) to ${parts.key}`, { key: parts.key, by: s.email });
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, photos: invPhotos.photosFor(String(parts.key), ledgerFor(String(parts.key))) }));
+        } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: e.message })); }
+      })();
+      return;
+    }
+    if (psub === '/delete' && req.method === 'POST') {
+      let body = ''; req.on('data', c => body += c); req.on('end', () => {
+        try {
+          const j = JSON.parse(body || '{}');
+          if (!j.confirm) throw new Error('confirmation required');
+          const key = String(j.key || ''), id = String(j.id || '');
+          const mine = (invPhotos.load().added[key] || []).find(p => p.id === id && p.by === who);
+          if (!['admin', 'manager'].includes(s.role) && !mine) {
+            res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'Only admin/manager or the person who added it can delete this photo' })); return;
+          }
+          const ledger = ledgerFor(key);
+          const r = invPhotos.remove(key, id, ledger, recycle.whoOf(s), '/api/inventory/photos/delete');
+          glog('mc-server', 'inventory_photo_deleted', 'ok', `${who} deleted photo ${id} on ${key}`, { key, id, by: s.email, recycle_id: r.recycle_id });
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, recycle_id: r.recycle_id, photos: invPhotos.photosFor(key, ledger) }));
+        } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: e.message })); }
+      });
+      return;
+    }
+  }
+
   if (req.url.split('?')[0] === '/api/inventory' && req.method === 'GET') {
     try {
       const readJSON = (p, d) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return d; } };
@@ -4594,6 +4649,7 @@ const server = http.createServer((req, res) => {
         return { unit_cost: 0, cost_basis: 'none', cost_source: '', cost_ref: '' };
       };
       const inv = readJSON(path.join(__dirname, 'data', 'inventory.json'), { records: [] });
+      const invPhotoStore = require('./lib/inventory-photos').load();
       const locmap = readJSON(path.join(__dirname, 'data', 'bom-location-map.json'), { map: {} }).map || {};
       // Credit real shop stock (Steve's inventory of record) into have/short, matched on SKU (>=5 chars).
       const shop = readJSON(path.join(__dirname, 'data', 'shop-inventory.json'), { items: [] });
@@ -4639,7 +4695,7 @@ const server = http.createServer((req, res) => {
         const req2 = parseFloat(String(reqVal).trim()); const hasReq = !isNaN(req2);
         const sh = (hasReq && oh < req2) ? Math.round((req2 - oh) * 1000) / 1000 : 0;
         onhandUnits += oh; if (sh) short++;
-        const photos = rec ? (rec.photos || []).map(p => ({ url: '/uploads/' + encodeURIComponent(p.file || ''), by: p.by, at: p.at })) : [];
+        const photos = require('./lib/inventory-photos').photosFor(ekey, rec ? (rec.photos || []) : [], invPhotoStore);
         const ledgerLoc = rec ? (rec.locations || []) : [];
         // Stored location from the parts-room / warehouse map when the ledger has none.
         const mm = ledgerLoc.length ? null : locmap[recKey(vpn, mpn, item, row.description)];
