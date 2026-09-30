@@ -42,6 +42,19 @@ tr:hover td{background:#191b1e}
 .diffbox .d{margin:4px 0}.diffbox .o{color:#e0524d;text-decoration:line-through}.diffbox .n2{color:#4caf50;font-weight:700}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12331a;border:1px solid #4caf50;color:#d7ffd7;padding:10px 16px;border-radius:8px;z-index:60;display:none}
 .toast.on{display:block}
+.thumb{width:34px;height:34px;object-fit:cover;border-radius:4px;border:1px solid var(--border);margin-right:3px;vertical-align:middle;cursor:pointer}
+.phbtn{background:transparent;border:1px dashed var(--border);color:var(--text2);border-radius:6px;padding:2px 7px;cursor:pointer;font-size:.78rem;vertical-align:middle;white-space:nowrap}
+.phbtn:hover{border-color:var(--orange);color:var(--orange)}
+.phgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:10px}
+.phcard{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#111316}
+.phcard img{width:100%;height:120px;object-fit:cover;display:block;background:#000}
+.phcard .meta{font-size:.68rem;color:var(--text2);padding:5px 7px;line-height:1.3}
+.phcard .pacts{display:flex;justify-content:flex-end;padding:0 6px 6px}
+.phdel{background:transparent;border:1px solid var(--border);color:#e0524d;border-radius:6px;padding:2px 8px;cursor:pointer;font-size:.75rem}
+.phconfirm{padding:6px 7px 8px;font-size:.72rem;border-top:1px solid #e0524d55;background:#e0524d14}
+.phconfirm button{margin-top:5px;margin-right:4px;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:.72rem;border:1px solid var(--border);background:transparent;color:var(--text)}
+.phconfirm .yes{background:#c62828;border-color:#c62828;color:#fff}
+.sid{display:block;color:var(--text2);font-size:.66rem;font-family:ui-monospace,Menlo,monospace}
 </style></head><body>
 <header>
   <h1>📦 Shop Inventory <span class="muted" style="font-weight:400;font-size:.8rem">— inventory of record</span></h1>
@@ -62,8 +75,8 @@ tr:hover td{background:#191b1e}
 <div class="wrap"><table id="tbl"><thead><tr>
   <th data-k="category">Category</th><th data-k="location">Location</th><th data-k="contents">Contents</th>
   <th data-k="description">Description</th><th data-k="exos_sku">Exos SKU</th><th data-k="source_sku">Source/SKU</th>
-  <th data-k="qty">Qty</th><th data-k="unit">Unit</th><th data-k="value">Value</th><th data-k="jurisdiction">Juris.</th><th>Edit</th>
-</tr></thead><tbody id="body"><tr><td colspan="11" class="muted" style="padding:30px;text-align:center">loading…</td></tr></tbody></table></div>
+  <th data-k="qty">Qty</th><th data-k="unit">Unit</th><th data-k="value">Value</th><th data-k="jurisdiction">Juris.</th><th>Photos</th><th>Edit</th>
+</tr></thead><tbody id="body"><tr><td colspan="12" class="muted" style="padding:30px;text-align:center">loading…</td></tr></tbody></table></div>
 <script>
 let ALL=[], VIEW=[], sortK='category', sortDir=1;
 const $=id=>document.getElementById(id);
@@ -92,19 +105,20 @@ function kpi(n,l){return `<div class="kpi"><div class="n">${n}</div><div class="
 function sortAndRender(){
   VIEW.sort((a,b)=>{let x=a[sortK],y=b[sortK];if(sortK==='qty'||sortK==='value'){x=parseFloat(x)||0;y=parseFloat(y)||0;return (x-y)*sortDir}return String(x||'').localeCompare(String(y||''))*sortDir});
   $('body').innerHTML=VIEW.map(i=>`<tr>
-    <td>${i.category||''}${i.sale_or_trash?' <span class="tag">S/T</span>':''}</td>
+    <td>${i.category||''}${i.sale_or_trash?' <span class="tag">S/T</span>':''}<span class="sid" title="Permanent Exos ID (last column of Steve's sheet)">${esc(i.id)}</span></td>
     <td>${esc(i.location)}</td>
     <td class="${i.is_rocket?'rocket':''}">${esc(i.contents)}</td>
     <td class="muted">${esc(i.description)}${i.edited_by?` <span class="etag" title="edited by ${esc(i.edited_by)} on ${esc((i.edited_at||'').slice(0,10))}${i.edit_note?' · '+esc(i.edit_note):''}">✎</span>`:''}</td>
     <td>${esc(i.exos_sku)}</td><td>${esc(i.source_sku)}</td>
     <td>${i.qty||0}</td><td>${i.unit||''}</td><td>${fmt(i.value)}</td><td>${i.jurisdiction||''}</td>
+    <td>${photoCell(i)}</td>
     <td><button class="ebtn" title="Edit item" onclick="shopEdit('${i.id}')">✎</button></td>
-  </tr>`).join('')||'<tr><td colspan="11" class="muted" style="padding:30px;text-align:center">no matches</td></tr>';
+  </tr>`).join('')||'<tr><td colspan="12" class="muted" style="padding:30px;text-align:center">no matches</td></tr>';
   $('count').textContent=VIEW.length+' shown';
 }
 function esc(s){return String(s||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}
 function exportCSV(){
-  const cols=['category','location','contents','description','exos_sku','source_sku','qty','unit','value','jurisdiction','is_rocket'];
+  const cols=['id','category','location','contents','description','exos_sku','source_sku','qty','unit','value','jurisdiction','is_rocket'];
   const rows=[cols.join(',')].concat(VIEW.map(i=>cols.map(c=>'"'+String(i[c]??'').replace(/"/g,'""')+'"').join(',')));
   const b=new Blob([rows.join('\n')],{type:'text/csv'});const a=document.createElement('a');
   a.href=URL.createObjectURL(b);a.download='shop-inventory.csv';a.click();
@@ -176,6 +190,58 @@ function shopEditConfirm(){
       shopToast('⚠ Save failed — reverted: '+e.message,false);
     });
 }
+// ── Photos: several per line + delete behind an explicit confirm (same manager as inventory.html) ──
+// Keyed "shop#SHOP-xxxxx" — the SHOP id is permanent, so photos stay on the right part across reloads.
+let phRow=null,phAsk=null;
+function photoCell(i){
+  const ps=i.photos||[],n=ps.length;
+  return ps.slice(-2).map(p=>'<img class="thumb" onclick="photoOpen(\''+i.id+'\')" src="'+p.url+'" title="'+esc((p.by||'')+' '+(p.at||'').slice(0,10))+'">').join('')+
+    '<button class="phbtn" title="View / add / delete photos" onclick="photoOpen(\''+i.id+'\')">'+(n>2?'+'+(n-2)+' ':'')+'📷'+(n?'':' Add')+'</button>';
+}
+function photoOpen(id){
+  phRow=ALL.find(x=>x.id===id)||VIEW.find(x=>x.id===id); if(!phRow)return;
+  phAsk=null;
+  $('photoKey').textContent=phRow.id+' · '+(phRow.category||'')+' · '+(phRow.location||'—')+' — '+(phRow.contents||phRow.description||'');
+  $('phStatus').textContent='';
+  photoRender();
+  $('photoOvl').classList.add('on');
+}
+function photoClose(){$('photoOvl').classList.remove('on');phRow=null;phAsk=null;}
+function photoRender(){
+  if(!phRow)return;
+  const ps=phRow.photos||[];
+  $('phGrid').innerHTML=ps.length?ps.map(p=>{
+    const conf=phAsk===p.id?'<div class="phconfirm"><strong>Delete this photo?</strong><br>It moves to the recycle bin (restorable for 90 days).'+
+      '<br><button onclick="photoAsk(null)">Cancel</button><button class="yes" onclick="photoDelete(\''+esc(p.id)+'\')">Yes, delete</button></div>'
+      :'<div class="pacts"><button class="phdel" onclick="photoAsk(\''+esc(p.id)+'\')">🗑 Delete</button></div>';
+    return '<div class="phcard"><a href="'+p.url+'" target="_blank"><img src="'+p.url+'"></a><div class="meta">'+esc(p.by||'')+' · '+esc((p.at||'').slice(0,10))+
+      (p.caption?'<br>'+esc(p.caption):'')+'</div>'+conf+'</div>';
+  }).join(''):'<div class="muted" style="grid-column:1/-1">No photos yet. Add as many as you like.</div>';
+}
+function photoAsk(id){phAsk=id;photoRender();}
+async function photoUpload(inp){
+  const row=phRow,files=[...(inp.files||[])]; inp.value=''; if(!row||!files.length)return;
+  const st=$('phStatus'); let ok=0,err='';
+  for(let k=0;k<files.length;k++){
+    st.textContent='Uploading '+(k+1)+' of '+files.length+'…';
+    const fd=new FormData(); fd.append('key','shop#'+row.id); fd.append('file',files[k]);
+    try{const r=await fetch('/api/inventory/photos/add',{method:'POST',body:fd});
+      if(r.status===401){location='/login';return;}
+      const j=await r.json(); if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
+      row.photos=j.photos; ok++;}catch(e){err=e.message;}
+  }
+  st.textContent=ok+' of '+files.length+' added'+(err?' · error: '+err:'');
+  if(phRow===row)photoRender(); sortAndRender();
+  shopToast(err?('Photo upload problem: '+err):(ok+' photo'+(ok>1?'s':'')+' added'),!err);
+}
+async function photoDelete(id){
+  const row=phRow; if(!row)return;
+  try{const r=await fetch('/api/inventory/photos/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:'shop#'+row.id,id,confirm:true})});
+    if(r.status===401){location='/login';return;}
+    const j=await r.json(); if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
+    row.photos=j.photos; phAsk=null; if(phRow===row)photoRender(); sortAndRender(); shopToast('Photo deleted (in recycle bin)');
+  }catch(e){shopToast('Delete failed: '+e.message,false);}
+}
 load();
 </script>
 <div class="ovl" id="se_ovl">
@@ -195,6 +261,19 @@ load();
       <button class="btn" id="se_review" onclick="shopEditReview()">Review change →</button>
       <button class="btn" id="se_confirm" style="display:none;background:#2e7d32;color:#fff" onclick="shopEditConfirm()">✓ Confirm &amp; save</button>
     </div>
+  </div>
+</div>
+<div class="ovl" id="photoOvl" onclick="if(event.target===this)photoClose()">
+  <div class="modal" style="max-width:760px">
+    <h3>📷 Photos</h3>
+    <div class="k" id="photoKey"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <label class="btn" style="cursor:pointer;margin:0;display:inline-block;text-transform:none;letter-spacing:0;font-size:.8rem;color:#111">➕ Add photos<input type="file" id="phPick" accept="image/*" multiple style="display:none" onchange="photoUpload(this)"></label>
+      <label class="btn ghost" style="cursor:pointer;margin:0;display:inline-block;text-transform:none;letter-spacing:0;font-size:.8rem">📸 Take photo<input type="file" id="phCam" accept="image/*" capture="environment" style="display:none" onchange="photoUpload(this)"></label>
+      <span class="muted" id="phStatus" style="font-size:.75rem"></span>
+    </div>
+    <div class="phgrid" id="phGrid"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn ghost" onclick="photoClose()">Close</button></div>
   </div>
 </div>
 <div class="toast" id="se_toast"></div>

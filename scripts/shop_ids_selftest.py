@@ -3,7 +3,9 @@
 Runs entirely in a temp dir (own registry/inventory/logs, throwaway password file, --decision-dry-run,
 --no-fleet-log): never touches live data, never files a real Decision.
 
-  python3 scripts/shop_ids_selftest.py      -> prints PASS/FAIL per check, exit 0 only if all pass
+  python3 scripts/shop_ids_selftest.py         -> prints PASS/FAIL per check, exit 0 only if all pass
+  python3 scripts/shop_ids_selftest.py --live  -> + live MC checks: /api/shop-inventory ids == registry,
+      photo add/list/delete on a shop line (throwaway selftest users + test photo removed afterwards)
 """
 import json, os, shutil, subprocess, sys, tempfile
 import openpyxl
@@ -206,9 +208,107 @@ def main():
           and os.path.basename(v1) not in gs.get("rejected", {}), r.get("summary"))
 
     shutil.rmtree(t, ignore_errors=True)
+    if "--live" in sys.argv:
+        live()
     n_ok = sum(1 for _, ok in results if ok)
     print(f"\n{n_ok}/{len(results)} passed")
     return 0 if n_ok == len(results) else 1
+
+
+def live():
+    """Against the running MC: ids served == registry, and shop-line photos add/list/delete work.
+    Creates two throwaway 'member' users (selftest flag) and removes them + the test photo in finally."""
+    import hashlib, http.cookiejar, secrets, urllib.request, urllib.error, uuid, datetime
+    MCD = os.path.join(R.WS, "mission-control")
+    USERS = os.path.join(MCD, "users.json")
+    base = "http://127.0.0.1:8080"
+
+    def save_users(obj):
+        tmp = f"{USERS}.tmp.{os.getpid()}"
+        with open(tmp, "w") as f:
+            json.dump(obj, f, indent=2, ensure_ascii=False)   # byte-identical to server.js JSON.stringify(.., 2)
+        os.replace(tmp, USERS)
+
+    def client():
+        return urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+
+    def call(op, path, method="GET", body=None, ctype="application/json"):
+        data = body if isinstance(body, bytes) else (json.dumps(body).encode() if body is not None else None)
+        req = urllib.request.Request(base + path, method=method, data=data, headers={"Content-Type": ctype})
+        try:
+            r = op.open(req, timeout=30); return r.status, r.read()
+        except urllib.error.HTTPError as e:
+            return e.code, e.read()
+
+    tag = secrets.token_hex(4)
+    temps, photo_ids = [], []
+    users = json.load(open(USERS))
+    nid = max([int(u["id"]) for u in users if str(u.get("id", "")).isdigit()] or [0]) + 1000
+    for n in ("a", "b"):
+        pw, salt = "Selftest-" + secrets.token_hex(12), secrets.token_hex(32)
+        temps.append(({"id": nid + len(temps), "email": f"selftest-shopids-{n}-{tag}@exos-selftest.invalid",
+                       "name": f"Selftest shopids {n}", "role": "member", "active": True, "selftest": True,
+                       "password_hash": hashlib.pbkdf2_hmac("sha256", pw.encode(), salt.encode(), 100000, dklen=64).hex(),
+                       "password_salt": salt, "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat()}, pw))
+    cur = json.load(open(USERS)); cur.extend(u for u, _ in temps); save_users(cur)
+    try:
+        ops = []
+        for u, pw in temps:
+            op = client(); st, _ = call(op, "/api/login", "POST", {"email": u["email"], "password": pw}); ops.append(op)
+            check(f"live: login throwaway {u['role']}", st == 200, st)
+        a, b = ops
+        st, body = call(a, "/api/shop-inventory")
+        d = json.loads(body) if st == 200 else {}
+        served = [i["id"] for i in d.get("items", [])]
+        inv = json.load(open(os.path.join(R.DATA, "shop-inventory.json")))
+        reg = json.load(open(os.path.join(R.DATA, "shop-id-registry.json")))
+        active = sorted(k for k, e in reg["ids"].items() if e["status"] == "active")
+        check("live: /api/shop-inventory ids == shop-inventory.json == registry active", st == 200 and
+              served == [i["id"] for i in inv["items"]] and sorted(served) == active, f"{st} {len(served)}/{len(active)}")
+        check("live: every served line has a photos array", all(isinstance(i.get("photos"), list) for i in d.get("items", [])))
+        sid = served[-1]; key = "shop#" + sid
+        png = bytes.fromhex("89504e470d0a1a0a0000000d4948445200000001000000010806000000"
+                            "1f15c4890000000d49444154789c6360000002000154a24f5d0000000049454e44ae426082")
+        bnd = uuid.uuid4().hex
+
+        def mp(k):
+            return (f"--{bnd}\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\n{k}\r\n"
+                    f"--{bnd}\r\nContent-Disposition: form-data; name=\"file\"; filename=\"selftest.png\"\r\n"
+                    f"Content-Type: image/png\r\n\r\n").encode() + png + f"\r\n--{bnd}--\r\n".encode()
+        ct = f"multipart/form-data; boundary={bnd}"
+        st, body = call(a, "/api/inventory/photos/add", "POST", mp(key), ct)
+        j = json.loads(body) if body else {}
+        photo_ids += [p["id"] for p in j.get("photos", []) if p.get("by", "").startswith("Selftest shopids")]
+        check("live: photo added to a shop line", st == 200 and j.get("ok") and len(photo_ids) == 1, (st, body[:200]))
+        st, body = call(a, "/api/inventory/photos/add", "POST", mp("shop#SHOP-99999"), ct)
+        check("live: photo on unknown shop id refused", st == 400, st)
+        st, body = call(a, "/api/shop-inventory?search=" + sid)
+        it = [i for i in json.loads(body).get("items", []) if i["id"] == sid] if st == 200 else []
+        check("live: photo shows on the line in /api/shop-inventory", it and any(p["id"] in photo_ids for p in it[0]["photos"]))
+        if photo_ids:
+            st, _ = call(b, "/api/inventory/photos/delete", "POST", {"key": key, "id": photo_ids[0], "confirm": True})
+            check("live: other member (not uploader) cannot delete", st == 403, st)
+            st, _ = call(a, "/api/inventory/photos/delete", "POST", {"key": key, "id": photo_ids[0]})
+            check("live: delete without confirm refused", st == 400, st)
+            st, body = call(a, "/api/inventory/photos/delete", "POST", {"key": key, "id": photo_ids[0], "confirm": True})
+            j = json.loads(body) if body else {}
+            check("live: uploader deletes with confirm -> recycle bin", st == 200 and j.get("ok") and j.get("recycle_id")
+                  and not any(p["id"] in photo_ids for p in j.get("photos", [])), (st, body[:200]))
+    finally:
+        cur = json.load(open(USERS))
+        save_users([u for u in cur if not str(u.get("email", "")).endswith(f"-{tag}@exos-selftest.invalid")])
+        check("live cleanup: throwaway users removed",
+              not any(str(u.get("email", "")).endswith(f"-{tag}@exos-selftest.invalid") for u in json.load(open(USERS))))
+        if photo_ids:   # drop the test photo's store entries (its file stays parked in the recycle bin)
+            sp = os.path.join(R.DATA, "inventory-photos.json")
+            st_ = json.load(open(sp))
+            for k in list(st_.get("added", {})):
+                st_["added"][k] = [p for p in st_["added"][k] if p["id"] not in photo_ids]
+                if not st_["added"][k]: del st_["added"][k]
+            for k in list(st_.get("removed", {})):
+                for pid in photo_ids: st_["removed"][k].pop(pid, None)
+                if not st_["removed"][k]: del st_["removed"][k]
+            json.dump(st_, open(sp + ".tmp", "w"), indent=1); os.replace(sp + ".tmp", sp)
 
 
 if __name__ == "__main__":

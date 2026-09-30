@@ -97,4 +97,18 @@ function remove(key, photoId, ledgerPhotos, who, route) {
   return { ok: true, recycle_id: rid };
 }
 
-module.exports = { STORE, PHOTO_DIR, IMG_EXTS, load, save, ledgerId, photosFor, add, remove };
+// Full Shop Inventory lines (Steve's workbook) use key "shop#SHOP-xxxxx". The SHOP id is permanent
+// (data/shop-id-registry.json, exo3 shop-stable-ids 2026-09-30), so photos stay on the right part across
+// reloads. Shop lines have no ledger photos. A shop key is only valid for an id on the current inventory.
+const SHOP_KEY_RE = /^shop#(SHOP-\d{5,})$/;
+function isShopKey(key) { return SHOP_KEY_RE.test(String(key || '')); }
+function shopKeyValid(key, shopInventoryPath) {
+  const m = SHOP_KEY_RE.exec(String(key || ''));
+  if (!m) return false;
+  try {
+    const inv = JSON.parse(fs.readFileSync(shopInventoryPath || path.join(MC_DIR, 'data', 'shop-inventory.json'), 'utf8'));
+    return (inv.items || []).some(i => i.id === m[1]);
+  } catch { return false; }
+}
+
+module.exports = { STORE, PHOTO_DIR, IMG_EXTS, load, save, ledgerId, photosFor, add, remove, isShopKey, shopKeyValid };

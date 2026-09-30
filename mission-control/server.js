@@ -4643,7 +4643,10 @@ const server = http.createServer((req, res) => {
       const shop = readJSON(path.join(__dirname, 'data', 'shop-inventory.json'), { items: [], counts: {}, total: 0 });
       // Apply manual item edits (keyed by item id) with who/when attribution, before filtering.
       const shopEdits = readJSON(path.join(__dirname, 'data', 'shop-edits.json'), {});
+      // Photos keyed "shop#SHOP-xxxxx" (permanent ids — data/shop-id-registry.json).
+      const invPhotos = require('./lib/inventory-photos'); const phStore = invPhotos.load();
       for (const it of (shop.items || [])) {
+        it.photos = invPhotos.photosFor('shop#' + it.id, [], phStore);
         const e = shopEdits[it.id];
         if (!e) continue;
         for (const k of ['contents', 'description', 'qty', 'location']) {
@@ -4661,7 +4664,7 @@ const server = http.createServer((req, res) => {
       if (loc) items = items.filter(i => String(i.location || '').toLowerCase().includes(loc));
       if (rocket === '1') items = items.filter(i => i.is_rocket);
       if (rocket === '0') items = items.filter(i => !i.is_rocket);
-      if (q) items = items.filter(i => [i.contents, i.description, i.exos_sku, i.source_sku, i.location, i.comments]
+      if (q) items = items.filter(i => [i.id, i.contents, i.description, i.exos_sku, i.source_sku, i.location, i.comments]
         .some(v => String(v || '').toLowerCase().includes(q)));
       let value = 0; for (const i of items) value += (parseFloat(i.total) || (parseFloat(i.value) || 0) * (parseFloat(i.qty) || 0)) || 0;
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -4714,6 +4717,7 @@ const server = http.createServer((req, res) => {
     const invPhotos = require('./lib/inventory-photos');
     const who = s.name || s.email || 'MC user';
     const ledgerFor = key => {
+      if (invPhotos.isShopKey(key)) return [];  // Full Shop Inventory line: page-added photos only
       // Ledger photos for a BOM line, found the same way /api/inventory joins them.
       try {
         const bom = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'bom-index.json'), 'utf8'));
@@ -4731,6 +4735,7 @@ const server = http.createServer((req, res) => {
       (async () => {
         try {
           const parts = await parseMultipart(req);
+          if (invPhotos.isShopKey(parts.key) && !invPhotos.shopKeyValid(String(parts.key))) throw new Error('unknown shop line');
           const added = invPhotos.add(String(parts.key || ''), [parts.file], who, String(parts.caption || ''));
           glog('mc-server', 'inventory_photo_added', 'ok', `${who} added ${added.length} photo(s) to ${parts.key}`, { key: parts.key, by: s.email });
           res.writeHead(200, { 'Content-Type': 'application/json' });
