@@ -75,6 +75,11 @@ def temp_password():
     return f"ExosMT-{word}-{num}"
 
 
+def max_id(users):
+    """users.json mixes int and string ids — only numeric ones count for the next id."""
+    return max([int(u["id"]) for u in users if str(u.get("id", "")).isdigit()] or [0])
+
+
 def load(p):
     with open(p) as f:
         return json.load(f)
@@ -86,6 +91,8 @@ def save_atomic(p, obj, backup_tag=None):
     tmp = f"{p}.tmp.{os.getpid()}"
     with open(tmp, "w") as f:
         json.dump(obj, f, indent=2)
+    if os.path.exists(p):
+        shutil.copymode(p, tmp)   # users.json is 0600 — never widen it
     os.replace(tmp, p)
 
 
@@ -179,7 +186,7 @@ def cmd_add(a):
         existing.update({"active": True, "password_hash": hash_password(pw, salt), "password_salt": salt, "must_reset": True})
         uid = existing["id"]
     else:
-        uid = max((u.get("id") or 0) for u in users) + 1
+        uid = max_id(users) + 1
         users.append({"id": uid, "email": email, "name": a.name, "role": ROLE, "org": a.org,
                       "password_hash": hash_password(pw, salt), "password_salt": salt,
                       "created_at": now(), "active": True, "last_login": None, "must_reset": True})
@@ -300,7 +307,7 @@ def selftest(live):
     if live:
         users = load(USERS)
         tag = secrets.token_hex(4)
-        base_id = max((u.get("id") or 0) for u in users) + 1000
+        base_id = max_id(users) + 1000
         temps = []
 
         def mk(role, suffix, extra=None):
