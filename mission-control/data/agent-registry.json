@@ -1,6 +1,6 @@
 {
  "generated": "2026-09-25T23:19:20.307166-05:00",
- "total": 218,
+ "total": 219,
  "standing": 112,
  "ephemeral": 18,
  "service": 5,
@@ -453,7 +453,10 @@
    "telemetry": "logs/data_room_integrity.log",
    "reusability_scope": "TBD",
    "risk_tier": "LOW",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-09-30 r2-controlled-docs: RTO data room (mission-control/dataroom + dataroom-manifest.json) now hash-locked + chmod a-w; drift owned by com.exos.doc-cm-drift; approver John Quinn; status pending Jon approval — D-7281871"
+   ]
   },
   {
    "label": "com.exos.dd-blocklist-monthly",
@@ -4397,6 +4400,27 @@
    "risk_tier": "MED",
    "change_log": [
     "2026-09-30 created (shop-stable-ids exo3 worker) — registry seeded from current shop-inventory.json (1,717 ids kept), Exos ID column + column-delete protection in Steve's sheet, guard live; approved by John Quinn 2026-09-30 (#exomac-system 13:02 CDT: 'build the matching approach and add the ID column to Steve's sheet ... They should not have the rights to delete the column without my decision')"
+   ]
+  },
+  {
+   "label": "com.exos.doc-cm-drift",
+   "script": "doc_cm.py",
+   "kind": "recurring",
+   "schedule": "daily 03:20 (StartCalendarInterval), wrapped by run_logged.py",
+   "purpose": "doc_cm.py check --accept-answered — controlled-document CM drift check (exo3 r2 theme 7). Re-hashes every row of mission-control/data/cm-register.json (Process Library docs from process-register.json + RTO data-room manifest and served files). Content != approved sha256 / missing / unapproved data-room addition => ONE deduped Decision card to Jon; re-baselines only sha256s on drift cards a HUMAN answered 'Approve'.",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Recommends-with-Context",
+   "human_owner": "John Quinn",
+   "permission_envelope": "READ process-library/**, mission-control/dataroom/*, mission-control/data/{process-register,dataroom-manifest,decisions}.json; WRITE only mission-control/data/cm-register.json + state/doc-cm-state.json (atomic, 0600); POST /api/decisions/ingest (local MC, token read from mission-control/data/.decisions-token at runtime); never edits, moves, reverts or commits documents; no email/Discord/external sends; content of CUI/ITAR-marked files never stored (hash + marking names only)",
+   "memory_boundary": "cm-register.json (approved sha256 per doc + history) and state/doc-cm-state.json (filed drift cards + digests)",
+   "escalation": "new unapproved-change set -> Decision card to Jon (priority high if data room, else med; dedupeKey cm-drift:<digest>); ingest failure -> fleet_log cm_drift_alert_failed level=error; crash -> agent_eval FAIL alert",
+   "eval_suite": "python3 scripts/doc_cm.py --selftest (16 cases: unapproved edit -> FAIL+card, dedupe, data-room manifest addition -> FAIL, agent-proposed answer does NOT re-baseline, approve refuses non-human/'Revert', human approve re-baselines exact files, CUI banner -> hash-only/not gitsafe, lock-off warning) + agent_eval hourly liveness (config/agent-evals.json)",
+   "telemetry": "fleet_log agent=com.exos.doc-cm-drift kind=govern actions cm_drift_check/cm_register_build/cm_approve/selftest (corr id per run, also stamped as correlationId on drift cards); run_logged.py -> logs/runs; stdout /Users/exomac/.openclaw/logs/doc-cm-drift.log",
+   "reusability_scope": "reusable hash-baseline + human-answered re-baseline pattern for any controlled artifact set (procedures, data room, BOM exports)",
+   "risk_tier": "LOW",
+   "envelope_source": "r2-controlled-docs 2026-09-30: authored + read by hand (scripts/doc_cm.py)",
+   "change_log": [
+    "2026-09-30 r2-controlled-docs (exo3 r2, Jon directive 2026-09-29 22:38): created + registered; CM register/drift check D-7281870, data-room lock D-7281871, numbering scheme D-7281872, doc owners D-7281873, controlled data on Mac D-7281874; approver John Quinn; status pending Jon approval — D-7281870"
    ]
   }
  ],

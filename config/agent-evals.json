@@ -1415,6 +1415,12 @@
       "warn_grace": 2.5,
       "fail_grace": 6,
       "owner": "John Quinn"
+    },
+    "com.exos.doc-cm-drift": {
+      "cadence_s": 86400,
+      "warn_grace": 2.5,
+      "fail_grace": 6,
+      "owner": "John Quinn"
     }
   },
   "_eval_wave_2": {
