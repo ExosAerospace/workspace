@@ -32,6 +32,13 @@ STATE = WS / "state" / "cron-prompt-guard-state.json"
 
 LITERAL_TOKEN = r"[Xx]-[Ee]xo-[Tt]oken:\s*['\"]?[A-Za-z0-9]{16,}"   # a pasted token, not $MCTOKEN
 LITERAL_JWT = r"eyJ[A-Za-z0-9_-]{15,}\.[A-Za-z0-9_-]{15,}"            # pasted Supabase key
+LITERAL_SB = r"\bsb_(?:publishable|secret)_[A-Za-z0-9_-]{10,}"          # pasted Supabase publishable/secret key
+
+# APAC live pipeline: the weekly scan may only STAGE (apac-candidates-staging.json). Auto-scan records
+# already in the live file on 2026-09-30 (pre-fix) are grandfathered; any NEW source:'auto-scan'
+# record means an agent wrote the live pipeline itself -> FAIL.
+APAC_LIVE = WS / "mission-control" / "data" / "apac-opportunities.json"
+APAC_AUTOSCAN_BASELINE = {"APAC-010", "APAC-011", "APAC-012", "APAC-013"}
 
 GUARDS = {
     "77ee570f-6957-456f-a687-7d28bedeabc3": {
@@ -94,12 +101,19 @@ def cron_tool_calls_by_cron_sessions(since_ms, db=DB):
     return out
 
 
+def apac_live_autoscan(path=APAC_LIVE, baseline=APAC_AUTOSCAN_BASELINE):
+    """IDs of source:'auto-scan' records in the live APAC file that are not grandfathered."""
+    d = json.load(open(path))
+    recs = d.get("opportunities", []) if isinstance(d, dict) else d
+    return sorted(r.get("id", "?") for r in recs if r.get("source") == "auto-scan" and r.get("id") not in baseline)
+
+
 def scan_prompt(prompt, spec):
     """Returns list of violations (empty = compliant)."""
     why = []
-    for pat in spec["forbid"]:
+    for pat in list(spec["forbid"]) + [LITERAL_SB]:
         if re.search(pat, prompt or ""):
-            why.append("forbidden text present: /%s/" % ("literal X-Exo-Token" if pat == LITERAL_TOKEN else "literal JWT" if pat == LITERAL_JWT else pat))
+            why.append("forbidden text present: /%s/" % ("literal X-Exo-Token" if pat == LITERAL_TOKEN else "literal JWT" if pat == LITERAL_JWT else "literal Supabase key" if pat == LITERAL_SB else pat))
     for pat in spec["require"]:
         if not re.search(pat, prompt or ""):
             why.append("required propose-only text missing: /%s/" % pat)
@@ -144,6 +158,15 @@ def check(db=DB, state_path=STATE, dry=False, now_ms=None, emit=True):
                 status = "WARN"
                 why.append("prompt changed since last pass — confirm a human session made it")
         state[jid] = h
+        if jid == "28a46633-1a11-439a-887b-dfb24224b12a":
+            try:
+                extra = apac_live_autoscan()
+                if extra:
+                    status = "FAIL"
+                    why.append("auto-scan record(s) written straight to apac-opportunities.json (must be staged): %s"
+                               % ", ".join(extra))
+            except Exception as e:
+                why.append("apac live file unreadable: %s" % e)
         results.append((spec["label"], status, "; ".join(why) or "propose-only prompt intact", "John Quinn"))
     if calls:
         results.append(("cron-prompt-guard:fleet", "WARN", "cron tool used from cron-run session(s): %s"
@@ -195,6 +218,15 @@ def selftest():
     ap = GUARDS["28a46633-1a11-439a-887b-dfb24224b12a"]
     ok(scan_prompt("write to apac-candidates-staging.json", ap) == [], "compliant APAC fixture passes")
     ok(scan_prompt("write to apac-candidates-staging.json then launchctl kickstart -k x", ap), "kickstart re-introduced -> flagged")
+    orr = GUARDS["f2ec7aca-8136-43c1-98b4-d2a94340d1ad"]
+    ok(scan_prompt("PROPOSE-ONLY cat .decisions-token -H 'apikey: sb_" + "publishable_" + "q" * 20 + "'", orr),
+       "literal Supabase publishable key in resolver prompt -> flagged")
+    with tempfile.TemporaryDirectory() as d:
+        f = os.path.join(d, "apac.json")
+        json.dump({"opportunities": [{"id": "APAC-010", "source": "auto-scan"}, {"id": "APAC-001", "source": "manual"}]}, open(f, "w"))
+        ok(apac_live_autoscan(f) == [], "grandfathered auto-scan records pass")
+        json.dump({"opportunities": [{"id": "APAC-010", "source": "auto-scan"}, {"id": "APAC-014", "source": "auto-scan"}]}, open(f, "w"))
+        ok(apac_live_autoscan(f) == ["APAC-014"], "new auto-scan record in LIVE apac file -> flagged")
     # 3. change attribution against a temp sqlite
     with tempfile.TemporaryDirectory() as d:
         db, sp = os.path.join(d, "t.sqlite"), os.path.join(d, "s.json")
