@@ -1,6 +1,6 @@
 {
  "generated": "2026-09-25T23:19:20.307166-05:00",
- "total": 217,
+ "total": 218,
  "standing": 112,
  "ephemeral": 18,
  "service": 5,
@@ -4377,6 +4377,26 @@
    "envelope_source": "r2-cron-hygiene 2026-09-30: read plist + scripts/diu_hycat_cso_watch.py by hand (urllib GET only; one openclaw message send to Jon DM)",
    "change_log": [
     "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): registered (was live since 6e21acd, 9/30 08:12, unregistered; drift alert every hour from 09:05); approver John Quinn; status pending Jon approval — D-7281857"
+   ]
+  },
+  {
+   "label": "shop-id-guard-exo3",
+   "script": "reindex_shop_inventory.py (+ shop_sheet_add_ids.py, mission-control/server.js location-xlsx upload hook, data/shop-id-registry.json)",
+   "kind": "gate (process, event-driven: runs on every Current_Inventory_Locations xlsx upload) + permanent-id registry",
+   "schedule": "on upload — server.js runs reindex_shop_inventory.py --file <upload> --uploader <name> when a 'location' .xlsx is uploaded; also runnable by hand",
+   "purpose": "Permanent SHOP-xxxxx ids for the Full Shop Inventory (Steve Norsworthy's workbook) so edits (shop-edits.json) and photos (inventory-photos.json key shop#SHOP-xxxxx) stay on the right part across reloads (Jon 2026-09-30, #exomac-system 13:02 CDT). Ids: Exos ID column -> fingerprint category+location+contents -> unique same-category contents (moved) -> new id; never reused, missing lines retired not deleted. Guard ('no deletion without Jon's decision'): once id_column_required, an upload missing the Exos ID column, with >2% blank/duplicate/unknown ids, or retiring >25% of active ids is REJECTED (previous inventory kept) and a Decision is filed for Jon.",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Human-confirmed (AI proposes, Jon decides): rejects fail-closed and files a Decision; never answers it. Accept path only after Jon's answer: --file <f> --override-guard.",
+   "human_owner": "John Quinn",
+   "permission_envelope": "Writes mission-control/data/shop-inventory.json, data/shop-id-registry.json (ids only ever added or marked retired), data/shop-id-guard.json (rejected uploads), logs/shop-id-guard.log, logs/fleet-events.jsonl; POSTs /api/decisions/ingest (dedupeKey shop-id-guard:<file>, assignedTo jquinn@exosaero.com, approver John Quinn). Reads uploads/*Current_Inventory_Locations*.xlsx. shop_sheet_add_ids.py writes a new workbook into uploads/ + one uploads/_meta.json entry; sheet-protection password lives only in ~/.config/exos/shop-sheet-protect.pw (0600, never printed; Jon only on request). No email/Discord sends.",
+   "memory_boundary": "Shop inventory files + id registry only. Never touches bom-index.json, inventory.json ledger, shop-edits.json content, or photos.",
+   "escalation": "Rejected upload -> Decision for Jon (priority high) + logs/shop-id-guard.log + fleet_log shop-id-guard/reindex outcome=rejected. Decision POST failure -> DECISION_FAILED line in logs/shop-id-guard.log.",
+   "eval_suite": "python3 scripts/shop_ids_selftest.py [--live] — 22 offline checks in a temp dir (same-sheet reload 0 id changes; mid-sheet insert -> only new row new id; moved row keeps id; column removed -> rejected + Decision payload (dry-run, never filed); >2% bad ids; bulk removal; retire-not-delete; override) + 11 live checks (served ids == registry; shop-line photo add/list/delete rules; throwaway users cleaned) — PASS 33/33 2026-09-30. Also node scripts/inventory_photos_selftest.js 17/17.",
+   "telemetry": "logs/fleet-events.jsonl (agent shop-id-guard, kind govern, action reindex, outcome ok|rejected with kept/matched/moved/new/retired) + shop-inventory.json id_match + registry last_summary + logs/shop-id-guard.log",
+   "reusability_scope": "Template for any human-maintained spreadsheet ingested as a record of truth: permanent ids + id column + fail-closed guard to a human decision",
+   "risk_tier": "MED",
+   "change_log": [
+    "2026-09-30 created (shop-stable-ids exo3 worker) — registry seeded from current shop-inventory.json (1,717 ids kept), Exos ID column + column-delete protection in Steve's sheet, guard live; approved by John Quinn 2026-09-30 (#exomac-system 13:02 CDT: 'build the matching approach and add the ID column to Steve's sheet ... They should not have the rights to delete the column without my decision')"
    ]
   }
  ],
