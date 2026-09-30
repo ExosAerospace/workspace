@@ -17,7 +17,7 @@ STATE = os.path.join(WS, "logs", "inventory-capture-dispatch-state.json")
 LOG = os.path.join(WS, "logs", "inventory-capture.log")
 RUNBOOK = os.path.join(WS, "drafts", "INVENTORY_CAPTURE_RUNBOOK.md")
 OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
-SESSION = "agent:inventory-capture"     # dedicated session; keeps it out of #exomac-system
+SESSION = "agent:main:inventory-capture"     # dedicated session; keeps it out of #exomac-system
 COOLDOWN_S = 240                        # don't re-poke the processor more than once / 4 min
 
 

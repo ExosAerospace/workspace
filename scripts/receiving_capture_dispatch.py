@@ -13,7 +13,7 @@ STATE = os.path.join(WS, "logs", "receiving-capture-dispatch-state.json")
 LOG = os.path.join(WS, "logs", "receiving-capture.log")
 RUNBOOK = os.path.join(WS, "drafts", "RECEIVING_CAPTURE_RUNBOOK.md")
 OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
-SESSION = "agent:inventory-capture"
+SESSION = "agent:main:inventory-capture"
 COOLDOWN_S = 150
 
 
