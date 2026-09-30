@@ -19,6 +19,9 @@ Checks
      cron never runs; SAM.gov renewal reminder, 9/11).
      Also WARN: an enabled anthropic/* or claude-cli/* cron that carries payload.toolsAllow
      (dies instantly: "CLI backend claude-cli cannot enforce runtime toolsAllow").
+  2b. CONFLICTING INSTRUCTIONS (WARN): an ENABLED agentTurn prompt that both declares the isolated
+     no-filesystem environment and orders a local file write (RUN LOG / tracker append), or that carries
+     R-NONEWS (empty run -> NO_REPLY) but also orders a post on an empty run. Research Team 9/30.
   3. TRANSIENT CRONS (WARN): a cron_run fleet event with registered:false that does not match the
      registry class "cron-class:transient-agent-reminder" (a one-shot that is gone from the store,
      i.e. self-deleted, or a live schedule kind "at" job with delete_after_run).
@@ -52,6 +55,26 @@ PATTERNS = [
     ("sk- api key", re.compile(r"\bsk-[A-Za-z0-9_-]{20,}")),
     ("X-Exo-Token literal", re.compile(r"x-exo-token\s*:\s*" + _NOT_LITERAL + r"[A-Za-z0-9_-]{16,}", re.I)),
 ]
+
+
+NOFS_MARK = re.compile(r"NO local filesystem access", re.I)
+FILE_WRITE = re.compile(r"(?:RUN LOG \(REQUIRED|(?:append|write)[^\n]{0,80}/Users/exomac/\S+\.(?:md|json|jsonl|txt))", re.I)
+NONEWS_MARK = "R-NONEWS"
+EMPTY_POST = re.compile(r"(?:if there are zero [^\n]{0,60}\bpost\b|if nothing (?:significant|new)[^\n]{0,20}, say exactly that|"
+                        r"even on empty runs|state '?no change to)", re.I)
+
+
+def conflict_findings(job):
+    """[why] for self-contradictory prompts on an enabled agentTurn cron (text never echoed)."""
+    if not job.get("enabled") or job.get("payload_kind") != "agentTurn": return []
+    try: msg = (json.loads(job.get("job_json") or "{}").get("payload") or {}).get("message") or ""
+    except Exception: return []
+    out = []
+    if NOFS_MARK.search(msg) and FILE_WRITE.search(msg):
+        out.append("prompt says no local filesystem but also orders a local file write (run log/tracker)")
+    if NONEWS_MARK in msg and EMPTY_POST.search(msg):
+        out.append("prompt carries R-NONEWS (empty run -> NO_REPLY) but also orders a post on an empty run")
+    return out
 
 
 def load_secret_hashes(secrets_path=SECRETS, cfg_dir=EXOS_CFG_DIR, extra_files=(DECISIONS_TOKEN,)):
@@ -185,6 +208,7 @@ def check(now_s, window_h=26, jobs=None, hashes=None, allow="load", events=None)
                               " (move to secrets store; value not shown)"))
             mf = model_findings(j, allow)
             if mf: res.append((label, mf[0], mf[1]))
+            for why in conflict_findings(j): res.append((label, "WARN", "conflicting instructions: " + why))
         evs = unregistered_run_events(now_s - window_h * 3600) if events is None else events
         stray = {}
         for r in evs:
@@ -248,6 +272,18 @@ def selftest():
     r = check(0, jobs=jobs, hashes={}, allow=allow, events=evs)
     ok(("cron:rec", "FAIL") in [(a, b) for a, b, _ in r] and "Qw3rty" not in json.dumps(r), "check(): FAIL without leaking value")
     ok([a for a, b, _ in r if b == "WARN"] == ["cron:x"], "check(): WARN only for the non-class unregistered run")
+    # conflicting instructions (Research Team 9/30 replay)
+    def cj(msg, enabled=1):
+        return dict(base, enabled=enabled, payload_model=None, job_json=json.dumps({"payload": {"message": msg}}))
+    hdr = "## ENVIRONMENT OVERRIDE\nYou are an isolated scheduled run with NO local filesystem access. SKIP any RUN LOG.\n"
+    ok(len(conflict_findings(cj(hdr + "## RUN LOG (REQUIRED — append silently, even on empty runs)\nappend one line to "
+                                "/Users/exomac/.openclaw/workspace/opportunities-tracker.md"))) == 1, "no-FS + run-log append = conflict")
+    ok(conflict_findings(cj(hdr + "Run evidence is recorded by cron telemetry; write no file.")) == [], "no-FS without file write ok")
+    nn = "\n── FLEET RULE R-NONEWS ──\n3. If nothing remains, reply exactly NO_REPLY"
+    ok(len(conflict_findings(cj("If there are zero strategic finds, post a single 2-line Tech Pulse." + nn))) == 1, "R-NONEWS + empty-run post = conflict")
+    ok(len(conflict_findings(cj("**Bottom line:** If nothing significant, say exactly that in one line." + nn))) == 1, "R-NONEWS + 'say exactly that' = conflict")
+    ok(conflict_findings(cj("If nothing is new, reply exactly NO_REPLY." + nn)) == [], "R-NONEWS consistent ok")
+    ok(conflict_findings(cj(hdr + "RUN LOG (REQUIRED", enabled=0)) == [], "disabled skipped")
     print("cron_hygiene selftest: %d/%d pass" % (n, n))
     return 0
 
