@@ -1409,6 +1409,12 @@
       "fail_grace": 8,
       "owner": "Exo (infra) / John Quinn",
       "selftest": "python3 scripts/cron_telemetry.py --selftest"
+    },
+    "com.exos.diu-hycat-cso-watch": {
+      "cadence_s": 50400,
+      "warn_grace": 2.5,
+      "fail_grace": 6,
+      "owner": "John Quinn"
     }
   },
   "_eval_wave_2": {
