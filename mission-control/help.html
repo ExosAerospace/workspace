@@ -451,7 +451,7 @@
     return post('/api/required-reading/heartbeat',
       {doc_id:DOC_ID, active_seconds:activeSeconds, scroll_max_pct:scrollMaxPct, heartbeats:++heartbeats})
       .then(function(r){ return r.ok?r.json():null; })
-      .then(function(d){ if(d&&typeof d.active_seconds==='number'){ activeSeconds=Math.min(activeSeconds,d.active_seconds); refreshUI(); } })
+      .then(function(d){ if(d&&typeof d.active_seconds==='number'){ activeSeconds=d.active_seconds; if(typeof d.scroll_max_pct==='number') scrollMaxPct=Math.max(scrollMaxPct,d.scroll_max_pct); refreshUI(); } })
       .catch(function(){});
   }
   setInterval(sendHeartbeat, 15000);
@@ -501,7 +501,7 @@
       if(mine && mine.completed){ setCompleted(mine.acknowledged_at?new Date(mine.acknowledged_at).toLocaleDateString():'earlier'); return; }
       updateScroll(); refreshUI();
       post('/api/required-reading/open', {doc_id:DOC_ID})
-        .then(function(r){ if(r.ok) opened=true; })
+        .then(function(r){ if(!r.ok) return; opened=true; return r.json().then(function(d){ if(d&&typeof d.active_seconds==='number') activeSeconds=Math.max(activeSeconds,d.active_seconds); if(d&&typeof d.scroll_max_pct==='number') scrollMaxPct=Math.max(scrollMaxPct,d.scroll_max_pct); refreshUI(); }); })
         .catch(function(){});
     })
     .catch(function(){});

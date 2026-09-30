@@ -2642,7 +2642,8 @@ const server = http.createServer((req, res) => {
           }
           rrSave(rr);
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ ok: true, server_open_at: prog.server_open_at }));
+          // Resume: return saved progress so a reload (iPhone tab eviction, app switch) doesn't restart the clock.
+          res.end(JSON.stringify({ ok: true, server_open_at: prog.server_open_at, active_seconds: prog.active_seconds || 0, scroll_max_pct: prog.scroll_max_pct || 0 }));
         } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'bad request' })); }
       });
       return;
@@ -2664,13 +2665,14 @@ const server = http.createServer((req, res) => {
           if (!prog || !prog.server_open_at) { res.writeHead(409, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'not opened' })); return; }
           const elapsed = Math.floor((Date.now() - new Date(prog.server_open_at).getTime()) / 1000);
           const clamped = Math.max(0, Math.min(Number(active_seconds) || 0, elapsed));
-          prog.active_seconds = clamped;
-          prog.scroll_max_pct = Math.max(0, Math.min(100, Math.round(Number(scroll_max_pct) || 0)));
+          // Accumulate across sessions (never regress on reload); still clamped to wall-clock since first open.
+          prog.active_seconds = Math.min(elapsed, Math.max(prog.active_seconds || 0, clamped));
+          prog.scroll_max_pct = Math.max(prog.scroll_max_pct || 0, Math.max(0, Math.min(100, Math.round(Number(scroll_max_pct) || 0))));
           prog.heartbeats = Math.max(prog.heartbeats || 0, Number(heartbeats) || 0);
           prog.updated_at = new Date().toISOString();
           rrSave(rr);
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ ok: true, active_seconds: clamped }));
+          res.end(JSON.stringify({ ok: true, active_seconds: prog.active_seconds, scroll_max_pct: prog.scroll_max_pct }));
         } catch (e) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'bad request' })); }
       });
       return;

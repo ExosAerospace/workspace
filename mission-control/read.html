@@ -130,7 +130,7 @@
     if(!opened || done) return Promise.resolve();
     return post('/api/required-reading/heartbeat',{doc_id:DOC_ID, active_seconds:activeSeconds, scroll_max_pct:scrollMaxPct, heartbeats:++heartbeats})
       .then(function(r){ return r.ok?r.json():null; })
-      .then(function(d){ if(d&&typeof d.active_seconds==='number'){ activeSeconds=Math.min(activeSeconds,d.active_seconds); refreshUI(); } })
+      .then(function(d){ if(d&&typeof d.active_seconds==='number'){ activeSeconds=d.active_seconds; if(typeof d.scroll_max_pct==='number') scrollMaxPct=Math.max(scrollMaxPct,d.scroll_max_pct); refreshUI(); } })
       .catch(function(){});
   }
   setInterval(sendHeartbeat, 15000);
@@ -213,7 +213,7 @@
       if(mine && mine.completed && FORM && mine.form_data){ (FORM.fields||[]).forEach(function(f){ var el=document.getElementById('ff_'+f.id); if(el){ if(f.type==='checkbox') el.checked=!!mine.form_data[f.id]; else el.value=mine.form_data[f.id]||''; } }); }
       if(mine && mine.completed){ setCompleted(mine.acknowledged_at?new Date(mine.acknowledged_at).toLocaleDateString():'earlier'); return; }
       refreshUI();
-      post('/api/required-reading/open', {doc_id:DOC_ID}).then(function(r){ if(r.ok) opened=true; }).catch(function(){});
+      post('/api/required-reading/open', {doc_id:DOC_ID}).then(function(r){ if(!r.ok) return; opened=true; return r.json().then(function(d){ if(d&&typeof d.active_seconds==='number') activeSeconds=Math.max(activeSeconds,d.active_seconds); if(d&&typeof d.scroll_max_pct==='number') scrollMaxPct=Math.max(scrollMaxPct,d.scroll_max_pct); refreshUI(); }); }).catch(function(){});
     })
     .catch(function(err){ document.getElementById('sub').textContent = (err&&err.code===401) ? 'Please sign in to record your reading.' : 'Could not load this document.'; });
 })();
