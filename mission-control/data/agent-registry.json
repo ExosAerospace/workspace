@@ -3719,7 +3719,6 @@
    "cron_name": "VFW Tundra AMP PowerStep — RFQ follow-up",
    "model": "agent default",
    "ai_in_critical_path": true,
-   "pending_retirement": "pending Jon approval — D-7281856",
    "change_log": [
     {
      "date": "2026-09-30",
@@ -3727,8 +3726,16 @@
      "change": "Deletion requested by Jon in #exomac-system 9/30 ('Delete the sixth'); left in place (already disabled) pending confirm; on confirm: openclaw cron rm + retire this entry",
      "approver": "John Quinn",
      "status": "pending Jon approval — D-7281856"
+    },
+    {
+     "date": "2026-09-30",
+     "by": "r2-confirm-gaps (exo3 r2 worker)",
+     "change": "Cron 3299389d no longer exists (deleted ~13:01 by Exo main session on Jon's instruction); entry marked retired",
+     "approver": "John Quinn",
+     "status": "pending Jon approval — D-7281856"
     }
-   ]
+   ],
+   "retired": "2026-09-30 ~13:01 — cron deleted by Exo main session on Jon's 'Delete the sixth' (#exomac-system); backup logs/audit-workers/cron-backups/3299389d-*.json; exo3 confirm pending D-7281856"
   },
   {
    "label": "cron:exomac-system-wake",
