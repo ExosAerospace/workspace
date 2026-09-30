@@ -339,6 +339,15 @@ def selftest(live):
             st, _, body = mc_call(mp_op, "/api/montana-partner/prospects")
             leak = any(k in body.decode("utf-8", "ignore").lower() for k in ['"email"', '"phone"', '"notes"'])
             check("partner prospects carry no email/phone/notes fields", st == 200 and not leak)
+            try:
+                n = len(json.loads(body)["prospects"])
+            except Exception:
+                n = -1
+            check("partner prospects feed lists the loaded Montana prospects", n >= 1, f"n={n}")
+            st, _, doc = mc_call(mp_op, "/api/montana-partner/doc?id=fly-from-montana-pdf")
+            check("partner can open the one-pager PDF", st == 200 and doc[:4] == b"%PDF", f"HTTP {st}")
+            st, _, _ = mc_call(mp_op, "/api/montana-partner/doc?id=../../users.json")
+            check("partner doc feed rejects unknown/traversal ids", st == 404, f"HTTP {st}")
             st, _, _ = mc_call(mp_op, "/api/montana-partner/summary")
             for p in PARTNER_DENIED:
                 st, _, _ = mc_call(mp_op, p)
