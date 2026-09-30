@@ -315,7 +315,8 @@ function renderFunnelQueue(d){
     <div class="kpis" style="margin-top:6px">
       <div class="kpi"><div class="lbl">NEW — unworked</div><div class="big">${esc(f.NEW||0)}</div><div class="cap">Pick these up first</div></div>
       <div class="kpi"><div class="lbl">RESEARCHING</div><div class="big">${esc(f.RESEARCHING||0)}</div><div class="cap">Finding POC + funding</div></div>
-      <div class="kpi"><div class="lbl">READY — to send</div><div class="big">${esc(f.READY||0)}</div><div class="cap">POC + draft done → Lizi sends</div></div>
+      <div class="kpi"><div class="lbl">AI-DRAFTED — needs check</div><div class="big">${esc(f.AI_READY||0)}</div><div class="cap">AI thinks it's ready; no person has checked it</div></div>
+      <div class="kpi"><div class="lbl">READY — to send</div><div class="big">${esc(f.READY||0)}</div><div class="cap">Checked by a student (card in Done) → Lizi sends</div></div>
     </div>` : '';
 
   const legend = ex.length ? `<div style="margin-top:12px">${ex.map(s=>`

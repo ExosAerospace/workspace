@@ -221,6 +221,8 @@ def write_student_queue(records):
         st = norm_stage(r["status"])
         counts[st] = counts.get(st, 0) + 1
     live = sum(v for k, v in counts.items() if k not in DEAD)
+    verified_ready = sum(1 for r in records if norm_stage(r["status"]) == "READY"
+                         and "student card #" in (r["status"] or ""))
     with_poc = sum(1 for r in records if r.get("has_poc") and norm_stage(r["status"]) not in DEAD)
 
     workable = [r for r in records if norm_stage(r["status"]) in ("NEW", "RESEARCHING")]
@@ -247,7 +249,11 @@ def write_student_queue(records):
     d["payload_funnel"] = {
         "total": len(records), "live": live, "with_poc": with_poc,
         "NEW": counts.get("NEW", 0), "RESEARCHING": counts.get("RESEARCHING", 0),
-        "READY": counts.get("READY", 0),
+        # READY on the tracker = person-verified only (lead card in Done). Leads the
+        # AI marked READY in the pipeline are shown separately so Lizi never sees an
+        # unchecked draft counted as "ready to send" (Lizi 2026-09-30).
+        "READY": verified_ready,
+        "AI_READY": counts.get("READY", 0) - verified_ready,
         "updated": datetime.date.today().isoformat(),
     }
     d["funnel_explainer"] = [
@@ -299,6 +305,8 @@ def build_summary(records, bridge_line):
         counts[st] = counts.get(st, 0) + 1
     total = len(records)
     live = sum(v for k, v in counts.items() if k not in DEAD)
+    verified_ready = sum(1 for r in records if norm_stage(r["status"]) == "READY"
+                         and "student card #" in (r["status"] or ""))
     # Prospects that still need enrichment: NEW, or RESEARCHING without a POC.
     need = [r for r in records
             if norm_stage(r["status"]) == "NEW"
