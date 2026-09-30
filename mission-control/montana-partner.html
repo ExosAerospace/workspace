@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exos × Montana Spaceport — Partner View</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0b0b0c;color:#e6e6e6;line-height:1.5}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:3px solid #F26A21;background:#151516}
+header h1{font-size:18px;font-weight:700}header h1 span{color:#F26A21}
+header .who{font-size:13px;color:#9a9a9a}header button{margin-left:12px;background:transparent;border:1px solid #444;color:#ccc;border-radius:6px;padding:5px 10px;cursor:pointer}
+main{max-width:1100px;margin:0 auto;padding:24px}
+section{background:#161617;border:1px solid #2a2a2b;border-radius:10px;padding:20px;margin-bottom:20px}
+h2{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:#F26A21;margin-bottom:12px}
+.hl{font-size:20px;font-weight:700;margin-bottom:6px}.muted{color:#9a9a9a;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid #262627;vertical-align:top}
+th{color:#9a9a9a;font-weight:600;font-size:12px;text-transform:uppercase}
+a{color:#F26A21}.tier{display:inline-block;padding:1px 8px;border-radius:10px;background:#2a2a2b;font-size:11px}
+.task{border-top:1px solid #262627;padding:10px 0}.task:first-child{border-top:none}
+.note{background:#1d1d1e;border-left:2px solid #F26A21;padding:6px 10px;margin:6px 0;font-size:13px}
+textarea{width:100%;min-height:60px;background:#0f0f10;color:#e6e6e6;border:1px solid #333;border-radius:6px;padding:8px;font:inherit}
+.btn{background:#F26A21;border:none;color:#000;font-weight:700;border-radius:6px;padding:6px 14px;cursor:pointer;margin-top:6px}
+.banner{font-size:12px;color:#9a9a9a;margin-top:6px}
+</style></head>
+<body>
+<header><h1><span>EXOS</span> × Montana Spaceport — Partner View</h1><div><span class="who" id="who"></span><button onclick="location='/set-password.html'">Password</button><button onclick="logout()">Sign out</button></div></header>
+<main>
+<section><h2>Program</h2><div class="hl" id="headline"></div><p id="summary"></p>
+<table id="status" style="margin-top:12px"><thead><tr><th>Item</th><th>Status</th></tr></thead><tbody></tbody></table></section>
+<section><h2>Partner documents</h2><div id="docs" class="muted">Loading…</div></section>
+<section><h2>Montana payload prospects (read-only)</h2><p class="muted">Verified organizations and public points of contact. Introductions go through Montana Spaceport to the Exos payload team.</p>
+<table id="prospects" style="margin-top:10px"><thead><tr><th>Organization</th><th>Tier</th><th>What they do</th><th>Point(s) of contact</th></tr></thead><tbody><tr><td colspan="4" class="muted">Loading…</td></tr></tbody></table></section>
+<section><h2>Shared tasks</h2><div id="tasks" class="muted">Loading…</div></section>
+<p class="banner">This view shows only material shared with Montana Spaceport partners. Access is logged.</p>
+</main>
+<script>
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function j(u,o){const r=await fetch(u,Object.assign({credentials:'same-origin'},o||{}));if(r.status===401){location='/login?next=/montana-partner.html';throw 0;}return r.json();}
+async function logout(){await fetch('/api/logout',{method:'POST',credentials:'same-origin'});location='/login';}
+(async()=>{
+  try{const me=await j('/api/me');document.getElementById('who').textContent=me.name||me.email||'';}catch(e){}
+  try{const s=await j('/api/montana-partner/summary');
+    document.getElementById('headline').textContent=(s.program&&s.program.headline)||'';
+    document.getElementById('summary').textContent=(s.program&&s.program.summary)||'';
+    document.querySelector('#status tbody').innerHTML=(s.status||[]).map(x=>`<tr><td>${esc(x.item)}</td><td>${esc(x.state)}</td></tr>`).join('');
+    document.getElementById('docs').innerHTML=(s.docs||[]).length?(s.docs.map(d=>`<div style="margin:6px 0"><a href="/api/montana-partner/doc?id=${encodeURIComponent(d.id)}" target="_blank">${esc(d.title)}</a> <span class="muted">— ${esc(d.desc)}</span></div>`).join('')):'No documents yet.';
+  }catch(e){}
+  try{const p=await j('/api/montana-partner/prospects');
+    document.querySelector('#prospects tbody').innerHTML=(p.prospects||[]).length?p.prospects.map(x=>`<tr><td><b>${esc(x.org)}</b>${x.website?`<br><a href="${esc(x.website)}" target="_blank" rel="noopener">${esc(x.website.replace(/^https?:\/\//,''))}</a>`:''}</td><td><span class="tier">${esc(x.tier)}</span></td><td>${esc(x.summary)}</td><td>${(x.contacts||[]).map(c=>`${esc(c.name)}${c.title?` — <span class="muted">${esc(c.title)}</span>`:''}`).join('<br>')||'<span class="muted">via organization</span>'}</td></tr>`).join(''):'<tr><td colspan="4" class="muted">No prospects yet.</td></tr>';
+  }catch(e){}
+  loadTasks();
+})();
+async function loadTasks(){
+  try{const t=await j('/api/montana-partner/tasks');const el=document.getElementById('tasks');
+    if(!(t.tasks||[]).length){el.textContent='No shared tasks yet.';return;}
+    el.innerHTML=t.tasks.map(x=>`<div class="task"><b>#${x.id} ${esc(x.title)}</b> <span class="tier">${esc(x.state)}</span>${x.due_date?` <span class="muted">due ${esc(x.due_date)}</span>`:''}<div class="muted" style="white-space:pre-wrap;margin:4px 0">${esc(x.description||'')}</div><div id="n${x.id}"></div><textarea id="t${x.id}" placeholder="Add a note for the Exos team…"></textarea><button class="btn" onclick="addNote(${x.id})">Add note</button></div>`).join('');
+    t.tasks.forEach(x=>loadNotes(x.id));
+  }catch(e){}
+}
+async function loadNotes(id){try{const n=await j('/api/montana-partner/notes?task_id='+id);document.getElementById('n'+id).innerHTML=(n.notes||[]).map(x=>`<div class="note"><b>${esc(x.owner)}</b> <span class="muted">${esc((x.created_at||'').slice(0,10))}</span><br>${esc(x.body)}</div>`).join('');}catch(e){}}
+async function addNote(id){const ta=document.getElementById('t'+id);const body=ta.value.trim();if(!body)return;
+  const r=await j('/api/montana-partner/note',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task_id:id,body})});
+  if(r.ok){ta.value='';loadNotes(id);}else alert(r.error||'Could not add note');}
+</script>
+</body></html>

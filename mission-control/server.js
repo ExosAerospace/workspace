@@ -1336,6 +1336,7 @@ const server = http.createServer((req, res) => {
         user.password_salt = salt;
         user.password_hash = hashPassword(newPassword, salt);
         user.password_set_at = new Date().toISOString();
+        if (user.must_reset) { delete user.must_reset; glog('mc-server', 'forced_reset_cleared', 'ok', 'temp password replaced', { email: session.email, role: user.role }); }
         saveUsers(users);
         glog('mc-server', 'change_password', 'ok', 'self-service password change', { email: session.email });
         res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: true }));
@@ -1428,7 +1429,7 @@ const server = http.createServer((req, res) => {
       try {
         const { email, name, password, role, project } = JSON.parse(body);
         if (!email || !name || !password) { res.writeHead(400); res.end(JSON.stringify({ error: 'email, name, password required' })); return; }
-        if (!['admin', 'manager', 'member', 'early_adopter', 'dd_reviewer'].includes(role)) { res.writeHead(400); res.end(JSON.stringify({ error: 'role must be admin, manager, member, early_adopter, or dd_reviewer' })); return; }
+        if (!['admin', 'manager', 'member', 'early_adopter', 'dd_reviewer', 'montana_partner'].includes(role)) { res.writeHead(400); res.end(JSON.stringify({ error: 'role must be admin, manager, member, early_adopter, dd_reviewer, or montana_partner' })); return; }
         const users = loadUsers();
         if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) { res.writeHead(409); res.end(JSON.stringify({ error: 'Email already exists' })); return; }
         const salt = crypto.randomBytes(32).toString('hex');
@@ -1460,7 +1461,7 @@ const server = http.createServer((req, res) => {
         if (idx === -1) { res.writeHead(404); res.end(JSON.stringify({ error: 'User not found' })); return; }
         if (name) users[idx].name = name;
         if (email) users[idx].email = email;
-        if (role && ['admin', 'manager', 'member', 'early_adopter', 'dd_reviewer'].includes(role)) users[idx].role = role;
+        if (role && ['admin', 'manager', 'member', 'early_adopter', 'dd_reviewer', 'montana_partner'].includes(role)) users[idx].role = role;
         if (project !== undefined) users[idx].project = project;
         if (active !== undefined) users[idx].active = active;
         if (password) {
@@ -1574,7 +1575,7 @@ const server = http.createServer((req, res) => {
   // DocuSign panel page: full MC session OR ds passcode unlocks it; else passcode prompt.
   if (req.method === 'GET' && (req.url === '/docusign' || req.url.split('?')[0] === '/docusign.html')) {
     const full = getSession(req);
-    if (full && full.role === 'early_adopter') { res.writeHead(302, { 'Location': '/' }); res.end(); return; }
+    if (full && (full.role === 'early_adopter' || full.role === 'montana_partner')) { res.writeHead(302, { 'Location': '/' }); res.end(); return; }
     if (full || getDsSession(req)) {
       try { res.writeHead(200, { 'Content-Type': 'text/html' }); res.end(fs.readFileSync(path.join(__dirname, 'docusign.html'))); }
       catch (e) { res.writeHead(404); res.end('DocuSign panel not found'); }
@@ -1839,6 +1840,140 @@ const server = http.createServer((req, res) => {
       if (fp.startsWith('/uploads/') || fp.startsWith('/viewpdf/') || fp.startsWith('/backup/')) auditDeny(session, req, 'dd-blocked-doc-route');
       res.writeHead(302, { 'Location': '/dataroom' }); res.end(); return;
     }
+  }
+
+  // ── montana_partner role: Montana Spaceport partner sandbox (Jon 2026-09-30) ─────────────
+  // Edgar / Limestone Hills / Montana Spaceport team. STRICT default-deny, modeled on dd_reviewer:
+  // they reach ONLY /montana-partner.html + the /api/montana-partner/* feeds below (program status,
+  // read-only Montana payload-prospect list, partner docs, tasks tagged `montana-partner` + notes on
+  // those tasks only). NO finance, cap table, investors, Series A, other CRM, other tasks, decisions,
+  // vault, dossiers, uploads tree, admin, docusign, chat. Every out-of-scope hit → auditDeny + glog.
+  // Spec: mission-control/data/agent-registry.json (montana-partner-access-exo3); eval:
+  // python3 scripts/montana_partner_access.py --selftest (live route checks).
+  if (session && session.role === 'montana_partner') {
+    const fp = req.url.split('?')[0];
+    const allowedPages = ['/montana-partner', '/montana-partner.html', '/login', '/login.html', '/set-password', '/set-password.html'];
+    // Forced reset: a partner seat is issued a temp password (scripts/montana_partner_access.py sets
+    // must_reset). Until they set their own, the ONLY things reachable are set-password + me/logout.
+    const mpUser = loadUsers().find(u => u.id === session.userId);
+    if (mpUser && mpUser.must_reset) {
+      if (fp.startsWith('/api/')) {
+        if (!['/api/me', '/api/logout', '/api/change-password'].includes(fp)) { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Set your own password first.' })); return; }
+      } else if (!['/set-password', '/set-password.html', '/login', '/login.html'].includes(fp) && !fp.startsWith('/brand-assets')) {
+        res.writeHead(302, { 'Location': '/set-password.html' }); res.end(); return;
+      }
+    }
+    if (fp === '/' || fp === '/index.html' || fp === '/dashboard' || fp === '/dashboard.html' || fp === '/welcome' || fp === '/welcome.html') {
+      res.writeHead(302, { 'Location': '/montana-partner.html' }); res.end(); return;
+    }
+    if (fp.startsWith('/api/')) {
+      const ok = fp === '/api/me' || fp === '/api/logout' || fp === '/api/change-password' || fp.startsWith('/api/montana-partner/');
+      if (!ok) {
+        auditDeny(session, req, 'montana-out-of-scope-api');
+        glog('mc-server', 'montana_partner_deny', 'warn', fp, { email: session.email, method: req.method });
+        res.writeHead(403, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Not available in the Montana partner view.' }));
+        return;
+      }
+    } else if (req.method !== 'GET' || (!allowedPages.includes(fp) && !fp.startsWith('/brand-assets'))) {
+      if (fp.startsWith('/uploads/') || fp.startsWith('/viewpdf/') || fp.startsWith('/backup/') || fp.startsWith('/data/') || fp.startsWith('/partner-docs/')) {
+        auditDeny(session, req, 'montana-blocked-doc-route');
+        glog('mc-server', 'montana_partner_deny', 'warn', fp, { email: session.email, method: req.method });
+      }
+      if (req.method !== 'GET') { res.writeHead(403); res.end('Forbidden'); return; }
+      res.writeHead(302, { 'Location': '/montana-partner.html' }); res.end(); return;
+    }
+  }
+
+  // ── Montana partner feeds. Readable by montana_partner + internal admin/manager (preview). ──
+  if (req.url.startsWith('/api/montana-partner/')) {
+    const fp = req.url.split('?')[0];
+    const s = getSession(req);
+    if (!s) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    if (!['montana_partner', 'admin', 'manager'].includes(s.role)) {
+      auditDeny(s, req, 'montana-feed-wrong-role');
+      res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not permitted' })); return;
+    }
+    const MP_TAG = 'montana-partner';
+    const MP_DOC_DIR = path.join(__dirname, 'partner-docs', 'montana');
+    const q = new URL(req.url, 'http://localhost').searchParams;
+    const sendJson = (code, obj) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(obj)); };
+    const readMp = () => { try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'montana-partner.json'), 'utf8')); } catch (e) { return {}; } };
+    // Task in partner scope = carries the montana-partner tag. Returns the row or null.
+    const mpTask = async (id) => {
+      if (!/^\d+$/.test(String(id || ''))) return null;
+      const r = await supabaseRequest('GET', `tasks?id=eq.${String(id)}&select=id,title,state,due_date,description,tags&limit=1`);
+      const row = Array.isArray(r.data) ? r.data[0] : null;
+      return row && Array.isArray(row.tags) && row.tags.includes(MP_TAG) ? row : null;
+    };
+    (async () => {
+      try {
+        if (fp === '/api/montana-partner/summary' && req.method === 'GET') {
+          const m = readMp();
+          glog('mc-server', 'montana_partner_view', 'ok', 'summary', { email: s.email, role: s.role });
+          return sendJson(200, { program: m.program || {}, status: m.status || [], offer: m.offer || {}, docs: (m.docs || []).map(d => ({ id: d.id, title: d.title, desc: d.desc })) });
+        }
+        if (fp === '/api/montana-partner/prospects' && req.method === 'GET') {
+          // Live from the CRM, but ONLY rows tagged montana-payload-prospect and ONLY whitelisted,
+          // non-contact-detail fields (org, tier, what they do, POC name/title). No emails/phones/notes.
+          const cos = await supabaseRequest('GET', 'companies?tags=cs.%7Bmontana-payload-prospect%7D&select=id,name,industry,tier,website,description,tags&order=name&limit=1000');
+          const cts = await supabaseRequest('GET', 'contacts?tags=cs.%7Bmontana-payload-prospect%7D&select=name,title,organization,company_id&order=name&limit=1000');
+          const byCo = {};
+          for (const c of (Array.isArray(cts.data) ? cts.data : [])) (byCo[c.company_id] = byCo[c.company_id] || []).push({ name: c.name, title: c.title });
+          const rows = (Array.isArray(cos.data) ? cos.data : []).map(c => ({
+            org: c.name, tier: c.tier, sector: c.industry, website: /^https?:\/\//i.test(c.website || '') ? c.website : null,
+            summary: (c.description || '').split('\n')[0].slice(0, 400),
+            contacts: byCo[c.id] || [],
+          }));
+          glog('mc-server', 'montana_partner_view', 'ok', 'prospects', { email: s.email, role: s.role, n: rows.length });
+          return sendJson(200, { prospects: rows });
+        }
+        if (fp === '/api/montana-partner/doc' && req.method === 'GET') {
+          const doc = (readMp().docs || []).find(d => d.id === (q.get('id') || ''));
+          if (!doc) return sendJson(404, { error: 'Not found' });
+          const safe = path.basename(doc.file);
+          const fpath = path.join(MP_DOC_DIR, safe);
+          if (!fs.existsSync(fpath)) return sendJson(404, { error: 'Not found' });
+          const ext = path.extname(safe).toLowerCase();
+          const types = { '.pdf': 'application/pdf', '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
+          glog('mc-server', 'montana_partner_view', 'ok', 'doc:' + safe, { email: s.email, role: s.role });
+          res.writeHead(200, { 'Content-Type': types[ext] || 'application/octet-stream', 'Content-Disposition': safeContentDisposition(safe, ext === '.pdf' ? 'inline' : 'attachment') });
+          const traced = guard.traceBuffer(fs.readFileSync(fpath), ext, s, req, 'partner-docs/montana/' + safe);
+          res._guardBytes = traced.length;
+          return res.end(traced);
+        }
+        if (fp === '/api/montana-partner/tasks' && req.method === 'GET') {
+          const r = await supabaseRequest('GET', `tasks?tags=cs.%7B${MP_TAG}%7D&select=id,title,state,due_date,description&order=id&limit=1000`);
+          return sendJson(200, { tasks: Array.isArray(r.data) ? r.data : [] });
+        }
+        if (fp === '/api/montana-partner/notes' && req.method === 'GET') {
+          const t = await mpTask(q.get('task_id'));
+          if (!t) { auditDeny(s, req, 'montana-out-of-scope-task'); return sendJson(403, { error: 'Not permitted' }); }
+          const r = await supabaseRequest('GET', `activities?subject=eq.task:${t.id}&select=id,body,owner,created_at&order=created_at.asc&limit=500`);
+          return sendJson(200, { notes: Array.isArray(r.data) ? r.data : [] });
+        }
+        if (fp === '/api/montana-partner/note' && req.method === 'POST') {
+          let body = ''; req.on('data', c => { body += c; if (body.length > 20000) req.destroy(); });
+          req.on('end', async () => {
+            try {
+              const p = JSON.parse(body || '{}');
+              const t = await mpTask(p.task_id);
+              if (!t) { auditDeny(s, req, 'montana-out-of-scope-note'); return sendJson(403, { error: 'Not permitted' }); }
+              const text = String(p.body || '').trim().slice(0, 4000);
+              if (!text) return sendJson(400, { error: 'body required' });
+              // Author always comes from the session (never the client); tagged so routers can tell partner notes apart.
+              const r = await supabaseRequest('POST', 'activities', { type: 'task_note', subject: `task:${t.id}`, body: '[Montana partner] ' + text, owner: s.name || s.email, status: 'completed' });
+              glog('mc-server', 'montana_partner_note', 'ok', `task:${t.id}`, { email: s.email });
+              return sendJson(r.status >= 400 ? r.status : 201, { ok: r.status < 400 });
+            } catch (e) { return sendJson(400, { error: 'Bad request' }); }
+          });
+          return;
+        }
+        auditDeny(s, req, 'montana-unknown-feed');
+        return sendJson(404, { error: 'Not found' });
+      } catch (e) { return sendJson(500, { error: 'error' }); }
+    })();
+    return;
   }
 
   // ── Data-room API: manifest + curated doc serving (session-gated; docs are non-sensitive) ──
@@ -5974,7 +6109,7 @@ const server = http.createServer((req, res) => {
       const ext = path.extname(filePath);
       // Auto-inject the global Exobot chat widget into every real MC page (except the
       // public/sandbox pages) so the conversation persists across navigation.
-      const NO_WIDGET = ['login.html', 'set-password.html', 'sign.html', 'docusign.html', 'welcome.html', 'vault.html', 'exobot-widget.js'];
+      const NO_WIDGET = ['login.html', 'set-password.html', 'sign.html', 'docusign.html', 'welcome.html', 'vault.html', 'montana-partner.html', 'exobot-widget.js'];
       const base = path.basename(filePath);
       // App pages + scripts must never be served stale: a code deploy has to take effect on the
       // next load, not after a manual hard-refresh. (This is what left Phil on the old "Save Note"
