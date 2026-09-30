@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-24T08:47:42.865080+00:00",
+ "generated_at": "2026-09-30T18:07:37.932967+00:00",
  "source_file": "1790139605116_Current_Inventory_Locations_BOMPN_2026-09-22.xlsx",
  "counts": {
   "Warehouse": 925,
@@ -10,6 +10,17 @@
  },
  "total": 1717,
  "rocket": 0,
+ "id_match": {
+  "kept": 0,
+  "matched": 1717,
+  "moved": 0,
+  "new": 0,
+  "retired": 0,
+  "reactivated": 0,
+  "total": 1717,
+  "registry": "shop-id-registry.json",
+  "override": false
+ },
  "items": [
   {
    "id": "SHOP-00001",
