@@ -11,6 +11,7 @@ latest FAA-licensed vehicle, not yet flown — no "first flight" framing); Monta
 PLANNED; public list price only ($7,500/kg); no free/in-kind slots; no "one of three" claim.
 """
 import os, shutil, subprocess, tempfile, zipfile
+import segno
 from docx import Document
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.oxml import OxmlElement
@@ -55,11 +56,21 @@ SECTIONS = [
         "State, industry and alumni sponsors co-funding research and student payloads.",
     ]),
 ]
-PRICE = "Published list rate: $7,500 per kg. Every quote is sized to your payload — contact us for pricing."
-NEXT = ("Next step: talk to the Montana Spaceport (Edgar · edgar@montanaspaceport.com). He introduces you to the "
-        "Exos payload team, who scope your payload, flight profile and funding path.")
+PRICE = "Published list rate: $7,500 per kg. Every quote is sized to your payload."
+QUOTE_URL = "https://www.exosaero.com/payload-questionnaire"
+CTA = "Get a quote and book your flight online:\nwww.exosaero.com/payload-questionnaire"
+CTA_SUB = ("Tell us about your payload online (class, mass, power, integration needs). The Exos payload team "
+           "comes back with a sized quote, flight profile and funding path. Specs and the BLK3 Payload User "
+           "Guide: www.exosaero.com/payload-resources")
+NEXT = "Want a warm intro first? The Montana Spaceport (Edgar · edgar@montanaspaceport.com) can connect you."
 FINE = ("The Montana spaceport is planned and in development; it is not yet licensed or operating. BLK3 flight dates "
-        "depend on vehicle readiness and FAA licensing. exosaero.com")
+        "depend on vehicle readiness and FAA licensing. www.exosaero.com")
+
+
+def qr_png():
+    path = os.path.join(tempfile.gettempdir(), "flymt_quote_qr.png")
+    segno.make(QUOTE_URL, error="m").save(path, scale=10, border=2, dark="#000000", light="#FFFFFF")
+    return path
 
 
 # ── Word ──────────────────────────────────────────────────────────────────────────────────────
@@ -118,13 +129,25 @@ def build_docx(path):
     for row in t.rows:
         for c in row.cells:
             c.width = Inches(3.35)
-    band = doc.add_table(rows=1, cols=1).cell(0, 0)
-    shade(band, "1A1A1A")
+    bt = doc.add_table(rows=1, cols=2); bt.alignment = WD_TABLE_ALIGNMENT.CENTER; bt.autofit = False
+    band, qcell = bt.cell(0, 0), bt.cell(0, 1)
+    for col, w in zip(bt.columns, (Inches(5.5), Inches(1.2))):
+        col.width = w
+        for c in col.cells:
+            c.width = w
+    shade(band, "1A1A1A"); shade(qcell, "1A1A1A")
     band.paragraphs[0].text = ""
     r = band.paragraphs[0].add_run(PRICE); r.font.size = Pt(9.5); r.bold = True; r.font.name = "Arial"; r.font.color.rgb = RGBColor.from_string("FFFFFF")
     band.paragraphs[0].paragraph_format.space_before = Pt(3); band.paragraphs[0].paragraph_format.space_after = Pt(2)
-    p = band.add_paragraph(); r = p.add_run(NEXT); r.font.size = Pt(9.5); r.font.name = "Arial"; r.font.color.rgb = RGBColor.from_string(ORANGE); r.bold = True
-    p.paragraph_format.space_after = Pt(3)
+    for text, size, color, bold, italic in ((CTA, 11, ORANGE, True, False), (CTA_SUB, 8.5, "FFFFFF", False, False),
+                                            (NEXT, 8.5, "BBBBBB", False, True)):
+        p = band.add_paragraph(); r = p.add_run(text); r.font.size = Pt(size); r.font.name = "Arial"
+        r.font.color.rgb = RGBColor.from_string(color); r.bold = bold; r.italic = italic
+        p.paragraph_format.space_after = Pt(2); p.paragraph_format.line_spacing = 1.05
+    qp = qcell.paragraphs[0]; qp.alignment = 1; qp.paragraph_format.space_before = Pt(4)
+    qp.add_run().add_picture(qr_png(), width=Inches(1.0))
+    cp = qcell.add_paragraph(); cp.alignment = 1; r = cp.add_run("Scan for a quote"); r.font.size = Pt(7)
+    r.font.name = "Arial"; r.font.color.rgb = RGBColor.from_string("FFFFFF")
     para(doc, FINE, size=7.5, color="777777", before=5, italic=True)
     doc.core_properties.title = TITLE; doc.core_properties.author = "Exos Aerospace"
     doc.save(path)
@@ -153,7 +176,14 @@ h3 {{ font-size:10pt; color:#{ORANGE}; text-transform:uppercase; margin:0 0 3pt;
 ul {{ list-style:none; padding:0; margin:0 0 4pt; }}
 li {{ font-size:9.5pt; line-height:1.3; padding-left:0.14in; text-indent:-0.14in; margin-bottom:2pt; }}
 li:before {{ content:"■"; color:#{ORANGE}; font-size:6.5pt; padding-right:0.07in; vertical-align:1px; }}
-.band {{ background:#1A1A1A; padding:5pt 8pt; margin-top:4pt; }}
+.band {{ background:#1A1A1A; padding:6pt 8pt; margin-top:4pt; display:flex; gap:10pt; align-items:center; }}
+.band .t {{ flex:1; }}
+.band .q {{ text-align:center; color:#fff; font-size:7pt; }}
+.band .q img {{ width:0.95in; height:0.95in; display:block; margin-bottom:2pt; }}
+.band .c {{ color:#{ORANGE}; font-weight:bold; font-size:11pt; margin:0 0 3pt; }}
+.band .c a {{ color:#{ORANGE}; text-decoration:none; }}
+.band .s {{ color:#fff; font-size:8.5pt; line-height:1.3; margin:0 0 3pt; }}
+.band .i {{ color:#bbb; font-style:italic; font-size:8.5pt; margin:0; }}
 .band .p {{ color:#fff; font-weight:bold; font-size:9.5pt; margin:0 0 3pt; }}
 .band .n {{ color:#{ORANGE}; font-weight:bold; font-size:9.5pt; margin:0; line-height:1.3; }}
 .fine {{ font-size:7.5pt; color:#777; font-style:italic; margin-top:5pt; }}
@@ -161,8 +191,11 @@ li:before {{ content:"■"; color:#{ORANGE}; font-size:6.5pt; padding-right:0.07
 <img class="hdr" src="image1.png"><img class="ftr" src="image2.png">
 <div class="body"><h1>{esc(TITLE)}</h1><div class="sub">{esc(SUB)}</div><p>{esc(LEAD)}</p>
 <div class="grid">{cells}</div>
-<div class="band"><div class="p">{esc(PRICE)}</div><div class="n">{esc(NEXT)}</div></div>
+<div class="band"><div class="t"><div class="p">{esc(PRICE)}</div><div class="c"><a href="{QUOTE_URL}">{esc(CTA).replace(chr(10), "<br>")}</a></div>
+<div class="s">{esc(CTA_SUB)}</div><div class="i">{esc(NEXT)}</div></div>
+<div class="q"><img src="qr.png">Scan for a quote</div></div>
 <div class="fine">{esc(FINE)}</div></div></div></body></html>"""
+    shutil.copy(qr_png(), os.path.join(tmp, "qr.png"))
     hp = os.path.join(tmp, "onepager.html")
     open(hp, "w").write(html)
     subprocess.run([CHROME, "--headless=new", "--disable-gpu", f"--print-to-pdf={path}", "--no-pdf-header-footer",
