@@ -12,27 +12,31 @@
    "flight": "BLK3 Flight 2",
    "flight_date": "2027-03-15",
    "mass_kg": 1,
-   "contract_value": null,
+   "contract_value": 8000,
    "owner": "Lizi Quinn + Phil Eaton",
    "task_ids": "2957, 2727",
    "questionnaire_received": true,
    "lsa_sent_outside_at": "2026-09-18",
-   "notes": "LSA + Cross Waiver emailed as Word by Lizi 9/18 (pre-dates this flow). Phil signed Addendum A 9/18. Jon 10/1: Kordel ready to sign and pay. Flight date is the March 2027 planning month, not a firm date. Contract value = rate card until the LSA figure is confirmed.",
+   "notes": "LSA + Cross Waiver emailed as Word by Lizi 9/18 (pre-dates this flow). Phil signed Addendum A 9/18. Jon 10/1: Kordel ready to sign and pay. Flight date is the March 2027 planning month, not a firm date. Contract value = rate card until the LSA figure is confirmed. 10/1 Exo: Kordel returned signed Cross Waiver (Subpart A) + filled LSA 9/30 to Phil/Lizi, but those files never reached MC (forward stripped attachments) \u2014 Lizi to forward the 9/30 email to Exo. Execution LSA built with Addendum A filled ($4,000 / $3,200 / $800). Send via MC e-sign: Kordel signs, John countersigns.",
    "export": {
-    "status": "unscreened"
+    "status": "not_controlled",
+    "classification": "EAR99",
+    "source": "Exo screen; customer to confirm",
+    "screened_by": "Exo",
+    "screened_at": "2026-10-01T11:53:04.195353Z"
    },
    "milestones": {},
    "csl": [
     {
      "name": "Scentience",
      "clear": true,
-     "result": "🟢 no CSL match for: Scentience",
+     "result": "\ud83d\udfe2 no CSL match for: Scentience",
      "at": "2026-10-01T11:48:40.945Z"
     },
     {
      "name": "Kordel France",
      "clear": true,
-     "result": "🟢 no CSL match for: Kordel France",
+     "result": "\ud83d\udfe2 no CSL match for: Kordel France",
      "at": "2026-10-01T11:48:41.452Z"
     }
    ],
@@ -50,8 +54,34 @@
      "email": "exo@exosaero.com",
      "action": "csl screened",
      "detail": "Scentience clear; Kordel France clear"
+    },
+    {
+     "at": "2026-10-01T11:53:04.195353Z",
+     "by": "Exo",
+     "email": "exo@exosaero.com",
+     "action": "LSA uploaded",
+     "detail": "Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01.docx (Phil 9/18 LSA + Addendum A filled at standard terms; ITAR/EAR screen clear)"
+    },
+    {
+     "at": "2026-10-01T11:53:04.195353Z",
+     "by": "Exo",
+     "email": "exo@exosaero.com",
+     "action": "updated",
+     "detail": "contract_value $8,000 = 1 kg x $7,500 + $500 integration fee (standard terms). Kordel asked about $8,500 \u2014 Lizi/Phil confirm."
+    },
+    {
+     "at": "2026-10-01T11:53:04.195353Z",
+     "by": "Exo",
+     "email": "exo@exosaero.com",
+     "action": "export screen",
+     "detail": "not_controlled EAR99 (proposed). Basis: questionnaire = COTS olfaction sensor + compute, BLE/WiFi 2.4 GHz COTS radios, no defense article. Customer self-classification to confirm in Lizi reply."
     }
-   ]
+   ],
+   "lsa_file": "uploads/payload-orders/PO2C-2026-001/1790855584019_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01.docx",
+   "lsa_html": "uploads/payload-orders/PO2C-2026-001/1790855584019_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01.html",
+   "lsa_uploaded_at": "2026-10-01T11:53:04.195353Z",
+   "next_due": "2026-10-03",
+   "updated_at": "2026-10-01T11:53:04.195353Z"
   }
  ]
 }
