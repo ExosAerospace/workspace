@@ -303,6 +303,15 @@ function openErp(file, opts = {}) {
         FROM vendor v`, sinceIso, sinceIso);
     },
 
+    deleteAsset(id) {
+      id = String(id);
+      const b = db.get('SELECT * FROM asset WHERE id = ?', id); if (!b) return false;
+      for (const e of db.all('SELECT * FROM asset_event WHERE asset_id = ?', id))
+        writeAudited('asset_event', e.id, 'delete', e, null, () => db.run('DELETE FROM asset_event WHERE id = ?', e.id));
+      writeAudited('asset', id, 'delete', b, null, () => db.run('DELETE FROM asset WHERE id = ?', id));
+      return true;
+    },
+
     // ---- P5B: Production control (work orders + routing/WIP + quality; closes MQ-1) ----
     listWorkOrders() {
       return db.all(

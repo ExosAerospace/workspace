@@ -41,6 +41,20 @@ def norm(s):
     return re.sub(r"[^a-z0-9]", "", str(s or "").lower())
 
 
+def base(s):
+    """norm() minus corporate suffixes, so 'Scentience' matches 'Scentience, Inc.'."""
+    return re.sub(r"(incorporated|inc|llc|ltd|limited|corp|corporation|co|gmbh|bv|sa|srl|plc)$", "", norm(s)) or norm(s)
+
+
+def find_key(reg, company):
+    k = norm(company)
+    if k in reg:
+        return k
+    b = base(company)
+    hits = [x for x, r in reg.items() if base(r.get("company") or x) == b]
+    return hits[0] if len(hits) == 1 else k
+
+
 def load():
     try:
         with open(REG) as f:
@@ -61,6 +75,7 @@ def recompute(rec):
     pls = rec.get("payloads") or []
     rec["is_payload_customer"] = len(pls) > 0
     rec["payload_count"] = len(pls)
+    rec["flights"] = sorted({p["flight_no"] for p in pls if p.get("flight_no")})   # mission numbers flown/booked
     rec["total_contract_value_usd"] = sum(float(p.get("contract_value_usd") or 0) for p in pls)
     rec["total_paid_usd"] = sum(float(p.get("amount_paid_usd") or 0) for p in pls)
     paid = sorted([p.get("paid_date") for p in pls if p.get("paid_date")])
@@ -72,14 +87,15 @@ def recompute(rec):
 def cmd_add(a):
     today = datetime.date.today().isoformat()
     reg = load()
-    key = norm(a.company)
-    if not key:
+    if not norm(a.company):
         sys.exit("ERROR: --company is required")
+    key = find_key(reg, a.company)
     rec = reg.get(key) or {"company": a.company, "payloads": [], "created": today}
     rec["company"] = rec.get("company") or a.company
     payload = {
         "payload_name": a.payload_name,
         "mission": a.mission,
+        "flight_no": (a.flight_no or "").upper() or None,   # mission number, e.g. M6 (Jon 2026-10-01)
         "flight_date": a.flight_date,
         "mass_kg": a.mass_kg,
         "contract_id": a.contract_id,
@@ -92,8 +108,15 @@ def cmd_add(a):
         "logged": today,
         "logged_by": "Exo",
     }
-    payload = {k: v for k, v in payload.items() if v is not None}
-    rec.setdefault("payloads", []).append(payload)
+    payload = {k: v for k, v in payload.items() if v is not None and v != ""}
+    # Same mission (or same contract) already on file as an unpaid placeholder → fill it in, don't duplicate.
+    slot = next((p for p in rec.get("payloads", []) if not float(p.get("amount_paid_usd") or 0) and (
+        (payload.get("flight_no") and p.get("flight_no") == payload["flight_no"]) or
+        (payload.get("contract_id") and p.get("contract_id") == payload["contract_id"]))), None)
+    if slot is not None:
+        slot.update(payload)
+    else:
+        rec.setdefault("payloads", []).append(payload)
     recompute(rec)
     rec["updated"] = today
     reg[key] = rec
@@ -117,8 +140,8 @@ def cmd_list(a):
           f"contracted ${tot_c:,.0f} | paid ${tot_p:,.0f}")
     for r in recs:
         signed = sum(1 for p in r.get("payloads", []) if p.get("signed_contract_ref"))
-        print(f"  • {r['company']:32} since {r.get('customer_since','?'):10} "
-              f"{r.get('payload_count',0)} payload(s)  "
+        print(f"  • {r['company']:32} since {(r.get('customer_since') or '?'):10} "
+              f"{r.get('payload_count',0)} payload(s) {','.join(r.get('flights') or []) or '—':8} "
               f"${r.get('total_paid_usd',0):,.0f}/${r.get('total_contract_value_usd',0):,.0f}  "
               f"signed:{signed}/{r.get('payload_count',0)}")
 
@@ -130,6 +153,7 @@ def main():
     add.add_argument("--company", required=True)
     add.add_argument("--payload-name", dest="payload_name")
     add.add_argument("--mission")
+    add.add_argument("--flight-no", dest="flight_no", help="mission number, e.g. M5 / M6")
     add.add_argument("--flight-date", dest="flight_date")
     add.add_argument("--mass-kg", dest="mass_kg")
     add.add_argument("--contract-id", dest="contract_id")

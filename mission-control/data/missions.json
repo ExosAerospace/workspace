@@ -1,0 +1,7 @@
+{
+ "_note": "Exos mission (flight) numbers. M = Mission. Jon 2026-10-01: booking M5 (entX) and M6 (BLK3 S0). S0 = serial number 0, the Pathfinder vehicle for the BLK3 product line. Payload orders, invoices and the payload-customer list carry the mission number. Earlier missions (M1-M4) not yet mapped here.",
+ "missions": [
+  {"id": "M5", "label": "M5 · entX", "customer": "entX Ltd", "vehicle": "BLK3", "vehicle_serial": "", "status": "booking", "notes": "entX mission (current contract). Vehicle serial to confirm."},
+  {"id": "M6", "label": "M6 · BLK3 S0 (Pathfinder)", "customer": "", "vehicle": "BLK3", "vehicle_serial": "S0", "status": "booking", "notes": "BLK3 S0 = serial 0, Pathfinder vehicle for the BLK3 product line. Shared payload bay."}
+ ]
+}

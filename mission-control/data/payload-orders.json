@@ -9,7 +9,7 @@
    "contact_name": "Kordel France",
    "contact_email": "kordel@scentience.ai",
    "payload_name": "Scentience OPU (olfaction sensor + compute)",
-   "flight": "BLK3 Flight 2",
+   "flight": "M6 \u00b7 BLK3 S0 (Pathfinder)",
    "flight_date": "2027-03-15",
    "mass_kg": 1,
    "contract_value": 8000,
@@ -25,7 +25,13 @@
     "screened_by": "Exo",
     "screened_at": "2026-10-01T11:53:04.195353Z"
    },
-   "milestones": {},
+   "milestones": {
+    "M1": {
+     "qb_invoice_id": "15859",
+     "qb_doc_number": "0071",
+     "qb_status": "pending_approval"
+    }
+   },
    "csl": [
     {
      "name": "Scentience",
@@ -75,13 +81,28 @@
      "email": "exo@exosaero.com",
      "action": "export screen",
      "detail": "not_controlled EAR99 (proposed). Basis: questionnaire = COTS olfaction sensor + compute, BLE/WiFi 2.4 GHz COTS radios, no defense article. Customer self-classification to confirm in Lizi reply."
+    },
+    {
+     "at": "2026-10-01T11:57:17Z",
+     "by": "Exo",
+     "email": "exo@exosaero.com",
+     "action": "M1 QB invoice drafted",
+     "detail": "#0071 $4,000.00 \u2014 awaiting D-7281885"
+    },
+    {
+     "at": "2026-10-01T12:25:35.536653Z",
+     "by": "Exo",
+     "email": "exo@exosaero.com",
+     "action": "mission set",
+     "detail": "M6 \u00b7 BLK3 S0 (Pathfinder) \u2014 was 'BLK3 Flight 2' (Jon 10/1: booking M6 on BLK3 S0)"
     }
    ],
    "lsa_file": "uploads/payload-orders/PO2C-2026-001/1790855584019_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01.docx",
    "lsa_html": "uploads/payload-orders/PO2C-2026-001/1790855584019_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01.html",
    "lsa_uploaded_at": "2026-10-01T11:53:04.195353Z",
    "next_due": "2026-10-03",
-   "updated_at": "2026-10-01T11:53:04.195353Z"
+   "updated_at": "2026-10-01T11:53:04.195353Z",
+   "mission": "M6"
   }
  ]
 }

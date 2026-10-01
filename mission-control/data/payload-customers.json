@@ -19,7 +19,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2019",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "arete": {
     "company": "Arete",
@@ -41,7 +42,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2019",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "astraxinternational": {
     "company": "ASTRAX International",
@@ -63,7 +65,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2019",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "beyondburials": {
     "company": "Beyond Burials",
@@ -85,7 +88,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2024",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "centerforappliedspacetechnologiescast": {
     "company": "Center for Applied Space Technologies (CAST)",
@@ -107,7 +111,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2019",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "deployablescubedgmbh": {
     "company": "Deployables Cubed GmbH",
@@ -129,19 +134,22 @@
     "total_paid_usd": 0.0,
     "customer_since": "2024",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "entxltd": {
     "company": "entX Ltd",
     "payloads": [
       {
         "payload_name": "entX RHU Demonstrator System",
-        "mission": "BLK3 (current contract)",
+        "mission": "M5 · entX",
         "paid_date": "2026-09-30",
         "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
         "logged": "2026-09-30",
         "logged_by": "Exo",
-        "flight_date": null
+        "flight_date": null,
+        "mission_was": "BLK3 (current contract)",
+        "flight_no": "M5"
       }
     ],
     "created": "2026-09-30",
@@ -151,7 +159,10 @@
     "total_paid_usd": 0.0,
     "customer_since": null,
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-10-01",
+    "flights": [
+      "M5"
+    ]
   },
   "hopstronautix": {
     "company": "Hopstronautix",
@@ -173,7 +184,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2024",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "lunasondeinc": {
     "company": "LunaSonde, Inc.",
@@ -195,7 +207,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2019",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "matthewlesiw": {
     "company": "Matthew Lesiw",
@@ -217,7 +230,8 @@
     "total_paid_usd": 0.0,
     "customer_since": null,
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "nasa": {
     "company": "NASA",
@@ -239,7 +253,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2019",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "universityofcentralfloridanasareddi": {
     "company": "University of Central Florida (NASA REDDI)",
@@ -261,7 +276,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2019",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "ocullo": {
     "company": "OCULLO",
@@ -283,7 +299,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2019",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "purdueuniversity": {
     "company": "Purdue University",
@@ -305,7 +322,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2019",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "reditusspace": {
     "company": "Reditus Space",
@@ -327,7 +345,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2025",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "researchsat": {
     "company": "ResearchSat",
@@ -349,19 +368,22 @@
     "total_paid_usd": 0.0,
     "customer_since": "2024",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "scentienceinc": {
     "company": "Scentience, Inc.",
     "payloads": [
       {
         "payload_name": "Scentience Olfactory Processing Unit",
-        "mission": "BLK3 (questionnaire)",
+        "mission": "M6 · BLK3 S0 (Pathfinder)",
         "paid_date": "2026-09-30",
         "notes": "Source: Phil master customer list 2026-09-30. Contract value / paid / flown status NOT yet confirmed; signed contract not on file.",
         "logged": "2026-09-30",
         "logged_by": "Exo",
-        "flight_date": null
+        "flight_date": null,
+        "mission_was": "BLK3 (questionnaire)",
+        "flight_no": "M6"
       }
     ],
     "created": "2026-09-30",
@@ -371,7 +393,10 @@
     "total_paid_usd": 0.0,
     "customer_since": null,
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-10-01",
+    "flights": [
+      "M6"
+    ]
   },
   "sonsoflibertygunworkssolgw": {
     "company": "Sons of Liberty Gun Works (SOLGW)",
@@ -393,7 +418,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2019",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "spacelabtech": {
     "company": "Space Lab Tech",
@@ -415,7 +441,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2024",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "spacebornunitedbv": {
     "company": "SpaceBorn United B.V.",
@@ -437,7 +464,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2024",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "teachersinspaceinc": {
     "company": "Teachers in Space, Inc.",
@@ -459,7 +487,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2019",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "toucanspace": {
     "company": "Toucan Space",
@@ -481,7 +510,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2024",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "universityofcaliforniairvineuci": {
     "company": "University of California, Irvine (UCI)",
@@ -503,7 +533,8 @@
     "total_paid_usd": 0.0,
     "customer_since": null,
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "universityofsurreysurreyspacecentre": {
     "company": "University of Surrey (Surrey Space Centre)",
@@ -525,7 +556,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2024",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "upliftaerospacellc": {
     "company": "Uplift Aerospace LLC",
@@ -547,7 +579,8 @@
     "total_paid_usd": 0.0,
     "customer_since": "2024",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   },
   "vectorspacebiosciencesinc": {
     "company": "Vector Space Biosciences Inc.",
@@ -569,6 +602,7 @@
     "total_paid_usd": 0.0,
     "customer_since": "2019",
     "last_payload_date": null,
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "flights": []
   }
 }

@@ -174,7 +174,11 @@ def prepare(a):
         cv = float(order["contract_value"])
         amount = round(cv * PCT[ms] / 100, 2)
         customer, email = order["customer"], order.get("contact_email")
-        desc = (f"{order.get('payload_name') or customer + ' payload'} — {order.get('flight', 'BLK3')} payload integration & flight. "
+        if not order.get("mission"):
+            raise SystemExit(f"{a.order} has no mission number (M5, M6, ...) — set it on the payload order first")
+        mlabel = next((m for m in jload(os.path.join(WS, "mission-control/data/missions.json"), {}).get("missions", []) if m["id"] == order["mission"]), {})
+        flight_txt = f"Mission {order['mission']}" + (f" ({mlabel['vehicle']} {mlabel['vehicle_serial']}{' Pathfinder' if mlabel.get('vehicle_serial') == 'S0' else ''})".replace(" )", ")") if mlabel.get("vehicle") else "")
+        desc = (f"{order.get('payload_name') or customer + ' payload'} — {flight_txt} payload integration & flight. "
                 f"Milestone {ms}: {MS_LABEL[ms]} of ${cv:,.0f} contract (payload order {order['id']}).")
         item = a.item or "Payload Sale"
     else:
@@ -289,7 +293,7 @@ def watch(a):
                 if o and r["milestone"] == "M1" and os.path.exists(PAYLOAD_CUSTOMER):
                     args = ["/usr/bin/python3", PAYLOAD_CUSTOMER, "add", "--company", o["customer"],
                             "--payload-name", o.get("payload_name") or o["customer"] + " payload", "--mission", o.get("flight") or "BLK3",
-                            "--contract-id", o["id"], "--amount-paid", str(amt), "--paid-date", today,
+                            "--flight-no", o.get("mission") or "", "--contract-id", o["id"], "--amount-paid", str(amt), "--paid-date", today,
                             "--notes", "M1 deposit via QB invoice " + r["doc_number"]]
                     if o.get("mass_kg"): args += ["--mass-kg", str(o["mass_kg"])]
                     if o.get("flight_date"): args += ["--flight-date", o["flight_date"]]

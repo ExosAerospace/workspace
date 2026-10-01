@@ -34,6 +34,10 @@ const CSL_SCREEN = path.join(WS, 'scripts', 'csl_screen.py');
 const PAYLOAD_CUSTOMER = path.join(WS, 'scripts', 'payload_customer.py');
 const PY = '/usr/bin/python3';
 
+const MISSIONS_FILE = path.join(MC_DIR, 'data', 'missions.json');
+// Mission numbers (M5, M6, ...): Jon 2026-10-01 — every payload order, invoice and payload-customer record carries one.
+function missions() { try { return JSON.parse(fs.readFileSync(MISSIONS_FILE, 'utf8')).missions || []; } catch { return []; } }
+function missionLabel(id) { const m = missions().find(x => x.id === id); return m ? m.label : (id || ''); }
 const RATE_PER_KG = 7500;          // published rate card
 const INTEGRATION_FEE = 500;       // flat, standard terms
 const TRAINING_DOCS = ['sec-cui', 'sec-cui-nda'];
@@ -151,14 +155,14 @@ function view(o, envelopes) {
   const overdue = (o.next_due && o.next_due < today) || (stage === 7 && !ms[1].invoiced_at && ms[1].due && ms[1].due <= today);
   const received = ms.reduce((a, m) => a + (Number(m.amount_received) || 0), 0);
   return {
-    ...o, contract_value_effective: cv, milestones_view: ms, stage, next_action: next, overdue: !!overdue,
+    ...o, flight: o.mission ? missionLabel(o.mission) : o.flight, contract_value_effective: cv, milestones_view: ms, stage, next_action: next, overdue: !!overdue,
     controlled: CONTROLLED(x.status), export_ok: !!exportOk, csl_ok: cslOk, screened: !!screened,
     executed, envelope_status: envStatus, amount_received_total: received,
   };
 }
 
 // ── field rules ──
-const EDITABLE = ['customer', 'contact_name', 'contact_email', 'payload_name', 'flight', 'flight_date', 'mass_kg',
+const EDITABLE = ['customer', 'contact_name', 'contact_email', 'payload_name', 'mission', 'flight', 'flight_date', 'mass_kg',
   'contract_value', 'owner', 'task_ids', 'opp_id', 'questionnaire_received', 'next_due', 'notes'];
 function clean(fields, o) {
   const out = {};
@@ -167,6 +171,7 @@ function clean(fields, o) {
   if ('contract_value' in out) out.contract_value = (out.contract_value === '' || out.contract_value == null) ? null : Number(out.contract_value);
   if ('questionnaire_received' in out) out.questionnaire_received = !!out.questionnaire_received;
   if ('payload_name' in out) out.payload_name = String(out.payload_name || '').slice(0, 80);
+  if ('mission' in out) { out.mission = String(out.mission || '').trim().toUpperCase(); if (out.mission && !missions().some(m => m.id === out.mission)) return { error: 'Unknown mission ' + out.mission + ' (add it to data/missions.json first).' }; if (out.mission) out.flight = missionLabel(out.mission); }
   if (o && CONTROLLED((o.export || {}).status) && 'notes' in out && String(out.notes || '').trim() && out.notes !== o.notes) {
     return { error: 'Notes are disabled on a controlled (ITAR/EAR) payload. Keep technical detail in the SharePoint location only.' };
   }
@@ -193,7 +198,7 @@ async function handle(req, res, ctx) {
 
   if (fp === '/api/payload-orders' && req.method === 'GET') {
     const d = load(); const envs = ctx.loadEnvelopes();
-    return send(res, 200, { orders: d.orders.map(o => view(o, envs)), handlers: trainedHandlers(),
+    return send(res, 200, { orders: d.orders.map(o => view(o, envs)), handlers: trainedHandlers(), missions: missions(),
       terms: { rate_per_kg: RATE_PER_KG, integration_fee: INTEGRATION_FEE, milestones: MILESTONES, procedure: PROCEDURE, training_docs: TRAINING_DOCS } });
   }
   if (req.method !== 'POST') return send(res, 404, { error: 'Not found' });
@@ -317,7 +322,7 @@ async function handle(req, res, ctx) {
     const title = 'BLK3 Launch Services Agreement — ' + o.customer;
     const r = await ctx.createEnvelope(req, {
       title, html, subject: 'Signature requested: ' + title,
-      message: 'Please review and sign the Launch Services Agreement for your payload on ' + (o.flight || 'BLK3') + '. Exos countersigns after you.',
+      message: 'Please review and sign the Launch Services Agreement for your payload on ' + ((o.mission ? missionLabel(o.mission) : o.flight) || 'BLK3') + '. Exos countersigns after you.',
       signers: [{ name: name || 'Customer', email, role: 'Customer' }, { name: 'John Quinn', email: 'jquinn@exosaero.com', role: 'Exos Aerospace — CEO' }],
     });
     if (!r || !r.id) return send(res, 500, { error: 'E-sign envelope was not created.' });
@@ -362,7 +367,7 @@ async function handle(req, res, ctx) {
       log(o, s, key + ' paid', '$' + amt.toLocaleString() + ' · ' + m.paid_at);
       if (key === 'M1') {   // first money in → payload-customer registry (green badge + metrics)
         const args = [PAYLOAD_CUSTOMER, 'add', '--company', o.customer, '--payload-name', o.payload_name || o.customer + ' payload',
-          '--mission', o.flight || 'BLK3', '--contract-id', o.id, '--amount-paid', String(amt), '--paid-date', m.paid_at,
+          '--mission', (o.mission ? missionLabel(o.mission) : o.flight) || 'BLK3', '--flight-no', o.mission || '', '--contract-id', o.id, '--amount-paid', String(amt), '--paid-date', m.paid_at,
           '--notes', 'M1 deposit via MC payload order ' + o.id];
         if (o.mass_kg) args.push('--mass-kg', String(o.mass_kg));
         if (o.flight_date) args.push('--flight-date', o.flight_date);
