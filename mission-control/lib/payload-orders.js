@@ -29,6 +29,13 @@ const STORE = path.join(MC_DIR, 'data', 'payload-orders.json');
 const RR_FILE = path.join(MC_DIR, 'data', 'required-reading.json');
 const LSA_DIR = path.join(MC_DIR, 'uploads', 'payload-orders');
 const DOCX2HTML = path.join(WS, 'scripts', 'docx2html.py');
+// Customer copy = Exos letterhead + the LSA's own page layout (Jon 2026-10-01). The e-sign envelope shows these
+// page images, never the re-flowed mammoth HTML (that is only used for the export screen's text).
+const LSA_RENDER = path.join(WS, 'scripts', 'lsa_esign_render.py');
+async function renderLsa(docxAbs) {
+  const { stdout } = await execFileP(PY, [LSA_RENDER, docxAbs], { timeout: 300000 });
+  return JSON.parse(String(stdout).trim().split('\n').pop());
+}
 const ITAR_SCREEN = path.join(WS, 'scripts', 'itar_ear_screen.py');
 const CSL_SCREEN = path.join(WS, 'scripts', 'csl_screen.py');
 const PAYLOAD_CUSTOMER = path.join(WS, 'scripts', 'payload_customer.py');
@@ -303,8 +310,13 @@ async function handle(req, res, ctx) {
       save(d);
       return send(res, 422, { error: 'Blocked: the LSA contains what looks like export-controlled technical data. Keep technical detail in SharePoint and send a commercial-only LSA. (' + hits[0] + ')' });
     }
+    let rend;
+    try { rend = await renderLsa(docx); }
+    catch (e) { return send(res, 500, { error: 'Could not put the LSA on Exos letterhead / render its pages: ' + String(e.stderr || e.message).slice(0, 300) }); }
     o.lsa_file = path.relative(MC_DIR, docx); o.lsa_html = path.relative(MC_DIR, html); o.lsa_uploaded_at = now();
-    log(o, s, 'LSA uploaded', name);
+    o.lsa_letterhead_docx = path.relative(MC_DIR, rend.letterhead_docx); o.lsa_pdf = path.relative(MC_DIR, rend.pdf);
+    o.lsa_pages_html = path.relative(MC_DIR, rend.pages_html);
+    log(o, s, 'LSA uploaded', name + ' → on Exos letterhead, ' + rend.pages + ' pages');
     save(d); audit('lsa-upload', name);
     return send(res, 200, { ok: true, order: view(o, ctx.loadEnvelopes()) });
   }
@@ -318,7 +330,13 @@ async function handle(req, res, ctx) {
     const email = String(body.signer_email || o.contact_email || '').trim();
     const name = String(body.signer_name || o.contact_name || '').trim();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return send(res, 400, { error: 'Customer signer email required.' });
-    const html = fs.readFileSync(path.join(MC_DIR, o.lsa_html), 'utf8');
+    // Format-true copy only: letterhead + original page layout. Render now if this LSA predates the rule.
+    if (!o.lsa_pages_html || !fs.existsSync(path.join(MC_DIR, o.lsa_pages_html))) {
+      try { const rend = await renderLsa(path.join(MC_DIR, o.lsa_file));
+        o.lsa_letterhead_docx = path.relative(MC_DIR, rend.letterhead_docx); o.lsa_pdf = path.relative(MC_DIR, rend.pdf); o.lsa_pages_html = path.relative(MC_DIR, rend.pages_html); }
+      catch (e) { return send(res, 500, { error: 'LSA not sent: could not render it on Exos letterhead (' + String(e.stderr || e.message).slice(0, 200) + ').' }); }
+    }
+    const html = fs.readFileSync(path.join(MC_DIR, o.lsa_pages_html), 'utf8');
     const title = 'BLK3 Launch Services Agreement — ' + o.customer;
     const r = await ctx.createEnvelope(req, {
       title, html, subject: 'Signature requested: ' + title,
