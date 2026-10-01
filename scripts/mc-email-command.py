@@ -365,6 +365,34 @@ def collect_attach_directives(*texts, cap=5, max_bytes=20 * 1024 * 1024, existin
     return out, missed
 
 
+_UPLOAD_PREFIX_RE = re.compile(r'^\d{10,}_')
+
+
+def _clean_att_name(path):
+    """Display name for an attachment: strip the mc-attach upload-id prefix (1790852114814_...)."""
+    return _UPLOAD_PREFIX_RE.sub("", os.path.basename(path))
+
+
+def dedupe_attachments(paths):
+    """One copy per document. The same file reaches the reply by several routes (the ATTACH: line
+    resolves to drafts/, and mc-attach.py stores a prefixed copy in uploads/ for EVERY task it was
+    filed on), so basename dedupe missed them and Jon got 5 copies of a 2-file deliverable
+    (Montana Partner Guide, 2026-10-01). Dedupe by content hash AND by prefix-stripped name;
+    first seen wins (explicit ATTACH:/path references come first)."""
+    out, hashes, names = [], set(), set()
+    for p in paths:
+        try:
+            h = hashlib.sha256(open(p, "rb").read()).hexdigest()
+        except Exception:
+            h = None
+        n = _clean_att_name(p).lower()
+        if (h and h in hashes) or n in names:
+            continue
+        out.append(p); names.add(n)
+        if h: hashes.add(h)
+    return out
+
+
 _UPLOADS_DIR = os.path.join(WS, "mission-control", "uploads")
 _UPLOADS_META = os.path.join(_UPLOADS_DIR, "_meta.json")
 
@@ -584,7 +612,7 @@ def email_requester(to_addr, orig_subject, instruction, reply_text, attachments=
                 data = f.read()
             ctype = mimetypes.guess_type(ap)[0] or "application/octet-stream"
             maintype, subtype = ctype.split("/", 1)
-            m.add_attachment(data, maintype=maintype, subtype=subtype, filename=os.path.basename(ap))
+            m.add_attachment(data, maintype=maintype, subtype=subtype, filename=_clean_att_name(ap))
         except Exception as e:
             log(f"[email-reply] attach failed {ap}: {e}")
     try:
@@ -1025,8 +1053,9 @@ def main():
                     # even if the reply text didn't spell out the path — so "fill this out and return it"
                     # actually returns the file. Dedupe by basename against path-referenced attachments.
                     for _d in new_task_deliverables(before_att_ids):
-                        if os.path.basename(_d) not in _have and len(atts) < 5:
+                        if os.path.basename(_d) not in _have:
                             atts.append(_d); _have.add(os.path.basename(_d))
+                    atts = dedupe_attachments(atts)[:5]  # dedupe BEFORE the cap so copies can't crowd out real files
                     # ExO3 GOVERN guard: every deliverable going back must be filed on its MC task.
                     _link_note = ""
                     try:
