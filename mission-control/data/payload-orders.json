@@ -102,17 +102,24 @@
      "action": "LSA rev2 on Exos letterhead",
      "detail": "Jon 10/1: letterhead header+footer, addenda on own pages, original format held; 'BLK3 Flight 2' \u2192 'Mission M6 (BLK3 S0)'. 11 pages",
      "email": "exo@exosaero.com"
+    },
+    {
+     "at": "2026-10-01T13:11:52Z",
+     "by": "Exo",
+     "email": "exo@exosaero.com",
+     "action": "LSA rev3",
+     "detail": "Jon 10/1 08:05: removed SARGE P1 'pathfinder' sentence from Addendum C (Scentience flies M6, not the Pathfinder). STIG B profile reference kept. 10 pages"
     }
    ],
-   "lsa_file": "uploads/payload-orders/PO2C-2026-001/1790860069623_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01_rev2.docx",
-   "lsa_html": "uploads/payload-orders/PO2C-2026-001/1790860069623_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01_rev2.html",
-   "lsa_uploaded_at": "2026-10-01T13:07:51Z",
+   "lsa_file": "uploads/payload-orders/PO2C-2026-001/1790860310266_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01_rev3.docx",
+   "lsa_html": "uploads/payload-orders/PO2C-2026-001/1790860310266_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01_rev3.html",
+   "lsa_uploaded_at": "2026-10-01T13:11:52Z",
    "next_due": "2026-10-03",
    "updated_at": "2026-10-01T11:53:04.195353Z",
    "mission": "M6",
-   "lsa_letterhead_docx": "uploads/payload-orders/PO2C-2026-001/1790860069623_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01_rev2_LETTERHEAD.docx",
-   "lsa_pdf": "uploads/payload-orders/PO2C-2026-001/1790860069623_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01_rev2_LETTERHEAD.pdf",
-   "lsa_pages_html": "uploads/payload-orders/PO2C-2026-001/1790860069623_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01_rev2_PAGES.html"
+   "lsa_letterhead_docx": "uploads/payload-orders/PO2C-2026-001/1790860310266_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01_rev3_LETTERHEAD.docx",
+   "lsa_pdf": "uploads/payload-orders/PO2C-2026-001/1790860310266_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01_rev3_LETTERHEAD.pdf",
+   "lsa_pages_html": "uploads/payload-orders/PO2C-2026-001/1790860310266_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01_rev3_PAGES.html"
   }
  ]
 }
