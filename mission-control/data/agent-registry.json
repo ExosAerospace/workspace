@@ -2794,7 +2794,8 @@
    "risk_tier": "MEDIUM",
    "envelope_source": "Jon 2026-09-27 (#blk3-payload): Lizi releases, Exo sends directly as the students' prompter",
    "change_log": [
-    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860",
+    "2026-10-01 question pipeline: deterministic is_question() (URL '?' ignored, question openers, @exo/please clarify/can you/help; report-style notes need @exo); acks state a concrete ETA (+4h, 9PM-8AM CT -> 10 AM) stored as due_date + eta: tag; fixed '% tid' crash on student notes containing '%' (job down 9/30 20:16 -> 10/1 14:53 CDT). Answering handed to com.exos.capstone-question-answerer."
    ]
   },
   {
@@ -4501,6 +4502,24 @@
    "reusability_scope": "any BOM assembly with a flight-vehicle asset + missions",
    "risk_tier": "LOW",
    "envelope_source": "authored with the build 2026-10-01 (Jon: 'Start Phase 5C now, with steps 1-3 first')"
+  },
+  {
+   "label": "com.exos.capstone-question-answerer",
+   "script": "scripts/capstone_question_answerer.py",
+   "kind": "launchd",
+   "schedule": "every 15 min",
+   "purpose": "Closes the UTD capstone question loop: dispatches each open utd-question triage task once (retry once after 2h) to an openclaw agent turn that answers program-safe, source-linked, on the student's task and marks the triage Done; SLA watchdog posts one 'new ETA' note to the student and one Discord alert when an ETA slips.",
+   "stack_layer": "EXECUTE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "Lizi Quinn",
+   "permission_envelope": "may post Exo notes on UTD student tasks, mark utd-question triage tasks Done / move their due_date, spawn openclaw agent turns (session agent:main:utd-question-<id>), and post SLA alerts to Discord channel 1539382179120021616; no email, no other external send; program-safe answers only (no pricing/customers/financials/CUI/ITAR/internal data; assignment/priority questions routed to Lizi); sourcing guardrail: every factual claim linked to a primary source dated 2023+ or stated as unverified",
+   "memory_boundary": "reads Supabase tasks/activities for utd-question + student tasks; writes logs/capstone-question-answerer*.{json,log}, logs/capstone-question-agent/",
+   "escalation": "ETA slip -> student status note + Discord #1539382179120021616 alert (once per task); agent BLOCKED -> retry once, then SLA alert surfaces it for Lizi",
+   "eval_suite": "dry-run with synthetic question (--dry-run --fake) covering dispatch message, SLA note and Discord alert, 2026-10-01; detection unit cases (URL-only '?', question openers, report-style notes, @exobot); agent_eval liveness (loaded + LastExitStatus=0)",
+   "telemetry": "logs/capstone-question-answerer.log, logs/capstone-question-answerer-state.json, logs/capstone-question-agent/<id>-attempt<N>.log; logs/runs/YYYY-MM-DD.jsonl (run_logged)",
+   "reusability_scope": "any sandboxed external-cohort program on MC",
+   "risk_tier": "MEDIUM",
+   "envelope_source": "Jon/coordinator directive 2026-10-01: every student question gets an ETA ack, an answer, and a status update if the ETA slips"
   }
  ],
  "eval_wave_1": {
