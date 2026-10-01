@@ -418,6 +418,10 @@ def new_task_deliverables(before_ids, cap=5, max_bytes=20 * 1024 * 1024):
     for m in meta:
         if m.get("id") in before_ids or not m.get("current", True) or not m.get("task_id"):
             continue
+        # Only Exo's own uploads — a teammate's concurrent MC upload is NOT this command's
+        # deliverable (2026-10-01: Steve's HVRR cert PDFs on #2408 rode out on a Japan-trip reply).
+        if not (m.get("uploaded_by") or "").startswith("Exo"):
+            continue
         sn = m.get("stored_name")
         p = os.path.join(_UPLOADS_DIR, sn) if sn else None
         if not (p and os.path.isfile(p)):
@@ -547,7 +551,13 @@ def ensure_task_linkage(atts, reply, subject, instruction, sender, mid):
     for p in atts:
         on = _file_on_task(p, meta)
         if on:
-            linked.append((p, on, "already")); continue
+            # Report EVERY task carrying this doc (same stored basename), not just the first hit.
+            _bn = re.sub(r"^\d+_", "", os.path.basename(p))
+            _all = {m.get("task_id") for m in meta if m.get("task_id") and m.get("current", True)
+                    and re.sub(r"^\d+_", "", m.get("stored_name") or "") == _bn} or {on}
+            for _t in sorted(_all, key=str):
+                linked.append((p, _t, "already"))
+            continue
         if target:
             r = subprocess.run([sys.executable, _MC_ATTACH, "--task", str(target), "--file", p,
                                 "--by", "Exo (email-command guard)"], capture_output=True, text=True, timeout=60)
@@ -1060,7 +1070,7 @@ def main():
                     _link_note = ""
                     try:
                         _linked, _orph = ensure_task_linkage(atts, reply, subject, instruction, sender, mid)
-                        _tids = sorted({t for _, t, _h in _linked})
+                        _tids = sorted({str(t) for _, t, _h in _linked}, key=lambda x: (len(x), x))
                         if _tids:
                             _link_note += "\n\n📁 Filed on MC task " + ", ".join(f"#{t}" for t in _tids) + "."
                         if _orph:
