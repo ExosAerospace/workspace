@@ -154,6 +154,25 @@ def file_decision(rec):
     return json.loads(urllib.request.urlopen(req, timeout=20).read())["id"]
 
 
+def attach_pdf_to_decision(rec):
+    """Put the invoice PDF on the Decision card (uploads/_meta.json decision_id) so Jon reviews it
+    right on /decisions.html — the related payload-order task docs (LSA etc.) appear alongside."""
+    import shutil, time, uuid
+    mc = os.path.join(WS, "mission-control")
+    meta_path = os.path.join(mc, "uploads/_meta.json")
+    meta = json.load(open(meta_path))
+    f = os.path.basename(rec["pdf"])
+    if any(m.get("decision_id") == rec["decision_id"] and m.get("filename", "").endswith(f) for m in meta):
+        return
+    stored = f"{int(time.time()*1000)}_{f}"
+    shutil.copy2(rec["pdf"], os.path.join(mc, "uploads", stored))
+    meta.append({"id": uuid.uuid4().hex[:16], "filename": f"Invoice #{rec['doc_number']} (exactly what the customer gets) — {f}",
+                 "stored_name": stored, "size": os.path.getsize(os.path.join(mc, "uploads", stored)), "extension": ".pdf",
+                 "task_id": None, "project_id": None, "decision_id": rec["decision_id"], "doc_key": f"qb-invoice-{rec['qb_id']}",
+                 "version": 1, "current": True, "uploaded_by": "Exo", "uploaded_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())})
+    tmp = meta_path + ".tmp"; json.dump(meta, open(tmp, "w"), indent=2); os.replace(tmp, meta_path)
+
+
 # ── prepare ──────────────────────────────────────────────────────────────────
 def prepare(a):
     st = jload(STATE, {"invoices": []})
@@ -213,6 +232,10 @@ def prepare(a):
            "milestone": ms, "status": "pending", "created_at": now(), "note": a.note or ""}
     rec["pdf"] = invoice_pdf(rec["qb_id"], rec["doc_number"])
     rec["decision_id"] = file_decision(rec)
+    try:
+        attach_pdf_to_decision(rec)
+    except Exception as e:
+        log(f"WARN could not attach invoice PDF to {rec['decision_id']}: {e}")
     st["invoices"].append(rec)
     jsave(STATE, st)
     if order:

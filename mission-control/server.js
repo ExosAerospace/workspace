@@ -5520,12 +5520,35 @@ const server = http.createServer((req, res) => {
     try {
       const upMeta = loadUploadsMeta();
       const OFFICE = new Set(['docx', 'pptx', 'xlsx', 'doc', 'ppt', 'xls']);
+      // Payload orders (PO2C-…) carry their MC task ids; a decision whose relatedItem is an
+      // order must surface that task's documents too (invoice/LSA approvals were dead-ending).
+      let orderTasks = {};
+      try {
+        const po = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'payload-orders.json'), 'utf-8'));
+        for (const o of (Array.isArray(po) ? po : (po.orders || []))) {
+          const ids = String(o.task_ids || '').match(/\d+/g) || [];
+          if (o.id && ids.length) orderTasks[String(o.id).toUpperCase()] = ids;
+        }
+      } catch (e) { /* no orders file */ }
       for (const d of arr) {
-        const tm = /task\s*#?\s*(\d+)/i.exec(d.relatedItem || '');
-        const taskId = tm ? tm[1] : null;
-        const linked = upMeta.filter(m =>
+        // Resolve EVERY way a decision can point at a task (dedicated fields, bare-number
+        // relatedItem, "task 2467" text, payload-order id) — previously only the text form worked.
+        const ids = new Set();
+        const ri = String(d.relatedItem == null ? '' : d.relatedItem).trim();
+        for (const v of [d.taskId, d.relatedTaskId, d.related_task, d.relatedTask, d.spawned_task]) {
+          const m = /(\d+)/.exec(String(v == null ? '' : v)); if (m) ids.add(m[1]);
+        }
+        if (/^#?\d+$/.test(ri)) ids.add(ri.replace('#', ''));
+        for (const m of ri.matchAll(/task\s*#?\s*(\d+)/gi)) ids.add(m[1]);
+        for (const t of (orderTasks[ri.toUpperCase()] || [])) ids.add(t);
+        d.linkedTaskIds = [...ids];
+        // Current versions only (superseded drafts just clutter the review row); docs linked to
+        // the decision itself first, then the related task's docs, newest first.
+        const linked = upMeta.filter(m => m.current !== false && (
           String(m.decision_id) === String(d.id) ||
-          (taskId && m.task_id != null && String(m.task_id) === String(taskId)));
+          (m.task_id != null && ids.has(String(m.task_id)))))
+          .sort((a, b) => ((String(b.decision_id) === String(d.id)) - (String(a.decision_id) === String(d.id)))
+            || String(b.uploaded_at || '').localeCompare(String(a.uploaded_at || '')));
         d.attachments = linked.map(m => {
           const ext = (String(m.stored_name).split('.').pop() || '').toLowerCase();
           const enc = encodeURIComponent(m.stored_name);
@@ -5534,6 +5557,7 @@ const server = http.createServer((req, res) => {
             url: '/uploads/' + enc,
             review_url: OFFICE.has(ext) ? '/viewpdf/' + enc : '/uploads/' + enc,
             size: m.size, uploaded_at: m.uploaded_at,
+            from_task: String(m.decision_id) === String(d.id) ? null : (m.task_id != null ? String(m.task_id) : null),
           };
         });
         // An explicit review_url on the decision record wins as the primary reviewable.

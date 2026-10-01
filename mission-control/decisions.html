@@ -107,13 +107,15 @@ let tab='open', data=[], picks={}, searchQuery='', scopeAll=false; // picks[id]=
 function toggleScope(){scopeAll=!scopeAll;const b=document.getElementById('scopeToggle');if(b)b.classList.toggle('active',scopeAll);load();}
 function ownerTag(d){return scopeAll?(' · 👤 '+esc(String(d.assignedTo||'jquinn@exosaero.com').replace(/@exosaero\.com$/,''))):'';}
 function attachHtml(d){
-  const list=(d.attachments||[]).map(a=>{
+  const atts=d.attachments||[];
+  const list=atts.map(a=>{
     const rev=a.review_url||a.url;
-    const review=`<a href="${rev}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#fff;text-decoration:none;background:var(--accent);border:1px solid var(--accent);border-radius:7px;padding:6px 11px;margin:4px 6px 0 0" title="Open an inline preview to review before deciding">📄 Review ${esc(a.filename)}</a>`;
+    const src=a.from_task?` <span style="font-weight:400;opacity:.8">· Task #${esc(a.from_task)}</span>`:'';
+    const review=`<a href="${rev}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#fff;text-decoration:none;background:var(--accent);border:1px solid var(--accent);border-radius:7px;padding:6px 11px;margin:4px 6px 0 0" title="Open an inline preview to review before deciding">📄 Review ${esc(a.filename)}${src}</a>`;
     const dl=(a.url&&a.url!==rev)?`<a href="${a.url}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted);text-decoration:none;background:#0a1830;border:1px solid var(--line);border-radius:7px;padding:6px 9px;margin:4px 6px 0 0" title="Download the original file">⬇︎ original</a>`:'';
     return review+dl;
   }).join('');
-  return list?`<div style="margin-top:10px">${list}</div>`:'';
+  return list?`<div style="margin-top:10px"><div style="font-size:11px;color:#bcd0ee;font-weight:600">📂 Documents to review (${atts.length})</div>${list}</div>`:'';
 }
 function emailHtml(d){
   const e=(d.email_activity||[]);
@@ -166,12 +168,13 @@ function relatedLinks(d){
   let out='';
   const ri=(d.relatedItem==null?'':String(d.relatedItem)).trim();
   const isTaskNum=/^#?\d+$/.test(ri);
-  let taskId=d.taskId||d.relatedTaskId||d.related_task||d.spawned_task||(isTaskNum?ri:'');
-  taskId=(taskId===0||taskId)?String(taskId).replace(/^#/,'').trim():'';
+  let taskIds=(d.linkedTaskIds&&d.linkedTaskIds.length)?d.linkedTaskIds:[];
+  if(!taskIds.length){let t=d.taskId||d.relatedTaskId||d.related_task||d.spawned_task||(isTaskNum?ri:'');t=(t===0||t)?String(t).replace(/^#/,'').trim():'';if(t)taskIds=[t];}
   if(ri && !isTaskNum){
-    out+=' · <a href="opportunities.html?focus='+encodeURIComponent(ri)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(ri)+'</a>';
+    const href=/^PO2C-/i.test(ri)?'payload-orders.html?focus=':'opportunities.html?focus=';
+    out+=' · <a href="'+href+encodeURIComponent(ri)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(ri)+'</a>';
   }
-  if(taskId){
+  for(const taskId of taskIds){
     out+=' · <a href="index.html?task='+encodeURIComponent(taskId)+'" style="color:var(--accent);text-decoration:none" title="Open this task in the Tasks board">🗒 Task #'+esc(taskId)+'</a>';
   }
   return out;
@@ -196,7 +199,7 @@ function card(d){
   const opts=(d.options&&d.options.length?d.options:['Yes','No']);
   return `<div class="card ${pr}">
     <div class="row1"><div><p class="title">${statusMark(false)}${esc(d.title)}<span class="pill ${pr}">${pr}</span></p>
-    <div class="meta">${d.id}${d.relatedItem?' · <a href="opportunities.html?focus='+encodeURIComponent(d.relatedItem)+'" style="color:var(--accent);text-decoration:none" title="Open the related item">🔗 '+esc(d.relatedItem)+'</a>':''} · ${esc(d.source||'')}${ownerTag(d)}</div></div></div>
+    <div class="meta">${d.id}${relatedLinks(d)} · ${esc(d.source||'')}${ownerTag(d)}</div></div></div>
     <div class="q"><b>${esc(d.question)}</b></div>
     ${d.context?`<div class="ctx">${esc(d.context)}</div>`:''}
     ${d.proposedAction?`<div class="prop">▸ ${esc(d.proposedAction)}</div>`:''}
