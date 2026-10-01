@@ -319,14 +319,14 @@ def build_summary(records, bridge_line):
         f"Pipeline: {total} prospects  ({live} live · {with_poc} with a named POC)",
         f"Funnel: {funnel}" if funnel else "Funnel: (empty)",
         f"Opportunities bridge: {bridge_line}",
-        f"Outreach drafts in drafts file, staged for Lizi's review: {count_drafts()}",
+        f"Outreach drafts written to date: {count_drafts()} (each run's new ones go to Lizi's inbox as email + Word)",
     ]
     if need:
         top = ", ".join(r["name"][:40] for r in need[:5])
         lines.append(f"Needs enrichment ({len(need)}): {top}")
     else:
         lines.append("Needs enrichment: none — every live prospect has a POC.")
-    lines.append("_Deterministic core (model out of critical path). Drafting runs best-effort next; drafts land in drafts/payload-outreach-drafts.md for review — never auto-sent._")
+    lines.append("_Drafts are emailed to Lizi's inbox for review, never sent to prospects automatically._")
     return "\n".join(lines)
 
 
@@ -360,7 +360,8 @@ def ollama_draft(context_block):
 def draft_prospects(records, limit):
     """Best-effort: draft outreach for up to `limit` enrichable, un-drafted
     prospects. Each prospect is isolated in try/except so one failure (or ollama
-    being down) can never break the run. Returns count of new drafts written."""
+    being down) can never break the run. Returns the list of new drafts written
+    (dicts: name/status/poc/email/body) so they can be emailed to the reviewer."""
     done = _already_drafted(None)
     # Candidates: have a POC, in an active enrich/ready stage, not yet drafted.
     cands = [r for r in records
@@ -368,7 +369,7 @@ def draft_prospects(records, limit):
              and norm_stage(r["status"]) in ("RESEARCHING", "READY")
              and not any(r["name"].startswith(d) or d.startswith(r["name"][:25])
                          for d in done)]
-    written = 0
+    written = []
     today = datetime.date.today().isoformat()
     os.makedirs(os.path.dirname(DRAFTS), exist_ok=True)
     t0 = time.monotonic()
@@ -386,7 +387,10 @@ def draft_prospects(records, limit):
                 f.write(f"*Status: {r['status']} · review + send from "
                         f"lquinn@exosaero.com · never auto-sent*\n\n")
                 f.write(body.rstrip() + "\n\n---\n")
-            written += 1
+            written.append({"name": r["name"], "status": r["status"],
+                            "poc": _poc_line(r["block"]),
+                            "email": _poc_email(r["block"]),
+                            "body": body.rstrip()})
             glog("draft", status="info", detail=f"drafted: {r['name'][:40]}")
         except Exception as e:
             glog("draft", status="error", detail=f"{r['name'][:30]}: {str(e)[:80]}")
@@ -394,54 +398,145 @@ def draft_prospects(records, limit):
     return written
 
 
-DECISIONS_API = "http://localhost:8080/api/decisions/ingest"
-DTOKEN_FILE = os.path.join(WORKSPACE, "mission-control/data/.decisions-token")
+# --- review hand-off: drafts go to the reviewer's INBOX, not a .md file ---
+# Jon 2026-10-01: "drafts land in drafts/payload-outreach-drafts.md is a problem
+# since no-one knows how or wants to review an md file." The .md stays as the
+# engine's internal dedupe log only. Every run's new drafts are emailed to the
+# reviewer as copy-paste-ready messages with a Word copy attached. This replaces
+# the old "N drafts ready" Decision, which sat unanswered from July on.
+# Internal delivery only: the reviewer sends from their own mailbox. Nothing
+# ever goes to a prospect from here.
+REVIEWER = "lquinn@exosaero.com"
+MAIL_FROM = "jquinnexo@pm.me"
 
 
-def _decisions_token():
-    try:
-        return open(DTOKEN_FILE, encoding="utf-8").read().strip()
-    except Exception:
-        return ""
+def _poc_line(block):
+    m = re.search(r"\*\*POC:\*\*\s*(.+)", block or "")
+    return re.sub(r"\*\*", "", m.group(1)).strip()[:200] if m else ""
 
 
-def file_drafts_decision(records):
-    """Compliant surfacing: staged outreach drafts can't be auto-sent (Permission
-    Envelope), and drafts die in files. So when drafts are staged, ensure ONE
-    idempotent Decision rides the Human Review Queue asking Jon to review + send.
-    Idempotent via a stable dedupeKey, so daily runs update rather than spam."""
-    n = count_drafts()
-    if n <= 0:
+def _poc_email(block):
+    # First real prospect address: skip our own domain and template guesses.
+    for e in re.findall(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+", block or ""):
+        if not re.search(r"exosaero\.com|^first|lastname|^name@|example\.", e, re.I):
+            return e
+    return ""
+
+
+def parse_drafts_file():
+    """Every draft in the internal .md log, as dicts (for --email-backlog)."""
+    if not os.path.exists(DRAFTS):
+        return []
+    txt = open(DRAFTS, encoding="utf-8", errors="replace").read()
+    out = []
+    for chunk in re.split(r"\n(?=## )", txt):
+        if not chunk.startswith("## "):
+            continue
+        head, _, rest = chunk.partition("\n")
+        name = re.sub(r"\s+—\s+drafted.*$", "", head[3:]).strip()
+        sm = re.search(r"^\*Status:\s*(.+?)\s*·", rest, re.M)
+        body = re.sub(r"^\*Status:.*\n", "", rest, count=1, flags=re.M)
+        body = re.split(r"\n---\s*(?:\n|$)", body)[0].strip()
+        if body:
+            name = re.sub(r"\s*⭐.*$", "", name).strip()
+            out.append({"name": name, "status": sm.group(1) if sm else "",
+                        "poc": "", "email": _poc_email(body), "body": body})
+    # Backfill contact + address from the pipeline row with the same org name.
+    recs = parse_pipeline()
+    key = lambda t: re.sub(r"[^a-z0-9]", "", t.lower().split(" — ")[0].split(" (")[0].split(" / ")[0])[:18]
+    for d in out:
+        k = key(d["name"])
+        r = next((r for r in recs if k and key(r["name"]) == k), None)
+        if r:
+            d["poc"] = d["poc"] or _poc_line(r["block"])
+            d["email"] = d["email"] or _poc_email(r["block"])
+            d["status"] = r["status"] or d["status"]
+    return out
+
+
+def _gov_flag(d):
+    # Standing rule: gov/.mil/national-lab outreach is sent by John, not the reviewer.
+    gov = re.search(r"\.(gov|mil)$|nasa\.gov|sandia\.gov|jhuapl\.edu|nih\.gov",
+                    d.get("email") or "", re.I)
+    return "GOV/.mil: route to John to send" if gov else ""
+
+
+def _subject_for(d):
+    return "Flying your payload on BLK3, March 2027"
+
+
+def _build_docx(drafts, path):
+    import docx
+    doc = docx.Document()
+    doc.add_heading("BLK3 payload outreach drafts for review", 1)
+    doc.add_paragraph(
+        f"{len(drafts)} draft(s), {datetime.date.today():%B %-d, %Y}. Edit as needed, "
+        "then send each one from your own Exos mailbox. None of these has been "
+        "sent to the prospect.")
+    for n, d in enumerate(drafts, 1):
+        doc.add_heading(f"{n}. {d['name']}", 2)
+        meta = [f"To: {d['email'] or '[find address]'} (confirm before sending)",
+                f"Subject: {_subject_for(d)}"]
+        if d.get("poc"):
+            meta.insert(0, f"Contact: {d['poc']}")
+        if d.get("status"):
+            meta.append(f"Pipeline status: {d['status'][:120]}")
+        if _gov_flag(d):
+            meta.append(_gov_flag(d))
+        doc.add_paragraph("\n".join(meta)).runs[0].italic = True
+        for para in re.split(r"\n\s*\n|\n(?=John Quinn,)", d["body"]):
+            if para.strip():
+                doc.add_paragraph(para.strip())
+    doc.save(path)
+    return path
+
+
+def email_drafts_to_reviewer(drafts, label="new"):
+    """One email per run to the reviewer: every draft inline (copy-paste ready)
+    plus the same set as an attached .docx. Returns True on send."""
+    if not drafts:
         return False
-    names = re.findall(r"^## (.+?) —", open(DRAFTS, encoding="utf-8").read(), re.M)
-    who = ", ".join(names[:4]) + ("…" if len(names) > 4 else "")
-    payload = json.dumps({
-        "source": "BLK3 Payload Sales Engine",
-        "relatedItem": "payload-drafts-ready",
-        "agentClass": "payload-sales",
-        "title": f"{n} BLK3 payload outreach draft(s) ready to review + send",
-        "question": f"{n} tailored SPACEavailable outreach drafts are staged ({who}). "
-                    "Send them to your inbox, ready for you to review and send?",
-        "proposedAction": "On Yes, I email the staged drafts to lquinn@exosaero.com "
-                          "for your review + send. External outreach is never auto-sent.",
-        "type": "yesno",
-        "options": ["Yes", "No"],
-        "priority": "normal",
-        "assignedTo": "lquinn@exosaero.com",
-        "dedupeKey": "payload-drafts-ready",
-    }).encode()
+    from email.message import EmailMessage
+    import tempfile
+    today = datetime.date.today()
+    parts = [f"{len(drafts)} {label} BLK3 payload outreach draft(s) for your review. "
+             "Edit, then send each from your own Exos mailbox. None has gone to the "
+             "prospect. The same drafts are attached as a Word file.", ""]
+    for n, d in enumerate(drafts, 1):
+        parts += ["=" * 60, f"{n}. {d['name']}"]
+        if d.get("poc"):
+            parts.append(f"Contact: {d['poc']}")
+        parts += [f"To: {d['email'] or '[find address]'} (confirm before sending)",
+                  f"Subject: {_subject_for(d)}"]
+        if _gov_flag(d):
+            parts.append(_gov_flag(d))
+        parts += ["", d["body"], ""]
+    m = EmailMessage()
+    m["From"] = MAIL_FROM
+    m["To"] = REVIEWER
+    m["Subject"] = (f"[Review + send] {len(drafts)} BLK3 payload outreach "
+                    f"draft(s), {today:%b %-d}")
+    m.set_content("\n".join(parts))
     try:
-        req = urllib.request.Request(
-            DECISIONS_API, data=payload,
-            headers={"Content-Type": "application/json",
-                     "X-Exo-Token": _decisions_token()})
-        with urllib.request.urlopen(req, timeout=20) as r:
-            ok = r.status in (200, 201)
-        glog("decision", status="info" if ok else "error",
-             detail=f"drafts-ready n={n}")
+        path = _build_docx(drafts, os.path.join(
+            tempfile.mkdtemp(), f"BLK3_Payload_Outreach_Drafts_{today}.docx"))
+        with open(path, "rb") as f:
+            m.add_attachment(f.read(), maintype="application",
+                             subtype="vnd.openxmlformats-officedocument."
+                                     "wordprocessingml.document",
+                             filename=os.path.basename(path))
+    except Exception as e:
+        glog("deliver-drafts", status="error", detail=f"docx: {str(e)[:100]}")
+    try:
+        p = subprocess.run(["msmtp", "-a", "protonmail", REVIEWER],
+                           input=bytes(m), capture_output=True, timeout=90)
+        ok = p.returncode == 0
+        glog("deliver-drafts", status="info" if ok else "error",
+             detail=f"n={len(drafts)} to={REVIEWER}"
+                    + ("" if ok else f" {p.stderr.decode()[:120]}"))
         return ok
     except Exception as e:
-        glog("decision", status="error", detail=str(e)[:120])
+        glog("deliver-drafts", status="error", detail=str(e)[:120])
         return False
 
 
@@ -478,6 +573,8 @@ def main():
                     help="only run the best-effort drafting step, then exit")
     ap.add_argument("--queue-only", action="store_true",
                     help="only refresh the capstone tracker funnel + queue, then exit")
+    ap.add_argument("--email-backlog", action="store_true",
+                    help="email EVERY draft in the internal log to the reviewer, then exit")
     ap.add_argument("--limit", type=int, default=DRAFT_LIMIT_DEFAULT,
                     help="max new drafts per run")
     args = ap.parse_args()
@@ -486,6 +583,13 @@ def main():
     records = parse_pipeline()
     glog("parse", status="info", detail=f"{len(records)} prospects")
     apply_lead_cards(records, fetch_lead_cards())
+
+    if args.email_backlog:
+        backlog = parse_drafts_file()
+        ok = email_drafts_to_reviewer(backlog, label="staged")
+        glog("end", status="info" if ok else "error", detail=f"backlog n={len(backlog)} sent={ok}")
+        print(f"backlog: {len(backlog)} draft(s) emailed to {REVIEWER}: {ok}")
+        return 0 if ok else 1
 
     # Lightweight refresh of the students' tracker only (hourly launchd job).
     if args.queue_only:
@@ -504,24 +608,26 @@ def main():
 
     # Best-effort drafting (model out of the critical path). Never blocks or
     # breaks delivery: fully wrapped, and skipped entirely on --dry-run/--no-draft.
-    drafted = 0
+    drafted, mailed = [], False
     if args.draft_only:
         drafted = draft_prospects(records, args.limit)
-        filed = file_drafts_decision(records)
-        glog("end", status="info", detail=f"draft-only: {drafted} new, decision={filed}")
-        print(f"draft-only: {drafted} new draft(s) -> {DRAFTS} · decision filed={filed}")
+        mailed = email_drafts_to_reviewer(drafted)
+        glog("end", status="info", detail=f"draft-only: {len(drafted)} new, emailed={mailed}")
+        print(f"draft-only: {len(drafted)} new draft(s) · emailed to {REVIEWER}={mailed}")
         return 0
     if not args.dry_run and not args.no_draft:
         try:
             drafted = draft_prospects(records, args.limit)
-            file_drafts_decision(records)
+            mailed = email_drafts_to_reviewer(drafted)
         except Exception as e:
             glog("draft", status="error", detail=str(e)[:120])
 
     bridge_line = run_bridge(args.dry_run)
     summary = build_summary(records, bridge_line)
     if drafted:
-        summary += f"\n_New drafts this run: {drafted}._"
+        summary += (f"\n_New drafts this run: {len(drafted)}, "
+                    + (f"emailed to Lizi's inbox (with a Word copy) for review._"
+                       if mailed else "email to Lizi FAILED, will retry next run._"))
 
     if args.dry_run:
         print(summary)
