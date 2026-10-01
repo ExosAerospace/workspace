@@ -1,0 +1,10 @@
+{
+ "_note": "MRP vehicle BOMs + non-mission builds (erp-foundation/mrp.js). Mission-driven demand comes from missions.json (vehicle -> assembly, vehicle_serial -> asset). 'builds' = demand that is not a booked mission (e.g. a contract vehicle). BLK3 overlays (bom-edits / bom-costs / inventory ledger section#item matches) apply only to the BLK3 BOM.",
+ "assemblies": [
+  {"id": "BLK3", "name": "BLK3 PSRLV", "bom_index": "bom-index.json", "source_xlsx": "mission-control/uploads/1787343333564_BLK3_BOM_8-21-2026.xlsx", "overlays": true},
+  {"id": "HVRR", "name": "HVRR (Hermes RDRE free-flight vehicle)", "bom_index": "bom-index-hvrr.json", "source_xlsx": "mission-control/uploads/1787344060367_HVRR_BOM_8-21-2026.xlsx", "overlays": false}
+ ],
+ "builds": [
+  {"id": "HVRR-1", "assembly": "HVRR", "qty": 1, "ref": "HVRR flight-ready build — Hermes free flight (FA9300-26-C-6011)", "asset_serial": null, "need_by": null, "status": "active"}
+ ]
+}

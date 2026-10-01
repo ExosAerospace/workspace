@@ -1,0 +1,6948 @@
+{
+ "assembly": "HVRR",
+ "source": "1787344060367_HVRR_BOM_8-21-2026.xlsx",
+ "generated_at": "2026-10-01T13:11:10.924828+00:00",
+ "count": 694,
+ "rows": [
+  {
+   "section": "Engine Bay",
+   "item": "1",
+   "qty": "15",
+   "vendor_pn": "04-05010",
+   "mfg_pn": "",
+   "description": "DEL FITTING SEALS ALUMINUM AN-10, 5/8\"",
+   "vendor": "Aircraft Spruce",
+   "cost": "1.75"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "2",
+   "qty": "20",
+   "vendor_pn": "04-05004",
+   "mfg_pn": "",
+   "description": "DEL FITTING SEALS ALUMINUM AN-4, 1/4\"",
+   "vendor": "Aircraft Spruce",
+   "cost": "1.75"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "3",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "1.06745023e+18",
+   "description": "K06 - Liquid Level Sensor PZ 1,00",
+   "vendor": "Teklab",
+   "cost": "345.5"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "4",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "ARM-1300",
+   "vendor": "Morga Newton",
+   "cost": ""
+  },
+  {
+   "section": "Engine Bay",
+   "item": "5",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "6K Resistor",
+   "vendor": "Mouser",
+   "cost": ""
+  },
+  {
+   "section": "Engine Bay",
+   "item": "6",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "10K Resistor",
+   "vendor": "Mouser`",
+   "cost": ""
+  },
+  {
+   "section": "Engine Bay",
+   "item": "7",
+   "qty": "2",
+   "vendor_pn": "11-01366",
+   "mfg_pn": "",
+   "description": "Ray Allen Rbs - Bezel Gear Switch",
+   "vendor": "Aircraft Spruce",
+   "cost": "129.85"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "8",
+   "qty": "2",
+   "vendor_pn": "AN7-5A",
+   "mfg_pn": "",
+   "description": "Bolt Undrilled AN7-5A, MFR P/N 12619-1",
+   "vendor": "Aircraft Spruce",
+   "cost": "1.62"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "9",
+   "qty": "4",
+   "vendor_pn": "AN7-13A",
+   "mfg_pn": "",
+   "description": "AN7 BOLTS 7/16-20",
+   "vendor": "Aircraft Spruce",
+   "cost": "3.6"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "10",
+   "qty": "1",
+   "vendor_pn": "102-3312-ND",
+   "mfg_pn": "CUI P/N VHK200W-Q24-S12-DIN",
+   "description": "DC/DC DIN RAIL SUPPLY 12V 200W, CUI P/N \t\nVHK200W-Q24-S12-DIN",
+   "vendor": "Digikey",
+   "cost": "321"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "11",
+   "qty": "1",
+   "vendor_pn": "D514A",
+   "mfg_pn": "",
+   "description": "ACDelco GM Original Equipment D514A (12573190) Ignition Coil",
+   "vendor": "Amazon",
+   "cost": "56.78"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "12",
+   "qty": "4",
+   "vendor_pn": "1193CT-2450",
+   "mfg_pn": "Joseph",
+   "description": "3/4 \"vented ball valve core housing",
+   "vendor": "AVCO",
+   "cost": "1085"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "14",
+   "qty": "10",
+   "vendor_pn": "SO63-3-55-22-90-ND",
+   "mfg_pn": "TE Connectivity P/N SO63-3-55-22-90",
+   "description": "SLDR SLEEVE WIRE-WIRE 0.17\"/0.2\", TE Connectivity P/N \t\nSO63-3-55-22-90",
+   "vendor": "Digikey",
+   "cost": "2.88"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "15",
+   "qty": "10",
+   "vendor_pn": "SO63-4-55-22-90-ND",
+   "mfg_pn": "TE Connectivity P/N SO63-4-55-22-90",
+   "description": "SLDR SLV WIRE-WIRE 0.235/0.255\", TE Connectivity P/N \t\nSO63-4-55-22-90",
+   "vendor": "Digikey",
+   "cost": "3.61"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "16",
+   "qty": "5",
+   "vendor_pn": "A1300-ND",
+   "mfg_pn": "TE Connectivity P/N \t\n206060-1",
+   "description": "CONN PLUG HSG FMALE 4POS INLINE",
+   "vendor": "Digikey",
+   "cost": "6.54"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "17",
+   "qty": "4",
+   "vendor_pn": "A16080-ND",
+   "mfg_pn": "TE Connectivity P/N 66101-4",
+   "description": "CONN SOCKET 16-18AWG GOLD CRIMP",
+   "vendor": "Digikey",
+   "cost": "1.48"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "18",
+   "qty": "4",
+   "vendor_pn": "1817-1022-ND",
+   "mfg_pn": "LRE-19-075-R-00-10-A",
+   "description": "SENSOR LINEAR 76.2MM CABLE, Alliance Sensors Group",
+   "vendor": "Digikey",
+   "cost": "361.25"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "19",
+   "qty": "3",
+   "vendor_pn": "298-11486-1-ND",
+   "mfg_pn": "Panduit P/N PNF10-14R-2K",
+   "description": "CONN RING CIRC 10-12AWG #1/4",
+   "vendor": "Digikey",
+   "cost": "1"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "20",
+   "qty": "15",
+   "vendor_pn": "298-11957-ND",
+   "mfg_pn": "Panduit P/N PNF 18-10R-M",
+   "description": "Ring Terminal Connector 10 Stud Circular 18-22 AWG Crimp",
+   "vendor": "Digikey",
+   "cost": "0.76"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "21",
+   "qty": "40",
+   "vendor_pn": "A1340-ND",
+   "mfg_pn": "TE Conectivity P/N 66099-4",
+   "description": "CONN PIN 16-18AWG GOLD CRIMP",
+   "vendor": "Digikey",
+   "cost": "1.42"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "22",
+   "qty": "5",
+   "vendor_pn": "A1351-ND",
+   "mfg_pn": "TE Connectivity P/N 206153-1",
+   "description": "CONN RCPT HSNG MALE 4POS INLINE, TE Connectivity P/N \t\n206153-1",
+   "vendor": "Digikey",
+   "cost": "6.22"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "23",
+   "qty": "10",
+   "vendor_pn": "A16046-ND",
+   "mfg_pn": "TE Conectivity P/N 54010-1",
+   "description": "CONN SEALING BOOT 11 BLACK, TE Conectivity P/N",
+   "vendor": "Digikey",
+   "cost": "21.29"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "24",
+   "qty": "10",
+   "vendor_pn": "A16080-ND",
+   "mfg_pn": "TE Connectivity P/N 66101-4",
+   "description": "Socket Contact Crimp 16-18 AWG Stamped",
+   "vendor": "Digikey",
+   "cost": "1.48"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "26",
+   "qty": "1",
+   "vendor_pn": "3937-TVP00RW-25-37SA-ND",
+   "mfg_pn": "Amphenol P/N  TVP00RW-25-37SA",
+   "description": "CONN RCPT FMALE 37  POS GOLD CRIMP",
+   "vendor": "Digikey",
+   "cost": "386.69"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "27",
+   "qty": "3",
+   "vendor_pn": "MSP3501P3-ND",
+   "mfg_pn": "TE Connectivity P/N M3041-000005-500PG",
+   "description": "TRANSDUCER 1-5V 500# PRES, TE Connectivity P/N \t\nM3041-000005-500PG",
+   "vendor": "Digikey",
+   "cost": "102.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "28",
+   "qty": "3",
+   "vendor_pn": "SC1202-ND",
+   "mfg_pn": "Conxall P/N 16282-2PG-311",
+   "description": "CONN PLUG MALE 2P GOLD SLDR CUP",
+   "vendor": "Digikey",
+   "cost": "7.33"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "29",
+   "qty": "11",
+   "vendor_pn": "SC1204-ND",
+   "mfg_pn": "Conxall P/N 16282-3PG-311",
+   "description": "CONN PLUG MALE 3POS SOLDER CUP",
+   "vendor": "Digikey",
+   "cost": "9.49"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "30",
+   "qty": "3",
+   "vendor_pn": "SC1211-ND",
+   "mfg_pn": "Conxall MFR# 18282-2SG-311",
+   "description": "CONN RCPT FMALE 2P GOLD SLDR CUP",
+   "vendor": "Digikey",
+   "cost": "8.86"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "31",
+   "qty": "9",
+   "vendor_pn": "SC1213-ND",
+   "mfg_pn": "Conxall P/N 18282-3SG-311",
+   "description": "3 Position Circular Connector Receptacle, Female Sockets Solder Cup",
+   "vendor": "Digikey",
+   "cost": "10.79"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "32",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "SS Plate 304 / 12x12x1.250",
+   "vendor": "Dix Metals",
+   "cost": "530"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "33",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "SS Plate 304 / 8x8x0.375",
+   "vendor": "Dix Metals",
+   "cost": "528"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "34",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "SS Plate 316 / 9x9x.50, Precision Ground 2 Faces",
+   "vendor": "Dix Metals",
+   "cost": "568"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "35",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "SS Sheet 304 11GA  #3  9.0 x 9.0",
+   "vendor": "Dix Metals",
+   "cost": "515"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "36",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "SS Sheet 304 11GA  #3  12.0 x 12.0",
+   "vendor": "Dix Metals",
+   "cost": "550"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "37",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "SS Plate 304, 12x12x0.50",
+   "vendor": "Dix Metals",
+   "cost": "691"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "38",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "SS Plate, 304 6x6x0.25",
+   "vendor": "Dix Metals",
+   "cost": "485"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "39",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "SS Plate, 304 6x6x0.125",
+   "vendor": "Dix Metals",
+   "cost": "450"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Chanmber",
+   "vendor": "",
+   "cost": ""
+  },
+  {
+   "section": "Engine Bay",
+   "item": "40",
+   "qty": "3",
+   "vendor_pn": "25SHX",
+   "mfg_pn": "",
+   "description": "HX porosity Pressure snubbgers",
+   "vendor": "Ebay",
+   "cost": "15"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "41",
+   "qty": "4",
+   "vendor_pn": "D2064-LN2-C203",
+   "mfg_pn": "",
+   "description": "Direct acting purge solenoids",
+   "vendor": "Gems Predyne",
+   "cost": "154"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "42",
+   "qty": "1",
+   "vendor_pn": "Rimfire V, 7/16 Hex, 3/8-24 THRD",
+   "mfg_pn": "",
+   "description": "Spark Plug",
+   "vendor": "http://sparkplugs.morrisonandmarvin.com/v.php",
+   "cost": "35"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "43",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Parabolic Nozzle EXOS P/N 64-005-4",
+   "vendor": "Invest Cast",
+   "cost": "5782.25"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "44",
+   "qty": "1",
+   "vendor_pn": "1101N32",
+   "mfg_pn": "",
+   "description": "Metal-Detector-Grade Gasket for Quick-Clamp Fittings, PTFE, for 1-1/2\" Tube OD",
+   "vendor": "McMaster-Carr",
+   "cost": "13.22"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "45",
+   "qty": "1",
+   "vendor_pn": "8974K71",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum Rod with Certification (emailed), 2\" Diameter 6\" long",
+   "vendor": "McMaster-Carr",
+   "cost": "23.82"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "46",
+   "qty": "4",
+   "vendor_pn": "2227K66",
+   "mfg_pn": "",
+   "description": "Nut for\u00a05/8\"\u00a0Tube OD for 37 Degree Flared Fitting for Aluminum Tubing",
+   "vendor": "McMaster-Carr",
+   "cost": "4.57"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "47",
+   "qty": "4",
+   "vendor_pn": "2227K76",
+   "mfg_pn": "",
+   "description": "Sleeve for 5/8\" Tube OD for 37 Degree Flared Fitting for Aluminum Tubing",
+   "vendor": "McMaster-Carr",
+   "cost": "3.83"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "48",
+   "qty": "2",
+   "vendor_pn": "2458K34",
+   "mfg_pn": "",
+   "description": "Lubrication-Free Ball Joint Rod End, 3/8\"-24 Internal Thread",
+   "vendor": "McMaster-Carr",
+   "cost": "6.86"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "49",
+   "qty": "5",
+   "vendor_pn": "4322K152",
+   "mfg_pn": "",
+   "description": "304 Stainless Steel Wing Nut Clamp for 1\" to 1-1/2\" Tube OD High-Polish Quick-Clamp Sanitary Tube Fitting",
+   "vendor": "McMaster-Carr",
+   "cost": "11.28"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "50",
+   "qty": "1",
+   "vendor_pn": "4332K154",
+   "mfg_pn": "",
+   "description": "304 Stainless Steel Clamp with Wing Nut for 2-1/2\" Tube OD High-Polish Quick-Clamp Sanitary Tube Fitting",
+   "vendor": "McMaster-Carr",
+   "cost": "15.82"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "51",
+   "qty": "1",
+   "vendor_pn": "8692K26",
+   "mfg_pn": "",
+   "description": "Oversized Shock-Resistant S7 Tool Steel Bar, 1\" Thick, 1\" Wide",
+   "vendor": "McMaster-Carr",
+   "cost": "81.04"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "52",
+   "qty": "1",
+   "vendor_pn": "4322K192",
+   "mfg_pn": "",
+   "description": "High-Polish Quick-Clamp Sanitary Tube Fitting, 304 Stainless Steel Adapter for 1.5\" Tube x Butt-Weld, 3\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "25.32"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "53",
+   "qty": "4",
+   "vendor_pn": "4322K212",
+   "mfg_pn": "",
+   "description": "High-Polish Quick-Clamp Sanitary Tube Fitting, 304 Stainless Steel Adapter for 1.5\" Tube x Butt-Weld, 1/2\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "4.77"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "54",
+   "qty": "1",
+   "vendor_pn": "4322K711",
+   "mfg_pn": "",
+   "description": "Stainless Steel Clamp with Bolt for 1\", 1-1/4\" and 1-1/2\" Tube OD High-Polish Quick-Clamp Sanitary Tube Fitting",
+   "vendor": "McMaster-Carr",
+   "cost": "23.08"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "55",
+   "qty": "4",
+   "vendor_pn": "43315K54",
+   "mfg_pn": "",
+   "description": "Ultra-Chemical-Resistant PTFE Plastic Gasket for 1-1/2\" Tube OD",
+   "vendor": "McMaster-Carr",
+   "cost": "2.17"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "56",
+   "qty": "3",
+   "vendor_pn": "44655K18",
+   "mfg_pn": "",
+   "description": "Butt-Weld Fitting for Stainless Steel Tubing, Polished 304L Stainless Steel Short 90 Degree Elbow for 1-1/2\" Tube",
+   "vendor": "McMaster-Carr",
+   "cost": "19"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "57",
+   "qty": "1",
+   "vendor_pn": "44655K38",
+   "mfg_pn": "",
+   "description": "Butt-Weld Fitting for Stainless Steel Tubing, Polished 304L Stainless Steel Short 45 Degree Elbow for 1-1/2\" Tube",
+   "vendor": "McMaster-Carr",
+   "cost": "18.2"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "58",
+   "qty": "1",
+   "vendor_pn": "4466K53",
+   "mfg_pn": "",
+   "description": "Stainless Steel Tubing for Food, Beverage, Dairy, Type 304L, 1-1/2\" OD, 0.065\" Wall Thickness, 1 ft.",
+   "vendor": "McMaster-Carr",
+   "cost": "24.09"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "59",
+   "qty": "2",
+   "vendor_pn": "4468K811",
+   "mfg_pn": "",
+   "description": "AN-4 18\" braided steel hose (Is this an -4?????",
+   "vendor": "McMaster-Carr",
+   "cost": "19.12"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "60",
+   "qty": "2",
+   "vendor_pn": "4468K811",
+   "mfg_pn": "",
+   "description": "Braided Chemical Hose with Fittings, Brass 7/16\"-20 Thread Size Flare UNF Female, 5/16\" OD 24\"long",
+   "vendor": "McMaster-Carr",
+   "cost": "20.45"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "61",
+   "qty": "2",
+   "vendor_pn": "4483T25",
+   "mfg_pn": "",
+   "description": "High-Load Ball Joint Rod End, Nylon/PTFE Insert, 7/16\"-20 Internal Thread",
+   "vendor": "McMaster-Carr",
+   "cost": "16.23"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "62",
+   "qty": "2",
+   "vendor_pn": "4483T5",
+   "mfg_pn": "",
+   "description": "High-Load Ball Joint Rod End, Nylon/PTFE Insert, 7/16\"-20 Thread",
+   "vendor": "McMaster-Carr",
+   "cost": "16.23"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "63",
+   "qty": "2",
+   "vendor_pn": "4509K14",
+   "mfg_pn": "",
+   "description": "Buna-N Gasket for Quick-Clamp Fittings, for 1-1/2\" Tube OD",
+   "vendor": "McMaster-Carr",
+   "cost": "0.88"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "64",
+   "qty": "1",
+   "vendor_pn": "46495K21",
+   "mfg_pn": "",
+   "description": "Ultra-Corrosion Resistant Full-Port On/Off Valve with Lockable Lever Handle, 1/2 NPT Female",
+   "vendor": "McMaster-Carr",
+   "cost": "40.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "65",
+   "qty": "2",
+   "vendor_pn": "4749T13",
+   "mfg_pn": "",
+   "description": "Externally Threaded Clevis Rod End, 3/8\"-24 Thread, 5/16\" ID, 2-1/4\" Shank Center Length",
+   "vendor": "McMaster-Carr",
+   "cost": "7.55"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "66",
+   "qty": "2",
+   "vendor_pn": "48805K451",
+   "mfg_pn": "",
+   "description": "Precision Extreme-Pressure 316 Stainless Steel Fitting, 90 Degree Elbow Connector, 1/2 NPT Male",
+   "vendor": "McMaster-Carr",
+   "cost": "64.76"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "67",
+   "qty": "1",
+   "vendor_pn": "50485K112",
+   "mfg_pn": "",
+   "description": "High-Polish Quick-Clamp Sanitary Tube Fitting, 316L Stainless Steel 90 Degree Elbow Connector for 1-1/2\" Tube OD",
+   "vendor": "McMaster-Carr",
+   "cost": "38.11"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "68",
+   "qty": "1",
+   "vendor_pn": "50715K163",
+   "mfg_pn": "",
+   "description": "37 Degree Flared Fitting for Stainless Steel Tubing, Straight Adapter for 3/8\" Tube OD x 1/4 NPT Male",
+   "vendor": "McMaster-Carr",
+   "cost": "18.14"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "69",
+   "qty": "2",
+   "vendor_pn": "50715K181",
+   "mfg_pn": "",
+   "description": "37 Degree Flared Fitting for Stainless Steel Tubing, 90 Degree Adapter for 1/4\" Tube OD x 1/8 NPT Male",
+   "vendor": "McMaster-Carr",
+   "cost": "27.19"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "70",
+   "qty": "1",
+   "vendor_pn": "50715K269",
+   "mfg_pn": "",
+   "description": "37 Degree Flared Fitting for Stainless Steel Tubing, Straight Adapter for 5/8\" Tube OD x 1/2 NPT Male",
+   "vendor": "McMaster-Carr",
+   "cost": "40.34"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "71",
+   "qty": "25",
+   "vendor_pn": "50715K316",
+   "mfg_pn": "",
+   "description": "Sleeve for 1/4\" Tube OD 37 Degree Flared Fitting for Stainless Steel Tubing",
+   "vendor": "McMaster-Carr",
+   "cost": "3.03"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "72",
+   "qty": "25",
+   "vendor_pn": "50715K324",
+   "mfg_pn": "",
+   "description": "Nut for 1/4\" Tube OD 37 Degree Flared Fitting for Stainless Steel Tubing",
+   "vendor": "McMaster-Carr",
+   "cost": "4.93"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "73",
+   "qty": "3",
+   "vendor_pn": "50715K532",
+   "mfg_pn": "",
+   "description": "37 Degree Flared Fitting for Stainless Steel Tubing, 90 Degree Elbow for 1/4\" Tube OD x Female Tube",
+   "vendor": "McMaster-Carr",
+   "cost": "41.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "74",
+   "qty": "1",
+   "vendor_pn": "5177K73",
+   "mfg_pn": "",
+   "description": "Easy-Bend Aluminum Tubing, 5/8\" OD, 0.035\" Wall Thickness",
+   "vendor": "McMaster-Carr",
+   "cost": "42.06"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "75",
+   "qty": "1",
+   "vendor_pn": "5267T19",
+   "mfg_pn": "",
+   "description": "Chemical-Resistant Viton\u00ae Fluoroelastomer O-Ring, Brown, 1/16 Fractional Width, Dash Number 009",
+   "vendor": "McMaster-Carr",
+   "cost": "14.95"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "76",
+   "qty": "1",
+   "vendor_pn": "5267T38",
+   "mfg_pn": "",
+   "description": "Chemical-Resistant Viton\u00ae Fluoroelastomer O-Ring, Brown, 1/16 Fractional Width, Dash Number 026",
+   "vendor": "McMaster-Carr",
+   "cost": "23.06"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "77",
+   "qty": "1",
+   "vendor_pn": "5333K71",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Screw-on Hydraulic Fluid Hose Fitting, Parker 30, 1/4\" Hose ID, 7/16\"-20 Thread, 37 Degree Flare",
+   "vendor": "McMaster-Carr",
+   "cost": "59.23"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "78",
+   "qty": "2",
+   "vendor_pn": "5482K12",
+   "mfg_pn": "Length?",
+   "description": "AN 37 Degree Flared Fitting, 304 Stainless Steel Adapter for 1/4\" Tube OD x 1/4 ANPT Male",
+   "vendor": "McMaster-Carr",
+   "cost": "19.38"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "79",
+   "qty": "1",
+   "vendor_pn": "5661K55",
+   "mfg_pn": "?",
+   "description": "Vibration-Resistant Worm-Drive Clamps for Firm Hose and Tube, 304 Stainless Steel, 1\" to 1-3/4\" Clamp ID",
+   "vendor": "McMaster-Carr",
+   "cost": "8.56"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "80",
+   "qty": "1",
+   "vendor_pn": "89325K43",
+   "mfg_pn": "Length?",
+   "description": "Corrosion-Resistant 316/316L Stainless Steel Rod, 1-1/2\" Diameter",
+   "vendor": "McMaster-Carr",
+   "cost": "31.51"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "81",
+   "qty": "1",
+   "vendor_pn": "9246K61",
+   "mfg_pn": "",
+   "description": "6061 Aluminum with Certification (emailed), 8\" x 8\", 1\" Thick",
+   "vendor": "McMaster-Carr",
+   "cost": "68.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "82",
+   "qty": "1",
+   "vendor_pn": "89015K239",
+   "mfg_pn": "?",
+   "description": "Multipurpose 6061 Aluminum Sheet, 1/8\" Thick, 8\" x 8\", with CERTS",
+   "vendor": "McMaster-Carr",
+   "cost": "14.65"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "83",
+   "qty": "1",
+   "vendor_pn": "974K86",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 3-1/4\" Diameter",
+   "vendor": "McMaster-Carr",
+   "cost": "142.14"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "84",
+   "qty": "1",
+   "vendor_pn": "8975K237",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1\" Thick x 2\" Wide x 6\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "17.64"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "85",
+   "qty": "1",
+   "vendor_pn": "8975K628",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1\" Thick x 12\" Wide",
+   "vendor": "McMaster-Carr",
+   "cost": "80.89"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "86",
+   "qty": "1",
+   "vendor_pn": "8975K71",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1/4\" Thick x 2\" Wide, 1'  Long",
+   "vendor": "McMaster-Carr",
+   "cost": "6.82"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "87",
+   "qty": "1",
+   "vendor_pn": "8975K71",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1/4\" Thick x 2\" Wide, 1'  Long",
+   "vendor": "McMaster-Carr",
+   "cost": "6.82"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "88",
+   "qty": "2",
+   "vendor_pn": "89785K824",
+   "mfg_pn": "",
+   "description": "Seamless 316 Stainless Steel Tubing, 1/4\" OD, 0.035\" Wall Thickness",
+   "vendor": "McMaster-Carr",
+   "cost": "43.2"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "89",
+   "qty": "1",
+   "vendor_pn": "89785K854",
+   "mfg_pn": "3 ft?",
+   "description": "Smooth-Bore Seamless 316 Stainless Steel Tubing, 5/8\" OD, 0.065\" Wall Thickness",
+   "vendor": "McMaster-Carr",
+   "cost": "44.54"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "90",
+   "qty": "1",
+   "vendor_pn": "89895K711",
+   "mfg_pn": "",
+   "description": "Seamless 304 Stainless Steel Tubing, 1/8\" OD, 0.02\" Wall Thickness",
+   "vendor": "McMaster-Carr",
+   "cost": "12.63"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "91",
+   "qty": "1",
+   "vendor_pn": "89965K661",
+   "mfg_pn": "",
+   "description": "General Purpose Aluminum Tubing, 7/8\" OD, 0.065\" Wall Thickness",
+   "vendor": "McMaster-Carr",
+   "cost": "8.18"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "92",
+   "qty": "1",
+   "vendor_pn": "50715K263",
+   "mfg_pn": "",
+   "description": "37 Degree Flared Fitting for Stainless Steel Tubing, Straight Connector for 1/2\" Tube OD",
+   "vendor": "McMaster-Carr",
+   "cost": "30.68"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "93",
+   "qty": "1",
+   "vendor_pn": "9056K4",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum Round Tube, 1/8\" Wall Thickness, 2\" OD, 6' long",
+   "vendor": "McMaster-Carr",
+   "cost": "91.43"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "94",
+   "qty": "1",
+   "vendor_pn": "91292A125",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Socket Head Screw, M5 x 0.8 mm Thread, 12 mm Long",
+   "vendor": "McMaster-Carr",
+   "cost": "12.62"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "95",
+   "qty": "1",
+   "vendor_pn": "91251A552",
+   "mfg_pn": "",
+   "description": "Black-Oxide Steel Socket Head Screw, 1/4\"-20 Thread Size, 2-1/2\" Long, Partially Threaded",
+   "vendor": "McMaster-Carr",
+   "cost": "13.9"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "96",
+   "qty": "1",
+   "vendor_pn": "91102A765",
+   "mfg_pn": "",
+   "description": "Zinc-Plated Steel Split Lock Washer for 7/16\" Screw Size, 0.45\" ID, 0.776\" OD",
+   "vendor": "McMaster-Carr",
+   "cost": "9.4"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "97",
+   "qty": "1",
+   "vendor_pn": "91253A540",
+   "mfg_pn": "",
+   "description": "Black-Oxide Alloy Steel Hex Drive Flat Head Screw, 1/4\"-20 Thread Size, 3/4\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "11.11"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "98",
+   "qty": "2",
+   "vendor_pn": "91259A624",
+   "mfg_pn": "",
+   "description": "Alloy Steel Shoulder Screw, 3/8\" Shoulder Diameter, 1\" Shoulder Length, 5/16\"-18 Thread",
+   "vendor": "McMaster-Carr",
+   "cost": "2.41"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "99",
+   "qty": "4",
+   "vendor_pn": "91780A362",
+   "mfg_pn": "",
+   "description": "Female Threaded Hex Standoff, Aluminum, 1/2\" Hex, 2\" Long, 1/4\"-20 Thread",
+   "vendor": "McMaster-Carr",
+   "cost": "4.88"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "100",
+   "qty": "1",
+   "vendor_pn": "91839A123",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Flex-Top Locknut for Heavy Vibration 1/4\"-20 Thread Size",
+   "vendor": "McMaster-Carr",
+   "cost": "10.48"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "101",
+   "qty": "1",
+   "vendor_pn": "92147A029",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Split Lock Washer for 1/4\" Screw Size, 0.26\" ID, 0.487\" OD",
+   "vendor": "McMaster-Carr",
+   "cost": "6.64"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "102",
+   "qty": "1",
+   "vendor_pn": "92196A540",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Socket Head Screw, 1/4\"-20 Thread Size, 3/4\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "22.83"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "103",
+   "qty": "1",
+   "vendor_pn": "90751A122",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Socket Head Screws, M5 x 0.50 mm Thread, 12 mm Long",
+   "vendor": "McMaster-Carr",
+   "cost": "13.02"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "104",
+   "qty": "1",
+   "vendor_pn": "9246K13",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1/4\" Thick x 12\" Wide, 1' Long",
+   "vendor": "McMaster-Carr",
+   "cost": "19.84"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "105",
+   "qty": "2",
+   "vendor_pn": "92620A649",
+   "mfg_pn": "",
+   "description": "Zinc Yellow-Chromate Plated Hex Head Screw, Grade 8 Steel, 3/8\"-24 Thread Size, 1-3/4\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "5.43"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "106",
+   "qty": "1",
+   "vendor_pn": "92735A330",
+   "mfg_pn": "",
+   "description": "Clevis Pin with Retaining Ring Groove, 18-8 Stainless Steel, 5/16\" Diameter, 13/16\" Usable Length",
+   "vendor": "McMaster-Carr",
+   "cost": "13.09"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "107",
+   "qty": "1",
+   "vendor_pn": "92949A267",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Button Head Hex Drive Screw, 10-32 Thread Size, 5/8\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "10.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "108",
+   "qty": "2",
+   "vendor_pn": "93190A689",
+   "mfg_pn": "",
+   "description": "Super Corrosion Resistant 316 Stainless Steel Hex Head Screw, 7/16\"-20 Thread Size, 1-1/2\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "2.1"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "109",
+   "qty": "2",
+   "vendor_pn": "93615A415",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Low-Profile Socket Head Screw, 1/4\"-20 Thread Size, 3/4\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "6.04"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "110",
+   "qty": "1",
+   "vendor_pn": "93776A441",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Serrated Flange Locknut, 5/16\"-18 Thread Size",
+   "vendor": "McMaster-Carr",
+   "cost": "5.09"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "111",
+   "qty": "1",
+   "vendor_pn": "94805A221",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Thin Hex Nut, Super-Corrosion-Resistant, 7/16\"-20 Thread Size",
+   "vendor": "McMaster-Carr",
+   "cost": "6.25"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "112",
+   "qty": "1",
+   "vendor_pn": "95412A327",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Threaded Rod, 3/8\"-24 Thread Size, 2-1/2\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "8.07"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "113",
+   "qty": "1",
+   "vendor_pn": "95462A515",
+   "mfg_pn": "",
+   "description": "Medium-Strength Steel Hex Nut, Grade 5, Zinc-Plated, 3/8\"-24 Thread Size",
+   "vendor": "McMaster-Carr",
+   "cost": "12"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "114",
+   "qty": "1",
+   "vendor_pn": "97325A181",
+   "mfg_pn": "",
+   "description": "Dowel Pin, Brass, 1/4\" Diameter, 3/4\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "13.38"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "115",
+   "qty": "1",
+   "vendor_pn": "98025A031",
+   "mfg_pn": "",
+   "description": "Zinc Yellow-Chromate Plated Steel Oversized Washer, Grade 8, for 3/8\" Screw Size, 0.406\" ID, 0.812\" OD",
+   "vendor": "McMaster-Carr",
+   "cost": "23.27"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "116",
+   "qty": "1",
+   "vendor_pn": "MH1SS6124-624TBE-624TBE-6.5IN-OAL",
+   "mfg_pn": "",
+   "description": "1-1/2\" X 6.50\" 316 SS 1 BRAID W/316 TUBE",
+   "vendor": "MIDWEST HOSE & SPECIALTY, INC",
+   "cost": "204.4"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "117",
+   "qty": "2",
+   "vendor_pn": "MH1SS6124-624TBE-624TBE-8.2IN-OAL",
+   "mfg_pn": "",
+   "description": "Fuel Flex Hose",
+   "vendor": "MIDWEST HOSE & SPECIALTY, INC",
+   "cost": "205.05"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "118",
+   "qty": "1",
+   "vendor_pn": "MH1SS6124-624TBE-624TBE-9.9IN-OAL",
+   "mfg_pn": "",
+   "description": "LOX Hose B",
+   "vendor": "MIDWEST HOSE & SPECIALTY, INC",
+   "cost": "205"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "119",
+   "qty": "2",
+   "vendor_pn": "CJ646",
+   "mfg_pn": "",
+   "description": "Curtis CJ646 universal joints",
+   "vendor": "Radwell",
+   "cost": "85"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "120",
+   "qty": "2",
+   "vendor_pn": "15560NOS",
+   "mfg_pn": "",
+   "description": "Filter, In-Line, -4 AN to 1/4 in. NPT, Cheater or Pro-Fogger, Aluminum, Blue Anodized, Each",
+   "vendor": "Summit Racing",
+   "cost": "39.22"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "121",
+   "qty": "2",
+   "vendor_pn": "922-04-04-1",
+   "mfg_pn": "",
+   "description": "Nitrous Filter, High-Pressure, -4 AN to 1/4 in. NPT, 90 Degree, Aluminum, Blue Anodized",
+   "vendor": "Summit Racing",
+   "cost": "25.62"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "122",
+   "qty": "2",
+   "vendor_pn": "AER-FBM2061",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, Union Tee, -4 AN Male, Aluminum, Blue",
+   "vendor": "Summit Racing",
+   "cost": "15.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "123",
+   "qty": "1",
+   "vendor_pn": "AER-FBM2257",
+   "mfg_pn": "",
+   "description": "Adapter Fitting, Female On The Run Tee, -10 AN Male x -10 AN Male x -10 AN Female, Aluminum, Blue, Each",
+   "vendor": "Summit Racing",
+   "cost": "56.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "124",
+   "qty": "3",
+   "vendor_pn": "AER-FBM2723",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, AN to NPT, Straight, Steel, Yellow Dichromate, -4 AN, 1/4 in. NPT, Each",
+   "vendor": "Summit Racing",
+   "cost": "10.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "125",
+   "qty": "4",
+   "vendor_pn": "EAR-921110ERL",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, AN to AN, 90 Degree, Aluminum, Blue Anodized, -10 AN, -10 AN, Each",
+   "vendor": "Summit Racing",
+   "cost": "56.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "126",
+   "qty": "1",
+   "vendor_pn": "EAR-992908ERL",
+   "mfg_pn": "",
+   "description": "Fitting, Cap, -8 AN, Aluminum, Blue Anodized, Each",
+   "vendor": "Summit Racing",
+   "cost": "9.78"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "127",
+   "qty": "2",
+   "vendor_pn": "EAR-992910ERL",
+   "mfg_pn": "",
+   "description": "Fitting, Cap, -10 AN, Aluminum, Blue Anodized, Each",
+   "vendor": "Summit Racing",
+   "cost": "12.57"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "128",
+   "qty": "6",
+   "vendor_pn": "EAR-997104ERL",
+   "mfg_pn": "",
+   "description": "Fitting, Bung, Weld-In, Male 4 AN, Aluminum, Each",
+   "vendor": "Summit Racing",
+   "cost": "9.76"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "129",
+   "qty": "1",
+   "vendor_pn": "FRA-496304",
+   "mfg_pn": "",
+   "description": "Fitting, Coupler, Union, AN to AN, 90 Degree, Aluminum, Blue Anodized, -4 AN, -4 AN, Swivel, Each",
+   "vendor": "Summit Racing",
+   "cost": "10.79"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "130",
+   "qty": "2",
+   "vendor_pn": "FRA-497304",
+   "mfg_pn": "",
+   "description": "Fitting, Reducer, AN to AN, Straight, Aluminum, Blue Anodized, -4 AN, -3 AN, Swivel, Each",
+   "vendor": "Summit Racing",
+   "cost": "10.79"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "131",
+   "qty": "1",
+   "vendor_pn": "FRA-597110",
+   "mfg_pn": "",
+   "description": "AN-10 Male weld bung Stainless",
+   "vendor": "Summit Racing",
+   "cost": "8.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "132",
+   "qty": "1",
+   "vendor_pn": "ICB-WPCIL30",
+   "mfg_pn": "",
+   "description": "Wiring Pigtail, Ignition Coil, 4-pin, Female, Chevy, Each",
+   "vendor": "Summit Racing",
+   "cost": "18.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "133",
+   "qty": "1",
+   "vendor_pn": "MSD-34039",
+   "mfg_pn": "",
+   "description": "Spark Plug Wire, Super Conductor, Spiral Core, 8.5mm, Red, 6 ft. Length",
+   "vendor": "Summit Racing",
+   "cost": "39.5"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "134",
+   "qty": "1",
+   "vendor_pn": "NOS-13700R-8NOS",
+   "mfg_pn": "",
+   "description": "Nozzle Fogger, Annular Discharge, Stainless Steel, Natural, Set of 8",
+   "vendor": "Summit Racing",
+   "cost": "669.95"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "135",
+   "qty": "1",
+   "vendor_pn": "NOS-13760-28NOS",
+   "mfg_pn": "",
+   "description": "Nitrous Oxide Jet, Flare, .028 in., Stainless SteeL, Each",
+   "vendor": "Summit Racing",
+   "cost": "8.67"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "136",
+   "qty": "1",
+   "vendor_pn": "NOS-13760-44NOS",
+   "mfg_pn": "",
+   "description": "Nitrous Oxide Jet, Flare, .044 in., Stainless Steel, Each",
+   "vendor": "Summit Racing",
+   "cost": "8.67"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "137",
+   "qty": "4",
+   "vendor_pn": "RUS-614210",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, AN to NPT, Straight, Aluminum, Blue Anodized, -10 AN, 1/2 in. NPT, Swivel, Each",
+   "vendor": "Summit Racing",
+   "cost": "9.95"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "138",
+   "qty": "3",
+   "vendor_pn": "SUM-220051",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, AN to NPT, 90 Degree, Aluminum, Blue Anodized, -10 AN, 1/2 in. NPT, Each",
+   "vendor": "Summit Racing",
+   "cost": "12.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "139",
+   "qty": "1",
+   "vendor_pn": "SUM-220054",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, AN to NPT, 45 Degree, Aluminum, Blue Anodized, -10 AN, 1/2 in. NPT, Each",
+   "vendor": "Summit Racing",
+   "cost": "12.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "140",
+   "qty": "1",
+   "vendor_pn": "SUM-2200608",
+   "mfg_pn": "",
+   "description": "Fitting, Bung, Weld-In, Male Threads, Aluminum, 8 AN, Each",
+   "vendor": "Summit Racing",
+   "cost": "3.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "141",
+   "qty": "3",
+   "vendor_pn": "SUM-2200620",
+   "mfg_pn": "",
+   "description": "Fitting, Bung, Weld-in, Aluminum, -20AN, Male Threads",
+   "vendor": "Summit Racing",
+   "cost": "9.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "142",
+   "qty": "6",
+   "vendor_pn": "101-0034",
+   "mfg_pn": "",
+   "description": "Fitting, Bung, Weld-In, Male Threads, Aluminum, 10 AN, Each",
+   "vendor": "Summit Racing",
+   "cost": "4.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "143",
+   "qty": "1",
+   "vendor_pn": "SUM-220441",
+   "mfg_pn": "",
+   "description": "Fitting, Coupler, Union, AN to AN, Straight, Aluminum, Blue Anodized, -4 AN, -4 AN, Swivel, Each",
+   "vendor": "Summit Racing",
+   "cost": "7.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "144",
+   "qty": "2",
+   "vendor_pn": "SUM-220451",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, AN to NPT, 90 Degree, Aluminum, Blue Anodized, -4 AN, 1/4 in. NPT, Each",
+   "vendor": "Summit Racing",
+   "cost": "8.99"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "145",
+   "qty": "1",
+   "vendor_pn": "SS-200-1-2",
+   "mfg_pn": "",
+   "description": "Stainless Steel Swagelok Tube Fitting, Male Connector, 1/8 in. Tube OD x 1/8 in. Male NPT",
+   "vendor": "Swagelok",
+   "cost": "14.05"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "146",
+   "qty": "1",
+   "vendor_pn": "SS-200-7-4",
+   "mfg_pn": "",
+   "description": "Stainless Steel Swagelok Tube Fitting, Female Connector, 1/8 in. Tube OD x 1/4 in. Female NPT",
+   "vendor": "Swagelok",
+   "cost": "22.05"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "147",
+   "qty": "1",
+   "vendor_pn": "SS-4CP2-10",
+   "mfg_pn": "",
+   "description": "Stainless Steel 1-Piece Poppet Check Valve, Fixed Pressure, 1/4 in. MNPT, 10 psig (0.69 bar)",
+   "vendor": "Swagelok",
+   "cost": "58.15"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "148",
+   "qty": "2",
+   "vendor_pn": "15380",
+   "mfg_pn": "",
+   "description": "2\" 1 piece Trunnion mount Collar 1.25\"ID with smooth 1/4\" pins for swivel",
+   "vendor": "Ultramotion",
+   "cost": "70"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "149",
+   "qty": "4",
+   "vendor_pn": "3-B.125-DC423_12-2-/6-1049",
+   "mfg_pn": "",
+   "description": "Linear Actuator B2 Type 2\" stroke W Pittman 12vdc motor",
+   "vendor": "Ultramotion",
+   "cost": "1542"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "150",
+   "qty": "4",
+   "vendor_pn": "WM22759/16-18-0",
+   "mfg_pn": "",
+   "description": "18 Gage Black Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.26"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "151",
+   "qty": "4",
+   "vendor_pn": "WM22759/16-18-2",
+   "mfg_pn": "",
+   "description": "18 Gage Red Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.26"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "153",
+   "qty": "1",
+   "vendor_pn": "ARM 10000",
+   "mfg_pn": "",
+   "description": "Board for Liquid Level Sense",
+   "vendor": "Morgan Newton",
+   "cost": "400"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "154",
+   "qty": "1",
+   "vendor_pn": "8992K512",
+   "mfg_pn": "",
+   "description": "Multipurpose 304 Stainless Steel Bar, 1/4\" Thick, 2\" Wide, Hot Rolled, 1 Foot Long",
+   "vendor": "McMaster-Carr",
+   "cost": "19.29"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "155",
+   "qty": "2",
+   "vendor_pn": "YC1390BT4T",
+   "mfg_pn": "",
+   "description": "Jefferson Piloted Solenoid valves 1/2\" Female inlet and outlet",
+   "vendor": "Radwell",
+   "cost": "278"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "156",
+   "qty": "4",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "1/4-20 Stainless Nut",
+   "vendor": "",
+   "cost": ""
+  },
+  {
+   "section": "Engine Bay",
+   "item": "157",
+   "qty": "1",
+   "vendor_pn": "s1066Z-048a084",
+   "mfg_pn": "",
+   "description": "Gear, Aluminum, 1.79 D, .125 gear thickness, .25 tall collar with set screw, .315 shaft hole",
+   "vendor": "Desgnatronics Inc.",
+   "cost": "40.79"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "158",
+   "qty": "1",
+   "vendor_pn": "s1086z-048s038",
+   "mfg_pn": "",
+   "description": "Gear, Stainless, .83 D, .188 gear thickness, .25 tall collar with set screw, .25 shaft hole",
+   "vendor": "Desgnatronics Inc.",
+   "cost": "33.1"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "159",
+   "qty": "1",
+   "vendor_pn": "s1086z-048a022",
+   "mfg_pn": "",
+   "description": "Gear, Aluminum, .5 D, .437 gear thickness with set screw, .25 shaft hole",
+   "vendor": "Desgnatronics Inc.",
+   "cost": "31.94"
+  },
+  {
+   "section": "Engine Bay",
+   "item": "160",
+   "qty": "3",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Resistors",
+   "vendor": "",
+   "cost": ""
+  },
+  {
+   "section": "Fin Can",
+   "item": "1",
+   "qty": "1",
+   "vendor_pn": "5177K73",
+   "mfg_pn": "",
+   "description": "Main Manifold, 5/8\" OD soft drawn aluminum tube 4'4\" long 580 psi rated (10' section)",
+   "vendor": "McMaster-Carr",
+   "cost": "42.06"
+  },
+  {
+   "section": "Fin Can",
+   "item": "2",
+   "qty": "1",
+   "vendor_pn": "5177K66",
+   "mfg_pn": "",
+   "description": "Main Manifold, 3/8\" OD soft drawn aluminum tube 1000 psi rated, (10' section)",
+   "vendor": "McMaster-Carr",
+   "cost": "31.93"
+  },
+  {
+   "section": "Fin Can",
+   "item": "3",
+   "qty": "2",
+   "vendor_pn": "Fabrication",
+   "mfg_pn": "",
+   "description": "Hand Fabricated 5/8\" OD weld on plugs for manifold ends",
+   "vendor": "EXOS",
+   "cost": "70"
+  },
+  {
+   "section": "Fin Can",
+   "item": "4",
+   "qty": "1",
+   "vendor_pn": "101-0034",
+   "mfg_pn": "",
+   "description": "Bung, Weld-In, Aluminum, Male Threads, Universal, Flanged, -10 AN, Each",
+   "vendor": "Summit Racing",
+   "cost": "4.99"
+  },
+  {
+   "section": "Fin Can",
+   "item": "5",
+   "qty": "1",
+   "vendor_pn": "Lower ACS gas manifold",
+   "mfg_pn": "",
+   "description": "Weld and test",
+   "vendor": "EXOS",
+   "cost": "0"
+  },
+  {
+   "section": "Fin Can",
+   "item": "6",
+   "qty": "1",
+   "vendor_pn": "04-05010",
+   "mfg_pn": "",
+   "description": "DEL FITTING SEAL 5/8\" OD ALUMINUM",
+   "vendor": "Aircraft Spruce",
+   "cost": "1.75"
+  },
+  {
+   "section": "Fin Can",
+   "item": "7",
+   "qty": "1",
+   "vendor_pn": "8974K82",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 3\" Diameter 3' long",
+   "vendor": "McMaster-Carr",
+   "cost": "192.44"
+  },
+  {
+   "section": "Fin Can",
+   "item": "8",
+   "qty": "4",
+   "vendor_pn": "Machining, DMU 60p",
+   "mfg_pn": "",
+   "description": "Machining for ACS Thruster bodies",
+   "vendor": "EXOS",
+   "cost": "400"
+  },
+  {
+   "section": "Fin Can",
+   "item": "9",
+   "qty": "8",
+   "vendor_pn": "YC1390BT2T",
+   "mfg_pn": "",
+   "description": "Jefferson Solenoid P/N YC1390BT2T",
+   "vendor": "Radwell",
+   "cost": "201"
+  },
+  {
+   "section": "Fin Can",
+   "item": "10",
+   "qty": "1",
+   "vendor_pn": "9559K115",
+   "mfg_pn": "",
+   "description": "Ultra-Chemical-Resistant Rigid PTFE O-Ring, 1/16 Fractional Width, Dash Number 021",
+   "vendor": "McMaster-Carr",
+   "cost": "7.06"
+  },
+  {
+   "section": "Fin Can",
+   "item": "11",
+   "qty": "8",
+   "vendor_pn": "2026BV171T",
+   "mfg_pn": "",
+   "description": "2026BV171T-12VDC,  Brass 1/8 in  300 psig 302 \u00baF 0.068 in FKM 12 VDC 20 bar  150 \u00baC  1.75 mm",
+   "vendor": "Radwell",
+   "cost": "77"
+  },
+  {
+   "section": "Fin Can",
+   "item": "12",
+   "qty": "1",
+   "vendor_pn": "1288N112",
+   "mfg_pn": "",
+   "description": "Chemical-Resistant Viton\u00ae Fluoroelastomer O-Ring, Super-Resilient, 1/16 Fractional Width, Dash No.012",
+   "vendor": "McMaster-Carr",
+   "cost": "5.99"
+  },
+  {
+   "section": "Fin Can",
+   "item": "13",
+   "qty": "4",
+   "vendor_pn": "04-05006",
+   "mfg_pn": "",
+   "description": "04-05006 DEL FITTING SEAL 3/8\" OD ALUMINUM (dash 6 seal)",
+   "vendor": "Aircraft Spruce",
+   "cost": "1.75"
+  },
+  {
+   "section": "Fin Can",
+   "item": "14",
+   "qty": "4",
+   "vendor_pn": "SUM-220655",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, AN to NPT, 45 Degree, Aluminum, Blue Anodized, -6 AN, 1/4 in. NPT, Each",
+   "vendor": "Summit Racing",
+   "cost": "7.99"
+  },
+  {
+   "section": "Fin Can",
+   "item": "15",
+   "qty": "4",
+   "vendor_pn": "50715K534",
+   "mfg_pn": "",
+   "description": "37 Degree Flared Fitting for Stainless Steel Tubing, 90 Degree Elbow for 3/8\" Tube OD x Female Tube",
+   "vendor": "McMaster-Carr",
+   "cost": "50.38"
+  },
+  {
+   "section": "Fin Can",
+   "item": "16",
+   "qty": "4",
+   "vendor_pn": "2227K62",
+   "mfg_pn": "",
+   "description": "Nut for 3/8\" Tube OD for 37 Degree Flared Fitting for Aluminum Tubing, AN-6",
+   "vendor": "McMaster-Carr",
+   "cost": "2.22"
+  },
+  {
+   "section": "Fin Can",
+   "item": "17",
+   "qty": "4",
+   "vendor_pn": "2227K72",
+   "mfg_pn": "",
+   "description": "Sleeve for 3/8\" Tube OD for 37 Degree Flared Fitting for Aluminum Tubing",
+   "vendor": "McMaster-Carr",
+   "cost": "2.24"
+  },
+  {
+   "section": "Fin Can",
+   "item": "18",
+   "qty": "1",
+   "vendor_pn": "AFFSHD-OR-64-05",
+   "mfg_pn": "",
+   "description": "Firesleeve - Industrial Heavy Duty - Braided - Oxide-Red",
+   "vendor": "American Firesleeve",
+   "cost": "160.02"
+  },
+  {
+   "section": "Fin Can",
+   "item": "19",
+   "qty": "1",
+   "vendor_pn": "4468K814",
+   "mfg_pn": "",
+   "description": "High-Pressure Braided Chemical Hose with Fittings, Brass 7/8\"-14 Thread Size Flare UNF Female, 5/8\" OD",
+   "vendor": "McMaster-Carr",
+   "cost": "60.43"
+  },
+  {
+   "section": "Fin Can",
+   "item": "20",
+   "qty": "2",
+   "vendor_pn": "8772K16",
+   "mfg_pn": "",
+   "description": "Spark-Resistant Tube Sleeving, 4\" ID",
+   "vendor": "McMaster-Carr",
+   "cost": "32.83"
+  },
+  {
+   "section": "Fin Can",
+   "item": "21",
+   "qty": "16",
+   "vendor_pn": "VSB2045Y-M3 /54GICT-ND",
+   "mfg_pn": "",
+   "description": "ACS Diode, SCHOTTKY 45V 6.5A P600",
+   "vendor": "Digikey",
+   "cost": "1.14"
+  },
+  {
+   "section": "Fin Can",
+   "item": "22",
+   "qty": "50",
+   "vendor_pn": "WM22759/16-18-2",
+   "mfg_pn": "",
+   "description": "18 gage Red wire",
+   "vendor": "Wiremasters",
+   "cost": "0.11"
+  },
+  {
+   "section": "Fin Can",
+   "item": "23",
+   "qty": "1",
+   "vendor_pn": "A1302-ND",
+   "mfg_pn": "TE Connectivity P/N 206708-1",
+   "description": "Female CPC 9 pin Connector",
+   "vendor": "Digikey",
+   "cost": "6.63"
+  },
+  {
+   "section": "Fin Can",
+   "item": "24",
+   "qty": "9",
+   "vendor_pn": "A16080-ND",
+   "mfg_pn": "TE Connectivity P/N 66101-4",
+   "description": "Connector, Socket 16-18AWG Gold Crimp",
+   "vendor": "Digikey",
+   "cost": "0.82"
+  },
+  {
+   "section": "Fin Can",
+   "item": "25",
+   "qty": "50",
+   "vendor_pn": "CWT-90003-ND",
+   "mfg_pn": "CWT-9003",
+   "description": "SLDR SLEEVE WIRE-WIRE 0.18\" CLR",
+   "vendor": "Digikey",
+   "cost": "0.93"
+  },
+  {
+   "section": "Fin Can",
+   "item": "26",
+   "qty": "16",
+   "vendor_pn": "94803-01-ND",
+   "mfg_pn": "3M P/N 94803",
+   "description": "0.250\" (6.35mm) Quick Connect Female 18-22 AWG Crimp Connector Fully Insulated",
+   "vendor": "Digikey",
+   "cost": "0.49"
+  },
+  {
+   "section": "Fin Can",
+   "item": "27",
+   "qty": "1",
+   "vendor_pn": "A16047-ND",
+   "mfg_pn": "TE Connectivity P/N 54123-1",
+   "description": "Connector Sealing Boot 13 Black",
+   "vendor": "Digikey",
+   "cost": "20.83"
+  },
+  {
+   "section": "Fin Can",
+   "item": "28",
+   "qty": "5",
+   "vendor_pn": "8772K61",
+   "mfg_pn": "",
+   "description": "Spark-Resistant Tube Sleeving, 1\" ID",
+   "vendor": "McMaster-Carr",
+   "cost": "7.73"
+  },
+  {
+   "section": "Fin Can",
+   "item": "29",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Carbon Fiber Skin, D25\" x L46\"",
+   "vendor": "SCORPIUS",
+   "cost": "23590"
+  },
+  {
+   "section": "Fin Can",
+   "item": "30",
+   "qty": "2",
+   "vendor_pn": "4684T11",
+   "mfg_pn": "",
+   "description": "Thick-Wall Butt-Weld Aluminum Unthreaded Fitting, 90 Degree Elbow Connector, 1/2 Pipe Size",
+   "vendor": "McMaster-Carr",
+   "cost": "211.57"
+  },
+  {
+   "section": "Fin Can",
+   "item": "31",
+   "qty": "2",
+   "vendor_pn": "101-0034",
+   "mfg_pn": "",
+   "description": "Bung, Weld-In, Aluminum, Male Threads, Universal, Flanged, -10 AN, Each",
+   "vendor": "Summit Racing",
+   "cost": "4.99"
+  },
+  {
+   "section": "Fin Can",
+   "item": "32",
+   "qty": "4",
+   "vendor_pn": "Fins",
+   "mfg_pn": "",
+   "description": "Fins, Carbon Fiber",
+   "vendor": "SCORPIUS",
+   "cost": "3200"
+  },
+  {
+   "section": "Fin Can",
+   "item": "33",
+   "qty": "7",
+   "vendor_pn": "AN525-10R12",
+   "mfg_pn": "",
+   "description": "Screw, Washer Head AN525-10R12, MFR # 11280-25 10/32",
+   "vendor": "Aircraft Spruce",
+   "cost": "0.15"
+  },
+  {
+   "section": "Fin Can",
+   "item": "34",
+   "qty": "2",
+   "vendor_pn": "91831A411",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Nylon-Insert Locknut 10-32 Thread Size",
+   "vendor": "McMaster-Carr",
+   "cost": "8.26"
+  },
+  {
+   "section": "Fin Can",
+   "item": "35",
+   "qty": "2",
+   "vendor_pn": "91102A740",
+   "mfg_pn": "",
+   "description": "Zinc-Plated Steel Split Lock Washer for Number 10 Screw Size, 0.2\" ID, 0.334\" OD",
+   "vendor": "McMaster-Carr",
+   "cost": "2.07"
+  },
+  {
+   "section": "Fin Can",
+   "item": "36",
+   "qty": "3",
+   "vendor_pn": "Access Port Cover",
+   "mfg_pn": "",
+   "description": "Power and connection access cover, Carbon Fiber",
+   "vendor": "SCORPIUS",
+   "cost": "250"
+  },
+  {
+   "section": "Fin Can",
+   "item": "37",
+   "qty": "5",
+   "vendor_pn": "MS21047L08K",
+   "mfg_pn": "",
+   "description": "Rivet Nuts",
+   "vendor": "Aircraft Spruce",
+   "cost": "7.65"
+  },
+  {
+   "section": "Fin Can",
+   "item": "38",
+   "qty": "1",
+   "vendor_pn": "AN426AD-3-3.5",
+   "mfg_pn": "",
+   "description": "Rivets",
+   "vendor": "Aircraft Spruce",
+   "cost": "71.75"
+  },
+  {
+   "section": "Fin Can",
+   "item": "39",
+   "qty": "11",
+   "vendor_pn": "M27500-18TG3T14",
+   "mfg_pn": "",
+   "description": "M27500-18TG3T14 is a 3 conductor cable with Tin coated round copper shielding and White Tefzel jacket with an M22759/18 inner conductor",
+   "vendor": "Wiremasters",
+   "cost": "1.52"
+  },
+  {
+   "section": "Fin Can",
+   "item": "40",
+   "qty": "26",
+   "vendor_pn": "M27500-18TG2T14",
+   "mfg_pn": "",
+   "description": "M27500-18TG2T14 is a 2 conductor cable with TIN COATED Cu ROUND shielding and Tefzel jacket with an M22759/18 inner conductor",
+   "vendor": "Wiremasters",
+   "cost": "1.24"
+  },
+  {
+   "section": "Fin Can",
+   "item": "41",
+   "qty": "7",
+   "vendor_pn": "M27500-22TG2T14",
+   "mfg_pn": "",
+   "description": "M27500-22TG2T14 is a 2 conductor cable with TIN COATED Cu ROUND shielding and Tefzel jacket with an M22759/18 inner conductor",
+   "vendor": "Wiremasters",
+   "cost": "0.77"
+  },
+  {
+   "section": "Fin Can",
+   "item": "42",
+   "qty": "9",
+   "vendor_pn": "WM22759/16-18-2",
+   "mfg_pn": "",
+   "description": "M22759/16-18-2 is a Tin Plated Copper, Single Layer of Extruded ETFE Jacketed Wire, 150\u00b0C. QPL material with certifications and test reports.",
+   "vendor": "Wiremasters",
+   "cost": "0.27"
+  },
+  {
+   "section": "Fin Can",
+   "item": "43",
+   "qty": "22",
+   "vendor_pn": "WM22759/16-18-0",
+   "mfg_pn": "",
+   "description": "M22759/16-18-0 is a Tin Plated Copper, Single Layer of Extruded ETFE Jacketed Wire, 150\u00b0C. QPL material with certifications and test reports.",
+   "vendor": "Wiremasters",
+   "cost": "0.28"
+  },
+  {
+   "section": "Fin Can",
+   "item": "44",
+   "qty": "7",
+   "vendor_pn": "WM22759/16-18-5",
+   "mfg_pn": "",
+   "description": "M22759/16-18-5 is a Tin Plated Copper, Single Layer of Extruded ETFE Jacketed Wire, 150\u00b0C. QPL material with certifications and test reports.",
+   "vendor": "Wiremasters",
+   "cost": "0.3"
+  },
+  {
+   "section": "Fin Can",
+   "item": "45",
+   "qty": "6",
+   "vendor_pn": "WM22759/16-16-2",
+   "mfg_pn": "",
+   "description": "M22759/16-16-2 is a Tin Plated Copper, Single Layer of Extruded ETFE Jacketed Wire, 150\u00b0C. QPL material with certifications and test reports.",
+   "vendor": "Wiremasters",
+   "cost": "0.35"
+  },
+  {
+   "section": "Fin Can",
+   "item": "46",
+   "qty": "1",
+   "vendor_pn": "TV06RW-25-37PA",
+   "mfg_pn": "Amphenol P/N TV06RW-25-37PA",
+   "description": "Circular MIL Spec Connector 37P SIZE 25",
+   "vendor": "ARROW",
+   "cost": "182.74"
+  },
+  {
+   "section": "Fin Can",
+   "item": "47",
+   "qty": "2",
+   "vendor_pn": "A1300-ND",
+   "mfg_pn": "TE Connectivity P/N 206060-1",
+   "description": "4 Position Circular Connector Plug Housing Free Hanging (In-Line) Coupling Nut",
+   "vendor": "Digikey",
+   "cost": "6.54"
+  },
+  {
+   "section": "Fin Can",
+   "item": "48",
+   "qty": "8",
+   "vendor_pn": "A16080CT-ND",
+   "mfg_pn": "TE Connectivity P/N 66100-9",
+   "description": "CONN SOCKET 16-18AWG GOLD CRIMP",
+   "vendor": "Digikey",
+   "cost": "1.35"
+  },
+  {
+   "section": "Fin Can",
+   "item": "49",
+   "qty": "1",
+   "vendor_pn": "A16046-ND",
+   "mfg_pn": "TE Connectivity P/N 54010-1",
+   "description": "Connector Sealing Boot 11 Black",
+   "vendor": "Digikey",
+   "cost": "21.29"
+  },
+  {
+   "section": "Fin Can",
+   "item": "50",
+   "qty": "1",
+   "vendor_pn": "Fin can charging mount",
+   "mfg_pn": "",
+   "description": "Aluminum 1\" thick from scrap",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Fin Can",
+   "item": "51",
+   "qty": "1",
+   "vendor_pn": "93085A823",
+   "mfg_pn": "",
+   "description": "Charging Mount installation screws",
+   "vendor": "McMaster-Carr",
+   "cost": "8.72"
+  },
+  {
+   "section": "Fin Can",
+   "item": "52",
+   "qty": "1",
+   "vendor_pn": "91735A144",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Pan Head Phillips Screw, Super-Corrosion-Resistant, 6-32 Thread Size, 1/4\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "6.18"
+  },
+  {
+   "section": "Fin Can",
+   "item": "53",
+   "qty": "1",
+   "vendor_pn": "3942-MSW00E16-8P-ND",
+   "mfg_pn": "Milspecwest P/N MSW00E16-8P",
+   "description": "CONN RCPT MALE 8P GOLD SLDR CUP",
+   "vendor": "Digikey",
+   "cost": "17.9"
+  },
+  {
+   "section": "Fin Can",
+   "item": "54",
+   "qty": "1",
+   "vendor_pn": "3942-MSW06E16-8S-ND",
+   "mfg_pn": "Milspecwest P/N MSW06E16-8S",
+   "description": "CONN PLUG FMALE 8P GOLD SLDR CUP",
+   "vendor": "Digikey",
+   "cost": "25.93"
+  },
+  {
+   "section": "Fin Can",
+   "item": "55",
+   "qty": "1",
+   "vendor_pn": "AMS3116E16-8SW-ND",
+   "mfg_pn": "Amphenol P/N MS3116E16-8SW",
+   "description": "CONN PLUG FMALE 8P GOLD SLDR CUP",
+   "vendor": "Digikey",
+   "cost": "59.61"
+  },
+  {
+   "section": "Fin Can",
+   "item": "56",
+   "qty": "1",
+   "vendor_pn": "MS3116E16-8SX",
+   "mfg_pn": "SPI Connects P/N MS3116E16-8SX",
+   "description": "MIL-C-26482 Series 1 Connector, Solder Contacts",
+   "vendor": "Heilind",
+   "cost": "41.13"
+  },
+  {
+   "section": "Fin Can",
+   "item": "57",
+   "qty": "1",
+   "vendor_pn": "A1352-ND",
+   "mfg_pn": "TE Connectivity P/N 206705-2",
+   "description": "9 Position Circular Connector Receptacle Housing Free Hanging (In-Line)",
+   "vendor": "Digikey",
+   "cost": "6.71"
+  },
+  {
+   "section": "Fin Can",
+   "item": "58",
+   "qty": "9",
+   "vendor_pn": "A1340-ND",
+   "mfg_pn": "TE Connectivity P/N 66099-4",
+   "description": "Pin Contact Crimp 16-18 AWG Stamped",
+   "vendor": "Digikey",
+   "cost": "1.42"
+  },
+  {
+   "section": "Fin Can",
+   "item": "59",
+   "qty": "1",
+   "vendor_pn": "A16047-ND",
+   "mfg_pn": "te Connectivity P/N 54123-1",
+   "description": "Connector Sealing Boot 13 Black",
+   "vendor": "Digikey",
+   "cost": "20.83"
+  },
+  {
+   "section": "Fin Can",
+   "item": "60",
+   "qty": "11",
+   "vendor_pn": "S03-03-R-ND",
+   "mfg_pn": "SR-03-R",
+   "description": "Wire to Wire Solder Sleeve Transparent - Blue 0.170\" (4.32mm), 0.200\" (5.08mm)",
+   "vendor": "Digikey",
+   "cost": "5.25"
+  },
+  {
+   "section": "Fin Can",
+   "item": "61",
+   "qty": "11",
+   "vendor_pn": "844-S02-04-R-ND",
+   "mfg_pn": "S02-04-R",
+   "description": "Wire to Wire Solder Sleeve Transparent - Blue 0.235\" (5.97mm), 0.255\" (6.48mm)",
+   "vendor": "Digikey",
+   "cost": "4.23"
+  },
+  {
+   "section": "Fin Can",
+   "item": "62",
+   "qty": "1",
+   "vendor_pn": "Kuject-WT050",
+   "mfg_pn": "",
+   "description": "Kuject 50PCS Self-Solder Wire Connectors, Solder and Seal Crimpless Heat Shrink Butt Connectors,",
+   "vendor": "Amazon",
+   "cost": "12.99"
+  },
+  {
+   "section": "Fin Can",
+   "item": "63",
+   "qty": "1",
+   "vendor_pn": "8772K61",
+   "mfg_pn": "",
+   "description": "Spark-Resistant Tube Sleeving, 1\" ID",
+   "vendor": "McMaster-Carr",
+   "cost": "7.73"
+  },
+  {
+   "section": "Fin Can",
+   "item": "64",
+   "qty": "1",
+   "vendor_pn": "9246K93",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1-3/4\" Thick, 12\" x 12\"",
+   "vendor": "McMaster-Carr",
+   "cost": "194.86"
+  },
+  {
+   "section": "Fin Can",
+   "item": "65",
+   "qty": "1",
+   "vendor_pn": "Signal Amplifier Box Body",
+   "mfg_pn": "",
+   "description": "Machining",
+   "vendor": "EXOS",
+   "cost": "1000"
+  },
+  {
+   "section": "Fin Can",
+   "item": "66",
+   "qty": "1",
+   "vendor_pn": "9246K13",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1/4\" Thick x 12\" Wide, 1 Foot Long",
+   "vendor": "McMaster-Carr",
+   "cost": "32.59"
+  },
+  {
+   "section": "Fin Can",
+   "item": "67",
+   "qty": "1",
+   "vendor_pn": "Signal Amplifier Box Top",
+   "mfg_pn": "",
+   "description": "Machining",
+   "vendor": "EXOS",
+   "cost": "450"
+  },
+  {
+   "section": "Fin Can",
+   "item": "68",
+   "qty": "1",
+   "vendor_pn": "8975K74",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1/2\" Thick x 2\" Wide, 1 Foot Long",
+   "vendor": "McMaster-Carr",
+   "cost": "13.87"
+  },
+  {
+   "section": "Fin Can",
+   "item": "69",
+   "qty": "2",
+   "vendor_pn": "Signal Amplifier Box Mounts",
+   "mfg_pn": "",
+   "description": "Machining",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Fin Can",
+   "item": "70",
+   "qty": "1",
+   "vendor_pn": "490-VHK50W-Q24-S28",
+   "mfg_pn": "CUI P/N VHK50W-Q24-S28",
+   "description": "Enclosed DC DC Converter 1 Output 28V 1.78A 36V Input",
+   "vendor": "Mouser",
+   "cost": "162.86"
+  },
+  {
+   "section": "Fin Can",
+   "item": "71",
+   "qty": "4",
+   "vendor_pn": "11-06846",
+   "mfg_pn": "CI-310-22",
+   "description": "Comant Ci 310-22 Radiophone Antenna, MFR Model # CI 310-22",
+   "vendor": "Aircraft Spruce",
+   "cost": "772"
+  },
+  {
+   "section": "Fin Can",
+   "item": "72",
+   "qty": "1",
+   "vendor_pn": "90233",
+   "mfg_pn": "",
+   "description": "Shireen Linear Amplifier 900 MHz, 20 Watt",
+   "vendor": "www.shireeninc.com",
+   "cost": "1395"
+  },
+  {
+   "section": "Fin Can",
+   "item": "73",
+   "qty": "4",
+   "vendor_pn": "PE45554",
+   "mfg_pn": "",
+   "description": "SMA Female Bulkhead Mount Connector Solder Attachment for PE-SR402FL, .235 inch D Hole",
+   "vendor": "Pasternak",
+   "cost": "28.19"
+  },
+  {
+   "section": "Fin Can",
+   "item": "74",
+   "qty": "3",
+   "vendor_pn": "PE-SR402FL-BULK",
+   "mfg_pn": "",
+   "description": "Formable 141 Semi-rigid Coax Cable with Tinned Copper Braid Outer Conductor",
+   "vendor": "Pasternak",
+   "cost": "14.39"
+  },
+  {
+   "section": "Fin Can",
+   "item": "75",
+   "qty": "4",
+   "vendor_pn": "PE4936",
+   "mfg_pn": "",
+   "description": "N Male Right Angle Connector Solder Attachment for PE-SR402AL, PE-SR402FL, RG402",
+   "vendor": "Pasternack",
+   "cost": "61.69"
+  },
+  {
+   "section": "Fin Can",
+   "item": "76",
+   "qty": "2",
+   "vendor_pn": "PE4083",
+   "mfg_pn": "",
+   "description": "SMA Male Right Angle Connector Solder Attachment for PE-SR402AL, PE-SR402FL, PE-SR402FLJ, PE-SR402TN, RG402",
+   "vendor": "Pasternack",
+   "cost": "33.39"
+  },
+  {
+   "section": "Fin Can",
+   "item": "77",
+   "qty": "1",
+   "vendor_pn": "PE3500LF-36",
+   "mfg_pn": "",
+   "description": "SMA Male to SMA Male Cable 36 Inch Length Using RG400 Coax, RoHS",
+   "vendor": "Pasternack",
+   "cost": "96.99"
+  },
+  {
+   "section": "Fin Can",
+   "item": "78",
+   "qty": "1",
+   "vendor_pn": "AMS3110E16-8P-ND",
+   "mfg_pn": "Milspecwest P/N MSW00E16-8P",
+   "description": "8 Position Circular Connector Receptacle, Male Pins Solder Cup",
+   "vendor": "Digikey",
+   "cost": "17.9"
+  },
+  {
+   "section": "Fin Can",
+   "item": "79",
+   "qty": "4",
+   "vendor_pn": "WM22759/16-18-2",
+   "mfg_pn": "",
+   "description": "18 gage Red wire",
+   "vendor": "Wiremasters",
+   "cost": "0.11"
+  },
+  {
+   "section": "Fin Can",
+   "item": "80",
+   "qty": "4",
+   "vendor_pn": "WM22759/16-18-0",
+   "mfg_pn": "",
+   "description": "18 gage Black wire",
+   "vendor": "Wiremasters",
+   "cost": "0.11"
+  },
+  {
+   "section": "Fin Can",
+   "item": "81",
+   "qty": "9",
+   "vendor_pn": "298-11957-ND",
+   "mfg_pn": "Panduit P/N PNF18-10R-M",
+   "description": "Ring Terminal Connector 10 Stud Circular 18-22 AWG Crimp",
+   "vendor": "Digikey",
+   "cost": "0.76"
+  },
+  {
+   "section": "Fin Can",
+   "item": "82",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Capacitor",
+   "vendor": "",
+   "cost": "3"
+  },
+  {
+   "section": "Fin Can",
+   "item": "83",
+   "qty": "5",
+   "vendor_pn": "PE4112",
+   "mfg_pn": "",
+   "description": "SMA Male Connector Solder Attachment for PE-SR402FL",
+   "vendor": "Pasternak",
+   "cost": "16.79"
+  },
+  {
+   "section": "Fin Can",
+   "item": "84",
+   "qty": "5",
+   "vendor_pn": "PE44693",
+   "mfg_pn": "",
+   "description": "SMA Male Right Angle Connector Solder Attachment for PE-SR402FL",
+   "vendor": "Pasternak",
+   "cost": "28.59"
+  },
+  {
+   "section": "Fin Can",
+   "item": "85",
+   "qty": "3",
+   "vendor_pn": "PE9081",
+   "mfg_pn": "",
+   "description": "SMA Female to N Male Adapter",
+   "vendor": "Pasternak",
+   "cost": "42.38"
+  },
+  {
+   "section": "Fin Can",
+   "item": "86",
+   "qty": "8",
+   "vendor_pn": "PE-SR402FL-BULK",
+   "mfg_pn": "",
+   "description": "Formable 141 Semi-rigid Coax Cable with Tinned Copper Braid Outer Conductor",
+   "vendor": "Pasternak",
+   "cost": "14.39"
+  },
+  {
+   "section": "Fin Can",
+   "item": "87",
+   "qty": "3",
+   "vendor_pn": "AOCSMA-1",
+   "mfg_pn": "",
+   "description": "Antenna, UHF/L-Band",
+   "vendor": "UB Corp",
+   "cost": "458"
+  },
+  {
+   "section": "Fin Can",
+   "item": "88",
+   "qty": "1",
+   "vendor_pn": "8975K631",
+   "mfg_pn": "65-0061",
+   "description": "MCO CaseMultipurpose 6061 Aluminum, 2\" Thick x 5\" Wide, 1' Long",
+   "vendor": "McMaster-Carr",
+   "cost": "109.76"
+  },
+  {
+   "section": "Fin Can",
+   "item": "89",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "MCO Case, Machining",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Fin Can",
+   "item": "90",
+   "qty": "1",
+   "vendor_pn": "8975K439",
+   "mfg_pn": "65-0062",
+   "description": "MCO Case Top, Multipurpose 6061 Aluminum, 1/4\" Thick x 6\" Wide, 1' Long",
+   "vendor": "McMaster-Carr",
+   "cost": "21.65"
+  },
+  {
+   "section": "Fin Can",
+   "item": "91",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "65-0062",
+   "description": "Machining",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Fin Can",
+   "item": "92",
+   "qty": "1",
+   "vendor_pn": "5958-MS3110E16-8PW-ND",
+   "mfg_pn": "SPI Connects P/N MS3110E16-8PW",
+   "description": "8 Position Circular Connector Receptacle, Male Pins Solder Cup, Surface Mount",
+   "vendor": "Digikey",
+   "cost": "180.39"
+  },
+  {
+   "section": "Fin Can",
+   "item": "93",
+   "qty": "1",
+   "vendor_pn": "5958-MS3110E16-8PX-ND",
+   "mfg_pn": "SPI Connects P/N \t\nMS3110E16-8PX",
+   "description": "8 Position Circular Connector Receptacle, Male Pins Solder Cup, Surface Mount",
+   "vendor": "Digikey",
+   "cost": "180.39"
+  },
+  {
+   "section": "Fin Can",
+   "item": "94",
+   "qty": "4",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Fins, Carbon Fiber",
+   "vendor": "",
+   "cost": "3500"
+  },
+  {
+   "section": "Fin Can",
+   "item": "95",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Fin Can",
+   "vendor": "",
+   "cost": "22500"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "1",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "70\" Carbon Fiber Skin",
+   "vendor": "SCORPIUS",
+   "cost": "28240"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "2",
+   "qty": "1",
+   "vendor_pn": "Press section Skin",
+   "mfg_pn": "",
+   "description": "Machining",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "3",
+   "qty": "2",
+   "vendor_pn": "10-AN-0024-300",
+   "mfg_pn": "",
+   "description": "Pressure Tank, 300psi MEOF, D10in x L24in SF 2.0",
+   "vendor": "SCORPIUS",
+   "cost": "27852"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "4",
+   "qty": "1",
+   "vendor_pn": "89155K16",
+   "mfg_pn": "",
+   "description": "Oversized Multipurpose 6061 Aluminum Sheet, 1\" Thick, 24\" x 24\"",
+   "vendor": "McMaster-Carr",
+   "cost": "632.09"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "5",
+   "qty": "2",
+   "vendor_pn": "Upper tank Mounting Bracket",
+   "mfg_pn": "",
+   "description": "Machining",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "6",
+   "qty": "1",
+   "vendor_pn": "89155K11",
+   "mfg_pn": "",
+   "description": "Oversized Multipurpose 6061 Aluminum Sheet, 1/4\" Thick, 24\" x 24\"",
+   "vendor": "McMaster-Carr",
+   "cost": "196.92"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "7",
+   "qty": "2",
+   "vendor_pn": "Lower tank holding bracket",
+   "mfg_pn": "",
+   "description": "Machining",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "8",
+   "qty": "1",
+   "vendor_pn": "Swivel Holder for Lower Boss",
+   "mfg_pn": "",
+   "description": "From 1\" thick aluminum Scrap",
+   "vendor": "EXOS",
+   "cost": "250"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "9",
+   "qty": "1",
+   "vendor_pn": "Bearing Holder for Lower Boss",
+   "mfg_pn": "",
+   "description": "Machining",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "10",
+   "qty": "1",
+   "vendor_pn": "63195K79",
+   "mfg_pn": "",
+   "description": "Swivel Joint, Open,  7/8\" ID, 1-9/16\" OD",
+   "vendor": "McMaster-Carr",
+   "cost": "19.01"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "11",
+   "qty": "1",
+   "vendor_pn": "92196A291",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Socket Head Screw, 10-32 Thread Size, 1-3/8\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "7.7"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "12",
+   "qty": "1",
+   "vendor_pn": "93776A401",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Serrated Flange Locknut, 10-32 Thread Size",
+   "vendor": "McMaster-Carr",
+   "cost": "5.89"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "13",
+   "qty": "1",
+   "vendor_pn": "NAS1423-12",
+   "mfg_pn": "",
+   "description": "DRILLED JAM NUT - NAS1423-12",
+   "vendor": "Military Fastners",
+   "cost": "10.34"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "14",
+   "qty": "1",
+   "vendor_pn": "NAS1149C1232R",
+   "mfg_pn": "",
+   "description": "FLAT WASHER - NAS1149C1232R",
+   "vendor": "Military Fastners",
+   "cost": "42"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "15",
+   "qty": "1",
+   "vendor_pn": "8975K74",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1/2\" Thick x 2\" Wide, 1 Foot Long",
+   "vendor": "McMaster-Carr",
+   "cost": "13.87"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "16",
+   "qty": "2",
+   "vendor_pn": "Plumbing brackets",
+   "mfg_pn": "",
+   "description": "Machining",
+   "vendor": "EXOS",
+   "cost": "250"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "17",
+   "qty": "1",
+   "vendor_pn": "93085A835",
+   "mfg_pn": "",
+   "description": "Mil. Spec. Stainless Steel Phillips Flat Head Screws, 100 Degree Countersink Angle, 10-32 Thread, 1-1/4\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "6.05"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "18",
+   "qty": "1",
+   "vendor_pn": "89785K837",
+   "mfg_pn": "",
+   "description": "Smooth-Bore Seamless 316 Stainless Steel Tubing, 3/8\" OD, 0.035\" Wall Thickness",
+   "vendor": "McMaster-Carr",
+   "cost": "34.29"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "19",
+   "qty": "1",
+   "vendor_pn": "SS-600-6-6ANWD",
+   "mfg_pn": "",
+   "description": "Stainless Steel Swagelok Tube Fitting, Union, 3/8 in. Tube OD x 3/8 in. AN Tube Flare with Wire Drill",
+   "vendor": "Swaglok",
+   "cost": "28"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "20",
+   "qty": "2",
+   "vendor_pn": "5482K196",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Nut for 3/8\" Tube OD, for Precision AN 37 Degree Flared Fitting",
+   "vendor": "McMaster-Carr",
+   "cost": "12.88"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "21",
+   "qty": "2",
+   "vendor_pn": "5482K204",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Sleeve for 3/8\" Tube OD Precision AN 37 Degree Flared Fitting",
+   "vendor": "McMaster-Carr",
+   "cost": "11.03"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "22",
+   "qty": "1",
+   "vendor_pn": "5482K132",
+   "mfg_pn": "",
+   "description": "Precision AN 37 Degree Flared Fitting, 316 Stainless Steel Straight Connector for 3/8\" OD Stainless Steel Tubing",
+   "vendor": "McMaster-Carr",
+   "cost": "28.02"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "23",
+   "qty": "1",
+   "vendor_pn": "4552K303",
+   "mfg_pn": "",
+   "description": "High-Pressure Braided Chemical Hose with Fittings, 303 Stainless Steel 9/16\"-18 Flare UNF Female, 7/16\" OD 24\" length",
+   "vendor": "McMaster-Carr",
+   "cost": "44.87"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "24",
+   "qty": "1",
+   "vendor_pn": "8974K97",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 4\" Diameter 6\" length",
+   "vendor": "McMaster-Carr",
+   "cost": "636.48"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "25",
+   "qty": "3",
+   "vendor_pn": "Regulators plate support bracket",
+   "mfg_pn": "",
+   "description": "Machining",
+   "vendor": "EXOS",
+   "cost": "150"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "26",
+   "qty": "1",
+   "vendor_pn": "8491K36",
+   "mfg_pn": "",
+   "description": "Economical Garolite CE Sheet, 24\" W x 24\" L, 1/2\" Thick",
+   "vendor": "McMaster-Carr",
+   "cost": "167.87"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "27",
+   "qty": "2",
+   "vendor_pn": "Regulators plate",
+   "mfg_pn": "",
+   "description": "Machining",
+   "vendor": "EXOS",
+   "cost": "750"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "28",
+   "qty": "1",
+   "vendor_pn": "92240A544",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Hex Head Screw, 1/4\"-20 Thread Size, 1-1/4\" Long, Fully Threaded",
+   "vendor": "McMaster-Carr",
+   "cost": "8.82"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "29",
+   "qty": "1",
+   "vendor_pn": "92240A563",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Hex Head Screw, 1/4\"-20 Thread Size, 5\" Long, Fully Threaded",
+   "vendor": "McMaster-Carr",
+   "cost": "6.99"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "30",
+   "qty": "1",
+   "vendor_pn": "92673A113",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Hex Nut, 1/4\"-20 Thread",
+   "vendor": "McMaster-Carr",
+   "cost": "2.49"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "31",
+   "qty": "1",
+   "vendor_pn": "8975K514",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1/4\" Thick x 4\" Wide, 1 Foot Long",
+   "vendor": "McMaster-Carr",
+   "cost": "15.18"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "32",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Regulator Hold Down Bracket, Machining",
+   "vendor": "EXOS",
+   "cost": "150"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "33",
+   "qty": "1",
+   "vendor_pn": "8975K244",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1\" Thick x 6\" Wide, 1 Foot Long",
+   "vendor": "McMaster-Carr",
+   "cost": "73.49"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "34",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Pressure Regulator Manifold, Standard, Machining",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "35",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Pressure Regulator Control Manifold, Opposing, Machining",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "36",
+   "qty": "1",
+   "vendor_pn": "9008K46",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1-1/2\" x 1-1/2\", 1 Foot Long",
+   "vendor": "McMaster-Carr",
+   "cost": "27.7"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "37",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Gas Exit Manifolds,  Machining",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "38",
+   "qty": "3",
+   "vendor_pn": "50785K24",
+   "mfg_pn": "",
+   "description": "High-Pressure Brass Pipe Fitting, Hollow Plug with External Hex Drive, 1/2 NPT",
+   "vendor": "McMaster-Carr",
+   "cost": "3.28"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "39",
+   "qty": "2",
+   "vendor_pn": "1493N104",
+   "mfg_pn": "",
+   "description": "Brass Threaded Pipe Nipple for Drinking Water, High-Pressure, Fully Threaded, 1/2 NPT, 1-1/8\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "3.21"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "40",
+   "qty": "2",
+   "vendor_pn": "SS-4R3A5-SC11",
+   "mfg_pn": "",
+   "description": "Stainless Steel High Pressure Proportional Relief Valve, 1/4 in. MNPT x 1/4 in. FNPT, SC-11 Cleaned",
+   "vendor": "Swagelok - Texas Valve and Fitting",
+   "cost": "373.46"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "41",
+   "qty": "2",
+   "vendor_pn": "177-R3A-K1-B",
+   "mfg_pn": "",
+   "description": "Yellow Spring Kit for R3A Series Proportional Relief Valve, 350 to 750 psig (24.1 to 51.7 bar)",
+   "vendor": "Swagelok - Texas Valve and Fitting",
+   "cost": "7.72"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "42",
+   "qty": "1",
+   "vendor_pn": "9464K109",
+   "mfg_pn": "",
+   "description": "Chemical-Resistant Viton\u00ae Fluoroelastomer O-Ring, 3/32 Fractional Width, Dash Number 106",
+   "vendor": "McMaster-Carr",
+   "cost": "4.73"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "43",
+   "qty": "1",
+   "vendor_pn": "9464K21",
+   "mfg_pn": "",
+   "description": "Chemical-Resistant Viton\u00ae Fluoroelastomer O-Ring, 1/16 Fractional Width, Dash Number 015",
+   "vendor": "McMaster-Carr",
+   "cost": "10.22"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "44",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": ".50 100SB 10-316",
+   "vendor": "Swagelok - Texas Valve and Fitting",
+   "cost": "294"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "45",
+   "qty": "2",
+   "vendor_pn": "SCRDFSST 015-400",
+   "mfg_pn": "",
+   "description": "SCRD Flat Seat Screw Type Forward Acting, Scored Rupture Disc. Size: DN 15 (NPS 1/2), Material: Monel 400 (2.4360)-Specified Burst Pressure: 500 PSIg @ 72 F-Burst Tolerance: Catalog Standard-Manufacturing Range: Zero-Seat: Flat Seat-Holder Pressure Rating: 10,000 PSI-Holder Type: Screw Type-Size Units: IN (Inches)-Media: Vapor-Non-Fragmenting: Yes-Tag Material: 300 Series Stainless Steel-Prior Lot Number: 1226790",
+   "vendor": "Swagelok - Texas Valve and Fitting",
+   "cost": "822"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "46",
+   "qty": "2",
+   "vendor_pn": "SUM-220051",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, 90 Degree, Male -10 AN to Male 1/2 in. NPT, Aluminum, Blue Anodized",
+   "vendor": "Summit Racing",
+   "cost": "12.99"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "47",
+   "qty": "1",
+   "vendor_pn": "SUM-220047",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, Straight, Male -10 AN to Male 1/2 in. NPT, Aluminum, Blue Anodized",
+   "vendor": "Summit Racing",
+   "cost": "3.99"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "48",
+   "qty": "1",
+   "vendor_pn": "AT921110ERL",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, AN to AN, 90 Degree, Aluminum, Black Anodized, -10 AN, -10 AN, Swivel",
+   "vendor": "Summit Racing",
+   "cost": "43.69"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "49",
+   "qty": "2",
+   "vendor_pn": "2227K66",
+   "mfg_pn": "",
+   "description": "Nut for 5/8\" Tube OD for 37 Degree Flared Fitting for Aluminum Tubing",
+   "vendor": "McMaster-Carr",
+   "cost": "4.57"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "50",
+   "qty": "2",
+   "vendor_pn": "2227K76",
+   "mfg_pn": "",
+   "description": "Sleeve for 5/8\" Tube OD for 37 Degree Flared Fitting for Aluminum Tubing",
+   "vendor": "McMaster-Carr",
+   "cost": "3.83"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "51",
+   "qty": "1",
+   "vendor_pn": "KYS-100-43821-10",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, AN to AN, 90 Degree, Aluminum, Blue Anodized, -10 AN, -10 AN, Each",
+   "vendor": "Summit Racing",
+   "cost": "12.99"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "52",
+   "qty": "1",
+   "vendor_pn": "5177K73",
+   "mfg_pn": "",
+   "description": "5/8\" OD soft drawn aluminum tube 6' long 580 psi rated",
+   "vendor": "McMaster-Carr",
+   "cost": "42.06"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "53",
+   "qty": "1",
+   "vendor_pn": "4468K814",
+   "mfg_pn": "",
+   "description": "High-Pressure Braided Chemical Hose with Fittings, Brass 7/8\"-14 Thread Size Flare UNF Female, 5/8\" OD, 24\"",
+   "vendor": "McMaster-Carr",
+   "cost": "49.52"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "54",
+   "qty": "1",
+   "vendor_pn": "91735A829",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Pan Head Phillips Screw, Super-Corrosion-Resistant, 10-32 Thread Size, 1/2\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "7.04"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "55",
+   "qty": "1",
+   "vendor_pn": "90107A011",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Washer for Number 10 Screw Size, 0.203\" ID, 0.438\" OD",
+   "vendor": "McMaster-Carr",
+   "cost": "4.37"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "56",
+   "qty": "2",
+   "vendor_pn": "873-D-NV-L",
+   "mfg_pn": "",
+   "description": "873-D High Flow Dome Loaded Reducing Regulators",
+   "vendor": "Aqua Environments",
+   "cost": "889"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "57",
+   "qty": "1",
+   "vendor_pn": "1247-1",
+   "mfg_pn": "",
+   "description": "1247 Inline Reducing Regulators 200-1000 psi",
+   "vendor": "Aqua Environments",
+   "cost": "117"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "58",
+   "qty": "4",
+   "vendor_pn": "H300-AL",
+   "mfg_pn": "",
+   "description": "Aluminum Hemispheres",
+   "vendor": "Sharpe Products",
+   "cost": "10.84"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "59",
+   "qty": "1",
+   "vendor_pn": "EAR-916104ERL",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, AN to NPT, Straight, Aluminum, Blue Anodized, -4 AN, 1/8 in. NPT, Swivel, Each",
+   "vendor": "Summit Racing",
+   "cost": "16.8"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "60",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Accumulator Tank, Welding",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "61",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Accumulator Support",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "62",
+   "qty": "4",
+   "vendor_pn": "25BC-6/25MRS-6",
+   "mfg_pn": "",
+   "description": "Chemiquip stainless steel snubbers/filters.  -6AN - 1/4\" NPT M-M 90 degree fitting",
+   "vendor": "Chemiquipproducts.com",
+   "cost": "180"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "63",
+   "qty": "1",
+   "vendor_pn": "5482K179",
+   "mfg_pn": "",
+   "description": "Precision AN 37 Degree Flared Fitting, 316 Stainless Steel Plug for 1/4\" OD Stainless Steel Tubing",
+   "vendor": "McMaster-Carr",
+   "cost": "14.32"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "64",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Pressure Comntrol Prefilter, Welding",
+   "vendor": "EXOS",
+   "cost": "200"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "65",
+   "qty": "1",
+   "vendor_pn": "2227K21",
+   "mfg_pn": "",
+   "description": "37 Degree Flared Fitting for Aluminum Tubing, Tee Connector for 1/4\" Tube OD",
+   "vendor": "McMaster-Carr",
+   "cost": "15.04"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "66",
+   "qty": "8",
+   "vendor_pn": "5482K195",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Nut for 1/4\" Tube OD Precision AN 37 Degree Flared Fitting",
+   "vendor": "McMaster-Carr",
+   "cost": "11.42"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "67",
+   "qty": "8",
+   "vendor_pn": "5482K203",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Sleeve for 1/4\" Tube OD Precision AN 37 Degree Flared Fitting",
+   "vendor": "McMaster-Carr",
+   "cost": "3.79"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "68",
+   "qty": "9",
+   "vendor_pn": "04-05004",
+   "mfg_pn": "",
+   "description": "DEL FITTING SEAL 1/4\" OD ALUMINUM",
+   "vendor": "Aircraft Spruce",
+   "cost": "1.75"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "69",
+   "qty": "3",
+   "vendor_pn": "5482K221",
+   "mfg_pn": "",
+   "description": "Precision AN 37 Degree Flared Fitting, 316 Stainless Steel 90 Degree Elbow for 1/4\" Tube x 1/4 ANPT Male",
+   "vendor": "McMaster-Carr",
+   "cost": "63.33"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "70",
+   "qty": "1",
+   "vendor_pn": "89785K824",
+   "mfg_pn": "",
+   "description": "Smooth-Bore Seamless 316 Stainless Tubing, 1/4\" OD, 0.035\" Wall, 3' long",
+   "vendor": "McMaster-Carr",
+   "cost": "23.27"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "71",
+   "qty": "12",
+   "vendor_pn": "5482K196",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Nut for 3/8\" Tube OD Precision AN 37 Degree Flared Fitting",
+   "vendor": "McMaster-Carr",
+   "cost": "12.88"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "72",
+   "qty": "12",
+   "vendor_pn": "5482K204",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Sleeve for 3/8\" Tube OD Precision AN 37 Degree Flared Fitting",
+   "vendor": "McMaster-Carr",
+   "cost": "11.03"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "73",
+   "qty": "16",
+   "vendor_pn": "04-05006",
+   "mfg_pn": "",
+   "description": "DEL FITTING SEAL 3/8\" OD ALUMINUM",
+   "vendor": "Aircraft Spruce",
+   "cost": "1.75"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "74",
+   "qty": "2",
+   "vendor_pn": "5482K173",
+   "mfg_pn": "",
+   "description": "Precision AN 37 Degree Flared Fitting, 316 Stainless Steel Tee Connector for 3/8\" Tube OD",
+   "vendor": "McMaster-Carr",
+   "cost": "80.56"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "75",
+   "qty": "2",
+   "vendor_pn": "448805K41",
+   "mfg_pn": "",
+   "description": "Precision Extreme-Pressure 316 Stainless Steel Fitting\n90 Degree Elbow Connector, 1/4 NPT Male",
+   "vendor": "McMaster-Carr",
+   "cost": "27.25"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "76",
+   "qty": "1",
+   "vendor_pn": "51205K187",
+   "mfg_pn": "",
+   "description": "Extreme-Pressure 316 Stainless Steel Pipe Fitting, Reducing Adapter, 1/4 NPTF Female x 1/8 NPTF Male",
+   "vendor": "McMaster-Carr",
+   "cost": "26.46"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "77",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "High Pressure Sensdor Adapter, Welding",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "78",
+   "qty": "1",
+   "vendor_pn": "223-1250-ND",
+   "mfg_pn": "TE Connectivity Measurement Specialties, M3041-000005-05KPG",
+   "description": "Pressure Sensor 5000PSI Vented Gauge Male - 1/4\" NPT 1 V ~ 5 V Cylinder, Threaded",
+   "vendor": "DigiKey",
+   "cost": "121.17"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "79",
+   "qty": "1",
+   "vendor_pn": "5482K149",
+   "mfg_pn": "",
+   "description": "Precision AN 37 Degree Flared Fitting, 316 Stainless Steel 90 Degree Elbow Connector for 3/8\" Tube OD",
+   "vendor": "McMaster-Carr",
+   "cost": "73.65"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "80",
+   "qty": "1",
+   "vendor_pn": "5482K181",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Plug for 3/8\" Tube OD Precision AN 37 Degree Flared Fitting",
+   "vendor": "McMaster-Carr",
+   "cost": "22.72"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "81",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "High Pressure Plumbing Elbow, Welding",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "82",
+   "qty": "3",
+   "vendor_pn": "5482K222",
+   "mfg_pn": "",
+   "description": "Precision AN 37 Degree Flared Fitting, 316 Stainless Steel 90 Degree Elbow for 3/8\" Tube x 1/4 ANPT Male",
+   "vendor": "McMaster-Carr",
+   "cost": "46.05"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "83",
+   "qty": "1",
+   "vendor_pn": "5177K63",
+   "mfg_pn": "",
+   "description": "Easy-Bend Aluminum Tubing, 1/4\" OD, 0.032\" Wall Thickness",
+   "vendor": "McMaster-Carr",
+   "cost": "22.8"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "84",
+   "qty": "1",
+   "vendor_pn": "5482K123",
+   "mfg_pn": "",
+   "description": "Precision AN 37 Degree Flared Fitting, 316 Stainless Steel Adapter for 3/8\" Tube OD x 1/4 ANPT Male",
+   "vendor": "McMaster-Carr",
+   "cost": "37.88"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "85",
+   "qty": "1",
+   "vendor_pn": "SS-83KF4",
+   "mfg_pn": "",
+   "description": "Stainless Steel 3-Piece High Pressure Ball Valve, PCTFE Seats, 1/4 in. FNPT",
+   "vendor": "Swagelock - Texas valve and fitting",
+   "cost": "364.62"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "86",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Plumbing Bracket, From 1\" thick aluminum Scrap minimum 2\"x3\"",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "87",
+   "qty": "2",
+   "vendor_pn": "91735A829",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Pan Head Phillips Screw, Super-Corrosion-Resistant, 10-32 Thread Size, 1/2\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "7.04"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "88",
+   "qty": "1",
+   "vendor_pn": "91735A833",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Pan Head Phillips Screw, Super-Corrosion-Resistant, 10-32 Thread Size, 1\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "10.33"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "89",
+   "qty": "1",
+   "vendor_pn": "91831A411",
+   "mfg_pn": "",
+   "description": "18-8 Stainless Steel Nylon-Insert Locknut, 10-32 Thread Size",
+   "vendor": "McMaster-Carr",
+   "cost": "8.26"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "90",
+   "qty": "4",
+   "vendor_pn": "51205K391",
+   "mfg_pn": "",
+   "description": "Extreme-Pressure 316 Stainless Steel Pipe Fitting, Plug with External Hex Drive, 1/4 NPT",
+   "vendor": "McMaster-Carr",
+   "cost": "9.52"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "91",
+   "qty": "4",
+   "vendor_pn": "D2064-LN2-C203",
+   "mfg_pn": "",
+   "description": "Direct acting solenoid valves",
+   "vendor": "Gems Predyne",
+   "cost": "154"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "92",
+   "qty": "2",
+   "vendor_pn": "4830K131",
+   "mfg_pn": "",
+   "description": "Standard-Wall 304/304L Stainless Steel Pipe Nipple, Fully Threaded, 1/4 NPT, 7/8\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "2.33"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "93",
+   "qty": "2",
+   "vendor_pn": "48805K88",
+   "mfg_pn": "",
+   "description": "Precision Extreme-Pressure 316 Stainless Steel Fitting, Straight Connector with Hex, 1/8 NPT Male, 1-1/16\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "9.61"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "94",
+   "qty": "2",
+   "vendor_pn": "2762K83",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Threaded Float, 4-1/2\" Diameter, 1/8 NPT, 562 Maximum PSI",
+   "vendor": "McMaster-Carr",
+   "cost": "88.65"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "95",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Accumulator Tank Fabrication",
+   "vendor": "EXOS",
+   "cost": "200"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "96",
+   "qty": "2",
+   "vendor_pn": "223-1871-ND",
+   "mfg_pn": "TE Connectivity Measurement Specialties P/N M3041-000006-500PG",
+   "description": "Pressure Sensor 500PSI Vented Gauge Male - 1/8\" NPT 1 V ~ 5 V Cylinder",
+   "vendor": "Digikey",
+   "cost": "121.17"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "97",
+   "qty": "2",
+   "vendor_pn": "EAR-997104ERL",
+   "mfg_pn": "",
+   "description": "Fitting, Bung, Weld-In, Male 4 AN, Aluminum, Each",
+   "vendor": "Summit Racing",
+   "cost": "9.76"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "98",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Bung Fitting, Welding",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "99",
+   "qty": "2",
+   "vendor_pn": "2M2S",
+   "mfg_pn": "",
+   "description": "1/4\" x 1/4\" Male NPT with snubber installed",
+   "vendor": "Chemiquipproducts.com",
+   "cost": "140"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "100",
+   "qty": "2",
+   "vendor_pn": "SC1211-ND",
+   "mfg_pn": "Conxall P/N 18282-2SG-311",
+   "description": "2 Position Circular Connector Receptacle, Female Sockets Solder Cup",
+   "vendor": "Digikey",
+   "cost": "8.86"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "101",
+   "qty": "3",
+   "vendor_pn": "SC1213-ND",
+   "mfg_pn": "Conxall P/N 18282-2SG-311",
+   "description": "3 Position Circular Connector Receptacle, Female Sockets Solder Cup",
+   "vendor": "Digikey",
+   "cost": "10.79"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "102",
+   "qty": "1",
+   "vendor_pn": "8975K215",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum, 1/2\" Thick x 4\" Wide, 1 Foot Long",
+   "vendor": "McMaster-Carr",
+   "cost": "30.32"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "103",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Upper Cable Mounting Bracket, Machining",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Pressure Section",
+   "item": "104",
+   "qty": "8",
+   "vendor_pn": "PE4931",
+   "mfg_pn": "",
+   "description": "SMA Female Bulkhead Mount Connector Solder Attachment for PE-SR401FL, .235\" D Hole",
+   "vendor": "Pasternack",
+   "cost": "119.99"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "105",
+   "qty": "22",
+   "vendor_pn": "PE-SR401FL-BULK",
+   "mfg_pn": "",
+   "description": "250 semi-rigid Coax cable 48\"",
+   "vendor": "Pasternack",
+   "cost": "36.99"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "106",
+   "qty": "14",
+   "vendor_pn": "PE-4907",
+   "mfg_pn": "",
+   "description": "SMA Male Connector Solder Attachment for PE-SR401FL",
+   "vendor": "Pasternack",
+   "cost": "87.99"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "107",
+   "qty": "2",
+   "vendor_pn": "654-TVP00RW2537SA",
+   "mfg_pn": "Amphenol P/N TVP00RW-25-37SA",
+   "description": "37 Position Circular Connector Receptacle, Female Sockets Crimp, Amphenol P/N TVP00RW-25-37SA",
+   "vendor": "Mouser",
+   "cost": "297.25"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "108",
+   "qty": "1",
+   "vendor_pn": "654-TV06RW-25-37PA",
+   "mfg_pn": "TV06RW-25-37PA",
+   "description": "Circular MIL Spec Connector 37P SIZE 25",
+   "vendor": "Mouser",
+   "cost": "483.63"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "109",
+   "qty": "1",
+   "vendor_pn": "654-MS3106E20-29S",
+   "mfg_pn": "Amphenol Indistrial P/N MS3106E20-29S",
+   "description": "Circular MIL Spec Connector 17P #16 SKT CONTACTS",
+   "vendor": "MOUSER",
+   "cost": "31.45"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "110",
+   "qty": "1",
+   "vendor_pn": "339-MS3106A28-21S-ND",
+   "mfg_pn": "Amphenol Industries P/N MS3106A28-21S",
+   "description": "37 Position Circular Connector Plug, Female Sockets Solder Cup",
+   "vendor": "Digikey",
+   "cost": "97.17"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "111",
+   "qty": "3",
+   "vendor_pn": "SC1202-ND",
+   "mfg_pn": "Conxall/Switchcraft P/N 16282-2PG-311",
+   "description": "2 Position Circular Connector Plug, Male Pins Solder",
+   "vendor": "Digikey",
+   "cost": "7.33"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "112",
+   "qty": "3",
+   "vendor_pn": "SC1204-ND",
+   "mfg_pn": "Conxall/Switchcraft P/N 16282-3PG-311",
+   "description": "3 Position Circular Connector Plug, Male Pins Solder Cup",
+   "vendor": "Digikey",
+   "cost": "9.49"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "113",
+   "qty": "13",
+   "vendor_pn": "M27500-18TG3T14",
+   "mfg_pn": "",
+   "description": "18-3 Tefzel Wire",
+   "vendor": "Wiremasters",
+   "cost": "1.54"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "114",
+   "qty": "72",
+   "vendor_pn": "M27500-18TG2T14",
+   "mfg_pn": "",
+   "description": "18-2 Tefzel Wire",
+   "vendor": "Wiremasters",
+   "cost": "1.11"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "115",
+   "qty": "31",
+   "vendor_pn": "M22759/16-14-2",
+   "mfg_pn": "",
+   "description": "14 Gage red wire",
+   "vendor": "Wiremasters",
+   "cost": "0.44"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "116",
+   "qty": "2",
+   "vendor_pn": "M22759/16-14-0",
+   "mfg_pn": "",
+   "description": "14 Gage black wire",
+   "vendor": "Wiremasters",
+   "cost": "0.46"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "117",
+   "qty": "7",
+   "vendor_pn": "M22759/16-14-5",
+   "mfg_pn": "",
+   "description": "14 Gage green wire",
+   "vendor": "Wiremasters",
+   "cost": "0.44"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "118",
+   "qty": "2",
+   "vendor_pn": "M22759/16-18-2",
+   "mfg_pn": "",
+   "description": "18 Gage red wire",
+   "vendor": "Wiremasters",
+   "cost": "0.26"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "119",
+   "qty": "3",
+   "vendor_pn": "M22759/16-18-0",
+   "mfg_pn": "",
+   "description": "18 Gage black wire",
+   "vendor": "Wiremasters",
+   "cost": "0.26"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "120",
+   "qty": "17",
+   "vendor_pn": "M22759/16-18-4",
+   "mfg_pn": "",
+   "description": "18 Gage yellow wire",
+   "vendor": "Wiremasters",
+   "cost": "0.26"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "121",
+   "qty": "56",
+   "vendor_pn": "A101232-ND",
+   "mfg_pn": "",
+   "description": "SLDR SLV WIRE-WIRE 0.235/0.255\"",
+   "vendor": "Digikey",
+   "cost": "4.23"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "122",
+   "qty": "1",
+   "vendor_pn": "A1351-ND",
+   "mfg_pn": "206153-1",
+   "description": "CONN RCPT HSNG MALE 4POS INLINE",
+   "vendor": "Digikey",
+   "cost": "6.23"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "123",
+   "qty": "4",
+   "vendor_pn": "A1340-ND",
+   "mfg_pn": "",
+   "description": "Pin Contact Gold or PdNi +Gold Crimp 16-18 AWG Stamped, TE Connectivity P/N 66099-4",
+   "vendor": "Digikey",
+   "cost": "1.42"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "124",
+   "qty": "2",
+   "vendor_pn": "654-TVP00RW-15-19P",
+   "mfg_pn": "",
+   "description": "Circular MIL Spec Connector TV 19C 19#20 PIN WALL RECP, Amphenol Aerospace P/N \nTVP00RW-15-19P",
+   "vendor": "MOUSER",
+   "cost": "150.5"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "125",
+   "qty": "1",
+   "vendor_pn": "654-TV06RW1519S",
+   "mfg_pn": "",
+   "description": "Standard Circular Connector 19P Straight Plug Sz 15 w/ Skt Cont, Amphenol Aerospace P/N TV06RW1519S",
+   "vendor": "MOUSER",
+   "cost": "96.93"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "126",
+   "qty": "1",
+   "vendor_pn": "654-MS3106A28-21SW",
+   "mfg_pn": "",
+   "description": "Circular MIL Spec Connector 37P SIZE 28 STRAIGHT PLUG SOCKET 5015",
+   "vendor": "MOUSER",
+   "cost": "82.2"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "127",
+   "qty": "3",
+   "vendor_pn": "SC1204-ND",
+   "mfg_pn": "",
+   "description": "3 Position Circular Connector Plug, Male Pins Solder Cup",
+   "vendor": "Digikey",
+   "cost": "9.49"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "128",
+   "qty": "70",
+   "vendor_pn": "M27500-22TG2T14",
+   "mfg_pn": "",
+   "description": "22-2 Tefzel Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.77"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "129",
+   "qty": "8",
+   "vendor_pn": "M22759/16-18-6",
+   "mfg_pn": "",
+   "description": "18 Gage Blue Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.3"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "130",
+   "qty": "35",
+   "vendor_pn": "A101231-ND",
+   "mfg_pn": "",
+   "description": "Wire to Wire Solder Sleeve Transparent - Blue 0.170\" (4.32mm), 0.200\" (5.08mm)",
+   "vendor": "Digikey",
+   "cost": "1.87"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "131",
+   "qty": "1",
+   "vendor_pn": "7856K262",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 0.09\" ID Before Shrinking, 4 ' length, Red",
+   "vendor": "McMaster-Carr",
+   "cost": "3.56"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "132",
+   "qty": "1",
+   "vendor_pn": "7496K42",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 1 Foot Long, 0.19\" ID Before Shrinking, Red",
+   "vendor": "McMaster-Carr",
+   "cost": "11.42"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "133",
+   "qty": "1",
+   "vendor_pn": "7856K63",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 1 Foot Long, 0.13\" ID Before Shrinking, Red",
+   "vendor": "McMaster-Carr",
+   "cost": "10.22"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "134",
+   "qty": "3",
+   "vendor_pn": "93085A823",
+   "mfg_pn": "",
+   "description": "Mil. Spec. Stainless Steel Phillips Flat Head Screws, 100 Degree Countersink Angle, 10-32 Thread, 5/16\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "8.72"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "135",
+   "qty": "11",
+   "vendor_pn": "93085A557",
+   "mfg_pn": "",
+   "description": "Mil. Spec. Stainless Steel Phillips Flat Head Screws, 100 Degree Countersink Angle, 1/4\"-28 Thread, 1/2\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "9.46"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "136",
+   "qty": "1",
+   "vendor_pn": "91400A114",
+   "mfg_pn": "",
+   "description": "Mil. Spec. Phillips Rounded Head Screws, 18-8 Stainless Steel, 4-40 Thread Size, 5/8\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "9.71"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "137",
+   "qty": "1",
+   "vendor_pn": "90715A005",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Nylon-Insert Locknut, Super-Corrosion-Resistant, 4-40 Thread Size",
+   "vendor": "McMaster-Carr",
+   "cost": "8.38"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "138",
+   "qty": "1",
+   "vendor_pn": "91735A150",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Pan Head Phillips Screw, Super-Corrosion-Resistant, 6-32 Thread Size, 5/8\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "7.04"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "139",
+   "qty": "1",
+   "vendor_pn": "90715A007",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Nylon-Insert Locknut, Super-Corrosion-Resistant, 6-32 Thread Size",
+   "vendor": "McMaster-Carr",
+   "cost": "7.69"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "140",
+   "qty": "1",
+   "vendor_pn": "91735A831",
+   "mfg_pn": "",
+   "description": "316 Stainless Steel Pan Head Phillips Screw, Super-Corrosion-Resistant, 10-32 Thread Size, 3/4\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "8.94"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "141",
+   "qty": "1",
+   "vendor_pn": "90257A411",
+   "mfg_pn": "",
+   "description": "Super-Corrosion-Resistant 316 Stainless Steel Hex Nut, 10-32 Thread Size",
+   "vendor": "McMaster-Carr",
+   "cost": "7.95"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "142",
+   "qty": "2",
+   "vendor_pn": "SC1211-ND",
+   "mfg_pn": "18282-2SG-311",
+   "description": "2 Position Circular Connector Receptacle, Female Sockets Solder Cup",
+   "vendor": "Digikey",
+   "cost": "8.86"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "143",
+   "qty": "3",
+   "vendor_pn": "SC1213-ND",
+   "mfg_pn": "18282-3SG-311",
+   "description": "3 Position Circular Connector Receptacle, Female Sockets Solder Cup",
+   "vendor": "Digikey",
+   "cost": "10.79"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "144",
+   "qty": "8",
+   "vendor_pn": "PE4931",
+   "mfg_pn": "",
+   "description": "SMA Female Bulkhead Mount Connector Solder Attachment for PE-SR401FL, .235\" D Hole",
+   "vendor": "Pasternack",
+   "cost": "119.99"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "145",
+   "qty": "21",
+   "vendor_pn": "PE-SR401FL",
+   "mfg_pn": "",
+   "description": "250 semi-rigid Coax cable 48\"",
+   "vendor": "Pasternack",
+   "cost": "36.39"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "146",
+   "qty": "6",
+   "vendor_pn": "PE-4907",
+   "mfg_pn": "",
+   "description": "SMA Male Connector Solder Attachment for PE-SR401FL",
+   "vendor": "Pasternack",
+   "cost": "87.99"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "147",
+   "qty": "2",
+   "vendor_pn": "3937-TVP00RW-25-37SA-ND",
+   "mfg_pn": "",
+   "description": "37 Position Circular Connector Receptacle, Female Sockets Crimp",
+   "vendor": "Digikey",
+   "cost": "386.69"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "148",
+   "qty": "1",
+   "vendor_pn": "3937-TVP00RW-25-37SA-ND",
+   "mfg_pn": "",
+   "description": "Circular MIL Spec Connector 37P SIZE 25, \t\n37 Position Circular Connector Receptacle, Female Sockets Crimp, Amphenol P/N \t\nTVP00RW-25-37SA",
+   "vendor": "Digikey",
+   "cost": "386.69"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "149",
+   "qty": "1",
+   "vendor_pn": "654-MS3106E20-29S",
+   "mfg_pn": "",
+   "description": "17 Position Circular Connector Plug, Female Sockets Solder Cup",
+   "vendor": "Mouser",
+   "cost": "31.45"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "150",
+   "qty": "1",
+   "vendor_pn": "AMS3106A28-21S-ND",
+   "mfg_pn": "",
+   "description": "37 Position Circular Connector Plug, Female Sockets Solder Cup",
+   "vendor": "Digikey",
+   "cost": "97.17"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "151",
+   "qty": "3",
+   "vendor_pn": "SC1202-ND",
+   "mfg_pn": "16282-2PG-311",
+   "description": "CONN PLUG MALE 2P GOLD SLDR CUP, Conxall P/N 16282-2PG-311",
+   "vendor": "Digikey",
+   "cost": "7.33"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "0",
+   "qty": "3",
+   "vendor_pn": "SC1204-ND",
+   "mfg_pn": "16282-3PG-311",
+   "description": "3 Position Circular Connector Plug, Male Pins Solder Cup, Conxall P/N 16282-3PG-311",
+   "vendor": "Digikey",
+   "cost": "9.49"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "153",
+   "qty": "13",
+   "vendor_pn": "M27500-18TG3T14",
+   "mfg_pn": "",
+   "description": "18-3 Tefzel Wire",
+   "vendor": "Wiremasters",
+   "cost": "1.52"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "154",
+   "qty": "72",
+   "vendor_pn": "M27500-18TG2T14",
+   "mfg_pn": "",
+   "description": "18-2 Tefzel Wire",
+   "vendor": "Wiremasters",
+   "cost": "1.24"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "155",
+   "qty": "31",
+   "vendor_pn": "M22759/16-14-2",
+   "mfg_pn": "",
+   "description": "14 Gage red wire",
+   "vendor": "Wiremasters",
+   "cost": "0.44"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "156",
+   "qty": "2",
+   "vendor_pn": "M22759/16-14-0",
+   "mfg_pn": "",
+   "description": "14 Gage black wire",
+   "vendor": "Wiremasters",
+   "cost": "0.45"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "157",
+   "qty": "7",
+   "vendor_pn": "M22759/16-14-5",
+   "mfg_pn": "",
+   "description": "14 Gage green wire",
+   "vendor": "Wiremasters",
+   "cost": "0.45"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "158",
+   "qty": "2",
+   "vendor_pn": "M22759/16-18-2",
+   "mfg_pn": "",
+   "description": "18 Gage red wire",
+   "vendor": "Wiremasters",
+   "cost": "0.27"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "159",
+   "qty": "3",
+   "vendor_pn": "M22759/16-18-0",
+   "mfg_pn": "",
+   "description": "18 Gage black wire",
+   "vendor": "Wiremasters",
+   "cost": "0.28"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "160",
+   "qty": "17",
+   "vendor_pn": "M22759/16-18-4",
+   "mfg_pn": "",
+   "description": "18 Gage yellow wire",
+   "vendor": "Wiremasters",
+   "cost": "0.27"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "161",
+   "qty": "56",
+   "vendor_pn": "A101232-ND",
+   "mfg_pn": "TE Connectivity P/N S02-04-R",
+   "description": "SLDR SLV WIRE-WIRE 0.235/0.255\"",
+   "vendor": "Digikey",
+   "cost": "4.23"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "162",
+   "qty": "1",
+   "vendor_pn": "A1351-ND",
+   "mfg_pn": "TE Connectivity P/N 206153-1",
+   "description": "4 Position Circular Connector Receptacle Housing",
+   "vendor": "Digikey",
+   "cost": "6.22"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "163",
+   "qty": "4",
+   "vendor_pn": "A1340-ND",
+   "mfg_pn": "TE Connectivity P/N 66099-4",
+   "description": "Pin Contact Crimp 16-18 AWG Stamped",
+   "vendor": "Digikey",
+   "cost": "1.42"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "164",
+   "qty": "2",
+   "vendor_pn": "AATVP00RW-15-19P-ND",
+   "mfg_pn": "Amphenol P/N TVP00RW-15-19P",
+   "description": "19 Position Circular Connector Receptacle, Male Pins Crimp",
+   "vendor": "Digikey",
+   "cost": "160.95"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "165",
+   "qty": "1",
+   "vendor_pn": "AATV06RW-15-19S-ND",
+   "mfg_pn": "Amphenol P/N \t\nTV06RW-15-19S",
+   "description": "19 Position Circular Connector Plug, Female Sockets Crimp",
+   "vendor": "Digikey",
+   "cost": "123.92"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "166",
+   "qty": "1",
+   "vendor_pn": "MS3106A28-21SW",
+   "mfg_pn": "Amphenol P/N \t\nMS3106A28-21SW",
+   "description": "37 Position Circular Connector Plug, Female Sockets Solder Cup",
+   "vendor": "Mouser",
+   "cost": "40.98"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "167",
+   "qty": "3",
+   "vendor_pn": "SC1204-ND",
+   "mfg_pn": "Conxall p/n 16282-3PG-311",
+   "description": "3 Position Circular Connector Plug, Male Pins Solder Cup",
+   "vendor": "Digikey",
+   "cost": "9.49"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "168",
+   "qty": "70",
+   "vendor_pn": "M27500-22TG2T14",
+   "mfg_pn": "",
+   "description": "22-2 Tefzel Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.77"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "169",
+   "qty": "8",
+   "vendor_pn": "M22759/16-18-6",
+   "mfg_pn": "",
+   "description": "18 Gage Blue Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.3"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "170",
+   "qty": "35",
+   "vendor_pn": "A101231-ND",
+   "mfg_pn": "TE Connectivity P/N S02-03-R",
+   "description": "Wire to Wire Solder Sleeve Transparent - Blue 0.170\" (4.32mm), 0.200\" (5.08mm)",
+   "vendor": "Digikey",
+   "cost": "1.87"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "171",
+   "qty": "1",
+   "vendor_pn": "7856K262",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 0.09\" ID Before Shrinking, 4 ' length",
+   "vendor": "McMaster-Carr",
+   "cost": "3.56"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "172",
+   "qty": "1",
+   "vendor_pn": "7496K42",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 1 Foot Long, 0.19\" ID Before Shrinking, Red",
+   "vendor": "McMaster-Carr",
+   "cost": "11.42"
+  },
+  {
+   "section": "Pressure Section",
+   "item": "173",
+   "qty": "1",
+   "vendor_pn": "7856K63",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 1 Foot Long, 0.13\" ID Before Shrinking, Red",
+   "vendor": "McMaster-Carr",
+   "cost": "10.22"
+  },
+  {
+   "section": "Tanks",
+   "item": "4",
+   "qty": "1",
+   "vendor_pn": "9056K4",
+   "mfg_pn": "",
+   "description": "Thrust Tubes, Multipurpose 6061 Aluminum Round Tube, 1/8\" Wall Thickness, 2\" OD, 12' long",
+   "vendor": "McMaster-Carr",
+   "cost": "155.43"
+  },
+  {
+   "section": "Tanks",
+   "item": "5",
+   "qty": "4",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Thrust Tubes, Machining",
+   "vendor": "Exos",
+   "cost": ""
+  },
+  {
+   "section": "Tanks",
+   "item": "6",
+   "qty": "1",
+   "vendor_pn": "8975K628",
+   "mfg_pn": "",
+   "description": "Load Cross, Multipurpose 6061 Aluminum with Certification, 1\" Thick x 12\" Wide",
+   "vendor": "McMaster-Carr",
+   "cost": "83.79"
+  },
+  {
+   "section": "Tanks",
+   "item": "7",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Load Cross, Machining",
+   "vendor": "Exos",
+   "cost": ""
+  },
+  {
+   "section": "Tanks",
+   "item": "8",
+   "qty": "3.5",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Load Cross and thrust Tubes, Welding",
+   "vendor": "Exos",
+   "cost": ""
+  },
+  {
+   "section": "Tanks",
+   "item": "9",
+   "qty": "1",
+   "vendor_pn": "8974K71",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum Rod with Certification, 2\" Diameter 1' long",
+   "vendor": "McMaster-Carr",
+   "cost": "34.94"
+  },
+  {
+   "section": "Tanks",
+   "item": "10",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Fuel Drop From Tank, Machining",
+   "vendor": "Exos",
+   "cost": ""
+  },
+  {
+   "section": "Tanks",
+   "item": "11",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Fuel System Welding",
+   "vendor": "Exos",
+   "cost": ""
+  },
+  {
+   "section": "Tanks",
+   "item": "12",
+   "qty": "1",
+   "vendor_pn": "101-0034",
+   "mfg_pn": "",
+   "description": "AN-10 male weld Bung Aluminum",
+   "vendor": "Summit Racing",
+   "cost": "4.99"
+  },
+  {
+   "section": "Tanks",
+   "item": "13",
+   "qty": "2",
+   "vendor_pn": "8975K71",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum Bar, 1/4\" Thick x 2\" Wide, 1'  Long",
+   "vendor": "McMaster-Carr",
+   "cost": "6.82"
+  },
+  {
+   "section": "Tanks",
+   "item": "14",
+   "qty": "1",
+   "vendor_pn": "9008K14",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum Bar, 1\" x 1\", 6 Feet Long",
+   "vendor": "McMaster-Carr",
+   "cost": "54.79"
+  },
+  {
+   "section": "Tanks",
+   "item": "15",
+   "qty": "1",
+   "vendor_pn": "8975K578",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum Bar, 1/8\" Thick x 1\" Wide, 6 Feet Long",
+   "vendor": "McMaster-Carr",
+   "cost": "10.83"
+  },
+  {
+   "section": "Tanks",
+   "item": "16",
+   "qty": "5",
+   "vendor_pn": "89965K641",
+   "mfg_pn": "Lengths",
+   "description": "General Purpose Aluminum Tubing, 3/4\" OD, 0.065\" Wall",
+   "vendor": "McMaster-Carr",
+   "cost": "27.95"
+  },
+  {
+   "section": "Tanks",
+   "item": "17",
+   "qty": "1",
+   "vendor_pn": "755TA600D",
+   "mfg_pn": "",
+   "description": "1/2\" Tee Buttweld S/40s Seamless Aluminum 6061-T6 B361",
+   "vendor": "PIPINGNOW",
+   "cost": "293.63"
+  },
+  {
+   "section": "Tanks",
+   "item": "18",
+   "qty": "4",
+   "vendor_pn": "43485K119",
+   "mfg_pn": "",
+   "description": "Standard-Wall Butt-Weld Aluminum Unthreaded Pipe Fitting, 90 Degree Elbow Connector, 1/2 Pipe Size",
+   "vendor": "McMaster-Carr",
+   "cost": "121.05"
+  },
+  {
+   "section": "Tanks",
+   "item": "19",
+   "qty": "4",
+   "vendor_pn": "101-0034",
+   "mfg_pn": "",
+   "description": "Bung, Weld-In, Aluminum, Male Threads, Universal, Flanged, -10 AN, Each",
+   "vendor": "Summit Racing",
+   "cost": "4.99"
+  },
+  {
+   "section": "Tanks",
+   "item": "20",
+   "qty": "1",
+   "vendor_pn": "FRA-482510",
+   "mfg_pn": "",
+   "description": "Fitting, Adapter, Tee, -10 AN Male, Aluminum, Blue Anodized",
+   "vendor": "Summit Racing",
+   "cost": "12.99"
+  },
+  {
+   "section": "Tanks",
+   "item": "21",
+   "qty": "2",
+   "vendor_pn": "43485K124",
+   "mfg_pn": "",
+   "description": "Standard-Wall Butt-Weld Aluminum Unthreaded Pipe Fitting, 90 Degree Elbow Connector, 1-1/2 Pipe Size",
+   "vendor": "McMaster-Carr",
+   "cost": "105.26"
+  },
+  {
+   "section": "Tanks",
+   "item": "22",
+   "qty": "1",
+   "vendor_pn": "5038K138",
+   "mfg_pn": "",
+   "description": "Standard-Wall Aluminum Pipe, Threaded on Both Ends, 1-1/2 NPT, 120\" Long",
+   "vendor": "McMaster-Carr",
+   "cost": "400.46"
+  },
+  {
+   "section": "Tanks",
+   "item": "23",
+   "qty": "1",
+   "vendor_pn": "8975K237",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum Bar, 1\" Thick x 2\" Wide, 1 Foot Long",
+   "vendor": "McMaster-Carr",
+   "cost": "27.73"
+  },
+  {
+   "section": "Tanks",
+   "item": "24",
+   "qty": "1",
+   "vendor_pn": "5177K73",
+   "mfg_pn": "",
+   "description": "Easy-Bend Aluminum Tubing, 5/8\" OD, 0.035\" Wall Thickness",
+   "vendor": "McMaster-Carr",
+   "cost": "42.06"
+  },
+  {
+   "section": "Tanks",
+   "item": "25",
+   "qty": "2",
+   "vendor_pn": "2227K66",
+   "mfg_pn": "",
+   "description": "Nut for\u00a05/8\"\u00a0Tube OD for 37 Degree Flared Fitting for Aluminum Tubing",
+   "vendor": "McMaster-Carr",
+   "cost": "4.57"
+  },
+  {
+   "section": "Tanks",
+   "item": "26",
+   "qty": "2",
+   "vendor_pn": "2227K76",
+   "mfg_pn": "",
+   "description": "Sleeve for 5/8\" Tube OD for 37 Degree Flared Fitting for Aluminum Tubing",
+   "vendor": "McMaster-Carr",
+   "cost": "3.83"
+  },
+  {
+   "section": "Tanks",
+   "item": "27",
+   "qty": "1",
+   "vendor_pn": "EAR-921110ERL",
+   "mfg_pn": "",
+   "description": "Fitting, Coupler, 90 Degree, Female -10 AN to Male -10 AN, Aluminum, Blue",
+   "vendor": "Summit Racing",
+   "cost": "53.25"
+  },
+  {
+   "section": "Tanks",
+   "item": "28",
+   "qty": "1",
+   "vendor_pn": "AER-FBM3150",
+   "mfg_pn": "",
+   "description": "Fitting, Coupler, 45 Degree, -10 AN Female to -10 AN Male, Aluminum, Red",
+   "vendor": "Summit Racing",
+   "cost": "52.99"
+  },
+  {
+   "section": "Tanks",
+   "item": "29",
+   "qty": "1",
+   "vendor_pn": "4468K814",
+   "mfg_pn": "",
+   "description": "High-Pressure Braided Chemical Hose with Fittings, Brass 7/8\"-14 Thread Size Flare UNF Female, 5/8\" OD",
+   "vendor": "McMaster-Carr",
+   "cost": "49.52"
+  },
+  {
+   "section": "Tanks",
+   "item": "30",
+   "qty": "1",
+   "vendor_pn": "4468K814",
+   "mfg_pn": "",
+   "description": "High-Pressure Braided Chemical Hose with Fittings, Brass 7/8\"-14 Thread Size Flare UNF Female, 5/8\" OD",
+   "vendor": "McMaster-Carr",
+   "cost": "53.15"
+  },
+  {
+   "section": "Tanks",
+   "item": "31",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Launch Lugs. From Scrap, Certificated material from load cross drop 1\" thick",
+   "vendor": "Exos",
+   "cost": "0"
+  },
+  {
+   "section": "Tanks",
+   "item": "32",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Upper and Lower Launch Lugs Machining",
+   "vendor": "Exos",
+   "cost": ""
+  },
+  {
+   "section": "Tanks",
+   "item": "33",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Upper and Lower Launch Lugs  welding",
+   "vendor": "Exos",
+   "cost": ""
+  },
+  {
+   "section": "Tanks",
+   "item": "34",
+   "qty": "1",
+   "vendor_pn": "8975K237",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum with Certification, 1\" Thick x 2\" Wide, 2 Feet Long",
+   "vendor": "McMaster-Carr",
+   "cost": "51.67"
+  },
+  {
+   "section": "Tanks",
+   "item": "35",
+   "qty": "1",
+   "vendor_pn": "9875K242",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum Bar, 1\" Thick x 4\" Wide, 2'",
+   "vendor": "McMaster-Carr",
+   "cost": "93.07"
+  },
+  {
+   "section": "Tanks",
+   "item": "36",
+   "qty": "3",
+   "vendor_pn": "PE4931",
+   "mfg_pn": "",
+   "description": "SMA Female Bulkhead Mount Conn. Solder Attachment for PE-SR401FL, .235 inch D Hole",
+   "vendor": "Pasternack",
+   "cost": "119.99"
+  },
+  {
+   "section": "Tanks",
+   "item": "37",
+   "qty": "60",
+   "vendor_pn": "PE-SR401FL-BULK",
+   "mfg_pn": "",
+   "description": "250 semi-rigid Coax cable 3 pieces at approx. 235\" ea.",
+   "vendor": "Pasternack",
+   "cost": "36.39"
+  },
+  {
+   "section": "Tanks",
+   "item": "38",
+   "qty": "3",
+   "vendor_pn": "PE4907",
+   "mfg_pn": "",
+   "description": "SMA Male Connector Solder Attachment for PE-SR401AL, PE-SR401FL, RG401",
+   "vendor": "Pasternack",
+   "cost": "87.99"
+  },
+  {
+   "section": "Tanks",
+   "item": "39",
+   "qty": "1",
+   "vendor_pn": "TV06RW-25-37PA",
+   "mfg_pn": "",
+   "description": "Circular MIL Spec Connector 37P SIZE 25",
+   "vendor": "PEI Genisis",
+   "cost": "215.47"
+  },
+  {
+   "section": "Tanks",
+   "item": "40",
+   "qty": "1",
+   "vendor_pn": "A1300-ND",
+   "mfg_pn": "TE Connectivity P/N 206060-1",
+   "description": "4 Position Circular Connector Plug Housing Free Hanging (In-Line) Coupling Nut, TE Connectivity P/N 206060-1",
+   "vendor": "Digikey",
+   "cost": "6.54"
+  },
+  {
+   "section": "Tanks",
+   "item": "41",
+   "qty": "4",
+   "vendor_pn": "A16080-ND",
+   "mfg_pn": "TE Connectivity P/N 66101-4",
+   "description": "Socket Contact Gold or PdNi +Gold Crimp 16-18 AWG Stamped",
+   "vendor": "Digikey",
+   "cost": "1.48"
+  },
+  {
+   "section": "Tanks",
+   "item": "42",
+   "qty": "40",
+   "vendor_pn": "M27500-18TG3T14",
+   "mfg_pn": "",
+   "description": "18-3 Tefzel Wire",
+   "vendor": "Wiremasters",
+   "cost": "1.52"
+  },
+  {
+   "section": "Tanks",
+   "item": "43",
+   "qty": "200",
+   "vendor_pn": "M27500-18TG2T14",
+   "mfg_pn": "",
+   "description": "18-2 Tefzel Wire",
+   "vendor": "Wiremasters",
+   "cost": "1.24"
+  },
+  {
+   "section": "Tanks",
+   "item": "44",
+   "qty": "100",
+   "vendor_pn": "M22759/16-14-2",
+   "mfg_pn": "",
+   "description": "14 Gage red wire",
+   "vendor": "Wiremasters",
+   "cost": "0.44"
+  },
+  {
+   "section": "Tanks",
+   "item": "45",
+   "qty": "20",
+   "vendor_pn": "M22759/16-18-5",
+   "mfg_pn": "",
+   "description": "18 Gage Green Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.3"
+  },
+  {
+   "section": "Tanks",
+   "item": "46",
+   "qty": "1",
+   "vendor_pn": "TVP00RW-25-37SA-ND",
+   "mfg_pn": "Amphenol P/N TVP00RW-25-37SA",
+   "description": "37 Position Circular Connector Receptacle, Female Sockets Crimp",
+   "vendor": "Digikey",
+   "cost": "386.69"
+  },
+  {
+   "section": "Tanks",
+   "item": "47",
+   "qty": "1",
+   "vendor_pn": "AATV06RW-15-19S-ND",
+   "mfg_pn": "Amphenol P/N TV06RW-15-19S",
+   "description": "19 Position Circular Connector Plug, Female Sockets Crimp",
+   "vendor": "Digikey",
+   "cost": "123.92"
+  },
+  {
+   "section": "Tanks",
+   "item": "48",
+   "qty": "160",
+   "vendor_pn": "M27500-22TG2T14",
+   "mfg_pn": "",
+   "description": "22-2 Tefzel Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.77"
+  },
+  {
+   "section": "Tanks",
+   "item": "49",
+   "qty": "20",
+   "vendor_pn": "M22759/16-18-6",
+   "mfg_pn": "",
+   "description": "18 Gage Blue Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.3"
+  },
+  {
+   "section": "Tanks",
+   "item": "50",
+   "qty": "5",
+   "vendor_pn": "571-2061531",
+   "mfg_pn": "TE Connectivity P/N 206153-1",
+   "description": "CONN RCPT HSNG MALE 4POS INLINE",
+   "vendor": "Mouser`",
+   "cost": "6.22"
+  },
+  {
+   "section": "Tanks",
+   "item": "51",
+   "qty": "20",
+   "vendor_pn": "A1340-ND",
+   "mfg_pn": "TE Connectivity P/N \t\n66099-4",
+   "description": "CONN PIN 16-18AWG GOLD CRIMP",
+   "vendor": "Digikey",
+   "cost": "1.42"
+  },
+  {
+   "section": "Tanks",
+   "item": "52",
+   "qty": "5",
+   "vendor_pn": "A16046-ND",
+   "mfg_pn": "TE Connectivity P/N 54010-1",
+   "description": "Connector Sealing Boot 11 Black TE",
+   "vendor": "Digikey",
+   "cost": "21.29"
+  },
+  {
+   "section": "Tanks",
+   "item": "53",
+   "qty": "1",
+   "vendor_pn": "SC1213-ND",
+   "mfg_pn": "Conxall/Switchcraft P/N 18282-3SG-311",
+   "description": "3 Position Circular Connector Receptacle, Female Sockets Solder Cup",
+   "vendor": "Digikey",
+   "cost": "10.79"
+  },
+  {
+   "section": "Tanks",
+   "item": "54",
+   "qty": "9",
+   "vendor_pn": "SC1204-ND",
+   "mfg_pn": "Conxall P/N 16282-3PG-311",
+   "description": "CONN PLUG MALE 3POS SOLDER CUP",
+   "vendor": "Digikey",
+   "cost": "9.49"
+  },
+  {
+   "section": "Tanks",
+   "item": "55",
+   "qty": "2",
+   "vendor_pn": "SC1202-ND",
+   "mfg_pn": "Conxall P/N 16282-2PG-311",
+   "description": "CONN PLUG MALE 2P GOLD SLDR CUP, Conxall/Switchcraft P/N 16282-311",
+   "vendor": "Digikey",
+   "cost": "7.33"
+  },
+  {
+   "section": "Tanks",
+   "item": "56",
+   "qty": "25",
+   "vendor_pn": "A101189-ND",
+   "mfg_pn": "TE Connectivity P/N S200-2-W1-22-9",
+   "description": "SLDR SLV WIRE-WIRE 0.105/0.145\", TE Connectivty P/N S200-2-W1-22-9",
+   "vendor": "Digikey",
+   "cost": "9.19"
+  },
+  {
+   "section": "Tanks",
+   "item": "57",
+   "qty": "20",
+   "vendor_pn": "SO63-3-55-22-90-ND",
+   "mfg_pn": "TE Connectivity P/N SO63-3-55-22-90",
+   "description": "SLDR SLEEVE WIRE-WIRE 0.17\"/0.2\", TE Connectivity P/N S063-3-55-22-90",
+   "vendor": "Digikey",
+   "cost": "2.88"
+  },
+  {
+   "section": "Tanks",
+   "item": "58",
+   "qty": "2",
+   "vendor_pn": "11-01366",
+   "mfg_pn": "",
+   "description": "RAY ALLEN RBS - BEZEL GEAR SWITCH",
+   "vendor": "Aircraft Spruce",
+   "cost": "129.85"
+  },
+  {
+   "section": "Tanks",
+   "item": "59",
+   "qty": "1",
+   "vendor_pn": "7856K262",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 0.09\" ID Before Shrinking, 4 ' length",
+   "vendor": "McMaster-Carr",
+   "cost": "3.56"
+  },
+  {
+   "section": "Tanks",
+   "item": "60",
+   "qty": "1",
+   "vendor_pn": "7496K42",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 1 Foot Long, 0.19\" ID Before Shrinking, Red",
+   "vendor": "McMaster-Carr",
+   "cost": "11.42"
+  },
+  {
+   "section": "Tanks",
+   "item": "61",
+   "qty": "1",
+   "vendor_pn": "7856K63",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 1 Foot Long, 0.13\" ID Before Shrinking, Red",
+   "vendor": "McMaster-Carr",
+   "cost": "10.22"
+  },
+  {
+   "section": "Tanks",
+   "item": "62",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Press and conduit Aero cover",
+   "vendor": "SCORPIUS",
+   "cost": "3000"
+  },
+  {
+   "section": "Tanks",
+   "item": "63",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Propellant Line cover",
+   "vendor": "SCORPIUS",
+   "cost": "2000"
+  },
+  {
+   "section": "Tanks",
+   "item": "64",
+   "qty": "16",
+   "vendor_pn": "AN525-10R6",
+   "mfg_pn": "",
+   "description": "SCREW, WASHER HEAD AN525-10R6",
+   "vendor": "Aircraft Spruce",
+   "cost": "0.19"
+  },
+  {
+   "section": "Tanks",
+   "item": "65",
+   "qty": "28",
+   "vendor_pn": "AN525-10R7",
+   "mfg_pn": "",
+   "description": "SCREW, WASHER HEAD AN525-10R7",
+   "vendor": "Aircraft Spruce",
+   "cost": "0.19"
+  },
+  {
+   "section": "Tanks",
+   "item": "66",
+   "qty": "3",
+   "vendor_pn": "PE4931",
+   "mfg_pn": "",
+   "description": "SMA Female Bulkhead Mount Conn. Solder Attachment for PE-SR401FL, .235 inch D Hole",
+   "vendor": "Pasternack",
+   "cost": "119.91"
+  },
+  {
+   "section": "Tanks",
+   "item": "67",
+   "qty": "60",
+   "vendor_pn": "PE-SR401FL-BULK",
+   "mfg_pn": "",
+   "description": "250 semi-rigid Coax cable 3 pieces at approx. 235\" ea.",
+   "vendor": "Pasternack",
+   "cost": "36.39"
+  },
+  {
+   "section": "Tanks",
+   "item": "68",
+   "qty": "3",
+   "vendor_pn": "PE4932",
+   "mfg_pn": "",
+   "description": "SMA Male Right AngleConn. Solder Attachment for PE-SR401FL",
+   "vendor": "Pasternack",
+   "cost": "125.99"
+  },
+  {
+   "section": "Tanks",
+   "item": "69",
+   "qty": "1",
+   "vendor_pn": "654-TV06RW-25-37PA",
+   "mfg_pn": "",
+   "description": "Circular MIL Spec Connector 37P SIZE 25",
+   "vendor": "Mouser",
+   "cost": "483.63"
+  },
+  {
+   "section": "Tanks",
+   "item": "70",
+   "qty": "1",
+   "vendor_pn": "A1300-ND",
+   "mfg_pn": "TE Connectivity P/N 206060-1",
+   "description": "4 Position Circular Connector Plug Housing Free Hanging (In-Line) Coupling Nut",
+   "vendor": "Digikey",
+   "cost": "6.54"
+  },
+  {
+   "section": "Tanks",
+   "item": "",
+   "qty": "4",
+   "vendor_pn": "A25107-ND",
+   "mfg_pn": "66103-3",
+   "description": "",
+   "vendor": "",
+   "cost": "1.27"
+  },
+  {
+   "section": "Tanks",
+   "item": "71",
+   "qty": "40",
+   "vendor_pn": "M27500-18TG3T14",
+   "mfg_pn": "",
+   "description": "18-3 Tefzel Wire",
+   "vendor": "Wiremasters",
+   "cost": "1.52"
+  },
+  {
+   "section": "Tanks",
+   "item": "72",
+   "qty": "200",
+   "vendor_pn": "M27500-18TG2T14",
+   "mfg_pn": "",
+   "description": "18-2 Tefzel Wire",
+   "vendor": "Wiremasters",
+   "cost": "1.4"
+  },
+  {
+   "section": "Tanks",
+   "item": "73",
+   "qty": "100",
+   "vendor_pn": "M22759/16-14-2",
+   "mfg_pn": "",
+   "description": "14 Gage red wire",
+   "vendor": "Wiremasters",
+   "cost": "0.44"
+  },
+  {
+   "section": "Tanks",
+   "item": "74",
+   "qty": "20",
+   "vendor_pn": "M22759/16-18-5",
+   "mfg_pn": "",
+   "description": "18 Gage Green Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.3"
+  },
+  {
+   "section": "Tanks",
+   "item": "75",
+   "qty": "1",
+   "vendor_pn": "3937-TVP00RW-25-37SA-ND",
+   "mfg_pn": "Amphenol P/N  TVP00RW-25-37SA",
+   "description": "37 Position Circular Connector Receptacle, Female Sockets Crimp",
+   "vendor": "Digikey",
+   "cost": "386.69"
+  },
+  {
+   "section": "Tanks",
+   "item": "76",
+   "qty": "1",
+   "vendor_pn": "AATV06RW-15-19S-ND",
+   "mfg_pn": "Amphenol P/N \t\nTV06RW-15-19S",
+   "description": "19 Position Circular Connector Plug, Female Sockets Crimp",
+   "vendor": "PEI-Genesis",
+   "cost": "123.92"
+  },
+  {
+   "section": "Tanks",
+   "item": "77",
+   "qty": "160",
+   "vendor_pn": "M27500-22TG2T14",
+   "mfg_pn": "",
+   "description": "22-2 Tefzel Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.77"
+  },
+  {
+   "section": "Tanks",
+   "item": "78",
+   "qty": "20",
+   "vendor_pn": "M22759/16-18-6",
+   "mfg_pn": "",
+   "description": "18 Gage Blue Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.3"
+  },
+  {
+   "section": "Tanks",
+   "item": "79",
+   "qty": "5",
+   "vendor_pn": "A1351-ND",
+   "mfg_pn": "TE Connectivity 206153-1",
+   "description": "4 Position Circular Connector Receptacle Housing",
+   "vendor": "Digikey",
+   "cost": "6.22"
+  },
+  {
+   "section": "Tanks",
+   "item": "80",
+   "qty": "14",
+   "vendor_pn": "A1340-ND",
+   "mfg_pn": "TE Connectivity P/N 66099-4",
+   "description": "Pin Contact Crimp 16-18 AWG Stamped",
+   "vendor": "Digikey",
+   "cost": "1.42"
+  },
+  {
+   "section": "Tanks",
+   "item": "81",
+   "qty": "5",
+   "vendor_pn": "A16046-ND",
+   "mfg_pn": "TE Connectivity P/N 54010-1",
+   "description": "Connector Sealing Boot 11 Black",
+   "vendor": "Digikey",
+   "cost": "21.29"
+  },
+  {
+   "section": "Tanks",
+   "item": "82",
+   "qty": "1",
+   "vendor_pn": "SC1213-ND",
+   "mfg_pn": "CONXall P/N 18282-3SG-311",
+   "description": "3 Position Circular Connector Receptacle, Female Sockets Solder Cup",
+   "vendor": "Digikey",
+   "cost": "10.79"
+  },
+  {
+   "section": "Tanks",
+   "item": "83",
+   "qty": "9",
+   "vendor_pn": "SC1204-ND",
+   "mfg_pn": "Conxall P/N 16282-3PG-311",
+   "description": "CONN PLUG MALE 3POS SOLDER CUP",
+   "vendor": "Digikey",
+   "cost": "9.49"
+  },
+  {
+   "section": "Tanks",
+   "item": "84",
+   "qty": "2",
+   "vendor_pn": "SC1202-ND",
+   "mfg_pn": "Conxall P/N 16282-2PG-311",
+   "description": "2 Position Circular Connector Plug, Male Pins Solder Cup",
+   "vendor": "Digikey",
+   "cost": "7.33"
+  },
+  {
+   "section": "Tanks",
+   "item": "85",
+   "qty": "25",
+   "vendor_pn": "A101230-ND",
+   "mfg_pn": "TE Connectivity P/N S02-2-R",
+   "description": "SLDR SLV WIRE-WIRE 0.105/0.145\"",
+   "vendor": "Digikey",
+   "cost": "3.664"
+  },
+  {
+   "section": "Tanks",
+   "item": "86",
+   "qty": "20",
+   "vendor_pn": "A101189-ND",
+   "mfg_pn": "TE connetctivity P/N S200-2-W1-22-9",
+   "description": "SLDR SLEEVE WIRE-WIRE 0.17\"/0.2\"",
+   "vendor": "Digikey",
+   "cost": "9.19"
+  },
+  {
+   "section": "Tanks",
+   "item": "87",
+   "qty": "2",
+   "vendor_pn": "11-01366",
+   "mfg_pn": "",
+   "description": "RAY ALLEN RBS - BEZEL GEAR SWITCH",
+   "vendor": "Aircraft Spruce",
+   "cost": "87.9"
+  },
+  {
+   "section": "Tanks",
+   "item": "88",
+   "qty": "1",
+   "vendor_pn": "7856K262",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 0.09\" ID Before Shrinking, 4 ' length",
+   "vendor": "McMaster-Carr",
+   "cost": "3.56"
+  },
+  {
+   "section": "Tanks",
+   "item": "89",
+   "qty": "1",
+   "vendor_pn": "7496K42",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 1 Foot Long, 0.19\" ID Before Shrinking, Red",
+   "vendor": "McMaster-Carr",
+   "cost": "11.42"
+  },
+  {
+   "section": "Tanks",
+   "item": "90",
+   "qty": "1",
+   "vendor_pn": "7856K63",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 1 Foot Long, 0.13\" ID Before Shrinking, Red",
+   "vendor": "McMaster-Carr",
+   "cost": "10.22"
+  },
+  {
+   "section": "Tanks",
+   "item": "91",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "LOX Tank",
+   "vendor": "SSLC",
+   "cost": "80000"
+  },
+  {
+   "section": "Tanks",
+   "item": "92",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Fuel Tank",
+   "vendor": "SSLC",
+   "cost": "80000"
+  },
+  {
+   "section": "Computer",
+   "item": "1",
+   "qty": "1",
+   "vendor_pn": "SDI505-AF00",
+   "mfg_pn": "",
+   "description": "IMU",
+   "vendor": "EMCORE",
+   "cost": "32178.34"
+  },
+  {
+   "section": "Computer",
+   "item": "",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "SD Hardware Developers Kit",
+   "vendor": "",
+   "cost": "4497"
+  },
+  {
+   "section": "Computer",
+   "item": "2",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "LPSS220006S10",
+   "description": "LiperiAir Semi Solid State Batteries",
+   "vendor": "RCBATTERT.COM",
+   "cost": "298.99"
+  },
+  {
+   "section": "Computer",
+   "item": "3",
+   "qty": "1",
+   "vendor_pn": "7 Pin JST-XH 6S",
+   "mfg_pn": "",
+   "description": "Balance Plug Extension Lead Wire",
+   "vendor": "Amazon",
+   "cost": "19"
+  },
+  {
+   "section": "Computer",
+   "item": "4",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Bulkhead",
+   "vendor": "Trident Metals",
+   "cost": "835.8"
+  },
+  {
+   "section": "Computer",
+   "item": "5",
+   "qty": "5",
+   "vendor_pn": "455-3390-ND",
+   "mfg_pn": "JST Sales  P/N A07KR07KR26E152A",
+   "description": "JUMPER 07KR-6S-P - 07KR-6S-P 6\"",
+   "vendor": "DigiKey",
+   "cost": "0.76"
+  },
+  {
+   "section": "Computer",
+   "item": "6",
+   "qty": "1",
+   "vendor_pn": "BG-8S",
+   "mfg_pn": "",
+   "description": "ISDT BattGo Battery Meter, LCD Display, Battery Balancer",
+   "vendor": "Amazon",
+   "cost": "39.9"
+  },
+  {
+   "section": "Computer",
+   "item": "7",
+   "qty": "1",
+   "vendor_pn": "DC6.5-100V 0-100A",
+   "mfg_pn": "",
+   "description": "DC 6.5-100V 0-100A Multimeter and DC 5-120V Mini Voltmeter",
+   "vendor": "Amazon",
+   "cost": "24.99"
+  },
+  {
+   "section": "Computer",
+   "item": "8",
+   "qty": "1",
+   "vendor_pn": "GPIO-MM-XT",
+   "mfg_pn": "GPIO-MM-XT",
+   "description": "Digital IO + Counter/Timer/PWM",
+   "vendor": "Diamond Sys",
+   "cost": "501.75"
+  },
+  {
+   "section": "Computer",
+   "item": "9",
+   "qty": "2",
+   "vendor_pn": "DMM-32DX-AT",
+   "mfg_pn": "DMM-32DX-AT",
+   "description": "Diamond Systems Analog I/O",
+   "vendor": "Diamond Sys",
+   "cost": "1073"
+  },
+  {
+   "section": "Computer",
+   "item": "10",
+   "qty": "1",
+   "vendor_pn": "ATH4-E3940-8G064N",
+   "mfg_pn": "",
+   "description": "Athena IV E3940 CPU",
+   "vendor": "Diamond Sys",
+   "cost": "2387"
+  },
+  {
+   "section": "Computer",
+   "item": "11",
+   "qty": "1",
+   "vendor_pn": "C009045B001A",
+   "mfg_pn": "C009045B001A",
+   "description": "Cambium 900MHz PTP 450 Connectorized Radio, 902 - 928 MHz",
+   "vendor": "Business Systems Connections",
+   "cost": "895"
+  },
+  {
+   "section": "Computer",
+   "item": "12",
+   "qty": "1",
+   "vendor_pn": "102-PTP20-24-S24-ND",
+   "mfg_pn": "CUI P/N PTP20-24-S24",
+   "description": "Power Supply for Radio",
+   "vendor": "DigiKey",
+   "cost": "72.54"
+  },
+  {
+   "section": "Computer",
+   "item": "13",
+   "qty": "1",
+   "vendor_pn": "MMA030V10P2D0T4A3",
+   "mfg_pn": "Omega P/N",
+   "description": "Pressure Transducer 0-30",
+   "vendor": "",
+   "cost": "875"
+  },
+  {
+   "section": "Computer",
+   "item": "15",
+   "qty": "2",
+   "vendor_pn": "PE9620",
+   "mfg_pn": "",
+   "description": "Precision SMA Female to SMA Female Bulkhead Mount Adapter, With O-Ring",
+   "vendor": "Pasterknack",
+   "cost": "73.99"
+  },
+  {
+   "section": "Computer",
+   "item": "16",
+   "qty": "4",
+   "vendor_pn": "PE4112",
+   "mfg_pn": "",
+   "description": "SMA Male Connector Solder Attachment for PE-SR402AL",
+   "vendor": "Pasterknack",
+   "cost": "16.79"
+  },
+  {
+   "section": "Computer",
+   "item": "",
+   "qty": "1",
+   "vendor_pn": "PE9077",
+   "mfg_pn": "",
+   "description": "SMA Female to TNC Male Adapter",
+   "vendor": "Pasterknack",
+   "cost": "47.39"
+  },
+  {
+   "section": "Computer",
+   "item": "17",
+   "qty": "1",
+   "vendor_pn": "PE3500LF-36",
+   "mfg_pn": "",
+   "description": "SMA Male to SMA Male Cable 36 Inch Length Using RG400 Coax, RoHS",
+   "vendor": "Pasterknack",
+   "cost": "96.99"
+  },
+  {
+   "section": "Computer",
+   "item": "18",
+   "qty": "3",
+   "vendor_pn": "PE-SR402FL-BULK",
+   "mfg_pn": "",
+   "description": "Formable 141 Semi-rigid Coax Cable with Tinned Copper Braid Outer. As needed.",
+   "vendor": "Pasterknack",
+   "cost": "14.39"
+  },
+  {
+   "section": "Computer",
+   "item": "19",
+   "qty": "1",
+   "vendor_pn": "895-USBRS2321.8BT5.0",
+   "mfg_pn": "USB-RS232-WE-1800-BT_5.0",
+   "description": "CABLE USB RS232 5V WIRE END 1.8M",
+   "vendor": "Mouser",
+   "cost": "25.8"
+  },
+  {
+   "section": "Computer",
+   "item": "20",
+   "qty": "1",
+   "vendor_pn": "695-MS3100E2821PW",
+   "mfg_pn": "ITT P/N MS3100E28-21PW",
+   "description": "ITT Cannon, MS3100E28-21PW, Circular MIL Spec Connector ER 37C 37#16 PIN RECP",
+   "vendor": "Mouser",
+   "cost": "111.2"
+  },
+  {
+   "section": "Computer",
+   "item": "21",
+   "qty": "1",
+   "vendor_pn": "654-MS3100E28-21P",
+   "mfg_pn": "MS3100E28-21P",
+   "description": "Circular MIL Spec Connector 37P #16 PIN CONTACTS",
+   "vendor": "Mouser",
+   "cost": "26.04"
+  },
+  {
+   "section": "Computer",
+   "item": "22",
+   "qty": "2",
+   "vendor_pn": "34-0003",
+   "mfg_pn": "",
+   "description": "EXOS Modular Driver",
+   "vendor": "Morgan Newton",
+   "cost": "1923.37"
+  },
+  {
+   "section": "Computer",
+   "item": "23",
+   "qty": "2",
+   "vendor_pn": "34-0004",
+   "mfg_pn": "",
+   "description": "EXOS, Modular CPU",
+   "vendor": "Morgan Newton",
+   "cost": "1339.1"
+  },
+  {
+   "section": "Computer",
+   "item": "24",
+   "qty": "1",
+   "vendor_pn": "GPS",
+   "mfg_pn": "",
+   "description": "TRS-3S-HAD",
+   "vendor": "JAVAD",
+   "cost": "7150"
+  },
+  {
+   "section": "Computer",
+   "item": "25",
+   "qty": "1",
+   "vendor_pn": "GPS Enclosure",
+   "mfg_pn": "",
+   "description": "GPS Enclosure, 3D Printed",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Computer",
+   "item": "26",
+   "qty": "2",
+   "vendor_pn": "TL1232-ND",
+   "mfg_pn": "Eaton Tripp Lite P/N \t\nUR024-000-UP",
+   "description": "ADAPTER USB A PLUG TO USB A RCPT",
+   "vendor": "DigiKey",
+   "cost": "7.78"
+  },
+  {
+   "section": "Computer",
+   "item": "27",
+   "qty": "1",
+   "vendor_pn": "881-CCR-33S80-T",
+   "mfg_pn": "CCR-33SZ80-T",
+   "description": "Coaxial SwitchesLatching SPDT Coaxial Switch, DC-18GHz, SMA Female",
+   "vendor": "MOUSER",
+   "cost": "226.92"
+  },
+  {
+   "section": "Computer",
+   "item": "28",
+   "qty": "100",
+   "vendor_pn": "WM9712-ND",
+   "mfg_pn": "Molex, P/N 0380020185",
+   "description": "Molex, P/N 0380020185, JUMPER BARRIER BLK 2POS RING",
+   "vendor": "DigiKey",
+   "cost": "0.37"
+  },
+  {
+   "section": "Computer",
+   "item": "29",
+   "qty": "2",
+   "vendor_pn": "895-USB-COM232-PLUS2",
+   "mfg_pn": "USB-COM232-PLUS2",
+   "description": "FTDI, USB-COM232-PLUS2",
+   "vendor": "MOUSER",
+   "cost": "41.82"
+  },
+  {
+   "section": "Computer",
+   "item": "30",
+   "qty": "2",
+   "vendor_pn": "965-MS3100E2029P",
+   "mfg_pn": "AMPHENOL P/N MS3100E20-29P",
+   "description": "Circular MIL Spec Connector ER 17C 17#16 SKT PLUG",
+   "vendor": "Mouser",
+   "cost": "107.21"
+  },
+  {
+   "section": "Computer",
+   "item": "31",
+   "qty": "2",
+   "vendor_pn": "339-MS3106E20-29S-ND",
+   "mfg_pn": "AMPHENOL P/N  MS3106E20-29S",
+   "description": "CONN PLUG FMALE 17P SOLDER CUP",
+   "vendor": "DigiKey",
+   "cost": "31.45"
+  },
+  {
+   "section": "Computer",
+   "item": "32",
+   "qty": "4",
+   "vendor_pn": "7130K31",
+   "mfg_pn": "",
+   "description": "Nylon Plastic Cable Tie, Narrow, 8\" Long, for 2-1/8\", 0.10\" Wide, Black",
+   "vendor": "McMaster",
+   "cost": "7.03"
+  },
+  {
+   "section": "Computer",
+   "item": "33",
+   "qty": "2",
+   "vendor_pn": "70215K54",
+   "mfg_pn": "",
+   "description": "Cable Tie, Standard, 11\" Long, for 3\" Maximum Bundle Diameter, Black",
+   "vendor": "McMaster",
+   "cost": "12.16"
+  },
+  {
+   "section": "Computer",
+   "item": "34",
+   "qty": "4",
+   "vendor_pn": "CBB108-ND",
+   "mfg_pn": "CINCH Connectivity P/N 8-140",
+   "description": "CONN BARRIER STRIP 8CIRC 0.375\"",
+   "vendor": "DigiKey",
+   "cost": "15.53"
+  },
+  {
+   "section": "Computer",
+   "item": "35",
+   "qty": "3",
+   "vendor_pn": "5923-0ZRS1000FF1A-ND",
+   "mfg_pn": "Bell Fuse P/N 0ZRS1000FF1A",
+   "description": "Bell Fuse Inc, 0ZRS1000FF1A,  PTC RESET FUSE 32V 10A RADIAL",
+   "vendor": "DigiKey",
+   "cost": "2.12"
+  },
+  {
+   "section": "Computer",
+   "item": "36",
+   "qty": "2",
+   "vendor_pn": "CB1AHF-M-12V-ND",
+   "mfg_pn": "Panasonic Electric Works P/N CB1AHF-M-12V",
+   "description": "Panasonic Electric Works, P/N CB1AHF-M-12V, RELAY AUTOMOTIVE SPST 70A 12V",
+   "vendor": "DigiKey",
+   "cost": "6.65"
+  },
+  {
+   "section": "Computer",
+   "item": "37",
+   "qty": "5",
+   "vendor_pn": "609-1524-ND",
+   "mfg_pn": "Amphenol ICC P/N DE09P064TXLF",
+   "description": "Amphenol ICC, P/N DE09P064TXLF, CONN D-SUB RCPT 9 POS SLDR CUP, Male Pins Connector",
+   "vendor": "DigiKey",
+   "cost": "0.66"
+  },
+  {
+   "section": "Computer",
+   "item": "38",
+   "qty": "5",
+   "vendor_pn": "609-1525-ND",
+   "mfg_pn": "Amphenol P/N \t\nDE09S064TLF",
+   "description": "Amphenol ICC, P/N DE09S064TLF, CONN D-SUB RCPT 9POS SLDR CUP,  Female Sockets Connector",
+   "vendor": "DigiKey",
+   "cost": "0.67"
+  },
+  {
+   "section": "Computer",
+   "item": "39",
+   "qty": "10",
+   "vendor_pn": "MSC30A-ND",
+   "mfg_pn": "3M P/N 89130-0001",
+   "description": "CONN RCPT 30P IDC 26-28AWG GOLD",
+   "vendor": "DigiKey",
+   "cost": "2.24"
+  },
+  {
+   "section": "Computer",
+   "item": "40",
+   "qty": "10",
+   "vendor_pn": "MKC50A-ND",
+   "mfg_pn": "3M P/N 89150-0101",
+   "description": "CONN RCPT 50P IDC 26-28AWG GOLD",
+   "vendor": "DigiKey",
+   "cost": "2.24"
+  },
+  {
+   "section": "Computer",
+   "item": "41",
+   "qty": "6",
+   "vendor_pn": "MSC10A-ND",
+   "mfg_pn": "3M P/N 89110-0001",
+   "description": "CONN RCPT 10P IDC 26-28AWG GOLD",
+   "vendor": "DigiKey",
+   "cost": "1.37"
+  },
+  {
+   "section": "Computer",
+   "item": "42",
+   "qty": "1",
+   "vendor_pn": "HF50G-10-ND",
+   "mfg_pn": "3M P/N HF539/50",
+   "description": "CBL RIBN 50COND 0.05 GRAY 10'",
+   "vendor": "DigiKey",
+   "cost": "91.15"
+  },
+  {
+   "section": "Computer",
+   "item": "43",
+   "qty": "168",
+   "vendor_pn": "WMTG-222T14",
+   "mfg_pn": "",
+   "description": "2 conductor cable with TIN COATED Cu ROUND shielding and Tefzel jacket with an M22759/18 inner conductor P/N M27500-22TG2T14",
+   "vendor": "Wiremasters",
+   "cost": "0.77"
+  },
+  {
+   "section": "Computer",
+   "item": "44",
+   "qty": "100",
+   "vendor_pn": "M22759/16-10-2",
+   "mfg_pn": "",
+   "description": "Tin Plated Copper, Single Layer of Extruded ETFE Jacketed Wire, 150\u00b0C. QPL material with certifications and test reports.",
+   "vendor": "Wiremasters",
+   "cost": "1.21"
+  },
+  {
+   "section": "Computer",
+   "item": "45",
+   "qty": "100",
+   "vendor_pn": "M22759/16-10-0",
+   "mfg_pn": "",
+   "description": "Tin Plated Copper, Single Layer of Extruded ETFE Jacketed Wire, 150\u00b0C. QPL material with certifications and test reports.",
+   "vendor": "Wiremasters",
+   "cost": "1.21"
+  },
+  {
+   "section": "Computer",
+   "item": "46",
+   "qty": "100",
+   "vendor_pn": "M22759/16-16-6",
+   "mfg_pn": "",
+   "description": "Tin Plated Copper, Single Layer of Extruded ETFE Jacketed Wire, 150\u00b0C. QPL material with certifications and test reports.",
+   "vendor": "Wiremasters",
+   "cost": "0.35"
+  },
+  {
+   "section": "Computer",
+   "item": "47",
+   "qty": "100",
+   "vendor_pn": "M22759/16-12-2",
+   "mfg_pn": "",
+   "description": "Tin Plated Copper, Single Layer of Extruded ETFE Jacketed Wire, 150\u00b0C. QPL material with certifications and test reports.",
+   "vendor": "Wiremasters",
+   "cost": "0.71"
+  },
+  {
+   "section": "Computer",
+   "item": "48",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Computer Mounting Plate",
+   "vendor": "EXOS",
+   "cost": "200"
+  },
+  {
+   "section": "Computer",
+   "item": "49",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Cable tray",
+   "vendor": "EXOS",
+   "cost": "200"
+  },
+  {
+   "section": "Computer",
+   "item": "50",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Cover Plate - Driver Side",
+   "vendor": "EXOS",
+   "cost": "100"
+  },
+  {
+   "section": "Computer",
+   "item": "51",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Fan Support Plate",
+   "vendor": "EXOS",
+   "cost": "100"
+  },
+  {
+   "section": "Computer",
+   "item": "52",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Charger support - printed",
+   "vendor": "EXOS",
+   "cost": "100"
+  },
+  {
+   "section": "Computer",
+   "item": "53",
+   "qty": "2",
+   "vendor_pn": "1939K17",
+   "mfg_pn": "",
+   "description": "Fan, thin, 50x10mm, 12V",
+   "vendor": "McMaster",
+   "cost": "13.82"
+  },
+  {
+   "section": "Payload Section",
+   "item": "1",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "45\" Payload Skin",
+   "vendor": "SCORPIUS",
+   "cost": "18000"
+  },
+  {
+   "section": "Payload Section",
+   "item": "2",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "EXOS",
+   "description": "25\" Payload Mounting Plate",
+   "vendor": "EXOS",
+   "cost": "500"
+  },
+  {
+   "section": "Payload Section",
+   "item": "3",
+   "qty": "1",
+   "vendor_pn": "PR-22",
+   "mfg_pn": "",
+   "description": "1/4\" 22 PSI Pressure Relief Valve",
+   "vendor": "Ratermann at www.RMIorder.com",
+   "cost": "64.12"
+  },
+  {
+   "section": "Payload Section",
+   "item": "4",
+   "qty": "1",
+   "vendor_pn": "PA-14",
+   "mfg_pn": "",
+   "description": "Pipe-Away Adapter 1/4\" NPT",
+   "vendor": "Ratermann at www.RMIorder.com",
+   "cost": "48.75"
+  },
+  {
+   "section": "Payload Section",
+   "item": "5",
+   "qty": "1",
+   "vendor_pn": "44705K113",
+   "mfg_pn": "",
+   "description": "Low-Pressure Aluminum Pipe Fitting, 90 Degree Elbow Adapter, 1/4 NPT Female x Male",
+   "vendor": "McMaster-Carr",
+   "cost": "14.17"
+  },
+  {
+   "section": "Payload Section",
+   "item": "6",
+   "qty": "1",
+   "vendor_pn": "5177K73",
+   "mfg_pn": "",
+   "description": "Main Manifold, 5/8\" OD soft drawn aluminum tube 4'4\" long 580 psi rated",
+   "vendor": "McMaster-Carr",
+   "cost": "42.06"
+  },
+  {
+   "section": "Payload Section",
+   "item": "7",
+   "qty": "1",
+   "vendor_pn": "5177K66",
+   "mfg_pn": "",
+   "description": "Main Manifold, 3/8\" OD soft drawn aluminum tube 1.5\" long 1000 psi rated, hand flared",
+   "vendor": "McMaster-Carr",
+   "cost": "31.93"
+  },
+  {
+   "section": "Payload Section",
+   "item": "8",
+   "qty": "2",
+   "vendor_pn": "Fabrication",
+   "mfg_pn": "",
+   "description": "Hand Fabricated 5/8\" OD weld on plugs for manifold ends",
+   "vendor": "EXOS",
+   "cost": "7"
+  },
+  {
+   "section": "Payload Section",
+   "item": "9",
+   "qty": "1",
+   "vendor_pn": "SUM-220062",
+   "mfg_pn": "",
+   "description": "AN -10 weld fitting for gas inlet on manifold (weld on bung)",
+   "vendor": "Summit Racing",
+   "cost": "8.92"
+  },
+  {
+   "section": "Payload Section",
+   "item": "10",
+   "qty": "1",
+   "vendor_pn": "4012N37",
+   "mfg_pn": "",
+   "description": "6061T6 Aluminum bar stock, 3\" diameter x 3' long.",
+   "vendor": "Bralco or Metals supermarket or Castle Metals",
+   "cost": "192.44"
+  },
+  {
+   "section": "Payload Section",
+   "item": "11",
+   "qty": "8",
+   "vendor_pn": "YC1390BT2T",
+   "mfg_pn": "",
+   "description": "Jefferson YC1390BT2T, large ACS valve stem, spring, plunger,  coil.  Plunger and core have PTFE seats",
+   "vendor": "RADWELL",
+   "cost": "201"
+  },
+  {
+   "section": "Payload Section",
+   "item": "12",
+   "qty": "1",
+   "vendor_pn": "9559K115",
+   "mfg_pn": "",
+   "description": "Ultra-Chemical-Resistant Rigid PTFE O-Ring, 1/16 Fractional Width, Dash Number 021",
+   "vendor": "McMaster-Carr",
+   "cost": "7.06"
+  },
+  {
+   "section": "Payload Section",
+   "item": "13",
+   "qty": "8",
+   "vendor_pn": "2026BV171T",
+   "mfg_pn": "",
+   "description": "2026BV171T-12VDC    Brass    1/8 in    300 psig    302 \u00baF    0.068 in    FKM    12 VDC  20 bar    150 \u00baC    1.75 mm",
+   "vendor": "RADWELL",
+   "cost": "77"
+  },
+  {
+   "section": "Payload Section",
+   "item": "14",
+   "qty": "1",
+   "vendor_pn": "1288N112",
+   "mfg_pn": "",
+   "description": "Chemical-Resistant Viton\u00ae Fluoroelastomer O-Ring, Super-Resilient, 1/16 Fractional Width, Dash No.012",
+   "vendor": "McMaster-Carr",
+   "cost": "5.99"
+  },
+  {
+   "section": "Payload Section",
+   "item": "15",
+   "qty": "4",
+   "vendor_pn": "04-05006",
+   "mfg_pn": "",
+   "description": "04-05006 DEL FITTING SEAL 3/8\" OD ALUMINUM (dash 6 seal)",
+   "vendor": "Aircraft Spruce",
+   "cost": "1.75"
+  },
+  {
+   "section": "Payload Section",
+   "item": "16",
+   "qty": "4",
+   "vendor_pn": "SUM-220647",
+   "mfg_pn": "",
+   "description": "Aluminum AN-6 x 1/4\" NPT adapter straight",
+   "vendor": "Summit Racing",
+   "cost": "3.99"
+  },
+  {
+   "section": "Payload Section",
+   "item": "17",
+   "qty": "4",
+   "vendor_pn": "2227K62",
+   "mfg_pn": "",
+   "description": "Aluminum AN-6 Nut for Flare fitting",
+   "vendor": "McMaster-Carr",
+   "cost": "2.22"
+  },
+  {
+   "section": "Payload Section",
+   "item": "18",
+   "qty": "4",
+   "vendor_pn": "2227K72",
+   "mfg_pn": "",
+   "description": "Aluminum AN-6 Ferrule for Flare fitting",
+   "vendor": "McMaster-Carr",
+   "cost": "2.24"
+  },
+  {
+   "section": "Payload Section",
+   "item": "19",
+   "qty": "50",
+   "vendor_pn": "VSB2045Y-M3/54GICT-ND",
+   "mfg_pn": "",
+   "description": "SCHOTTKY 45V 6.5A P600",
+   "vendor": "Digikey",
+   "cost": "1.08"
+  },
+  {
+   "section": "Payload Section",
+   "item": "20",
+   "qty": "50",
+   "vendor_pn": "18 gage Red wire",
+   "mfg_pn": "",
+   "description": "18 gage Red wire",
+   "vendor": "Wiremasters",
+   "cost": "0.11"
+  },
+  {
+   "section": "Payload Section",
+   "item": "21",
+   "qty": "1",
+   "vendor_pn": "A1302-ND",
+   "mfg_pn": "Ampheno P/N 206708-1",
+   "description": "Female CPC 9 pin Connector",
+   "vendor": "Digikey",
+   "cost": "6.86"
+  },
+  {
+   "section": "Payload Section",
+   "item": "22",
+   "qty": "9",
+   "vendor_pn": "A16080-ND",
+   "mfg_pn": "Amphenol P/N 66101-4",
+   "description": "Connector, Socket 16-18AWG Gold Crimp",
+   "vendor": "Digikey",
+   "cost": "1.48"
+  },
+  {
+   "section": "Payload Section",
+   "item": "23",
+   "qty": "1",
+   "vendor_pn": "A16047-ND",
+   "mfg_pn": "TE Connectivity P/N 54123-1",
+   "description": "Connector Sealing Boot 13 Black",
+   "vendor": "Digikey",
+   "cost": "20.83"
+  },
+  {
+   "section": "Payload Section",
+   "item": "24",
+   "qty": "50",
+   "vendor_pn": "650-CWT9003",
+   "mfg_pn": "TE Connectivity CWT-9003",
+   "description": "Heat Shrink, Blue,16-14AWG, 600V, Polyolefin, CWT Series",
+   "vendor": "Mouser",
+   "cost": "0.94"
+  },
+  {
+   "section": "Payload Section",
+   "item": "25",
+   "qty": "2",
+   "vendor_pn": "7496K42",
+   "mfg_pn": "",
+   "description": "Heat-Shrink Tubing, 1 Foot Long, 0.19\" ID Before Shrinking, Red",
+   "vendor": "McMaster-Carr",
+   "cost": "11.42"
+  },
+  {
+   "section": "Payload Section",
+   "item": "26",
+   "qty": "16",
+   "vendor_pn": "94803-01-ND",
+   "mfg_pn": "3M P/N 94803",
+   "description": "0.250\" (6.35mm) Quick Connect Female 18-22 AWG Crimp Connector Fully Insulated",
+   "vendor": "Digikey",
+   "cost": "0.49"
+  },
+  {
+   "section": "Payload Section",
+   "item": "27",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "3\" Plate 6061-T651 ASTM B209, Cutting Tolerance +.125/0.00  Cutting to 25.25 OD, Certs required.",
+   "vendor": "The Trident Company",
+   "cost": "835.8"
+  },
+  {
+   "section": "Payload Section",
+   "item": "28",
+   "qty": "6",
+   "vendor_pn": "93085A823",
+   "mfg_pn": "",
+   "description": "Bulkhead installation Screws",
+   "vendor": "Mcmaster-Carr",
+   "cost": "7"
+  },
+  {
+   "section": "Payload Section",
+   "item": "29",
+   "qty": "2",
+   "vendor_pn": "9396K412",
+   "mfg_pn": "",
+   "description": "Bulkhead O-ring for Sealing Payload",
+   "vendor": "Mcmaster-Carr",
+   "cost": "36.37"
+  },
+  {
+   "section": "Payload Section",
+   "item": "30",
+   "qty": "1",
+   "vendor_pn": "AN832-10D",
+   "mfg_pn": "",
+   "description": "Bulkhead mounted AN-10 aluminum Coupling",
+   "vendor": "Aircraft Spruce",
+   "cost": "14.75"
+  },
+  {
+   "section": "Payload Section",
+   "item": "31",
+   "qty": "1",
+   "vendor_pn": "AN924-10D",
+   "mfg_pn": "",
+   "description": "Bulkhead Nut for AN-10 Bulkhead Coupling",
+   "vendor": "Aircraft Spruce",
+   "cost": "5.95"
+  },
+  {
+   "section": "Payload Section",
+   "item": "32",
+   "qty": "1",
+   "vendor_pn": "4468K814",
+   "mfg_pn": "",
+   "description": "30\" braided hose with brass female AN-10 ends",
+   "vendor": "Mcmaster-Carr",
+   "cost": "53.15"
+  },
+  {
+   "section": "Payload Section",
+   "item": "33",
+   "qty": "1",
+   "vendor_pn": "6281T13",
+   "mfg_pn": "",
+   "description": "Brass Air Fill Valve, Nickel-Plated, NPT x 7/16\" Long Schrader, 200 PSI, 1-5/16\" Long",
+   "vendor": "Mcmaster-Carr",
+   "cost": "5.45"
+  },
+  {
+   "section": "Payload Section",
+   "item": "34",
+   "qty": "2",
+   "vendor_pn": "PE4931",
+   "mfg_pn": "",
+   "description": "SMA Female Bulkhead Mount Connector Solder Attachment for PE-SR401FL, .235\" D Hole",
+   "vendor": "Pasternack",
+   "cost": "107.99"
+  },
+  {
+   "section": "Payload Section",
+   "item": "35",
+   "qty": "8",
+   "vendor_pn": "PE-SR401FL-BULK",
+   "mfg_pn": "",
+   "description": "250 semi-rigid Coax cable 48\"",
+   "vendor": "Pasternack",
+   "cost": "32.99"
+  },
+  {
+   "section": "Payload Section",
+   "item": "36",
+   "qty": "4",
+   "vendor_pn": "PE4907",
+   "mfg_pn": "",
+   "description": "SMA Male Connector Solder Attachment for PE-SR401FL_BULK",
+   "vendor": "Pasternack",
+   "cost": "74.99"
+  },
+  {
+   "section": "Payload Section",
+   "item": "37",
+   "qty": "1",
+   "vendor_pn": "3942-MS3110E16-8P",
+   "mfg_pn": "Milspec West P/N MS3110E16-8P",
+   "description": "Conn Circular PIN 8 POS Solder ST Wall Mount 8 Terminal 1 Port",
+   "vendor": "Digikey",
+   "cost": "19.9"
+  },
+  {
+   "section": "Payload Section",
+   "item": "38",
+   "qty": "12",
+   "vendor_pn": "WMTG-182T14",
+   "mfg_pn": "",
+   "description": "18-2 Shielded Tefzel wire for Upper ACS valve actuation: 4 pieces cut to 36\"",
+   "vendor": "Wiremasters",
+   "cost": "1.11"
+  },
+  {
+   "section": "Payload Section",
+   "item": "39",
+   "qty": "40",
+   "vendor_pn": "WM22759/16-18-4",
+   "mfg_pn": "",
+   "description": "18 gage Yellow wire",
+   "vendor": "Wiremasters",
+   "cost": "1.11"
+  },
+  {
+   "section": "Payload Section",
+   "item": "40",
+   "qty": "1",
+   "vendor_pn": "A1352-ND",
+   "mfg_pn": "TE Connectivity  P/N  Amphenol 206705-2",
+   "description": "CONN RCPT HSNG MALE 9POS INLINE",
+   "vendor": "Digikey",
+   "cost": "6.71"
+  },
+  {
+   "section": "Payload Section",
+   "item": "41",
+   "qty": "9",
+   "vendor_pn": "A1340-ND",
+   "mfg_pn": "TE Connectivity P/N 66099-4",
+   "description": "Connector, Pin 16-18AWG Gold Crimp",
+   "vendor": "Digikey",
+   "cost": "6.71"
+  },
+  {
+   "section": "Payload Section",
+   "item": "42",
+   "qty": "1",
+   "vendor_pn": "A16047-ND",
+   "mfg_pn": "TE Connectivity P/N 54123-1",
+   "description": "Connector Sealing Boot 13 Black",
+   "vendor": "Digikey",
+   "cost": "20.83"
+  },
+  {
+   "section": "Payload Section",
+   "item": "43",
+   "qty": "1",
+   "vendor_pn": "IMS3100E28-21P-ND",
+   "mfg_pn": "ITT Canon PN MS3100E28-21P",
+   "description": "37 Position Circular Connector Receptacle, Male Pins Solder Cup, Amphenol PN: MS3100E28-21P",
+   "vendor": "Digikey",
+   "cost": "156.96"
+  },
+  {
+   "section": "Payload Section",
+   "item": "44",
+   "qty": "10",
+   "vendor_pn": "844-S02-06-R-ND",
+   "mfg_pn": "TE Connectivity P/N +S02-06-R",
+   "description": "SLDR SLV WIRE-WIRE 0.075/0.105\"",
+   "vendor": "Digikey",
+   "cost": "3.74"
+  },
+  {
+   "section": "Payload Section",
+   "item": "45",
+   "qty": "30",
+   "vendor_pn": "844-S02-04-R-ND",
+   "mfg_pn": "Te Connectivity P/N S04-04-R",
+   "description": "Solder sleeve .235, TE Connectivity S02-04-R",
+   "vendor": "Digikey",
+   "cost": "4.23"
+  },
+  {
+   "section": "Payload Section",
+   "item": "46",
+   "qty": "62",
+   "vendor_pn": "M27500-18TG2T14",
+   "mfg_pn": "",
+   "description": "18-2 Shielded Tefzel wire",
+   "vendor": "Wiremasters",
+   "cost": "1.11"
+  },
+  {
+   "section": "Payload Section",
+   "item": "47",
+   "qty": "4",
+   "vendor_pn": "WM22759/16-18-4",
+   "mfg_pn": "",
+   "description": "18 gage Yellow wire",
+   "vendor": "Wiremasters",
+   "cost": "0.26"
+  },
+  {
+   "section": "Payload Section",
+   "item": "48",
+   "qty": "43",
+   "vendor_pn": "M27500-22TG3T14",
+   "mfg_pn": "",
+   "description": "22-2 Shielded Tefzel wire",
+   "vendor": "Wiremasters",
+   "cost": "1"
+  },
+  {
+   "section": "Payload Section",
+   "item": "49",
+   "qty": "8",
+   "vendor_pn": "WM22759/16-16-6",
+   "mfg_pn": "",
+   "description": "16 gage Blue wire",
+   "vendor": "Wiremasters",
+   "cost": "0.3"
+  },
+  {
+   "section": "Payload Section",
+   "item": "50",
+   "qty": "20",
+   "vendor_pn": "WM22759/16-14-0",
+   "mfg_pn": "",
+   "description": "14 gage Black Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.46"
+  },
+  {
+   "section": "Payload Section",
+   "item": "51",
+   "qty": "8",
+   "vendor_pn": "WM22759/16-18-2",
+   "mfg_pn": "",
+   "description": "18 Gage Red Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.26"
+  },
+  {
+   "section": "Payload Section",
+   "item": "52",
+   "qty": "12",
+   "vendor_pn": "WM22759/16-14-2",
+   "mfg_pn": "",
+   "description": "14 gage Red Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.44"
+  },
+  {
+   "section": "Payload Section",
+   "item": "53",
+   "qty": "3",
+   "vendor_pn": "WM22759/16-18-0",
+   "mfg_pn": "",
+   "description": "18 gage Black Wire",
+   "vendor": "Wiremasters",
+   "cost": "0.26"
+  },
+  {
+   "section": "Payload Section",
+   "item": "54",
+   "qty": "1",
+   "vendor_pn": "AMS3106A28-21S-ND",
+   "mfg_pn": "Amphenol P/N MS3106A28-21S",
+   "description": "37 Position Circular Connector Plug, Female Sockets Solder Cup, Amphenol PN: MS3106A28-21S",
+   "vendor": "Digikey",
+   "cost": "97.17"
+  },
+  {
+   "section": "Payload Section",
+   "item": "55",
+   "qty": "1",
+   "vendor_pn": "A1300-ND",
+   "mfg_pn": "TE Connectivity P/N 206060-1",
+   "description": "4 Position Circular Connector Plug Housing Free Hanging (In-Line)",
+   "vendor": "Digikey",
+   "cost": "6.85"
+  },
+  {
+   "section": "Payload Section",
+   "item": "56",
+   "qty": "4",
+   "vendor_pn": "A25108_ND",
+   "mfg_pn": "Te Connectivity P/N 66105-3",
+   "description": "CONN SOCKET 20-24AWG GOLD CRIMP",
+   "vendor": "Digikey",
+   "cost": "6.85"
+  },
+  {
+   "section": "Payload Section",
+   "item": "57",
+   "qty": "7",
+   "vendor_pn": "SC1202-ND",
+   "mfg_pn": "Conxall P/N 16282-2PG-311",
+   "description": "2 Position Circular Connector Plug, Male Pins Solder Cup. Conxall/Switchcraft # 16282-2PG-311",
+   "vendor": "Digikey",
+   "cost": "8.15"
+  },
+  {
+   "section": "Payload Section",
+   "item": "58",
+   "qty": "4",
+   "vendor_pn": "SC1204-ND",
+   "mfg_pn": "Conxall P/N 16282-3PG-311",
+   "description": "3 Position Circular Connector Plug, Male Pins Solder Cup",
+   "vendor": "Digikey",
+   "cost": "9.49"
+  },
+  {
+   "section": "Payload Section",
+   "item": "59",
+   "qty": "40",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Small Wire Tie Wraps",
+   "vendor": "",
+   "cost": "0.2"
+  },
+  {
+   "section": "Recovery section",
+   "item": "1",
+   "qty": "",
+   "vendor_pn": "M3041-000005-05KPG",
+   "mfg_pn": "",
+   "description": "TRANSDUCER 1-5V 5000# PRES",
+   "vendor": "Allied Electronics & Automation",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "1",
+   "qty": "1",
+   "vendor_pn": "17-0037",
+   "mfg_pn": "",
+   "description": "10-pin plus RF (custom 3-d printed part) (male), 1 plug for nosecone",
+   "vendor": "EXOS",
+   "cost": "200"
+  },
+  {
+   "section": "Recovery section",
+   "item": "3",
+   "qty": "9",
+   "vendor_pn": "A16080CT-ND",
+   "mfg_pn": "TE Connectivity P/N 66100-9",
+   "description": "CONN SOCKET 16-18AWG GOLD CRIMP",
+   "vendor": "DigiKey",
+   "cost": "1.35"
+  },
+  {
+   "section": "Recovery section",
+   "item": "4",
+   "qty": "1",
+   "vendor_pn": "17-0038",
+   "mfg_pn": "",
+   "description": "10-pin plus RF (custom 3-d printed part) (female) 1 Plug for Recovery Section",
+   "vendor": "EXOS",
+   "cost": "200"
+  },
+  {
+   "section": "Recovery section",
+   "item": "5",
+   "qty": "9",
+   "vendor_pn": "A25107-ND",
+   "mfg_pn": "TE Connectivity P/N 66103-3",
+   "description": "CONN PIN 20-24AWG GOLD CRIMP",
+   "vendor": "DigiKey",
+   "cost": "1.27"
+  },
+  {
+   "section": "Recovery section",
+   "item": "6",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Fairing Mold Modification (nosecone mod)",
+   "vendor": "SCORPIUS",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "7",
+   "qty": "1",
+   "vendor_pn": "7442A13",
+   "mfg_pn": "Dow P/N P5200",
+   "description": "Sealant Primer for High-Strength Silicone Sealant, Dow Corning P5200 Adhesion Promoter",
+   "vendor": "McMaster",
+   "cost": "101.25"
+  },
+  {
+   "section": "Recovery section",
+   "item": "8",
+   "qty": "1",
+   "vendor_pn": "66235A1",
+   "mfg_pn": "Dow P/N 832",
+   "description": "Silicone Sealant  Dow Corning 832, 10.1 oz. Cartridge, Off-White \n66235A1",
+   "vendor": "McMaster",
+   "cost": "18.54"
+  },
+  {
+   "section": "Recovery section",
+   "item": "9",
+   "qty": "1",
+   "vendor_pn": "9344K4",
+   "mfg_pn": "",
+   "description": "Flame-Retardant Expandable Sleeving, Duct Rated, 1/2\" ID (Snakeskin)",
+   "vendor": "McMaster",
+   "cost": "25.8"
+  },
+  {
+   "section": "Recovery section",
+   "item": "10",
+   "qty": "1",
+   "vendor_pn": "73216SN2MT00+N0C111C1",
+   "mfg_pn": "",
+   "description": "SOLENOID VALVE, 2 WAY, NORMALLY CLOSED, 1/4\" PORT, BRASS, 12VDC COIL",
+   "vendor": "Parker Engineering",
+   "cost": "378.06"
+  },
+  {
+   "section": "Recovery section",
+   "item": "11",
+   "qty": "1",
+   "vendor_pn": "C111C1",
+   "mfg_pn": "",
+   "description": "12 DC Volt, Solenoid Coil",
+   "vendor": "MSC",
+   "cost": "80.79"
+  },
+  {
+   "section": "Recovery section",
+   "item": "11",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Nose Cone",
+   "vendor": "SCORPIUS",
+   "cost": "20000"
+  },
+  {
+   "section": "Recovery section",
+   "item": "12",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Nose Tank Honeycomb Centering Plate",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "13",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Nosecone Retaining Plate",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "15",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Black Kevlar 2\" Wide Webbing, 10,000 pound-rated; 12' L",
+   "vendor": "EXOS",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "16",
+   "qty": "1",
+   "vendor_pn": "5SRTC-GG-K-24-72",
+   "mfg_pn": "",
+   "description": "INSULATED THERMOCOUPLE, READY-MA",
+   "vendor": "DigiKey",
+   "cost": "128.01"
+  },
+  {
+   "section": "Recovery section",
+   "item": "17",
+   "qty": "1",
+   "vendor_pn": "Micro-Track RTG HA",
+   "mfg_pn": "",
+   "description": "APRS (Automatic Packing Reporting System)",
+   "vendor": "Byonics",
+   "cost": "279"
+  },
+  {
+   "section": "Recovery section",
+   "item": "18",
+   "qty": "",
+   "vendor_pn": "Serial No. 100001",
+   "mfg_pn": "",
+   "description": "Cutters",
+   "vendor": "Exos",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "19",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Kevlar Webbing Cut Ring",
+   "vendor": "Exos",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "20",
+   "qty": "1",
+   "vendor_pn": "PE3810-36",
+   "mfg_pn": "",
+   "description": "SMA Male to SMB Plug Cable 36\" L using RG316 Coax, Upper Cable",
+   "vendor": "Pasternack",
+   "cost": "72.99"
+  },
+  {
+   "section": "Recovery section",
+   "item": "21",
+   "qty": "1",
+   "vendor_pn": "PE3W03014-60",
+   "mfg_pn": "",
+   "description": "SMA Male to SMB Jack Cable 60\" L Using RG316 Coax, Lower Cable",
+   "vendor": "Pasternack",
+   "cost": "51.99"
+  },
+  {
+   "section": "Recovery section",
+   "item": "22",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Sarge Radio support bracket",
+   "vendor": "EXOS",
+   "cost": "200"
+  },
+  {
+   "section": "Recovery section",
+   "item": "24",
+   "qty": "2",
+   "vendor_pn": "G3Ant-3AT1",
+   "mfg_pn": "",
+   "description": "G3Ant-3AT1 GPS",
+   "vendor": "NavtechGPS",
+   "cost": "300"
+  },
+  {
+   "section": "Recovery section",
+   "item": "25",
+   "qty": "2",
+   "vendor_pn": "9396K412",
+   "mfg_pn": "",
+   "description": "High-Temperature Silicone O-Ring 1/4 thick, Dash Number 469",
+   "vendor": "McMaster",
+   "cost": "36.37"
+  },
+  {
+   "section": "Recovery section",
+   "item": "",
+   "qty": "1",
+   "vendor_pn": "WAC00153 Rev X1",
+   "mfg_pn": "",
+   "description": "AGU-Link Phone Kit",
+   "vendor": "WAMORE",
+   "cost": "4000"
+  },
+  {
+   "section": "Recovery section",
+   "item": "27",
+   "qty": "1",
+   "vendor_pn": "RKT000201",
+   "mfg_pn": "",
+   "description": "AGU - 20\" Diameter Compataible Rocket Autonomous Guided Unit - sized to fly a StrongC-1200 ram air parachute",
+   "vendor": "WAMORE",
+   "cost": "10000"
+  },
+  {
+   "section": "Recovery section",
+   "item": "28",
+   "qty": "20",
+   "vendor_pn": "04-05004",
+   "mfg_pn": "",
+   "description": "04-05004 Del Fitting Seal 1/4\" OD Aluminum",
+   "vendor": "AIRCRAFT SPRUCE",
+   "cost": "1.75"
+  },
+  {
+   "section": "Recovery section",
+   "item": "29",
+   "qty": "30",
+   "vendor_pn": "04-05006",
+   "mfg_pn": "",
+   "description": "04-05006 Del Fitting Seal 3/8\" OD Aluminum",
+   "vendor": "AIRCRAFT SPRUCE",
+   "cost": "1.75"
+  },
+  {
+   "section": "Recovery section",
+   "item": "31",
+   "qty": "",
+   "vendor_pn": "292800500N 2928",
+   "mfg_pn": "",
+   "description": "1/2\" Natural Kevlar Tape - 1200lb Minimum tensile (1200 yards @ $6.12/yd) Put-up: 200 yards per spool. 20 yard minimum piece Max. 4 Splices  Standard ship quantity tolerance is +/-10%",
+   "vendor": "Bally Ribbon Mills",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "32",
+   "qty": "",
+   "vendor_pn": "2491",
+   "mfg_pn": "",
+   "description": "1 inch Kevlar Tape  -1500lb tensile strength  Light Resin finish",
+   "vendor": "Bally Ribbon Mills",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "33",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Kevlar Fabric - 3.9 ounce 779 Correctional fabric \"Gray Goods\"",
+   "vendor": "JP Composites",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "34",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "D-Ring Vent Stabilizer - i 6AL-4V 0.1250\" Dia x 33.23\" Annealed",
+   "vendor": "Performance Titanium Group",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "35",
+   "qty": "",
+   "vendor_pn": "3160",
+   "mfg_pn": "",
+   "description": "Kevlar Webbing - Black Kevlar 2\" Wide Webbing",
+   "vendor": "Offray",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "36",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Ballute - Sewing / Assembly",
+   "vendor": "Lee Hardesty",
+   "cost": "3000"
+  },
+  {
+   "section": "Recovery section",
+   "item": "39",
+   "qty": "",
+   "vendor_pn": "2175",
+   "mfg_pn": "",
+   "description": "2175 - 1 3/4\" Natural LT. \"R\" Kevlar Webbing (1.75\" 15,000lb Kevlar)",
+   "vendor": "Bally Ribbon Mills",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "40",
+   "qty": "1",
+   "vendor_pn": "8974K13",
+   "mfg_pn": "",
+   "description": "Multipurpose 6061 Aluminum Rod 1\" x 3' length",
+   "vendor": "McMaster",
+   "cost": "23.69"
+  },
+  {
+   "section": "Recovery section",
+   "item": "41",
+   "qty": "",
+   "vendor_pn": "89325K34",
+   "mfg_pn": "",
+   "description": "316/316L Stainless Steel Rod, 1-1/4\" diameter, 2' long",
+   "vendor": "McMaster",
+   "cost": "102.31"
+  },
+  {
+   "section": "Recovery section",
+   "item": "42",
+   "qty": "",
+   "vendor_pn": "H364-6RM",
+   "mfg_pn": "",
+   "description": "Separable Link, Drag Chute 52B6660-1 and -2 or 4160-1 6000lb strength",
+   "vendor": "Paragear",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "43",
+   "qty": "",
+   "vendor_pn": "MS24553",
+   "mfg_pn": "",
+   "description": "Separable Link, drag chute 15000lb",
+   "vendor": "",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "44",
+   "qty": "",
+   "vendor_pn": "3755T15",
+   "mfg_pn": "",
+   "description": "Wire Rope Compression Sleeve - for Lifting for Stainless Steel and Steel Rope, 18-8 Stainless Steel, for 1/8\" Rope diameter",
+   "vendor": "McMaster",
+   "cost": "12.77"
+  },
+  {
+   "section": "Recovery section",
+   "item": "45",
+   "qty": "",
+   "vendor_pn": "3936T14",
+   "mfg_pn": "",
+   "description": "Wire Rope Stop - Not for Lifting\nfor Steel and Stainless Steel Rope, Zinc Plated, for 1/8\" Rope Diameter",
+   "vendor": "McMaster",
+   "cost": "15.89"
+  },
+  {
+   "section": "Recovery section",
+   "item": "46",
+   "qty": "",
+   "vendor_pn": "CSR 104516-950",
+   "mfg_pn": "",
+   "description": "Cord, Technora H-M-A, Braided, Natural Tubular, Spliceable, Coreless construction Synthetic Finish after braiding 950 lb minimum tensile strength",
+   "vendor": "CSR",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "47",
+   "qty": "",
+   "vendor_pn": "CSR 104516-2100",
+   "mfg_pn": "",
+   "description": "Cord, Technora H-M-A, Braided, Natural Tubular, Spliceable, Coreless construction Synthetic Finish after braiding 2100 lb minimum tensile strength",
+   "vendor": "CSR",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "48",
+   "qty": "",
+   "vendor_pn": "CSR 104516-600",
+   "mfg_pn": "",
+   "description": "Cord, Technora H-M-A, Braided, Natural Tubular, spliceable, coreless construction Synthetic Finish after braiding 600 lb minimum tensile strength",
+   "vendor": "CSR",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "49",
+   "qty": "",
+   "vendor_pn": "Labor",
+   "mfg_pn": "",
+   "description": "Build new container (labor only)",
+   "vendor": "Lee Hardesty",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "50",
+   "qty": "",
+   "vendor_pn": "Labor",
+   "mfg_pn": "",
+   "description": "Modify breaklines to add correct oval shaped 3 ring",
+   "vendor": "Lee Hardesty",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "51",
+   "qty": "",
+   "vendor_pn": "Labor",
+   "mfg_pn": "",
+   "description": "Reline old Parachute & build new slider",
+   "vendor": "Lee Hardesty",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "52",
+   "qty": "",
+   "vendor_pn": "Labor",
+   "mfg_pn": "",
+   "description": "Pack Parachute into container",
+   "vendor": "Lee Hardesty",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "53",
+   "qty": "",
+   "vendor_pn": "Labor",
+   "mfg_pn": "",
+   "description": "Assemble new container (putting  new canopy onto container with links)",
+   "vendor": "Lee Hardesty",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "54",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Build second slider for parachute",
+   "vendor": "Lee Hardesty",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "55",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Super Screamers",
+   "vendor": "Lee Hardesty",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "56",
+   "qty": "4",
+   "vendor_pn": "TAXXAS P/N HAN122",
+   "mfg_pn": "",
+   "description": "Hangar 9 Remote Glow Plug Adapter",
+   "vendor": "Hobby Town",
+   "cost": "13.75"
+  },
+  {
+   "section": "Recovery section",
+   "item": "58",
+   "qty": "4",
+   "vendor_pn": "Traxxas P/N TRA3232X",
+   "mfg_pn": "",
+   "description": "Traxxas Super-Duty Long Glow Plug (2.5 & 3.3)",
+   "vendor": "HobbyTown",
+   "cost": "9.95"
+  },
+  {
+   "section": "Recovery section",
+   "item": "59",
+   "qty": "1",
+   "vendor_pn": "412015",
+   "mfg_pn": "",
+   "description": "CANOPY, MAIN, C-1200, 15 CELL",
+   "vendor": "???",
+   "cost": "20000"
+  },
+  {
+   "section": "Recovery section",
+   "item": "60",
+   "qty": "",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Closeout Pins",
+   "vendor": "Exos/Strong Enterprises",
+   "cost": ""
+  },
+  {
+   "section": "Recovery section",
+   "item": "62",
+   "qty": "1",
+   "vendor_pn": "A1302-ND",
+   "mfg_pn": "206708-1",
+   "description": "CONN PLUG HSG FMALE 9POS INLINE",
+   "vendor": "DigiKey",
+   "cost": "6.86"
+  },
+  {
+   "section": "Recovery section",
+   "item": "",
+   "qty": "9",
+   "vendor_pn": "A16080-ND",
+   "mfg_pn": "66101-4",
+   "description": "CONN SOCKET 16-18AWG GOLD CRIMP",
+   "vendor": "DigiKey",
+   "cost": "1.48"
+  },
+  {
+   "section": "Recovery section",
+   "item": "63",
+   "qty": "1",
+   "vendor_pn": "A1303-ND",
+   "mfg_pn": "206705-1",
+   "description": "CONN RCPT HSNG MALE 9POS PNL MNT",
+   "vendor": "DigiKey",
+   "cost": "5.68"
+  },
+  {
+   "section": "Recovery section",
+   "item": "",
+   "qty": "9",
+   "vendor_pn": "A1340-ND",
+   "mfg_pn": "66099-4",
+   "description": "CONN PIN 16-18AWG GOLD CRIMP",
+   "vendor": "DigiKey",
+   "cost": "5.68"
+  },
+  {
+   "section": "Recovery section",
+   "item": "64",
+   "qty": "1",
+   "vendor_pn": "2351-CPP15F18-ND9-5-ND",
+   "mfg_pn": "Semiconductor Circuts Inc P/N CPP15F18",
+   "description": "DC/DC CONVERTER 3.3V 50W, \t\nEnclosed DC DC Converter 1 Output 3.3V 15A 36V Input",
+   "vendor": "Digi-Key",
+   "cost": "72.2"
+  },
+  {
+   "section": "Recovery section",
+   "item": "65",
+   "qty": "2",
+   "vendor_pn": "571-211768-1",
+   "mfg_pn": "TE Connectivity P/N 211768-1",
+   "description": "Standard Circular Connector PLUG 9 POSITION shell size 17",
+   "vendor": "Mouser",
+   "cost": "10.3"
+  },
+  {
+   "section": "Recovery section",
+   "item": "67",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "SARGE, RECOVERY SECTION Skin",
+   "vendor": "SCORPIUS",
+   "cost": "15000"
+  },
+  {
+   "section": "Recovery section",
+   "item": "70",
+   "qty": "2",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "3\" Plate 6061-T651 ASTM B209, Cutting Tolerance +.125/-0.00, Cutting to 25.25\", Certs Required",
+   "vendor": "The Trident Company",
+   "cost": "835.8"
+  },
+  {
+   "section": "Recovery section",
+   "item": "71",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Retaining Ring, machined",
+   "vendor": "EXOS",
+   "cost": "3600"
+  },
+  {
+   "section": "Recovery section",
+   "item": "72",
+   "qty": "1",
+   "vendor_pn": "",
+   "mfg_pn": "",
+   "description": "Release Bulkhead, machined",
+   "vendor": "EXOS",
+   "cost": "2400"
+  }
+ ]
+}

@@ -3,11 +3,13 @@
 /**
  * mrp.js — ERP Phase 5C: Material Requirements Planning on the audited ERP db.
  *
- *   sync  Load the MC materials files into the ERP (part master, BLK3 BOM, physical counts, missions) and
+ *   sync  Load the MC materials files into the ERP (part master, every vehicle BOM in mrp-assemblies.json — BLK3, HVRR —,
+ *         physical counts, missions) and
  *         post ERP receiving (accepted receipts) into the inventory ledger. Idempotent; only changed rows
  *         are written/audited. Mission Control pages keep reading their JSON files unchanged.
  *   run   Demand = flight vehicles with missions booked (asset serial → BOM assembly; M5 + M6 on BLK3 S0 =
- *         ONE BLK3 build set). Net = gross − on hand − on order (open PO lines). Shortages become per-vendor
+ *         ONE BLK3 build set) + non-mission builds from mrp-assemblies.json (HVRR-1). Parts shared across vehicles
+ *         are netted once against the common stock pool. Net = gross − on hand − on order (open PO lines). Shortages become per-vendor
  *         PURCHASE REQUESTS (proposals only). A request becomes a PO only when a person converts it into a
  *         PO draft and submits it through the existing Suppliers & POs approval flow (≥ $5K / flight-critical
  *         → Jon's Decision card). This engine never creates, approves, or sends a PO and never touches QB.
@@ -27,8 +29,10 @@ const num = v => { const n = parseFloat(String(v == null ? '' : v).replace(/[$,]
 const r3 = n => Math.round((Number(n) || 0) * 1000) / 1000;
 const r2 = n => Math.round((Number(n) || 0) * 100) / 100;
 const normPN = s => String(s || '').trim().toUpperCase().replace(/\s+/g, '');
-// A part number specific enough to find inside free-text PO lines: >= 5 chars, has a digit, not a BLK3-<section>-<item> placeholder.
-const matchablePN = pn => pn.length >= 5 && /\d/.test(pn) && !pn.startsWith('BLK3-');
+// Vehicle BOMs + non-mission builds (BLK3, HVRR, ...). BLK3 is the default if the file is missing.
+const assemblyConfig = () => readJSON('mrp-assemblies.json', { assemblies: [{ id: 'BLK3', bom_index: 'bom-index.json', overlays: true }], builds: [] });
+// A part number specific enough to find inside free-text PO lines: >= 5 chars, has a digit, not a <ASSEMBLY>-<section>-<item> placeholder.
+const matchablePN = pn => pn.length >= 5 && /\d/.test(pn) && !pn.startsWith('BLK3-') && !pn.startsWith('HVRR-');
 
 // BOM vendor spellings → one canonical name ("Digikey"/"DigiKey"/"Digi-Key" → Digi-Key).
 const VENDOR_ALIASES = [
@@ -61,9 +65,8 @@ function vendorIndex(erp) {
 // ── sync ────────────────────────────────────────────────────────────────────
 function sync(erp) {
   const stats = { parts: 0, parts_changed: 0, bom_lines: 0, bom_changed: 0, counts_posted: 0, receipts_posted: 0, missions: 0 };
-  const bom = readJSON('bom-index.json', { rows: [] });
-  const edits = readJSON('bom-edits.json', {});
-  const costs = (readJSON('bom-costs.json', { costs: {} }).costs) || {};
+  const blk3Edits = readJSON('bom-edits.json', {});
+  const blk3Costs = (readJSON('bom-costs.json', { costs: {} }).costs) || {};
   const inv = readJSON('inventory.json', { records: [] });
   const shop = readJSON('shop-inventory.json', { items: [] });
   const findVendor = vendorIndex(erp);
@@ -84,11 +87,20 @@ function sync(erp) {
   const locs = {};
   const bomLines = [];   // written after the parts they reference (FK)
   const seen = {};
+  stats.assemblies = {};
+  for (const asm of assemblyConfig().assemblies) {
+  const A = asm.id;
+  const bom = readJSON(asm.bom_index, { rows: [] });
+  // bom-edits / bom-costs / ledger section#item matches are keyed to the BLK3 BOM rows only.
+  const edits = asm.overlays ? blk3Edits : {};
+  const costs = asm.overlays ? blk3Costs : {};
+  stats.assemblies[A] = (bom.rows || []).length;
   for (const row of bom.rows || []) {
     const sec = row.section || '', item = String(row.item || '');
     const key = `${sec}#${item}`;
     const pn = row.vendor_pn || row.mfg_pn || '';
-    const pid = pn ? 'pt-' + normPN(pn) : `pt-BLK3-${sec.replace(/\W+/g, '')}-${item}`;
+    // No part number → assembly-scoped placeholder (BLK3 ids unchanged from the first load).
+    const pid = pn ? 'pt-' + normPN(pn) : `pt-${A}-${sec.replace(/\W+/g, '')}-${item}`;
     const ed = edits[key] || {};
     const c = costs[key];
     const sheet = num(row.cost);
@@ -97,7 +109,7 @@ function sync(erp) {
     const vendor = canonVendor(row.vendor);
     const v = vendor && vendor !== 'Exos' ? findVendor(vendor) : null;
     const p = parts[pid] || (parts[pid] = {
-      id: pid, part_number: pn || `BLK3-${sec}-${item}`, description: ed.description || row.description || '',
+      id: pid, part_number: pn || `${A}-${sec}-${item}`, description: ed.description || row.description || '',
       vendor, vendor_id: v ? v.id : null, unit: 'ea', unit_cost: r2(unit_cost) || null, cost_basis,
       make_buy: /^exos/i.test(String(row.vendor || '')) ? 'make' : 'buy', active: 1,
       raw_json: { mfg_pn: row.mfg_pn || '', vendor_pn: row.vendor_pn || '', bom_vendor: row.vendor || '', cost_source: c ? (c.source || '') : '', cost_ref: c ? (c.ref || '') : '' },
@@ -106,19 +118,21 @@ function sync(erp) {
 
     const qtyPer = num(ed.req !== undefined && ed.req !== '' ? ed.req : row.qty);
     // The BOM sheet repeats a few section#item keys (blank or reused item numbers) — keep each row distinct.
-    seen[key] = (seen[key] || 0) + 1;
-    bomLines.push({ id: `BLK3:${key}` + (seen[key] > 1 ? `~${seen[key]}` : ''), assembly: 'BLK3', section: sec, item_no: item, part_id: pid, qty_per: qtyPer,
+    const sk = `${A}:${key}`;
+    seen[sk] = (seen[sk] || 0) + 1;
+    bomLines.push({ id: sk + (seen[sk] > 1 ? `~${seen[sk]}` : ''), assembly: A, section: sec, item_no: item, part_id: pid, qty_per: qtyPer,
       raw_json: { description: ed.description || row.description || '', source: bom.source || '', edited_by: ed._by || '' } });
 
     let rec = null;
     for (const k of [row.vendor_pn, row.mfg_pn]) if (k && recBy[normPN(k)]) { rec = recBy[normPN(k)]; break; }
-    if (!rec && item) rec = recBy[`${sec.toUpperCase()}#${item}`];
+    if (!rec && item && asm.overlays) rec = recBy[`${sec.toUpperCase()}#${item}`];
     let shopOh = 0;
     for (const k of [row.vendor_pn, row.mfg_pn]) { const kk = normPN(k); if (kk.length >= 5 && shopBy[kk] != null) { shopOh = shopBy[kk]; break; } }
     let oh = (rec ? Number(rec.qty_on_hand) || 0 : 0) + shopOh;
     if (ed.on_hand !== undefined && ed.on_hand !== '') oh = Number(ed.on_hand) || 0;
     onHand[pid] = Math.max(onHand[pid] || 0, oh);
     if (rec && (rec.locations || []).length) locs[pid] = rec.locations.join(', ');
+  }
   }
   for (const p of Object.values(parts)) { const r = erp.mrpUpsert('part', p); stats.parts++; if (r.changed) stats.parts_changed++; }
   for (const b of bomLines) { const r = erp.mrpUpsert('bom_line', b); stats.bom_lines++; if (r.changed) stats.bom_changed++; }
@@ -173,13 +187,25 @@ function run(erp, actor) {
     b.missions.push(m.id);
     if (m.need_date && (!b.need_by || m.need_date < b.need_by)) b.need_by = m.need_date;
   }
-  const gross = {}, unquantified = new Set(), demandRef = {}, needBy = {};
+  // Non-mission builds (e.g. the HVRR contract vehicle) from mrp-assemblies.json.
+  for (const cb of assemblyConfig().builds || []) {
+    if (!cb.assembly || ['complete', 'cancelled', 'paused'].includes(String(cb.status || '').toLowerCase())) continue;
+    const a = cb.asset_serial ? Object.values(assets).find(x => x.serial === cb.asset_serial) : null;
+    if (a && builds[a.id]) continue;   // already planned through its missions
+    builds[a ? a.id : `build:${cb.id}`] = { asset_id: a ? a.id : null, serial: cb.asset_serial || '', assembly: cb.assembly, missions: [cb.id], qty: Number(cb.qty) || 1, need_by: cb.need_by || null, ref: cb.ref || '' };
+  }
+  const gross = {}, unquantified = new Set(), demandRef = {}, needBy = {}, byAsm = {}, blk3Set = {};
   for (const b of Object.values(builds)) {
     if (!b.assembly) continue;
-    const ref = `${b.serial || 'no vehicle'} (${b.missions.join(', ')})`;
+    const ref = `${b.assembly} ${b.serial || ''}`.trim() + ` (${b.missions.join(', ')})`;
+    const q = b.qty || 1;
     for (const l of erp.listBom(b.assembly)) {
+      (byAsm[l.part_id] = byAsm[l.part_id] || new Set()).add(b.assembly);
       if (l.qty_per == null) { unquantified.add(l.part_id); }
-      else gross[l.part_id] = (gross[l.part_id] || 0) + Number(l.qty_per);
+      else {
+        gross[l.part_id] = (gross[l.part_id] || 0) + Number(l.qty_per) * q;
+        if (b.assembly === 'BLK3') blk3Set[l.part_id] = (blk3Set[l.part_id] || 0) + Number(l.qty_per);
+      }
       demandRef[l.part_id] = demandRef[l.part_id] ? (demandRef[l.part_id].includes(ref) ? demandRef[l.part_id] : demandRef[l.part_id] + '; ' + ref) : ref;
       if (b.need_by && (!needBy[l.part_id] || b.need_by < needBy[l.part_id])) needBy[l.part_id] = b.need_by;
     }
@@ -205,12 +231,17 @@ function run(erp, actor) {
   for (const pid of ids) {
     const p = parts[pid] || {};
     const g = r3(gross[pid] || 0), oh = r3(onHand[pid] || 0), oo = r3(onOrder[pid] || 0);
-    const net = unquantified.has(pid) && !gross[pid] ? 0 : r3(Math.max(0, g - oh - oo));
-    // 'verify': already paid in QuickBooks but no physical count — almost certainly received or built into S0.
-    // Kept OUT of purchase requests so a missing count never turns into a duplicate buy.
-    const action = unquantified.has(pid) && !gross[pid] ? 'quantify'
-      : (net > 0 ? (p.cost_basis === 'paid' ? 'verify' : (p.make_buy === 'make' ? 'make' : 'buy')) : 'none');
-    lines.push({ id: `${runId}-${++i}`, part_id: pid, assembly: 'BLK3', demand_ref: demandRef[pid] || '', gross: g, on_hand: oh, on_order: oo, net,
+    let net = unquantified.has(pid) && !gross[pid] ? 0 : r3(Math.max(0, g - oh - oo));
+    // 'verify': paid in QuickBooks (for BLK3 S0) but no physical count — almost certainly received or built into S0.
+    // Only the BLK3 set is held back for a count; any demand beyond it (e.g. HVRR's set) is still a real buy.
+    let ref = demandRef[pid] || '';
+    let action = unquantified.has(pid) && !gross[pid] ? 'quantify' : (net > 0 ? (p.make_buy === 'make' ? 'make' : 'buy') : 'none');
+    if (net > 0 && p.cost_basis === 'paid') {
+      const held = Math.min(net, blk3Set[pid] || 0);
+      if (held >= net) action = 'verify';
+      else if (held > 0) { net = r3(net - held); ref += ` · ${held} more paid for BLK3 S0, not counted — verify`; }
+    }
+    lines.push({ id: `${runId}-${++i}`, part_id: pid, assembly: [...(byAsm[pid] || [])].sort().join(', '), demand_ref: ref, gross: g, on_hand: oh, on_order: oo, net,
       unit_cost: p.unit_cost || 0, ext_cost: r2(net * (p.unit_cost || 0)), vendor: p.vendor || '', vendor_id: p.vendor_id || null,
       make_buy: p.make_buy || 'buy', need_by: needBy[pid] || null, action });
   }

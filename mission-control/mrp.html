@@ -38,7 +38,7 @@
 <body>
 <header>
   <h1>🧮 MRP — Material Requirements Planning</h1>
-  <span class="muted small">Missions → BLK3 BOM → net vs on hand + on order → purchase requests · ERP system of record</span>
+  <span class="muted small">Missions + builds → vehicle BOMs (BLK3, HVRR) → net vs on hand + on order → purchase requests · ERP system of record</span>
   <a class="back" href="/index.html">← Mission Control</a>
 </header>
 <div class="wrap">
@@ -58,10 +58,11 @@
   <div id="t-lines" class="card" style="display:none">
     <div class="bar">
       <input id="q" placeholder="Search part # / description / supplier" style="min-width:280px"/>
+      <select id="fa"><option value="">All vehicles</option></select>
       <select id="f"><option value="">All actions</option><option value="buy">Buy</option><option value="make">Make (shop)</option><option value="verify">Verify (paid, not counted)</option><option value="quantify">Quantify (no BOM qty)</option><option value="none">Covered</option></select>
       <span class="muted small" id="lcount"></span>
     </div>
-    <div class="scroll"><table><thead><tr><th>Part #</th><th>Description</th><th>Supplier</th><th class="r">Need</th><th class="r">On hand</th><th class="r">On order</th><th class="r">Net</th><th class="r">Unit</th><th class="r">Ext.</th><th>Action</th></tr></thead><tbody id="lbody"></tbody></table></div>
+    <div class="scroll"><table><thead><tr><th>Part #</th><th>Description</th><th>Vehicle</th><th>Supplier</th><th class="r">Need</th><th class="r">On hand</th><th class="r">On order</th><th class="r">Net</th><th class="r">Unit</th><th class="r">Ext.</th><th>Action</th></tr></thead><tbody id="lbody"></tbody></table></div>
   </div>
 </div>
 <script>
@@ -78,17 +79,20 @@ function show(ok, t) { const m = $('msg'); m.className = 'msg ' + (ok ? 'ok' : '
 async function load() {
   try { D = await api('/api/mrp'); } catch (e) { document.querySelector('.wrap').innerHTML = '<div class="card">' + esc(e.message) + '</div>'; return; }
   const s = (D.run && D.run.summary) || {};
-  const builds = (s.builds || []).map(b => `<b>${esc(b.assembly)} ${esc(b.serial || '(no vehicle)')}</b> for ${esc((b.missions||[]).join(' + '))}${b.need_by ? ' · need by ' + esc(b.need_by) : ' · <span class="pill p-amber">need date not set</span>'}`).join('; ');
+  const builds = (s.builds || []).map(b => `<b>${esc(b.assembly)} ${esc(b.serial || '(serial TBD)')}</b> for ${esc((b.missions||[]).join(' + '))}${b.need_by ? ' · need by ' + esc(b.need_by) : ' · <span class="pill p-amber">need date not set</span>'}`).join('; ');
   $('demand').innerHTML = D.run
     ? `Demand: ${builds || 'no missions with a vehicle'} &nbsp;·&nbsp; Last run ${esc(new Date(D.run.run_at).toLocaleString())} by ${esc(D.run.actor)} &nbsp;·&nbsp; ${D.part_count} parts in the ERP part master
        ${D.can_act ? ' &nbsp;<button class="btn sm" id="rerun" onclick="rerun()">↻ Re-run MRP</button>' : ''}
-       <div style="margin-top:6px">On hand = the latest physical count (BOM ledger + shop inventory of record) plus ERP receipts since. Parts already built into S0 are not counted. If it's been installed, record it on the inventory page, or the planner will treat it as short.</div>`
+       <div style="margin-top:6px">On hand = the latest physical count (BOM ledger + shop inventory of record) plus ERP receipts since. Parts shared by BLK3 and HVRR are netted once against the common stock. Parts already built into S0 are not counted. If it's been installed, record it on the inventory page, or the planner will treat it as short.</div>`
     : 'No MRP run yet.' + (D.can_act ? ' <button class="btn sm" onclick="rerun()">Run MRP</button>' : '');
   $('kpis').innerHTML = [
     ['Parts planned', s.parts_planned], ['To buy', s.short_buy], ['Est. buy cost', money(s.est_buy_cost)], ['Shop-make', s.short_make],
     ['Verify (paid, not counted)', `${s.verify_paid_not_counted || 0} · ${money(s.verify_value)}`], ['No BOM qty', s.needs_qty], ['Covered', s.covered],
     ['Requests', `${s.purchase_requests || 0} (${s.pr_to_jon || 0} → Jon)`],
   ].map(([k, v]) => `<div class="kpi"><span class="muted small">${k}</span><b>${esc(v == null ? '—' : v)}</b></div>`).join('');
+  const asms = [...new Set((D.lines || []).flatMap(l => String(l.assembly || '').split(', ').filter(Boolean)))].sort();
+  const cur = $('fa').value;
+  $('fa').innerHTML = '<option value="">All vehicles</option>' + asms.map(a => `<option${a === cur ? ' selected' : ''}>${esc(a)}</option>`).join('');
   renderReqs(); renderLines();
 }
 function renderReqs() {
@@ -103,11 +107,11 @@ function renderReqs() {
   </tr>`).join('') || '<tr><td colspan="8" class="muted">No open purchase requests.</td></tr>';
 }
 function renderLines() {
-  const q = $('q').value.toLowerCase(), f = $('f').value;
-  const rows = (D.lines || []).filter(l => (!f || l.action === f) && (!q || `${l.part_number} ${l.description} ${l.vendor}`.toLowerCase().includes(q)));
+  const q = $('q').value.toLowerCase(), f = $('f').value, fa = $('fa').value;
+  const rows = (D.lines || []).filter(l => (!f || l.action === f) && (!fa || String(l.assembly).split(', ').includes(fa)) && (!q || `${l.part_number} ${l.description} ${l.vendor}`.toLowerCase().includes(q)));
   $('lcount').textContent = `${rows.length} of ${(D.lines||[]).length}`;
   $('lbody').innerHTML = rows.slice(0, 800).map(l => `<tr>
-    <td>${esc(l.part_number)}</td><td>${esc(l.description)}</td><td>${esc(l.vendor)}</td>
+    <td>${esc(l.part_number)}</td><td>${esc(l.description)}${l.demand_ref && l.demand_ref.includes('verify') ? `<div class="small muted">${esc(l.demand_ref.split(' · ').slice(1).join(' · '))}</div>` : ''}</td><td class="small">${esc(l.assembly)}</td><td>${esc(l.vendor)}</td>
     <td class="r">${l.action === 'quantify' ? '?' : esc(l.gross)}</td><td class="r">${esc(l.on_hand)}</td><td class="r">${esc(l.on_order)}</td>
     <td class="r"><b>${esc(l.net)}</b></td><td class="r">${l.unit_cost ? money(l.unit_cost) : '—'}</td><td class="r">${l.ext_cost ? money(l.ext_cost) : ''}</td>
     <td><span class="pill ${ACT[l.action][1]}" title="${l.action === 'verify' ? 'Paid in QuickBooks but no physical count — confirm whether it is on the shelf or built into S0. Not included in purchase requests.' : ''}">${ACT[l.action][0]}</span></td></tr>`).join('');
@@ -134,7 +138,7 @@ document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
   document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === t));
   ['req','lines'].forEach(k => $('t-'+k).style.display = k === t.dataset.t ? '' : 'none');
 });
-$('q').addEventListener('input', renderLines); $('f').addEventListener('change', renderLines);
+$('q').addEventListener('input', renderLines); $('f').addEventListener('change', renderLines); $('fa').addEventListener('change', renderLines);
 load();
 </script>
 </body></html>

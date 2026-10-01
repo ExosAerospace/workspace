@@ -241,7 +241,7 @@
      "name": "Serialized flight-hardware asset register",
      "status": "in_progress",
      "owner": "Exo",
-     "note": "Asset Register LIVE 2026-08-09 (assets.html + read-only /api/assets, audited). Tracks the BLK3 vehicle by serial: S0 = Pathfinder (booked M6). Jon 2026-10-01: only flight vehicles/missions belong here; the GEO-FOG INS spares were removed (not relevant). Mission numbers (M5 entX, M6 BLK3 S0) live in data/missions.json and flow to payload orders, invoices and the payload-customer list."
+     "note": "Asset Register LIVE 2026-08-09 (assets.html + read-only /api/assets, audited). Tracks the BLK3 vehicle by serial: S0 (booked M5 = Pathfinder mission, then M6; 'Pathfinder' internal only). Jon 2026-10-01: only flight vehicles/missions belong here; the GEO-FOG INS spares were removed (not relevant). Mission numbers (M5 entX, M6 BLK3 S0) live in data/missions.json and flow to payload orders, invoices and the payload-customer list."
     }
    ]
   },
@@ -301,6 +301,12 @@
      "status": "done",
      "owner": "Exo",
      "note": "LIVE 2026-10-01: mrp.html + /api/mrp (lib/mrp.js). Net = gross − on hand − open PO qty. Per-vendor purchase requests (proposals); 'Make PO draft' → Suppliers & POs draft → existing approval (≥ $5K / flight-critical / DD → Jon Decision). QB-paid-but-uncounted parts flagged 'verify', never re-bought. Accepted ERP receipts post to the inventory ledger and close POs. Nightly com.exos.mrp-nightly 02:45 (registered, eval'd)."
+    },
+    {
+     "name": "Multi-vehicle: BLK3 + HVRR BOMs, shared-part netting",
+     "status": "done",
+     "owner": "Exo",
+     "note": "LIVE 2026-10-01 (Jon: 'are the systems built for multiple vehicles ... we are currently building the HVRR and BLK3'). mrp-assemblies.json lists vehicle BOMs (BLK3 694→692 lines, HVRR 694 lines from HVRR_BOM_8-21-2026.xlsx via scripts/reindex_bom_assembly.py) + non-mission builds (HVRR-1, Hermes FA9300-26-C-6011). 512 of 515 HVRR parts are shared with BLK3 → netted once against the common pool. QB-paid BLK3 S0 items held for 'verify' only up to the BLK3 set; HVRR demand beyond it is a real buy."
     },
     {
      "name": "Step 4 — Payload orders, missions, invoices in the ERP (contracts + milestones)",
