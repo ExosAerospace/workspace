@@ -150,6 +150,12 @@
    "status": "In Progress",
    "deliverables": [
     {
+     "name": "Payload order-to-cash (sell side): questionnaire → export/CSL screen → LSA e-sign → M1/M2/M3 payments",
+     "status": "live",
+     "owner": "Exo (build) · Lizi + Phil (deal owners)",
+     "note": "LIVE 2026-10-01 (Jon: Kordel ready to sign and pay, no clear process): payload-orders.html + /api/payload-orders (lib/payload-orders.js). One 9-step path per payload; LSA goes out through MC e-sign (customer signs, John countersigns); no LSA send or invoice until the export + CSL screens are done. ITAR/EAR (off-normal): MC stores ONLY the classification number + GCC High SharePoint path + trained handler (signed CUI Policies + CUI NDA) + SEC-CUI-STOR confirmation; notes off; LSA export-screened on upload. M1 paid → payload-customer registry. First order PO2C-2026-001 Scentience/Kordel (CSL clear; export screen open). Invoices are issued in QuickBooks by finance (QB API is read-only)."
+    },
+    {
      "name": "Vendors, POs, receiving (feeds SCRM scorecards)",
      "status": "todo",
      "owner": "Exo",

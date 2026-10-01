@@ -272,6 +272,44 @@ function nextDecisionId(arr) {
 // ── E-SIGN: storage + helpers ──
 const ENVELOPES_FILE = path.join(__dirname, 'data', 'envelopes.json');
 function esignToken() { return crypto.randomBytes(20).toString('hex'); }
+// Shared e-sign envelope creation (used by /api/esign/create and the payload order-to-cash flow).
+async function createEsignEnvelope(req, { title, html, message, subject, signers }) {
+        const valid = (signers || []).filter(s => s && s.email);
+        if (!valid.length) { const e = new Error('No signers with email'); e.code = 400; throw e; }
+        const host = req.headers['host'] || 'localhost:8080';
+        // Prefer explicit env var, then fall back to a local config file, then use host header
+        let mcPublicUrl = process.env.MC_PUBLIC_URL;
+        if (!mcPublicUrl) {
+          try { mcPublicUrl = require('fs').readFileSync(require('path').join(__dirname, '.public-url'), 'utf-8').trim(); } catch {}
+        }
+        const base = (mcPublicUrl || ('http://' + host)).replace(/\/+$/, '');
+        // Signing order (John 2026-09-01): the counterparty signs FIRST, Exos countersigns LAST,
+        // so we control final execution and are never bound while waiting on the other side. Push any
+        // Exos signer to the end (stable, preserves counterparty order) regardless of submitted order.
+        const isExosSigner = (s) => /@exosaero\.com$/i.test(s.email||'') || /\bquinn\b/i.test(s.name||'');
+        const ordered = [...valid].sort((a,b) => (isExosSigner(a)?1:0) - (isExosSigner(b)?1:0));
+        const env = {
+          id: esignToken().slice(0,12), title: title || 'Document', html: html || '',
+          message: message || '', subject: subject || ('Signature requested: ' + (title||'Document')),
+          createdAt: new Date().toISOString(), expiresAt: new Date(Date.now() + 5*24*60*60*1000).toISOString(), status: 'pending',
+          base: base,
+          signers: ordered.map(s => ({ name: s.name||'Signer', email: s.email, role: s.role||'', token: esignToken(), signed:false, signedAt:null, ip:null, signatureType:null, signatureData:null }))
+        };
+        const all = loadEnvelopes(); all.push(env); saveEnvelopes(all);
+        const t = esignTransport();
+        // All links (for the API response/admin), but SEQUENTIAL routing: email only the first
+        // (counterparty) signer now; each subsequent signer is emailed as the prior one completes.
+        const links = env.signers.map(s => ({ email: s.email, name: s.name, link: base + '/sign?token=' + s.token }));
+        const first = env.signers.find(s => !s.signed);
+        if (first) {
+          const link = base + '/sign?token=' + first.token;
+          try { await t.sendMail({ from: '"John Quinn — Exos Aerospace" <jquinnexo@pm.me>', replyTo: 'jquinn@exosaero.com', to: first.email, subject: env.subject, html: esignRequestEmail(first, link, env) }); }
+          catch (e) { console.error('[E-Sign] link email error to', first.email, e.message); }
+        }
+        console.log('[E-Sign] Envelope ' + env.id + ' created; sequential signing, first link sent to ' + (first ? first.email : 'n/a'));
+        return { id: env.id, links };
+}
+
 function loadEnvelopes() { try { return JSON.parse(fs.readFileSync(ENVELOPES_FILE, 'utf-8')); } catch { return []; } }
 function saveEnvelopes(arr) { fs.mkdirSync(path.dirname(ENVELOPES_FILE), { recursive: true }); fs.writeFileSync(ENVELOPES_FILE, JSON.stringify(arr, null, 2)); }
 // ── MNDA registry (source of truth for the purple "MNDA on record" border; reused by CRM/ERP/dossiers) ──
@@ -4398,43 +4436,21 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/esign/create' && req.method === 'POST') {
     let body = ''; req.on('data', c => body += c); req.on('end', async () => {
       try {
-        const { title, html, message, subject, signers } = JSON.parse(body);
-        const valid = (signers || []).filter(s => s && s.email);
-        if (!valid.length) { res.writeHead(400, {'Content-Type':'application/json'}); res.end(JSON.stringify({error:'No signers with email'})); return; }
-        const host = req.headers['host'] || 'localhost:8080';
-        // Prefer explicit env var, then fall back to a local config file, then use host header
-        let mcPublicUrl = process.env.MC_PUBLIC_URL;
-        if (!mcPublicUrl) {
-          try { mcPublicUrl = require('fs').readFileSync(require('path').join(__dirname, '.public-url'), 'utf-8').trim(); } catch {}
-        }
-        const base = (mcPublicUrl || ('http://' + host)).replace(/\/+$/, '');
-        // Signing order (John 2026-09-01): the counterparty signs FIRST, Exos countersigns LAST,
-        // so we control final execution and are never bound while waiting on the other side. Push any
-        // Exos signer to the end (stable, preserves counterparty order) regardless of submitted order.
-        const isExosSigner = (s) => /@exosaero\.com$/i.test(s.email||'') || /\bquinn\b/i.test(s.name||'');
-        const ordered = [...valid].sort((a,b) => (isExosSigner(a)?1:0) - (isExosSigner(b)?1:0));
-        const env = {
-          id: esignToken().slice(0,12), title: title || 'Document', html: html || '',
-          message: message || '', subject: subject || ('Signature requested: ' + (title||'Document')),
-          createdAt: new Date().toISOString(), expiresAt: new Date(Date.now() + 5*24*60*60*1000).toISOString(), status: 'pending',
-          base: base,
-          signers: ordered.map(s => ({ name: s.name||'Signer', email: s.email, role: s.role||'', token: esignToken(), signed:false, signedAt:null, ip:null, signatureType:null, signatureData:null }))
-        };
-        const all = loadEnvelopes(); all.push(env); saveEnvelopes(all);
-        const t = esignTransport();
-        // All links (for the API response/admin), but SEQUENTIAL routing: email only the first
-        // (counterparty) signer now; each subsequent signer is emailed as the prior one completes.
-        const links = env.signers.map(s => ({ email: s.email, name: s.name, link: base + '/sign?token=' + s.token }));
-        const first = env.signers.find(s => !s.signed);
-        if (first) {
-          const link = base + '/sign?token=' + first.token;
-          try { await t.sendMail({ from: '"John Quinn — Exos Aerospace" <jquinnexo@pm.me>', replyTo: 'jquinn@exosaero.com', to: first.email, subject: env.subject, html: esignRequestEmail(first, link, env) }); }
-          catch (e) { console.error('[E-Sign] link email error to', first.email, e.message); }
-        }
-        console.log('[E-Sign] Envelope ' + env.id + ' created; sequential signing, first link sent to ' + (first ? first.email : 'n/a'));
-        res.writeHead(200, {'Content-Type':'application/json'}); res.end(JSON.stringify({ success:true, id: env.id, links }));
-      } catch (e) { console.error('[E-Sign] create error:', e.message); res.writeHead(500,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
+        const r = await createEsignEnvelope(req, JSON.parse(body));
+        res.writeHead(200, {'Content-Type':'application/json'}); res.end(JSON.stringify({ success:true, id: r.id, links: r.links }));
+      } catch (e) {
+        if (e.code === 400) { res.writeHead(400, {'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); return; }
+        console.error('[E-Sign] create error:', e.message); res.writeHead(500,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message}));
+      }
     }); return;
+  }
+
+  // ── Payload order-to-cash (lib/payload-orders.js): questionnaire → export/CSL screen → LSA e-sign → M1/M2/M3 ──
+  // ITAR/EAR payloads: MC holds only the SharePoint (GCC High) path + trained handler, never the data.
+  if (req.url.split('?')[0] === '/api/payload-orders' || req.url.startsWith('/api/payload-orders/')) {
+    require('./lib/payload-orders').handle(req, res, { getSession, loadEnvelopes, createEnvelope: createEsignEnvelope, glog })
+      .catch(e => { console.error('[payload-orders]', e.message); if (!res.headersSent) { res.writeHead(500, {'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); } });
+    return;
   }
 
   if (req.url.startsWith('/api/esign/get') && req.method === 'GET') {

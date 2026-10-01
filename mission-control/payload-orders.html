@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exos — Payload Orders</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--blue:#0066cc;--blue2:#0080ff;--orange:#ff6b00;--orange2:#ff8c33;--text:#e8edf5;--text2:#a0aec0;--border:rgba(255,255,255,0.08);--card:#0f1e38;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--purple:#a855f7}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);min-height:100vh;line-height:1.5}
+  header{background:linear-gradient(135deg,#0a1628 0%,#0d2050 100%);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;min-height:64px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-logo{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--orange));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+  .brand-text h1{font-size:1.05rem;line-height:1.1}.brand-text p{font-size:.78rem;color:var(--text2)}
+  .header-right a{color:var(--blue2);text-decoration:none;font-size:.85rem;margin-left:14px}
+  .wrap{max-width:1150px;margin:0 auto;padding:28px 24px 64px}
+  .hero{background:linear-gradient(135deg,var(--navy3),var(--navy2));border:1px solid var(--border);border-radius:14px;padding:22px 26px;margin-bottom:20px}
+  .hero .tag{display:inline-block;background:rgba(255,140,51,.15);color:var(--orange2);border:1px solid rgba(255,140,51,.3);border-radius:20px;padding:3px 12px;font-size:.72rem;font-weight:600;margin-bottom:10px}
+  .hero h2{font-size:1.5rem;margin-bottom:6px}.hero p{color:var(--text2);font-size:.88rem;max-width:900px}
+  .steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.steps span{font-size:.72rem;background:var(--navy);border:1px solid var(--border);border-radius:12px;padding:2px 10px;color:var(--text2)}
+  .bar{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+  button,.btn{background:var(--blue);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:.82rem;cursor:pointer;font-weight:600}
+  button.sec{background:var(--navy3);border:1px solid var(--border)}button.warn{background:#7a2d00}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--navy2);font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text2)}
+  tr.row{cursor:pointer}tr.row:hover{background:rgba(0,128,255,.06)}
+  .muted{color:var(--text2)}.small{font-size:.76rem}
+  .chip{display:inline-block;border-radius:10px;padding:1px 9px;font-size:.7rem;font-weight:600;margin-right:4px}
+  .c-ok{background:rgba(34,197,94,.15);color:var(--green)}.c-warn{background:rgba(234,179,8,.15);color:var(--yellow)}
+  .c-bad{background:rgba(239,68,68,.15);color:#ff9b9b}.c-ctl{background:rgba(168,85,247,.18);color:#d4b0ff}
+  .prog{display:flex;gap:3px;margin-top:4px}.prog i{display:block;width:16px;height:5px;border-radius:2px;background:var(--navy3)}.prog i.on{background:var(--green)}
+  #panel{position:fixed;top:0;right:-760px;width:740px;max-width:100%;height:100vh;background:var(--navy2);border-left:1px solid var(--border);overflow-y:auto;transition:right .2s;z-index:20;padding:22px 24px 60px}
+  #panel.open{right:0}#bk{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:19}#bk.open{display:block}
+  .sec-h{font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;color:var(--orange2);margin:20px 0 8px;font-weight:700}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  label{display:block;font-size:.72rem;color:var(--text2);margin-bottom:3px}
+  input,select,textarea{width:100%;background:var(--navy);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:7px 9px;font-size:.84rem;font-family:inherit}
+  textarea{min-height:60px}
+  .box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+  .ctlbox{border-color:rgba(168,85,247,.45);background:rgba(168,85,247,.06)}
+  .msg{font-size:.8rem;margin-top:8px}.msg.err{color:#ff9b9b}.msg.ok{color:var(--green)}
+  .hist{font-size:.74rem;color:var(--text2);border-left:2px solid var(--border);padding-left:10px}
+  .hist div{margin-bottom:3px}
+  .ms{display:grid;grid-template-columns:60px 1fr 110px 1fr;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:.8rem}
+  .next{background:rgba(0,128,255,.1);border:1px solid rgba(0,128,255,.3);border-radius:8px;padding:9px 12px;font-size:.86rem;margin-top:8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="brand-logo">EX</div><div class="brand-text"><h1>Exos Aerospace</h1><p>Mission Control · Payload Orders</p></div></div>
+  <div class="header-right"><a href="/index.html">← Board</a><a href="program.html">Payloads-exo3</a><a href="docusign.html">DocuSign</a><a href="erp-rollout.html">ERP-exo3</a></div>
+</header>
+<div class="wrap">
+  <div class="hero">
+    <span class="tag">ERP · PAYLOAD ORDER-TO-CASH</span>
+    <h2>🧾 Payload Orders</h2>
+    <p>Every BLK3 payload deal follows the same steps from questionnaire to final payment. Standard terms: published rate + $500 integration fee, paid <b>50%</b> at reservation, <b>40%</b> at L-120 and <b>10%</b> after flight data. The signed LSA governs.
+    <b>ITAR / EAR payloads:</b> Mission Control holds only the classification number, the GCC High SharePoint location, and the trained handler. The controlled data never goes into MC.</p>
+    <div class="steps"><span>1 Questionnaire</span><span>2 Export + CSL screen</span><span>3 LSA ready</span><span>4 Out for signature</span><span>5 Executed</span><span>6 M1 invoiced</span><span>7 Slot reserved</span><span>8 M2 (L-120)</span><span>9 M3 post-flight</span></div>
+  </div>
+  <div class="bar"><button onclick="openNew()">+ New payload order</button><label style="display:flex;gap:6px;align-items:center;margin:0"><input type="checkbox" id="showClosed" style="width:auto" onchange="render()"> Show closed</label><span class="muted small" id="sum"></span></div>
+  <div id="list"><p class="muted">Loading…</p></div>
+</div>
+<div id="bk" onclick="closeP()"></div>
+<div id="panel"></div>
+<script>
+let D={orders:[],handlers:[],terms:{}},cur=null;
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=id=>document.getElementById(id);
+const money=n=>n==null||n===''?'—':'$'+Number(n).toLocaleString();
+async function api(p,b){const r=await fetch(p,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{});const j=await r.json().catch(()=>({error:'HTTP '+r.status}));if(!r.ok)throw new Error(j.error||('HTTP '+r.status));return j;}
+async function load(){try{D=await api('/api/payload-orders');render();if(cur){cur=D.orders.find(o=>o.id===cur.id)||cur;}}catch(e){$('list').innerHTML='<div class="box msg err">'+esc(e.message)+'</div>';}}
+function exportChip(o){const x=o.export||{};if(x.status==='unscreened'||!x.status)return '<span class="chip c-warn">Export: not screened</span>';
+  if(x.status==='not_controlled')return '<span class="chip c-ok">Not controlled'+(x.classification?' · '+esc(x.classification):'')+'</span>';
+  return '<span class="chip c-ctl">'+(x.status==='itar'?'ITAR':'EAR')+' · '+esc(x.classification)+(o.export_ok?'':' · incomplete')+'</span>';}
+function render(){
+  const show=$('showClosed').checked;const os=D.orders.filter(o=>show||!o.closed);
+  const tot=os.reduce((a,o)=>a+(o.contract_value_effective||0),0),rec=os.reduce((a,o)=>a+(o.amount_received_total||0),0);
+  $('sum').textContent=os.length+' open · '+money(tot)+' contracted · '+money(rec)+' received';
+  if(!os.length){$('list').innerHTML='<p class="muted">No payload orders yet.</p>';return;}
+  $('list').innerHTML='<table><tr><th>Order</th><th>Customer / payload</th><th>Flight</th><th>Value</th><th>Status</th><th>Next action</th></tr>'+os.map(o=>
+   `<tr class="row" onclick="openP('${o.id}')"><td><b>${esc(o.id)}</b><div class="muted small">${esc(o.owner||'')}</div></td>
+    <td><b>${esc(o.customer)}</b><div class="muted small">${esc(o.payload_name||'')}${o.mass_kg?' · '+o.mass_kg+' kg':''}</div></td>
+    <td class="small">${esc(o.flight||'')}<div class="muted">${esc(o.flight_date||'')}</div></td>
+    <td>${money(o.contract_value_effective)}<div class="muted small">${money(o.amount_received_total)} in</div></td>
+    <td>${exportChip(o)}<div class="prog">${[1,2,3,4,5,6,7,8,9].map(i=>`<i class="${o.stage>i?'on':''}"></i>`).join('')}</div><div class="muted small">Step ${Math.min(o.stage,9)} of 9</div></td>
+    <td class="small">${o.overdue?'<span class="chip c-bad">overdue</span>':''}${esc(o.next_action)}</td></tr>`).join('')+'</table>';
+}
+function closeP(){$('panel').classList.remove('open');$('bk').classList.remove('open');cur=null;}
+function openNew(){cur={id:null,customer:'',export:{status:'unscreened'},milestones_view:[],history:[]};draw();}
+function openP(id){cur=D.orders.find(o=>o.id===id);draw();}
+function f(k,label,type,ph){const v=cur[k]==null?'':cur[k];return `<div><label>${label}</label><input id="f_${k}" type="${type||'text'}" value="${esc(v)}" placeholder="${esc(ph||'')}"></div>`;}
+function draw(){
+  const o=cur,x=o.export||{status:'unscreened'},ctl=x.status==='ear'||x.status==='itar',isNew=!o.id;
+  const hs=D.handlers.map(h=>`<option value="${esc(h.email)}" ${x.handler_email===h.email?'selected':''}>${esc(h.name)} (${esc(h.email)})</option>`).join('');
+  let h=`<div style="display:flex;justify-content:space-between;align-items:center"><h3>${isNew?'New payload order':esc(o.id)+' · '+esc(o.customer)}</h3><button class="sec" onclick="closeP()">✕</button></div>`;
+  if(!isNew)h+=`<div class="next">➡️ <b>Next:</b> ${esc(o.next_action)}</div>`;
+  h+=`<div class="sec-h">1 · Deal</div><div class="grid">${f('customer','Customer (company)')}${f('payload_name','Payload name (non-technical, 80 chars)')}
+   ${f('contact_name','Customer signer name')}${f('contact_email','Customer signer email','email')}
+   ${f('flight','Flight','text','BLK3 Flight 2')}${f('flight_date','Flight date','date')}
+   ${f('mass_kg','Mass (kg)','number')}${f('contract_value','Contract value from the LSA (blank = rate card)','number')}
+   ${f('owner','Deal owner','text','Lizi Quinn')}${f('task_ids','MC task #s','text','2957')}</div>
+   <div style="margin-top:8px"><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="f_questionnaire_received" style="width:auto" ${o.questionnaire_received?'checked':''}> Payload questionnaire (Addendum D) received${ctl?' (stored in SharePoint only)':''}</label></div>
+   <div style="margin-top:8px"><label>Notes</label>${ctl?'<div class="muted small">Notes are off for controlled payloads. Keep all technical detail in the SharePoint location.</div>':`<textarea id="f_notes">${esc(o.notes||'')}</textarea>`}</div>
+   <button style="margin-top:10px" onclick="saveDeal()">${isNew?'Create order':'Save'}</button><div class="msg" id="m1"></div>`;
+  if(isNew){$('panel').innerHTML=h;$('panel').classList.add('open');$('bk').classList.add('open');return;}
+  // screens
+  const csl=(o.csl||[]).map((c,i)=>`<div class="small">${c.clear?'🟢':(c.cleared_by?'✅':'🔴')} ${esc(c.name)} — ${esc(c.cleared_by?'cleared by '+c.cleared_by+': '+c.clear_reason:c.result)} ${(!c.clear&&!c.cleared_by)?`<button class="sec" onclick="clearCsl(${i})">Clear (admin)</button>`:''}</div>`).join('')||'<div class="muted small">Not screened yet.</div>';
+  h+=`<div class="sec-h">2 · Denied-party + export screen</div><div class="box"><b class="small">Denied-party (CSL) screen</b> ${csl}<button class="sec" style="margin-top:6px" onclick="runCsl()">Run CSL screen</button><div class="msg" id="m2"></div></div>
+   <div class="box ${ctl?'ctlbox':''}" style="margin-top:10px"><b class="small">Export jurisdiction</b>
+   <div class="grid" style="margin-top:6px"><div><label>Status</label><select id="x_status" onchange="cur.export={...cur.export,status:this.value};draw()">
+     ${[['unscreened','Not screened yet'],['not_controlled','Not controlled (EAR99 / NLR)'],['ear','EAR, controlled (ECCN)'],['itar','ITAR (USML)']].map(([v,l])=>`<option value="${v}" ${x.status===v?'selected':''}>${l}</option>`).join('')}</select></div>
+     <div><label>Classification number only</label><input id="x_class" value="${esc(x.classification||'')}" placeholder="${x.status==='itar'?'USML Cat XV(e)':(x.status==='ear'?'9A515.x':'EAR99')}"></div>
+     <div><label>Determined by</label><select id="x_source">${['customer-provided','Exos determination','pending counsel'].map(v=>`<option ${x.source===v?'selected':''}>${v}</option>`).join('')}</select></div></div>
+   ${ctl?`<div style="margin-top:10px" class="small">🔒 <b>Controlled payload.</b> Only the location and the handler are recorded here. Questionnaire, drawings, ICDs and test data stay in GCC High SharePoint.</div>
+     <div style="margin-top:8px"><label>SharePoint (GCC High) location</label><input id="x_sp" value="${esc(x.sharepoint_path||'')}" placeholder="https://exosaero.sharepoint.us/sites/… or exosaero \\ Exos US-Payloads \\ Customer"></div>
+     <div class="grid" style="margin-top:8px"><div><label>Trained handler (signed CUI Policies + CUI NDA)</label><select id="x_handler"><option value="">— pick —</option>${hs}</select>${D.handlers.length?'':'<div class="msg err">Nobody has signed both CUI documents yet.</div>'}</div>
+     <div><label>&nbsp;</label><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="x_ack" style="width:auto" ${x.procedure_ack?'checked':''}> I am the handler and completed ${esc(D.terms.procedure||'SEC-CUI-STOR')} for this payload</label>${x.procedure_ack?`<div class="muted small">Confirmed by ${esc(x.procedure_ack.by)} ${esc((x.procedure_ack.at||'').slice(0,10))}</div>`:''}</div></div>`:''}
+   <button style="margin-top:10px" onclick="saveExport()">Save export screen</button><div class="msg" id="m3"></div>
+   ${x.screened_by?`<div class="muted small" style="margin-top:4px">Last set by ${esc(x.screened_by)} ${esc((x.screened_at||'').slice(0,10))}</div>`:''}</div>`;
+  // LSA
+  const env=o.envelope_status;
+  h+=`<div class="sec-h">3 · Launch Services Agreement</div><div class="box">
+   <div class="small">${o.lsa_file?'📄 '+esc(o.lsa_file.split('/').pop())+' uploaded '+esc((o.lsa_uploaded_at||'').slice(0,10)):'No LSA uploaded.'}
+   ${env?'<br>✍️ E-sign envelope '+esc(o.envelope_id)+': <b>'+esc(env)+'</b>':''}${o.lsa_sent_outside_at?'<br>📧 Sent outside MC on '+esc(o.lsa_sent_outside_at):''}${o.lsa_signed_at?'<br>✅ Executed '+esc(o.lsa_signed_at)+' · '+esc(o.lsa_signed_copy||''):''}</div>
+   <div style="margin-top:8px"><label>Upload LSA (.docx, commercial terms only, export-screened on upload)</label><input type="file" id="lsaFile" accept=".docx"></div>
+   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="sec" onclick="upLsa()">Upload</button>
+   <button onclick="sendLsa()" ${(!o.screened||!o.lsa_file||(env&&env!=='expired')||o.executed)?'disabled':''}>Send for e-signature (customer, then John)</button></div>
+   <details style="margin-top:10px"><summary class="small muted">LSA handled outside MC (emailed Word copy)</summary>
+   <div class="grid" style="margin-top:6px"><div><label>Sent on</label><input type="date" id="o_sent" value="${esc(o.lsa_sent_outside_at||'')}"></div><div><label>Fully executed on</label><input type="date" id="o_signed" value="${esc(o.lsa_signed_at||'')}"></div></div>
+   <div style="margin-top:6px"><label>Where the signed copy is filed</label><input id="o_copy" value="${esc(o.lsa_signed_copy||'')}"></div><button class="sec" style="margin-top:6px" onclick="lsaOutside()">Record</button></details>
+   <div class="msg" id="m4"></div></div>`;
+  // milestones
+  h+=`<div class="sec-h">4 · Payments · ${money(o.contract_value_effective)} contract</div><div class="box">`+(o.milestones_view||[]).map(m=>`<div class="ms"><b>${m.key} ${m.pct}%</b>
+   <div class="small">${esc(m.trigger)}${m.due?'<br><span class="muted">due '+esc(m.due)+'</span>':''}</div><div>${money(m.amount)}</div>
+   <div class="small">${m.paid_at?'✅ paid '+money(m.amount_received)+' on '+esc(m.paid_at):(m.invoiced_at?'🧾 invoiced '+esc(m.invoice_no||'')+' on '+esc(m.invoiced_at)+' <button class="sec" onclick="msPaid(\''+m.key+'\','+(m.amount||0)+')">Record payment</button>':`<button class="sec" ${(!o.screened||!o.executed)?'disabled':''} onclick="msInv('${m.key}')">Mark invoiced</button>`)}</div></div>`).join('')+
+   `<div class="msg" id="m5"></div></div>`;
+  h+=`<div class="sec-h">History</div><div class="hist">${(o.history||[]).slice().reverse().map(e=>`<div>${esc((e.at||'').slice(0,16).replace('T',' '))} · <b>${esc(e.by)}</b> · ${esc(e.action)} ${esc(e.detail)}</div>`).join('')}</div>
+   <div style="margin-top:16px"><button class="warn" onclick="closeOrder()">${o.closed?'Reopen':'Close order'}</button></div>`;
+  $('panel').innerHTML=h;$('panel').classList.add('open');$('bk').classList.add('open');
+}
+function msg(id,t,ok){const e=$(id);if(e){e.className='msg '+(ok?'ok':'err');e.textContent=t;}}
+async function act(p,b,m){try{const r=await api(p,{id:cur.id,...b});cur=r.order;const i=D.orders.findIndex(o=>o.id===cur.id);if(i>=0)D.orders[i]=cur;else D.orders.push(cur);render();draw();msg(m,'Saved',true);}catch(e){msg(m,e.message);}}
+function saveDeal(){const g=k=>{const e=$('f_'+k);return e?(e.type==='checkbox'?e.checked:e.value):undefined};const fields={};
+  ['customer','payload_name','contact_name','contact_email','flight','flight_date','mass_kg','contract_value','owner','task_ids','questionnaire_received','notes'].forEach(k=>{const v=g(k);if(v!==undefined)fields[k]=v;});
+  act('/api/payload-orders/save',{id:cur.id||undefined,fields},'m1');}
+function runCsl(){msg('m2','Screening…',true);act('/api/payload-orders/csl',{},'m2');}
+function clearCsl(i){const r=prompt('Reason this is a false match (name collision, no nexus):');if(r)act('/api/payload-orders/csl',{clear_index:i,reason:r},'m2');}
+function saveExport(){const v=id=>($(id)||{}).value;act('/api/payload-orders/export',{status:v('x_status'),classification:v('x_class'),source:v('x_source'),sharepoint_path:v('x_sp'),handler_email:v('x_handler'),procedure_ack:($('x_ack')||{}).checked},'m3');}
+function upLsa(){const fl=$('lsaFile').files[0];if(!fl){msg('m4','Pick the .docx first');return;}msg('m4','Uploading + export-screening…',true);
+  const rd=new FileReader();rd.onload=()=>act('/api/payload-orders/lsa-upload',{filename:fl.name,data_b64:String(rd.result).split(',')[1]},'m4');rd.readAsDataURL(fl);}
+function sendLsa(){if(!confirm('Send the LSA to '+(cur.contact_email||'the customer')+' for signature? John countersigns after them.'))return;act('/api/payload-orders/send-lsa',{},'m4');}
+function lsaOutside(){act('/api/payload-orders/lsa-outside',{sent_at:$('o_sent').value||undefined,signed_at:$('o_signed').value||undefined,signed_copy:$('o_copy').value},'m4');}
+function msInv(k){const n=prompt(k+' invoice number (from QuickBooks):');if(n===null)return;act('/api/payload-orders/milestone',{key:k,action:'invoiced',invoice_no:n},'m5');}
+function msPaid(k,amt){const a=prompt(k+' amount received ($):',amt);if(!a)return;const dt=prompt('Date received (YYYY-MM-DD):',new Date().toISOString().slice(0,10));if(!dt)return;act('/api/payload-orders/milestone',{key:k,action:'paid',amount:Number(a),date:dt},'m5');}
+function closeOrder(){const r=prompt(cur.closed?'Reason for reopening:':'Reason for closing:');if(r===null)return;act('/api/payload-orders/close',{reopen:cur.closed,reason:r},'m5');}
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+{
+ "seq": 1,
+ "orders": [
+  {
+   "id": "PO2C-2026-001",
+   "created_at": "2026-10-01T11:47:41.857005Z",
+   "created_by": "Exo",
+   "customer": "Scentience",
+   "contact_name": "Kordel France",
+   "contact_email": "kordel@scentience.ai",
+   "payload_name": "Scentience OPU (olfaction sensor + compute)",
+   "flight": "BLK3 Flight 2",
+   "flight_date": "2027-03-15",
+   "mass_kg": 1,
+   "contract_value": null,
+   "owner": "Lizi Quinn + Phil Eaton",
+   "task_ids": "2957, 2727",
+   "questionnaire_received": true,
+   "lsa_sent_outside_at": "2026-09-18",
+   "notes": "LSA + Cross Waiver emailed as Word by Lizi 9/18 (pre-dates this flow). Phil signed Addendum A 9/18. Jon 10/1: Kordel ready to sign and pay. Flight date is the March 2027 planning month, not a firm date. Contract value = rate card until the LSA figure is confirmed.",
+   "export": {
+    "status": "unscreened"
+   },
+   "milestones": {},
+   "csl": [
+    {
+     "name": "Scentience",
+     "clear": true,
+     "result": "🟢 no CSL match for: Scentience",
+     "at": "2026-10-01T11:48:40.945Z"
+    },
+    {
+     "name": "Kordel France",
+     "clear": true,
+     "result": "🟢 no CSL match for: Kordel France",
+     "at": "2026-10-01T11:48:41.452Z"
+    }
+   ],
+   "history": [
+    {
+     "at": "2026-10-01T11:47:41.857005Z",
+     "by": "Exo",
+     "email": "exo",
+     "action": "created",
+     "detail": "Seeded from MC #2957/#2727. LSA sent outside MC 2026-09-18 (Word by email)."
+    },
+    {
+     "at": "2026-10-01T11:48:41.452Z",
+     "by": "Exo",
+     "email": "exo@exosaero.com",
+     "action": "csl screened",
+     "detail": "Scentience clear; Kordel France clear"
+    }
+   ]
+  }
+ ]
+}
