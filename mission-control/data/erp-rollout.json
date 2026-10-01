@@ -237,23 +237,23 @@
   {
    "name": "Supplier Management & SCRM Policy",
    "artifact": "Exos_Supplier_SCRM_Policy.docx",
-   "owner": "Lizi → Exo/MC",
+   "owner": "Jon (review) → Exo/MC",
    "status": "in_progress",
-   "note": "Draft delivered; adopt & sign"
+   "note": "Draft delivered; adopt & sign · Jon review: D-7281881 (filed 2026-10-01)"
   },
   {
    "name": "Quality Management System (QMS) Charter",
    "artifact": "Exos_QMS_Charter.docx",
-   "owner": "Lizi → Exo/MC",
+   "owner": "Jon (review) → Exo/MC",
    "status": "in_progress",
-   "note": "AS9100D-aligned; cert is target"
+   "note": "AS9100D-aligned; cert is target · Jon review: D-7281882 (filed 2026-10-01)"
   },
   {
    "name": "Manufacturing Maturation Plan (MRL)",
    "artifact": "Exos_Manufacturing_Maturation_Plan.docx",
-   "owner": "Lizi → Exo/MC",
+   "owner": "Jon (review) → Exo/MC",
    "status": "in_progress",
-   "note": "Draft delivered"
+   "note": "Draft delivered · Jon review: D-7281883 (filed 2026-10-01)"
   },
   {
    "name": "Government / DIB Readiness Register",
