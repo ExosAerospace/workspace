@@ -56,7 +56,7 @@ FOUR_PILLAR_MARKERS = ("decision_trace", "fleet_log", "agent_eval", "eval_suite"
 
 
 def _run(cmd):
-    return subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=30)
+    return subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, errors="replace", timeout=30)
 
 
 def registry_labels():
