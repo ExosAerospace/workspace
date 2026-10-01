@@ -1,5 +1,5 @@
 {
- "_note": "Exos mission (flight) numbers. M = Mission. Jon 2026-10-01: booking M5 (entX) and M6, both on the BLK3 S0 rocket (S0 = serial number 0, the Pathfinder vehicle for the BLK3 product line; M5 flies first). Payload orders, invoices and the payload-customer list carry the mission number. Earlier missions (M1-M4) not yet mapped here.",
+ "_note": "Exos mission (flight) numbers. M = Mission. Jon 2026-10-01: booking M5 (entX) and M6, both on the BLK3 S0 rocket (S0 = serial number 0; M5 flies first). Jon 10/1 08:00: M5 is the Pathfinder mission, NOT M6. 'Pathfinder' is an INTERNAL name only: it never goes on an invoice and is kept out of labels (labels flow to payload orders/LSA). Payload orders, invoices and the payload-customer list carry the mission number. Earlier missions (M1-M4) not yet mapped here.",
  "missions": [
   {
    "id": "M5",
@@ -8,16 +8,18 @@
    "vehicle": "BLK3",
    "vehicle_serial": "S0",
    "status": "booking",
-   "notes": "entX mission (current contract). Flies on BLK3 S0 (Pathfinder) — Jon 10/1."
+   "notes": "entX mission (current contract). M5 is the Pathfinder mission (Jon 10/1 08:00) — internal name only, never on invoices. Flies on BLK3 S0, first S0 mission.",
+   "pathfinder": true
   },
   {
    "id": "M6",
-   "label": "M6 · BLK3 S0 (Pathfinder)",
+   "label": "M6 · BLK3 S0",
    "customer": "",
    "vehicle": "BLK3",
    "vehicle_serial": "S0",
    "status": "booking",
-   "notes": "BLK3 S0 = serial 0, Pathfinder vehicle for the BLK3 product line. Second S0 mission (after M5 entX). Shared payload bay."
+   "notes": "Second mission on BLK3 S0 (after M5 entX). Shared payload bay. NOT the Pathfinder (Jon 10/1).",
+   "pathfinder": false
   }
  ]
 }

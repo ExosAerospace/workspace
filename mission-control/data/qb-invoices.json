@@ -7,14 +7,20 @@
    "email": "kordel@scentience.ai",
    "amount": 4000.0,
    "terms": "Net 30",
-   "desc": "Scentience OPU (olfaction sensor + compute) \u2014 Mission M6 (BLK3 S0 Pathfinder) payload integration & flight. Milestone M1: slot reservation (50%) of $8,000 contract (payload order PO2C-2026-001).",
+   "desc": "Scentience OPU (olfaction sensor + compute) \u2014 Mission M6 (BLK3 S0) payload integration & flight. Milestone M1: slot reservation (50%) of $8,000 contract (payload order PO2C-2026-001).",
    "order": "PO2C-2026-001",
    "milestone": "M1",
    "status": "pending",
    "created_at": "2026-10-01T11:57:14Z",
    "note": "Heads-up: Kordel's LSA e-sign is still pending (D-7281884). M1 is due at slot reservation, so the clean move is to approve after he signs. Approving now is fine too if you want the invoice to arrive with the LSA (he told you he's ready to sign and pay).",
    "pdf": "/Users/exomac/.openclaw/workspace/drafts/invoices/Exos_Invoice_0071.pdf",
-   "decision_id": "D-7281885"
+   "decision_id": "D-7281885",
+   "revised": [
+    {
+     "at": "2026-10-01T13:02:39Z",
+     "why": "Jon 10/1 08:00: M5 is the Pathfinder, not M6; no 'Pathfinder' on any invoice"
+    }
+   ]
   }
  ]
 }

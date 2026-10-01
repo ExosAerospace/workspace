@@ -9,7 +9,7 @@
    "contact_name": "Kordel France",
    "contact_email": "kordel@scentience.ai",
    "payload_name": "Scentience OPU (olfaction sensor + compute)",
-   "flight": "M6 \u00b7 BLK3 S0 (Pathfinder)",
+   "flight": "M6 \u00b7 BLK3 S0",
    "flight_date": "2027-03-15",
    "mass_kg": 1,
    "contract_value": 8000,
@@ -94,7 +94,7 @@
      "by": "Exo",
      "email": "exo@exosaero.com",
      "action": "mission set",
-     "detail": "M6 \u00b7 BLK3 S0 (Pathfinder) \u2014 was 'BLK3 Flight 2' (Jon 10/1: booking M6 on BLK3 S0)"
+     "detail": "M6 \u00b7 BLK3 S0 \u2014 was 'BLK3 Flight 2' (Jon 10/1: booking M6 on BLK3 S0)"
     }
    ],
    "lsa_file": "uploads/payload-orders/PO2C-2026-001/1790855584019_Scentience_BLK3_LSA_Appendix_A_EXECUTION_2026-10-01.docx",

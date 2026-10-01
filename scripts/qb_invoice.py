@@ -40,6 +40,19 @@ JON = "jquinn@exosaero.com"
 PCT = {"M1": 50, "M2": 40, "M3": 10}
 MS_LABEL = {"M1": "slot reservation (50%)", "M2": "L-120 milestone (40%)", "M3": "post-flight data delivery (10%)"}
 OPT_SEND, OPT_HOLD, OPT_CANCEL = "Approve & send", "Hold", "Cancel invoice"
+# Internal program names that must never appear on a customer invoice (Jon 2026-10-01: "we do not want
+# pathfinder on any invoice"). Checked at prepare AND re-checked against QB's live line text before send.
+INVOICE_BANNED = ("pathfinder",)
+
+
+def banned_terms(text):
+    return [t for t in INVOICE_BANNED if t in (text or "").lower()]
+
+
+def flight_text(mission_id, m):
+    """Customer-facing flight line: 'Mission M6 (BLK3 S0)'. Mission id + vehicle/serial only — no internal names."""
+    veh = " ".join(x for x in (m.get("vehicle"), m.get("vehicle_serial")) if x)
+    return f"Mission {mission_id}" + (f" ({veh})" if veh else "")
 
 
 def now():
@@ -196,7 +209,7 @@ def prepare(a):
         if not order.get("mission"):
             raise SystemExit(f"{a.order} has no mission number (M5, M6, ...) — set it on the payload order first")
         mlabel = next((m for m in jload(os.path.join(WS, "mission-control/data/missions.json"), {}).get("missions", []) if m["id"] == order["mission"]), {})
-        flight_txt = f"Mission {order['mission']}" + (f" ({mlabel['vehicle']} {mlabel['vehicle_serial']}{' Pathfinder' if mlabel.get('vehicle_serial') == 'S0' else ''})".replace(" )", ")") if mlabel.get("vehicle") else "")
+        flight_txt = flight_text(order["mission"], mlabel)
         desc = (f"{order.get('payload_name') or customer + ' payload'} — {flight_txt} payload integration & flight. "
                 f"Milestone {ms}: {MS_LABEL[ms]} of ${cv:,.0f} contract (payload order {order['id']}).")
         item = a.item or "Payload Sale"
@@ -208,6 +221,8 @@ def prepare(a):
     if not email:
         raise SystemExit("no customer billing email — QB can't send without one")
 
+    if banned_terms(desc):
+        raise SystemExit(f"invoice text contains internal term(s) {banned_terms(desc)} — not allowed on a customer invoice")
     terms = a.terms or "Net 30"
     if a.dry_run:
         cid, new = find_or_create_customer(customer, email, True)
@@ -278,6 +293,11 @@ def watch(a):
                 log(f"skip {r['decision_id']}: answered by '{by or by_email}' — invoice actions need a human answer")
                 continue
             if ans.lower().startswith("approve"):
+                live = q.query(f"select * from Invoice where Id = '{r['qb_id']}'").get("Invoice") or [{}]
+                bad = banned_terms(" ".join(str(l.get("Description") or "") for l in live[0].get("Line", [])) + " " + str(live[0].get("CustomerMemo", {}).get("value") or ""))
+                if bad:
+                    log(f"BLOCKED send of QB invoice {r['doc_number']}: line text contains {bad} — fix the invoice, then re-approve")
+                    continue
                 if a.dry_run:
                     print("WOULD SEND", r["doc_number"], r["email"]); continue
                 res = _api("POST", f"invoice/{r['qb_id']}/send", params={"sendTo": r["email"]})["Invoice"]
