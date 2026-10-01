@@ -3328,6 +3328,9 @@ const server = http.createServer((req, res) => {
         if (session && session.role === 'early_adopter') {
           const proj = await eaTaskInScope(session, id);
           if (!proj || ('category' in fields && fields.category !== proj)) { eaForbid(session, req, res, 'out-of-scope-task-edit'); return; }
+          // Students can't reassign. The edit panel always sends an owner, and it used to fall back
+          // to 'Jon' — that's how Karan's finished cards ended up in Jon's Done (10/1). Drop it.
+          delete fields.owner; delete fields.assigned_to; delete fields.assigned_email;
         }
         if (fields.state === 'Done' && !fields.completed_at) fields.completed_at = new Date().toISOString();
         if (fields.state && fields.state !== 'Done') fields.completed_at = null;

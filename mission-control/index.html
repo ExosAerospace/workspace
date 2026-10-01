@@ -1697,6 +1697,14 @@ function openEdit(id) {
   autoGrow(document.getElementById('editDesc'));
   const _editOwnerSel = document.getElementById('editOwner');
   const _ownerParts = String(task.owner || 'Jon').split('+').map(p => canonOwner(p.trim())).filter(Boolean);
+  // Make sure the current owner is selectable. Sandboxed (early_adopter) users don't get the
+  // /api/team roster, so a student's own name wasn't in the list → nothing selected → Save fell
+  // back to 'Jon' and silently reassigned their finished cards to Jon (10/1 fix).
+  String(task.owner || '').split('+').map(p => p.trim()).filter(Boolean).forEach(p => {
+    if (!Array.from(_editOwnerSel.options).some(o => canonOwner(o.value) === canonOwner(p))) {
+      const opt = document.createElement('option'); opt.value = p; opt.textContent = p; _editOwnerSel.appendChild(opt);
+    }
+  });
   Array.from(_editOwnerSel.options).forEach(o => {
     o.selected = _ownerParts.includes(canonOwner(o.value));
   });
@@ -1972,7 +1980,7 @@ async function saveEdit() {
     id,
     title: document.getElementById('editTitle').value.trim(),
     description: document.getElementById('editDesc').value.trim(),
-    owner: Array.from(document.getElementById('editOwner').selectedOptions).map(o => o.value).join('+') || 'Jon',
+    owner: Array.from(document.getElementById('editOwner').selectedOptions).map(o => o.value).join('+') || ((tasks.find(t => t.id == id) || {}).owner) || 'Jon',
     state: document.getElementById('editState').value,
     due_date: document.getElementById('editDue').value || null,
     priority: parseInt(document.getElementById('editPriority').value) || 0,
