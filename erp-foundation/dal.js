@@ -190,6 +190,119 @@ function openErp(file, opts = {}) {
       return db.get('SELECT * FROM asset_event WHERE id = ?', id);
     },
 
+    // ---- P5: Supply chain — supplier master/ASL, purchase orders, receiving inspection (audited) ----
+    listContracts() { return db.all('SELECT id, number, title, customer, status FROM contract ORDER BY title'); },
+    listWBS() { return db.all('SELECT id, contract_id, code, name FROM wbs_element ORDER BY contract_id, code'); },
+    listVendors() {
+      return db.all(`SELECT id, name, qb_id, asl_status, category, country, flight_critical, dd_tier, review_due,
+                            active, updated_at, raw_json FROM vendor ORDER BY name COLLATE NOCASE`);
+    },
+    getVendor(id) { return db.get('SELECT * FROM vendor WHERE id = ?', String(id)); },
+    getVendorByQb(qbId) { return db.get('SELECT * FROM vendor WHERE qb_id = ?', String(qbId)); },
+    upsertVendor(v) {
+      if (!v || !v.id) throw new Error('upsertVendor requires id');
+      const id = String(v.id);
+      const before = db.get('SELECT * FROM vendor WHERE id = ?', id) || null;
+      const prev = before && before.raw_json ? JSON.parse(before.raw_json) : {};
+      const rec = { ...prev, ...v, updated_at: new Date().toISOString() };
+      writeAudited('vendor', id, before ? 'update' : 'insert', before, rec, () => {
+        db.run(`INSERT INTO vendor (id,name,raw_json,qb_id,asl_status,category,country,flight_critical,dd_tier,review_due,active,updated_at)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+                ON CONFLICT(id) DO UPDATE SET name=excluded.name, raw_json=excluded.raw_json, qb_id=excluded.qb_id,
+                  asl_status=excluded.asl_status, category=excluded.category, country=excluded.country,
+                  flight_critical=excluded.flight_critical, dd_tier=excluded.dd_tier, review_due=excluded.review_due,
+                  active=excluded.active, updated_at=excluded.updated_at`,
+          id, rec.name ?? null, JSON.stringify(rec), rec.qb_id ?? null, rec.asl_status ?? null, rec.category ?? null,
+          rec.country ?? null, rec.flight_critical ? 1 : 0, rec.dd_tier ?? null, rec.review_due ?? null,
+          rec.active === false ? 0 : 1, rec.updated_at);
+      });
+      return db.get('SELECT * FROM vendor WHERE id = ?', id);
+    },
+    listPOs({ vendor_id, since, limit = 2000 } = {}) {
+      const where = [], args = [];
+      if (vendor_id) { where.push('p.vendor_id = ?'); args.push(String(vendor_id)); }
+      if (since) { where.push('p.issued_at >= ?'); args.push(String(since)); }
+      return db.all(`SELECT p.id, p.po_number, p.source, p.qb_id, p.vendor_id, v.name AS vendor_name, p.status, p.total,
+                            p.issued_at, p.need_by, p.promised_date, p.requested_by, p.approved_by, p.approved_at,
+                            p.project_id, p.wbs_id, p.contract_id, p.decision_id, p.flight_critical, p.updated_at,
+                            (SELECT COUNT(*) FROM receipt r WHERE r.po_id = p.id) AS receipts
+                       FROM purchase_order p LEFT JOIN vendor v ON v.id = p.vendor_id`
+        + (where.length ? ' WHERE ' + where.join(' AND ') : '')
+        + ' ORDER BY p.issued_at DESC, p.id DESC LIMIT ?', ...args, limit);
+    },
+    getPO(id) {
+      const po = db.get('SELECT p.*, v.name AS vendor_name FROM purchase_order p LEFT JOIN vendor v ON v.id = p.vendor_id WHERE p.id = ?', String(id));
+      if (!po) return null;
+      po.lines = db.all('SELECT * FROM po_line WHERE po_id = ? ORDER BY line_no, id', po.id);
+      po.receipt_list = db.all('SELECT * FROM receipt WHERE po_id = ? ORDER BY received_at DESC, id DESC', po.id);
+      return po;
+    },
+    /** Upsert a PO; if `lines` is given, the PO's lines are replaced (each line write audited). */
+    upsertPO(po, lines) {
+      if (!po || !po.id) throw new Error('upsertPO requires id');
+      const id = String(po.id);
+      const before = db.get('SELECT * FROM purchase_order WHERE id = ?', id) || null;
+      const prev = before && before.raw_json ? JSON.parse(before.raw_json) : {};
+      const rec = { ...prev, ...po, updated_at: new Date().toISOString() };
+      const F = ['vendor_id', 'project_id', 'wbs_id', 'status', 'total', 'issued_at', 'po_number', 'source', 'qb_id',
+                 'requested_by', 'approved_by', 'approved_at', 'need_by', 'promised_date', 'contract_id', 'decision_id', 'flight_critical', 'updated_at'];
+      writeAudited('purchase_order', id, before ? 'update' : 'insert', before, rec, () => {
+        db.run(`INSERT INTO purchase_order (id,raw_json,${F.join(',')}) VALUES (?,?,${F.map(() => '?').join(',')})
+                ON CONFLICT(id) DO UPDATE SET raw_json=excluded.raw_json, ${F.map(f => `${f}=excluded.${f}`).join(', ')}`,
+          id, JSON.stringify(rec), ...F.map(f => f === 'flight_critical' ? (rec[f] ? 1 : 0) : (rec[f] ?? null)));
+      });
+      if (Array.isArray(lines)) {
+        const old = db.all('SELECT * FROM po_line WHERE po_id = ?', id);
+        const keep = new Set(lines.map((l, i) => String(l.id || `${id}-L${i + 1}`)));
+        for (const o of old) if (!keep.has(o.id)) writeAudited('po_line', o.id, 'delete', o, null, () => db.run('DELETE FROM po_line WHERE id = ?', o.id));
+        lines.forEach((l, i) => {
+          const lid = String(l.id || `${id}-L${i + 1}`);
+          const b = db.get('SELECT * FROM po_line WHERE id = ?', lid) || null;
+          const lr = { ...l, id: lid, po_id: id, line_no: l.line_no ?? i + 1 };
+          writeAudited('po_line', lid, b ? 'update' : 'insert', b, lr, () => {
+            db.run(`INSERT INTO po_line (id,po_id,description,qty,unit_price,raw_json,line_no,part_number,account,amount,qty_received)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?)
+                    ON CONFLICT(id) DO UPDATE SET description=excluded.description, qty=excluded.qty, unit_price=excluded.unit_price,
+                      raw_json=excluded.raw_json, line_no=excluded.line_no, part_number=excluded.part_number, account=excluded.account,
+                      amount=excluded.amount, qty_received=COALESCE(po_line.qty_received, excluded.qty_received)`,
+              lid, id, lr.description ?? null, lr.qty ?? null, lr.unit_price ?? null, JSON.stringify(lr), lr.line_no,
+              lr.part_number ?? null, lr.account ?? null, lr.amount ?? null, lr.qty_received ?? null);
+          });
+        });
+      }
+      return this.getPO(id);
+    },
+    /** Record a receipt + receiving inspection against a PO line; rolls qty_received onto the line. */
+    addReceipt(r) {
+      if (!r || !r.id || !r.po_id) throw new Error('addReceipt requires id + po_id');
+      const id = String(r.id);
+      writeAudited('receipt', id, 'insert', null, r, () => {
+        db.run(`INSERT INTO receipt (id,po_id,received_at,raw_json,po_line_id,qty_received,qty_accepted,qty_rejected,result,coc_received,received_by,ncr_id)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+          id, String(r.po_id), r.received_at ?? new Date().toISOString(), JSON.stringify(r), r.po_line_id ?? null,
+          r.qty_received ?? null, r.qty_accepted ?? null, r.qty_rejected ?? null, r.result ?? null,
+          r.coc_received ? 1 : 0, r.received_by ?? null, r.ncr_id ?? null);
+        if (r.po_line_id) db.run('UPDATE po_line SET qty_received = COALESCE(qty_received,0) + ? WHERE id = ?', Number(r.qty_received) || 0, String(r.po_line_id));
+      });
+      return db.get('SELECT * FROM receipt WHERE id = ?', id);
+    },
+    /** Supplier scorecard inputs: spend (12 mo), on-time and quality from MC receiving inspections. */
+    vendorScorecards(sinceIso) {
+      return db.all(`SELECT v.id AS vendor_id,
+          (SELECT COALESCE(SUM(p.total),0) FROM purchase_order p WHERE p.vendor_id = v.id AND p.issued_at >= ?) AS spend_12mo,
+          (SELECT COUNT(*) FROM purchase_order p WHERE p.vendor_id = v.id AND p.issued_at >= ?) AS pos_12mo,
+          (SELECT MAX(p.issued_at) FROM purchase_order p WHERE p.vendor_id = v.id) AS last_po,
+          (SELECT COUNT(*) FROM receipt r JOIN purchase_order p ON p.id = r.po_id WHERE p.vendor_id = v.id) AS receipts,
+          (SELECT COUNT(*) FROM receipt r JOIN purchase_order p ON p.id = r.po_id WHERE p.vendor_id = v.id
+              AND COALESCE(p.promised_date, p.need_by) IS NOT NULL AND substr(r.received_at,1,10) <= COALESCE(p.promised_date, p.need_by)) AS on_time,
+          (SELECT COUNT(*) FROM receipt r JOIN purchase_order p ON p.id = r.po_id WHERE p.vendor_id = v.id
+              AND COALESCE(p.promised_date, p.need_by) IS NOT NULL) AS dated_receipts,
+          (SELECT COALESCE(SUM(r.qty_received),0) FROM receipt r JOIN purchase_order p ON p.id = r.po_id WHERE p.vendor_id = v.id) AS qty_in,
+          (SELECT COALESCE(SUM(r.qty_accepted),0) FROM receipt r JOIN purchase_order p ON p.id = r.po_id WHERE p.vendor_id = v.id) AS qty_ok,
+          (SELECT COUNT(*) FROM receipt r JOIN purchase_order p ON p.id = r.po_id WHERE p.vendor_id = v.id AND COALESCE(r.qty_rejected,0) > 0) AS rejects
+        FROM vendor v`, sinceIso, sinceIso);
+    },
+
     // ---- P5B: Production control (work orders + routing/WIP + quality; closes MQ-1) ----
     listWorkOrders() {
       return db.all(

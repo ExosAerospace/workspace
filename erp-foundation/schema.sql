@@ -426,7 +426,10 @@ CREATE TABLE IF NOT EXISTS invoice (
 CREATE TABLE IF NOT EXISTS vendor (
   id          TEXT PRIMARY KEY,
   name        TEXT,
-  raw_json    TEXT
+  raw_json    TEXT,
+  -- Phase 5 supply chain (migrate_supply.js adds these to existing dbs)
+  qb_id TEXT, asl_status TEXT, category TEXT, country TEXT, flight_critical INTEGER,
+  dd_tier TEXT, review_due TEXT, active INTEGER, updated_at TEXT
 );
 
 CREATE TABLE IF NOT EXISTS purchase_order (
@@ -437,7 +440,10 @@ CREATE TABLE IF NOT EXISTS purchase_order (
   status      TEXT,
   total       REAL,
   issued_at   TEXT,
-  raw_json    TEXT
+  raw_json    TEXT,
+  -- Phase 5 supply chain (migrate_supply.js adds these to existing dbs)
+  po_number TEXT, source TEXT, qb_id TEXT, requested_by TEXT, approved_by TEXT, approved_at TEXT,
+  need_by TEXT, promised_date TEXT, contract_id TEXT, decision_id TEXT, flight_critical INTEGER, updated_at TEXT
 );
 
 CREATE TABLE IF NOT EXISTS po_line (
@@ -446,14 +452,19 @@ CREATE TABLE IF NOT EXISTS po_line (
   description TEXT,
   qty         REAL,
   unit_price  REAL,
-  raw_json    TEXT
+  raw_json    TEXT,
+  -- Phase 5 supply chain (migrate_supply.js adds these to existing dbs)
+  line_no INTEGER, part_number TEXT, account TEXT, amount REAL, qty_received REAL
 );
 
 CREATE TABLE IF NOT EXISTS receipt (
   id          TEXT PRIMARY KEY,
   po_id       TEXT REFERENCES purchase_order(id) ON DELETE CASCADE,
   received_at TEXT,
-  raw_json    TEXT
+  raw_json    TEXT,
+  -- Phase 5 supply chain (migrate_supply.js adds these to existing dbs)
+  po_line_id TEXT, qty_received REAL, qty_accepted REAL, qty_rejected REAL, result TEXT,
+  coc_received INTEGER, received_by TEXT, ncr_id TEXT
 );
 
 CREATE TABLE IF NOT EXISTS asset (

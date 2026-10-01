@@ -153,13 +153,13 @@
      "name": "Payload order-to-cash (sell side): questionnaire → export/CSL screen → LSA e-sign → M1/M2/M3 payments",
      "status": "live",
      "owner": "Exo (build) · Lizi + Phil (deal owners)",
-     "note": "LIVE 2026-10-01 (Jon: Kordel ready to sign and pay, no clear process): payload-orders.html + /api/payload-orders (lib/payload-orders.js). One 9-step path per payload; LSA goes out through MC e-sign (customer signs, John countersigns); no LSA send or invoice until the export + CSL screens are done. ITAR/EAR (off-normal): MC stores ONLY the classification number + GCC High SharePoint path + trained handler (signed CUI Policies + CUI NDA) + SEC-CUI-STOR confirmation; notes off; LSA export-screened on upload. M1 paid → payload-customer registry. First order PO2C-2026-001 Scentience/Kordel (CSL clear; export screen open). Invoices are issued in QuickBooks by finance (QB API is read-only)."
+     "note": "LIVE 2026-10-01 (Jon: Kordel ready to sign and pay, no clear process): payload-orders.html + /api/payload-orders (lib/payload-orders.js). One 9-step path per payload; LSA goes out through MC e-sign (customer signs, John countersigns); no LSA send or invoice until the export + CSL screens are done. ITAR/EAR (off-normal): MC stores ONLY the classification number + GCC High SharePoint path + trained handler (signed CUI Policies + CUI NDA) + SEC-CUI-STOR confirmation; notes off; LSA export-screened on upload. M1 paid → payload-customer registry. First order PO2C-2026-001 Scentience/Kordel (CSL clear; export screen open). Invoices: Exo creates them in QuickBooks and QB emails them with a pay link after Jon approves the Decision card (qb_invoice.py, QB write approved 10/1)."
     },
     {
      "name": "Vendors, POs, receiving (feeds SCRM scorecards)",
-     "status": "todo",
+     "status": "done",
      "owner": "Exo",
-     "note": "Next increment: vendor/PO/receiving tables exist (empty); DAL + views to follow. Feeds SCRM scorecards."
+     "note": "LIVE 2026-10-01 (suppliers.html). Supplier master (1,121: QB vendors + BOM/DD suppliers) with ASL status, qualification basis, certs, annual review; MC-issued POs (requisition, approval: Jon via Decision card when >= $5K / flight-critical / DD not cleared / ASL override, else another admin), FAR/DFARS + AS9100 quality flowdowns by PO flags, printable PO; approved POs pushed to QuickBooks automatically; receiving inspection (CoC, accept/reject; rejects auto-open an NCR); on-time + quality scorecards. QB vendors/POs sync every 30 min into the audited ERP db."
     },
     {
      "name": "Serialized flight-hardware asset register",

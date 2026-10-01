@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Suppliers &amp; POs — Exos Mission Control</title>
+<style>
+  :root{--bg:#0b0b0d;--panel:#141418;--panel2:#1b1b21;--border:#2a2a31;--text:#e8e8ec;--text2:#9a9aa6;--orange:#ff6b00;--orange2:#ff8c33;--red:#e0524d;--green:#3fb56a;--amber:#e8aa3c;--blue:#4a9eff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header{padding:14px 20px;border-bottom:2px solid var(--orange);display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  header h1{margin:0;font-size:1.15rem;font-weight:800}
+  a.back{color:var(--text2);text-decoration:none;font-weight:600;margin-left:auto}
+  .wrap{padding:14px 20px;max-width:1300px;margin:0 auto}
+  .tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+  .tab{background:var(--panel);border:1px solid var(--border);color:var(--text2);border-radius:9px;padding:8px 14px;cursor:pointer;font-weight:700}
+  .tab.on{background:var(--orange);color:#fff;border-color:var(--orange)}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+  input,select,textarea{background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:.92rem}
+  textarea{width:100%;min-height:54px}
+  label{display:block;font-size:.7rem;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin:8px 0 3px}
+  .btn{background:var(--orange);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:.88rem}
+  .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .btn.green{background:var(--green)} .btn.red{background:var(--red)}
+  .btn.sm{padding:5px 9px;font-size:.78rem}
+  .btn:disabled{opacity:.5;cursor:default}
+  .muted{color:var(--text2)} .small{font-size:.8rem}
+  table{width:100%;border-collapse:collapse;font-size:.86rem}
+  td,th{padding:6px 7px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+  th{color:var(--text2);font-weight:600;font-size:.74rem;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0;background:var(--panel)}
+  tr.click{cursor:pointer} tr.click:hover{background:var(--panel2)}
+  .r{text-align:right}
+  .pill{display:inline-block;font-size:.7rem;border-radius:20px;padding:1px 8px;border:1px solid var(--border);color:var(--text2);white-space:nowrap}
+  .p-green{color:var(--green);border-color:var(--green)} .p-red{color:var(--red);border-color:var(--red)} .p-amber{color:var(--amber);border-color:var(--amber)} .p-blue{color:var(--blue);border-color:var(--blue)} .p-orange{color:var(--orange2);border-color:var(--orange2)}
+  .kpis{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;min-width:150px}
+  .kpi b{display:block;font-size:1.3rem}
+  .scroll{max-height:62vh;overflow:auto}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:flex-start;justify-content:center;z-index:50;overflow:auto;padding:30px 10px}
+  .modal .box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;width:min(980px,100%)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 12px}
+  .grid input,.grid select{width:100%}
+  .msg{padding:9px;border-radius:8px;margin:8px 0;display:none}
+  .msg.ok{display:block;background:rgba(63,181,106,.15);color:var(--green)} .msg.err{display:block;background:rgba(224,82,77,.15);color:var(--red)}
+  .lines input{width:100%;padding:6px}
+  .hist{font-size:.78rem;color:var(--text2);max-height:140px;overflow:auto}
+  .chk{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px} .chk label{display:flex;gap:6px;align-items:center;text-transform:none;font-size:.85rem;color:var(--text);letter-spacing:0;margin:0}
+</style></head>
+<body>
+<header>
+  <h1>🏭 Suppliers &amp; Purchase Orders</h1>
+  <span class="muted small">ERP system of record · approved POs go into QuickBooks automatically</span>
+  <a class="back" href="/index.html">← Mission Control</a>
+</header>
+<div class="wrap">
+  <div class="kpis" id="kpis"></div>
+  <div class="tabs">
+    <div class="tab on" data-t="pos">🧾 Purchase Orders</div>
+    <div class="tab" data-t="vendors">🏷️ Suppliers &amp; ASL</div>
+    <div class="tab" data-t="score">📈 Scorecards</div>
+  </div>
+
+  <div id="t-pos" class="card">
+    <div class="bar">
+      <button class="btn" onclick="openNewPO()">＋ New PO</button>
+      <input id="poq" type="search" placeholder="Search PO #, supplier, requester…" style="flex:1;min-width:200px">
+      <select id="pof">
+        <option value="action">Needs action</option><option value="mine">My POs</option><option value="open">Open (all)</option>
+        <option value="mc">Raised in MC</option><option value="all">All (24 mo)</option>
+      </select>
+    </div>
+    <div class="scroll"><table><thead><tr><th>PO #</th><th>Date</th><th>Supplier</th><th class="r">Total</th><th>Status</th><th>Need by</th><th>Source</th><th>Requested by</th></tr></thead><tbody id="pobody"></tbody></table></div>
+  </div>
+
+  <div id="t-vendors" class="card" style="display:none">
+    <div class="bar">
+      <button class="btn" onclick="openVendor(null)">＋ New supplier</button>
+      <input id="vq" type="search" placeholder="Search supplier…" style="flex:1;min-width:200px">
+      <select id="vf">
+        <option value="active12">Bought from in last 12 mo</option><option value="asl">On the ASL</option><option value="flag">Due-diligence flags</option>
+        <option value="review">ASL review overdue</option><option value="all">All suppliers</option>
+      </select>
+    </div>
+    <div class="scroll"><table><thead><tr><th>Supplier</th><th>ASL</th><th>Category / scope</th><th>DD</th><th class="r">Spend 12 mo</th><th class="r">POs</th><th>Last PO</th><th>Review due</th></tr></thead><tbody id="vbody"></tbody></table></div>
+  </div>
+
+  <div id="t-score" class="card" style="display:none">
+    <div class="muted small" style="margin-bottom:8px">On-time = received on or before the promised/need-by date. Quality = accepted ÷ received quantity at receiving inspection. Both come from receipts logged here; spend comes from QuickBooks POs. Scorecards feed ASL retention (SCRM Policy).</div>
+    <div class="scroll"><table><thead><tr><th>Supplier</th><th>ASL</th><th class="r">Spend 12 mo</th><th class="r">Receipts</th><th class="r">On-time</th><th class="r">Quality</th><th class="r">Rejects</th><th>Rating</th></tr></thead><tbody id="sbody"></tbody></table></div>
+  </div>
+</div>
+
+<!-- PO modal (new / edit / detail) -->
+<div class="modal" id="pomodal"><div class="box" id="pobox"></div></div>
+<!-- Vendor modal -->
+<div class="modal" id="vmodal"><div class="box" id="vbox"></div></div>
+
+<script>
+let D = null, CUR = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const money = n => '$' + (Number(n)||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+const money2 = n => '$' + (Number(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const STATUS = {draft:['Draft',''],pending_approval:['Awaiting approval','p-amber'],issued:['Issued','p-blue'],partially_received:['Partly received','p-orange'],
+  received:['Received','p-green'],closed:['Closed',''],rejected:['Rejected','p-red'],cancelled:['Cancelled',''],open:['Open (QB)','p-blue']};
+const ASLC = {'Approved':'p-green','Conditional':'p-amber','Pending qualification':'p-blue','Disapproved':'p-red','Inactive':'','Not evaluated':''};
+const pill = (t,c) => `<span class="pill ${c||''}">${esc(t)}</span>`;
+const st = s => { const x = STATUS[s] || [s,'']; return pill(x[0], x[1]); };
+const ddPill = v => !v.dd_tier ? '<span class="muted small">—</span>' : pill(v.dd_tier + (v.dd_status && v.dd_status!=='cleared' ? ' · '+v.dd_status : ''), v.dd_tier==='GREEN'?'p-green':v.dd_tier==='RED'?'p-red':'p-amber');
+async function api(url, body) {
+  const r = await fetch(url, body ? {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),credentials:'same-origin'} : {credentials:'same-origin'});
+  const j = await r.json().catch(()=>({error:'bad response'}));
+  if (!r.ok) { const e = new Error(j.error || ('HTTP '+r.status)); e.data = j; throw e; }
+  return j;
+}
+function show(el, ok, text) { el.className = 'msg ' + (ok?'ok':'err'); el.textContent = text; }
+
+async function load() {
+  try { D = await api('/api/supply'); } catch (e) { document.querySelector('.wrap').innerHTML = '<div class="card">'+esc(e.message)+'</div>'; return; }
+  D.vmap = Object.fromEntries(D.vendors.map(v => [v.id, v]));
+  const open = D.pos.filter(p => ['open','issued','partially_received'].includes(p.status));
+  const pend = D.pos.filter(p => p.status === 'pending_approval');
+  const asl = D.vendors.filter(v => ['Approved','Conditional'].includes(v.asl_status));
+  const flags = D.vendors.filter(v => v.dd_tier && v.dd_tier !== 'GREEN' && v.dd_status !== 'cleared');
+  const spend = D.vendors.reduce((a,v)=>a+v.spend_12mo,0);
+  $('kpis').innerHTML = [
+    ['Open POs', open.length + ' · ' + money(open.reduce((a,p)=>a+(p.total||0),0))],
+    ['Awaiting approval', pend.length], ['Spend, last 12 mo', money(spend)],
+    ['Approved suppliers (ASL)', asl.length], ['DD flags to clear', flags.length],
+  ].map(k => `<div class="kpi"><span class="muted small">${k[0]}</span><b>${k[1]}</b></div>`).join('');
+  renderPOs(); renderVendors(); renderScores();
+  const q = new URLSearchParams(location.search).get('po'); if (q && !CUR) openPO(q);
+}
+
+function renderPOs() {
+  const q = $('poq').value.toLowerCase(), f = $('pof').value, me = (D.me.email||'').toLowerCase();
+  let rows = D.pos.filter(p => {
+    if (f === 'action') return p.status === 'pending_approval' || p.status === 'draft' && (p.requested_by||'').toLowerCase() === me || ['issued','partially_received'].includes(p.status);
+    if (f === 'mine') return (p.requested_by||'').toLowerCase() === me;
+    if (f === 'open') return ['open','issued','partially_received','pending_approval'].includes(p.status);
+    if (f === 'mc') return p.source === 'mc';
+    return true;
+  });
+  if (q) rows = rows.filter(p => [p.po_number, p.id, p.vendor_name, p.requested_by].join(' ').toLowerCase().includes(q));
+  $('pobody').innerHTML = rows.slice(0, 400).map(p => `<tr class="click" onclick="openPO('${esc(p.id)}')">
+    <td><b>${esc(p.po_number || p.id)}</b>${p.flight_critical ? ' '+pill('flight-critical','p-orange') : ''}</td><td>${esc(p.issued_at||'')}</td><td>${esc(p.vendor_name||'—')}</td>
+    <td class="r">${money2(p.total)}</td><td>${st(p.status)}</td><td>${esc(p.need_by||'')}</td><td>${p.source==='mc'?pill('MC','p-orange'):pill('QB')}</td><td class="small">${esc(p.requested_by||'')}</td></tr>`).join('')
+    || '<tr><td colspan="8" class="muted">Nothing here.</td></tr>';
+}
+
+function renderVendors() {
+  const q = $('vq').value.toLowerCase(), f = $('vf').value;
+  let rows = D.vendors.filter(v => {
+    if (f === 'active12') return v.pos_12mo > 0 || ['Approved','Conditional','Pending qualification'].includes(v.asl_status);
+    if (f === 'asl') return ['Approved','Conditional'].includes(v.asl_status);
+    if (f === 'flag') return v.dd_tier && v.dd_tier !== 'GREEN' && v.dd_status !== 'cleared';
+    if (f === 'review') return v.review_overdue;
+    return true;
+  });
+  if (q) rows = rows.filter(v => (v.name||'').toLowerCase().includes(q));
+  rows.sort((a,b) => b.spend_12mo - a.spend_12mo || (a.name||'').localeCompare(b.name||''));
+  $('vbody').innerHTML = rows.slice(0, 500).map(v => `<tr class="click" onclick="openVendor('${esc(v.id)}')">
+    <td><b>${esc(v.name)}</b>${v.flight_critical?' '+pill('flight-critical','p-orange'):''}${v.qb_id?'':' '+pill('not in QB')}${v.active?'':' '+pill('inactive')}</td>
+    <td>${pill(v.asl_status, ASLC[v.asl_status])}</td><td class="small">${esc([v.category, v.scope].filter(Boolean).join(' · '))}</td><td>${ddPill(v)}</td>
+    <td class="r">${v.spend_12mo?money(v.spend_12mo):''}</td><td class="r">${v.pos_12mo||''}</td><td>${esc(v.last_po||'')}</td>
+    <td>${v.review_due ? (v.review_overdue ? pill(v.review_due+' overdue','p-red') : esc(v.review_due)) : ''}</td></tr>`).join('')
+    || '<tr><td colspan="8" class="muted">No suppliers match.</td></tr>';
+}
+
+function rating(v) {
+  if (!v.receipts) return '<span class="muted small">no receipts yet</span>';
+  const ot = v.on_time_pct == null ? 100 : v.on_time_pct, qp = v.quality_pct == null ? 100 : v.quality_pct;
+  if (qp < 90 || ot < 70 || v.rejects >= 3) return pill('At risk','p-red');
+  if (qp < 98 || ot < 90) return pill('Watch','p-amber');
+  return pill('Good','p-green');
+}
+function renderScores() {
+  const rows = D.vendors.filter(v => v.spend_12mo > 0 || v.receipts > 0).sort((a,b) => b.spend_12mo - a.spend_12mo);
+  $('sbody').innerHTML = rows.slice(0, 300).map(v => `<tr class="click" onclick="openVendor('${esc(v.id)}')"><td>${esc(v.name)}</td><td>${pill(v.asl_status, ASLC[v.asl_status])}</td>
+    <td class="r">${money(v.spend_12mo)}</td><td class="r">${v.receipts||''}</td><td class="r">${v.on_time_pct==null?'—':v.on_time_pct+'%'}</td>
+    <td class="r">${v.quality_pct==null?'—':v.quality_pct+'%'}</td><td class="r">${v.rejects||''}</td><td>${rating(v)}</td></tr>`).join('');
+}
+
+// ── PO form ────────────────────────────────────────────────────────────────
+function acctOptions(sel) {
+  return '<option value="">— QB account —</option>' + D.accounts.map(a => `<option value="${esc(a.id)}" ${String(sel)===String(a.id)?'selected':''}>${esc(a.name)}</option>`).join('');
+}
+function chargeOptions(po) {
+  const cur = po.contract_id ? 'c:'+po.contract_id+(po.wbs_id?'|'+po.wbs_id:'') : po.project_id ? 'p:'+po.project_id : '';
+  let o = '<option value="">Overhead / indirect</option>';
+  for (const c of D.contracts) {
+    o += `<option value="c:${esc(c.id)}" ${cur==='c:'+c.id?'selected':''}>${esc(c.number||'')} — ${esc(c.title)} (gov contract)</option>`;
+    for (const w of D.wbs.filter(w => w.contract_id === c.id)) o += `<option value="c:${esc(c.id)}|${esc(w.id)}" ${cur==='c:'+c.id+'|'+w.id?'selected':''}>&nbsp;&nbsp;↳ WBS ${esc(w.code)} ${esc(w.name)}</option>`;
+  }
+  for (const p of D.projects) o += `<option value="p:${esc(p.id)}" ${cur==='p:'+p.id?'selected':''}>${esc(p.name)} (project)</option>`;
+  return o;
+}
+function lineRow(l) {
+  l = l || {qty:1};
+  return `<tr><td><input class="l-pn" value="${esc(l.part_number||'')}" placeholder="Part #"></td><td><input class="l-desc" value="${esc(l.description||'')}" placeholder="Description"></td>
+  <td style="width:70px"><input class="l-qty" type="number" min="0" step="any" value="${esc(l.qty)}" oninput="poTotal()"></td>
+  <td style="width:100px"><input class="l-price" type="number" min="0" step="any" value="${esc(l.unit_price==null?'':l.unit_price)}" oninput="poTotal()"></td>
+  <td style="width:230px"><select class="l-acct" style="width:100%">${acctOptions(l.account_id)}</select></td>
+  <td class="r l-ext" style="width:90px"></td><td><button class="btn ghost sm" onclick="this.closest('tr').remove();poTotal()">✕</button></td></tr>`;
+}
+function vendorOptions(sel) {
+  const vs = D.vendors.filter(v => v.active && v.dd_status !== 'failed').sort((a,b) => (b.pos_12mo - a.pos_12mo) || a.name.localeCompare(b.name));
+  return '<option value="">— pick supplier —</option>' + vs.map(v => `<option value="${esc(v.id)}" ${sel===v.id?'selected':''}>${esc(v.name)}${['Approved','Conditional'].includes(v.asl_status)?' ✓ASL':''}</option>`).join('');
+}
+function openNewPO(po) {
+  po = po || {lines:[{qty:1}]};
+  CUR = po.id || null;
+  $('pobox').innerHTML = `<div class="bar"><h2 style="margin:0">${po.id ? 'Edit '+esc(po.id) : 'New purchase order'}</h2><button class="btn ghost sm" style="margin-left:auto" onclick="closeM('pomodal')">Close</button></div>
+  <div class="grid">
+    <div><label>Supplier</label><select id="f-vendor" onchange="vendHint()">${vendorOptions(po.vendor_id)}</select><div id="f-vhint" class="small muted"></div></div>
+    <div><label>Need-by date</label><input id="f-need" type="date" value="${esc(po.need_by||'')}"></div>
+    <div><label>Charge to</label><select id="f-charge">${chargeOptions(po)}</select></div>
+    <div><label>Terms</label><input id="f-terms" value="${esc(po.terms||'Net 30')}"></div>
+  </div>
+  <div class="chk">
+    <label><input type="checkbox" id="f-fc" ${po.flight_critical?'checked':''}> Flight-critical (ASL + quality clauses)</label>
+    <label><input type="checkbox" id="f-elec" ${po.electronic_parts?'checked':''}> Electronic parts</label>
+    <label><input type="checkbox" id="f-metal" ${po.specialty_metals?'checked':''}> Specialty metals</label>
+    <label><input type="checkbox" id="f-exp" ${po.export_controlled?'checked':''}> Export-controlled (ITAR/EAR)</label>
+    <label><input type="checkbox" id="f-cui" ${po.cui?'checked':''}> Supplier gets CUI</label>
+  </div>
+  <div class="small muted" style="margin-top:4px">Never put controlled technical data in a PO line or note. Reference the drawing number; the data stays in SharePoint.</div>
+  <label>Lines</label>
+  <table class="lines"><thead><tr><th>Part #</th><th>Description</th><th>Qty</th><th>Unit $</th><th>QB expense account</th><th class="r">Ext.</th><th></th></tr></thead><tbody id="f-lines">${(po.lines||[]).map(lineRow).join('')}</tbody></table>
+  <div class="bar" style="margin-top:6px"><button class="btn ghost sm" onclick="$('f-lines').insertAdjacentHTML('beforeend', lineRow());poTotal()">＋ Line</button><b style="margin-left:auto">Total <span id="f-total"></span></b></div>
+  <div class="grid"><div><label>Ship to (blank = Greenville)</label><input id="f-ship" value="${esc(po.ship_to||'')}"></div></div>
+  <label>Notes to supplier</label><textarea id="f-notes">${esc(po.notes||'')}</textarea>
+  <div id="f-msg" class="msg"></div>
+  <div class="bar" style="margin-top:10px"><button class="btn ghost" onclick="savePO(false)">Save draft</button><button class="btn" onclick="savePO(true)">Save &amp; submit for approval</button>
+  <span class="muted small">≥ ${money(D.approval.jon_threshold)}, flight-critical, or a supplier with open DD flags → Jon approves on his Decisions board. Otherwise another admin approves here.</span></div>`;
+  $('pomodal').style.display = 'flex'; poTotal(); vendHint();
+}
+function vendHint() {
+  const v = D.vmap[$('f-vendor').value]; if (!v) { $('f-vhint').textContent=''; return; }
+  $('f-vhint').innerHTML = 'ASL: ' + pill(v.asl_status, ASLC[v.asl_status]) + ' · DD: ' + ddPill(v) + (v.on_time_pct!=null?' · on-time '+v.on_time_pct+'%':'');
+}
+function poTotal() {
+  let t = 0; document.querySelectorAll('#f-lines tr').forEach(tr => { const e = (+tr.querySelector('.l-qty').value||0)*(+tr.querySelector('.l-price').value||0); t+=e; tr.querySelector('.l-ext').textContent = money2(e); });
+  $('f-total').textContent = money2(t);
+}
+function collectPO() {
+  const ch = $('f-charge').value; let contract_id=null, wbs_id=null, project_id=null;
+  if (ch.startsWith('c:')) { [contract_id, wbs_id] = ch.slice(2).split('|'); } else if (ch.startsWith('p:')) project_id = ch.slice(2);
+  return { id: CUR, vendor_id: $('f-vendor').value, need_by: $('f-need').value || null, terms: $('f-terms').value, contract_id, wbs_id: wbs_id||null, project_id,
+    charge_label: ch ? $('f-charge').selectedOptions[0].textContent.replace(/^\s*↳\s*/,'').trim() : '',
+    flight_critical: $('f-fc').checked, electronic_parts: $('f-elec').checked, specialty_metals: $('f-metal').checked, export_controlled: $('f-exp').checked, cui: $('f-cui').checked,
+    ship_to: $('f-ship').value, notes: $('f-notes').value,
+    lines: [...document.querySelectorAll('#f-lines tr')].map(tr => { const a = tr.querySelector('.l-acct'); return { part_number: tr.querySelector('.l-pn').value, description: tr.querySelector('.l-desc').value,
+      qty: tr.querySelector('.l-qty').value, unit_price: tr.querySelector('.l-price').value, account_id: a.value, account: a.value ? a.selectedOptions[0].textContent : '' }; }) };
+}
+async function savePO(submit) {
+  const m = $('f-msg');
+  try {
+    const r = await api('/api/supply/po/save', collectPO()); CUR = r.po.id;
+    if (submit) await submitPO(r.po.id, m); else { show(m, true, 'Saved ' + r.po.id); await load(); }
+  } catch (e) { show(m, false, e.message); }
+}
+async function submitPO(id, m) {
+  try {
+    const r = await api('/api/supply/po/submit', {id});
+    await load(); openPO(id, 'Submitted — approval goes to ' + r.routed_to + '.');
+  } catch (e) {
+    if (e.data && e.data.needs_override && D.me.admin) {
+      const why = prompt(e.message + '\n\nAdmin override: give the reason for this one-time buy (it goes to Jon with the PO):');
+      if (why) { const r = await api('/api/supply/po/submit', {id, asl_override_reason: why}).catch(x => { show(m,false,x.message); }); if (r) { await load(); openPO(id, 'Submitted with ASL override — Jon approves.'); } }
+    } else show(m, false, e.message);
+  }
+}
+
+// ── PO detail ──────────────────────────────────────────────────────────────
+async function openPO(id, note) {
+  let po; try { po = await api('/api/supply/po?id=' + encodeURIComponent(id)); } catch (e) { alert(e.message); return; }
+  CUR = po.id;
+  const me = (D.me.email||'').toLowerCase(), mine = (po.requested_by||'').toLowerCase() === me;
+  const v = D.vmap[po.vendor_id] || {};
+  const canRecv = ['issued','partially_received','open'].includes(po.status);
+  const isJon = me === String(D.approval.jon_email).toLowerCase();
+  const canApprove = po.status === 'pending_approval' && D.me.admin && (isJon || (!mine && po.approval_route !== 'jon'));
+  const lines = (po.lines||[]).map(l => `<tr><td>${esc(l.part_number||'')}</td><td>${esc(l.description||'')}</td><td class="r">${esc(l.qty)}</td><td class="r">${money2(l.unit_price)}</td>
+    <td class="r">${money2(l.amount != null ? l.amount : (l.qty||0)*(l.unit_price||0))}</td><td class="small muted">${esc(l.account||'')}</td><td class="r">${esc(l.qty_received||0)}</td>
+    ${canRecv ? `<td><input type="number" min="0" step="any" class="rq" data-l="${esc(l.id)}" style="width:70px" placeholder="rcvd"></td><td><input type="number" min="0" step="any" class="rj" data-l="${esc(l.id)}" style="width:60px" placeholder="rej"></td><td><input class="rr" data-l="${esc(l.id)}" placeholder="reject reason" style="width:140px"></td>` : ''}</tr>`).join('');
+  const rcpts = (po.receipt_list||[]).map(r => `<tr><td>${esc((r.received_at||'').slice(0,10))}</td><td>${esc(r.description||'')}</td><td class="r">${esc(r.qty_received)}</td><td class="r">${esc(r.qty_accepted)}</td><td class="r">${esc(r.qty_rejected||0)}</td>
+    <td>${pill(r.result, r.result==='accept'?'p-green':r.result==='reject'?'p-red':'p-amber')}</td><td>${r.coc_received?'CoC ✓':esc(r.coc_waiver||'')}</td><td>${esc(r.ncr_id||'')}</td><td class="small">${esc(r.received_by||'')}</td></tr>`).join('');
+  $('pobox').innerHTML = `<div class="bar"><h2 style="margin:0">PO ${esc(po.po_number||po.id)}</h2>${st(po.status)} ${po.source==='mc'?pill('MC','p-orange'):pill('QuickBooks')} ${po.flight_critical?pill('flight-critical','p-orange'):''}
+    <button class="btn ghost sm" style="margin-left:auto" onclick="closeM('pomodal')">Close</button></div>
+  ${note ? `<div class="msg ok">${esc(note)}</div>` : ''}
+  <div class="grid small">
+    <div><label>Supplier</label>${esc(po.vendor_name||'—')}<br>ASL ${pill(v.asl_status||'—', ASLC[v.asl_status])} DD ${ddPill(v)}</div>
+    <div><label>Date / need by</label>${esc(po.issued_at||'—')} / ${esc(po.need_by||po.qb_due_date||'—')}</div>
+    <div><label>Charge to</label>${esc(po.charge_label||po.contract_id||po.project_id||'Overhead')}</div>
+    <div><label>Requested / approved</label>${esc(po.requested_by_name||po.requested_by||'—')} / ${esc(po.approved_by||'—')}</div>
+    ${po.qb_id?`<div><label>QuickBooks</label>PO #${esc(po.po_number)} · ${esc(po.qb_status||'')}</div>`:''}
+    ${po.decision_id?`<div><label>Approval card</label><a href="decisions.html" style="color:var(--blue)">${esc(po.decision_id)}</a> ${esc((po.route_reasons||[]).join(', '))}</div>`:''}
+  </div>
+  ${po.asl_override?`<div class="msg err" style="display:block">ASL override by ${esc(po.asl_override.by)}: ${esc(po.asl_override.reason)}</div>`:''}
+  <label>Lines</label>
+  <table><thead><tr><th>Part #</th><th>Description</th><th class="r">Qty</th><th class="r">Unit</th><th class="r">Ext.</th><th>Account</th><th class="r">Rcvd</th>${canRecv?'<th>Receive</th><th>Reject</th><th>Reason</th>':''}</tr></thead><tbody>${lines}</tbody>
+  <tfoot><tr><td colspan="4" class="r"><b>Total</b></td><td class="r"><b>${money2(po.total)}</b></td><td colspan="${canRecv?5:2}"></td></tr></tfoot></table>
+  ${canRecv ? `<div class="card" style="margin-top:10px"><b>Receive &amp; inspect</b>
+    <div class="chk"><label><input type="checkbox" id="r-coc"> Certificate of Conformance received</label>
+    <input id="r-slip" placeholder="Packing slip #" style="width:160px"><input id="r-waive" placeholder="${po.flight_critical?'CoC missing? why (required)':'CoC note (optional)'}" style="flex:1;min-width:200px"></div>
+    <textarea id="r-notes" placeholder="Inspection notes (visual, dimensional, quantity, damage, certs)"></textarea>
+    <div class="bar" style="margin-top:6px"><button class="btn green" onclick="receive('${esc(po.id)}')">Log receipt</button><span class="muted small">Any rejected qty opens an NCR in Production → Quality automatically.</span></div>
+    <div id="r-msg" class="msg"></div></div>` : ''}
+  ${rcpts ? `<label>Receipts &amp; inspection</label><table><thead><tr><th>Date</th><th>Item</th><th class="r">Rcvd</th><th class="r">Accepted</th><th class="r">Rejected</th><th>Result</th><th>CoC</th><th>NCR</th><th>By</th></tr></thead><tbody>${rcpts}</tbody></table>` : ''}
+  ${(po.flowdowns||[]).length ? `<label>Flowdowns on this PO</label><div class="small">${po.flowdowns.map(c=>`<b>${esc(c.ref)}</b> ${esc(c.title)}`).join('<br>')}</div>` : ''}
+  ${po.notes?`<label>Notes</label><div class="small">${esc(po.notes)}</div>`:''}
+  ${(po.history||[]).length?`<label>History</label><div class="hist">${po.history.slice().reverse().map(h=>`${esc((h.at||'').slice(0,16).replace('T',' '))} · ${esc(h.by)} · <b>${esc(h.action)}</b> ${esc(h.detail||'')}`).join('<br>')}</div>`:''}
+  <div id="d-msg" class="msg"></div>
+  <div class="bar" style="margin-top:12px">
+    ${po.source==='mc' ? `<a class="btn ghost" target="_blank" href="/api/supply/po/print?id=${encodeURIComponent(po.id)}">🖨️ PO document / PDF</a>` : ''}
+    ${po.source==='mc' && ['draft','rejected'].includes(po.status) && (mine||D.me.admin) ? `<button class="btn ghost" onclick='openNewPO(${JSON.stringify(po).replace(/'/g,"&#39;")})'>Edit</button><button class="btn" onclick="submitPO('${esc(po.id)}', $('d-msg'))">Submit for approval</button>` : ''}
+    ${canApprove ? `<button class="btn green" onclick="approve('${esc(po.id)}','approve')">✓ Approve → QuickBooks</button><button class="btn red" onclick="approve('${esc(po.id)}','reject')">Reject</button>` : ''}
+    ${po.status==='pending_approval' && !canApprove ? `<span class="muted small">Waiting on ${po.approval_route==='jon'?'Jon (Decisions board)':'another admin'}.</span>` : ''}
+    ${po.source==='mc' && !['received','closed','cancelled'].includes(po.status) && (mine||D.me.admin) ? `<button class="btn ghost" style="margin-left:auto" onclick="cancelPO('${esc(po.id)}')">Cancel PO</button>` : ''}
+  </div>`;
+  $('pomodal').style.display = 'flex';
+}
+async function approve(id, decision) {
+  const reason = decision === 'reject' ? prompt('Reason for rejecting (goes back to the requester):') : '';
+  if (decision === 'reject' && reason === null) return;
+  try { const r = await api('/api/supply/po/approve', {id, decision, reason}); await load(); openPO(id, decision==='reject' ? 'Rejected.' : 'Approved' + (r.qb ? ' — QuickBooks PO #' + r.qb.doc_number + ' created. Print the PO and send it to the supplier.' : '.')); }
+  catch (e) { show($('d-msg'), false, e.message); }
+}
+async function cancelPO(id) {
+  const reason = prompt('Cancel this PO? Reason:'); if (reason === null) return;
+  try { const r = await api('/api/supply/po/cancel', {id, reason}); await load(); openPO(id, r.note || 'Cancelled.'); } catch (e) { show($('d-msg'), false, e.message); }
+}
+async function receive(id) {
+  const lines = [...document.querySelectorAll('.rq')].map(i => ({ po_line_id: i.dataset.l, qty_received: +i.value || 0,
+    qty_rejected: +(document.querySelector(`.rj[data-l="${i.dataset.l}"]`).value) || 0, reason: document.querySelector(`.rr[data-l="${i.dataset.l}"]`).value })).filter(l => l.qty_received > 0);
+  try {
+    const r = await api('/api/supply/receive', { po_id: id, lines, coc_received: $('r-coc').checked, coc_waiver: $('r-waive').value, packing_slip: $('r-slip').value, notes: $('r-notes').value });
+    await load(); openPO(id, 'Receipt logged' + (r.ncr ? ' — NCR ' + r.ncr + ' opened for the rejected items.' : '.'));
+  } catch (e) { show($('r-msg'), false, e.message); }
+}
+
+// ── vendor ─────────────────────────────────────────────────────────────────
+function openVendor(id) {
+  const v = id ? D.vmap[id] : { name:'', asl_status:'Not evaluated', certs:[] };
+  const certs = (v.certs||[]).concat([{}]).map(c => `<tr><td><input class="c-n" value="${esc(c.name||'')}" placeholder="AS9100D / ISO 9001 / ITAR reg / NADCAP…"></td><td><input class="c-num" value="${esc(c.number||'')}" placeholder="Cert #"></td><td><input class="c-x" type="date" value="${esc(c.expires||'')}"></td></tr>`).join('');
+  $('vbox').innerHTML = `<div class="bar"><h2 style="margin:0">${id ? esc(v.name) : 'New supplier'}</h2>${id ? pill(v.asl_status, ASLC[v.asl_status]) + ' ' + ddPill(v) : ''}<button class="btn ghost sm" style="margin-left:auto" onclick="closeM('vmodal')">Close</button></div>
+  ${v.dd_flags && v.dd_flags.length ? `<div class="msg err" style="display:block">Due diligence: ${esc(v.dd_flags.join('; '))}</div>` : ''}
+  <div class="grid">
+    ${id ? '' : `<div><label>Name</label><input id="v-name"></div>`}
+    <div><label>ASL status ${D.me.admin?'':'(admin)'}</label><select id="v-asl" ${D.me.admin?'':'disabled'}>${D.asl_states.map(s=>`<option ${s===v.asl_status?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div><label>Qualification basis</label><select id="v-qual"><option value="">—</option>${['Documentation review','First-article inspection','On-site survey / audit','Flight heritage (prior Exos use)','Distributor of record (OCM-authorized)'].map(s=>`<option ${s===v.qualification?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div><label>Category</label><input id="v-cat" value="${esc(v.category||'')}" placeholder="Machining, composites, avionics…"></div>
+    <div><label>Approved scope</label><input id="v-scope" value="${esc(v.scope||'')}" placeholder="What they're approved to supply"></div>
+    <div><label>CAGE</label><input id="v-cage" value="${esc(v.cage||'')}"></div>
+    <div><label>UEI</label><input id="v-uei" value="${esc(v.uei||'')}"></div>
+    <div><label>Email</label><input id="v-email" value="${esc(v.email||'')}"></div>
+    <div><label>Phone</label><input id="v-phone" value="${esc(v.phone||'')}"></div>
+    <div><label>Country</label><input id="v-country" value="${esc(v.country||'')}"></div>
+    <div><label>Next ASL review</label><input id="v-review" type="date" value="${esc(v.review_due||'')}"></div>
+  </div>
+  <div class="chk"><label><input type="checkbox" id="v-fc" ${v.flight_critical?'checked':''}> Supplies flight-critical items</label></div>
+  <label>Certifications</label><table><thead><tr><th>Certificate</th><th>Number</th><th>Expires</th></tr></thead><tbody id="v-certs">${certs}</tbody></table>
+  <label>Notes</label><textarea id="v-notes">${esc(v.notes||'')}</textarea>
+  ${id && (v.asl_history||[]).length ? `<label>ASL history</label><div class="hist">${v.asl_history.slice().reverse().map(h=>`${esc(h.at.slice(0,10))} · ${esc(h.by)} · ${esc(h.from)} → <b>${esc(h.to)}</b> ${esc(h.reason||'')}`).join('<br>')}</div>` : ''}
+  ${id ? `<div class="small muted" style="margin-top:8px">12 mo: ${money(v.spend_12mo)} across ${v.pos_12mo} PO(s) · on-time ${v.on_time_pct==null?'—':v.on_time_pct+'%'} · quality ${v.quality_pct==null?'—':v.quality_pct+'%'} · ${v.qb_id?'QB vendor '+esc(v.qb_id):'not in QuickBooks yet (created on first approved PO)'}</div>` : ''}
+  <div id="v-msg" class="msg"></div>
+  <div class="bar" style="margin-top:10px"><button class="btn" onclick="saveVendor(${id?`'${esc(id)}'`:'null'})">Save</button></div>`;
+  $('vmodal').style.display = 'flex';
+}
+async function saveVendor(id) {
+  const v = id ? D.vmap[id] : {};
+  const body = { id, category: $('v-cat').value, scope: $('v-scope').value, qualification: $('v-qual').value, cage: $('v-cage').value, uei: $('v-uei').value,
+    email: $('v-email').value, phone: $('v-phone').value, country: $('v-country').value, notes: $('v-notes').value, flight_critical: $('v-fc').checked,
+    review_due: $('v-review').value, certs: [...document.querySelectorAll('#v-certs tr')].map(tr => ({ name: tr.querySelector('.c-n').value, number: tr.querySelector('.c-num').value, expires: tr.querySelector('.c-x').value })).filter(c => c.name) };
+  if (!id) body.name = $('v-name').value;
+  const asl = $('v-asl').value;
+  if (D.me.admin && asl !== (v.asl_status || 'Not evaluated')) { body.asl_status = asl; body.reason = prompt('Reason for the ASL change (kept in the audit trail):') || ''; }
+  try { const r = await api('/api/supply/vendor', body); await load(); openVendor(r.vendor.id); show($('v-msg'), true, 'Saved.'); } catch (e) { show($('v-msg'), false, e.message); }
+}
+
+function closeM(id) { $(id).style.display = 'none'; CUR = null; }
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === t));
+  ['pos','vendors','score'].forEach(k => $('t-'+k).style.display = k === t.dataset.t ? '' : 'none');
+});
+['poq','pof'].forEach(i => $(i).addEventListener('input', renderPOs));
+['vq','vf'].forEach(i => $(i).addEventListener('input', renderVendors));
+document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeM(m.id); }));
+load();
+</script>
+</body></html>

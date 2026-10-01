@@ -4445,6 +4445,13 @@ const server = http.createServer((req, res) => {
     }); return;
   }
 
+  // ── Supply chain (lib/supply-chain.js): supplier master/ASL, POs (approval → QB), receiving inspection, scorecards ──
+  if (req.url.split('?')[0] === '/api/supply' || req.url.startsWith('/api/supply/')) {
+    require('./lib/supply-chain').handle(req, res, { getSession, glog })
+      .catch(e => { console.error('[supply-chain]', e.message); if (!res.headersSent) { res.writeHead(500, {'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); } });
+    return;
+  }
+
   // ── Payload order-to-cash (lib/payload-orders.js): questionnaire → export/CSL screen → LSA e-sign → M1/M2/M3 ──
   // ITAR/EAR payloads: MC holds only the SharePoint (GCC High) path + trained handler, never the data.
   if (req.url.split('?')[0] === '/api/payload-orders' || req.url.startsWith('/api/payload-orders/')) {
@@ -5597,6 +5604,16 @@ const server = http.createServer((req, res) => {
           glog('mc-server', 'decision_answered', 'ok', `${d.id} → ${String(d.answer || '').slice(0, 80)}`, { decision: d.id, by: session ? session.email : 'token', confirmed_proposal: !!(d.proposal_resolution && d.proposal_resolution.confirmed) });
         }
         saveDecisions(arr);
+        // Event-driven follow-through for action cards: PO approvals (supply chain) and QB invoice sends.
+        for (const id of updated) {
+          const d = arr.find(x => x.id === id); if (!d) continue;
+          const k = String(d.dedupeKey || '');
+          if (k.startsWith('po-approve:')) {
+            require('./lib/supply-chain').onDecision(d).catch(e => glog('supply-chain', 'po_decision_failed', 'error', `${d.id}: ${e.message}`, { decision: d.id }));
+          } else if (k.startsWith('qb-invoice:')) {
+            try { require('child_process').execFile('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'qb_invoice.py'), 'watch'], { timeout: 120000 }, () => {}); } catch (e) {}
+          }
+        }
         // Fire rendered notifications async (non-blocking) for each answered decision.
         // Notifies the internal person waiting (owner field → @exosaero.com email) via
         // Discord DM + email. Never blocks the HTTP response.

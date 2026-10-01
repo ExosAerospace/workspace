@@ -4440,6 +4440,48 @@
    "reusability_scope": "Exos infra. Any MC host migration MUST move this connector (it was missed on 9/28).",
    "risk_tier": "MED",
    "envelope_source": "hand-written 2026-09-30 from plist + Cloudflare API (tunnel 337a6040, route 192.168.143.0/24)"
+  },
+  {
+   "label": "com.exos.qb-supply-sync",
+   "script": "erp-foundation/qb_supply_sync.js",
+   "kind": "recurring",
+   "schedule": "every 30 min",
+   "purpose": "qb_supply_sync.js: mirror QuickBooks vendors + purchase orders (and Supplier-DD registry tiers / BOM-only suppliers) into the audited ERP supplier master + PO tables for the Suppliers & POs module. Read-only on QB; never overwrites MC-owned fields (ASL, quals, certs, receipts, MC-raised POs).",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "external API: intuit.com, quickbooks (READ: Vendor, PurchaseOrder, Account); writes erp-foundation/mc.db via audited DAL; writes mission-control/data/qb-accounts-cache.json",
+   "memory_boundary": "workspace ERP db (audited) + MC data dir",
+   "escalation": "Decisions board / Jon inbox",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 1800s → WARN); idempotency check: second consecutive run reports 0 new/updated (verified 2026-10-01)",
+   "telemetry": "~/.openclaw/logs/qb-supply-sync.launchd.log; erp audit_log actor=qb-supply-sync",
+   "reusability_scope": "ERP supply chain",
+   "risk_tier": "LOW",
+   "envelope_source": "authored 2026-10-01 with the module",
+   "change_log": [
+    "2026-10-01 created with ERP Phase 5 Suppliers & POs (Jon: 'Build it!')"
+   ]
+  },
+  {
+   "label": "com.exos.qb-invoice-watch",
+   "script": "scripts/qb_invoice.py",
+   "kind": "recurring",
+   "schedule": "every 5 min (+ event-driven on Decision answer)",
+   "purpose": "qb_invoice.py watch: on a HUMAN-answered 'EXO3: Approve & send invoice' card, has QuickBooks email the unsent invoice (Approve & send) or deletes it (Cancel); marks payload-order milestones invoiced/paid from QB balance.",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Execute-on-human-approval",
+   "human_owner": "John Quinn",
+   "permission_envelope": "external API: intuit.com, quickbooks (WRITE: Invoice send/delete-unsent only; READ: Invoice); customer email sent BY QuickBooks only after Jon's card answer; writes payload-orders.json + qb-invoices.json",
+   "memory_boundary": "workspace + MC data dir",
+   "escalation": "Decisions board / Jon inbox",
+   "eval_suite": "agent_eval hourly liveness (LastExitStatus=0; staleness > 2.5x cadence 300s → WARN); guard test: agent/Exo-answered cards are skipped (verified 2026-10-01)",
+   "telemetry": "logs/qb-invoice.log; ~/.openclaw/logs/qb-invoice-watch.launchd.log",
+   "reusability_scope": "finance AR",
+   "risk_tier": "MEDIUM",
+   "envelope_source": "authored 2026-10-01",
+   "change_log": [
+    "2026-10-01 created (Jon approved QB write for invoicing; sends via Decision approval)"
+   ]
   }
  ],
  "eval_wave_1": {

@@ -1,0 +1,48 @@
+{
+ "_note": "Supply Chain module config (lib/supply-chain.js). Thresholds/approvers are Exo defaults pending Jon's confirmation (Decision filed 2026-10-01). Flowdowns are incorporated by reference; counsel review recommended before the first government-funded PO.",
+ "qb_push": true,
+ "public_base": "https://mc.exosaero.space",
+ "default_terms": "Net 30",
+ "asl_review_months": 12,
+ "approval": {
+  "jon_email": "jquinn@exosaero.com",
+  "jon_threshold": 5000,
+  "gov_funded_to_jon": false,
+  "rule": "Jon approves (Decision card) when total >= threshold, flight-critical, supplier DD not cleared, or ASL override. Otherwise any admin except the requester approves in MC."
+ },
+ "company": {
+  "name": "Exos Aerospace Systems & Technologies, Inc.",
+  "address": "299 FM 1903, Greenville, TX 75402",
+  "cage": "7EMY6",
+  "uei": "CK24BPZGF854"
+ },
+ "flowdowns": [
+  {"ref": "Exos PO T&Cs", "title": "Exos standard purchase order terms and conditions; supplier represents it is not excluded on SAM.gov or listed on the Consolidated Screening List", "when": ["always"]},
+  {"ref": "Q1", "title": "Certificate of Conformance required with each shipment, signed by an authorized supplier quality representative", "when": ["flight_critical"]},
+  {"ref": "Q2", "title": "First Article Inspection per AS9102 on first production, and after any design, process, facility, or sub-tier change", "when": ["flight_critical"]},
+  {"ref": "Q3", "title": "Lot/serial traceability to raw material; material certifications (mill/test reports) furnished with shipment", "when": ["flight_critical"]},
+  {"ref": "Q4", "title": "Right of access for Exos, its customers, and regulatory authorities to facilities and records involved in this order", "when": ["flight_critical"]},
+  {"ref": "Q5", "title": "Supplier shall notify Exos of nonconformances and obtain Exos approval for nonconforming product disposition; notify of changes in process, facility, or sub-tier source; no substitution without written approval", "when": ["flight_critical"]},
+  {"ref": "Q6", "title": "Counterfeit part prevention (AS5553 / AS6174); parts sourced from OCM or authorized distributors only", "when": ["flight_critical", "electronic"]},
+  {"ref": "Q7", "title": "Quality records retained a minimum of 10 years and available to Exos on request", "when": ["flight_critical"]},
+  {"ref": "Q8", "title": "Foreign Object Debris (FOD) prevention per AS9146", "when": ["flight_critical"]},
+  {"ref": "Q9", "title": "Applicable requirements of this order flowed down to sub-tier suppliers", "when": ["flight_critical", "gov"]},
+  {"ref": "FAR 52.203-19", "title": "Prohibition on Requiring Certain Internal Confidentiality Agreements or Statements", "when": ["gov"]},
+  {"ref": "FAR 52.204-21", "title": "Basic Safeguarding of Covered Contractor Information Systems", "when": ["gov"]},
+  {"ref": "FAR 52.204-23", "title": "Prohibition on Contracting for Hardware, Software, and Services Developed or Provided by Kaspersky Lab and Other Covered Entities", "when": ["gov"]},
+  {"ref": "FAR 52.204-25", "title": "Prohibition on Contracting for Certain Telecommunications and Video Surveillance Services or Equipment", "when": ["gov"]},
+  {"ref": "FAR 52.222-26", "title": "Equal Opportunity", "when": ["gov"], "and": ["over_10k"]},
+  {"ref": "FAR 52.222-50", "title": "Combating Trafficking in Persons", "when": ["gov"]},
+  {"ref": "FAR 52.244-6", "title": "Subcontracts for Commercial Products and Commercial Services", "when": ["gov"]},
+  {"ref": "DFARS 252.203-7002", "title": "Requirement to Inform Employees of Whistleblower Rights", "when": ["gov"]},
+  {"ref": "DFARS 252.244-7000", "title": "Subcontracts for Commercial Products or Commercial Services", "when": ["gov"]},
+  {"ref": "DFARS 252.225-7009", "title": "Restriction on Acquisition of Certain Articles Containing Specialty Metals", "when": ["metals"], "and": ["gov"]},
+  {"ref": "DFARS 252.246-7007", "title": "Contractor Counterfeit Electronic Part Detection and Avoidance System", "when": ["electronic"], "and": ["gov"]},
+  {"ref": "DFARS 252.246-7008", "title": "Sources of Electronic Parts", "when": ["electronic"], "and": ["gov"]},
+  {"ref": "DFARS 252.204-7012", "title": "Safeguarding Covered Defense Information and Cyber Incident Reporting", "when": ["cui"]},
+  {"ref": "DFARS 252.204-7019 / -7020", "title": "Notice of NIST SP 800-171 DoD Assessment Requirements / NIST SP 800-171 DoD Assessment Requirements", "when": ["cui"]},
+  {"ref": "DFARS 252.204-7021", "title": "Contractor Compliance with the Cybersecurity Maturity Model Certification Level Requirements", "when": ["cui"]},
+  {"ref": "DFARS 252.225-7048", "title": "Export-Controlled Items", "when": ["export"]},
+  {"ref": "ITAR / EAR notice", "title": "Items or technical data under this order may be controlled under the ITAR (22 CFR 120-130) or EAR (15 CFR 730-774); no export, re-export, or foreign-person access without required U.S. authorization", "when": ["export"]}
+ ]
+}
