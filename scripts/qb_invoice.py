@@ -142,6 +142,28 @@ def invoice_pdf(inv_id, doc):
     return fn
 
 
+def write_cover_email(rec, contact_name=None):
+    """Jon 2026-10-01: an invoice never goes out bare — it needs an intro email. Write the cover email
+    next to the PDF (<pdf>_cover_email.txt); decision-send-watcher puts it at the top of the
+    ready-to-send so Jon can paste it and attach the PDF. [____] marks anything Jon must fill."""
+    first = (contact_name or "").split()[0] if contact_name else "[____]"
+    due = (datetime.datetime.now() + datetime.timedelta(days=int(re.sub(r"\D", "", rec["terms"]) or 30))).strftime("%B %-d, %Y")
+    ms = f"Milestone {rec['milestone']} on payload order {rec['order']}" if rec.get("order") else "the work described"
+    txt = (f"To: {contact_name + ' ' if contact_name else ''}<{rec['email']}>\n"
+           f"Subject: Exos Invoice #{rec['doc_number']} — {rec['customer']}\n"
+           f"Attachment: {os.path.basename(rec['pdf'])}\n\n"
+           f"Hi {first},\n\n"
+           f"Attached is Exos Invoice #{rec['doc_number']} for ${rec['amount']:,.2f}, covering {ms}.\n\n"
+           f"- Billed to: {rec['customer']}\n- Terms: {rec['terms']}, due {due}\n"
+           f"- Payment: by wire. We'll send wire instructions separately; please confirm them with us by phone before sending funds.\n\n"
+           f"[____ one line on what this payment unlocks / next step]\n\n"
+           f"Thanks, and let me know if you have any questions.\n\nBest,\nJohn Quinn\nCofounder & CEO\n")
+    fn = os.path.splitext(rec["pdf"])[0] + "_cover_email.txt"
+    if not os.path.exists(fn):  # never clobber a hand-edited cover email
+        open(fn, "w").write(txt)
+    return fn
+
+
 def file_decision(rec):
     tok = open(TOKEN).read().strip()
     rel_pdf = os.path.relpath(rec["pdf"], WS)
@@ -149,6 +171,7 @@ def file_decision(rec):
            f"Amount: ${rec['amount']:,.2f} · Terms: {rec['terms']} · QB invoice #{rec['doc_number']} (QB Id {rec['qb_id']})\n"
            f"Line: {rec['desc']}\n"
            f"Invoice PDF (exactly what the customer gets): {rel_pdf}\n"
+           + (f"Cover email (intro that goes with the invoice): {rec['cover_email']}\n" if rec.get("cover_email") else "")
            + (f"Payload order: {rec['order']} {rec['milestone']}\n" if rec.get("order") else "")
            + (f"\n{rec['note']}\n" if rec.get("note") else "")
            + "\nOn Approve & send: QuickBooks emails it from its own mailer with the PDF and a 'Review and pay' "
@@ -246,6 +269,7 @@ def prepare(a):
            "email": email, "amount": amount, "terms": terms, "desc": desc, "order": order["id"] if order else None,
            "milestone": ms, "status": "pending", "created_at": now(), "note": a.note or ""}
     rec["pdf"] = invoice_pdf(rec["qb_id"], rec["doc_number"])
+    rec["cover_email"] = os.path.relpath(write_cover_email(rec, (order or {}).get("contact_name")), WS)
     rec["decision_id"] = file_decision(rec)
     try:
         attach_pdf_to_decision(rec)

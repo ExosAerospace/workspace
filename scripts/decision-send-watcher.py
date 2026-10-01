@@ -184,7 +184,17 @@ def send(it, draft):
     m=EmailMessage(); m["From"]=FROM; m["To"]=to
     title=it.get("title","(decision)")
     m["Subject"]=f"[Ready to send — from you] {title}"
-    ctx=(f"You authorized decision {it.get('id')} ({title}) with: {it.get('answer','')}.\n"
+    # Jon 2026-10-01: an invoice is never "ready to send" bare — lead with its cover email
+    # (written by qb_invoice.py next to the PDF as <pdf>_cover_email.txt).
+    cover = ""
+    if att and att.lower().endswith(".pdf"):
+        cf = os.path.splitext(att)[0] + "_cover_email.txt"
+        if not os.path.exists(cf):
+            cf = os.path.join(WS, "drafts/invoices", os.path.splitext(os.path.basename(att))[0] + "_cover_email.txt")
+        if os.path.exists(cf):
+            cover = ("EMAIL TO SEND (paste into a new message, attach the PDF below; fill any [____] first):\n"
+                     + "-"*60 + "\n" + open(cf).read().strip() + "\n" + "-"*60 + "\n\n")
+    ctx=(cover +f"You authorized decision {it.get('id')} ({title}) with: {it.get('answer','')}.\n"
          f"Related: {it.get('relatedItem','')}\n\n"
          f"This is the ready message. SEND IT FROM YOUR OWN EMAIL to the intended recipient. "
          f"It was delivered here to you, and was NOT sent to the outside party by the system.\n\n"
