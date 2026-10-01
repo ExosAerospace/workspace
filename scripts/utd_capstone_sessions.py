@@ -52,7 +52,7 @@ def lead_sessions(stu, card, short, poc, d1, d2, d3):
          "(\"only\", \"first\", \"fastest\"), anything off in tone\n"
          "   DRAFT: your corrected version, under 150 words, no prices\n"
          "BLK3 facts you can use: 135 kg payload bay, about 100-110 km, a few minutes of microgravity, "
-         "hardware back in 2-3 days, Flight 2 about March 2027.\n"
+         "hardware recovered and returned to you, Flight 2 about March 2027.\n"
          f"Then drag this task AND card #{card} to Done. The lead now counts as READY."),
     ]
 
@@ -132,7 +132,7 @@ S += [
      "Email it to Lizi and Senthil, and post the text plus which option you chose and why. Drag this task and 3137 to Done."),
     ("Brenda", "onepager-top", TUE, "⏱ 20 min · One-pager: headline + 3 \"what you get\" bullets",
      "Exo's starter bullets, from the Payload User's Guide:\n- 135 kg payload bay on a reusable rocket\n"
-     "- A few minutes of microgravity at about 100-110 km\n- Your hardware back in 2-3 days, so you can fly again\n"
+     "- A few minutes of microgravity at about 100-110 km\n- Your hardware recovered and returned to you, so you can fly again\n"
      "Write a headline (SPACEavailable™ is the brand) and rewrite the bullets in your words. Post both here. Drag to Done."),
     ("Brenda", "onepager-send", WED, "⏱ 20 min · One-pager: who it's for + how to reserve; send v1 to Lizi",
      "Add a \"who flies\" line (use the 5 segments on Laura's ICP) and a call to action (\"Contact Exos to reserve a slot\"). No prices. "
