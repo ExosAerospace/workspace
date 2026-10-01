@@ -358,8 +358,13 @@ def main():
             reply(taskid, f"✅ Exo: {', '.join(did)} (per {owner_of_note or 'note'}: “{cmd[:120]}”).")
             logline(f"act {aid} task {taskid}: {did}"); acted += 1; continue
 
-        # 4) free-form directive -> route to the right owner as a linked task
-        if ACTION.search(cmd):
+        # 4) free-form directive -> route to the right owner as a linked task.
+        # A QUESTION is never a directive, even if it contains an action verb ("where do i go to
+        # login for you to investigate this" spawned #3318 — Jon 10/1). Questions fall to 5) and
+        # get answered on the original task.
+        is_question = cmd.rstrip().endswith("?") or re.match(
+            r"(where|what|why|how|when|who|which|can|could|should|would|is|are|do|does|did|will)\b", low)
+        if ACTION.search(cmd) and not is_question:
             p = resolve_person(cmd, roster) or domain_owner(cmd, by_email)
             if p:
                 nid = supa("POST", "tasks", {"title": cmd[:70], "owner": p["name"], "assigned_to": p["name"],
