@@ -1,16 +1,77 @@
 {
-  "_about": "Pending Mission Control seats for Montana Spaceport partners (role montana_partner). INTERNAL — never served to partners. A seat is activated ONLY by `python3 scripts/montana_partner_access.py add ... --apply` after Jon confirms the email. Owner: John Quinn. MC task #3288 (parent #3287).",
-  "policy": "Emails stay BLANK until the partner supplies the address they want for MC and Jon confirms. 'email_on_file_unconfirmed' is what the CRM already has — do NOT activate from it without Jon's confirmation.",
+  "_about": "Pending Mission Control seats for Montana Spaceport partners (role montana_partner). INTERNAL \u2014 never served to partners. A seat is activated ONLY by `python3 scripts/montana_partner_access.py add ... --apply` after Jon confirms the email. Owner: John Quinn. MC task #3288 (parent #3287).",
+  "policy": "Emails stay BLANK until the partner supplies the address they want for MC and Jon confirms. 'email_on_file_unconfirmed' is what the CRM already has \u2014 do NOT activate from it without Jon's confirmation.",
   "seats": [
-    {"seat_id": "mt-edgar", "name": "Edgar", "org": "Montana Spaceport", "email": "", "status": "pending",
-     "email_on_file_unconfirmed": "edgar@montanaspaceport.com",
-     "note": "Surname conflict to confirm: CRM rows say 'Edgar Johansson'; the 9/30 tasking and memory say 'Edgar Rayo' / 'Edgardo Rayo'. Route-through-Jon only.", "created": "2026-09-30"},
-    {"seat_id": "mt-sean", "name": "Sean", "org": "Limestone Hills Innovation & Test Campus", "email": "", "status": "pending",
-     "email_on_file_unconfirmed": "sean@montanaspaceport.com",
-     "note": "Opportunities tracker (6/8) names Sean McClung coordinating LHITC/MSTR materials; surname not confirmed for the seat.", "created": "2026-09-30"},
-    {"seat_id": "mt-isaiah", "name": "Isaiah", "org": "Montana Spaceport", "email": "", "status": "pending",
-     "email_on_file_unconfirmed": "isaiah@montanaspaceport.com",
-     "note": "CRM auto-capture (8/31) lists Isaiah Centifanto; confirm with Edgar.", "created": "2026-09-30"}
+    {
+      "seat_id": "mt-edgar",
+      "name": "Edgar Johansson",
+      "org": "Montana Spaceport",
+      "email": "edgar@montanaspaceport.com",
+      "status": "active",
+      "email_on_file_unconfirmed": "edgar@montanaspaceport.com",
+      "note": "Surname conflict to confirm: CRM rows say 'Edgar Johansson'; the 9/30 tasking and memory say 'Edgar Rayo' / 'Edgardo Rayo'. Route-through-Jon only.",
+      "created": "2026-09-30",
+      "activated_at": "2026-10-01T10:55:25.000Z",
+      "mc_user_id": 26
+    },
+    {
+      "seat_id": "mt-sean",
+      "name": "Sean McClung",
+      "org": "Montana Spaceport (VP Operations; Limestone Hills Innovation & Test Campus)",
+      "email": "sean@montanaspaceport.com",
+      "status": "active",
+      "email_on_file_unconfirmed": "sean@montanaspaceport.com",
+      "note": "Opportunities tracker (6/8) names Sean McClung coordinating LHITC/MSTR materials; surname not confirmed for the seat.",
+      "created": "2026-09-30",
+      "activated_at": "2026-10-01T10:55:26.000Z",
+      "mc_user_id": 27
+    },
+    {
+      "seat_id": "mt-isaiah",
+      "name": "Isaiah Centifanto",
+      "org": "Montana Spaceport (VP Data & Technology)",
+      "email": "isaiah@montanaspaceport.com",
+      "status": "active",
+      "email_on_file_unconfirmed": "isaiah@montanaspaceport.com",
+      "note": "CRM auto-capture (8/31) lists Isaiah Centifanto; confirm with Edgar.",
+      "created": "2026-09-30",
+      "activated_at": "2026-10-01T10:55:28.000Z",
+      "mc_user_id": 28
+    }
   ],
-  "events": []
+  "events": [
+    {
+      "ts": "2026-10-01T10:55:25.000Z",
+      "action": "grant",
+      "email": "edgar@montanaspaceport.com",
+      "name": "Edgar Johansson",
+      "org": "Montana Spaceport",
+      "mc_user_id": 26,
+      "seat": "mt-edgar",
+      "cloudflare": "added",
+      "corr": "8897493761354f3c"
+    },
+    {
+      "ts": "2026-10-01T10:55:26.000Z",
+      "action": "grant",
+      "email": "sean@montanaspaceport.com",
+      "name": "Sean McClung",
+      "org": "Montana Spaceport (VP Operations; Limestone Hills Innovation & Test Campus)",
+      "mc_user_id": 27,
+      "seat": "mt-sean",
+      "cloudflare": "added",
+      "corr": "0f939f666f8d4805"
+    },
+    {
+      "ts": "2026-10-01T10:55:28.000Z",
+      "action": "grant",
+      "email": "isaiah@montanaspaceport.com",
+      "name": "Isaiah Centifanto",
+      "org": "Montana Spaceport (VP Data & Technology)",
+      "mc_user_id": 28,
+      "seat": "mt-isaiah",
+      "cloudflare": "added",
+      "corr": "fc59298c52d343f2"
+    }
+  ]
 }

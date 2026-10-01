@@ -1,24 +1,69 @@
 {
   "_about": "Curated, partner-safe content for the montana_partner MC view (/montana-partner.html). NOTHING here may include finance, investor, Series A, cap-table, CUI/ITAR or internal-only content. Owner: John Quinn. Edit only with Jon's approval.",
-  "updated": "2026-09-30",
+  "updated": "2026-10-01",
   "program": {
-    "title": "Exos Aerospace × Montana Spaceport",
-    "headline": "Fly with Exos now → Fly from Montana next",
+    "title": "Exos Aerospace \u00d7 Montana Spaceport",
+    "headline": "Fly with Exos now \u2192 Fly from Montana next",
     "summary": "Exos and the Montana Spaceport signed a Letter of Intent on February 26, 2026. Montana payload customers can fly on the Exos BLK3 reusable suborbital vehicle in 2027 from Exos's current launch site, then follow the vehicle to Montana once the Montana spaceport is licensed and operating. The Montana spaceport is PLANNED and in development; it is not yet licensed or operational."
   },
   "status": [
-    {"item": "Letter of Intent — Montana Spaceport & Exos", "state": "Executed (2026-02-26)"},
-    {"item": "Montana spaceport site", "state": "Planned / in development — not yet licensed or operational"},
-    {"item": "FAA/DOT Spaceport Siting & Launch Corridors RFI (Docket FAA-2026-9736)", "state": "Coordinating comments; due 2026-10-26"},
-    {"item": "BLK3 2027 payload slots", "state": "Open — sold per slot; see the one-pager"},
-    {"item": "Montana payload prospects", "state": "Verified target list below; intros via Montana Spaceport → Exos payload team"}
+    {
+      "item": "Letter of Intent \u2014 Montana Spaceport & Exos",
+      "state": "Executed (2026-02-26)"
+    },
+    {
+      "item": "Program Operating Agreement (two BLK3 vehicles, NCE)",
+      "state": "Draft \u2014 path to signature on task #3304"
+    },
+    {
+      "item": "Task Order No. 1 \u2014 Montana launch-site evaluation",
+      "state": "Starts on execution; candidate-site data on task #3305"
+    },
+    {
+      "item": "Montana spaceport site",
+      "state": "Planned / in development \u2014 not yet licensed or operational"
+    },
+    {
+      "item": "FAA/DOT Spaceport Siting & Launch Corridors RFI (Docket FAA-2026-9736)",
+      "state": "Coordinating comments; due 2026-10-26"
+    },
+    {
+      "item": "BLK3 2027 payload slots",
+      "state": "Open \u2014 sold per slot; see the one-pager"
+    },
+    {
+      "item": "Montana payload prospects",
+      "state": "Verified target list below; intros via Montana Spaceport \u2192 Exos payload team"
+    }
   ],
   "offer": {
     "how_it_works": "Montana Spaceport makes the introduction; the Exos payload team scopes the payload and quotes the slot.",
-    "contact": "Introductions via Montana Spaceport → Exos payload team"
+    "contact": "Introductions via Montana Spaceport \u2192 Exos payload team"
   },
   "docs": [
-    {"id": "fly-from-montana-pdf", "title": "Fly with Exos → Fly from Montana (one-page, PDF)", "desc": "One-page overview for Montana institutions and companies.", "file": "Fly_with_Exos_Fly_from_Montana_OnePager.pdf"},
-    {"id": "fly-from-montana-docx", "title": "Fly with Exos → Fly from Montana (editable Word)", "desc": "Editable version of the one-pager.", "file": "Fly_with_Exos_Fly_from_Montana_OnePager.docx"}
+    {
+      "id": "partner-guide-pdf",
+      "title": "Montana Partner Guide \u2014 Working with Exos (START HERE, PDF)",
+      "desc": "How we work (exo3 / Mission Control), your access, Program Operating Agreement Q&A, and how to move fastest.",
+      "file": "Montana_Partner_Guide_Working_with_Exos_exo3_2026-10-01.pdf"
+    },
+    {
+      "id": "partner-guide-docx",
+      "title": "Montana Partner Guide (editable Word)",
+      "desc": "Editable version of the guide.",
+      "file": "Montana_Partner_Guide_Working_with_Exos_exo3_2026-10-01.docx"
+    },
+    {
+      "id": "fly-from-montana-pdf",
+      "title": "Fly with Exos \u2192 Fly from Montana (one-page, PDF)",
+      "desc": "One-page overview for Montana institutions and companies.",
+      "file": "Fly_with_Exos_Fly_from_Montana_OnePager.pdf"
+    },
+    {
+      "id": "fly-from-montana-docx",
+      "title": "Fly with Exos \u2192 Fly from Montana (editable Word)",
+      "desc": "Editable version of the one-pager.",
+      "file": "Fly_with_Exos_Fly_from_Montana_OnePager.docx"
+    }
   ]
 }
