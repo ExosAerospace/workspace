@@ -387,6 +387,7 @@ document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
 ['poq','pof'].forEach(i => $(i).addEventListener('input', renderPOs));
 ['vq','vf'].forEach(i => $(i).addEventListener('input', renderVendors));
 document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeM(m.id); }));
-load();
+// Deep link (#po=<id>) — MRP opens the PO draft it just created.
+load().then(() => { const m = location.hash.match(/po=([^&]+)/); if (m) openPO(decodeURIComponent(m[1])); });
 </script>
 </body></html>

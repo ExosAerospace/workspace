@@ -708,6 +708,100 @@ function openErp(file, opts = {}) {
       return db.all('SELECT x.*, a.name AS agent_name FROM contract_attribution x LEFT JOIN sales_agent a ON a.id=x.agent_id WHERE x.contract_id = ?', String(contractId));
     },
 
+    // ---- P5C: MRP — part master, BOM, inventory ledger, missions, MRP runs, purchase requests ----
+    // Audited upserts that only write (and only log) when a column actually changed, so the nightly
+    // sync does not flood audit_log with no-op rows.
+    mrpUpsert(table, rec) {
+      const COLS = {
+        part: ['part_number', 'description', 'vendor', 'vendor_id', 'unit', 'unit_cost', 'cost_basis', 'lead_time_days', 'make_buy', 'active', 'raw_json'],
+        bom_line: ['assembly', 'section', 'item_no', 'part_id', 'qty_per', 'raw_json'],
+        mission: ['label', 'customer', 'vehicle', 'asset_id', 'status', 'need_date', 'raw_json'],
+        purchase_request: ['run_id', 'vendor', 'vendor_id', 'status', 'est_total', 'need_by', 'routes_to_jon', 'po_id', 'raw_json'],
+      }[table];
+      if (!COLS) throw new Error('mrpUpsert: unsupported table ' + table);
+      if (!rec || !rec.id) throw new Error('mrpUpsert requires id');
+      const id = String(rec.id);
+      const before = db.get(`SELECT * FROM ${table} WHERE id = ?`, id) || null;
+      const row = {};
+      for (const c of COLS) row[c] = rec[c] === undefined ? (before ? before[c] : null) : (rec[c] === null ? null : (typeof rec[c] === 'object' ? JSON.stringify(rec[c]) : rec[c]));
+      if (before && COLS.every(c => String(before[c] ?? '') === String(row[c] ?? ''))) return { id, changed: false };
+      const ts = new Date().toISOString();
+      const stamp = table === 'purchase_request' && !before ? ['created_at', 'updated_at'] : ['updated_at'];
+      const cols = ['id', ...COLS, ...stamp];
+      const vals = [id, ...COLS.map(c => row[c]), ...stamp.map(() => ts)];
+      writeAudited(table, id, before ? 'update' : 'insert', before, { id, ...row }, () => {
+        db.run(`INSERT INTO ${table} (${cols.join(',')}) VALUES (${cols.map(() => '?').join(',')}) ` +
+          `ON CONFLICT(id) DO UPDATE SET ${cols.slice(1).filter(c => c !== 'created_at').map(c => `${c}=excluded.${c}`).join(', ')}`, ...vals);
+      });
+      return { id, changed: true };
+    },
+    addInventoryTxn(t) {
+      if (!t || !t.id || !t.part_id || !t.kind) throw new Error('addInventoryTxn requires id, part_id, kind');
+      if (t.kind === 'receipt' && t.ref && db.get("SELECT 1 FROM inventory_txn WHERE kind='receipt' AND ref = ?", String(t.ref))) return null;
+      writeAudited('inventory_txn', t.id, 'insert', null, t, () => {
+        db.run('INSERT INTO inventory_txn (id,part_id,kind,qty,location,source,ref,occurred_at) VALUES (?,?,?,?,?,?,?,?)',
+          String(t.id), String(t.part_id), t.kind, Number(t.qty) || 0, t.location ?? null, t.source ?? null, t.ref ?? null, t.occurred_at || new Date().toISOString());
+      });
+      return t.id;
+    },
+    /** On-hand per part = latest physical count + receipts/adjustments after that count. */
+    onHandByPart() {
+      const out = {};
+      const counts = db.all(`SELECT t.part_id, t.qty, t.occurred_at FROM inventory_txn t
+        JOIN (SELECT part_id, MAX(occurred_at) m FROM inventory_txn WHERE kind='count' GROUP BY part_id) x
+          ON x.part_id = t.part_id AND x.m = t.occurred_at WHERE t.kind='count'`);
+      const since = {};
+      for (const c of counts) { out[c.part_id] = Number(c.qty) || 0; since[c.part_id] = c.occurred_at; }
+      for (const d of db.all("SELECT part_id, qty, occurred_at FROM inventory_txn WHERE kind IN ('receipt','adjust')")) {
+        if (!since[d.part_id] || d.occurred_at > since[d.part_id]) out[d.part_id] = (out[d.part_id] || 0) + (Number(d.qty) || 0);
+      }
+      return out;
+    },
+    lastCountByPart() {
+      const m = {};
+      for (const r of db.all(`SELECT part_id, qty FROM inventory_txn t WHERE kind='count' AND occurred_at =
+          (SELECT MAX(occurred_at) FROM inventory_txn x WHERE x.part_id=t.part_id AND x.kind='count')`)) m[r.part_id] = Number(r.qty) || 0;
+      return m;
+    },
+    listParts() { return db.all('SELECT * FROM part ORDER BY part_number'); },
+    listBom(assembly) { return db.all('SELECT * FROM bom_line WHERE assembly = ? ORDER BY section, CAST(item_no AS REAL)', String(assembly)); },
+    listMissions() { return db.all('SELECT * FROM mission ORDER BY id'); },
+    /** Open supply: open/issued PO lines not yet fully received (QB + MC POs). */
+    listOpenPoLines() {
+      return db.all(`SELECT l.id, l.po_id, l.part_number, l.description, l.qty, COALESCE(l.qty_received,0) qty_received,
+          p.po_number, p.status, p.vendor_id, p.need_by, p.promised_date, p.issued_at
+        FROM po_line l JOIN purchase_order p ON p.id = l.po_id
+        WHERE p.status IN ('open','issued','partially_received') AND COALESCE(l.qty,0) > COALESCE(l.qty_received,0)`);
+    },
+    listAcceptedReceipts() {
+      return db.all(`SELECT r.id, r.po_id, r.po_line_id, r.received_at, COALESCE(r.qty_accepted, r.qty_received, 0) qty,
+          l.part_number, l.description FROM receipt r LEFT JOIN po_line l ON l.id = r.po_line_id`);
+    },
+    saveMrpRun(run, lines) {
+      if (!run || !run.id) throw new Error('saveMrpRun requires id');
+      writeAudited('mrp_run', run.id, 'insert', null, { ...run, lines: (lines || []).length }, () => {
+        db.run('INSERT INTO mrp_run (id,run_at,actor,scope,summary_json) VALUES (?,?,?,?,?)',
+          run.id, run.run_at, run.actor || actor, run.scope || '', JSON.stringify(run.summary || {}));
+        for (const l of lines || []) {
+          db.run(`INSERT INTO mrp_line (id,run_id,part_id,assembly,demand_ref,gross,on_hand,on_order,net,unit_cost,ext_cost,vendor,vendor_id,make_buy,need_by,action)
+                  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+            l.id, run.id, l.part_id, l.assembly, l.demand_ref, l.gross, l.on_hand, l.on_order, l.net, l.unit_cost, l.ext_cost,
+            l.vendor, l.vendor_id, l.make_buy, l.need_by, l.action);
+        }
+      });
+      return run.id;
+    },
+    latestMrpRun() { return db.get('SELECT * FROM mrp_run ORDER BY run_at DESC LIMIT 1') || null; },
+    listMrpLines(runId) {
+      return db.all(`SELECT m.*, p.part_number, p.description FROM mrp_line m LEFT JOIN part p ON p.id = m.part_id
+        WHERE m.run_id = ? ORDER BY (m.action = 'none'), m.ext_cost DESC`, String(runId));
+    },
+    listPurchaseRequests({ status } = {}) {
+      return status ? db.all('SELECT * FROM purchase_request WHERE status = ? ORDER BY est_total DESC', String(status))
+                    : db.all('SELECT * FROM purchase_request ORDER BY created_at DESC, est_total DESC');
+    },
+    getPurchaseRequest(id) { return db.get('SELECT * FROM purchase_request WHERE id = ?', String(id)) || null; },
+
     // ---- audit inspection ----
     recentAudit({ limit = 10 } = {}) {
       return db.all('SELECT id,actor,ts,entity,entity_id,action FROM audit_log ORDER BY id DESC LIMIT ?', limit);

@@ -175,6 +175,32 @@
       "override_rate_ceiling": 0.45,
       "min_runs_for_eval": 8,
       "delegation_enabled": true
+    },
+    {
+      "id": "mrp-planner",
+      "purpose": "ERP Phase 5C MRP planner: demand from flight vehicles with booked missions (M5+M6 on BLK3 S0 = one build set) exploded through the BOM, netted against on hand + open POs, shortages proposed as per-vendor purchase requests.",
+      "autonomy_tier": "Recommend-with-Context",
+      "write_scope": [
+        "erp-foundation/mc.db: part, bom_line, inventory_txn, mission, mrp_run, mrp_line, purchase_request (audited DAL only)"
+      ],
+      "rollback_path": "audit_log before/after on every row; requests superseded not deleted; nightly mc.db backups.",
+      "memory_boundary": "Reads BOM/inventory/missions/supply-config + ERP POs/receipts; stateless per run.",
+      "decision_boundary": {
+        "execute": [
+          "Sync parts/BOM/counts/missions/receipts into the ERP",
+          "Compute net requirements",
+          "Write/supersede purchase REQUESTS (proposals)"
+        ],
+        "escalate": [
+          "Creating, approving, issuing, or cancelling any PO (human converts + submits through Suppliers & POs; >= $5K/flight-critical/DD-not-cleared -> Jon Decision)",
+          "Any QuickBooks write or supplier contact",
+          "Treating a QB-paid-but-uncounted part as short (flagged 'verify' for a human count instead)"
+        ]
+      },
+      "escalation_owner": "Jon (Decisions inbox, via PO approval)",
+      "override_rate_ceiling": 0.45,
+      "min_runs_for_eval": 8,
+      "delegation_enabled": true
     }
   ]
 }

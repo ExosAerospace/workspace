@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MRP — Exos Mission Control</title>
+<style>
+  :root{--bg:#0b0b0d;--panel:#141418;--panel2:#1b1b21;--border:#2a2a31;--text:#e8e8ec;--text2:#9a9aa6;--orange:#ff6b00;--red:#e0524d;--green:#3fb56a;--amber:#e8aa3c;--blue:#4a9eff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header{padding:14px 20px;border-bottom:2px solid var(--orange);display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  header h1{margin:0;font-size:1.15rem;font-weight:800}
+  a{color:var(--orange)} a.back{color:var(--text2);text-decoration:none;font-weight:600;margin-left:auto}
+  .wrap{padding:14px 20px;max-width:1300px;margin:0 auto}
+  .tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+  .tab{background:var(--panel);border:1px solid var(--border);color:var(--text2);border-radius:9px;padding:8px 14px;cursor:pointer;font-weight:700}
+  .tab.on{background:var(--orange);color:#fff;border-color:var(--orange)}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+  input,select{background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:.92rem}
+  .btn{background:var(--orange);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:.88rem}
+  .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)} .btn.sm{padding:5px 9px;font-size:.78rem}
+  .btn:disabled{opacity:.5;cursor:default}
+  .muted{color:var(--text2)} .small{font-size:.8rem}
+  table{width:100%;border-collapse:collapse;font-size:.86rem}
+  td,th{padding:6px 7px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+  th{color:var(--text2);font-weight:600;font-size:.74rem;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0;background:var(--panel)}
+  .r{text-align:right}
+  .pill{display:inline-block;font-size:.7rem;border-radius:20px;padding:1px 8px;border:1px solid var(--border);color:var(--text2);white-space:nowrap}
+  .p-green{color:var(--green);border-color:var(--green)} .p-red{color:var(--red);border-color:var(--red)} .p-amber{color:var(--amber);border-color:var(--amber)} .p-blue{color:var(--blue);border-color:var(--blue)}
+  .kpis{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;min-width:150px}
+  .kpi b{display:block;font-size:1.3rem}
+  .scroll{max-height:64vh;overflow:auto}
+  .msg{padding:9px;border-radius:8px;margin:8px 0;display:none}
+  .msg.ok{display:block;background:rgba(63,181,106,.15);color:var(--green)} .msg.err{display:block;background:rgba(224,82,77,.15);color:var(--red)}
+  details summary{cursor:pointer}
+</style></head>
+<body>
+<header>
+  <h1>🧮 MRP — Material Requirements Planning</h1>
+  <span class="muted small">Missions → BLK3 BOM → net vs on hand + on order → purchase requests · ERP system of record</span>
+  <a class="back" href="/index.html">← Mission Control</a>
+</header>
+<div class="wrap">
+  <div class="card small muted" id="demand"></div>
+  <div class="kpis" id="kpis"></div>
+  <div id="msg" class="msg"></div>
+  <div class="tabs">
+    <div class="tab on" data-t="req">🛒 Purchase requests</div>
+    <div class="tab" data-t="lines">📋 Requirements</div>
+  </div>
+
+  <div id="t-req" class="card">
+    <div class="muted small" style="margin-bottom:8px">Proposals only. <b>Make PO draft</b> creates a draft in <a href="suppliers.html">Suppliers &amp; POs</a> with the planning prices. Confirm the quote there, add the QuickBooks accounts and flags, then submit it. The normal approval rules apply: ≥ $5K, flight-critical or DD not cleared → Jon's Decision card.</div>
+    <div class="scroll"><table><thead><tr><th>Request</th><th>Supplier</th><th>ASL</th><th class="r">Lines</th><th class="r">Est. total</th><th>Approval</th><th>Status</th><th></th></tr></thead><tbody id="rbody"></tbody></table></div>
+  </div>
+
+  <div id="t-lines" class="card" style="display:none">
+    <div class="bar">
+      <input id="q" placeholder="Search part # / description / supplier" style="min-width:280px"/>
+      <select id="f"><option value="">All actions</option><option value="buy">Buy</option><option value="make">Make (shop)</option><option value="verify">Verify (paid, not counted)</option><option value="quantify">Quantify (no BOM qty)</option><option value="none">Covered</option></select>
+      <span class="muted small" id="lcount"></span>
+    </div>
+    <div class="scroll"><table><thead><tr><th>Part #</th><th>Description</th><th>Supplier</th><th class="r">Need</th><th class="r">On hand</th><th class="r">On order</th><th class="r">Net</th><th class="r">Unit</th><th class="r">Ext.</th><th>Action</th></tr></thead><tbody id="lbody"></tbody></table></div>
+  </div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => '$' + (Number(n)||0).toLocaleString('en-US', {maximumFractionDigits: 0});
+const ACT = { buy: ['Buy','p-amber'], make: ['Make','p-blue'], verify: ['Verify','p-red'], quantify: ['Quantify','p-red'], none: ['Covered','p-green'] };
+let D = null;
+async function api(url, body) {
+  const r = await fetch(url, body ? { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) } : {});
+  const j = await r.json().catch(() => ({})); if (!r.ok) { const e = new Error(j.error || r.statusText); e.data = j; throw e; } return j;
+}
+function show(ok, t) { const m = $('msg'); m.className = 'msg ' + (ok ? 'ok' : 'err'); m.textContent = t; }
+async function load() {
+  try { D = await api('/api/mrp'); } catch (e) { document.querySelector('.wrap').innerHTML = '<div class="card">' + esc(e.message) + '</div>'; return; }
+  const s = (D.run && D.run.summary) || {};
+  const builds = (s.builds || []).map(b => `<b>${esc(b.assembly)} ${esc(b.serial || '(no vehicle)')}</b> for ${esc((b.missions||[]).join(' + '))}${b.need_by ? ' · need by ' + esc(b.need_by) : ' · <span class="pill p-amber">need date not set</span>'}`).join('; ');
+  $('demand').innerHTML = D.run
+    ? `Demand: ${builds || 'no missions with a vehicle'} &nbsp;·&nbsp; Last run ${esc(new Date(D.run.run_at).toLocaleString())} by ${esc(D.run.actor)} &nbsp;·&nbsp; ${D.part_count} parts in the ERP part master
+       ${D.can_act ? ' &nbsp;<button class="btn sm" id="rerun" onclick="rerun()">↻ Re-run MRP</button>' : ''}
+       <div style="margin-top:6px">On hand = the latest physical count (BOM ledger + shop inventory of record) plus ERP receipts since. Parts already built into S0 are not counted. If it's been installed, record it on the inventory page, or the planner will treat it as short.</div>`
+    : 'No MRP run yet.' + (D.can_act ? ' <button class="btn sm" onclick="rerun()">Run MRP</button>' : '');
+  $('kpis').innerHTML = [
+    ['Parts planned', s.parts_planned], ['To buy', s.short_buy], ['Est. buy cost', money(s.est_buy_cost)], ['Shop-make', s.short_make],
+    ['Verify (paid, not counted)', `${s.verify_paid_not_counted || 0} · ${money(s.verify_value)}`], ['No BOM qty', s.needs_qty], ['Covered', s.covered],
+    ['Requests', `${s.purchase_requests || 0} (${s.pr_to_jon || 0} → Jon)`],
+  ].map(([k, v]) => `<div class="kpi"><span class="muted small">${k}</span><b>${esc(v == null ? '—' : v)}</b></div>`).join('');
+  renderReqs(); renderLines();
+}
+function renderReqs() {
+  $('rbody').innerHTML = (D.requests || []).map(p => `<tr>
+    <td><details><summary>${esc(p.id)}</summary><div class="small muted">${p.lines.map(l => `${esc(l.qty)} × ${esc(l.part_number)} ${esc(l.description)} @ ${money(l.unit_cost)}${(l.on_order_pos||[]).length ? ' (also on PO ' + esc(l.on_order_pos.join(', ')) + ')' : ''}`).join('<br>')}</div></details></td>
+    <td>${esc(p.vendor)}${p.vendor_id ? '' : ' <span class="pill p-red">not in supplier list</span>'}</td>
+    <td>${p.asl_status ? `<span class="pill ${['Approved','Conditional'].includes(p.asl_status) ? 'p-green' : 'p-amber'}">${esc(p.asl_status)}</span>` : '—'}</td>
+    <td class="r">${p.lines.length}</td><td class="r">${money(p.est_total)}</td>
+    <td>${p.routes_to_jon ? '<span class="pill p-amber">Jon (Decision)</span>' : '<span class="pill">admin</span>'}</td>
+    <td>${p.status === 'converted' ? `<a href="suppliers.html#po=${encodeURIComponent(p.po_id)}">${esc(p.po_id)}</a>` : '<span class="pill">open</span>'}</td>
+    <td>${p.status === 'open' && D.can_act ? `<button class="btn sm" onclick="convert('${esc(p.id)}', ${p.vendor_id ? 'null' : `'${esc(p.vendor)}'`})">Make PO draft</button> <button class="btn sm ghost" onclick="dismiss('${esc(p.id)}')">Dismiss</button>` : ''}</td>
+  </tr>`).join('') || '<tr><td colspan="8" class="muted">No open purchase requests.</td></tr>';
+}
+function renderLines() {
+  const q = $('q').value.toLowerCase(), f = $('f').value;
+  const rows = (D.lines || []).filter(l => (!f || l.action === f) && (!q || `${l.part_number} ${l.description} ${l.vendor}`.toLowerCase().includes(q)));
+  $('lcount').textContent = `${rows.length} of ${(D.lines||[]).length}`;
+  $('lbody').innerHTML = rows.slice(0, 800).map(l => `<tr>
+    <td>${esc(l.part_number)}</td><td>${esc(l.description)}</td><td>${esc(l.vendor)}</td>
+    <td class="r">${l.action === 'quantify' ? '?' : esc(l.gross)}</td><td class="r">${esc(l.on_hand)}</td><td class="r">${esc(l.on_order)}</td>
+    <td class="r"><b>${esc(l.net)}</b></td><td class="r">${l.unit_cost ? money(l.unit_cost) : '—'}</td><td class="r">${l.ext_cost ? money(l.ext_cost) : ''}</td>
+    <td><span class="pill ${ACT[l.action][1]}" title="${l.action === 'verify' ? 'Paid in QuickBooks but no physical count — confirm whether it is on the shelf or built into S0. Not included in purchase requests.' : ''}">${ACT[l.action][0]}</span></td></tr>`).join('');
+}
+async function rerun() {
+  const b = $('rerun'); if (b) { b.disabled = true; b.textContent = 'Running…'; }
+  try { const r = await api('/api/mrp/run', {}); show(true, `MRP run ${r.run ? r.run.run_id : ''} complete. The previous open requests are superseded.`); await load(); }
+  catch (e) { show(false, e.message); if (b) { b.disabled = false; b.textContent = '↻ Re-run MRP'; } }
+}
+async function convert(id, unmatchedVendor) {
+  let vendor_id = null;
+  if (unmatchedVendor) {
+    vendor_id = prompt(`"${unmatchedVendor}" isn't in the supplier list. Add or find it in Suppliers & POs, then paste its supplier ID here (or Cancel):`);
+    if (!vendor_id) return;
+  }
+  try { const r = await api('/api/mrp/request/convert', { id, vendor_id }); show(true, `PO draft ${r.po_id} created. Opening it…`); location.href = r.open; }
+  catch (e) { show(false, e.message); }
+}
+async function dismiss(id) {
+  const reason = prompt('Why dismiss this request? (kept in the audit trail)'); if (reason === null) return;
+  try { await api('/api/mrp/request/cancel', { id, reason }); await load(); } catch (e) { show(false, e.message); }
+}
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === t));
+  ['req','lines'].forEach(k => $('t-'+k).style.display = k === t.dataset.t ? '' : 'none');
+});
+$('q').addEventListener('input', renderLines); $('f').addEventListener('change', renderLines);
+load();
+</script>
+</body></html>

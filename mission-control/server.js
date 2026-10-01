@@ -4452,6 +4452,13 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── MRP (lib/mrp.js, ERP Phase 5C): missions → BOM → net vs on-hand/on-order → purchase requests → PO drafts ──
+  if (req.url.split('?')[0] === '/api/mrp' || req.url.startsWith('/api/mrp/')) {
+    require('./lib/mrp').handle(req, res, { getSession, glog })
+      .catch(e => { console.error('[mrp]', e.message); if (!res.headersSent) { res.writeHead(500, {'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); } });
+    return;
+  }
+
   // ── Payload order-to-cash (lib/payload-orders.js): questionnaire → export/CSL screen → LSA e-sign → M1/M2/M3 ──
   // ITAR/EAR payloads: MC holds only the SharePoint (GCC High) path + trained handler, never the data.
   if (req.url.split('?')[0] === '/api/payload-orders' || req.url.startsWith('/api/payload-orders/')) {

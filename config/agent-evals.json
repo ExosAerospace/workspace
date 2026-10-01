@@ -1439,6 +1439,12 @@
    "warn_grace": 2.5,
    "fail_grace": 6,
    "owner": "John Quinn"
+  },
+  "com.exos.mrp-nightly": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
   }
  },
  "_eval_wave_2": {

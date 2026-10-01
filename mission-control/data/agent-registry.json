@@ -1,6 +1,6 @@
 {
  "generated": "2026-09-25T23:19:20.307166-05:00",
- "total": 220,
+ "total": 221,
  "standing": 112,
  "ephemeral": 18,
  "service": 6,
@@ -4482,6 +4482,25 @@
    "change_log": [
     "2026-10-01 created (Jon approved QB write for invoicing; sends via Decision approval)"
    ]
+  },
+  {
+   "label": "com.exos.mrp-nightly",
+   "script": "erp-foundation/mrp.js",
+   "kind": "recurring",
+   "schedule": "daily 02:45",
+   "purpose": "ERP Phase 5C MRP: sync part master/BLK3 BOM/physical counts/missions/ERP receipts into mc.db, then plan (missions -> BOM -> net vs on hand + on order) and write per-vendor purchase REQUESTS. Proposals only.",
+   "stack_layer": "DECIDE",
+   "autonomy_tier": "Recommend-with-Context",
+   "human_owner": "Exo (infra) / John Quinn",
+   "permission_envelope": "writes only ERP mc.db Phase 5C tables (part, bom_line, inventory_txn, mission, mrp_run, mrp_line, purchase_request) via the audited DAL; reads MC materials JSON + supply-config. NO PO creation, NO QuickBooks, NO email/external sends. A request becomes a PO only when an admin/manager converts it to a draft and submits it through the Suppliers & POs approval flow (>= $5K / flight-critical / DD not cleared -> Jon Decision).",
+   "memory_boundary": "workspace ERP db + MC data (read); stateless per run, history kept as mrp_run rows",
+   "rollback_path": "Every write is an audit_log row (before/after); requests are superseded each run (never deleted); restore mc.db from nightly backup (erp-foundation/backups).",
+   "escalation": "Decisions board via the existing PO approval flow (supply-chain)",
+   "eval_suite": "agent_eval liveness (config/agent-evals.json: daily cadence, LastExitStatus=0); idempotency check = second consecutive sync writes 0 changed rows; guard: QB-paid parts with no count -> 'verify' (never a purchase request)",
+   "telemetry": "~/.openclaw/logs/mrp-nightly.log + audit_log (agent mrp-planner) + mrp_run summary",
+   "reusability_scope": "any BOM assembly with a flight-vehicle asset + missions",
+   "risk_tier": "LOW",
+   "envelope_source": "authored with the build 2026-10-01 (Jon: 'Start Phase 5C now, with steps 1-3 first')"
   }
  ],
  "eval_wave_1": {
