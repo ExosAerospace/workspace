@@ -1,0 +1,20 @@
+{
+ "invoices": [
+  {
+   "qb_id": "15859",
+   "doc_number": "0071",
+   "customer": "Scentience",
+   "email": "kordel@scentience.ai",
+   "amount": 4000.0,
+   "terms": "Net 30",
+   "desc": "Scentience OPU (olfaction sensor + compute) \u2014 BLK3 Flight 2 payload integration & flight. Milestone M1: slot reservation (50%) of $8,000 contract (payload order PO2C-2026-001).",
+   "order": "PO2C-2026-001",
+   "milestone": "M1",
+   "status": "pending",
+   "created_at": "2026-10-01T11:57:14Z",
+   "note": "Heads-up: Kordel's LSA e-sign is still pending (D-7281884). M1 is due at slot reservation, so the clean move is to approve after he signs. Approving now is fine too if you want the invoice to arrive with the LSA (he told you he's ready to sign and pay).",
+   "pdf": "/Users/exomac/.openclaw/workspace/drafts/invoices/Exos_Invoice_0071.pdf",
+   "decision_id": "D-7281885"
+  }
+ ]
+}
