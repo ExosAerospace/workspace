@@ -117,7 +117,9 @@ end-to-end in MC; benefits + PTO balances match Bamboo.
 **Exit criteria:** a full pay-period run in MC matches Bamboo time data; supervisors approving in MC;
 audit trail verified.
 
-### Phase 3 — BambooHR Cutover & Decommission *(the planned transition)*
+### Phase 3 — BambooHR Cutover & Decommission *(REMOVED 2026-10-01)*
+
+> **REMOVED (Jon 2026-10-01): Phase 3 is deleted from the rollout. BambooHR stays the HR + timekeeping system of record permanently due to compliance risk; MC interfaces to it, never replaces it. Kept below for history only.**
 **Goal:** make Mission Control authoritative for HR and retire Bamboo.
 - **Go/no-go checklist** (see §6). Confirm 100% of staff onboarded into MC, balances reconciled,
   timekeeping validated for a full cycle, payroll/benefits data flowing.
@@ -233,7 +235,9 @@ Recommendation: **(A).**
 
 ---
 
-## 6. BambooHR Cutover Plan (detail)
+## 6. BambooHR Cutover Plan (detail) *(REMOVED 2026-10-01)*
+
+> **REMOVED (Jon 2026-10-01): Phase 3 is deleted from the rollout. BambooHR stays the HR + timekeeping system of record permanently due to compliance risk; MC interfaces to it, never replaces it. Kept below for history only.**
 
 **Strategy:** parallel-run, reconcile, validate, then flip. Bamboo stays authoritative until the
 go/no-go passes.

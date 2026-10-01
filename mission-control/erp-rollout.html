@@ -77,14 +77,14 @@
 {
  "generated": "2026-08-09",
  "meta": {
-  "name": "Mission Control → Work-Management ERP",
-  "tag": "PROGRAM · ERP ROLLOUT",
+  "name": "ERP-exo3 — Mission Control → Work-Management ERP",
+  "tag": "ERP-EXO3 · ERP ROLLOUT",
   "summary": "Transform Mission Control into a DCAA-grade, CMMC-ready Work-Management ERP — HR, timekeeping, contracts/CDRL, procurement, production, and finance — interfacing (not replacing) BambooHR and closing the government/DIB readiness gaps.",
   "sponsor": "John Quinn",
   "program_lead": "Phil Eaton",
   "process_turnover": "Lizi → Exo (COMPLETE — library live in MC; Lizi advises on revisions)",
   "started": "2026-07-20",
-  "current_phase": "Phase 0 COMPLETE + Phase 1 complete (BambooHR interface live) · Phase 2 (Timekeeping in Bamboo — Lizi/Kyle) + Phases 4/5/5B in progress · CUI enclave & remote-backup hardening deferred to Phase 6"
+  "current_phase": "Phase 0 COMPLETE + Phase 1 complete (BambooHR interface live) · Phase 2 (Timekeeping in Bamboo — Exo owns, approvals to Jon) + Phases 4/5/5B in progress · CUI enclave & remote-backup hardening deferred to Phase 6"
  },
  "milestones": [
   {
@@ -170,13 +170,13 @@
    "name": "Phase 2 — Timekeeping (Bamboo/DCAA) → MC Cost Accounting",
    "due": "2026-10",
    "status": "In Progress",
-   "note": "Decision 2026-07-30: timekeeping lives in BAMBOO — projects structured to the DCAA-required format, employees book time under DCAA cost codes, Bamboo object-lock = immutability. Fixed-Price (FFP) is the primary vehicle, which limits the DCAA compliance burden. MC does NOT build timekeeping; it reads Bamboo actuals for cost rollup.",
+   "note": "2026-10-01: Jon handed Phase 2 to Exo; approvals go to Jon as Decisions D-7281877 (policy EXOS-FIN-002-0), D-7281878 (who completes the Bamboo admin setup), D-7281879 (cost-code structure + approver map), D-7281880 (total-time scope). Live 10/1 pull: Sept 1,216 hrs / 201 entries, 8 of 12 clocking, ~86% of hours carry no project, no cost-code tasks, Hermes 8.4 hrs. Decision 2026-07-30: timekeeping lives in BAMBOO — projects structured to the DCAA-required format, employees book time under DCAA cost codes, Bamboo object-lock = immutability. Fixed-Price (FFP) is the primary vehicle, which limits the DCAA compliance burden. MC does NOT build timekeeping; it reads Bamboo actuals for cost rollup.",
    "deliverables": [
     {
      "name": "DCAA timekeeping (in Bamboo — projects + cost codes + object-lock)",
      "status": "blocked",
-     "owner": "Lizi Quinn (create) + Kyle Ballard (support)",
-     "note": "Task #1870. PLAN SET 2026-09-05 (Jon): Exo does the Bamboo setup via admin login at ExoMac; PILOT = Project Hermes (FA9300-25-C-6022) to prove the system before any DCAA-required contract. Staged: DCAA Timekeeping Policy procedure EXOS-FIN-002-0, Hermes pilot setup sheet, employee quick-start, team announcement (#2657). Lizi to schedule the ExoMac session (#2656). TURNKEY CONFIG SPEC delivered 2026-09-04 (attached to #1870): Projects = contracts (FA9300-25-C-6022, Karmen D2P2) + indirect pools (OH/G&A/B&P/IR&D) + leave; Tasks = WBS cost codes; total-time accounting, supervisor approval (no self-approval), object-lock. ~30-60 min admin-console work. API canNOT create these (admin-only). DECISION for Jon: Lizi/Kyle configure vs. give Exo an admin login to drive the UI. FFP-primary limits mandatory scope."
+     "owner": "Exo (drive) + Jon/Lizi admin login per D-7281878; Kyle = policy/indirect-rate owner",
+     "note": "2026-10-01: Exo took over (stalled with Kyle since 9/7, due 9/12). Gated by D-7281878 + D-7281879. Task #1870. PLAN SET 2026-09-05 (Jon): Exo does the Bamboo setup via admin login at ExoMac; PILOT = Project Hermes (FA9300-25-C-6022) to prove the system before any DCAA-required contract. Staged: DCAA Timekeeping Policy procedure EXOS-FIN-002-0, Hermes pilot setup sheet, employee quick-start, team announcement (#2657). Lizi to schedule the ExoMac session (#2656). TURNKEY CONFIG SPEC delivered 2026-09-04 (attached to #1870): Projects = contracts (FA9300-25-C-6022, Karmen D2P2) + indirect pools (OH/G&A/B&P/IR&D) + leave; Tasks = WBS cost codes; total-time accounting, supervisor approval (no self-approval), object-lock. ~30-60 min admin-console work. API canNOT create these (admin-only). DECISION for Jon: Lizi/Kyle configure vs. give Exo an admin login to drive the UI. FFP-primary limits mandatory scope."
     },
     {
      "name": "Read Bamboo project/time actuals into MC (interface)",
@@ -186,25 +186,12 @@
     },
     {
      "name": "Labor actuals → project / WBS cost rollup (feeds Phase 4)",
-     "status": "todo",
-     "owner": "Exo"
+     "status": "in_progress",
+     "owner": "Exo",
+     "note": "2026-10-01: Exo building the labor rollup (contract/WBS + indirect pools, budget vs actual) off time_entry."
     }
-   ]
-  },
-  {
-   "id": "P3",
-   "name": "Phase 3 — BambooHR Cutover & Decommission",
-   "due": "—",
-   "status": "N/A",
-   "note": "Removed by decision 2026-07-30 — BambooHR remains the HR system of record permanently; MC interfaces to it, never replaces it.",
-   "deliverables": [
-    {
-     "name": "N/A — Bamboo stays authoritative (no cutover/decommission)",
-     "status": "blocked",
-     "owner": "—",
-     "note": "superseded by the read-through interface in Phase 1"
-    }
-   ]
+   ],
+   "owner": "Exo (Jon 2026-10-01: Exo owns Phase 2; decisions route to Jon)"
   },
   {
    "id": "P4",
