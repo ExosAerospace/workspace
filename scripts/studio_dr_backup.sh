@@ -94,6 +94,19 @@ done
 # 2c) Cloudflare tunnel credentials (exos-mc creds/config + lan-tunnel token). Both tunnels
 #     must move on failover (9/30 lesson: the LAN tunnel was missed at cutover -> laptops lost MC).
 [ -d "$HOME/.cloudflared" ] && run_rsync "$HOME/.cloudflared/" "cloudflared/"
+# 2d) file-based secrets outside ~/.openclaw (Bridge SMTP pw, bot tokens, vault env) + the Studio's
+#     CURRENT com.exos launchd set — failover_monitor's promote loads the server jobs from here
+#     (the Mini's parked disabled-standby copies are from before the 9/28 cutover).
+[ -d "$HOME/.config/exos" ] && run_rsync "$HOME/.config/exos/" "config-exos/"
+if [ "$DEST_REMOTE" = "True" ] || [ "$DEST_REMOTE" = "true" ]; then
+  ssh "${DEST%%:*}" "mkdir -p '${DEST#*:}launchagents'" 2>>"$LOG" || true
+  rsync -a --delete --include='com.exos.*.plist' --include='ai.openclaw.gateway.plist' --exclude='*' \
+    -e ssh "$HOME/Library/LaunchAgents/" "${DEST}launchagents/" 2>>"$LOG" || RSYNC_RC=$?
+else
+  mkdir -p "${DEST}launchagents"
+  rsync -a --delete --include='com.exos.*.plist' --include='ai.openclaw.gateway.plist' --exclude='*' \
+    "$HOME/Library/LaunchAgents/" "${DEST}launchagents/" 2>>"$LOG" || RSYNC_RC=$?
+fi
 
 # 3) optional git push (off in self-test)
 if [ "$GIT_PUSH" = "True" ] || [ "$GIT_PUSH" = "true" ]; then
