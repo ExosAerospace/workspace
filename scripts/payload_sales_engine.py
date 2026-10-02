@@ -50,6 +50,7 @@ DRAFTS = os.path.join(WORKSPACE, "drafts/payload-outreach-drafts.md")
 # /api/capstone-program). The engine writes the ranked work queue + funnel here.
 CAPSTONE_JSON = os.path.join(WORKSPACE, "mission-control/data/capstone-program.json")
 DISCORD_CHANNEL = "channel:1501636671492460554"  # #blk3-payload
+LAST_POST_STATE = os.path.join(WORKSPACE, "state/payload_sales_engine_last_post.json")
 
 # launchd has a minimal PATH; resolve the openclaw binary explicitly (same
 # pattern as scripts/cron-failure-watchdog.py).
@@ -635,7 +636,26 @@ def main():
         glog("end", status="info", detail="dry-run, not posted")
         return 0
 
+    # R-NONEWS (Jon 2026-10-02: "why does this seem to be running constantly"):
+    # post to #blk3-payload only when something moved — new drafts mailed, a
+    # failed mail, or the funnel/pipeline counts changed since the last post.
+    sig = summary.split("\nOutreach drafts written")[0]
+    try:
+        last = json.load(open(LAST_POST_STATE)).get("sig")
+    except Exception:
+        last = None
+    if not drafted and sig == last:
+        glog("end", status="info", detail="no change since last post; silent")
+        print("no change since last post; not posted")
+        return 0
+
     ok = post_discord(summary)
+    if ok:
+        try:
+            json.dump({"sig": sig, "at": datetime.datetime.now().isoformat()},
+                      open(LAST_POST_STATE, "w"))
+        except Exception:
+            pass
     glog("end", status="info" if ok else "error",
          detail="posted" if ok else "post failed")
     print(summary)
