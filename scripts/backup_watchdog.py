@@ -108,9 +108,10 @@ def side_checks(mark, now, probe=None, verify_state=None):
         time.sleep(0 if DRY_RUN else 20)
         ok, why = probe()
     check_side("link", not ok, why, mark, now,
-               f"🔴 Exos DR: Mini link DOWN — the Studio can't reach the Mini (mini-dr) over the DR link ({why}).\n"
-               f"Likely cause: the Mini rebooted after a power loss and is FileVault-locked. Fix: someone at Lizi's "
-               f"unlocks the Mini (log in as exomac). Until then: no DR copies, no hot-state sync, no automatic failover.",
+               f"🟡 Exos DR notice: Mini offline — the Studio can't reach mini-dr ({why}).\n"
+               f"Low priority: Lizi's site network runs on building power (no UPS for the switch), so a brief power event at her "
+               f"building is the most likely cause. Studio is unaffected. Fix when convenient: unlock the Mini (FileVault) or check Lizi's building power."
+               f" Until then: no DR copies, no hot-state sync, no automatic failover.",
                "✅ Exos DR: Mini link is back up — DR copies and failover standby resumed.")
     vs = verify_state if verify_state is not None else dr_verify.read_state()
     vbad = bool(vs) and not vs.get("ok", True)
