@@ -78,14 +78,69 @@ def degradation_register():
          "contend; the parallel two-box pool is gone until the Studio returns."),
         ("Email (ProtonMail Bridge)", "DELAYED", "Bridge must be signed in on the Mini on failover; "
          "inbound/outbound email is down until re-auth."),
-        ("Mission Control reachability", "DELAYED", "Brief outage during the Cloudflare tunnel cutover "
-         "(mc/ssh.exosaero.space repointed Studio->Mini)."),
+        ("Mission Control reachability", "DELAYED", "Automatic failover (failover-monitor-exo3): MC + both "
+         "tunnels come up on the Mini ~7-8 min after the Studio's last lease renewal (dry-run until the live drill). "
+         "Staff must use https://mc.exosaero.space — the LAN IP does not move."),
         ("Portal logins / 2FA", "DELAYED", "Some gov/vendor portals force a re-login+2FA from the "
          "'new device' on first use after failover."),
         ("QuickBooks", "DELAYED", "OAuth may need re-consent on the Mini."),
-        ("Data freshness (RPO)", "EXPOSURE", rpo + " — anything written on the Studio after the last "
-         "backup is not yet on the Mini. Shrinkable by increasing backup frequency."),
+        ("Data freshness (RPO)", "EXPOSURE", rpo + " for the full tree; MC hot state (sessions, data JSON, "
+         "mc.db, uploads) is synced every 5 min (dr-hot-sync), so logins + recent MC writes survive."),
+        ("OpenClaw gateway crons + Studio Exobot", "MANUAL", "Not auto-started on promote (one bot token = one "
+         "gateway; the Mini runs its own Exo (Mini) bot). Start by hand after a failover if needed."),
     ]
+
+def _mini(cmd, timeout=90):
+    host = DEST.split(":")[0] if REMOTE else None
+    if not host:
+        return 1, "", "local self-test mode"
+    try:
+        r = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host, cmd],
+                           capture_output=True, text=True, timeout=timeout)
+        return r.returncode, r.stdout, r.stderr
+    except Exception as e:
+        return 1, "", str(e)[:120]
+
+def failover_checks():
+    out = []
+    try:
+        import control_lease as cl
+        fcfg = cl.load_cfg()
+        ok, lease = cl.SupabaseStore(fcfg).get(fcfg["lease_object"])
+        age = time.time() - float((lease or {}).get("renewed_epoch", 0))
+        out.append(("Control lease fresh (Supabase, holder=studio)",
+                    ok and bool(lease) and lease.get("holder") == "studio" and age < 180,
+                    f"holder={(lease or {}).get('holder')} age={age:.0f}s mode={fcfg.get('mode')}"))
+        fl = os.path.exists(cl.FENCE_FLAG)
+        out.append(("Studio not fenced", not fl, "server-fenced.flag " + ("SET" if fl else "clear")))
+    except Exception as e:
+        out.append(("Control lease fresh (Supabase, holder=studio)", False, str(e)[:80]))
+    hs = gate_json(os.path.expanduser("~/.openclaw/state/hot-sync.json"))
+    hs_age = time.time() - hs.get("epoch", 0) if hs else None
+    out.append(("Hot-state sync age < 15 min (RPO 5 min target)", hs_age is not None and hs_age < 900,
+                f"{hs_age:.0f}s" if hs_age is not None else "never"))
+    if REMOTE:
+        base = DEST.split(":", 1)[1]
+        rc, so, se = _mini("cat ~/.openclaw/state/failover-monitor.json")
+        try:
+            st = json.loads(so); m_age = time.time() - st.get("last_run_epoch", 0)
+            out.append(("Mini failover-monitor alive (< 5 min)", m_age < 300,
+                        f"last run {m_age:.0f}s ago, mode={st.get('mode')}, action={st.get('last_action')}, "
+                        f"hb_age={st.get('hb_age')}s mc_up={st.get('mc_up')}"))
+        except Exception:
+            out.append(("Mini failover-monitor alive (< 5 min)", False, (se or so or "no state")[:80]))
+        rc, so, se = _mini(f"cd {base}workspace && /usr/bin/python3 scripts/failover_monitor.py --plan", 120)
+        miss = [l for l in so.splitlines() if l.startswith("missing inputs")]
+        out.append(("Dry-run promote plan on the Mini (all inputs present)", rc == 0, (miss[0] if miss else (se or "no output"))[:120]))
+        rc, so, se = _mini(f"cd {base}workspace && /usr/bin/python3 scripts/failover_monitor.py --selftest | tail -1", 120)
+        out.append(("Failover selftest on the Mini (blip/dead/partition/hold...)", rc == 0, so.strip()[:60] or se[:60]))
+        rc, so, se = _mini(f"sqlite3 '{base}workspace/erp-foundation/mc.db' 'pragma integrity_check;'")
+        out.append(("Mirrored mc.db integrity", rc == 0 and so.strip() == "ok", (so or se).strip()[:60]))
+    return out
+
+def gate_json(p):
+    try: return json.load(open(p))
+    except Exception: return None
 
 def main():
     t0 = time.time()
@@ -126,6 +181,10 @@ def main():
             r = subprocess.run(["plutil", "-lint", os.path.join(staged, p)], capture_output=True, text=True)
             if r.returncode != 0: plist_ok = False; bad.append(p)
     checks.append(("Staged launchd plists lint", plist_ok, "all OK" if plist_ok else f"bad: {bad}"))
+
+    # 3b) automatic-failover readiness (dr-failover 2026-10-02): lease, hot sync, Mini monitor,
+    #     dry-run promote plan on the Mini, selftest. NEVER runs a live promote.
+    checks.extend(failover_checks())
 
     # 4) RTO/RPO
     rto = time.time() - t0

@@ -809,11 +809,14 @@
    "permission_envelope": "Discord post via deliver/openclaw message; LLM calls; external API: quickbooks; deletes local files (PAUSE); file I/O: MC data JSON; own logs/state",
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
-   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN) + 7 failover-readiness checks (lease fresh, Studio not fenced, hot-sync < 15 min, Mini monitor alive, dry-run promote plan on the Mini, Mini selftest 7/7, mirrored mc.db integrity) — 15/15 on 2026-10-02 (--print)",
    "telemetry": "logs/failover_validate.log",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-10-02 dr-failover (Jon 10/2 item 4): drill extended with lease/hot-sync/Mini-monitor/dry-run-promote/selftest/mc.db checks; never runs a live promote; approver John Quinn; status pending Jon approval — D-tbd (see logs/audit-workers/dr-failover.REPORT.md)"
+   ]
   },
   {
    "label": "com.exos.file-maintenance",
