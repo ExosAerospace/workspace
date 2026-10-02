@@ -54,7 +54,7 @@ Nothing was sent (no email or Discord). Mission Control and the OpenClaw gateway
 - 6b597b3 lease + fencing + failover monitor + hold (dry-run) + registry/evals
 - b1a258c drill checks
 - e879096 registry decision ids
-- This report (next commit)
+- 8aea9d9 this report + retroactive registry entry for com.exos.mini-dr-link (the exo3 gate flagged it: the other session created it unregistered)
 
 ## Decisions filed (none answered or closed by me)
 - **D-7281892** (med): keep the hourly verified backup + 5-min hot sync. Roll back: `launchctl bootout gui/$(id -u)/com.exos.dr-hot-sync`; `git revert a8cf105 c18963e`.
