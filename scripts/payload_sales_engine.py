@@ -626,36 +626,49 @@ def main():
 
     bridge_line = run_bridge(args.dry_run)
     summary = build_summary(records, bridge_line)
-    if drafted:
-        summary += (f"\n_New drafts this run: {len(drafted)}, "
-                    + (f"emailed to Lizi's inbox (with a Word copy) for review._"
-                       if mailed else "email to Lizi FAILED, will retry next run._"))
 
     if args.dry_run:
         print(summary)
         glog("end", status="info", detail="dry-run, not posted")
         return 0
 
-    # R-NONEWS (Jon 2026-10-02: "why does this seem to be running constantly"):
-    # post to #blk3-payload only when something moved — new drafts mailed, a
-    # failed mail, or the funnel/pipeline counts changed since the last post.
-    sig = summary.split("\nOutreach drafts written")[0]
+    # Jon 2026-10-02: ONE Monday summary in #blk3-payload, not a daily post.
+    # The engine still runs daily (drafts -> Lizi's inbox); the week's drafts
+    # are tallied in state and reported Monday. Exception: a failed mail to
+    # Lizi posts the same day, since it needs a human.
     try:
-        last = json.load(open(LAST_POST_STATE)).get("sig")
+        st = json.load(open(LAST_POST_STATE))
     except Exception:
-        last = None
-    if not drafted and sig == last:
-        glog("end", status="info", detail="no change since last post; silent")
-        print("no change since last post; not posted")
+        st = {}
+    week = st.get("week", {"drafted": 0, "mailed": 0})
+    week["drafted"] += len(drafted)
+    week["mailed"] += len(drafted) if mailed else 0
+    mail_failed = bool(drafted) and not mailed
+    is_monday = datetime.date.today().weekday() == 0
+
+    if not (is_monday or mail_failed):
+        st["week"] = week
+        json.dump(st, open(LAST_POST_STATE, "w"))
+        glog("end", status="info", detail=f"not Monday; silent (week drafted={week['drafted']})")
+        print(f"not Monday; not posted (week so far: {week['drafted']} drafts)")
         return 0
 
+    if mail_failed:
+        summary += (f"\n_⚠️ {len(drafted)} new draft(s) could not be emailed to Lizi; "
+                    "will retry next run._")
+    if is_monday:
+        summary = summary.replace("daily run", "weekly summary", 1)
+        summary += (f"\n_Last 7 days: {week['drafted']} new draft(s), "
+                    f"{week['mailed']} emailed to Lizi's inbox (with a Word copy) for review._")
+
     ok = post_discord(summary)
-    if ok:
-        try:
-            json.dump({"sig": sig, "at": datetime.datetime.now().isoformat()},
-                      open(LAST_POST_STATE, "w"))
-        except Exception:
-            pass
+    if ok and is_monday:
+        week = {"drafted": 0, "mailed": 0}
+    st.update({"week": week, "at": datetime.datetime.now().isoformat()})
+    try:
+        json.dump(st, open(LAST_POST_STATE, "w"))
+    except Exception:
+        pass
     glog("end", status="info" if ok else "error",
          detail="posted" if ok else "post failed")
     print(summary)
