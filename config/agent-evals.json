@@ -1468,6 +1468,22 @@
    "warn_grace": 3,
    "fail_grace": 12,
    "owner": "John Quinn"
+  },
+  "com.exos.lease-renew": {
+   "cadence_s": 60,
+   "warn_grace": 3,
+   "fail_grace": 10,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/failover_monitor.py --selftest"
+  },
+  "com.exos.failover-monitor": {
+   "cadence_s": 60,
+   "warn_grace": 5,
+   "fail_grace": 15,
+   "owner": "John Quinn",
+   "host": "mini",
+   "selftest": "/usr/bin/python3 scripts/failover_monitor.py --selftest",
+   "note": "runs on the Mini; liveness read by failover_validate over ssh (failover-monitor.json last_run_epoch)"
   }
  },
  "_eval_wave_2": {

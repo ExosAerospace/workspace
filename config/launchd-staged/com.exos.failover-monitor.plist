@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MINI only (user LaunchAgent; exomac is not admin there). failover-monitor-exo3: automatic
+     Studio->Mini failover at 6 min. Runs from the DR mirror so the hourly backup ships the code.
+     mode from config/failover.json (dry-run until the live drill). Jon 2026-10-02.
+     Install on the Mini: cp to ~/Library/LaunchAgents/ && launchctl bootstrap gui/$(id -u) <plist> -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.exos.failover-monitor</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/exomac/dr-mirror/workspace/scripts/failover_monitor.py</string>
+  </array>
+  <key>StartInterval</key><integer>60</integer>
+  <key>RunAtLoad</key><true/>
+  <key>ProcessType</key><string>Background</string>
+  <key>StandardOutPath</key><string>/Users/exomac/Library/Logs/exos-failover-monitor.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/exomac/Library/Logs/exos-failover-monitor.err.log</string>
+</dict>
+</plist>

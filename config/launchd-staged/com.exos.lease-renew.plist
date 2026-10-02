@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- STUDIO only. Control-lease renewer + Studio fencing + heartbeat to the Mini (every 60 s).
+     scripts/lease_renew.py; mode from config/failover.json (dry-run until the live drill). Jon 2026-10-02. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.exos.lease-renew</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/exomac/.openclaw/workspace/scripts/run_logged.py</string>
+    <string>com.exos.lease-renew</string>
+    <string>--</string>
+    <string>/usr/bin/python3</string>
+    <string>/Users/exomac/.openclaw/workspace/scripts/lease_renew.py</string>
+  </array>
+  <key>StartInterval</key><integer>60</integer>
+  <key>RunAtLoad</key><true/>
+  <key>ProcessType</key><string>Background</string>
+  <key>StandardOutPath</key><string>/Users/exomac/.openclaw/workspace/logs/lease-renew.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/exomac/.openclaw/workspace/logs/lease-renew.err.log</string>
+</dict>
+</plist>

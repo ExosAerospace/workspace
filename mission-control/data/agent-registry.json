@@ -4595,6 +4595,50 @@
    "change_log": [
     "2026-10-02 dr-failover (Jon 10/2 10:10 'go ahead 2-4' + item 1): NEW agent: 5-min hot-state sync, loaded on the Studio (rollback: launchctl bootout gui/$(id -u)/com.exos.dr-hot-sync); approver John Quinn; status pending Jon approval — D-tbd (see logs/audit-workers/dr-failover.REPORT.md)"
    ]
+  },
+  {
+   "label": "com.exos.lease-renew",
+   "exo3_name": "lease-renew-exo3",
+   "script": "lease_renew.py",
+   "kind": "recurring",
+   "schedule": "every 60s (Studio only)",
+   "purpose": "Studio side of the Supabase control lease: renews every 60 s, pushes a heartbeat to the Mini over exos-mini, and FENCES the Studio (send/state jobs stand down via run_logged gate; exos-mc + lan-tunnel connectors booted out; gateway too if lease lost) when the Mini holds the lease or the Studio has no Supabase AND no internet for >= 240 s. Never takes the lease back from the Mini (failback manual).",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Execute-within-bounds (dry-run until Jon switches to live)",
+   "human_owner": "John Quinn",
+   "permission_envelope": "Supabase Storage read/write of exos-control/control-lease.json only; ssh mini-dr write of one heartbeat file; LIVE mode only: write/remove ~/.openclaw/state/server-fenced.flag, launchctl bootout/bootstrap of com.exos.mc-tunnel, com.exos.lan-tunnel (+ ai.openclaw.gateway on lease loss). No sends, no deletes. Dry-run: records would-fence only.",
+   "memory_boundary": "~/.openclaw/state/control-lease-local.json, server-fence-dryrun.json; Supabase bucket exos-control",
+   "escalation": "fence/reclaim events -> fleet_log warn; backup/failover drill (failover_validate) reports lease freshness to Jon; Decisions board",
+   "eval_suite": "python3 scripts/failover_monitor.py --selftest (7 scenarios, runs studio_decide + mini_decide on a simulated clock incl. partition: Studio fences before Mini promotes, never both active) + agent_eval liveness cadence 60 s + failover_validate 'lease freshness'",
+   "telemetry": "logs/lease-renew.log (state changes); fleet_log agent=lease-renew; logs/runs/*.jsonl (run_logged)",
+   "reusability_scope": "DR",
+   "risk_tier": "HIGH",
+   "envelope_source": "hand-written by dr-failover worker 2026-10-02",
+   "change_log": [
+    "2026-10-02 dr-failover (Jon 10/2 10:10 'go ahead 2-4', 6-min auto-failover): NEW agent, loaded on the Studio in DRY-RUN (rollback: launchctl bootout gui/$(id -u)/com.exos.lease-renew); approver John Quinn; status pending Jon approval — D-tbd (see logs/audit-workers/dr-failover.REPORT.md)"
+   ]
+  },
+  {
+   "label": "com.exos.failover-monitor",
+   "exo3_name": "failover-monitor-exo3",
+   "script": "failover_monitor.py",
+   "kind": "recurring",
+   "schedule": "every 60s (Mini only, user LaunchAgent, runs from ~/dr-mirror/workspace/scripts)",
+   "purpose": "Automatic Studio->Mini failover at 6 min: promote ONLY if the control lease is stale >= 360 s (via a >= 60 s 'mini-pending' claim the Studio did not reclaim), the Studio is dark on BOTH paths (heartbeat over exos-mini + MC https /sign over exos-mc) and no maintenance hold. Promote = restore from mirror, start MC, both tunnels, the Studio's loaded com.exos jobs, DM Jon + #exomac-system. Failback manual (Jon).",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Execute-within-bounds (dry-run until Jon switches to live)",
+   "human_owner": "John Quinn",
+   "permission_envelope": "Supabase Storage read of exos-control (write of control-lease.json only in LIVE mode); https GET mc.exosaero.space/sign; reads ~/dr-mirror. LIVE promote only: rsync mirror -> ~/.openclaw/workspace (no delete), copy secrets/tunnel creds with .pre-promote backups, launchctl bootstrap user LaunchAgents, Discord REST post to Jon DM + #exomac-system. Dry-run: logs WOULD claim/promote + plan, no writes, no sends.",
+   "memory_boundary": "Mini: ~/.openclaw/state/failover-monitor.json, ~/Library/Logs/exos-failover-monitor.log; Supabase bucket exos-control",
+   "escalation": "promote -> Jon DM + #exomac-system (live); would-promote -> fleet_log warn (dry-run); failback = Jon only",
+   "eval_suite": "python3 scripts/failover_monitor.py --selftest (7/7: 3-min blip no promote; dead -> promote 6-8 min; partitioned -> Studio fences, never both; hold -> none; Supabase-only outage -> none; Studio back mid-claim -> reclaim; tunnel dead/Studio alive -> none) + --plan on the Mini (missing inputs) in failover_validate weekly + live drill (Decision)",
+   "telemetry": "fleet_log agent=failover-monitor (Mini fleet-events.jsonl); ~/Library/Logs/exos-failover-monitor.log; state JSON read by failover_validate over ssh",
+   "reusability_scope": "DR",
+   "risk_tier": "HIGH",
+   "envelope_source": "hand-written by dr-failover worker 2026-10-02",
+   "change_log": [
+    "2026-10-02 dr-failover (Jon 10/2 10:10 'go ahead 2-4', 6-min auto-failover): NEW agent failover-monitor-exo3, loaded on the Mini in DRY-RUN (rollback on the Mini: launchctl bootout gui/$(id -u)/com.exos.failover-monitor); approver John Quinn; status pending Jon approval — D-tbd (see logs/audit-workers/dr-failover.REPORT.md)"
+   ]
   }
  ],
  "eval_wave_1": {

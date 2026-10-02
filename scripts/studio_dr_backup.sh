@@ -98,13 +98,15 @@ done
 #     CURRENT com.exos launchd set — failover_monitor's promote loads the server jobs from here
 #     (the Mini's parked disabled-standby copies are from before the 9/28 cutover).
 [ -d "$HOME/.config/exos" ] && run_rsync "$HOME/.config/exos/" "config-exos/"
+# which com.exos jobs are actually LOADED on the Studio right now -> promote starts only those
+launchctl list | awk '{print $3}' | grep -E '^com\.exos\.' | sort > "$HOME/Library/LaunchAgents/_loaded.txt" 2>/dev/null || true
 if [ "$DEST_REMOTE" = "True" ] || [ "$DEST_REMOTE" = "true" ]; then
   ssh "${DEST%%:*}" "mkdir -p '${DEST#*:}launchagents'" 2>>"$LOG" || true
-  rsync -a --delete --include='com.exos.*.plist' --include='ai.openclaw.gateway.plist' --exclude='*' \
+  rsync -a --delete --include='com.exos.*.plist' --include='ai.openclaw.gateway.plist' --include='_loaded.txt' --exclude='*' \
     -e ssh "$HOME/Library/LaunchAgents/" "${DEST}launchagents/" 2>>"$LOG" || RSYNC_RC=$?
 else
   mkdir -p "${DEST}launchagents"
-  rsync -a --delete --include='com.exos.*.plist' --include='ai.openclaw.gateway.plist' --exclude='*' \
+  rsync -a --delete --include='com.exos.*.plist' --include='ai.openclaw.gateway.plist' --include='_loaded.txt' --exclude='*' \
     "$HOME/Library/LaunchAgents/" "${DEST}launchagents/" 2>>"$LOG" || RSYNC_RC=$?
 fi
 

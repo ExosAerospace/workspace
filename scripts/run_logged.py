@@ -84,6 +84,46 @@ def _pump(pipe_fd, buf, counter):
             del buf[: len(buf) - TAIL_BYTES]
 
 
+FENCE_FLAG = os.path.join(os.path.expanduser("~"), ".openclaw", "state", "server-fenced.flag")
+FENCE_EXEMPT = ("com.exos.lease-renew", "com.exos.dr-backup", "com.exos.dr-hot-sync",
+                "com.exos.backup-watchdog", "com.exos.failover-validate")
+
+
+def _fenced_skip(label, cmd):
+    """Studio fencing (control lease, dr-failover 2026-10-02): when lease_renew.py has fenced this
+    host (lost the lease to the Mini, or cut off from the internet past the fence threshold) every
+    non-exempt job stands down — no sends / state writes from a box that is not the server.
+    The flag only exists in failover mode=live. Any error here = run the job as before."""
+    try:
+        if not os.path.exists(FENCE_FLAG):
+            return None
+        exempt = FENCE_EXEMPT
+        try:
+            with open(os.path.join(WORKSPACE, "config", "failover.json")) as f:
+                exempt = tuple(json.load(f).get("fence_exempt_labels") or FENCE_EXEMPT)
+        except Exception:
+            pass
+        if label in exempt:
+            return None
+        try:
+            with open(FENCE_FLAG) as f:
+                why = f.read().strip()[:200]
+        except Exception:
+            why = "fenced"
+        now = _now().isoformat(timespec="seconds")
+        _append_record({"label": label, "start": now, "end": now, "host": socket.gethostname().split(".")[0],
+                        "launchd": os.environ.get("XPC_SERVICE_NAME", ""), "cmd": " ".join(cmd)[:500],
+                        "duration_s": 0, "exit_code": 0, "signal": None, "ok": True, "pid": None,
+                        "skipped": "fenced", "stderr_bytes": 0, "stderr_tail": ["[fence] skipped: " + why]})
+        try:
+            sys.stderr.write("run_logged.py: %s SKIPPED — host fenced (%s)\n" % (label, why))
+        except Exception:
+            pass
+        return 0
+    except Exception:
+        return None
+
+
 def main(argv):
     if len(argv) >= 2 and argv[1] != "--":
         label, rest = argv[1], argv[2:]
@@ -94,6 +134,10 @@ def main(argv):
     if not cmd:
         sys.stderr.write("run_logged.py: no command given\n")
         return 2
+
+    skipped = _fenced_skip(label, cmd)
+    if skipped is not None:
+        return skipped
 
     start = _now()
     t0 = time.monotonic()
