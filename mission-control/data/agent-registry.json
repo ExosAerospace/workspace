@@ -4642,6 +4642,27 @@
    "change_log": [
     "2026-10-02 dr-failover (Jon 10/2 10:10 'go ahead 2-4', 6-min auto-failover): NEW agent failover-monitor-exo3, loaded on the Mini in DRY-RUN (rollback on the Mini: launchctl bootout gui/$(id -u)/com.exos.failover-monitor); approver John Quinn; status pending Jon approval — D-7281893"
    ]
+  },
+  {
+   "label": "com.exos.mini-dr-link",
+   "script": "cloudflared tunnel run --token (exos-mini)",
+   "kind": "service",
+   "schedule": "KeepAlive (Mini only, user LaunchAgent; runs only while exomac is logged in — FileVault)",
+   "purpose": "Mini side of the DR link: remotely-managed Cloudflare tunnel exos-mini -> ssh-mini.exosaero.space -> ssh://localhost:22. Carries the Studio->Mini backup, hot sync and lease heartbeat (ssh alias mini-dr on the Studio, key-only).",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Service (no decisions)",
+   "human_owner": "John Quinn",
+   "permission_envelope": "outbound Cloudflare tunnel connector only; exposes the Mini's sshd (key-only, PasswordAuthentication off) at ssh-mini.exosaero.space; no sends, no data writes",
+   "memory_boundary": "none (token in ~/.config/exos on the Studio; plist on the Mini)",
+   "escalation": "backup_watchdog 'Mini link down' alert to Jon (Discord DM + #exomac-system + email)",
+   "eval_suite": "python3 scripts/dr_verify.py --link (run by backup_watchdog hourly, 2-probe rule) + failover_validate weekly",
+   "telemetry": "Mini /tmp/mini-dr-link.log; backup-watchdog fleet_log (link=up/DOWN)",
+   "reusability_scope": "DR",
+   "risk_tier": "MED",
+   "envelope_source": "registered retroactively by dr-failover worker 2026-10-02 (created by the Mini-link session 10/2 ~09:50)",
+   "change_log": [
+    "2026-10-02 dr-failover: registered retroactively (exo3 gate); created 10/2 ~09:50 by the session that wired the Mini link; liveness covered by backup_watchdog link probe; approver John Quinn; status pending Jon approval — D-7281892"
+   ]
   }
  ],
  "eval_wave_1": {
