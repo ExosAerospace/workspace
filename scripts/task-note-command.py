@@ -381,7 +381,12 @@ def main():
                 who = "Exo (triage)"
                 flag_awaiting(taskid)   # Exo-owned directive: surface the ORIGINAL task to the top too
             newid = nid[0]["id"] if nid else "?"
-            reply(taskid, f"✅ Exo: created task #{newid} → {who} for “{cmd[:110]}”.")
+            if p:
+                reply(taskid, f"✅ Exo: created task #{newid} → {who} for “{cmd[:110]}”.")
+            else:
+                # Exo does it itself — the triage row is only the resolver's internal queue entry.
+                # Never tell the requester we "created a task" (Jon #2414 10/2): do it, reply HERE.
+                reply(taskid, f"✅ Exo: on it — I'll do this and post the result right here on this task.")
             logline(f"route {aid} task {taskid} -> {who} #{newid}"); acted += 1; continue
 
         # 5) unrecognized @Exobot note (question/FYI) -> Exo triage so the main session handles it
