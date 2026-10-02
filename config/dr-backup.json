@@ -1,7 +1,7 @@
 {
-  "_comment": "DR backup config for the Studio->offsite-Mini topology. Pre-migration these run in LOCAL self-test mode (dest is a local staging dir). At migration, set 'dest' to the offsite Mini over the Cloudflare SSH tunnel, e.g. exomac@ssh.exosaero.space:/Users/exomac/dr-mirror/ and set dest_is_remote=true.",
-  "dest": "/Users/exomac/dr-selftest-mirror/",
-  "dest_is_remote": false,
+  "_comment": "LIVE 2026-10-02: Studio -> Mini (at Lizi office) over ssh alias mini-dr (cloudflared access ssh to ssh-mini.exosaero.space).",
+  "dest": "mini-dr:/Users/exomac/dr-mirror/",
+  "dest_is_remote": true,
   "workspace_src": "/Users/exomac/.openclaw/workspace/",
   "openclaw_config_src": "/Users/exomac/.openclaw/",
   "vaultwarden_backup_src": "/Users/exomac/exos-asset-backups/vaultwarden/",
