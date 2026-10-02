@@ -876,11 +876,12 @@
     "com.exos.mc-email-command": {
       "backed_up": true,
       "converted_at": "2026-09-28T22:05:33-05:00",
+      "loaded_at": "2026-10-02T07:24:56-05:00",
       "original_args": [
         "/usr/bin/python3",
         "/Users/exomac/.openclaw/workspace/scripts/mc-email-command.py"
       ],
-      "reload": "deferred: RunAtLoad=true (converted, takes effect on next load)",
+      "reload": "reloaded (RunAtLoad) on Jon approval D-7281863 (2026-10-01); logged run exit 0 at 07:24:56",
       "run_at_load": true,
       "status": "converted"
     },
