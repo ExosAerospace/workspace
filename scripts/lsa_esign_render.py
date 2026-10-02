@@ -11,12 +11,16 @@ Steps:
   1. apply_exos_letterhead.py → <base>_LETTERHEAD.docx (body untouched; addenda start on their own page)
   2. LibreOffice → <base>_LETTERHEAD.pdf (exact page layout)
   3. pdftoppm → page images → <base>_PAGES.html (same "pdf-rendered" page-image format docusign.html uses for
-     uploaded PDFs, so /sign and the executed copy show the real pages)
+     uploaded PDFs, so /sign and the executed copy show the real pages), plus hidden esign-line-slot markers for
+     every "____" signature/date line so the server stamps each signature onto its line (esign_stamp.py; Jon 10/1)
 
 Usage: lsa_esign_render.py IN.docx  → prints JSON {letterhead_docx, pdf, pages_html, pages}
 Exit 1 if the letterhead check fails or the PDF can't be produced.
 """
 import base64, glob, json, os, subprocess, sys, tempfile
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import esign_stamp  # signature-line slots: signatures land ON the lines, not only on a trailing certificate
 
 WS = "/Users/exomac/.openclaw/workspace"
 SOFFICE = "/opt/homebrew/bin/soffice"
@@ -45,8 +49,10 @@ def main(inp):
             f'<img src="data:image/jpeg;base64,{base64.b64encode(open(f, "rb").read()).decode()}" alt="Page {i}" '
             f'style="width:100%;height:auto;display:block;border:1px solid #ddd;border-radius:4px;"></div>'
             for i, f in enumerate(imgs, 1))
-    open(pages_html, "w").write(f'<div class="pdf-rendered" data-pdf="1" data-pages="{len(imgs)}">{pages}</div>')
-    print(json.dumps({"letterhead_docx": lh_docx, "pdf": pdf, "pages_html": pages_html, "pages": len(imgs)}))
+    slots = esign_stamp.find_slots(pdf)
+    open(pages_html, "w").write(f'<div class="pdf-rendered" data-pdf="1" data-pages="{len(imgs)}">{pages}{esign_stamp.slots_html(slots)}</div>')
+    print(json.dumps({"letterhead_docx": lh_docx, "pdf": pdf, "pages_html": pages_html, "pages": len(imgs),
+                      "signature_lines": sum(1 for x in slots if x["kind"] == "sig")}))
 
 
 if __name__ == "__main__":

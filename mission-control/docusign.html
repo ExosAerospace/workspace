@@ -2256,6 +2256,47 @@ async function findSincerelyCut(page, viewport) {
   return { top, bottom: Math.max(top, bottom), left: Math.max(0, Math.round(s.x)) };
 }
 
+// Signature LINES (Jon 2026-10-01): every "____" signature blank (line start, or after "By:"/"Signature:") and its
+// "Date: ____" partner, labelled by the printed name on the line below. Emitted as hidden esign-line-slot markers
+// (fractions of the page); the server's esign_stamp.py puts each signer's signature and date ON those lines.
+async function findSignatureLines(page, viewport, pageNo) {
+  const tc = await page.getTextContent();
+  const W = viewport.width, H = viewport.height;
+  const items = tc.items.filter(it => it.str && it.str.trim()).map(it => {
+    const [x, base] = viewport.convertToViewportPoint(it.transform[4], it.transform[5]);
+    const h = (Math.abs(it.transform[3]) || 10) * viewport.scale, w = (it.width || 0) * viewport.scale;
+    return { str: it.str, x0: x, x1: x + w, y0: base - h * 0.85, y1: base + h * 0.2, h };
+  });
+  const rows = [];
+  for (const it of items) {
+    const re = /_{8,}/g; let m;
+    while ((m = re.exec(it.str))) {
+      const cw = it.str.length ? (it.x1 - it.x0) / it.str.length : 0;
+      const b = { x0: it.x0 + cw * m.index, x1: it.x0 + cw * (m.index + m[0].length), y0: it.y0, y1: it.y1, h: it.h };
+      const mid = (b.y0 + b.y1) / 2;
+      const leftText = (it.str.slice(0, m.index) + ' ' + items.filter(o => o !== it && Math.abs((o.y0 + o.y1) / 2 - mid) < b.h * 0.5 && o.x1 <= b.x0 + 1)
+        .sort((a, c) => a.x1 - c.x1).map(o => o.str).join(' ')).trim();
+      const prev = (leftText.split(/\s+/).pop() || '');
+      if (/^date:?$/i.test(prev)) { rows.push({ kind: 'date', b }); continue; }
+      if (leftText && !/^(by|signature|signed|sign|name)\s*:?$/i.test(prev)) continue;
+      // printed name under this line only — stop at the next blank on the row (two-column signature blocks)
+      const right = Math.min(b.x1 + 320 * viewport.scale, ...items.filter(o => o !== it && /_{8,}/.test(o.str) && Math.abs((o.y0 + o.y1) / 2 - mid) < b.h * 0.5 && o.x0 >= b.x1 - 1).map(o => o.x0 - 2));
+      const label = items.filter(o => o.y0 > b.y1 - 2 && o.y0 < b.y1 + b.h * 1.9 && o.x1 > b.x0 - 6 && o.x0 < right)
+        .sort((a, c) => a.x0 - c.x0).map(o => o.str).join(' ').trim();
+      const above = items.filter(o => o.y1 <= b.y0 + 1 && o.y1 > b.y0 - b.h * 6 && o.x1 > b.x0 - 6 && o.x0 < b.x1 + 6).map(o => o.y1);
+      rows.push({ kind: 'sig', b, label, top: above.length ? Math.max(...above) : b.y0 - b.h * 3 });
+    }
+  }
+  const esc = v => String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  const f = v => (Math.round(v * 100000) / 100000);
+  return rows.map(r => {
+    const mate = r.kind === 'date' ? rows.find(g => g.kind === 'sig' && Math.abs(g.b.y0 - r.b.y0) < 4) : r;
+    if (!mate) return '';
+    return `<div class="esign-line-slot" data-page="${pageNo}" data-kind="${r.kind}" data-label="${esc(mate.label)}" ` +
+      `data-box="${f(r.b.x0 / W)},${f(r.b.y0 / H)},${f(r.b.x1 / W)},${f(r.b.y1 / H)}"` + (r.kind === 'sig' ? ` data-top="${f(r.top / H)}"` : '') + `></div>`;
+  }).join('');
+}
+
 // Longest run of (near-)white pixel rows below y0 — the blank band between a letter's signature
 // block and its footer. Returns {top, bottom} in canvas pixels (a small margin kept each side).
 function largestBlankBand(canvas, y0) {
@@ -2288,6 +2329,7 @@ async function renderPdfToHtml(file) {
   const scale = 1.6; // balance of crispness vs. localStorage size
   let pagesHtml = '';
   let slotPlaced = false;
+  let lineSlots = '';
 
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
@@ -2321,12 +2363,13 @@ async function renderPdfToHtml(file) {
              : img(slice(cut.bottom, canvas.height))) + `</div>`;
       continue;
     }
+    try { lineSlots += await findSignatureLines(page, viewport, i); } catch (e) { console.warn('signature-line scan failed p' + i, e); }
     const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
     pagesHtml += `<div class="pdf-page" style="margin:0 auto 16px;max-width:720px;">` +
       `<img src="${dataUrl}" alt="Page ${i}" style="width:100%;height:auto;display:block;border:1px solid #ddd;border-radius:4px;"></div>`;
   }
 
-  return `<div class="pdf-rendered" data-pdf="1" data-pages="${pdf.numPages}">${pagesHtml}</div>`;
+  return `<div class="pdf-rendered" data-pdf="1" data-pages="${pdf.numPages}">${pagesHtml}${lineSlots}</div>`;
 }
 
 // ════════════════════════════════════════════════════════════════════

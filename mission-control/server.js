@@ -458,19 +458,69 @@ function esignCertificate(env, signers) {
     <h2 style="color:#0a1628;">Signature Certificate</h2>${rows}
     <p style="font-size:12px;color:#666;">Executed electronically by the parties under the U.S. E-SIGN Act (15 U.S.C. §7001 et seq.) and the Uniform Electronic Transactions Act (UETA). Envelope ID: ${env.id} · Completed: ${env.completedAt||''}</p>`;
 }
+// Signature LINES (Jon 2026-10-01, Lesiw LSA: "the signatures at the bottom of the page is invalid … fix it fully").
+// Page-image documents (LSAs via lsa_esign_render.py, uploaded PDFs via docusign.html) carry hidden
+// <div class="esign-line-slot"> markers for every "____" signature line and its "Date: ____". esign_stamp.py burns each
+// signer's signature onto their line and the signing date onto their Date line, straight into the page images (email
+// clients strip CSS overlays), and builds the executed PDF (stamped pages + audit certificate page). The certificate is
+// the audit trail only — the document itself reads as signed.
+const ESIGN_LINE_SLOT = 'class="esign-line-slot"';
+const ESIGN_STAMP = path.join(__dirname, '..', 'scripts', 'esign_stamp.py');
+const ESIGN_EXEC_DIR = path.join(UPLOADS_DIR, 'esign-executed');
+function esignStampLines(env, pdfOut) {
+  return new Promise((resolve) => {
+    const py = require('child_process').spawn('/usr/bin/python3', [ESIGN_STAMP, 'stamp']);
+    let out = '', err = '';
+    const timer = setTimeout(() => py.kill('SIGKILL'), 120000);
+    py.stdout.on('data', d => out += d); py.stderr.on('data', d => err += d);
+    py.on('close', code => {
+      clearTimeout(timer);
+      if (code !== 0) { console.error('[E-Sign] stamp failed for ' + env.id + ': ' + err.slice(-400)); return resolve(null); }
+      try { resolve(JSON.parse(out)); } catch (e) { console.error('[E-Sign] stamp output unreadable: ' + e.message); resolve(null); }
+    });
+    py.on('error', e => { clearTimeout(timer); console.error('[E-Sign] stamp spawn error: ' + e.message); resolve(null); });
+    py.stdin.end(JSON.stringify({ id: env.id, title: env.title, html: env.html, signers: env.signers, completedAt: env.completedAt, pdf_out: pdfOut || null }));
+  });
+}
+// After a non-final signature: the next signer (Exos countersigns last) sees the earlier signatures on their lines.
+async function esignRefreshStamped(envId) {
+  const all = loadEnvelopes(); const env = all.find(e => e.id === envId);
+  if (!env || !(env.html || '').includes(ESIGN_LINE_SLOT)) return;
+  const r = await esignStampLines(env, null);
+  if (!r || !r.placed || !r.placed.length) return;
+  const fresh = loadEnvelopes(); const e2 = fresh.find(e => e.id === envId);
+  if (e2) { e2.htmlStamped = r.html; saveEnvelopes(fresh); }
+}
 async function esignDeliverCompleted(env) {
   const t = esignTransport();
+  let body = null, attachments = [];
+  if ((env.html || '').includes(ESIGN_LINE_SLOT)) {
+    fs.mkdirSync(ESIGN_EXEC_DIR, { recursive: true });
+    const pdfName = 'Executed_' + String(env.title || 'Document').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '') + '_' + env.id + '.pdf';
+    const r = await esignStampLines(env, path.join(ESIGN_EXEC_DIR, pdfName));
+    if (r && r.placed && r.placed.length) {
+      body = r.html + esignCertificate(env);
+      if (r.pdf && fs.existsSync(r.pdf)) {
+        attachments.push({ filename: pdfName, path: r.pdf, contentType: 'application/pdf' });
+        try { const all = loadEnvelopes(); const e2 = all.find(e => e.id === env.id);
+          if (e2) { e2.executedPdf = path.relative(__dirname, r.pdf); e2.htmlStamped = r.html; saveEnvelopes(all); } } catch (e) {}
+      }
+      const unplaced = env.signers.filter(s => !r.placed.includes(s.name)).map(s => s.name);
+      if (unplaced.length) console.warn('[E-Sign] ' + env.id + ': no signature line matched for ' + unplaced.join(', ') + ' (certificate only)');
+    }
+  }
+  if (!body) body = esignExecutedBody(env);
   const completedHtml = `<div style="font-family:Arial,sans-serif;max-width:760px;margin:0 auto;color:#222;">
     <div style="background:#0a1628;padding:18px 24px;border-radius:8px 8px 0 0;"><h2 style="color:#22c55e;margin:0;font-size:18px;">✓ Fully Executed — ${env.title}</h2></div>
     <div style="background:#fff;padding:24px;border:1px solid #ddd;">
-      <p style="color:#333;">All parties have signed. The fully executed document and signature certificate are below.</p>
+      <p style="color:#333;">All parties have signed. The fully executed document${attachments.length ? ' (signed PDF attached)' : ''} and signature certificate are below.</p>
       <hr style="border:none;border-top:1px solid #eee;margin:18px 0;">
       <h3 style="color:#0a1628;">${env.title}</h3>
-      ${esignExecutedBody(env)}
+      ${body}
     </div>
   </div>`;
   const recipients = Array.from(new Set(env.signers.map(s => s.email).concat(['jquinn@exosaero.com'])));
-  const info = await t.sendMail({ from: '"Exos Aerospace — DocuSign" <jquinnexo@pm.me>', replyTo: 'jquinn@exosaero.com', to: recipients.join(', '), subject: 'Fully Executed: ' + env.title, html: completedHtml });
+  const info = await t.sendMail({ from: '"Exos Aerospace — DocuSign" <jquinnexo@pm.me>', replyTo: 'jquinn@exosaero.com', to: recipients.join(', '), subject: 'Fully Executed: ' + env.title, html: completedHtml, attachments });
   console.log('[E-Sign] Completed doc delivered for envelope ' + env.id + ' to ' + recipients.join(', '));
   return info;
 }
@@ -4486,7 +4536,7 @@ const server = http.createServer((req, res) => {
     }
     res.writeHead(200,{'Content-Type':'application/json'});
     res.end(JSON.stringify({
-      title: env.title, html: env.html, message: env.message, status: env.status,
+      title: env.title, html: env.htmlStamped || env.html, message: env.message, status: env.status,
       signer: { name: signer.name, email: signer.email, role: signer.role, signed: signer.signed, signedAt: signer.signedAt },
       signers: env.signers.map(s => ({ name: s.name, role: s.role, signed: s.signed, signedAt: s.signedAt }))
     }));
@@ -4542,6 +4592,7 @@ const server = http.createServer((req, res) => {
         // Sequential routing: now that this signer is done, email the NEXT unsigned signer their link
         // (counterparty first → Exos last). Failure here is logged, not fatal to this signature.
         if (!allSigned) {
+          try { await esignRefreshStamped(env.id); } catch (e) { console.error('[E-Sign] stamp refresh error:', e.message); }
           const next = env.signers.find(s => !s.signed);
           if (next) {
             try {
