@@ -1,0 +1,2 @@
+The Sandia TAOS Manual v11.1 (OUO / Export Controlled) was moved 2026-10-02 to the restricted folder
+/Users/exomac/Restricted-OUO/ (Exos employees only, local access, no copies). See README-ACCESS.txt there.

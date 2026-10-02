@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/print_start_guard.py\""
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "deny": [
+      "Read(//Users/exomac/Restricted-OUO/**)",
+      "Edit(//Users/exomac/Restricted-OUO/**)",
+      "Write(//Users/exomac/Restricted-OUO/**)",
+      "Bash(*Restricted-OUO*)",
+      "Bash(*TAOS_Manual*)",
+      "Read(**/TAOS_Manual*)"
+    ]
+  }
+}

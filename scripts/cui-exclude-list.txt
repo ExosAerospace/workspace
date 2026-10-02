@@ -81,3 +81,5 @@ Exos_RDRE_Capability_Statement*
 Data_Usage_Agreement*ITAR*
 NASAs_RDRE_Dev_AAS_Teasley*
 TAOS_Manual*
+# Restricted OUO folder (outside workspace) — never mirror (2026-10-02)
+Restricted-OUO/
