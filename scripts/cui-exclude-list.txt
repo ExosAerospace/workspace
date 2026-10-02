@@ -70,26 +70,14 @@ Exos_RDRE_Capability_Statement*
 *.slx
 *.mdl
 
-# --- Trajectory / 6DOF / dispersion + NASA GFE residue (added 2026-09-30, exo3 r2 r2-controlled-docs) ---
-# BLK3 6DOF sim inputs (mass/aero/inertia/damping tables, nominal mission, statistical winds), TAOS drift
-# mods, fin-resize DATCOM kits and Part 450 Monte Carlo dispersion frameworks = trajectory/performance
-# technical data; NASA RDRE GFE (Teasley DUA + AAS paper) was logged removed 6/16 but copies remain in
-# ~/.openclaw/media/inbound. Keep them OFF the DR mirror until Jon decides (Decision exo3-r2:r2-controlled-docs:controlled-data-on-mac).
-# Rollback: delete this block.
-*6DOF*
-*_6DOF_*
-BLK3_MASS_AERO_*
-BLK3_INERTIA_CG_*
-BLK3_DAMPING_*
-NOMINAL_MISSION_*
-*STATISTICAL_WINDS*
-*DRIFTMOD*
-Lazarus_Segment1_DriftMod*
-*DATCOM*
-BLK3_Fin_Resize*
-*MonteCarlo_Dispersion*
+# --- Government-marked residue (added 2026-09-30 exo3 r2; NARROWED 2026-10-02 per Jon) ---
+# Jon 2026-10-02: Exos's own trajectory/6DOF/Monte Carlo dispersion "math work" (BLK3/M101 sizing, Lazarus
+# drift mods, fin-resize DATCOM, Part 450 dispersion frameworks) is RELEASED: internal Exos engineering data,
+# NOT GFE/contract-marked CUI, no GCC High requirement -> back on the DR mirror. Still ITAR-sensitive: no
+# foreign-person access/sharing without Neil's export review.
+# Only government-supplied, government-marked items stay excluded:
+#   NASA RDRE GFE (Teasley DUA + AAS paper) -> being deleted per D-7281874;
+#   Sandia TAOS Manual v11.1 (marked OUO / Export Controlled Information).
 Data_Usage_Agreement*ITAR*
 NASAs_RDRE_Dev_AAS_Teasley*
 TAOS_Manual*
-lazarus_taos/
-project-lazarus/
