@@ -467,7 +467,8 @@
    "cadence_s": 86400,
    "warn_grace": 2.5,
    "fail_grace": 6,
-   "owner": "John Quinn"
+   "owner": "John Quinn",
+   "selftest": "python3 scripts/qb_deposit_sync.py --selftest"
   },
   "com.exos.ready-action-verify": {
    "cadence_s": 86400,

@@ -1665,18 +1665,19 @@
    "schedule": "daily 06:15",
    "purpose": "qb_deposit_sync.py — keep the $800K build-capital tracker current from ACTUAL QuickBooks bank deposits. Reads Deposit entities (each line = money into the bank), classifies each li",
    "stack_layer": "ORCHESTRATE",
-   "autonomy_tier": "Execute-within-bounds",
+   "autonomy_tier": "Propose-only (human confirms)",
    "human_owner": "John Quinn",
-   "permission_envelope": "external API: intuit.com, quickbooks; deletes local files (STATE_PATH); own logs/state",
+   "permission_envelope": "external API: intuit.com/QuickBooks READ-ONLY (Deposit query); writes own ledger mission-control/data/build_capital_deposits.json + drafts/Exos_BuildCapital_800K_Tracker.xlsx (booked lanes only); files Decision cards via /api/decisions/ingest. Cannot book a lane without a HUMAN-answered 'Book' on the card that lists the line (D-7281865).",
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
-   "escalation": "Decisions board / Jon inbox",
-   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 86400s → WARN)",
-   "telemetry": "logs/qb_deposit_sync.log",
+   "escalation": "ONE consolidated high-priority EXO3 Decision card per batch of new proposals (dedupeKey qb-deposit:<digest>) -> Jon; card-filing failure -> fleet_log error, proposals retried next run",
+   "eval_suite": "python3 scripts/qb_deposit_sync.py --selftest (18 checks; replays auto-booked-without-click, agent-proposed/agent-named answers never book) + agent_eval hourly liveness (config/agent-evals.json)",
+   "telemetry": "logs/fleet-events.jsonl (deposit_sync_run / deposit_proposals_filed / deposit_booked / deposit_rejected / deposit_card_failed) + logs/runs/*.jsonl (run_logged) + ~/.openclaw/logs/qb-deposit-sync.log",
    "reusability_scope": "TBD",
-   "risk_tier": "LOW",
+   "risk_tier": "MED",
    "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
    "change_log": [
-    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): PROPOSED (not applied; money): propose-only gate — confident deposit matches become pending proposals, lane totals/tracker count human-confirmed entries only, existing 17 grandfathered; approver John Quinn; status pending Jon approval — D-7281865"
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): PROPOSED (not applied; money): propose-only gate — confident deposit matches become pending proposals, lane totals/tracker count human-confirmed entries only, existing 17 grandfathered; approver John Quinn; status pending Jon approval — D-7281865",
+    "2026-10-02 r3-followthrough: APPLIED propose-only gate (commit 76e961b) — confident matches -> proposals + one Decision card; lanes/tracker credited only on a human 'Book' answer; 17 prior matches grandfathered; approver John Quinn; status approved by Jon — D-7281865 ('Yes, gate it', 2026-10-01 06:11 CDT); rollback: git revert 76e961b"
    ]
   },
   {
