@@ -90,7 +90,7 @@ YOUR STEPS
 2. Check the contact: still in that role (organization site + LinkedIn)? Is the email in a public source, or did the AI guess it? Record the link.
 3. Check every factual claim in the research and the draft: the program is real and current, the funding is real, and the draft's BLK3 claims match the Payload User's Guide (EduSourced files). No prices. Flag any "only / first / fastest" claim that has no source.
 4. Post ONE note: PASS or FAIL, then a numbered list of every error (what the AI said, what is true, your source), then a corrected draft if anything was wrong.
-5. PASS → drag to Done. FAIL → leave it In Progress and say what would fix it.
+5. Post ONE note with your verdict on the AI's work (PASS or FAIL), every error with its source, and your corrected draft. Then drag to Done either way. FAIL grades the AI, not you; do not add a second PASS note.
 Add your error count to the running tally for Karan's AI audit (task 3133).
 
 RULES: You do not contact anyone. Public information only. Lizi reviews and sends."""
