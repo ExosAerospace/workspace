@@ -1287,7 +1287,9 @@
    "warn_grace": 2.5,
    "fail_consecutive_errors": 2,
    "owner": "John Quinn",
-   "enabled": true
+   "enabled": true,
+   "selftest": "python3 scripts/cron_hygiene.py --selftest",
+   "restricted_agent": "research-web"
   },
   "cron:research-team-investor-capital-markets": {
    "kind": "openclaw-cron",

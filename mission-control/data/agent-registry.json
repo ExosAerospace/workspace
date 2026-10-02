@@ -1166,7 +1166,8 @@
      "approver": "John Quinn",
      "change": "Added deterministic deliverable→MC-task linkage guard (PoliTo LOI miss). Match: cited task # → else keyword score on open tasks (top≥3, lead≥2). Else flag, never guess."
     },
-    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): HELD (not reloaded; replies to non-Exos MC users): proposed reload onto run_logged; approver John Quinn; status pending Jon approval — D-7281863"
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): HELD (not reloaded; replies to non-Exos MC users): proposed reload onto run_logged; approver John Quinn; status pending Jon approval — D-7281863",
+    "2026-10-02 r3-followthrough: RELOADED onto run_logged (bootout+bootstrap 07:24:55 CDT; launchctl print shows run_logged.py; RunAtLoad run exit 0, logs/runs/2026-10-02.jsonl; commit c97effc); approver John Quinn; status approved by Jon — D-7281863 ('Reload it now', 2026-10-01)"
    ]
   },
   {
@@ -3294,11 +3295,11 @@
    "stack_layer": "SENSE",
    "autonomy_tier": "Recommends-with-Context",
    "human_owner": "John Quinn",
-   "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts brief to #rd-team; no file writes; announces final output to Discord channel:1501636614034821320",
-   "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts brief to #rd-team; no file writes",
+   "permission_envelope": "RESTRICTED web-only tier (pilot, D-7281869/D-7281890): runs on OpenClaw agent 'research-web' whose agent-level tools policy allows ONLY group:web (web_search/x_search/web_fetch), group:memory (memory_search/memory_get), session_status, message, tavily_search/tavily_extract; denies group:runtime/fs/automation/nodes/ui/agents/media + sessions_spawn/send, subagents, conversations_send/turn; heartbeat disabled; sandbox off; enforced by the gateway for claude-cli runs. Posts brief to #rd-team via cron announce (channel:1501636614034821320); no file writes.",
+   "memory_boundary": "fresh isolated session per run; research-web agent's own memory index (same workspace memory/ files, 434 indexed 2026-10-02); no filesystem tools",
    "escalation": "output: announces final output to Discord channel:1501636614034821320; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-grant-contract-scanner'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
-   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-grant-contract-scanner'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-grant-contract-scanner'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory). + cron_hygiene.restricted_tier_findings() hourly via agent_eval: FAIL if this job leaves agent research-web or the agent's tools policy widens/disappears, WARN if its heartbeat is re-enabled (python3 scripts/cron_hygiene.py --selftest, 37 checks)",
+   "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log cron_run event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-grant-contract-scanner'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_receipts (OpenClaw >= 2026.9.7; adapter e3a40b7)",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "LOW",
    "envelope_source": "derived 2026-09-29 (cron-registry audit worker) from the cron's payload, toolsAllow and delivery via `openclaw cron list --all --json`; prompt read by hand",
@@ -3306,7 +3307,17 @@
    "cron_id": "f4ea413e-c591-41ee-8933-7a927ed60c67",
    "cron_name": "Research Team: Grant & Contract Scanner",
    "model": "anthropic/claude-sonnet-5",
-   "ai_in_critical_path": true
+   "ai_in_critical_path": true,
+   "change_log": [
+    {
+     "date": "2026-10-02",
+     "by": "Exo (r3-followthrough)",
+     "approver": "John Quinn",
+     "change": "Pilot of the restricted web-only tool tier: moved from agent main (full tools) to new agent research-web (web/memory/session_status/message only); deterministic guard cron_hygiene.restricted_tier_findings (e3a40b7); prompt/model/schedule/delivery unchanged. Plan approved D-7281869 (2026-10-01).",
+     "status": "pending Jon approval — D-7281890",
+     "rollback": "openclaw cron edit f4ea413e-c591-41ee-8933-7a927ed60c67 --agent main; drop the id from RESTRICTED_TIER in scripts/cron_hygiene.py"
+    }
+   ]
   },
   {
    "label": "cron:discord-mission-control-sync",
