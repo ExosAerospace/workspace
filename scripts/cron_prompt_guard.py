@@ -76,10 +76,12 @@ def connect(db=DB):
 
 
 def load_prompts(db=DB):
+    import cron_telemetry  # schema adapter (OpenClaw >= 2026.9.7 keeps the prompt in job_json)
     con = connect(db)
     try:
-        rows = con.execute("select job_id, name, enabled, payload_message from cron_jobs").fetchall()
-        return {r[0]: {"name": r[1], "enabled": bool(r[2]), "prompt": r[3] or ""} for r in rows}
+        rows = cron_telemetry.job_rows(con)
+        return {r["job_id"]: {"name": r["name"], "enabled": bool(r["enabled"]), "prompt": r.get("payload_message") or ""}
+                for r in rows}
     finally:
         con.close()
 

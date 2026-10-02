@@ -4,7 +4,7 @@ cron_telemetry.py — mirror OpenClaw cron run history into the fleet telemetry 
 (exo3 audit THEME 3: the OpenClaw crons emitted no telemetry).
 
 Reads the OpenClaw state DB READ-ONLY (~/.openclaw/state/openclaw.sqlite, opened mode=ro;
-tables cron_jobs + cron_run_logs) and emits ONE fleet_log event per NEW finished cron run:
+tables cron_jobs + cron_run_logs, or cron_run_receipts on OpenClaw >= 2026.9.7) and emits ONE fleet_log event per NEW finished cron run:
 
     agent   = registry label for the cron (cron:<slug(name)>, matched on cron_id)
     kind    = the cron's stack layer (sense|interpret|decide|orchestrate|learn|govern)
@@ -45,17 +45,85 @@ def connect(db=DB):
     return sqlite3.connect("file:%s?mode=ro" % db, uri=True, timeout=10)
 
 
-def load_cron_jobs(db=DB):
-    """{job_id: dict} for every cron in the store (enabled or not)."""
+# ---- store schema adapter ------------------------------------------------------------------
+# OpenClaw 2026.9.7 (installed 2026-10-01 ~11:00 CDT) moved cron_jobs' flat columns into job_json /
+# state_json and replaced cron_run_logs with cron_run_receipts. Every exo3 cron check went blind
+# ("no such column: schedule_kind"). These helpers return rows with the LEGACY column names from
+# either schema, so callers (agent_eval, cron_hygiene, cron_prompt_guard) don't care which is live.
+JOB_KEYS = ("job_id", "name", "enabled", "schedule_kind", "schedule_expr", "every_ms", "at", "created_at_ms",
+            "last_run_at_ms", "last_run_status", "consecutive_errors", "next_run_at_ms", "delete_after_run")
+
+
+def _columns(con, table):
+    return {r[1] for r in con.execute("pragma table_info(%s)" % table)}
+
+
+def _tables(con):
+    return {r[0] for r in con.execute("select name from sqlite_master where type in ('table','view')")}
+
+
+def job_rows(con):
+    """[dict] one per cron, legacy column names + payload_kind/model/tools_allow_json/message, agent_id,
+    declaration_key (system-declared jobs, e.g. heartbeat:main) and the raw job_json."""
+    if "state_json" not in _columns(con, "cron_jobs"):         # legacy flat schema
+        con.row_factory = sqlite3.Row
+        try:
+            return [dict(r) for r in con.execute("select * from cron_jobs")]
+        finally:
+            con.row_factory = None
+    out = []
+    for jid, name, en, agent, pk, decl, jj, sj in con.execute(
+            "select job_id, name, enabled, agent_id, payload_kind, declaration_key, job_json, state_json from cron_jobs"):
+        try: j = json.loads(jj or "{}")
+        except Exception: j = {}
+        try: st = json.loads(sj or "{}")
+        except Exception: st = {}
+        sch, pl = j.get("schedule") or {}, j.get("payload") or {}
+        out.append({
+            "job_id": jid, "name": name, "enabled": en, "agent_id": agent or j.get("agentId"),
+            "declaration_key": decl or j.get("declarationKey"),
+            "schedule_kind": sch.get("kind"), "schedule_expr": sch.get("expr"), "every_ms": sch.get("everyMs"),
+            "at": sch.get("at"), "created_at_ms": j.get("createdAtMs"),
+            "last_run_at_ms": st.get("lastRunAtMs"), "last_run_status": st.get("lastRunStatus") or st.get("lastStatus"),
+            "consecutive_errors": st.get("consecutiveErrors") or 0, "next_run_at_ms": st.get("nextRunAtMs"),
+            "delete_after_run": int(bool(j.get("deleteAfterRun"))),
+            "payload_kind": pk or pl.get("kind"), "payload_model": pl.get("model"),
+            "payload_tools_allow_json": json.dumps(pl["toolsAllow"]) if "toolsAllow" in pl else None,
+            "payload_message": pl.get("message") or pl.get("text"), "job_json": jj})
+    return out
+
+
+def run_rows(con):
+    """[dict] finished runs, legacy cron_run_logs names. On the receipts schema seq = finished_at_ms
+    (monotonic per job; any legacy small-int high-water mark is below it, so nothing is lost)."""
+    if "cron_run_logs" in _tables(con):
+        q = ("select job_id, seq, ts, status, error, duration_ms, model, provider, run_id, "
+             "delivery_status, total_tokens from cron_run_logs order by ts asc, seq asc")
+    else:
+        q = ("select job_id, finished_at_ms as seq, finished_at_ms as ts, status, error_text as error, "
+             "finished_at_ms - started_at_ms as duration_ms, null as model, null as provider, "
+             "coalesce(request_run_id, receipt_id) as run_id, null as delivery_status, null as total_tokens "
+             "from cron_run_receipts where status != 'running' order by finished_at_ms asc, receipt_id asc")
+    con.row_factory = sqlite3.Row
+    try:
+        return [dict(r) for r in con.execute(q)]
+    finally:
+        con.row_factory = None
+
+
+def load_cron_jobs_full(db=DB):
+    """{job_id: row} with every adapter field (incl. job_json / payload_message)."""
     con = connect(db)
     try:
-        con.row_factory = sqlite3.Row
-        rows = con.execute(
-            "select job_id, name, enabled, schedule_kind, schedule_expr, every_ms, at, created_at_ms, "
-            "last_run_at_ms, last_run_status, consecutive_errors, next_run_at_ms, delete_after_run from cron_jobs").fetchall()
-        return {r["job_id"]: dict(r) for r in rows}
+        return {r["job_id"]: r for r in job_rows(con)}
     finally:
         con.close()
+
+
+def load_cron_jobs(db=DB):
+    """{job_id: dict} for every cron in the store (enabled or not)."""
+    extra = ("agent_id", "declaration_key", "payload_kind")
+    return {jid: {k: r.get(k) for k in JOB_KEYS + extra} for jid, r in load_cron_jobs_full(db).items()}
 
 
 def registry_crons(path=REGISTRY):
@@ -186,10 +254,7 @@ def run_pass(db=DB, state_path=STATE, registry_path=REGISTRY, emit=None, dry=Fal
     jobs = load_cron_jobs(db)
     con = connect(db)
     try:
-        con.row_factory = sqlite3.Row
-        rows = con.execute(
-            "select job_id, seq, ts, status, error, duration_ms, model, provider, run_id, "
-            "delivery_status, total_tokens from cron_run_logs order by ts asc, seq asc").fetchall()
+        rows = run_rows(con)
     finally:
         con.close()
     cutoff_ms = (now_s - backfill_hours * 3600) * 1000
@@ -203,18 +268,23 @@ def run_pass(db=DB, state_path=STATE, registry_path=REGISTRY, emit=None, dry=Fal
             continue  # first pass: older history is baseline, not news
         ent = reg.get(jid) or {}
         job = jobs.get(jid) or {}
+        if job.get("payload_kind") == "heartbeat":
+            continue  # platform heartbeat ticks (2026.9.7 stores them as cron rows) are not agent runs
         label = ent.get("label") or ("cron:" + (slug(job.get("name")) or jid))
         layer = str(ent.get("stack_layer") or "ORCHESTRATE").split("/")[0].strip().upper()
         st = (r["status"] or "unknown").lower()
         err = r["error"] or ""
         timeout = "timeout" in err.lower() or "timed out" in err.lower() or st == "timeout"
-        outcome = {"ok": "ok", "error": "failed", "timeout": "failed", "skipped": "skipped"}.get(st, st)
+        outcome = {"ok": "ok", "error": "failed", "timeout": "failed", "skipped": "skipped",
+                   "interrupted": "failed", "superseded": "skipped"}.get(st, st)
         level = "warn" if (outcome == "failed" or timeout) else "info"
         detail = {"cron_id": jid, "cron_name": job.get("name"), "seq": seq, "run_id": r["run_id"],
                   "run_at": datetime.datetime.fromtimestamp(r["ts"] / 1000, datetime.timezone.utc).isoformat(),
                   "status": st, "duration_ms": r["duration_ms"], "model": r["model"],
                   "delivery_status": r["delivery_status"], "total_tokens": r["total_tokens"],
                   "registered": bool(ent)}
+        if job.get("declaration_key"):
+            detail["system_declared"] = job["declaration_key"]
         if err:
             detail["error"] = err[:300]
         if dry:
@@ -296,6 +366,40 @@ def selftest():
         at = {"enabled": 1, "schedule_kind": "at", "at": "2026-01-01T00:00:00Z", "consecutive_errors": 0}
         check(score_cron(at, th, now)[0] == "WARN", "overdue unrun one-shot WARN")
         check(score_cron(dict(at, at="2099-01-01T00:00:00Z"), th, now)[0] == "OK", "future one-shot OK")
+        # 8 OpenClaw 2026.9.7 receipts schema (job_json/state_json + cron_run_receipts)
+        db2, sp2 = os.path.join(d, "v2.sqlite"), os.path.join(d, "state2.json")
+        con = sqlite3.connect(db2)
+        con.execute("create table cron_jobs (store_key text, job_id text, declaration_key text, owner_agent_id text, "
+                    "name text, description text, enabled int, agent_id text, payload_kind text, job_json text, "
+                    "state_json text default '{}', updated_at int)")
+        con.execute("create table cron_run_receipts (receipt_id text, store_key text, job_id text, config_revision text, "
+                    "agent_id text, request_run_id text, status text, owner_pid int, owner_start_time int, "
+                    "started_at_ms int, finished_at_ms int, error_text text)")
+        jj = {"id": "j1", "name": "Fixture Daily Watch", "agentId": "research-web", "createdAtMs": 0,
+              "schedule": {"kind": "cron", "expr": "0 9 * * *"},
+              "payload": {"kind": "agentTurn", "model": "anthropic/x", "toolsAllow": ["*"], "message": "hi"}}
+        con.execute("insert into cron_jobs values ('k','j1',null,null,'Fixture Daily Watch',null,1,'research-web','agentTurn',?,?,0)",
+                    (json.dumps(jj), json.dumps({"lastRunAtMs": int(now * 1000 - H), "consecutiveErrors": 2, "lastRunStatus": "error"})))
+        hb = {"id": "hb", "name": "heartbeat-main", "schedule": {"kind": "every", "everyMs": 3 * H}, "payload": {"kind": "heartbeat"},
+              "deleteAfterRun": False}
+        con.execute("insert into cron_jobs values ('k','hb','heartbeat:main',null,'heartbeat-main',null,1,'main','heartbeat',?,'{}',0)",
+                    (json.dumps(hb),))
+        for rid, jid, st, fin, err in [("r1", "j1", "ok", now * 1000 - 2 * H, None), ("r2", "j1", "interrupted", now * 1000 - H, "gateway stopped"),
+                                       ("r3", "hb", "skipped", now * 1000 - H, "heartbeat skipped: quiet-hours"), ("r4", "j1", "running", None, None)]:
+            con.execute("insert into cron_run_receipts values (?, 'k', ?, 'c', 'a', null, ?, 1, 1, ?, ?, ?)",
+                        (rid, jid, st, int((fin or now * 1000) - 1000), int(fin) if fin else None, err))
+        con.commit(); con.close()
+        jobs2 = load_cron_jobs(db2)
+        check(jobs2["j1"]["schedule_kind"] == "cron" and jobs2["j1"]["schedule_expr"] == "0 9 * * *"
+              and jobs2["j1"]["consecutive_errors"] == 2 and jobs2["j1"]["agent_id"] == "research-web", "v2 job fields from job_json/state_json")
+        check(score_cron(dict(jobs2["j1"]), th, now)[0] == "FAIL", "v2 consecutive errors still FAIL")
+        full = load_cron_jobs_full(db2)["j1"]
+        check(full["payload_tools_allow_json"] == '["*"]' and full["payload_message"] == "hi" and full["payload_model"] == "anthropic/x",
+              "v2 payload fields")
+        got2 = []
+        n2 = run_pass(db2, sp2, rp, emit=lambda *a, **k: got2.append((a, k)), now_s=now)
+        check(n2 == 2 and [g[1]["outcome"] for g in got2] == ["ok", "failed"], "v2 receipts: finished runs only, heartbeat skipped, interrupted=failed")
+        check(run_pass(db2, sp2, rp, emit=lambda *a, **k: got2.append((a, k)), now_s=now) == 0, "v2 dedupe on re-run")
         print("cron_telemetry selftest: %d/%d pass" % (ok, ok))
         return 0
     finally:

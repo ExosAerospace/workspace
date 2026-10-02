@@ -154,6 +154,7 @@ def cron_drift(jobs, reg_crons, transient_class=None, now_s=None):
     out = []
     for jid, j in sorted(jobs.items()):
         e = reg_crons.get(jid)
+        if not e and j.get("payload_kind") == "heartbeat": continue  # OpenClaw >= 2026.9.7 heartbeat ticks (not agents)
         if not e and transient_class and is_transient(j, now_s): continue
         name = "cron:%s (openclaw cron %s)" % (cron_telemetry.slug(j.get("name")), jid[:8])
         if not e: out.append(name)
@@ -270,6 +271,8 @@ def selftest():
     assert registry_drift(live, {a, b, c}) == []
     assert registry_drift(live, {a}) == [b, c]
     assert registry_drift(set(), {a}) == []  # registered-but-gone is not drift
+    assert cron_drift({"hb": {"name": "heartbeat-main", "payload_kind": "heartbeat"}}, {}) == []  # platform heartbeat row is not drift
+    assert cron_drift({"sc": {"name": "skill-review", "payload_kind": "agentTurn"}}, {}) != []  # system AI job still is
     assert not (LA / "no-such-one-shot-fixture.plist").exists()  # one-shot 'done' rule keys on plist absence
     assert registry_labels(), "registry unreadable or empty"
     assert registry_labels(complete_only=True) <= registry_labels()

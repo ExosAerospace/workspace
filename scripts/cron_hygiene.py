@@ -22,6 +22,9 @@ Checks
   2b. CONFLICTING INSTRUCTIONS (WARN): an ENABLED agentTurn prompt that both declares the isolated
      no-filesystem environment and orders a local file write (RUN LOG / tracker append), or that carries
      R-NONEWS (empty run -> NO_REPLY) but also orders a post on an empty run. Research Team 9/30.
+  2c. RESTRICTED TOOL TIER (FAIL): a job in RESTRICTED_TIER is not on agent "research-web", or that
+     agent's tools policy in openclaw.json widened (allow gains shell/files/cron/gateway/*, a required
+     deny is removed, or the profile is gone). WARN if its heartbeat is re-enabled. D-7281869 pilot.
   3. TRANSIENT CRONS (WARN): a cron_run fleet event with registered:false that does not match the
      registry class "cron-class:transient-agent-reminder" (a one-shot that is gone from the store,
      i.e. self-deleted, or a live schedule kind "at" job with delete_after_run).
@@ -125,15 +128,8 @@ def scan_text(text, hashes):
 
 
 def load_jobs_full(db=None):
-    import cron_telemetry, sqlite3
-    con = cron_telemetry.connect(db or cron_telemetry.DB)
-    try:
-        con.row_factory = sqlite3.Row
-        rows = con.execute("select job_id, name, enabled, schedule_kind, delete_after_run, payload_kind, "
-                           "payload_model, payload_tools_allow_json, job_json from cron_jobs").fetchall()
-        return {r["job_id"]: dict(r) for r in rows}
-    finally:
-        con.close()
+    import cron_telemetry
+    return cron_telemetry.load_cron_jobs_full(db or cron_telemetry.DB)  # schema adapter (OpenClaw >= 2026.9.7)
 
 
 def model_allowlist(path=OPENCLAW_CFG):
@@ -151,10 +147,16 @@ def _job_model(job):
 
 
 def _has_tools_allow(job):
+    """True only for a RESTRICTING allow-list. OpenClaw 2026.9.7 stamps ["*"] (= all tools) on every
+    agentTurn job and `--clear-tools` now writes ["*"] instead of deleting the key - not a restriction."""
     t = job.get("payload_tools_allow_json")
-    if t not in (None, "", "null"): return True
-    try: return "toolsAllow" in (json.loads(job.get("job_json") or "{}").get("payload") or {})
-    except Exception: return False
+    if t in (None, "", "null"):
+        try: t = (json.loads(job.get("job_json") or "{}").get("payload") or {}).get("toolsAllow")
+        except Exception: t = None
+    else:
+        try: t = json.loads(t)
+        except Exception: return True
+    return t is not None and t != ["*"]
 
 
 def model_findings(job, allow):
@@ -166,6 +168,52 @@ def model_findings(job, allow):
     if m and (m.startswith("anthropic/") or m.startswith("claude-cli/")) and _has_tools_allow(job):
         return ("WARN", "anthropic/claude-cli cron carries payload.toolsAllow (claude-cli cannot enforce it; run dies) - run --clear-tools")
     return None
+
+
+# ---- restricted (web-only) tool tier, D-7281869 (Jon 2026-10-01 "Approve the plan, pilot first") ----
+# A web-only watcher runs on the OpenClaw agent "research-web" whose agent-level tools policy allows
+# only web search/fetch, memory search, session_status and message. Per-job toolsAllow can't be used
+# on claude-cli models, so the restriction lives on the agent; this guard keeps it from drifting.
+RESTRICTED_AGENT = "research-web"
+RESTRICTED_TIER = {  # cron_id -> name (pilot first; next wave added only after Jon's keep decision)
+    "f4ea413e-c591-41ee-8933-7a927ed60c67": "Research Team: Grant & Contract Scanner",
+}
+_FORBIDDEN_ALLOW = {"*", "exec", "bash", "process", "code_execution", "read", "write", "edit", "apply_patch",
+                    "group:runtime", "group:fs", "group:automation", "group:openclaw", "group:plugins",
+                    "group:nodes", "group:ui", "automations", "cron", "gateway", "openclaw", "browser",
+                    "computer", "nodes", "sessions_spawn", "subagents"}
+_REQUIRED_DENY = {"group:runtime", "group:fs", "group:automation"}
+
+
+def restricted_tier_findings(jobs, cfg):
+    """[(label, status, why)]: a restricted-tier job moved off the restricted agent, or the agent's
+    tool policy widened (allow gains shell/files/cron/gateway, or a required deny is removed)."""
+    out = []
+    ent = (((cfg or {}).get("agents") or {}).get("entries") or {}).get(RESTRICTED_AGENT)
+    if ent is None:
+        out.append(("agent:" + RESTRICTED_AGENT, "FAIL", "restricted agent profile missing from openclaw.json"))
+    else:
+        tools = ent.get("tools") or {}
+        allow, deny = set(tools.get("allow") or []), set(tools.get("deny") or [])
+        if not allow:
+            out.append(("agent:" + RESTRICTED_AGENT, "FAIL", "restricted agent has no tools.allow list (= full tools)"))
+        bad = sorted(allow & _FORBIDDEN_ALLOW)
+        if bad:
+            out.append(("agent:" + RESTRICTED_AGENT, "FAIL", "restricted agent allows " + ", ".join(bad)))
+        miss = sorted(_REQUIRED_DENY - deny)
+        if miss:
+            out.append(("agent:" + RESTRICTED_AGENT, "FAIL", "restricted agent no longer denies " + ", ".join(miss)))
+        hb = ent.get("heartbeat")
+        if not (isinstance(hb, dict) and str(hb.get("every", "")).strip() in ("0", "0m", "0s")):
+            out.append(("agent:" + RESTRICTED_AGENT, "WARN", "restricted agent heartbeat not disabled (would DM on the default heartbeat)"))
+    for jid, name in sorted(RESTRICTED_TIER.items()):
+        j = jobs.get(jid)
+        if j is None:
+            out.append(("cron:restricted-tier", "WARN", "restricted-tier job %s (%s) is gone from the store" % (jid[:8], name)))
+        elif (j.get("agent_id") or "main") != RESTRICTED_AGENT:
+            out.append(("cron:restricted-tier", "FAIL", "%s is back on agent %r (full tools); restricted tier requires %r"
+                        % (name, j.get("agent_id") or "main", RESTRICTED_AGENT)))
+    return out
 
 
 def transient_class_match(detail, live_jobs):
@@ -193,7 +241,7 @@ def unregistered_run_events(since_ts, events_path=EVENTS):
     return out
 
 
-def check(now_s, window_h=26, jobs=None, hashes=None, allow="load", events=None):
+def check(now_s, window_h=26, jobs=None, hashes=None, allow="load", events=None, restricted="load"):
     """[(label, status, why)] for agent_eval. Non-OK only. Never raises."""
     res = []
     try:
@@ -209,6 +257,14 @@ def check(now_s, window_h=26, jobs=None, hashes=None, allow="load", events=None)
             mf = model_findings(j, allow)
             if mf: res.append((label, mf[0], mf[1]))
             for why in conflict_findings(j): res.append((label, "WARN", "conflicting instructions: " + why))
+        cfg = None
+        if restricted == "load":
+            try: cfg = json.load(open(OPENCLAW_CFG))
+            except Exception: cfg = {}
+        elif restricted is not None:
+            cfg = restricted
+        if cfg is not None:
+            res.extend(restricted_tier_findings(jobs, cfg))
         evs = unregistered_run_events(now_s - window_h * 3600) if events is None else events
         stray = {}
         for r in evs:
@@ -269,7 +325,7 @@ def selftest():
            {"agent": "cron:y", "detail": {"cron_id": "gone", "registered": False}}]
     jobs = {"rec": dict(base, name="Rec", schedule_kind="cron", delete_after_run=0, payload_model=None,
                         job_json=json.dumps({"payload": {"message": "pass: Qw3rty-Ab9_zz"}}))}
-    r = check(0, jobs=jobs, hashes={}, allow=allow, events=evs)
+    r = check(0, jobs=jobs, hashes={}, allow=allow, events=evs, restricted=None)
     ok(("cron:rec", "FAIL") in [(a, b) for a, b, _ in r] and "Qw3rty" not in json.dumps(r), "check(): FAIL without leaking value")
     ok([a for a, b, _ in r if b == "WARN"] == ["cron:x"], "check(): WARN only for the non-class unregistered run")
     # conflicting instructions (Research Team 9/30 replay)
@@ -284,6 +340,26 @@ def selftest():
     ok(len(conflict_findings(cj("**Bottom line:** If nothing significant, say exactly that in one line." + nn))) == 1, "R-NONEWS + 'say exactly that' = conflict")
     ok(conflict_findings(cj("If nothing is new, reply exactly NO_REPLY." + nn)) == [], "R-NONEWS consistent ok")
     ok(conflict_findings(cj(hdr + "RUN LOG (REQUIRED", enabled=0)) == [], "disabled skipped")
+    # ["*"] is the 2026.9.7 unrestricted default, not a toolsAllow restriction
+    ok(model_findings(dict(base, payload_model="anthropic/claude-haiku-4-5", payload_tools_allow_json='["*"]'), allow) is None, "anthropic + [\"*\"] is not the toolsAllow trap")
+    # restricted tier (D-7281869 pilot): replay "job quietly put back on the full agent" + policy widening
+    pid = next(iter(RESTRICTED_TIER))
+    good = {"agents": {"entries": {RESTRICTED_AGENT: {"heartbeat": {"every": "0m"}, "tools": {
+        "allow": ["group:web", "group:memory", "session_status", "message"],
+        "deny": ["group:runtime", "group:fs", "group:automation"]}}}}}
+    on = {pid: {"agent_id": RESTRICTED_AGENT}}
+    ok(restricted_tier_findings(on, good) == [], "restricted tier clean")
+    ok([x[1] for x in restricted_tier_findings({pid: {"agent_id": "main"}}, good)] == ["FAIL"], "job moved back to main = FAIL")
+    ok([x[1] for x in restricted_tier_findings({pid: {"agent_id": None}}, good)] == ["FAIL"], "--clear-agent (default=main) = FAIL")
+    wide = json.loads(json.dumps(good)); wide["agents"]["entries"][RESTRICTED_AGENT]["tools"]["allow"].append("exec")
+    ok(any(x[1] == "FAIL" and "exec" in x[2] for x in restricted_tier_findings(on, wide)), "allow gains exec = FAIL")
+    nodeny = json.loads(json.dumps(good)); nodeny["agents"]["entries"][RESTRICTED_AGENT]["tools"]["deny"] = ["group:fs"]
+    ok(any(x[1] == "FAIL" and "group:runtime" in x[2] for x in restricted_tier_findings(on, nodeny)), "deny removed = FAIL")
+    noallow = json.loads(json.dumps(good)); del noallow["agents"]["entries"][RESTRICTED_AGENT]["tools"]["allow"]
+    ok(any(x[1] == "FAIL" for x in restricted_tier_findings(on, noallow)), "no allow list = FAIL")
+    ok(any(x[1] == "FAIL" for x in restricted_tier_findings(on, {"agents": {"entries": {}}})), "profile deleted = FAIL")
+    hbon = json.loads(json.dumps(good)); del hbon["agents"]["entries"][RESTRICTED_AGENT]["heartbeat"]
+    ok([x[1] for x in restricted_tier_findings(on, hbon)] == ["WARN"], "heartbeat re-enabled = WARN")
     print("cron_hygiene selftest: %d/%d pass" % (n, n))
     return 0
 
