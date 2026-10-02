@@ -29,6 +29,19 @@ GIT_PUSH=$(j git_push)
 ts() { date '+%Y-%m-%d %H:%M:%S'; }
 log() { echo "$(ts) $*" | tee -a "$LOG"; }
 
+# single-flight: the hourly/02:00 job and the Sunday drill must never overlap
+LOCKDIR="$HOME/.openclaw/state/dr-backup.lock"
+mkdir -p "$HOME/.openclaw/state"
+if ! mkdir "$LOCKDIR" 2>/dev/null; then
+  if [ -n "$(find "$LOCKDIR" -maxdepth 0 -mmin +240 2>/dev/null)" ]; then
+    rmdir "$LOCKDIR" 2>/dev/null; mkdir "$LOCKDIR" 2>/dev/null || { log "another DR backup holds the lock; exit"; exit 0; }
+    log "WARN stale DR-backup lock (>4h) broken"
+  else
+    log "another DR backup is running (lock $LOCKDIR); exit"; exit 0
+  fi
+fi
+trap 'rmdir "$LOCKDIR" 2>/dev/null' EXIT
+
 log "=== DR backup start (dest=$DEST remote=$DEST_REMOTE) ==="
 
 CUI_EXCLUDE="$WS/scripts/cui-exclude-list.txt"
@@ -78,6 +91,10 @@ for f in "$HOME/.protonmail-bridge.crt" "$HOME/.msmtprc"; do
   fi
 done
 
+# 2c) Cloudflare tunnel credentials (exos-mc creds/config + lan-tunnel token). Both tunnels
+#     must move on failover (9/30 lesson: the LAN tunnel was missed at cutover -> laptops lost MC).
+[ -d "$HOME/.cloudflared" ] && run_rsync "$HOME/.cloudflared/" "cloudflared/"
+
 # 3) optional git push (off in self-test)
 if [ "$GIT_PUSH" = "True" ] || [ "$GIT_PUSH" = "true" ]; then
   ( cd "$WS" && git push 2>>"$LOG" ) && log "git push OK" || log "WARN git push failed"
@@ -96,6 +113,13 @@ log "manifest sha256=$MANIFEST_SHA rsync_rc=$RSYNC_RC"
 # 30 timeout, 255 ssh, etc.) is a REAL failure -> no sentinel, watchdog alerts + pauses.
 if [ "$RSYNC_RC" -eq 0 ] || [ "$RSYNC_RC" -eq 23 ] || [ "$RSYNC_RC" -eq 24 ]; then
   [ "$RSYNC_RC" -ne 0 ] && log "WARN rsync rc=$RSYNC_RC (partial — a few unreadable/vanished files skipped; treated as OK)"
+  # 5) content-hash verify of the critical files on the mirror (secrets, gateway config, MC server,
+  #    tunnel creds). A mismatch = checksum FAIL -> no sentinel; the watchdog alerts Jon.
+  if ! python3 "$WS/scripts/dr_verify.py" --verify >>"$LOG" 2>&1; then
+    log "=== DR backup FAILED (checksum verify mismatch) — sentinel NOT updated; watchdog will alert ==="
+    exit 1
+  fi
+  log "checksum verify OK"
   python3 "$WS/scripts/backup_health_gate.py" --write "$MANIFEST_SHA" >>"$LOG" 2>&1
   log "=== DR backup SUCCESS — sentinel written ==="
   exit 0
