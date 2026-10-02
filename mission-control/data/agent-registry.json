@@ -4532,6 +4532,42 @@
    "reusability_scope": "any sandboxed external-cohort program on MC",
    "risk_tier": "MEDIUM",
    "envelope_source": "Jon/coordinator directive 2026-10-01: every student question gets an ETA ack, an answer, and a status update if the ETA slips"
+  },
+  {
+   "label": "com.exos.dr-backup",
+   "script": "studio_dr_backup.sh",
+   "kind": "recurring",
+   "schedule": "hourly (StartInterval 3600)",
+   "purpose": "studio_dr_backup.sh — Studio->Mini DR mirror over ssh mini-dr (cloudflared, ssh-mini.exosaero.space): workspace, openclaw config incl. secrets, vaultwarden backups; writes backup-healthy sentinel. RPO ~1h.",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "Exo (infra) / John Quinn",
+   "permission_envelope": "rsync over SSH to the Mini (key-only); file I/O: own logs/state sentinel; no sends",
+   "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
+   "escalation": "Decisions board / Jon inbox",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
+   "telemetry": "logs/failover_validate.log",
+   "reusability_scope": "TBD",
+   "risk_tier": "MED",
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+  },
+  {
+   "label": "com.exos.backup-watchdog",
+   "script": "backup_watchdog.py",
+   "kind": "recurring",
+   "schedule": "hourly (StartInterval 3600)",
+   "purpose": "backup_watchdog.py — alerts Jon (deduped) + sets backup-health pause if no good Studio->Mini backup within max_age_hours (26h); clears on recovery. Catches a locked Mini (FileVault after power loss).",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "Exo (infra) / John Quinn",
+   "permission_envelope": "Discord DM + #exomac-system via openclaw message; email to Jon; own state/pause flag",
+   "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
+   "escalation": "Decisions board / Jon inbox",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
+   "telemetry": "logs/failover_validate.log",
+   "reusability_scope": "TBD",
+   "risk_tier": "MED",
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
   }
  ],
  "eval_wave_1": {
