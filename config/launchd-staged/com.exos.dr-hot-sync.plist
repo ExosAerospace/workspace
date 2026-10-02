@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Studio only. 5-minute hot-state sync Studio -> Mini DR mirror (sessions, MC data JSON, mc.db
+     via sqlite .backup, uploads delta). RPO target 5 min. Jon 2026-10-02 item 2.
+     Install: cp to ~/Library/LaunchAgents/ && launchctl bootstrap gui/$(id -u) <plist> -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.exos.dr-hot-sync</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/exomac/.openclaw/workspace/scripts/run_logged.py</string>
+    <string>com.exos.dr-hot-sync</string>
+    <string>--</string>
+    <string>/usr/bin/python3</string>
+    <string>/Users/exomac/.openclaw/workspace/scripts/dr_hot_sync.py</string>
+  </array>
+  <key>StartInterval</key><integer>300</integer>
+  <key>RunAtLoad</key><true/>
+  <key>ProcessType</key><string>Background</string>
+  <key>StandardOutPath</key><string>/Users/exomac/.openclaw/workspace/logs/dr-hot-sync.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/exomac/.openclaw/workspace/logs/dr-hot-sync.err.log</string>
+</dict>
+</plist>

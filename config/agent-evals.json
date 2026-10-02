@@ -1448,6 +1448,26 @@
    "warn_grace": 2.5,
    "fail_grace": 6,
    "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.dr-backup": {
+   "cadence_s": 3600,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "John Quinn",
+   "selftest": "python3 scripts/dr_verify.py --link"
+  },
+  "com.exos.backup-watchdog": {
+   "cadence_s": 3600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "python3 scripts/backup_watchdog.py --selftest"
+  },
+  "com.exos.dr-hot-sync": {
+   "cadence_s": 300,
+   "warn_grace": 3,
+   "fail_grace": 12,
+   "owner": "John Quinn"
   }
  },
  "_eval_wave_2": {

@@ -4537,37 +4537,64 @@
    "label": "com.exos.dr-backup",
    "script": "studio_dr_backup.sh",
    "kind": "recurring",
-   "schedule": "hourly (StartInterval 3600)",
-   "purpose": "studio_dr_backup.sh — Studio->Mini DR mirror over ssh mini-dr (cloudflared, ssh-mini.exosaero.space): workspace, openclaw config incl. secrets, vaultwarden backups; writes backup-healthy sentinel. RPO ~1h.",
+   "schedule": "hourly (StartInterval 3600); delta run ~60 s",
+   "purpose": "studio_dr_backup.sh — Studio->Mini DR mirror over ssh mini-dr: workspace, ~/.openclaw incl. secrets, vaultwarden backups, ~/.cloudflared (both tunnels), ~/.config/exos, current com.exos launchd set; sha256 verify of 6 critical files on the Mini; writes backup-healthy sentinel. RPO ~1h (hot set 5 min via dr-hot-sync).",
    "stack_layer": "GOVERN/ASSURE",
    "autonomy_tier": "Execute-within-bounds",
    "human_owner": "Exo (infra) / John Quinn",
-   "permission_envelope": "rsync over SSH to the Mini (key-only); file I/O: own logs/state sentinel; no sends",
+   "permission_envelope": "rsync over SSH to the Mini (key-only, BatchMode); reads secrets to copy them; writes own lock/sentinel/dr-verify state; NO sends, NO deletes outside the mirror",
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
-   "escalation": "Decisions board / Jon inbox",
-   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
-   "telemetry": "logs/failover_validate.log",
+   "escalation": "backup_watchdog alerts Jon (Discord DM + #exomac-system + email) on stale >26h / checksum FAIL",
+   "eval_suite": "agent_eval liveness (config/agent-evals.json cadence 3600 s) + dr_verify.py --verify after every run (checksum mismatch = no sentinel) + failover_validate.py weekly drill",
+   "telemetry": "logs/dr-backup.log; ~/.openclaw/state/dr-verify.json; logs/runs/*.jsonl when run_logged",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-10-02 dr-failover (Jon 10/2 10:10 'go ahead 2-4' + item 1): added ~/.cloudflared, ~/.config/exos, launchagents to the copy; single-flight lock; post-copy checksum verify (a8cf105 + hot-sync commit); approver John Quinn; status pending Jon approval — D-tbd (see logs/audit-workers/dr-failover.REPORT.md)"
+   ]
   },
   {
    "label": "com.exos.backup-watchdog",
    "script": "backup_watchdog.py",
    "kind": "recurring",
    "schedule": "hourly (StartInterval 3600)",
-   "purpose": "backup_watchdog.py — alerts Jon (deduped) + sets backup-health pause if no good Studio->Mini backup within max_age_hours (26h); clears on recovery. Catches a locked Mini (FileVault after power loss).",
+   "purpose": "backup_watchdog.py — hourly: backup stale >26h -> pause risky crons + alert; checksum verify FAIL -> alert; Mini link down (2 probes, e.g. FileVault-locked after reboot) -> alert. Deduped per condition (1/outage + 24h reminder + 1 recovery).",
    "stack_layer": "GOVERN/ASSURE",
    "autonomy_tier": "Execute-within-bounds",
    "human_owner": "Exo (infra) / John Quinn",
    "permission_envelope": "Discord DM + #exomac-system via openclaw message; email to Jon; own state/pause flag",
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
-   "escalation": "Decisions board / Jon inbox",
-   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 604800s → WARN)",
-   "telemetry": "logs/failover_validate.log",
+   "escalation": "Jon via Discord DM + #exomac-system + email (alert only for link/checksum; pause only for stale backup)",
+   "eval_suite": "python3 scripts/backup_watchdog.py --selftest (7 cases: link down/dedupe/reminder/recovery/2-probe blip/checksum fail/recovery) + agent_eval liveness cadence 3600 s",
+   "telemetry": "logs/backup-watchdog.log; fleet_log agent=backup-watchdog (logs/fleet-events.jsonl)",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
-   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)"
+   "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
+   "change_log": [
+    "2026-10-02 dr-failover (Jon 10/2 10:10 'go ahead 2-4' + item 1): Mini-link-down + checksum-fail alerts, fleet_log, --dry-run/--selftest (a8cf105); approver John Quinn; status pending Jon approval — D-tbd (see logs/audit-workers/dr-failover.REPORT.md)"
+   ]
+  },
+  {
+   "label": "com.exos.dr-hot-sync",
+   "script": "dr_hot_sync.py",
+   "kind": "recurring",
+   "schedule": "every 300s",
+   "purpose": "dr_hot_sync.py — 5-min hot-state sync Studio->Mini mirror: MC sessions/users, data/*.json(l), mc.db via sqlite .backup, uploads delta; writes .hot-sync-stamp.json. RPO 5 min; MC logins survive failover.",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "rsync over SSH to the Mini mirror (adds/updates only, never deletes); sqlite3 .backup read of erp-foundation/mc.db to a temp file; own lock/state; NO sends. Fenced (lease lost) = no-op.",
+   "memory_boundary": "MC data + ERP db (read) -> Mini dr-mirror (write)",
+   "escalation": "failover_validate weekly drill flags hot-sync age > 15 min; Decisions board / Jon",
+   "eval_suite": "agent_eval liveness cadence 300 s; failover_validate.py check 'hot-sync age'; integrity_check of mirrored mc.db in the drill",
+   "telemetry": "logs/dr-hot-sync.log; ~/.openclaw/state/hot-sync.json; fleet_log agent=dr-hot-sync; logs/runs/*.jsonl (run_logged)",
+   "reusability_scope": "DR",
+   "risk_tier": "MED",
+   "envelope_source": "hand-written by dr-failover worker 2026-10-02",
+   "change_log": [
+    "2026-10-02 dr-failover (Jon 10/2 10:10 'go ahead 2-4' + item 1): NEW agent: 5-min hot-state sync, loaded on the Studio (rollback: launchctl bootout gui/$(id -u)/com.exos.dr-hot-sync); approver John Quinn; status pending Jon approval — D-tbd (see logs/audit-workers/dr-failover.REPORT.md)"
+   ]
   }
  ],
  "eval_wave_1": {
