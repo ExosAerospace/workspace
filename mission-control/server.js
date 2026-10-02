@@ -535,6 +535,23 @@ function loadUploadsMeta() {
 function saveUploadsMeta(meta) {
   fs.writeFileSync(UPLOADS_META, JSON.stringify(meta, null, 2));
 }
+// Canonical document key, a port of slug() in scripts/mc-attach.py: strip trailing
+// version/date/draft tokens so every revision of a doc maps to the same key.
+// Keep the two in sync; index.html carries the same function for legacy records.
+function uploadDocKey(name) {
+  let s = path.basename(String(name || '')).replace(/\.[^.]+$/, '').toLowerCase();
+  let prev = null;
+  while (prev !== s) {
+    prev = s;
+    s = s.replace(/[\s_.\-]+v?\d+(\.\d+)*$/, '');
+    s = s.replace(/[\s_.\-]*\(?\d{4}-\d{2}-\d{2}\)?$/, '');
+    s = s.replace(/[\s_.\-]+draft$/, '');
+    s = s.replace(/[\s_.\-]*\(\d+\)$/, '');   // browser duplicate: "name (1)"
+    s = s.replace(/[\s_.\-]+copy$/, '');
+  }
+  s = s.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return s || 'document';
+}
 
 // --- Office-doc -> PDF rendition for in-browser "Open" (viewing) ---
 // Browsers can't render .docx/.doc inline; we generate a cached PDF so the
@@ -4658,6 +4675,24 @@ const server = http.createServer((req, res) => {
           uploaded_by: session ? session.name : 'Unknown',
           uploaded_at: new Date().toISOString(),
         };
+        // Versioning (same rule as scripts/mc-attach.py): a new upload whose doc_key matches a
+        // current doc on the same task/project/decision supersedes it. The old version is kept
+        // (current:false) and stays visible under "Superseded versions", with a Restore button.
+        entry.doc_key = parts.doc_key || uploadDocKey(file.filename);
+        const scopeOf = m => taskId ? String(m.task_id) === String(taskId)
+          : projectId ? String(m.project_id) === String(projectId)
+          : decisionId ? String(m.decision_id) === String(decisionId) : false;
+        let prevVer = 0;
+        for (const m of meta) {
+          if (!scopeOf(m) || m.current === false) continue;
+          if ((m.doc_key || uploadDocKey(m.filename)) !== entry.doc_key) continue;
+          m.current = false;
+          m.superseded_at = entry.uploaded_at;
+          m.superseded_by = entry.id;
+          prevVer = Math.max(prevVer, parseInt(m.version || 1, 10) || 1);
+        }
+        entry.version = prevVer + 1;
+        entry.current = true;
         meta.push(entry);
         saveUploadsMeta(meta);
 
@@ -5170,6 +5205,31 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(meta));
     return;
+  }
+
+  // Mark a document superseded, or restore it as current. Body: { id, current: true|false }.
+  // Nothing is deleted; superseded docs stay listed under "Superseded versions".
+  if (req.url.startsWith('/api/uploads/set-current') && req.method === 'POST') {
+    let body = ''; req.on('data', c => body += c); req.on('end', () => {
+      try {
+        const { id, current } = JSON.parse(body || '{}');
+        const meta = loadUploadsMeta();
+        const entry = meta.find(m => m.id === id);
+        if (!entry) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'File not found' })); return; }
+        const who = session ? session.name : 'Unknown';
+        if (current) { entry.current = true; delete entry.superseded_at; delete entry.superseded_by; entry.restored_at = new Date().toISOString(); entry.restored_by = who; }
+        else { entry.current = false; entry.superseded_at = new Date().toISOString(); entry.superseded_by = entry.superseded_by || null; entry.superseded_marked_by = who; }
+        saveUploadsMeta(meta);
+        if (entry.task_id) {
+          supabaseRequest('POST', 'activities', {
+            type: 'task_note', subject: `task:${entry.task_id}`,
+            body: current ? `Document restored as current: ${entry.filename}` : `Document marked superseded: ${entry.filename}`,
+            owner: who, status: 'completed',
+          }).catch(() => {});
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(entry));
+      } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: e.message })); }
+    }); return;
   }
 
   // Delete an uploaded file

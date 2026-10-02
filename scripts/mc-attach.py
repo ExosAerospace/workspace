@@ -34,6 +34,8 @@ def slug(s):
         s = re.sub(r'[\s_.\-]+v?\d+(\.\d+)*$', '', s)    # trailing version: _v0.1, -v2, _3 (BLK3-safe)
         s = re.sub(r'[\s_.\-]*\(?\d{4}-\d{2}-\d{2}\)?$', '', s)  # trailing ISO date (opt parens)
         s = re.sub(r'[\s_.\-]+draft$', '', s)            # trailing 'draft'
+        s = re.sub(r'[\s_.\-]*\(\d+\)$', '', s)          # browser duplicate: "name (1)"
+        s = re.sub(r'[\s_.\-]+copy$', '', s)             # trailing 'copy'
     s = re.sub(r'[^a-z0-9]+', '-', s).strip('-')
     return s or "document"
 

@@ -515,6 +515,15 @@
   .doc-actions button:hover { border-color: var(--blue); color: var(--blue2); }
   .doc-actions button.del:hover { border-color: var(--blocked-accent); color: #ff7070; }
   .docs-empty { text-align: center; color: var(--text2); padding: 30px 20px; font-size: 13px; }
+  .doc-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .03em; padding: 1px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+  .doc-tag.latest { background: rgba(34,197,94,.18); color: #22c55e; }
+  .doc-tag.new { background: rgba(59,130,246,.2); color: #60a5fa; }
+  .doc-tag.older { background: rgba(245,158,11,.18); color: #f59e0b; }
+  .doc-tag.superseded { background: rgba(148,163,184,.2); color: #94a3b8; }
+  .doc-item.is-superseded { opacity: .6; }
+  .doc-item.is-superseded .doc-name { text-decoration: line-through; }
+  .docs-superseded { margin-top: 10px; }
+  .docs-superseded summary { cursor: pointer; font-size: 12px; color: var(--text2); padding: 6px 0; }
 
   /* ── TOAST ── */
   #toast {
@@ -2262,37 +2271,110 @@ async function loadDocuments(taskId) {
   }
   el.innerHTML = '<div class="docs-empty">Loading documents...</div>';
   try {
-    const res = await fetch(`/api/uploads?task_id=${taskId}`);
+    // history=1 also returns superseded versions, shown in a collapsed section below the current ones.
+    const res = await fetch(`/api/uploads?task_id=${taskId}&history=1`);
     if (res.status === 401) { window.location = '/login'; return; }
-    const docs = await res.json();
-    if (!docs || docs.length === 0) {
+    const all = await res.json();
+    if (!all || all.length === 0) {
       el.innerHTML = '<div class="docs-empty">No documents attached yet. Upload files above.</div>';
       // Update tab badge
       updateDocBadge(0);
       return;
     }
+    const byNewest = (a,b) => new Date(b.uploaded_at) - new Date(a.uploaded_at);
+    const docs = all.filter(d => d.current !== false).sort(byNewest);
+    const old = all.filter(d => d.current === false).sort(byNewest);
     updateDocBadge(docs.length);
-    el.innerHTML = docs.sort((a,b) => new Date(b.uploaded_at) - new Date(a.uploaded_at)).map(doc => {
+
+    // "NEW" = uploaded since you last opened this task's documents (first visit: last 24h).
+    // Pinned once per page load, so refreshes after an upload don't clear the tags.
+    const seenKey = 'mcDocSeen:' + taskId;
+    window._docSeen = window._docSeen || {};
+    if (window._docSeen[taskId] === undefined) {
+      window._docSeen[taskId] = Number(localStorage.getItem(seenKey)) || (Date.now() - 24*3600*1000);
+      try { localStorage.setItem(seenKey, String(Date.now())); } catch (_) {}
+    }
+    const lastSeen = window._docSeen[taskId];
+
+    // Group current docs by version key. One per key is normal; more than one means older
+    // copies were never superseded (uploads before 10/2/26), so flag the newest as LATEST.
+    const keyOf = d => d.doc_key || docVersionKey(d.filename);
+    const groups = {};
+    docs.forEach(d => { (groups[keyOf(d)] = groups[keyOf(d)] || []).push(d); });
+    const hasHistory = new Set(old.map(keyOf));
+
+    const row = (doc, state) => {
       const iconCls = docIconClass(doc.extension);
-      const time = new Date(doc.uploaded_at).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'});
-      return `<div class="doc-item">
+      const g = groups[keyOf(doc)] || [];
+      let tags = '';
+      if (state === 'superseded') {
+        tags += '<span class="doc-tag superseded">SUPERSEDED</span>';
+      } else {
+        if (g.length > 1 && g[0] !== doc) tags += `<span class="doc-tag older" title="A newer file with the same name is on this task">OLDER COPY</span>`;
+        else if (g.length > 1 || hasHistory.has(keyOf(doc))) tags += '<span class="doc-tag latest">LATEST</span>';
+        if (new Date(doc.uploaded_at).getTime() > lastSeen) tags += '<span class="doc-tag new">NEW</span>';
+      }
+      const ver = (parseInt(doc.version, 10) || 1) > 1 ? ` &middot; v${doc.version}` : '';
+      const repl = state === 'superseded' && doc.superseded_at ? ` &middot; replaced ${fmtDocTime(doc.superseded_at)}` : '';
+      const toggle = state === 'superseded'
+        ? `<button onclick="setDocCurrent('${doc.id}', true)" title="Make this a current document again">Restore</button>`
+        : `<button onclick="setDocCurrent('${doc.id}', false)" title="Move to Superseded versions (nothing is deleted)">Superseded</button>`;
+      return `<div class="doc-item${state === 'superseded' ? ' is-superseded' : ''}">
         <div class="doc-icon ${iconCls}">${docIconLabel(doc.extension)}</div>
         <div class="doc-info">
-          <div class="doc-name" title="${escHtml(doc.filename)}">${escHtml(doc.filename)}</div>
-          <div class="doc-meta">${formatFileSize(doc.size)} &middot; ${time} &middot; ${escHtml(doc.uploaded_by || '?')}</div>
+          <div class="doc-name" title="${escHtml(doc.filename)}">${escHtml(doc.filename)}${tags}</div>
+          <div class="doc-meta">${formatFileSize(doc.size)} &middot; ${fmtDocTime(doc.uploaded_at)}${ver} &middot; ${escHtml(doc.uploaded_by || '?')}${repl}</div>
         </div>
         <div class="doc-actions">
           <button onclick="window.open('${['.docx','.doc'].includes((doc.extension||'').toLowerCase()) ? '/viewpdf/' : '/uploads/'}${encodeURIComponent(doc.stored_name)}','_blank')">Open</button>
           <a href="/uploads/${encodeURIComponent(doc.stored_name)}" download="${escHtml(doc.filename)}" style="text-decoration:none">
             <button type="button">Download</button>
           </a>
+          ${toggle}
           <button class="del" onclick="deleteDocument('${doc.id}')">Delete</button>
         </div>
       </div>`;
-    }).join('');
+    };
+    el.innerHTML = (docs.length ? docs.map(d => row(d, 'current')).join('') : '<div class="docs-empty">No current documents. Older versions are below.</div>')
+      + (old.length ? `<details class="docs-superseded"><summary>Superseded versions (${old.length})</summary>${old.map(d => row(d, 'superseded')).join('')}</details>` : '');
   } catch(e) {
     el.innerHTML = `<div class="docs-empty">Failed to load documents: ${escHtml(e.message)}</div>`;
   }
+}
+
+// Upload time in Central, e.g. "Oct 2, 2026, 12:41 PM CDT".
+function fmtDocTime(iso) {
+  const d = new Date(iso);
+  if (isNaN(d)) return '?';
+  return d.toLocaleString('en-US', { timeZone: 'America/Chicago', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+}
+
+// Same rule as uploadDocKey() in server.js / slug() in scripts/mc-attach.py.
+function docVersionKey(name) {
+  let s = String(name || '').split('/').pop().replace(/\.[^.]+$/, '').toLowerCase();
+  let prev = null;
+  while (prev !== s) {
+    prev = s;
+    s = s.replace(/[\s_.\-]+v?\d+(\.\d+)*$/, '');
+    s = s.replace(/[\s_.\-]*\(?\d{4}-\d{2}-\d{2}\)?$/, '');
+    s = s.replace(/[\s_.\-]+draft$/, '');
+    s = s.replace(/[\s_.\-]*\(\d+\)$/, '');
+    s = s.replace(/[\s_.\-]+copy$/, '');
+  }
+  return s.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'document';
+}
+
+async function setDocCurrent(docId, current) {
+  try {
+    const res = await fetch('/api/uploads/set-current', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: docId, current })
+    });
+    if (res.status === 401) { window.location = '/login'; return; }
+    if (!res.ok) throw new Error('Update failed');
+    toast(current ? 'Restored as current' : 'Moved to Superseded versions');
+    if (currentPanelTaskId) { loadDocuments(currentPanelTaskId); loadTimeline(currentPanelTaskId); }
+  } catch (e) { toast('Failed: ' + e.message); }
 }
 
 function updateDocBadge(count) {
