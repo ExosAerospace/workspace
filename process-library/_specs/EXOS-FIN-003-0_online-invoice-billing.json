@@ -1,0 +1,53 @@
+{
+  "title": "Online Invoice Billing & Payment Collection (QuickBooks) - Product & Payload Sales",
+  "doc_no": "EXOS-FIN-003-0",
+  "area": "Finance & Accounting",
+  "area_id": "12-finance-accounting",
+  "owner": "Kyle Ballard (CFO / Finance) / Exo",
+  "rev": "0",
+  "status": "Draft",
+  "intl_release": "No",
+  "reference_docs": "QuickBooks Online + QuickBooks Payments (system of record, card/ACH collection); scripts/qb_invoice.py (prepare / watch); Mission Control Decisions (Approve & send invoice card); mission-control/data/payload-orders.json (payload milestones); product reservation workbooks (e.g. watch workbook); EXOS-FIN-001 Monthly GAAP Close; payload Launch Services Agreement (LSA) milestone schedule.",
+  "remarks": "Created 2026-10-03 at Jon's direction. First use: $675 BLK3 flight-watch pre-orders (10 for-sale units). Applies equally to payload sales (LSA milestones such as the M1 deposit) and any other Exos product or service sale.",
+  "objective": "define one standard, controlled way to bill customers and collect payment online through QuickBooks, for any Exos product or service sale (merchandise such as flight watches, payload sales, and services), so that nothing is invoiced or emailed without approval and every sale is tracked from request to paid.",
+  "overview": "QuickBooks Online is the invoicing and payments system of record. Exo prepares every invoice in QuickBooks as UNSENT and files an 'Approve & send invoice' Decision for the approver (Jon). Only an approved Decision causes QuickBooks to email the invoice, with QuickBooks' own PDF and a 'Review and pay' link so the buyer pays directly by card or bank transfer (ACH). The invoice watcher marks the sale paid when the QuickBooks balance reaches $0, and the sale is logged Reserved -> Invoiced -> Paid in the product workbook or the payload order record. Nobody logs in to QuickBooks to send invoices by hand, and no payment, refund, or journal entry is made by this procedure.",
+  "tasks": [
+    {"name": "Task 1 - Set Up a New Offering (once per product, before the first invoice)", "steps": [
+      "Jon approves the offering: product or service, unit price, quantity available (cap), payment terms, and the invoice description. For flight watches: $675 per watch, due on receipt, 10 for-sale units.",
+      "If the offering is marketed to investors or involves securities, Counsel reviews the offer language before any invoice is issued.",
+      "Confirm QuickBooks Payments online card and ACH acceptance is enabled so invoices carry the 'Review and pay' link.",
+      "Create or confirm the QuickBooks product/service item and the income account it posts to (Finance).",
+      "Write the standard invoice description. Pre-orders must state that the item is a pre-order and when it ships or is delivered (e.g. 'Pre-order - ships after the BLK3 flight, targeted 2027').",
+      "Create the tracking record: a product workbook with columns Buyer, Email, Qty, Invoice #, Status (Reserved / Invoiced / Paid / Cancelled), Dates; or, for payload sales, the order and milestones in payload-orders.json.",
+      "Record the offering, price, cap, and approval date in the Mission Control task for the offering."
+    ]},
+    {"name": "Task 2 - Receive and Forward the Buyer Request", "steps": [
+      "Buyer requests come in by email reply (for the watch offer, replies go to Lizi's inbox, lquinn@exosaero.com) or through the sales contact.",
+      "Before forwarding, check the tracking record: if the cap is already reached (e.g. 10 watches reserved), reply that the offering is sold out and do not request an invoice.",
+      "Forward the request to Exo with the command line '@Exobot invoice <product>' (e.g. '@Exobot invoice watch') and the buyer's full name, billing email, and quantity. For payload sales, give the order number and milestone (e.g. PO2C-2026-001 M1).",
+      "Exo logs the buyer as Reserved in the tracking record and confirms back to the requester."
+    ]},
+    {"name": "Task 3 - Prepare the Invoice (Exo)", "steps": [
+      "Run denied-party (CSL) screening on any new buyer before invoicing. A hit stops the procedure and goes to Jon.",
+      "Find or create the QuickBooks customer for the buyer.",
+      "Create the invoice in QuickBooks as UNSENT: approved unit price x quantity, approved terms (watches: due on receipt), and the approved description.",
+      "Pull QuickBooks' own invoice PDF into drafts/invoices/ for review.",
+      "File the 'Approve & send invoice' Decision card (approver: Jon) showing buyer, quantity, amount, terms, and the invoice PDF.",
+      "Update the tracking record with the invoice number."
+    ]},
+    {"name": "Task 4 - Approve and Send", "steps": [
+      "Jon reviews the Decision card and answers 'Approve & send', 'Hold', or 'Cancel invoice'. Free-text replies do not send; the card stays open.",
+      "On 'Approve & send', QuickBooks emails the invoice from its own mailer with the PDF attached and the 'Review and pay' link. Exo marks the record Invoiced.",
+      "On 'Cancel invoice', the unsent invoice is deleted from QuickBooks and the record is marked Cancelled, releasing the unit back to the available quantity.",
+      "On 'Hold', nothing is sent and the invoice stays unsent until a later answer."
+    ]},
+    {"name": "Task 5 - Collect Payment and Close Out", "steps": [
+      "The buyer pays online by card or ACH through the QuickBooks link. Payments made another way (check, wire) are recorded in QuickBooks by Finance.",
+      "The invoice watcher polls sent invoices. When the QuickBooks balance reaches $0, Exo marks the record Paid (payload sales: the milestone is marked paid and the payload-customer registry is updated).",
+      "Invoices unpaid after 14 days are flagged to the requester for a follow-up; no automatic reminder is sent to the buyer without approval.",
+      "Exo reports the running tally (Reserved / Invoiced / Paid against the cap) on the offering's Mission Control task. When the cap is reached, the offering is closed and further requests are declined.",
+      "Fulfillment (shipping the item or delivering the service) follows the offering's own delivery terms and is recorded on the tracking record.",
+      "Finance reconciles the QuickBooks Payments deposits to the invoices during the monthly close (EXOS-FIN-001)."
+    ]}
+  ]
+}
