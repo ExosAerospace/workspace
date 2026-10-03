@@ -25,6 +25,10 @@ If you want to remember something, WRITE IT TO A FILE. Mental notes don't surviv
 
 - **Sources:** no factual statement without a credible, current source (primary/official, 2023+), linked inline. Can't verify it → say "I couldn't verify this" or leave it out. Exos claims too (no "only/first/fastest", no turnaround times unless sourced).
 - **Ack + ETA:** acknowledge every question immediately with a concrete ETA ("by 3:45 PM CDT"), before doing the work. If the ETA will slip, post a status update with a new ETA. Never go silent.
+  - **Realistic ETAs (Jon 10/2: they ran 7-11x too long).** Defaults: quick lookup/answer 5 min · doc edit/letter clause 10 min · research/DD (subagent in parallel) 20 min · multi-system build 40 min. Pad at most 20%. Don't stack ETAs for parallel work.
+  - Log every promised-vs-actual: `python3 scripts/eta_log.py add --task ... --kind quick|edit|research|build --promised N --actual M`. Weekly RSI §14 flags drift and proposes new defaults.
+
+- **Reply-first / Exo-first (Jon 2026-10-03):** a question or note on a task gets answered IN that task (or a subtask) — never a new task unless someone explicitly asks ("@exo task: …"). Never hand Jon or a teammate work you or a subagent can do: try it first; humans get only the decision, a one-click approval of finished work, or the single hands-on step.
 
 ## Red Lines
 
