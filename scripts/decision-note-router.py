@@ -164,20 +164,29 @@ def main():
         # Exo-authored decisions: follow-up direction on Exo's own analysis comes back to Exo,
         # not to a domain owner (e.g. an investor-dilution ask must not land on finance/AP).
         exo_src = str(d.get("source") or "").lower().startswith("exo")
-        owner = (explicit_name(note, roster) or
-                 (None if exo_src else (domain_owner(note, by_email) or ollama_owner(note, roster, by_email))))
-        if owner:
-            mktask({"title": f"{note[:70]}", "owner": owner["name"], "assigned_email": owner["email"],
-                    "assigned_to": owner["name"], "state": "To Do", "priority": 72, "category": "Decision",
-                    "source": "decision-note-router", "tags": ["decision-routed"],
+        # EXO-FIRST / SUBTASK-FIRST (Jon 2026-10-03): only an EXPLICITLY named person gets the work.
+        # Otherwise Exo does it (task-question-answer.py works these) and hands off only a genuine human
+        # step. If the decision is about an existing task, the routed item is a SUBTASK of that task.
+        named = explicit_name(note, roster)
+        guess = None if (named or exo_src) else (domain_owner(note, by_email) or ollama_owner(note, roster, by_email))
+        rel = next((str(d.get(k)) for k in ("relatedTaskId", "spawned_task", "taskId", "relatedTask", "related_task")
+                    if re.fullmatch(r"\d{2,}", str(d.get(k) or "").lstrip("#"))), None)
+        rel = rel.lstrip("#") if rel else None
+        sub = ["subtask", f"parent:{rel}"] if rel else []
+        if named:
+            mktask({"title": f"{note[:70]}", "owner": named["name"], "assigned_email": named["email"],
+                    "assigned_to": named["name"], "state": "To Do", "priority": 72, "category": "Decision",
+                    "source": "decision-note-router", "tags": ["decision-routed"] + sub,
                     "description": f"Auto-routed from decision {d['id']} ({title}). Direction: {note}"})
-            logline(f"{d['id']}: routed -> {owner['email']}")
-        else:                                            # nobody resolved -> Exo triages (never lost)
-            mktask({"title": f"[route] {note[:64]}", "owner": "Exo", "assigned_email": "exo@exosaero.com",
+            logline(f"{d['id']}: routed -> {named['email']}{' sub of #'+rel if rel else ''}")
+        else:
+            hint = f" Suggested human owner if it truly needs one: {guess['name']} <{guess['email']}>." if guess else ""
+            mktask({"title": f"[Exo doing] {note[:62]}", "owner": "Exo", "assigned_email": "exo@exosaero.com",
                     "state": "To Do", "priority": 74, "category": "Decision", "source": "decision-note-router",
-                    "tags": ["decision-routed", "needs-owner"],
-                    "description": f"From decision {d['id']} ({title}). Direction: {note}. Exo to assign the owner."})
-            logline(f"{d['id']}: routed -> EXO triage")
+                    "tags": ["decision-routed", "needs-owner", "exo-first"] + sub,
+                    "description": (f"From decision {d['id']} ({title}){' about task #'+rel if rel else ''}. "
+                                    f"Direction: {note}. Exo to do it itself.{hint}")})
+            logline(f"{d['id']}: routed -> EXO-first{' sub of #'+rel if rel else ''} (guess={guess and guess['email']})")
         state[d["id"]] = nh; acted += 1
     json.dump(state, open(STATE, "w"), indent=0)
     print(f"routed {acted}")

@@ -12,10 +12,12 @@ and acts:
     @Exobot unblock | resume                                  -> state To Do
     @Exobot reassign to <name> | have <name> | give to <name> -> reassign owner (roster-resolved)
     @Exobot urgent | asap | high priority | escalate          -> bump priority
-  Free-form directive ("@Exobot order a new servo", "@Exobot have Neil renew the license"):
-    -> create a linked task auto-assigned to the resolved owner (or an Exo triage task).
-  Anything else with @Exobot (a question/FYI):
-    -> create an Exo triage task so the main Exo session handles it (nothing lost).
+  REPLY-FIRST / EXO-FIRST (Jon 2026-10-03) — notes never spawn top-level tasks unless asked:
+    @Exobot task: <title> | create a task ...  -> the ONLY path to a new top-level task
+    directive naming a person ("have Neil renew the license") -> SUBTASK of this task -> that person
+    directive with no named person ("order a new servo")      -> Exo does it (Exo subtask), answers here,
+                                                                  hands off only what needs a human
+    question / FYI                                             -> Exo subtask, answered on this task
   ANY note containing a question mark "?" (even WITHOUT @exo) is auto-answered on the task
     -> routed to the answer loop; Exo posts the answer on the task (Jon 2026-09-10). Guards:
        never answers Exo's own posts, and won't retro-answer questions older than QM_SINCE.
@@ -101,6 +103,20 @@ def supa(method, path, body=None):
 def reply(taskid, msg):
     supa("POST", "activities", {"type": "task_note", "subject": f"task:{taskid}",
          "body": msg, "owner": "Exo", "status": "completed"})
+
+
+def exo_subtask(taskid, title, desc, tags, priority=70, suggested=None):
+    """REPLY-FIRST (Jon 2026-10-03): a question/FYI/directive on a task NEVER becomes a new top-level
+    task. It becomes an Exo-owned SUBTASK of the task it was asked on (parent:<id> tag -> hidden from
+    the board, rolled up under the parent card, excluded from burndown 'created'). The answer loop
+    (task-question-answer.py) works it and posts the result on the parent task. `suggested` = the
+    person we'd have assigned before; Exo does it first and only hands off what truly needs a human."""
+    tg = ["subtask", f"parent:{taskid}", "note-routed", "exo-first"] + list(tags)
+    if suggested:
+        desc += f" Suggested human owner if it truly needs one: {suggested['name']} <{suggested['email']}>."
+    return supa("POST", "tasks", {"title": title, "owner": "Exo", "assigned_email": "exo@exosaero.com",
+         "state": "To Do", "priority": priority, "category": "Task", "source": "task-note-command",
+         "tags": tg, "description": desc})
 
 
 def flag_awaiting(taskid):
@@ -262,15 +278,13 @@ def main():
             if (r.get("created_at") or "") < QM_SINCE:
                 continue  # pre-feature question: already marked seen; do not retro-answer
             qtext = body.strip()
-            nid = supa("POST", "tasks", {"title": f"[note] {qtext[:60] or 'question'} (task #{taskid})",
-                 "owner": "Exo", "assigned_email": "exo@exosaero.com", "state": "To Do", "priority": 70,
-                 "category": "Task", "source": "task-note-command",
-                 "tags": ["note-routed", "needs-attention", "auto-question"],
-                 "description": f"Question posted on task #{taskid} (by {owner_of_note or 'team'}): {qtext}. Exo to review and answer."})
+            nid = exo_subtask(taskid, f"[Exo answering] {qtext[:60] or 'question'}",
+                 f"Question posted on task #{taskid} (by {owner_of_note or 'team'}): {qtext}. Exo to review and answer.",
+                 ["needs-attention", "auto-question"])
             newid = nid[0]["id"] if nid else "?"
             flag_awaiting(taskid)
-            reply(taskid, f"✅ Exo: got your question — I'll post the answer here on this task shortly (ref #{newid}).")
-            logline(f"auto-q {aid} task {taskid} -> #{newid}"); acted += 1; continue
+            reply(taskid, "✅ Exo: got your question — I'll answer right here on this task shortly.")
+            logline(f"auto-q {aid} task {taskid} -> sub #{newid}"); acted += 1; continue
         cmd = directive_after(body)
         low = cmd.lower()
         did = []
@@ -316,6 +330,23 @@ def main():
             except Exception as ex:
                 reply(taskid, f"✅ Exo (procedure): couldn't rebuild the {section} procedure ({ex}).")
             logline(f"procedure {aid} task {taskid} section {section}"); acted += 1; continue
+
+        # EXPLICIT new task: "@exo task: <title>" / "create a task ..." / "build a task ..." — the ONLY
+        # path that creates a new top-level task from a note (Jon 2026-10-03). Owner = named person,
+        # else Exo. Linked back to this task in the description.
+        mtask = re.match(r"(?:(?:new\s+)?task\s*[:\-]|(?:create|build|make|open)\s+(?:a\s+)?(?:new\s+)?task\b"
+                         r"\s*(?:for\s+\w+\s*)?[:\-]?)\s*(.+)", cmd, re.I)
+        if mtask and mtask.group(1).strip():
+            ttitle = re.sub(r"^to\s+", "", mtask.group(1).strip(), flags=re.I)
+            p = resolve_person(cmd, roster)
+            nt = supa("POST", "tasks", {"title": ttitle[:70], "owner": p["name"] if p else "Exo",
+                 "assigned_email": p["email"] if p else "exo@exosaero.com", "state": "To Do", "priority": 74,
+                 "category": "Task", "source": "task-note-command", "tags": ["note-routed", "explicit-task"],
+                 "assigned_at": datetime.now(timezone.utc).isoformat(),
+                 "description": f"Explicitly requested from a note on task #{taskid} (by {owner_of_note}): {ttitle}"})
+            ntid = nt[0]["id"] if nt else "?"
+            reply(taskid, f"✅ Exo: created task #{ntid} → {p['name'] if p else 'Exo'} for “{ttitle[:110]}” (you asked for a task).")
+            logline(f"explicit-task {aid} task {taskid} -> #{ntid}"); acted += 1; continue
 
         # 1) reassignment (leading verb only)
         if re.search(r"\b(reassign|assign|hand|give|have|route|delegate)\b", cmdzone):
@@ -365,39 +396,38 @@ def main():
         is_question = cmd.rstrip().endswith("?") or re.match(
             r"(where|what|why|how|when|who|which|can|could|should|would|is|are|do|does|did|will)\b", low)
         if ACTION.search(cmd) and not is_question:
-            p = resolve_person(cmd, roster) or domain_owner(cmd, by_email)
-            if p:
-                nid = supa("POST", "tasks", {"title": cmd[:70], "owner": p["name"], "assigned_to": p["name"],
-                     "assigned_email": p["email"], "state": "To Do", "priority": 74, "category": "Task",
-                     "source": "task-note-command", "tags": ["note-routed"],
+            # EXO-FIRST (Jon 2026-10-03): only an EXPLICITLY named person gets the work (as a subtask of
+            # this task). A domain-guessed owner no longer gets it dumped on them — Exo does it first and
+            # hands off only the piece that truly needs a human (decision / approval / physical action).
+            named = resolve_person(cmd, roster)
+            if named:
+                nid = supa("POST", "tasks", {"title": cmd[:70], "owner": named["name"], "assigned_to": named["name"],
+                     "assigned_email": named["email"], "state": "To Do", "priority": 74, "category": "Task",
+                     "source": "task-note-command", "tags": ["note-routed", "subtask", f"parent:{taskid}"],
                      "assigned_at": datetime.now(timezone.utc).isoformat(),
-                     "description": f"Routed from a note on task #{taskid} (by {owner_of_note}). Directive: {cmd}"})
-                who = p["name"]
-            else:
-                nid = supa("POST", "tasks", {"title": f"[route] {cmd[:64]}", "owner": "Exo",
-                     "assigned_email": "exo@exosaero.com", "state": "To Do", "priority": 74, "category": "Task",
-                     "source": "task-note-command", "tags": ["note-routed", "needs-owner"],
-                     "description": f"From a note on task #{taskid} (by {owner_of_note}). Directive: {cmd}. Exo to own/assign."})
-                who = "Exo (triage)"
-                flag_awaiting(taskid)   # Exo-owned directive: surface the ORIGINAL task to the top too
+                     "description": f"Delegated from a note on task #{taskid} (by {owner_of_note}). Directive: {cmd}"})
+                newid = nid[0]["id"] if nid else "?"
+                reply(taskid, f"✅ Exo: added subtask #{newid} on this task → {named['name']} for “{cmd[:110]}”.")
+                logline(f"route {aid} task {taskid} -> {named['name']} sub #{newid}"); acted += 1; continue
+            guess = domain_owner(cmd, by_email)
+            nid = exo_subtask(taskid, f"[Exo doing] {cmd[:62]}",
+                 f"From a note on task #{taskid} (by {owner_of_note}). Directive: {cmd}. Exo to do it itself.",
+                 ["needs-owner"], priority=74, suggested=guess)
             newid = nid[0]["id"] if nid else "?"
-            if p:
-                reply(taskid, f"✅ Exo: created task #{newid} → {who} for “{cmd[:110]}”.")
-            else:
-                # Exo does it itself — the triage row is only the resolver's internal queue entry.
-                # Never tell the requester we "created a task" (Jon #2414 10/2): do it, reply HERE.
-                reply(taskid, f"✅ Exo: on it — I'll do this and post the result right here on this task.")
-            logline(f"route {aid} task {taskid} -> {who} #{newid}"); acted += 1; continue
+            flag_awaiting(taskid)   # Exo-owned directive: surface the ORIGINAL task to the top too
+            # Never tell the requester we "created a task" (Jon #2414 10/2): do it, reply HERE.
+            reply(taskid, "✅ Exo: on it — I'll do this myself and post the result right here. "
+                          "If any piece needs a person (a decision, approval, or hands-on step) I'll say exactly what.")
+            logline(f"route {aid} task {taskid} -> Exo-first sub #{newid} (guess={guess and guess['email']})"); acted += 1; continue
 
-        # 5) unrecognized @Exobot note (question/FYI) -> Exo triage so the main session handles it
-        nid = supa("POST", "tasks", {"title": f"[note] {cmd[:60] or 'follow up'} (task #{taskid})",
-             "owner": "Exo", "assigned_email": "exo@exosaero.com", "state": "To Do", "priority": 70,
-             "category": "Task", "source": "task-note-command", "tags": ["note-routed", "needs-attention"],
-             "description": f"@Exobot note on task #{taskid} (by {owner_of_note}): {cmd}. Exo to review and act."})
+        # 5) unrecognized @Exobot note (question/FYI) -> Exo subtask on THIS task; answered here.
+        nid = exo_subtask(taskid, f"[Exo answering] {cmd[:60] or 'follow up'}",
+             f"@Exobot note on task #{taskid} (by {owner_of_note}): {cmd}. Exo to review and act.",
+             ["needs-attention"])
         newid = nid[0]["id"] if nid else "?"
         flag_awaiting(taskid)   # surface the ORIGINAL task to the top until answered
-        reply(taskid, f"✅ Exo: got your question — I'll post the answer here on this task shortly (ref #{newid}).")
-        logline(f"triage {aid} task {taskid} -> #{newid}"); acted += 1
+        reply(taskid, "✅ Exo: got it — I'll answer right here on this task shortly.")
+        logline(f"triage {aid} task {taskid} -> sub #{newid}"); acted += 1
 
     state["seen"] = list(seen)[-4000:]  # bound growth
     json.dump(state, open(STATE, "w"))

@@ -252,6 +252,13 @@ def main():
     except Exception as _e:
         L.append(f"\n## 13. Machine utilization\n- (utilization module error: {_e})")
 
+    # §15 Reply-first / Exo-first task loop (Jon 2026-10-03): recursive audit of task creation.
+    try:
+        import rsi_task_creation
+        L.extend(rsi_task_creation.report_section(7))
+    except Exception as _e:
+        L.append(f"\n## 15. Reply-first task loop\n- (module error: {_e})")
+
     report = "\n".join(L)
 
     os.makedirs(REPORTS, exist_ok=True)

@@ -30,6 +30,7 @@ STATE = os.path.join(WS, "logs", "task-question-answer-state.json")
 LOG = os.path.join(WS, "logs", "task-question-answer.log")
 JON = "1501632195163590739"
 MAX_TRIES = 3
+DEC_SINCE = "2026-10-03T21:48:00+00:00"   # decision-routed pickup starts at the Exo-first deploy (no stale burst)
 SLA_MIN = 20            # a request open longer than this with no response → escalate to John
 
 
@@ -83,31 +84,39 @@ def parse_request(desc):
     m = re.search(r"task #(\d+)", desc or "")
     if m:
         origid = m.group(1)
-    rm = re.search(r"Directive:\s*(.*)", desc or "", re.S) or re.search(r"\):\s*(.*)", desc or "", re.S)
+    rm = re.search(r"(?:Directive|Direction):\s*(.*)", desc or "", re.S) or re.search(r"\):\s*(.*)", desc or "", re.S)
     req = (rm.group(1) if rm else desc or "").strip()
-    req = re.sub(r"\.\s*(Exo to review.*|Exo to own.*)$", "", req).strip()
+    req = re.sub(r"\.\s*(Exo to review.*|Exo to own.*|Exo to do it itself.*)$", "", req, flags=re.S).strip()
     return origid, req
 
 
-def resolve(origid, request, ctx):
+def resolve(origid, request, ctx, suggested=""):
+    hint = (f"(Routing hint: before this change the request would have gone to {suggested}. Use them only for a genuine step-4 handoff.)\n\n" if suggested else "")
     prompt = (
         "You are Exo, resolving a support request a teammate posted with @Exobot on Mission Control "
         f"task #{origid}. Your job: get them an answer or get it done — never leave it unaddressed.\n\n"
         f"REQUEST (from the note): {request}\n\n"
         f"TASK #{origid}: {ctx.get('title','')}\n"
         f"TASK CONTEXT:\n{(ctx.get('description') or '')[:2500]}\n\n"
-        "Handle it:\n"
+        "Handle it — EXO-FIRST (Jon 2026-10-03): if you or a subagent CAN do it, DO it. Never hand a teammate "
+        "work you are capable of; the most a human should get is a decision or a one-click approval of what "
+        "you already finished.\n"
         "1. QUESTION → answer clearly and correctly from the task/context (use Bash/curl against our "
         "Supabase or files if you need more). If you genuinely can't, state exactly what's missing and who can provide it.\n"
-        "2. DIRECTIVE that is SAFE and INTERNAL (gather info, draft a doc, prepare/stage something, read data) "
-        "→ actually DO it now with your tools, then report what you did and where it is.\n"
-        "3. DIRECTIVE needing an EXTERNAL send, a spend, or anything irreversible/consequential → DO NOT execute "
-        "it autonomously. Prepare it (draft/plan) and state exactly what you need from John to proceed. "
-        "(Standing Exos guardrail: no external sends without John's go.)\n\n"
+        "2. DIRECTIVE that is SAFE and INTERNAL (gather info, research, draft a doc, analyze, prepare/stage, read or "
+        "update our own data) → actually DO it now with your tools, then report what you did and where it is.\n"
+        "3. DIRECTIVE needing an EXTERNAL send, a spend, or anything irreversible/consequential → do every "
+        "preparatory step yourself (draft, quote, fill the form, stage the PO), then ask John ONLY for the go/no-go. "
+        "(Standing Exos guardrail: no external sends without John's go.)\n"
+        "4. Only if a step physically needs a person (hands-on shop/lab work, a signature, a login only they hold) "
+        "→ do everything around it and set handoff to that ONE step for the right person.\n\n"
+        f"{hint}"
         "Then return ONLY a JSON object (no prose outside it):\n"
-        '{"response":"<concise message to post on the task, <=1200 chars>","resolved":true|false}\n'
+        '{"response":"<concise message to post on the task, <=1200 chars>","resolved":true|false,'
+        '"handoff":null|{"email":"<person@exosaero.com>","step":"<the one human step, <=70 chars>"}}\n'
         "resolved=true only if the request is fully handled and needs nothing further from the user; "
-        "false if it now needs John's decision/input. Do NOT post to the task yourself — just return the JSON."
+        "false if it now needs John's decision/input. handoff=null unless step 4 applies. "
+        "Do NOT post to the task yourself — just return the JSON."
     )
     pf = None
     try:
@@ -120,7 +129,8 @@ def resolve(origid, request, ctx):
         m = re.search(r"\{.*\}", raw, re.S)
         obj = json.loads(m.group(0)) if m else {"response": raw, "resolved": False}
         resp = (obj.get("response") or "").strip()
-        return resp, bool(obj.get("resolved")), r.returncode
+        ho = obj.get("handoff") if isinstance(obj.get("handoff"), dict) else None
+        return resp, bool(obj.get("resolved")), r.returncode, ho
     finally:
         if pf:
             try: os.unlink(pf)
@@ -140,7 +150,10 @@ def sweep_stale_flags():
         else:
             notes = supa("GET", f"activities?select=body&subject=eq.task:{tid}"
                                 f"&type=eq.task_note&order=created_at.desc&limit=10") or []
-            answered = any(str(n.get("body") or "").lstrip().startswith("✅ Exo:") for n in notes)
+            # an ACK ("got it — I'll answer right here", "on it — I'll do this") is not an answer
+            ack = re.compile(r"I'll (answer|post the answer|do this)|got (it|your (question|follow-up))|on it —", re.I)
+            answered = any(str(n.get("body") or "").lstrip().startswith("✅ Exo:")
+                           and not ack.search(str(n.get("body") or "")[:120]) for n in notes)
         if answered:
             tags = [x for x in (t.get("tags") or []) if x != "awaiting-exo-answer"]
             supa("PATCH", f"tasks?id=eq.{tid}", {"tags": tags})
@@ -161,7 +174,8 @@ def main():
     since = (datetime.now(timezone.utc) - timedelta(days=14)).isoformat()
     rows = []
     for tag in ("needs-attention", "needs-owner"):
-        q = (f"tasks?select=id,title,description,state,tags,source,created_at&source=eq.task-note-command"
+        q = (f"tasks?select=id,title,description,state,tags,source,created_at"
+             f"&source=in.(task-note-command,decision-note-router)"
              f"&state=neq.Done&tags=cs.%7B{tag}%7D&created_at=gte.{urllib.parse.quote(since)}"
              f"&order=id.desc&limit=50")
         rows += (supa("GET", q) or [])
@@ -178,15 +192,22 @@ def main():
         tid = str(t.get("id"))
         if tid in seen:
             continue
+        if t.get("source") == "decision-note-router" and (t.get("created_at") or "") < DEC_SINCE:
+            continue
         origid, request = parse_request(t.get("description") or "")
+        if not origid:
+            pm = next((x[7:] for x in (t.get("tags") or []) if str(x).startswith("parent:")), None)
+            # decision-routed with no related task: answer on the Exo item itself
+            origid = pm or (tid if t.get("source") == "decision-note-router" else None)
         if not origid:
             seen.add(tid); continue
         orig = supa("GET", f"tasks?id=eq.{origid}&select=id,title,description") or []
         ctx = orig[0] if orig else {}
         try:
-            resp, resolved, rc = resolve(origid, request, ctx)
+            sm = re.search(r"Suggested human owner if it truly needs one: ([^.]+<[^>]+>)", t.get("description") or "")
+            resp, resolved, rc, handoff = resolve(origid, request, ctx, sm.group(1) if sm else "")
         except Exception as e:
-            resp, resolved, rc = "", False, -1
+            resp, resolved, rc, handoff = "", False, -1, None
             log(f"resolve exception t{tid}: {e}")
 
         if not resp:
@@ -206,6 +227,21 @@ def main():
         supa("POST", "activities", {"type": "task_note", "subject": f"task:{origid}",
              "body": "✅ Exo: " + resp, "owner": "Exo", "status": "completed"})
         supa("PATCH", f"tasks?id=eq.{tid}", {"state": "Done"})
+        # Step-4 handoff: the ONE human step becomes a subtask of the original task for that person.
+        if handoff and re.match(r"[^@\s]+@exosaero\.com$", str(handoff.get("email") or "").strip(), re.I):
+            em = handoff["email"].strip().lower()
+            try:
+                ro = json.load(open(os.path.join(WS, "mission-control", "data", "routing-roster.json")))
+                pr = next((x for x in ro if x.get("email", "").lower() == em), None)
+            except Exception:
+                pr = None
+            nm = pr["name"] if pr else em
+            supa("POST", "tasks", {"title": str(handoff.get("step") or request)[:70], "owner": nm,
+                 "assigned_to": nm, "assigned_email": em, "state": "To Do", "priority": 74, "category": "Task",
+                 "source": "exo-handoff", "tags": ["subtask", f"parent:{origid}", "exo-handoff"],
+                 "assigned_at": datetime.now(timezone.utc).isoformat(),
+                 "description": f"Exo did everything else on task #{origid}; this one step needs you. See Exo's note on #{origid}."})
+            log(f"handoff subtask -> {em} on #{origid}")
         # A substantive answer is posted → Exo is no longer the blocker, so ALWAYS clear the
         # "awaiting-exo-answer" chip. The chip means "Exo owes an answer"; once answered it is
         # misleading to keep it lit (even when the ball is now in John's court — that path is

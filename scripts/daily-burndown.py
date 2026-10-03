@@ -84,9 +84,19 @@ def main():
 
     # 2) metrics (recompute open after sweep)
     open_now = len(opn) - swept
-    created = sum(1 for t in tasks if (t.get("created_at") or "") >= day_ago)
-    closed = sum(1 for t in tasks if (t.get("completed_at") or "") >= day_ago)
+    # REPLY-FIRST metric (Jon 2026-10-03): subtasks (parent:<id>) and Exo's answer/do items are NOT
+    # new work — count only top-level tasks; show subtasks separately so nothing is hidden.
+    def is_sub(t): return any(str(g).startswith("parent:") for g in (t.get("tags") or []))
+    top = [t for t in tasks if not is_sub(t)]
+    created = sum(1 for t in top if (t.get("created_at") or "") >= day_ago)
+    closed = sum(1 for t in top if (t.get("completed_at") or "") >= day_ago)
     net = created - closed
+    sub_c = sum(1 for t in tasks if is_sub(t) and (t.get("created_at") or "") >= day_ago)
+    sub_x = sum(1 for t in tasks if is_sub(t) and (t.get("completed_at") or "") >= day_ago)
+    # Violations: top-level tasks spawned from a note without an explicit "@exo task:" ask
+    viol = sum(1 for t in top if (t.get("created_at") or "") >= day_ago
+               and (t.get("source") or "") in ("task-note-command", "decision-note-router")
+               and "explicit-task" not in (t.get("tags") or []) and "decision-routed" not in (t.get("tags") or []))
 
     prev = {}
     try:
@@ -117,12 +127,15 @@ def main():
     json.dump({"open": open_now, "decisions_open": dopen, "date": now.strftime("%Y-%m-%d")}, open(STATE, "w"))
     with open(LOG, "a") as f:
         f.write(json.dumps({"ts": now.isoformat(), "created": created, "closed": closed, "net": net,
+                            "sub_created": sub_c, "sub_closed": sub_x, "note_spawn_violations": viol,
                             "swept_noise": swept, "flagged": flagged, "open": open_now, "decisions_open": dopen}) + "\n")
 
     msg = (f"🔻 **Daily burndown — {now:%a %b %d}**\n"
            f"Open backlog: **{open_now}**{trend}\n"
            f"Last 24h: created {created} · closed {closed} · **net {'+' if net>=0 else ''}{net}**"
            f"{f' · swept {swept} noise' if swept else ''}{f' · flagged {flagged} auto-close' if flagged else ''}"
+           f"\nSubtasks/Exo replies (not counted): +{sub_c} / ✓{sub_x}"
+           f"{f' · ⚠️ {viol} note-spawned top-level task(s) without an explicit ask' if viol else ''}"
            f"{dec_line}\n"
            f"{'⚠️ still creating faster than closing — throttle is working, give it a few days' if net>0 else '✅ closing ≥ creating'}")
     try:

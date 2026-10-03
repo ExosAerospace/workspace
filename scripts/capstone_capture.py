@@ -125,6 +125,28 @@ def handle_question(a, author, tid, t, n):
     now = datetime.now(timezone.utc)
     created = parse_ts(a["created_at"])
     eta = compute_eta(created if now - created < timedelta(minutes=30) else now)
+    # REPLY-FIRST (Jon 2026-10-03): one open question entry per student task. A follow-up question on
+    # the same task is folded into the still-undispatched entry (same ETA) instead of a new task
+    # (#3133 alone once spawned 9). If the open entry is already dispatched, open a fresh one.
+    try:
+        ast = json.load(open(os.path.join(WS, "logs/capstone-question-answerer-state.json")))
+        dispatched = {str(k) for k in (ast.get("dispatched") or {})}
+    except Exception:
+        dispatched = set()
+    if not DRY:
+        cur = supa("GET", f"tasks?select=id,description,due_date&tags=cs.%7Bstudent-task:{tid}%7D"
+                          f"&tags=cs.%7Butd-question%7D&state=not.in.(Done,Cancelled)&order=id.desc&limit=1") or []
+        if cur and str(cur[0]["id"]) not in dispatched:
+            ex = cur[0]
+            supa("PATCH", f"tasks?id=eq.{ex['id']}", {"description": (ex.get("description") or "") +
+                 f"\n\nALSO ANSWER — follow-up from {author} ({a['created_at'][:16]}):\n{a.get('body')}"})
+            try:
+                eta = parse_ts(ex["due_date"])
+            except Exception:
+                pass
+            reply(tid, f"✅ Exo: captured (data point #{n}). Got your follow-up. I'll answer it here along "
+                       f"with your earlier question by {fmt_eta(eta)}.")
+            return eta
     nid = supa("POST", "tasks", {
         "title": f"[UTD question] {author}: {(a.get('body') or '').strip()[:60]} (task #{tid})",
         "owner": "Exo", "assigned_email": "exo@exosaero.com", "state": "To Do", "priority": 85,
