@@ -6,6 +6,7 @@ who have NOT replied, where the last send is between MIN and MAX days old (recen
 not so old it's dead). One batched DM, deduped so a given contact re-nudges at most every RENUDGE days.
 --dry-run prints, sends nothing.
 """
+import time
 import json, os, sys, subprocess
 from datetime import datetime, timezone
 from email.header import decode_header
@@ -83,11 +84,22 @@ def main():
     msg = "\n".join(lines)[:1900]
     print(msg)
     if not dry:
-        r = subprocess.run([OPENCLAW, "message", "send", "--channel", "discord", "--target", "user:" + JON, "-m", msg],
-                           capture_output=True, text=True, timeout=60, env=env())
-        if r.returncode != 0:   # don't mark as nudged — the batch retries next run
-            print(f"ERROR: discord send failed rc={r.returncode}: {(r.stderr or r.stdout or '').strip()[:300]}",
-                  file=sys.stderr)
+        # Retry: a gateway restart/outage makes the send hang (10/2 run died on an uncaught TimeoutExpired).
+        err = ""
+        for attempt in range(3):
+            if attempt:
+                time.sleep(45)
+            try:
+                r = subprocess.run([OPENCLAW, "message", "send", "--channel", "discord", "--target", "user:" + JON,
+                                    "-m", msg], capture_output=True, text=True, timeout=90, env=env())
+                if r.returncode == 0:
+                    break
+                err = f"rc={r.returncode}: {(r.stderr or r.stdout or '').strip()[:300]}"
+            except subprocess.TimeoutExpired:
+                err = "timed out after 90s (gateway unreachable?)"
+            print(f"WARN: discord send attempt {attempt + 1}/3 failed — {err}", file=sys.stderr)
+        else:   # don't mark as nudged — the batch retries next run
+            print(f"ERROR: discord send failed after 3 attempts — {err}", file=sys.stderr)
             sys.exit(1)
         for age, name, a, subj, tid in batch:   # mark ONLY the 5 sent (rest reappear tomorrow)
             st[a] = now.isoformat()

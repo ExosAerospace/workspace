@@ -13,12 +13,14 @@ Run:  python3 scripts/dd_blocklist_monthly.py           # generate + send to all
       python3 scripts/dd_blocklist_monthly.py --dry     # preview only, no send
 Scheduled monthly via launchd com.exos.dd-blocklist-monthly.
 """
-import json, os, sys, subprocess, datetime
+import json, os, sys, subprocess, datetime, shutil
 from email.message import EmailMessage
 from email.utils import formatdate
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 DRY = "--dry" in sys.argv
+# launchd PATH lacks /opt/homebrew/bin — resolve msmtp absolutely (10/1 run died: FileNotFoundError msmtp).
+MSMTP = shutil.which("msmtp") or next((x for x in ("/opt/homebrew/bin/msmtp", "/usr/local/bin/msmtp") if os.path.exists(x)), "msmtp")
 FROM = "jquinnexo@pm.me"
 FREE = {"protonmail.com","proton.me","pm.me","sbcglobal.net","gmail.com","yahoo.com","ymail.com",
  "outlook.com","hotmail.com","live.com","msn.com","aol.com","icloud.com","me.com","mac.com",
@@ -100,7 +102,7 @@ Questions - reply to me.
     att = os.path.join(WS, f"drafts/DD_Blocked_Senders_{today}.txt")
     with open(att, "rb") as f:
         m.add_attachment(f.read(), maintype="text", subtype="plain", filename=f"Exos_DD_Blocked_Senders_{today}.txt")
-    p = subprocess.run(["msmtp", "--timeout=60", "-a", "default", *recips], input=m.as_bytes(), capture_output=True)
+    p = subprocess.run([MSMTP, "--timeout=60", "-a", "default", *recips], input=m.as_bytes(), capture_output=True)
     print("send:", "rc " + str(p.returncode), (p.stderr.decode()[:200] or "OK"))
 
 if __name__ == "__main__":
