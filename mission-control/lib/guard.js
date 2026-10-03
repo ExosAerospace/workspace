@@ -53,9 +53,9 @@ const ROBOTS = 'User-agent: *\nDisallow: /api/export/all\nDisallow: /api/v1/dump
 const AUTOMATION_UA = /(curl|wget|python-requests|python-urllib|aiohttp|httpx|httpie|go-http-client|okhttp|java\/|libwww|scrapy|headless|puppeteer|playwright|selenium|phantomjs|node-fetch|axios|undici|postman|insomnia|powershell|httrack|sitesucker)/i;
 const DOWNLOAD_RE = /^\/(uploads|viewpdf|backup)\/|^\/api\/dataroom-doc/;
 
-// Initial thresholds (WATCH-ONLY until tuned + approved). Scores add; tiers below.
+// Thresholds tuned from the 9/27-10/3 watch week (peak real user 106 rpm); Jon approved enforce 10/3.
 const T = {
-  rpm: [120, 300], records_hr: [300, 1000], downloads_hr: [25, 75], mb_hr: 200,
+  rpm: [150, 300], records_hr: [300, 1000], downloads_hr: [25, 75], mb_hr: 200,
   denied_10m: [20, 60], medium: 40, high: 80,
 };
 
