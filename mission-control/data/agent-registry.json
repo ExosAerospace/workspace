@@ -1154,11 +1154,11 @@
    "stack_layer": "ORCHESTRATE",
    "autonomy_tier": "Execute-within-bounds",
    "human_owner": "John Quinn",
-   "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (exosmc+do@proton.me, exosmc@pm.me, exosmc@proton.me, jquinn@exosaero.com, jquinnexo+do@pm.me, jquinnexo@pm.me); Discord post via deliver/openclaw message; wakes a full-tool OpenClaw agent session; LLM calls; reads mailbox via Bridge IMAP; deletes local files (pf); file I/O: MC data JSON; own logs/state; attaches outgoing deliverables to the matching OPEN MC task via mc-attach.py (versioned, reversible) — deliverable→task linkage guard, 2026-09-29",
+   "permission_envelope": "SENDS EMAIL via msmtp to internal addresses (exosmc+do@proton.me, exosmc@pm.me, exosmc@proton.me, jquinn@exosaero.com, jquinnexo+do@pm.me, jquinnexo@pm.me); Discord post via deliver/openclaw message; wakes a full-tool OpenClaw agent session; LLM calls; reads mailbox via Bridge IMAP; deletes local files (pf); file I/O: MC data JSON; own logs/state; attaches outgoing deliverables to the matching OPEN MC task via mc-attach.py (versioned, reversible) — deliverable→task linkage guard, 2026-09-29; routes '@Exobot invoice <product>' from Lizi/Jon ONLY to the deterministic invoice_command_exo3 handler (no agent turn): CSL screen, QB invoice create UNSENT via qb_invoice.prepare + Approve & send Decision to Jon, writes mission-control/data/offering-ledger.json + product workbook mirror, internal confirmation email to the sender (Exos addresses only) — never emails a buyer (2026-10-03)",
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
-   "escalation": "Decisions board / Jon inbox; orphan deliverable → flagged in the requester's reply ('which task?') + agent_eval WARN",
-   "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates; `python3 scripts/mc-email-command.py --selftest` (c) task-linkage: PoliTo LOI replay must resolve to #3226, ties/unrelated must NOT auto-attach; runtime: every run emits fleet_log govern/deliverable_task_link — orphan = level warn → agent_eval hourly WARN",
-   "telemetry": "logs/mc-email-command.log; logs/fleet-events.jsonl (deliverable_task_link); logs/decision-traces.jsonl (auto task-match)",
+   "escalation": "Decisions board / Jon inbox; orphan deliverable → flagged in the requester's reply ('which task?') + agent_eval WARN; invoice command: CSL hit/screen error or QB prepare failure -> Discord DM + internal email to Jon, no invoice",
+   "eval_suite": "config/agent-evals.json (Wave 1) — launchd cadence + crash + delivery-exhausted; FAIL escalates; `python3 scripts/mc-email-command.py --selftest` (c) task-linkage: PoliTo LOI replay must resolve to #3226, ties/unrelated must NOT auto-attach; runtime: every run emits fleet_log govern/deliverable_task_link — orphan = level warn → agent_eval hourly WARN; selftest (d) invoice-command: module loads, HTML/Outlook forward routes to the handler, quoted earlier command does NOT re-fire, + invoice_command_exo3 --selftest (parser formats + success/dup/unauthorized/missing/CSL/cap/cancel paths)",
+   "telemetry": "logs/mc-email-command.log; logs/fleet-events.jsonl (deliverable_task_link); logs/decision-traces.jsonl (auto task-match); logs/invoice-command.log; fleet_log orchestrate/invoice_command + offering_status; decision-traces (invoice prepared / CSL hold)",
    "reusability_scope": "Pattern for any command/intake channel that returns deliverables (email, MC chat, Discord): deterministic deliverable→task linkage guard + orphan WARN",
    "risk_tier": "HIGH",
    "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
@@ -1170,7 +1170,13 @@
      "change": "Added deterministic deliverable→MC-task linkage guard (PoliTo LOI miss). Match: cited task # → else keyword score on open tasks (top≥3, lead≥2). Else flag, never guess."
     },
     "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): HELD (not reloaded; replies to non-Exos MC users): proposed reload onto run_logged; approver John Quinn; status pending Jon approval — D-7281863",
-    "2026-10-02 r3-followthrough: RELOADED onto run_logged (bootout+bootstrap 07:24:55 CDT; launchctl print shows run_logged.py; RunAtLoad run exit 0, logs/runs/2026-10-02.jsonl; commit c97effc); approver John Quinn; status approved by Jon — D-7281863 ('Reload it now', 2026-10-01)"
+    "2026-10-02 r3-followthrough: RELOADED onto run_logged (bootout+bootstrap 07:24:55 CDT; launchctl print shows run_logged.py; RunAtLoad run exit 0, logs/runs/2026-10-02.jsonl; commit c97effc); approver John Quinn; status approved by Jon — D-7281863 ('Reload it now', 2026-10-01)",
+    {
+     "date": "2026-10-03",
+     "by": "Exo",
+     "approver": "John Quinn",
+     "change": "Added '@Exobot invoice <product>' email command (EXOS-FIN-003-0 Task 2->3, Jon approved 10/3) — deterministic handler scripts/invoice_command_exo3.py, see registry entry invoice-command-exo3."
+    }
    ]
   },
   {
@@ -4487,16 +4493,17 @@
    "stack_layer": "ORCHESTRATE",
    "autonomy_tier": "Execute-on-human-approval",
    "human_owner": "John Quinn",
-   "permission_envelope": "external API: intuit.com, quickbooks (WRITE: Invoice send/delete-unsent only; READ: Invoice); customer email sent BY QuickBooks only after Jon's card answer; writes payload-orders.json + qb-invoices.json",
+   "permission_envelope": "external API: intuit.com, quickbooks (WRITE: Invoice send/delete-unsent only; READ: Invoice); customer email sent BY QuickBooks only after Jon's card answer; writes payload-orders.json + qb-invoices.json; on Approve&send / Cancel / Paid of an offering invoice: updates mission-control/data/offering-ledger.json (+ product workbook mirror) via invoice_command_exo3.ledger_mark (2026-10-03)",
    "memory_boundary": "workspace + MC data dir",
    "escalation": "Decisions board / Jon inbox",
-   "eval_suite": "agent_eval hourly liveness (LastExitStatus=0; staleness > 2.5x cadence 300s → WARN); guard test: agent/Exo-answered cards are skipped (verified 2026-10-01)",
+   "eval_suite": "agent_eval hourly liveness (LastExitStatus=0; staleness > 2.5x cadence 300s → WARN); guard test: agent/Exo-answered cards are skipped (verified 2026-10-01); scripts/qb_invoice_eval.py; offering ledger hook covered by invoice_command_exo3 --selftest (Cancel releases units)",
    "telemetry": "logs/qb-invoice.log; ~/.openclaw/logs/qb-invoice-watch.launchd.log",
    "reusability_scope": "finance AR",
    "risk_tier": "MEDIUM",
    "envelope_source": "authored 2026-10-01",
    "change_log": [
-    "2026-10-01 created (Jon approved QB write for invoicing; sends via Decision approval)"
+    "2026-10-01 created (Jon approved QB write for invoicing; sends via Decision approval)",
+    "2026-10-03 prepare(): qty x unit-price lines, offering metadata, returns rec; cover email due-on-receipt + online pay for offering invoices; watch(): offering ledger Invoiced/Cancelled/Paid hooks (EXOS-FIN-003-0)"
    ]
   },
   {
@@ -4662,6 +4669,32 @@
    "envelope_source": "registered retroactively by dr-failover worker 2026-10-02 (created by the Mini-link session 10/2 ~09:50)",
    "change_log": [
     "2026-10-02 dr-failover: registered retroactively (exo3 gate); created 10/2 ~09:50 by the session that wired the Mini link; liveness covered by backup_watchdog link probe; approver John Quinn; status pending Jon approval — D-7281892"
+   ]
+  },
+  {
+   "label": "invoice-command-exo3",
+   "script": "scripts/invoice_command_exo3.py (called in-process by com.exos.mc-email-command; no own launchd job)",
+   "kind": "process (event-driven: '@Exobot invoice <product>' email from Lizi/Jon via the email-command channel)",
+   "schedule": "event-driven (mc-email-command poll, every 600s)",
+   "purpose": "EXOS-FIN-003-0 Tasks 2->3: turn Lizi's forwarded buyer reply ('@Exobot invoice watch' + buyer name, billing email, qty) into an UNSENT QuickBooks invoice + Jon's 'Approve & send invoice' Decision, with cap enforcement (Reserved+Invoiced+Paid), Message-ID dedupe and CSL denied-party screening; tracks Reserved -> Invoiced -> Paid / Cancelled in the offering ledger + product workbook.",
+   "stack_layer": "ORCHESTRATE (DECIDE gate = Jon's Approve & send)",
+   "autonomy_tier": "Execute-within-bounds (prepare only); send = Execute-on-human-approval via qb_invoice watch",
+   "human_owner": "John Quinn",
+   "permission_envelope": "Authorized senders only (config/invoice-offerings.json: lquinn@exosaero.com, jquinn@exosaero.com, jquinnexo@pm.me) — others ignored+logged. READ: CSL bulk list (data.trade.gov), QB Customer/Item/Term/Invoice. WRITE: QB Customer create + Invoice create UNSENT (qb_invoice.prepare; no send, no payment, no item creation); MC Decision ingest (approver Jon); mission-control/data/offering-ledger.json; product workbook rows tagged [exo:<entry>] (hand-entered rows never touched). EMAIL: internal only (sender confirmation / Jon hold notice; Exos addresses enforced). NEVER emails a buyer — QuickBooks sends only after Jon answers 'Approve & send'. Catalog prices/caps/terms change only with Jon's approval (EXOS-FIN-003-0 Task 1).",
+   "memory_boundary": "workspace: config/invoice-offerings.json, mission-control/data/offering-ledger.json, qb-invoices.json (via qb_invoice), csl-dispositions.json (read), product workbook in drafts/; QuickBooks realm 9130350938957276",
+   "escalation": "CSL hit or screen error -> HOLD (fail-closed), Discord DM + internal email to Jon, no invoice; QB prepare failure -> entry 'failed', not auto-retried, Jon alerted; missing/ambiguous/unknown/over-cap -> reply to sender asking for exactly what's missing, no invoice",
+   "eval_suite": "python3 scripts/invoice_command_exo3.py --selftest (parser: labeled/inline/multi-line/forwarded From+Reply-To fallback/ambiguity/quoted-command no-fire; handler: success, duplicate Message-ID, unauthorized, missing info, CSL hit, CSL error fail-closed, over-cap, sold-out, Cancel releases units, QB error not retried) + python3 scripts/mc-email-command.py --selftest (d) routing; e2e dry-run harness via --simulate <eml> --dry-run --sandbox",
+   "telemetry": "logs/invoice-command.log; logs/fleet-events.jsonl (agent com.exos.mc-email-command, capability invoice-command-exo3: invoice_command, offering_status); logs/decision-traces.jsonl (invoice prepared / CSL hold)",
+   "reusability_scope": "Any Jon-approved fixed-price offering: add a catalog entry (price, cap, terms, QB item, description, workbook) to config/invoice-offerings.json — no code change.",
+   "risk_tier": "HIGH",
+   "envelope_source": "authored 2026-10-03 with the build",
+   "change_log": [
+    {
+     "date": "2026-10-03",
+     "by": "Exo",
+     "approver": "John Quinn",
+     "change": "Created (Jon approved 2026-10-03): '@Exobot invoice <product>' email command, first offering = BLK3 flight watch $675, due on receipt, cap 10."
+    }
    ]
   }
  ],

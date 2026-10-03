@@ -1,0 +1,27 @@
+{
+ "_doc": "Product catalog for the '@Exobot invoice <product>' email command (scripts/invoice_command_exo3.py). Procedure EXOS-FIN-003-0 Task 1: each offering here must be Jon-approved (price, cap, terms, description). qb_item must be an EXISTING QuickBooks item; the command never creates QB items.",
+ "authorized_senders": ["lquinn@exosaero.com", "jquinn@exosaero.com", "jquinnexo@pm.me"],
+ "offerings": {
+  "watch": {
+   "name": "Exos BLK3 flight watch (pre-order)",
+   "aliases": ["watch", "watches", "flight watch", "flight watches", "flight-watch", "blk3 watch"],
+   "unit_price": 675.00,
+   "terms": "Due on receipt",
+   "cap": 10,
+   "max_per_request": 10,
+   "qb_item": "Sales",
+   "qb_item_note": "No dedicated merchandise item exists in QB (checked 2026-10-03). 'Sales' (Id 82, income account 'Sales') is the closest existing item. Finance (Kyle) to confirm or create a 'Flight Watch' item, then change this field.",
+   "desc_template": "Exos flight watch pre-order (qty {qty}). Pre-order — ships after the BLK3 flight, targeted 2027.",
+   "workbook": {
+    "path": "drafts/Exos_BLK3_Watch_Allocation_TDP_10sell_10employees.xlsx",
+    "sheet": "Investor Allocation (10)",
+    "first_row": 3,
+    "last_row": 12,
+    "cols": {"buyer": 2, "email": 3, "reserved_date": 4, "paid_date": 6, "notes": 9}
+   },
+   "approved_by": "John Quinn",
+   "approved_on": "2026-10-03",
+   "procedure": "EXOS-FIN-003-0"
+  }
+ }
+}

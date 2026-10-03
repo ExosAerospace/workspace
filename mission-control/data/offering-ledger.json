@@ -1,0 +1,9 @@
+{
+ "_doc": "Offering reservations ledger (EXOS-FIN-003-0). Written by invoice_command_exo3.py + qb_invoice.py watch.",
+ "offerings": {
+  "watch": {
+   "entries": []
+  }
+ },
+ "processed": {}
+}

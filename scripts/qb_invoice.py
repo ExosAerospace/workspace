@@ -22,6 +22,10 @@ Usage:
   qb_invoice.py prepare --order PO2C-2026-001 --milestone M1 [--terms "Net 30"] [--dry-run]
   qb_invoice.py prepare --customer "Acme" --email ap@acme.com --amount 1234.56 --desc "..." [--item "Test Services"]
   qb_invoice.py watch [--dry-run]
+
+Offering invoices (watches etc.) are prepared by scripts/invoice_command_exo3.py ('@Exobot invoice <product>'
+email command) through prepare() with qty/unit_price/offering set; watch() then moves the offering ledger
+entry Invoiced / Cancelled (unit released) / Paid via invoice_command_exo3.ledger_mark().
 """
 import argparse, json, os, re, sys, urllib.request, urllib.parse, urllib.error, datetime, subprocess
 
@@ -147,15 +151,22 @@ def write_cover_email(rec, contact_name=None):
     next to the PDF (<pdf>_cover_email.txt); decision-send-watcher puts it at the top of the
     ready-to-send so Jon can paste it and attach the PDF. [____] marks anything Jon must fill."""
     first = (contact_name or "").split()[0] if contact_name else "[____]"
-    due = (datetime.datetime.now() + datetime.timedelta(days=int(re.sub(r"\D", "", rec["terms"]) or 30))).strftime("%B %-d, %Y")
-    ms = f"Milestone {rec['milestone']} on payload order {rec['order']}" if rec.get("order") else "the work described"
+    if "receipt" in (rec.get("terms") or "").lower():
+        due = "upon receipt"
+    else:
+        due = (datetime.datetime.now() + datetime.timedelta(days=int(re.sub(r"\D", "", rec["terms"]) or 30))).strftime("%B %-d, %Y")
+    ms = f"Milestone {rec['milestone']} on payload order {rec['order']}" if rec.get("order") else (
+        rec["desc"].rstrip(".") if rec.get("offering") else "the work described")
+    pay = ("online by card or bank transfer (ACH) through the 'Review and pay' link in the QuickBooks invoice email."
+           if rec.get("offering") else
+           "by wire. We'll send wire instructions separately; please confirm them with us by phone before sending funds.")
     txt = (f"To: {contact_name + ' ' if contact_name else ''}<{rec['email']}>\n"
            f"Subject: Exos Invoice #{rec['doc_number']} — {rec['customer']}\n"
            f"Attachment: {os.path.basename(rec['pdf'])}\n\n"
            f"Hi {first},\n\n"
            f"Attached is Exos Invoice #{rec['doc_number']} for ${rec['amount']:,.2f}, covering {ms}.\n\n"
-           f"- Billed to: {rec['customer']}\n- Terms: {rec['terms']}, due {due}\n"
-           f"- Payment: by wire. We'll send wire instructions separately; please confirm them with us by phone before sending funds.\n\n"
+           f"- Billed to: {rec['customer']}\n- Terms: {rec['terms']}" + ("" if due == "upon receipt" else f", due {due}") + "\n"
+           f"- Payment: {pay}\n\n"
            f"[____ one line on what this payment unlocks / next step]\n\n"
            f"Thanks, and let me know if you have any questions.\n\nBest,\nJohn Quinn\nCofounder & CEO\n")
     fn = os.path.splitext(rec["pdf"])[0] + "_cover_email.txt"
@@ -182,7 +193,7 @@ def file_decision(rec):
         "question": f"Send QuickBooks invoice #{rec['doc_number']} for ${rec['amount']:,.2f} to {rec['customer']} ({rec['email']})?",
         "context": ctx, "proposedAction": "Approve & send — QuickBooks emails the invoice + pay link; MC milestone marked invoiced.",
         "type": "choice", "options": [OPT_SEND, OPT_HOLD, OPT_CANCEL], "priority": "high",
-        "relatedItem": rec.get("order") or "", "dedupeKey": f"qb-invoice:{rec['qb_id']}",
+        "relatedItem": rec.get("order") or ((rec.get("offering") or {}).get("entry_id") or ""), "dedupeKey": f"qb-invoice:{rec['qb_id']}",
         "approver": JON, "assignedTo": JON, "agentClass": "qb-invoice",
     }
     req = urllib.request.Request("http://localhost:8080/api/decisions/ingest", data=json.dumps(body).encode(),
@@ -247,16 +258,23 @@ def prepare(a):
     if banned_terms(desc):
         raise SystemExit(f"invoice text contains internal term(s) {banned_terms(desc)} — not allowed on a customer invoice")
     terms = a.terms or "Net 30"
+    qty = int(getattr(a, "qty", None) or 1)
+    unit = round(float(getattr(a, "unit_price", None) or amount / qty), 2)
+    if abs(round(qty * unit, 2) - amount) > 0.005:
+        raise SystemExit(f"qty x unit price ({qty} x {unit}) != amount {amount}")
+    offering = getattr(a, "offering", None)
     if a.dry_run:
         cid, new = find_or_create_customer(customer, email, True)
-        print(json.dumps({"doc_number": a.doc_number or next_doc_number(), "customer": customer, "qb_customer": cid, "new_customer": new, "email": email, "amount": amount,
-                          "item": item, "terms": terms, "desc": desc}, indent=1))
-        return
+        out = {"doc_number": a.doc_number or next_doc_number(), "customer": customer, "qb_customer": cid, "new_customer": new, "email": email, "amount": amount,
+               "qty": qty, "unit_price": unit, "item": item, "item_id": ref_by_name("Item", item), "terms": terms,
+               "terms_id": ref_by_name("Term", terms), "desc": desc, "dry_run": True}
+        print(json.dumps(out, indent=1))
+        return out
     cid, _ = find_or_create_customer(customer, email, False)
     inv = {
         "CustomerRef": {"value": cid},
         "Line": [{"DetailType": "SalesItemLineDetail", "Amount": amount, "Description": desc,
-                  "SalesItemLineDetail": {"ItemRef": {"value": ref_by_name("Item", item)}, "Qty": 1, "UnitPrice": amount}}],
+                  "SalesItemLineDetail": {"ItemRef": {"value": ref_by_name("Item", item)}, "Qty": qty, "UnitPrice": unit}}],
         "SalesTermRef": {"value": ref_by_name("Term", terms)},
         "BillEmail": {"Address": email},
         "AllowOnlineACHPayment": True, "AllowOnlineCreditCardPayment": True,
@@ -268,8 +286,10 @@ def prepare(a):
     rec = {"qb_id": created["Id"], "doc_number": created.get("DocNumber") or created["Id"], "customer": customer,
            "email": email, "amount": amount, "terms": terms, "desc": desc, "order": order["id"] if order else None,
            "milestone": ms, "status": "pending", "created_at": now(), "note": a.note or ""}
+    if offering:
+        rec["offering"] = dict(offering, qty=qty, unit_price=unit)
     rec["pdf"] = invoice_pdf(rec["qb_id"], rec["doc_number"])
-    rec["cover_email"] = os.path.relpath(write_cover_email(rec, (order or {}).get("contact_name")), WS)
+    rec["cover_email"] = os.path.relpath(write_cover_email(rec, (order or {}).get("contact_name") or (customer if offering else None)), WS)
     rec["decision_id"] = file_decision(rec)
     try:
         attach_pdf_to_decision(rec)
@@ -281,6 +301,7 @@ def prepare(a):
         _order_log(order["id"], f"{ms} QB invoice drafted", f"#{rec['doc_number']} ${amount:,.2f} — awaiting {rec['decision_id']}",
                    lambda m: m.update({"qb_invoice_id": rec["qb_id"], "qb_doc_number": rec["doc_number"], "qb_status": "pending_approval"}), ms)
     log(f"prepared QB invoice {rec['doc_number']} (Id {rec['qb_id']}) {customer} ${amount:,.2f} → {rec['decision_id']}")
+    return rec
 
 
 def _order_log(order_id, action, detail, mutate=None, ms=None):
@@ -299,6 +320,17 @@ def _order_log(order_id, action, detail, mutate=None, ms=None):
 
 
 # ── watch ────────────────────────────────────────────────────────────────────
+def _offering_mark(r, status):
+    """Move the offering-ledger entry (watch pre-orders etc.) — never let a ledger hiccup break invoicing."""
+    if not r.get("offering"):
+        return
+    try:
+        import invoice_command_exo3
+        invoice_command_exo3.ledger_mark(r, status)
+    except Exception as e:
+        log(f"WARN offering ledger update failed for #{r.get('doc_number')} -> {status}: {e}")
+
+
 def watch(a):
     st = jload(STATE, {"invoices": []})
     decs = jload(DECISIONS, [])
@@ -331,6 +363,7 @@ def watch(a):
                         m.update(invoice_no=r["doc_number"], invoiced_at=today, invoiced_by="Exo (QB, approved " + r["decision_id"] + ")", qb_status="sent")
                     _order_log(r["order"], f"{r['milestone']} invoiced", f"QB #{r['doc_number']} emailed by QuickBooks to {r['email']} · approved {r['decision_id']}", mut, r["milestone"])
                 log(f"SENT QB invoice {r['doc_number']} to {r['email']} (approved {r['decision_id']})")
+                _offering_mark(r, "Invoiced")
                 changed = True
             elif ans.lower().startswith("cancel"):
                 if a.dry_run:
@@ -343,6 +376,7 @@ def watch(a):
                     _order_log(r["order"], f"{r['milestone']} QB invoice cancelled", f"#{r['doc_number']} deleted unsent ({r['decision_id']})",
                                lambda m: [m.pop(k, None) for k in ("qb_invoice_id", "qb_doc_number", "qb_status")], r["milestone"])
                 log(f"cancelled QB invoice {r['doc_number']} ({r['decision_id']})")
+                _offering_mark(r, "Cancelled")
                 changed = True
             # Hold → leave pending; Jon can re-answer the card later.
         elif r["status"] == "sent":
@@ -367,6 +401,7 @@ def watch(a):
                     if o.get("contract_value"): args += ["--contract-value", str(o["contract_value"])]
                     subprocess.run(args, timeout=60)
             log(f"PAID QB invoice {r['doc_number']} ${amt:,.2f}")
+            _offering_mark(r, "Paid")
             changed = True
     if changed:
         jsave(STATE, st)

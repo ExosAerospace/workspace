@@ -43,6 +43,10 @@ from email.utils import getaddresses, parsedate_to_datetime
 from email.message import EmailMessage
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import itar_ear_screen as ee
+try:
+    import invoice_command_exo3 as invoice_cmd   # '@Exobot invoice <product>' (EXOS-FIN-003-0)
+except Exception as _ie:  # never let the invoice module break the command channel
+    invoice_cmd = None
 from datetime import datetime, timedelta, timezone
 
 WS       = "/Users/exomac/.openclaw/workspace"
@@ -846,6 +850,58 @@ def is_trigger(msg, subject, body):
     # is handled by the dedicated sent-log processor (sent-loop-closer), NOT this command trigger.
 
 
+_INVOICE_FALLBACK_RE = re.compile(r'@\s*ex(?:o(?:bot|bto|boto|bott)?|bot)\b[\s:,\-]*invoice\b', re.I)
+_JON_ADDRS = ("jquinn@exosaero.com", "jquinnexo@pm.me", "jquinnexo+do@pm.me", "jquinnexo@proton.me")
+
+
+def _send_internal(to_addr, subject, text):
+    """Plain internal notice (Exos addresses only) through the same msmtp path as email_requester."""
+    if not to_addr.lower().endswith(("@exosaero.com", "@pm.me", "@proton.me")):
+        log(f"[invoice-cmd] refused non-internal notice to {to_addr}")
+        return False
+    m = EmailMessage()
+    m["From"] = "Exo (Exos AI Assistant) <jquinnexo@pm.me>"
+    m["To"] = to_addr
+    m["Subject"] = _clean_subject(subject)
+    m.set_content(text + "\n\n- Exo (automated, EXOS-FIN-003-0 invoice command)\n")
+    try:
+        p = subprocess.run(["/opt/homebrew/bin/msmtp", "-a", "protonmail", to_addr],
+                           input=m.as_bytes(), capture_output=True, timeout=60, env=sub_env())
+        ok = p.returncode == 0
+        log(f"[invoice-cmd] notice {'sent' if ok else 'FAILED'} to {to_addr}")
+        return ok
+    except Exception as e:
+        log(f"[invoice-cmd] notice error to {to_addr}: {e}")
+        return False
+
+
+def handle_invoice_command(mid, sender, subject, body, names):
+    """'@Exobot invoice <product>' — deterministic handler (scripts/invoice_command_exo3.py). Unauthorized and
+    duplicate requests are logged only; every other outcome is answered to the (internal) sender by email.
+    Jon's own successful requests get Discord only (the Decision is his artifact — no duplicate email)."""
+    try:
+        res = invoice_cmd.handle(mid, sender, subject, body)
+    except Exception as e:
+        log(f"[invoice-cmd] handler crashed mid={mid}: {e}")
+        discord(f"⛔ @Exobot invoice handler crashed — no invoice created.\nFrom: {sender}\nSubject: {subject}\n{e}")
+        return
+    oc = res.get("outcome")
+    log(f"[invoice-cmd] mid={mid} sender={sender} outcome={oc}")
+    if oc in ("unauthorized", "duplicate"):
+        return
+    cmd_line = (invoice_cmd.find_command(body).group(0) if invoice_cmd.find_command(body) else "@Exobot invoice")[:200]
+    if res.get("jon_alert"):
+        discord("⚠️ " + res["jon_alert"])
+        _send_internal("jquinn@exosaero.com", f"Exo HOLD: @Exobot invoice request — {_clean_subject(subject)}", res["jon_alert"])
+    if res.get("discord"):
+        discord(res["discord"])
+    if res.get("reply"):
+        if oc == "success" and sender.lower() in _JON_ADDRS:
+            log(f"[invoice-cmd] success for Jon — Decision is the artifact; email suppressed")
+        else:
+            email_requester(sender, subject, cmd_line, res["reply"])
+
+
 def main():
     # Concurrency guard: an accepted trigger launches an agent run up to 600s, and launchd
     # fires this every 600s. Without a lock, overlapping runs read stale state and double-fire.
@@ -962,6 +1018,21 @@ def main():
                 discord(f"📄✅ Training certificate filed for {sname} <{sender}>: {fnames}"
                         + ("" if ok_rec else " (⚠️ completion NOT recorded — check cui-itar-annual doc)"))
                 log(f"[cert] mid={mid} filed {len(certs)} cert(s) for {sender} recorded={ok_rec}")
+            processed += 1
+            continue
+
+        # ---- "@Exobot invoice <product>" (EXOS-FIN-003-0, Jon 2026-10-03): deterministic, no agent turn ----
+        # Lizi/Jon only; prepares the QB invoice UNSENT + Jon's Approve & send Decision. Never emails a buyer.
+        inv_body = invoice_cmd.message_text(msg) if invoice_cmd else ""
+        if invoice_cmd and invoice_cmd.is_invoice_command(inv_body):
+            handle_invoice_command(mid, sender, subject, inv_body, names)
+            processed += 1
+            continue
+        if invoice_cmd is None and _INVOICE_FALLBACK_RE.search(body or ""):
+            # module failed to import: HOLD rather than let a free-form agent turn improvise an invoice
+            log(f"[invoice-cmd] module unavailable — held mid={mid}")
+            discord(f"⛔ @Exobot invoice request HELD (invoice module failed to load) — no invoice created.\n"
+                    f"From: {sender}\nSubject: {subject}")
             processed += 1
             continue
 
@@ -1196,6 +1267,29 @@ def _selftest():
         print("PASS task-linkage:", {"forward": pick2, "executed_reply": pick})
     except Exception as e:
         fails.append(f"task-linkage: {e}")
+    # (d) '@Exobot invoice' routing (EXOS-FIN-003-0, 2026-10-03): the module loads, an Outlook-style forward
+    #     routes to the deterministic handler (never the LLM agent), a quoted earlier command does not, and
+    #     the handler's own eval passes (parser formats + success/dup/unauthorized/missing/CSL/cap paths).
+    try:
+        assert invoice_cmd is not None, "invoice_command_exo3 failed to import"
+        fwd = ("@Exobot invoice watch\r\nName: Jane Doe, Qty: 1\r\n \r\n Lizi Quinn \r\n"
+               "________________________________\r\n From: Jane Doe <jane@example.com> \r\n Sent: Fri \r\n")
+        assert invoice_cmd.is_invoice_command(fwd), "forwarded invoice command not detected"
+        assert not invoice_cmd.is_invoice_command("@exo see below\n\nOn Fri Exo wrote:\n> @Exobot invoice watch A B a@b.co 1"), \
+            "quoted command re-fired"
+        assert "handle_invoice_command(mid, sender, subject, inv_body, names)" in open(os.path.abspath(__file__)).read()
+        hm = EmailMessage(); hm.set_content("<div>@Exobot invoice watch Jane Doe 2</div><div>Lizi Quinn</div><hr>"
+                                            "<b>From:</b> Jane Doe &lt;jane@example.com&gt;<br><b>Sent:</b> Fri", subtype="html")
+        own, _f = invoice_cmd.split_own_text(invoice_cmd.message_text(hm))
+        assert "jane@example.com" not in own and invoice_cmd.is_invoice_command(invoice_cmd.message_text(hm)), "HTML forward split"
+        import io, contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = invoice_cmd._selftest()
+        assert rc == 0, "invoice_command_exo3 selftest failed:\n" + buf.getvalue()[-800:]
+        print("PASS invoice-command routing + handler eval")
+    except Exception as e:
+        fails.append(f"invoice-command: {e}")
     if fails:
         print("SELFTEST FAILED:")
         for f in fails:
