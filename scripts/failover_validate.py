@@ -167,7 +167,10 @@ def main():
     except Exception as e:
         checks.append(("server.js syntax", False, str(e)[:80]))
     try:
-        r = subprocess.run(["ollama", "list"], capture_output=True, text=True, timeout=20)
+        # launchd PATH lacks Homebrew — resolve the binary explicitly (drill 10/4 false fail)
+        oll = shutil.which("ollama") or next((c for c in ("/opt/homebrew/bin/ollama", "/usr/local/bin/ollama",
+               os.path.expanduser("~/.local/bin/ollama")) if os.path.exists(c)), "ollama")
+        r = subprocess.run([oll, "list"], capture_output=True, text=True, timeout=20)
         names = r.stdout.lower()
         have = all(any(sub in ln for ln in names.splitlines()) for sub in REQUIRED_MODELS_SUBSTR)
         checks.append(("Ollama failover model set", have,
