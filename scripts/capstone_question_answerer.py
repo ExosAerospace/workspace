@@ -152,8 +152,9 @@ INSTRUCTIONS
    useful. If the triage description has "ALSO ANSWER" follow-ups, answer every one in the same answer.
 2. PROGRAM-SAFE ONLY: the student is a sandboxed UTD early_adopter under NDA. Public / program
    information only. NO pricing, customers, financials, CUI/ITAR/export-controlled data, or any
-   internal data. Questions about assignments, priorities, grading or scope → say Lizi will
-   confirm, and route it to Lizi (mention "Lizi" in the answer).
+   internal data. Questions about assignments, priorities, grading or scope → tell the student
+   to ask Lizi directly (she owns those calls). Never claim you passed, sent or flagged anything
+   to Lizi or anyone else; you cannot.
 3. SOURCING GUARDRAIL: make NO factual statement without a credible, current source
    (primary/official, dated 2023 or later), linked inline next to the claim. If you cannot find
    one, say plainly that it could not be verified. Treat these Exos claims as UNVERIFIED unless
