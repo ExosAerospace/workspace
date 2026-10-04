@@ -24,6 +24,8 @@ WS = Path("/Users/exomac/.openclaw/workspace")
 DB = Path(os.path.expanduser("~/.openclaw/state/openclaw.sqlite"))
 JON_ID = "1501632195163590739"
 OPENCLAW = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/shims/openclaw"
+ALERT_STATE = WS / "logs" / "fleet-alert-state.json"
+REMIND_H = 6
 THRESH = {"disk_pct": 80.0, "mem_pct": 88.0, "pg_connections": 55.0}
 
 
@@ -38,13 +40,26 @@ def cron_health():
     out = {"ok": 0, "err": 0, "none": 0, "errors": [], "persistent": 0}
     try:
         con = sqlite3.connect(f"file:{DB}?mode=ro", uri=True, timeout=10)
-        for name, status, err, cerr in con.execute(
-            "SELECT name, last_run_status, last_error, consecutive_errors FROM cron_jobs WHERE enabled=1"):
+        cols = {r[1] for r in con.execute("PRAGMA table_info(cron_jobs)")}
+        if "state_json" in cols:
+            # OpenClaw >= 10/2026 schema: run state lives in state_json (lastRunStatus, consecutiveErrors, ...)
+            rows = []
+            for name, sj in con.execute("SELECT name, state_json FROM cron_jobs WHERE enabled=1"):
+                try:
+                    st = json.loads(sj or "{}")
+                except Exception:
+                    st = {}
+                rows.append((name, st.get("lastRunStatus") or st.get("lastStatus"),
+                             st.get("lastError") or st.get("lastErrorMessage"), st.get("consecutiveErrors")))
+        else:   # legacy schema
+            rows = con.execute("SELECT name, last_run_status, last_error, consecutive_errors "
+                               "FROM cron_jobs WHERE enabled=1").fetchall()
+        for name, status, err, cerr in rows:
             if status == "ok":
                 out["ok"] += 1
             elif status == "error":
                 out["err"] += 1
-                out["errors"].append((name, (err or "")[:80], cerr or 0))
+                out["errors"].append((name, (str(err or ""))[:80], cerr or 0))
                 if (cerr or 0) >= 2:
                     out["persistent"] += 1
             else:
@@ -121,8 +136,10 @@ def main():
         fleet += f" · {transient} transient err (self-clears)"
     if bad:
         fleet += f" · launchd bad-exit: {', '.join(n for n, _ in bad[:3])}"
-    elif not ch.get("db_error"):
+    else:
         fleet += " · launchd OK"
+    if ch.get("db_error"):
+        fleet += f"\n  ⚠ Cron status DB unreadable: {ch['db_error']}"
 
     if sb:
         sbl = f"Supabase (t4g.micro): mem {sb['mem_pct']}% · disk {sb['disk_pct']}% · {int(sb['pg_connections'])} conns"
@@ -133,7 +150,19 @@ def main():
 
     tag = now.strftime("%-I:%M %p CT")
     msg = f"{lead} Fleet exception ({tag})\n  {fleet}\n  {sbl}"
+    # Don't repeat the SAME exception every hour (Jon 10/4). Re-DM only when the problem set changes,
+    # or as a reminder every REMIND_H hours while it persists.
+    sig = json.dumps({"persistent": sorted(persistent), "bad": sorted(n for n, _ in bad),
+                      "breaches": sorted(breaches), "sb_down": sb is None, "db": bool(ch.get("db_error"))})
+    try:
+        last = json.load(open(ALERT_STATE))
+    except Exception:
+        last = {}
+    nowts = now.timestamp()
+    if last.get("sig") == sig and nowts - last.get("at", 0) < REMIND_H * 3600:
+        return
     dm(msg)
+    json.dump({"sig": sig, "at": nowts}, open(ALERT_STATE, "w"))
 
 
 if __name__ == "__main__":
