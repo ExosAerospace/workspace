@@ -50,7 +50,7 @@ FROM = "jquinnexo@pm.me"
 # data (.json/.csv/.log), or notebooks — attaching those is what filled Jon's inbox with useless files.
 DELIVERABLE_EXT = (".docx", ".pdf", ".pptx", ".xlsx")
 FILE_RX = re.compile(r"((?:drafts|captures|tasks|submissions-archive)/[\w./\- ]+?\.(?:docx|pdf|md|txt|pptx|xlsx))", re.I)
-SEND_RX = re.compile(r"\b(re-?send|send it|send me|send to me|send the draft|email me|for me to send|send drafted|send response)\b", re.I)
+SEND_RX = re.compile(r"\b(re-?send|send it|send me|send to me|send the draft|email me|for me to send|send drafted|send response|send draft to my inbox)\b", re.I)  # +exo3 field-report option (10/4)
 # Jon 2026-07-31: a decision whose ONLY action is "deliver this draft to your inbox to send" is
 # redundant — delivering to Jon's own inbox is NOT an external send (he still sends it himself), so
 # it should fire IMMEDIATELY on OPEN, not wait for him to approve delivering it to himself.
