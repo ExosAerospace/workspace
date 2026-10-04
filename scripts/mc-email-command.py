@@ -38,10 +38,10 @@ except Exception:
 import imaplib, email, json, os, re, sys, subprocess, tempfile, fcntl, hashlib, html as _html, mimetypes
 import urllib.request
 from datetime import datetime, timezone
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # before local imports: importlib loaders run from other dirs
 import durable_send_shim  # noqa: F401  (durable delivery: spool-then-send)
 from email.utils import getaddresses, parsedate_to_datetime
 from email.message import EmailMessage
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import itar_ear_screen as ee
 try:
     import invoice_command_exo3 as invoice_cmd   # '@Exobot invoice <product>' (EXOS-FIN-003-0)
