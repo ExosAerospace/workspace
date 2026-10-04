@@ -1485,6 +1485,12 @@
    "host": "mini",
    "selftest": "/usr/bin/python3 scripts/failover_monitor.py --selftest",
    "note": "runs on the Mini; liveness read by failover_validate over ssh (failover-monitor.json last_run_epoch)"
+  },
+  "com.exos.decisions-discord-feed": {
+   "cadence_s": 120,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
   }
  },
  "_eval_wave_2": {
