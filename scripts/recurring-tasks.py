@@ -80,7 +80,17 @@ def parse_date(s):
 
 
 def main():
-    tasks = get("tasks?select=id,title,state,due_date,owner,assigned_email,tags,completed_at,source&limit=5000")
+    # Paginate: Supabase caps every response at 1000 rows, so "&limit=5000" silently returned only
+    # 1000 tasks — newer instances went unseen and their families were re-spawned as duplicates
+    # (#3374/#3375 "Charge radios/cameras", 2026-10-04).
+    tasks, off = [], 0
+    while True:
+        pg = get(f"tasks?select=id,title,state,due_date,owner,assigned_email,tags,completed_at,source"
+                 f"&order=id&limit=1000&offset={off}")
+        tasks += pg
+        if len(pg) < 1000:
+            break
+        off += 1000
 
     def rrule_of(t):
         for x in (t.get("tags") or []):
@@ -107,7 +117,8 @@ def main():
     created = 0
     for nt, rr in fam_rr.items():
         inst = by.get(nt, [])
-        active = [i for i in inst if str(i.get("state", "")).lower() not in ("done", "complete", "completed")]
+        active = [i for i in inst if str(i.get("state", "")).lower() not in ("done", "complete", "completed")
+                  and not any(str(g).startswith("merged-dup:") for g in (i.get("tags") or []))]
         if active:
             continue  # current cycle still pending — do nothing
         # all done → create the next instance from the latest instance's due date
