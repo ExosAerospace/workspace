@@ -290,6 +290,9 @@ When applying building-an-exo, also consult:
 **Prose:**
 - `/skills/writing-copy/SKILL.md` — applies automatically to any written output (MTP statement, board memo, transition comms)
 
+**Field implementation (Exos Aerospace):**
+- `references/exos-field-lessons.md` — real ExO 3.0 implementation failures and anti-patterns; generalized lessons and framework improvement suggestions from production fleet operation
+
 ## Triggers
 
 - Founder or CEO is asking "what would we build today, with AI, from scratch?"
