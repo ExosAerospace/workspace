@@ -125,7 +125,11 @@ def try_send(target, text, channel=DEFAULT_CHANNEL):
             return True, None
         return False, (out.stderr or out.stdout or f"rc={out.returncode}").strip()[:500]
     except subprocess.TimeoutExpired:
-        return False, "timeout"
+        # The CLI posts to Discord and then hangs past SEND_TIMEOUT, so a timeout almost always
+        # means the message DID land. Retrying it tripled #decisions cards (2026-10-04).
+        # Treat as delivered (at-most-once) rather than re-post.
+        _log(f"WARN send timed out after {SEND_TIMEOUT}s; assuming delivered, not retrying -> {target}")
+        return True, "timeout (assumed delivered)"
     except Exception as e:
         return False, f"{type(e).__name__}: {e}"[:500]
 

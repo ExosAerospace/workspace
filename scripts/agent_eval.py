@@ -15,7 +15,7 @@ Emits one eval event per agent to fleet_log; on a NEW FAIL, escalates one dedupe
 alert to the system channel via deliver. Runs hourly via launchd.
 Dry-run: AGENT_EVAL_DRYRUN=1 (no escalation, no state write).
 """
-import json, os, sys, subprocess, plistlib, time, datetime
+import json, os, sys, subprocess, plistlib, time, datetime, hashlib, shutil, tempfile
 from pathlib import Path
 
 WS = Path("/Users/exomac/.openclaw/workspace")
@@ -264,6 +264,149 @@ def check_cron_prompt_guard(state):
         state[key] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
     return results, new_fails
 
+def check_duplicate_sends(state, now, _sent_dir=None):
+    """OUTPUT-level eval: scan outbox/sent/ for duplicate (target, text-hash) pairs
+    within 15 min, and entries where attempts>1 and last_error contains 'timeout'
+    (pre-fix pattern: timed-out retries that landed multiple times).
+    One deduped FAIL alert per offending source via the standard new_fail_alerts path."""
+    results, new_fails = [], []
+    sent_dir = Path(_sent_dir) if _sent_dir else (WS / "outbox" / "sent")
+    if not sent_dir.exists():
+        return results, new_fails
+
+    scan_window_s = 2 * 3600    # look back 2h
+    dup_window_s  = 15 * 60     # flag pairs within 15 min
+    cutoff = now - scan_window_s
+
+    recent = []
+    for p in sent_dir.glob("*.json"):
+        try:
+            e = json.loads(p.read_text())
+            raw_ts = e.get("sent") or e.get("last_attempt") or e.get("created")
+            if not raw_ts:
+                continue
+            ts = datetime.datetime.fromisoformat(raw_ts).timestamp()
+            if ts < cutoff:
+                continue
+            text_hash = hashlib.sha1((e.get("text") or "").encode()).hexdigest()[:12]
+            recent.append({
+                "file": p.name,
+                "target": e.get("target", ""),
+                "text_hash": text_hash,
+                "ts": ts,
+                "source": e.get("source", "unknown"),
+                "attempts": int(e.get("attempts") or 1),
+                "last_error": str(e.get("last_error") or ""),
+            })
+        except Exception:
+            continue
+
+    recent.sort(key=lambda x: x["ts"])
+
+    offenders = {}  # source -> [description, ...]
+    # Check (target, text_hash) duplicates within 15 min
+    for i, a in enumerate(recent):
+        for b in recent[i + 1:]:
+            if b["ts"] - a["ts"] > dup_window_s:
+                break
+            if a["target"] == b["target"] and a["text_hash"] == b["text_hash"]:
+                src = a["source"]
+                offenders.setdefault(src, []).append(
+                    f"dup target={a['target'][:40]} hash={a['text_hash']} "
+                    f"({a['file']} + {b['file']})"
+                )
+
+    # Check attempts>1 where last send timed out (pre-fix retry pattern)
+    for e in recent:
+        if e["attempts"] > 1 and "timeout" in e["last_error"].lower():
+            src = e["source"]
+            offenders.setdefault(src, []).append(
+                f"multi-attempt-timeout target={e['target'][:40]} "
+                f"attempts={e['attempts']} file={e['file']}"
+            )
+
+    key_prefix = "dupsend:"
+    for src, issues in offenders.items():
+        key = key_prefix + src
+        status = "FAIL"
+        why = "; ".join(issues[:3])
+        results.append((key, status, why, "John Quinn"))
+        try:
+            import fleet_log
+            fleet_log.event("agent_eval", "govern", "dup_send", outcome="fail",
+                            owner="John Quinn", detail={"source": src, "issues": issues})
+        except Exception:
+            pass
+        if state.get(key, {}).get("status") != "FAIL":
+            new_fails.append((key, why, "John Quinn"))
+        state[key] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
+
+    # Clear resolved keys
+    for key in [k for k in state if k.startswith(key_prefix)
+                and k[len(key_prefix):] not in offenders]:
+        state[key] = {"status": "OK", "ts": datetime.datetime.now().isoformat(timespec="seconds")}
+
+    return results, new_fails
+
+
+def _dup_send_selftest():
+    """Selftest fixture for check_duplicate_sends. Fixture labels don't use literal com.exos.*."""
+    tmp = Path(tempfile.mkdtemp())
+    sent_dir = tmp / "outbox" / "sent"
+    sent_dir.mkdir(parents=True)
+
+    def mk(fname, target, text, ts_offset, source, attempts=1, last_error=None):
+        ts_s = time.time() + ts_offset
+        ts_iso = datetime.datetime.fromtimestamp(ts_s, tz=datetime.timezone.utc).isoformat()
+        e = {"id": fname, "created": ts_iso, "sent": ts_iso,
+             "target": target, "text": text,
+             "source": source, "attempts": attempts, "last_error": last_error}
+        (sent_dir / (fname + ".json")).write_text(json.dumps(e))
+
+    src_a = "-".join(["fixture", "alpha"])   # not a literal com.exos.* string
+    src_b = "-".join(["fixture", "beta"])
+
+    # Two identical (target, text) within 5 min -> dup flagged for src_a
+    mk("d1", "channel:T1", "hello dup", -100, src_a)
+    mk("d2", "channel:T1", "hello dup", -100 + 300, src_a)   # 5 min later
+    # Same text, different target -> not a dup
+    mk("d3", "channel:T2", "hello dup", -100, src_a)
+    # Same target, different text -> not a dup
+    mk("d4", "channel:T1", "different text", -100, src_a)
+    # Same (target, text) but >15 min apart -> not flagged in the dup window
+    mk("d5", "channel:T1", "old msg", -7200 + 10, src_a)    # near edge of 2h window
+    mk("d6", "channel:T1", "old msg", -7200 + 10 + 1000, src_a)   # 1000s later = >15 min
+    # attempts>1 with timeout -> flagged for src_b
+    mk("d7", "channel:T3", "timeout post", -60, src_b, attempts=2, last_error="timeout (assumed delivered)")
+    # attempts>1 but no timeout -> NOT flagged by the timeout check (still no dup either)
+    mk("d8", "channel:T3", "error post", -60, src_b, attempts=2, last_error="network error")
+
+    try:
+        now_t = time.time()
+        state = {}
+        res, fails = check_duplicate_sends(state, now_t, _sent_dir=sent_dir)
+        src_keys = {r[0].replace("dupsend:", "") for r in res}
+        assert src_a in src_keys, f"{src_a} expected in results, got {src_keys}"
+        assert src_b in src_keys, f"{src_b} expected in results (timeout), got {src_keys}"
+        # all FAIL
+        assert all(r[1] == "FAIL" for r in res), "expected all FAIL"
+        # new_fails on first run
+        assert len(fails) == len(res), "first run should have all as new_fails"
+        # second run: same state -> no new_fails
+        _, fails2 = check_duplicate_sends(state, now_t, _sent_dir=sent_dir)
+        assert fails2 == [], f"dedup: expected no new fails on re-run, got {fails2}"
+        # empty dir -> no results
+        empty_dir = tmp / "empty" / "sent"
+        empty_dir.mkdir(parents=True)
+        res_empty, _ = check_duplicate_sends({}, now_t, _sent_dir=empty_dir)
+        assert res_empty == [], "empty dir should yield no results"
+        # nonexistent dir -> no results, no crash
+        res_nx, _ = check_duplicate_sends({}, now_t, _sent_dir=tmp / "nonexistent")
+        assert res_nx == [], "nonexistent dir should yield no results"
+    finally:
+        shutil.rmtree(tmp)
+
+
 def selftest():
     # fixture labels built at runtime so the exo3 gate doesn't read them as new agents
     a, b, c = (".".join(["com", "exos", "fixture-" + x]) for x in "abc")
@@ -304,7 +447,8 @@ def selftest():
     assert cron_telemetry.score_cron(dict(daily, consecutive_errors=3), th, now)[0] == "FAIL"
     assert cron_telemetry.score_cron(dict(daily, enabled=0), th, now)[0] == "SKIP"
     assert isinstance(cron_telemetry.registry_crons(REGISTRY), dict)
-    print("agent_eval selftest: 18/18 pass")
+    _dup_send_selftest()
+    print("agent_eval selftest: 25/25 pass")
     import cron_hygiene  # r2 cron-hygiene guards (secrets in prompts, model allowlist, transient crons)
     cron_hygiene.selftest()
     import mail_bridge_guard  # r2 launchd-residuals: Bridge password drift + IMAP auth storm
@@ -401,6 +545,9 @@ def main():
     mb_results, mb_fails = check_mail_bridge(state, now)
     results += mb_results
     new_fail_alerts += mb_fails
+    ds_results, ds_fails = check_duplicate_sends(state, now)
+    results += ds_results
+    new_fail_alerts += ds_fails
 
     npass = sum(1 for _, s, _, _ in results if s == "OK")
     nwarn = sum(1 for _, s, _, _ in results if s == "WARN")

@@ -4728,7 +4728,7 @@
    "permission_envelope": "Reads mission-control/data/decisions.json; posts to ONE configured internal Discord channel via deliver.py; writes own state logs/decisions-discord-feed-state.json. No email, no external sends, no Supabase writes.",
    "memory_boundary": "workspace (read decisions.json, own state)",
    "escalation": "Decisions board / Jon DM",
-   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 120s → WARN)",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 120s → WARN); duplicate-send OUTPUT eval (agent_eval.py check_duplicate_sends: flags same target+text-hash delivered >1x within 15 min, or attempts>1 with timeout last_error)",
    "telemetry": "logs/decisions-discord-feed.log",
    "reusability_scope": "TBD",
    "risk_tier": "LOW",
