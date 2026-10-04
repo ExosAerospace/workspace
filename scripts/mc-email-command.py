@@ -409,7 +409,7 @@ def meta_att_ids():
         return set()
 
 
-def new_task_deliverables(before_ids, cap=5, max_bytes=20 * 1024 * 1024):
+def new_task_deliverables(before_ids, reply_text="", cap=5, max_bytes=20 * 1024 * 1024):
     """Files the agent attached to a task during THIS command (via mc-attach.py) — the current
     versions added since `before_ids` was snapshotted. This makes the @exo reply carry the actual
     deliverable even when the reply text never names the file path (root cause of the 2026-09-21
@@ -419,12 +419,20 @@ def new_task_deliverables(before_ids, cap=5, max_bytes=20 * 1024 * 1024):
         meta = json.load(open(_UPLOADS_META))
     except Exception:
         return out
+    # The reply must cite the upload's task # or name the file. Other Exo sessions/crons upload as
+    # "Exo" too, so "new since snapshot + uploaded by Exo" is not proof it's THIS command's file
+    # (2026-10-04: an R&D-credit QRE sheet another session put on #1200 rode out on the Salim reply).
+    cited = set(re.findall(r"#(\d{1,6})\b", reply_text or ""))
     for m in meta:
         if m.get("id") in before_ids or not m.get("current", True) or not m.get("task_id"):
             continue
         # Only Exo's own uploads — a teammate's concurrent MC upload is NOT this command's
         # deliverable (2026-10-01: Steve's HVRR cert PDFs on #2408 rode out on a Japan-trip reply).
         if not (m.get("uploaded_by") or "").startswith("Exo"):
+            continue
+        _nm = _UPLOAD_PREFIX_RE.sub("", m.get("stored_name") or "")
+        if str(m.get("task_id")) not in cited and not (_nm and _nm in (reply_text or "")):
+            log(f"[email-reply] skip concurrent upload {_nm} on #{m.get('task_id')} (task not cited in reply)")
             continue
         sn = m.get("stored_name")
         p = os.path.join(_UPLOADS_DIR, sn) if sn else None
@@ -1133,7 +1141,7 @@ def main():
                     # Also attach any deliverable the agent added to a task this run (via mc-attach.py),
                     # even if the reply text didn't spell out the path — so "fill this out and return it"
                     # actually returns the file. Dedupe by basename against path-referenced attachments.
-                    for _d in new_task_deliverables(before_att_ids):
+                    for _d in new_task_deliverables(before_att_ids, reply):
                         if os.path.basename(_d) not in _have:
                             atts.append(_d); _have.add(os.path.basename(_d))
                     atts = dedupe_attachments(atts)[:5]  # dedupe BEFORE the cap so copies can't crowd out real files
