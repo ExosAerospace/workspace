@@ -2871,13 +2871,13 @@
    "script": "openclaw cron 51e09612-a217-43e0-a7a9-a3243c59a5a0 (agentTurn)",
    "kind": "openclaw-cron",
    "schedule": "cron '0 9 * * *' America/Chicago",
-   "purpose": "Daily task-backlog grind: proposes MERGE/CLOSE batches of duplicate and stale MC tasks to Jon; Jon replies 'commit batch' before anything changes.",
+   "purpose": "Daily task-backlog grind: curates MERGE/CLOSE candidates; backlog_grind_apply.py verifies at source, auto-applies provably safe cleanups, and posts the rest as ONE Decision card (Jon 10/3-10/4: no Discord 'commit batch').",
    "stack_layer": "DECIDE",
    "autonomy_tier": "Recommends-with-Context",
    "human_owner": "John Quinn",
    "permission_envelope": "toolsAllow 32 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes, node_inference; NO exec); prompted actions: reads Supabase tasks (service key) + subject_dedup.py dry-run; posts one proposal to #exomac-system; announces final output to Discord 1501636814849577050",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads Supabase tasks (service key) + subject_dedup.py dry-run; posts one proposal to #exomac-system",
-   "escalation": "human confirm gate: Jon approves in Discord before anything is committed/staged; output: announces final output to Discord 1501636814849577050; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
+   "escalation": "Decision card via scripts/backlog_grind_apply.py propose (verified at source); executed by com.exos.backlog-grind-apply only after Jon's human click in MC (per-item hold overrides). Provably safe cleanups auto-applied with snapshot.",
    "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:daily-task-backlog-grind-dedup-stale-close-batch-to-jon'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:daily-task-backlog-grind-dedup-stale-close-batch-to-jon'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "decision-surfacing pattern reusable for any board (propose-then-confirm)",
@@ -2887,7 +2887,8 @@
    "cron_id": "51e09612-a217-43e0-a7a9-a3243c59a5a0",
    "cron_name": "Daily task-backlog grind — dedup + stale-close batch to Jon",
    "model": "agent default",
-   "ai_in_critical_path": true
+   "ai_in_critical_path": true,
+   "updated": "2026-10-04"
   },
   {
    "label": "cron:spacewerx-on-orbit-logistics-concept-paper-open-call-watch",
@@ -4791,6 +4792,26 @@
    "memory_boundary": "workspace memory files",
    "risk_tier": "LOW",
    "eval_suite": "agent_eval cron hygiene (last run status ok; daily cadence)"
+  },
+  {
+   "label": "com.exos.backlog-grind-apply",
+   "script": "backlog_grind_apply.py apply",
+   "kind": "recurring",
+   "schedule": "every 600s",
+   "purpose": "Executes the daily backlog-grind Decision ONLY after a human click in MC ('Apply my recommendations', per-item 'hold N' overrides): merge/close/re-date the listed tasks with snapshot + tags; posts one result line. Its 'propose' mode (called by the grind cron) verifies candidates at source and auto-applies only provably safe cleanups.",
+   "stack_layer": "DECIDE",
+   "autonomy_tier": "Execute-on-approval",
+   "human_owner": "John Quinn",
+   "permission_envelope": "Supabase tasks PATCH (state/tags/description/due_date) limited to IDs in the approved plan or the provably-safe auto class; reads decisions.json; POST /api/decisions/ingest; one Discord post to #exomac-system. No email, no deletes (Cancelled only), snapshots before every write.",
+   "memory_boundary": "workspace (plan file mission-control/data/backlog-grind-plan.json, snapshots, own log)",
+   "escalation": "Decision card D-* (human-click gated)",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0; staleness > 2.5x cadence 600s → WARN)",
+   "telemetry": "logs/backlog-grind-apply.log",
+   "reusability_scope": "pattern shared with legacy_triage_decisions.py",
+   "risk_tier": "MEDIUM",
+   "envelope_source": "hand review of scripts/backlog_grind_apply.py, 2026-10-04",
+   "registered": "2026-10-04",
+   "decision_trace": "plan.decision_id + snapshot files"
   }
  ],
  "eval_wave_1": {

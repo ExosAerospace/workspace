@@ -1491,6 +1491,12 @@
    "warn_grace": 2.5,
    "fail_grace": 6,
    "owner": "John Quinn"
+  },
+  "com.exos.backlog-grind-apply": {
+   "cadence_s": 600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
   }
  },
  "_eval_wave_2": {

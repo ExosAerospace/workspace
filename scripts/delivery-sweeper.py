@@ -16,12 +16,14 @@ import os
 import sys
 import json
 import glob
+import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import deliver as D  # reuse spool dirs, try_send, logging
 
 MAX_ATTEMPTS = 20          # ~1h of coverage at a 3-min sweep w/ inline tries
 SENT_RETENTION_DAYS = 7    # prune sent audit copies older than this
+INLINE_GRACE_SECS = D.INLINE_ATTEMPTS * D.SEND_TIMEOUT + sum(D.INLINE_BACKOFF) + 30   # ~218s
 
 
 def _load(path):
@@ -51,6 +53,16 @@ def sweep():
     pend = sorted(glob.glob(os.path.join(D.PENDING, "*.json")))
     redelivered = failed = 0
     for path in pend:
+        # Race guard (2026-10-04 duplicate Cracks Digest; 36 "could not move to sent" dupes in the log):
+        # a pending file this young may still be mid inline-send in deliver() (worst case
+        # INLINE_ATTEMPTS x SEND_TIMEOUT + backoff ≈ 190s). Leave it to the live sender; the next
+        # sweep picks it up if the inline attempts really failed. deliver() rewrites the file after
+        # each failed try, so mtime tracks the live sender's last touch.
+        try:
+            if time.time() - os.path.getmtime(path) < INLINE_GRACE_SECS:
+                continue
+        except OSError:
+            continue
         entry = _load(path)
         if entry is None:
             # unreadable/corrupt — move aside, don't loop on it
