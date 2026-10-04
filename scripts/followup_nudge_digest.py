@@ -58,8 +58,34 @@ def main():
         st = {}
 
     due = []
+    # A send to several people is ONE thread: if any recipient of that same send replied afterwards, or
+    # anyone at the same org domain replied after it, the thread is answered (10/4: Graham + Raquel were
+    # flagged "no reply" though Michael Sheldon had answered the same Ainigma email).
+    def norm_subj(x):
+        x = dec(x or "").strip().lower()
+        while x[:3] in ("re:", "fw:") or x[:4] == "fwd:":
+            x = x.split(":", 1)[1].strip()
+        return x
+    BROAD = ("gmail.com", "yahoo.com", "outlook.com", "hotmail.com", "icloud.com", "aol.com", "proton.me",
+             "protonmail.com", "pm.me", "me.com", "live.com", "msn.com", "sbcglobal.net", "comcast.net")
+    def domain(a):
+        d = a.rsplit("@", 1)[-1].lower()
+        # big shared domains (free mail, .mil/.gov/.edu) are not one org — never merge on them
+        return None if d in BROAD or d.endswith((".mil", ".gov", ".edu")) else d
+    answered_sends, org_reply = set(), {}
+    for a, c in contacts.items():
+        if c.get("replied") and c.get("last_reply"):
+            answered_sends.add((c.get("last_sent"), norm_subj(c.get("subj"))))
+            d = domain(a)
+            if d and c["last_reply"] > org_reply.get(d, ""):
+                org_reply[d] = c["last_reply"]
+
     for a, c in contacts.items():
         if c.get("replied") or c.get("cleared") or not c.get("last_sent"):
+            continue
+        if (c["last_sent"], norm_subj(c.get("subj"))) in answered_sends:
+            continue
+        if domain(a) and org_reply.get(domain(a), "") > c["last_sent"]:
             continue
         age = age_days(c["last_sent"], now)
         if age < MIN_DAYS or age > MAX_DAYS:
