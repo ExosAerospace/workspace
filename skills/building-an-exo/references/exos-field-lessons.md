@@ -6,7 +6,7 @@ Real implementation failures and anti-patterns from Exos Aerospace's ExO 3.0 bui
 
 ## L-001 · Registry + liveness eval ≠ Trusted Eval
 
-**What happened:** 155 of 238 registered agents (65%) have only liveness/exit-code evals. An agent that exits 0 but produces wrong output — duplicate Discord posts, missed deliveries, stale responses — scores PASS on every liveness check. The decisions-discord-feed triple-post (F-003) and the capstone answerer false self-post (F-007) are direct evidence.
+**What happened:** Before the 2026-10-04 backfill, 155 of 238 agents in config/agent-evals.json (65%) had only liveness/exit-code evals, and 0 of 136 side-effecting registry agents had an output eval (after backfill: 69/136, 50.7%). An agent that exits 0 but produces wrong output — duplicate Discord posts, missed deliveries, stale responses — scores PASS on every liveness check. The decisions-discord-feed triple-post (F-003) and the capstone answerer false self-post (F-007) are direct evidence.
 
 **Anti-pattern:** "We registered the agent and gave it a cadence check — that's the eval."
 

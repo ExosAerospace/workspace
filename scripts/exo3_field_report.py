@@ -40,7 +40,7 @@ MC = "http://127.0.0.1:8080"
 DECISIONS_API = MC + "/api/decisions/ingest"
 DRY = "--dry-run" in sys.argv
 
-WEEK = datetime.datetime.now().strftime("%Y-W%W")
+WEEK = datetime.datetime.now().strftime("%G-W%V")  # ISO week (was %W → off by one)
 TODAY = datetime.date.today().isoformat()
 REPORT_DOCX = os.path.join(REPORT_DIR, f"exo3-field-report-{WEEK}.docx")
 
@@ -118,21 +118,17 @@ def sync_statuses_from_ledger(failures):
 
 def get_fleet_stats():
     """Derive fleet stats from agent-registry.json and improvement-ledger."""
-    reg = load_json(os.path.join(WS, "mission-control", "data", "agent-registry.json"), {})
-    agents = reg.get("agents", [])
-    total = len(agents)
-    liveness_only = sum(
-        1 for a in agents
-        if a.get("eval_suite") and "liveness" in str(a.get("eval_suite", "")).lower()
-        and "output" not in str(a.get("eval_suite", "")).lower()
-        and "dup_send" not in str(a.get("eval_suite", "")).lower()
-    )
-    output_evals = total - liveness_only
+    # Single source of truth: agent_eval.eval_coverage() (side-effecting agents only), so the
+    # report never disagrees with the gate/RSI numbers.
+    sys.path.insert(0, os.path.join(WS, "scripts"))
+    import agent_eval
+    c = agent_eval.eval_coverage()
     return {
-        "total": total,
-        "liveness_only": liveness_only,
-        "output_evals": output_evals,
-        "eval_pct": round(100 * output_evals / max(total, 1), 1),
+        "total": c["total_agents"],
+        "side_effecting": c["side_effecting"],
+        "liveness_only": c["liveness_only"],
+        "output_evals": c["output_eval"],
+        "eval_pct": c["coverage_pct"],
     }
 
 
@@ -191,8 +187,9 @@ def build_docx(failures, fleet_stats, counts):
     hdr[1].text = "Value"
     rows = [
         ("Agents registered", str(fleet_stats["total"])),
-        ("Agents with output eval", f"{fleet_stats['output_evals']} ({fleet_stats['eval_pct']}%)"),
-        ("Agents liveness-only", str(fleet_stats["liveness_only"])),
+        ("Side-effecting agents (send/write externally)", str(fleet_stats["side_effecting"])),
+        ("…with an output eval", f"{fleet_stats['output_evals']} ({fleet_stats['eval_pct']}%)"),
+        ("…liveness-only (need bespoke output eval)", str(fleet_stats["liveness_only"])),
         ("Failures catalogued (all time)", str(len(failures))),
         ("Fixed + verified", str(counts.get("fixed+verified", 0))),
         ("Fixed, pending 7d verdict", str(counts.get("fixed-pending-verdict", 0))),
@@ -246,7 +243,8 @@ def build_docx(failures, fleet_stats, counts):
     feedback = [
         (
             "AGENT_SPEC_SCHEMA: require output_eval for side-effecting agents",
-            "155/238 (65%) of Exos agents have liveness-only evals. The AGENT_SPEC_SCHEMA "
+            f"On 2026-10-04 0 of {fleet_stats['side_effecting']} side-effecting Exos agents had an output eval; "
+            f"after backfill {fleet_stats['output_evals']} ({fleet_stats['eval_pct']}%) do. The AGENT_SPEC_SCHEMA "
             "should add output_eval as a required field for any agent with risk_tier >= MED "
             "or a non-null external send in permission_envelope. Gate registration should "
             "block if absent. Source: F-002, F-003.",
