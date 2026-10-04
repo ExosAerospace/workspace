@@ -1,0 +1,93 @@
+{
+ "entries": [
+  {
+   "id": "IMP-001",
+   "agent": "com.exos.payload-sales-engine",
+   "govlog": "payload-sales",
+   "cron": null,
+   "change": "plist pin /usr/bin/python3 (10/4)",
+   "hypothesis": "Homebrew python lacked python-docx; pinning system python ends the green-but-errored docx failures",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": "No module named 'docx'",
+   "at": "2026-10-04T09:05:00-05:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 6,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 129.0,
+    "sig_errors": 3
+   },
+   "confound": "docx failure surfaced via completion-watchdog worker scan, not a govlog 'error' event — verdict also checks watchdog for the signature"
+  },
+  {
+   "id": "IMP-002",
+   "agent": "com.exos.mc-email-command",
+   "govlog": "email-command",
+   "cron": null,
+   "change": "994012e",
+   "hypothesis": "sys.path before shim import ends 'No module named durable_send_shim' quiet errors",
+   "metrics": [
+    "reliability",
+    "turnaround"
+   ],
+   "error_signature": "durable_send_shim",
+   "at": "2026-10-04T12:00:00-05:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 311,
+    "reliability": 0.794,
+    "quiet_errors": 64,
+    "turnaround_s": 1.2,
+    "sig_errors": 2
+   },
+   "confound": "baseline includes 62 IMAP login errors from the 9/28-29 Mac Studio migration (Bridge not signed in) — judge this fix on the durable_send_shim signature only (2 in baseline)"
+  },
+  {
+   "id": "IMP-003",
+   "agent": "com.exos.delivery-sweeper",
+   "govlog": null,
+   "cron": null,
+   "change": "784c961 sweeper inline-grace",
+   "hypothesis": "Sweeper skipping spool files <218s old ends duplicate Discord posts (race with live send)",
+   "metrics": [
+    "dup_sends",
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-04T09:10:00-05:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 1098,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 0.3,
+    "dup_sends": 10
+   }
+  },
+  {
+   "id": "IMP-004",
+   "agent": "cron:backlog-grind",
+   "govlog": null,
+   "cron": "51e09612-a217-43e0-a7a9-a3243c59a5a0",
+   "change": "784c961",
+   "hypothesis": "Guarded propose + Decision card keeps grind reliable while cutting Jon review load; watch tokens/turnaround don't rise",
+   "metrics": [
+    "reliability",
+    "cost",
+    "turnaround"
+   ],
+   "error_signature": null,
+   "at": "2026-10-04T09:10:00-05:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 7,
+    "reliability": 1.0,
+    "turnaround_s": 126.5,
+    "cost_tokens": 79227
+   }
+  }
+ ]
+}

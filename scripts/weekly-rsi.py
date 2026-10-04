@@ -259,6 +259,13 @@ def main():
     except Exception as _e:
         L.append(f"\n## 15. Reply-first task loop\n- (module error: {_e})")
 
+    # §16 Improvement ledger (Jon 2026-10-04): every fix is a hypothesis, verified against telemetry
+    try:
+        import improvement_ledger
+        L.extend(improvement_ledger.report_section())
+    except Exception as _e:
+        L.append(f"\n## 16. Improvement ledger\n- (module error: {_e})")
+
     report = "\n".join(L)
 
     os.makedirs(REPORTS, exist_ok=True)

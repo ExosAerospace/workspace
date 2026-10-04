@@ -155,6 +155,22 @@ def classify(added, files, newf, labels):
                     "msg": "DECIDE/GOVERN mechanism changed without a decision-trace / eval / fleet_log reference.",
                     "fix": "Consider emitting a decision_trace, a corr-ID via fleet_log, or an eval threshold (Four Pillars).",
                 })
+    # R4 (WARN): an agent's script changed but no improvement-ledger entry was staged (exo3 VALIDATE
+    # step, Jon 2026-10-04 — every fix is a hypothesis measured before/after against telemetry).
+    try:
+        reg = json.load(open(os.path.join(ROOT, "mission-control", "data", "agent-registry.json"))).get("agents", [])
+        agent_scripts = {os.path.basename(str(a.get("script") or "").split()[0]) for a in reg if a.get("script")}
+    except Exception:
+        agent_scripts = set()
+    if "mission-control/data/improvement-ledger.json" not in files:
+        for f in files:
+            if f.startswith("scripts/") and f.endswith(".py") and f not in newf and os.path.basename(f) in agent_scripts:
+                findings.append({
+                    "level": "WARN", "rule": "R4-improvement-ledger", "file": f,
+                    "msg": "Agent script changed without an improvement-ledger entry (no before/after measurement).",
+                    "fix": "If this is a fix/tuning: python3 scripts/improvement_ledger.py add --agent <label> --change <commit> "
+                           "--hypothesis '...' --metrics reliability,turnaround[,cost] — the weekly RSI §16 verdicts it in 7 days.",
+                })
     return findings
 
 
