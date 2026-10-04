@@ -80,6 +80,34 @@ def _log(msg):
         pass  # logging must never break delivery
 
 
+def _recent_sent(target, text_hash, window_s=600):
+    """Return True if an identical (target, sha256-16-hex-prefix of text) pair
+    already landed in outbox/sent/ within window_s seconds. Never raises."""
+    try:
+        _ensure_dirs()
+        cutoff = time.time() - window_s
+        for fname in os.listdir(SENT):
+            if not fname.endswith(".json"):
+                continue
+            try:
+                e = json.load(open(os.path.join(SENT, fname)))
+                raw_ts = e.get("sent") or e.get("last_attempt") or e.get("created")
+                if not raw_ts:
+                    continue
+                ts = datetime.fromisoformat(raw_ts).timestamp()
+                if ts < cutoff:
+                    continue
+                stored = hashlib.sha256((e.get("text") or "").encode()).hexdigest()[:16]
+                if e.get("target") == target and stored == text_hash:
+                    return True
+            except Exception:
+                continue
+    except Exception:
+        pass
+    return False
+
+
+
 def _spool_id(text, target):
     ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%f")
     h = hashlib.sha1(f"{target}|{text}".encode("utf-8")).hexdigest()[:8]
@@ -144,7 +172,7 @@ def _mark_sent(pending_path, entry):
         _log(f"WARN could not move to sent: {e}")
 
 
-def deliver(text, target=DEFAULT_TARGET, channel=DEFAULT_CHANNEL, source="unknown"):
+def deliver(text, target=DEFAULT_TARGET, channel=DEFAULT_CHANNEL, source="unknown", allow_repeat=False):
     """
     Durable delivery. Spools first, then tries to send with inline retries.
     Returns True if delivered this call, False if left in the spool for the
@@ -153,6 +181,18 @@ def deliver(text, target=DEFAULT_TARGET, channel=DEFAULT_CHANNEL, source="unknow
     if not text or not str(text).strip():
         return True  # nothing to send
     text = str(text)
+    if not allow_repeat:
+        _h = hashlib.sha256(text.encode()).hexdigest()[:16]
+        if _recent_sent(target, _h, window_s=600):
+            _log(f"SUPPRESSED-DUP [{source}] target={target} hash={_h}")
+            try:
+                import fleet_log
+                fleet_log.event(source, "orchestrate", "deliver", outcome="suppressed-dup",
+                                detail={"target": target, "hash": _h})
+            except Exception:
+                pass
+            return True
+
     pending_path = spool(text, target=target, channel=channel, source=source)
     try:
         with open(pending_path) as f:

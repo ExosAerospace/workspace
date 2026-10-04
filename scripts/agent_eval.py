@@ -15,7 +15,7 @@ Emits one eval event per agent to fleet_log; on a NEW FAIL, escalates one dedupe
 alert to the system channel via deliver. Runs hourly via launchd.
 Dry-run: AGENT_EVAL_DRYRUN=1 (no escalation, no state write).
 """
-import json, os, sys, subprocess, plistlib, time, datetime, hashlib, shutil, tempfile
+import json, os, re, sys, subprocess, plistlib, time, datetime, hashlib, shutil, tempfile
 from pathlib import Path
 
 WS = Path("/Users/exomac/.openclaw/workspace")
@@ -108,6 +108,33 @@ def registry_labels(complete_only=False):
     if isinstance(agents, dict): agents = list(agents.values())
     return {a.get("label") for a in agents if a.get("label")
             and not (complete_only and any(_blank(a.get(f)) for f in SPEC_FIELDS))}
+
+_SIDE_EFFECT_PE_RE = re.compile(
+    r"deliver|discord post|smtp|msmtp|sends email|supabase.*write|quickbooks|qb write|openclaw message",
+    re.IGNORECASE
+)
+
+def eval_coverage(registry_path=None):
+    """Return dict: {total_agents, side_effecting, output_eval, liveness_only, coverage_pct}."""
+    try:
+        reg = json.load(open(registry_path or REGISTRY))
+        agents = reg.get("agents", [])
+        if isinstance(agents, dict): agents = list(agents.values())
+        total = len([a for a in agents if a.get("label")])
+        side = [a for a in agents if a.get("label") and
+                _SIDE_EFFECT_PE_RE.search(str(a.get("permission_envelope") or ""))]
+        output = [a for a in side if str(a.get("eval_type") or "").strip().lower() == "output"]
+        liveness = [a for a in side if a not in output]
+        pct = round(100.0 * len(output) / len(side), 1) if side else 100.0
+        return {
+            "total_agents": total,
+            "side_effecting": len(side),
+            "output_eval": len(output),
+            "liveness_only": len(liveness),
+            "coverage_pct": pct,
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
 def live_labels():
     """Every com.exos.* agent that can run: plists in ~/Library/LaunchAgents plus
@@ -448,7 +475,14 @@ def selftest():
     assert cron_telemetry.score_cron(dict(daily, enabled=0), th, now)[0] == "SKIP"
     assert isinstance(cron_telemetry.registry_crons(REGISTRY), dict)
     _dup_send_selftest()
-    print("agent_eval selftest: 25/25 pass")
+    # eval_coverage: reads live registry; just verify keys and types are correct
+    cov = eval_coverage()
+    assert "error" not in cov, f"eval_coverage returned error: {cov}"
+    assert isinstance(cov["coverage_pct"], float)
+    assert cov["side_effecting"] >= cov["output_eval"]
+    assert 0.0 <= cov["coverage_pct"] <= 100.0
+    print(f"eval_coverage: {cov['output_eval']}/{cov['side_effecting']} = {cov['coverage_pct']}%")
+    print("agent_eval selftest: 27/27 pass")
     import cron_hygiene  # r2 cron-hygiene guards (secrets in prompts, model allowlist, transient crons)
     cron_hygiene.selftest()
     import mail_bridge_guard  # r2 launchd-residuals: Bridge password drift + IMAP auth storm
@@ -555,6 +589,17 @@ def main():
     log(f"eval: {npass} OK / {nwarn} WARN / {nfail} FAIL across {len(results)} agents")
     for short, s, why, owner in results:
         if s != "OK": log(f"  {s}: {short} — {why} (owner {owner})")
+
+    cov = eval_coverage()
+    if "error" not in cov:
+        log(f"eval-coverage: {cov['output_eval']}/{cov['side_effecting']} side-effecting agents "
+            f"have output evals ({cov['coverage_pct']}%); {cov['liveness_only']} still liveness-only")
+        try:
+            import fleet_log
+            fleet_log.event("agent_eval", "govern", "eval_coverage", outcome="info",
+                            owner="John Quinn", detail=cov)
+        except Exception:
+            pass
 
     new_drift = check_registry_drift(state)
     if new_drift and not DRY:

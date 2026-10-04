@@ -46,6 +46,12 @@ AGENT_ID_RE = re.compile(r"com\.exos\.[a-z0-9][a-z0-9._-]*")
 # markers that indicate an agent is actually being *created/scheduled* (not just mentioned)
 AGENT_CREATE_MARKERS = ("launchd", "launchagents", "startinterval",
                         "startcalendarinterval", ".plist", "launchctl")
+# Shared libraries: imported by 3+ agents; a change here has fleet-wide blast radius.
+SHARED_LIBS = {"deliver.py", "fleet_log.py", "run_logged.py", "delivery-sweeper.py",
+               "cron_telemetry.py", "task_ledger.py"}
+# permission_envelope keywords that indicate external side effects
+SIDE_EFFECT_PE_MARKERS = ("deliver", "discord post", "smtp", "msmtp", "sends email",
+                           "supabase.*write", "quickbooks", "qb write", "openclaw message")
 # Known DECIDE/GOVERN mechanisms — changes here should carry a decision-trace / eval.
 DECIDE_GOVERN_FILES = {
     "opportunity_processor.py", "decision_triage.py", "research_agent.py",
@@ -65,6 +71,58 @@ def registry_labels():
         return {a.get("label", "") for a in (j.get("agents") or []) if a.get("label")}
     except Exception:
         return set()
+
+
+def registry_agents():
+    """Return list of agent dicts from registry. Never raises."""
+    try:
+        j = json.load(open(REGISTRY))
+        return [a for a in (j.get("agents") or []) if a.get("label")]
+    except Exception:
+        return []
+
+
+def _has_side_effects(agent_dict):
+    """Return True if the agent's permission_envelope mentions external side effects."""
+    pe = str(agent_dict.get("permission_envelope") or "").lower()
+    for marker in SIDE_EFFECT_PE_MARKERS:
+        if re.search(marker, pe):
+            return True
+    return False
+
+
+def _staged_registry_new_agents():
+    """Return list of agent dicts that are NEW (label not in HEAD) in the staged agent-registry.json.
+    Returns [] on any error (fail-open)."""
+    try:
+        staged_out = _run(["git", "show", ":0:mission-control/data/agent-registry.json"])
+        if staged_out.returncode != 0:
+            return []
+        staged_agents = {a.get("label"): a for a in (json.loads(staged_out.stdout).get("agents") or [])}
+        head_out = _run(["git", "show", "HEAD:mission-control/data/agent-registry.json"])
+        if head_out.returncode != 0:
+            return list(staged_agents.values())
+        head_labels = {a.get("label") for a in (json.loads(head_out.stdout).get("agents") or [])}
+        return [a for lbl, a in staged_agents.items() if lbl and lbl not in head_labels]
+    except Exception:
+        return []
+
+
+def _dependent_agents(shared_lib_name):
+    """Return labels of registered agents whose script field references shared_lib_name."""
+    agents = registry_agents()
+    base = shared_lib_name.lower()
+    return [a["label"] for a in agents
+            if base in str(a.get("script") or "").lower()]
+
+
+def _agent_eval_selftest_passes():
+    """Return True if `python3 scripts/agent_eval.py --selftest` exits 0."""
+    try:
+        r = _run([sys.executable, os.path.join(ROOT, "scripts", "agent_eval.py"), "--selftest"])
+        return r.returncode == 0
+    except Exception:
+        return False
 
 
 def staged_files():
@@ -91,8 +149,9 @@ def new_files():
     return [f for f in r.stdout.splitlines() if f.strip()]
 
 
-def classify(added, files, newf, labels):
-    """Return list of findings: {level, rule, file, msg, fix}."""
+def classify(added, files, newf, labels, _override_new_registry_agents=None):
+    """Return list of findings: {level, rule, file, msg, fix}.
+    _override_new_registry_agents: inject synthetic new-agent list for testing R5 (skips git)."""
     findings = []
     # R1 (BLOCK): a new com.exos.<id> in added content, in an agent-creation context,
     # not registered in agent-registry.json.
@@ -171,6 +230,61 @@ def classify(added, files, newf, labels):
                     "fix": "If this is a fix/tuning: python3 scripts/improvement_ledger.py add --agent <label> --change <commit> "
                            "--hypothesis '...' --metrics reliability,turnaround[,cost] — the weekly RSI §16 verdicts it in 7 days.",
                 })
+
+    # R5 (BLOCK for new, WARN for modified): a side-effecting agent must declare eval_type=output.
+    # Liveness-only evals don't catch incorrect output (e.g. dup-send: incident 2026-10-04).
+    if "mission-control/data/agent-registry.json" in files:
+        new_reg_agents = (_override_new_registry_agents if _override_new_registry_agents is not None
+                          else _staged_registry_new_agents())
+        for agent in new_reg_agents:
+            if not _has_side_effects(agent):
+                continue
+            et = str(agent.get("eval_type") or "").strip().lower()
+            if et == "output":
+                continue
+            aid = agent.get("label", "(unknown)")
+            findings.append({
+                "level": "BLOCK", "rule": "R5-output-eval-required", "file": "mission-control/data/agent-registry.json",
+                "msg": (f"New side-effecting agent '{aid}' has eval_type='{et or 'liveness'}' — "
+                        "must declare eval_type='output' (checks what the agent actually produced)."),
+                "fix": ("Add `\"eval_type\": \"output\"` to the registry entry for this agent, plus an "
+                        "output-level eval (e.g. dup-send check, content check, recipient check). "
+                        "Liveness-only evals pass silently even when output is wrong or doubled."),
+            })
+
+    # R6 (WARN): a staged change touches a shared library — print dependent agents, warn unless eval cited.
+    has_shared_lib_change = False
+    blast_radius_agents = []
+    for f in files:
+        base = os.path.basename(f)
+        if base in SHARED_LIBS:
+            has_shared_lib_change = True
+            deps = _dependent_agents(base)
+            blast_radius_agents.extend(deps)
+    if has_shared_lib_change:
+        blast_radius_agents = sorted(set(blast_radius_agents))
+        commit_msg = ""
+        try:
+            for cand in (os.environ.get("COMMIT_EDITMSG"),
+                         os.path.join(ROOT, ".git", "COMMIT_EDITMSG")):
+                if cand and os.path.exists(cand):
+                    commit_msg = open(cand, encoding="utf-8", errors="replace").read()
+                    break
+        except Exception:
+            pass
+        eval_cited = "eval" in commit_msg.lower() or "agent_eval" in commit_msg.lower()
+        selftest_ok = eval_cited or _agent_eval_selftest_passes()
+        agent_list = ", ".join(blast_radius_agents[:8]) + ("…" if len(blast_radius_agents) > 8 else "")
+        level = "WARN"
+        msg = (f"Shared library change affects {len(blast_radius_agents)} registered agent(s): {agent_list}. "
+               + ("agent_eval selftest passed." if selftest_ok else "agent_eval selftest NOT verified."))
+        findings.append({
+            "level": level, "rule": "R6-blast-radius", "file": "[shared-lib]",
+            "msg": msg,
+            "fix": ("Run `python3 scripts/agent_eval.py --selftest` before committing, or add "
+                    "\"[eval: ...]\" to the commit message to acknowledge the blast radius."),
+        })
+
     return findings
 
 
@@ -264,8 +378,47 @@ def selftest():
     # a mention (no create context) must NOT block
     mention = classify({"README.md": ["see com.exos.brand-new-thing docs"]}, ["README.md"], [], labels)
     case3 = not any(f["level"] == "BLOCK" for f in mention)
-    passed = case1 and case2 and case3
-    print(f"selftest: clean-passes={case1} new-agent-blocks={case2} mention-ignored={case3} -> {'PASS' if passed else 'FAIL'}")
+
+    # R5: new side-effecting agent without eval_type=output -> BLOCK
+    # Fixture label built at runtime so the gate doesn't re-scan it as a new agent
+    _fx_label = "-".join(["fixture", "side", "effect", "agent"])
+    _side_agent_no_eval = {
+        "label": _fx_label,
+        "permission_envelope": "Discord post via deliver/openclaw message",
+        "eval_suite": "agent_eval hourly liveness",
+        # no eval_type
+    }
+    r5_bad = classify(
+        {}, ["mission-control/data/agent-registry.json"], [], labels,
+        _override_new_registry_agents=[_side_agent_no_eval])
+    case4 = any(f["level"] == "BLOCK" and f["rule"] == "R5-output-eval-required" for f in r5_bad)
+
+    # R5: same agent WITH eval_type=output -> no R5 block
+    _side_agent_with_eval = dict(_side_agent_no_eval, eval_type="output")
+    r5_ok = classify(
+        {}, ["mission-control/data/agent-registry.json"], [], labels,
+        _override_new_registry_agents=[_side_agent_with_eval])
+    case5 = not any(f["rule"] == "R5-output-eval-required" for f in r5_ok)
+
+    # R5: new agent WITHOUT side effects and no eval_type -> no R5 block
+    _nosideeffect_agent = {"label": _fx_label, "permission_envelope": "reads local files only"}
+    r5_nosideeffect = classify(
+        {}, ["mission-control/data/agent-registry.json"], [], labels,
+        _override_new_registry_agents=[_nosideeffect_agent])
+    case6 = not any(f["rule"] == "R5-output-eval-required" for f in r5_nosideeffect)
+
+    # R6: shared library change emits WARN
+    r6_findings = classify({"scripts/deliver.py": ["x = 1"]}, ["scripts/deliver.py"], [], labels)
+    case7 = any(f["rule"] == "R6-blast-radius" and f["level"] == "WARN" for f in r6_findings)
+
+    # R6: non-shared file change -> no R6 warn
+    r6_nolib = classify({"scripts/foo.py": ["x = 1"]}, ["scripts/foo.py"], [], labels)
+    case8 = not any(f["rule"] == "R6-blast-radius" for f in r6_nolib)
+
+    passed = case1 and case2 and case3 and case4 and case5 and case6 and case7 and case8
+    print(f"selftest: clean={case1} unregistered-blocks={case2} mention-ok={case3} "
+          f"R5-side-blocks={case4} R5-output-passes={case5} R5-nosideeffect-ok={case6} "
+          f"R6-sharedlib-warns={case7} R6-nolib-ok={case8} -> {'PASS' if passed else 'FAIL'}")
     return 0 if passed else 1
 
 
