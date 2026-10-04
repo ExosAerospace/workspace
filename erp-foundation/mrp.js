@@ -137,6 +137,21 @@ function sync(erp) {
   for (const p of Object.values(parts)) { const r = erp.mrpUpsert('part', p); stats.parts++; if (r.changed) stats.parts_changed++; }
   for (const b of bomLines) { const r = erp.mrpUpsert('bom_line', b); stats.bom_lines++; if (r.changed) stats.bom_changed++; }
 
+  // Manual on-hand edits from the MRP page (mrp-onhand-overrides.json). An override wins until the
+  // physical sources (inventory.json / shop inventory / BOM edits) report a DIFFERENT count than they
+  // did when the override was made — i.e. someone recounted — then the fresh count wins and the
+  // override retires. src_qty is captured on the first sync after the edit.
+  const OVR = path.join(DATA, 'mrp-onhand-overrides.json');
+  const ovr = readJSON('mrp-onhand-overrides.json', {});
+  let ovrDirty = false;
+  for (const [pid, o] of Object.entries(ovr)) {
+    const src = r3(onHand[pid] || 0);
+    if (o.src_qty === null || o.src_qty === undefined) { o.src_qty = src; ovrDirty = true; }
+    if (r3(o.src_qty) === src) onHand[pid] = Number(o.qty) || 0;
+    else { delete ovr[pid]; ovrDirty = true; stats.overrides_retired = (stats.overrides_retired || 0) + 1; }
+  }
+  if (ovrDirty) { fs.writeFileSync(OVR + '.tmp', JSON.stringify(ovr, null, 1)); fs.renameSync(OVR + '.tmp', OVR); }
+
   // Physical counts → ledger, only when the count differs from the last one posted.
   const last = erp.lastCountByPart();
   const at = new Date().toISOString();

@@ -34,6 +34,7 @@
   .msg{padding:9px;border-radius:8px;margin:8px 0;display:none}
   .msg.ok{display:block;background:rgba(63,181,106,.15);color:var(--green)} .msg.err{display:block;background:rgba(224,82,77,.15);color:var(--red)}
   details summary{cursor:pointer}
+  .oh{cursor:pointer;border-bottom:1px dashed var(--text2)} .oh:hover{color:var(--orange)}
 </style></head>
 <body>
 <header>
@@ -83,7 +84,7 @@ async function load() {
   $('demand').innerHTML = D.run
     ? `Demand: ${builds || 'no missions with a vehicle'} &nbsp;·&nbsp; Last run ${esc(new Date(D.run.run_at).toLocaleString())} by ${esc(D.run.actor)} &nbsp;·&nbsp; ${D.part_count} parts in the ERP part master
        ${D.can_act ? ' &nbsp;<button class="btn sm" id="rerun" onclick="rerun()">↻ Re-run MRP</button>' : ''}
-       <div style="margin-top:6px">On hand = the latest physical count (BOM ledger + shop inventory of record) plus ERP receipts since. Parts shared by BLK3 and HVRR are netted once against the common stock. Parts already built into S0 are not counted. If it's been installed, record it on the inventory page, or the planner will treat it as short.</div>`
+       <div style="margin-top:6px">On hand = the latest physical count (BOM ledger + shop inventory of record) plus ERP receipts since. Parts shared by BLK3 and HVRR are netted once against the common stock. Parts already built into S0 are not counted. If it's been installed, record it on the inventory page, or the planner will treat it as short.${D.can_act ? ' Click any <b>On hand</b> number (✎) to correct it; it is saved as a physical count and survives the nightly sync until the part is recounted.' : ''}</div>`
     : 'No MRP run yet.' + (D.can_act ? ' <button class="btn sm" onclick="rerun()">Run MRP</button>' : '');
   $('kpis').innerHTML = [
     ['Parts planned', s.parts_planned], ['To buy', s.short_buy], ['Est. buy cost', money(s.est_buy_cost)], ['Shop-make', s.short_make],
@@ -112,9 +113,24 @@ function renderLines() {
   $('lcount').textContent = `${rows.length} of ${(D.lines||[]).length}`;
   $('lbody').innerHTML = rows.slice(0, 800).map(l => `<tr>
     <td>${esc(l.part_number)}</td><td>${esc(l.description)}${l.demand_ref && l.demand_ref.includes('verify') ? `<div class="small muted">${esc(l.demand_ref.split(' · ').slice(1).join(' · '))}</div>` : ''}</td><td class="small">${esc(l.assembly)}</td><td>${esc(l.vendor)}</td>
-    <td class="r">${l.action === 'quantify' ? '?' : esc(l.gross)}</td><td class="r">${esc(l.on_hand)}</td><td class="r">${esc(l.on_order)}</td>
+    <td class="r">${l.action === 'quantify' ? '?' : esc(l.gross)}</td><td class="r">${D.can_act ? `<span class="oh" title="Click to edit on hand" onclick="editOnHand('${esc(l.id)}')">${esc(l.on_hand)} ✎</span>` : esc(l.on_hand)}${l._edited ? '<div class="small" style="color:var(--green)">saved</div>' : ''}</td><td class="r">${esc(l.on_order)}</td>
     <td class="r"><b>${esc(l.net)}</b></td><td class="r">${l.unit_cost ? money(l.unit_cost) : '—'}</td><td class="r">${l.ext_cost ? money(l.ext_cost) : ''}</td>
     <td><span class="pill ${ACT[l.action][1]}" title="${l.action === 'verify' ? 'Paid in QuickBooks but no physical count — confirm whether it is on the shelf or built into S0. Not included in purchase requests.' : ''}">${ACT[l.action][0]}</span></td></tr>`).join('');
+}
+async function editOnHand(lineId) {
+  const l = (D.lines || []).find(x => x.id === lineId); if (!l) return;
+  const v = prompt(`On hand for ${l.part_number} — ${l.description}\nCurrent: ${l.on_hand}. Enter the counted quantity:`, l.on_hand);
+  if (v === null || v.trim() === '') return;
+  const qty = Number(v); if (!Number.isFinite(qty) || qty < 0) return show(false, 'Enter a number of 0 or more.');
+  if (qty === Number(l.on_hand)) return;
+  const reason = prompt('Why the change? e.g. "counted on shelf", "installed in S0" (kept in the audit trail)', '');
+  if (reason === null) return;
+  try {
+    const r = await api('/api/mrp/onhand', { line_id: l.id, part_id: l.part_id, qty, reason });
+    Object.assign(l, r.line, { _edited: true });
+    show(true, `On hand for ${l.part_number} set to ${qty}. It's recorded as a physical count in the ERP ledger. Re-run MRP to refresh the purchase requests.`);
+    renderLines();
+  } catch (e) { show(false, e.message); }
 }
 async function rerun() {
   const b = $('rerun'); if (b) { b.disabled = true; b.textContent = 'Running…'; }

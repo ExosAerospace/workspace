@@ -792,6 +792,17 @@ function openErp(file, opts = {}) {
       return run.id;
     },
     latestMrpRun() { return db.get('SELECT * FROM mrp_run ORDER BY run_at DESC LIMIT 1') || null; },
+    /** Manual on-hand edit from the MRP page: refresh one planned line in place (audited). */
+    mrpLineSetOnHand(lineId, f) {
+      const before = db.get('SELECT * FROM mrp_line WHERE id = ?', String(lineId));
+      if (!before) return null;
+      const after = { ...before, on_hand: f.on_hand, net: f.net, ext_cost: f.ext_cost, action: f.action };
+      writeAudited('mrp_line', String(lineId), 'update', before, after, () => {
+        db.run('UPDATE mrp_line SET on_hand=?, net=?, ext_cost=?, action=? WHERE id=?',
+          f.on_hand, f.net, f.ext_cost, f.action, String(lineId));
+      });
+      return after;
+    },
     listMrpLines(runId) {
       return db.all(`SELECT m.*, p.part_number, p.description FROM mrp_line m LEFT JOIN part p ON p.id = m.part_id
         WHERE m.run_id = ? ORDER BY (m.action = 'none'), m.ext_cost DESC`, String(runId));

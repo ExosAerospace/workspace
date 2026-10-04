@@ -110,6 +110,41 @@ async function handle(req, res, ctx) {
     } finally { erp.close(); }
   }
 
+  // Manual on-hand edit (Jon 10/3). Posts an audited physical count to the ERP ledger, records an override the
+  // nightly sync honours until the inventory sources report a recount, and refreshes this line's net in place.
+  // Purchase requests are NOT rewritten — re-run MRP to regenerate them.
+  if (fp === '/api/mrp/onhand' && req.method === 'POST') {
+    if (!canAct) return send(res, 403, { error: 'Only an admin or manager can edit on-hand quantities.' });
+    const body = await readBody(req);
+    const qty = Number(body.qty);
+    if (!body.part_id || !Number.isFinite(qty) || qty < 0 || qty > 1e6) return send(res, 400, { error: 'Enter an on-hand quantity of 0 or more.' });
+    const r3 = n => Math.round((Number(n) || 0) * 1000) / 1000;
+    const reason = String(body.reason || '').slice(0, 300);
+    const erp = openErp(me);
+    try {
+      const run = erp.latestMrpRun();
+      const line = run && erp.listMrpLines(run.id).find(l => l.id === body.line_id && l.part_id === body.part_id);
+      if (!line) return send(res, 404, { error: 'That line is not in the current MRP run. Reload the page.' });
+      const at = now();
+      erp.addInventoryTxn({ id: `cnt-mrp-${Date.now().toString(36)}`, part_id: line.part_id, kind: 'count', qty: r3(qty), location: null,
+        source: `mrp manual count by ${s.name || me}${reason ? ' — ' + reason : ''}`, ref: line.id, occurred_at: at });
+      const fs = require('fs');
+      const OVR = path.join(WS, 'mission-control', 'data', 'mrp-onhand-overrides.json');
+      let ovr = {}; try { ovr = JSON.parse(fs.readFileSync(OVR, 'utf8')); } catch {}
+      ovr[line.part_id] = { qty: r3(qty), src_qty: null, by: s.name || me, at, reason, previous: line.on_hand };
+      fs.writeFileSync(OVR + '.tmp', JSON.stringify(ovr, null, 1)); fs.renameSync(OVR + '.tmp', OVR);
+      let { action, net } = line;
+      if (action !== 'quantify') {
+        net = Math.max(0, r3(Number(line.gross) - qty - (Number(line.on_order) || 0)));
+        if (net === 0) action = 'none';
+        else if (action === 'none') action = line.make_buy === 'make' ? 'make' : 'buy';
+      }
+      const upd = erp.mrpLineSetOnHand(line.id, { on_hand: r3(qty), net, ext_cost: Math.round(net * (Number(line.unit_cost) || 0) * 100) / 100, action });
+      glog('mrp_onhand_edit', `${line.part_number || line.part_id}: ${line.on_hand} -> ${r3(qty)}${reason ? ' (' + reason + ')' : ''}`);
+      return send(res, 200, { ok: true, line: { ...line, ...upd } });
+    } finally { erp.close(); }
+  }
+
   return send(res, 404, { error: 'unknown mrp route' });
 }
 
