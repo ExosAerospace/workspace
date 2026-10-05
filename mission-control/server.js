@@ -761,7 +761,7 @@ const SUPABASE_KEY = (() => {
 const PROTON_PW = (() => { try { return (JSON.parse(require('fs').readFileSync(require('os').homedir() + '/.openclaw/secrets.json', 'utf8')).protonmail_bridge_smtp_password) || ''; } catch (e) { return ''; } })();  // secrets.json, not hardcoded (2026-09-10)
 
 // Teamwork config (moved server-side from teamwork.html)
-const TEAMWORK_TOKEN = 'twp_qI3nZlYw4JHzCa87ef63uoP88LRC';
+const TEAMWORK_TOKEN = ''; // Teamwork retired 2026-09-08; key removed from code 2026-10-05 (revoke it in Teamwork)
 const TEAMWORK_BASE = 'https://exosaerospace.teamwork.com';
 const TEAMWORK_PROJECTS = [1107372, 902146, 503346, 1106202, 930633, 993036];
 
@@ -4332,6 +4332,13 @@ const server = http.createServer((req, res) => {
         recent_activities: Array.isArray(activities.data) ? activities.data.slice(0, 20) : [],
       }));
     }).catch(e => { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); });
+    return;
+  }
+
+  // Teamwork retired (2026-09-08): sync/status endpoints disabled so retired tasks can't be re-imported (2026-10-05)
+  if (req.url === '/api/teamwork/sync' || req.url === '/api/teamwork/status') {
+    res.writeHead(410, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Teamwork is retired; Mission Control + ERP is the system of record.' }));
     return;
   }
 

@@ -1183,7 +1183,6 @@ function renderStats() {
   const done = tasks.filter(t => t.state === 'Done').length;
   const now = new Date();
   const overdue = tasks.filter(t => t.due_date && new Date(t.due_date) < now && t.state !== 'Done').length;
-  const twCount = tasks.filter(t => (t.source || '').startsWith('teamwork')).length;
 
   const ac = (f) => currentFilter === f ? ' active' : '';
   document.getElementById('statsBar').innerHTML = `
@@ -1192,7 +1191,6 @@ function renderStats() {
     <div class="stat-card${ac('in_progress')}" onclick="setFilter('in_progress')"><div class="stat-num" style="color:var(--progress-accent)">${progress}</div><div class="stat-label">In Progress</div></div>
     <div class="stat-card${ac('done')}" onclick="setFilter('done')"><div class="stat-num" style="color:var(--done-accent)">${done}</div><div class="stat-label">Done</div></div>
     <div class="stat-card${ac('overdue')}" onclick="setFilter('overdue')"><div class="stat-num" style="color:${overdue > 0 ? 'var(--blocked-accent)' : 'var(--text2)'}">${overdue}</div><div class="stat-label">Overdue</div></div>
-    ${twCount > 0 ? `<div class="stat-card${ac('teamwork')}" onclick="setFilter('teamwork')"><div class="stat-num" style="color:#06b6d4">${twCount}</div><div class="stat-label">From Teamwork</div></div>` : ''}
   `;
 }
 
@@ -1247,7 +1245,6 @@ function getFilteredTasks() {
   else if (currentFilter === 'overdue') filtered = filtered.filter(t =>
     t.due_date && new Date(t.due_date) < new Date() && t.state !== 'Done'
   );
-  else if (currentFilter === 'teamwork') filtered = filtered.filter(t => (t.source || '').startsWith('teamwork'));
   const cat = document.getElementById('categoryFilter').value;
   if (cat) filtered = filtered.filter(t => t.category === cat);
   const asgEl = document.getElementById('assigneeFilter');
@@ -1509,7 +1506,6 @@ function buildCard(task) {
 
   // Source badge
   let srcHtml = '';
-  if ((task.source || '').startsWith('teamwork')) srcHtml = '<span class="task-source">TW</span>';
 
   // Move buttons
   let moveBtns = '';
