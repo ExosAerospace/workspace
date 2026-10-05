@@ -14,7 +14,7 @@
   a.home{color:var(--text2);font-size:13px;text-decoration:none} a{color:var(--accent)}
   .wrap{max-width:1180px;margin:0 auto;padding:22px 24px 60px}
   .cards{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}
-  .kpi{flex:1;min-width:170px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:4px solid var(--accent)}
+  .kpi{flex:1;min-width:140px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:4px solid var(--accent)}
   .kpi.green{border-left-color:var(--green)} .kpi.gold{border-left-color:var(--gold)} .kpi.cyan{border-left-color:var(--cyan)} .kpi.purple{border-left-color:var(--purple)}
   .kpi .num{font-size:26px;font-weight:700} .kpi .lbl{color:var(--text2);font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
   .kpi .note{color:var(--text2);font-size:11.5px;margin-top:4px}
@@ -55,7 +55,7 @@
     <select id="st"><option value="">All stages</option><option value="active">Active / meeting</option><option value="outreach">Outreach sent</option><option value="ready">Ready / draft</option><option value="early">Researching / new</option></select>
     <span class="muted" id="count"></span>
   </div>
-  <table><thead><tr><th>Prospect</th><th>Stage</th><th>Segment</th><th>Next action</th><th>Priority</th></tr></thead><tbody id="rows"></tbody></table>
+  <table><thead><tr><th>Prospect</th><th>Stage</th><th>Segment</th><th>Est. value</th><th>Next action</th><th>Priority</th></tr></thead><tbody id="rows"></tbody></table>
 </div>
 <script>
 const BAY_KG = 135;
@@ -71,6 +71,24 @@ function bucket(s) {
 }
 const LABEL = {active: 'Active', outreach: 'Outreach sent', ready: 'Ready / draft', early: 'Researching'};
 const field = (desc, k) => { const m = String(desc || '').match(new RegExp('\\*\\*' + k + ':\\*\\*\\s*([^\\n]+)')); return m ? m[1].trim() : ''; };
+// Estimated deal size per prospect (Jon 10/5: show pipeline value like APAC).
+// Every PAY- row carries the full-bay LIST price, so summing it is meaningless.
+// Instead estimate the likely slot from the published rate card (pricing/rate-card.json)
+// by segment. A real quoted value on the row (anything other than the full-bay
+// default) overrides the estimate.
+const TIERS = [
+  [/tribal|education|k-12|school|student/i, '1U', 7500],
+  [/gov|defense|dod|nasa|navy|army|air force|afrl|missile|hypersonic|clps|lunar|pharma|station|otv|broker|aggregat|\bcro\b|integrator|prime/i, 'Quarter bay', 255000],
+  [/photonics|sensor|commercial|manufactur|startup|biotech/i, '6U', 45000],
+];
+function estimate(x) {
+  const v = String(x.value || '');
+  if (!/full-bay list/i.test(v)) { const n = Number(v.replace(/[^0-9.]/g, '')); if (n > 0) return {usd: n, tier: 'Quoted'}; }
+  const s = `${x.seg} ${x.title}`;
+  for (const [re, tier, usd] of TIERS) if (re.test(s)) return {usd, tier};
+  return {usd: 22500, tier: '3U'};
+}
+const WEIGHT = {active: 0.5, outreach: 0.2, ready: 0.1, early: 0.05};
 let P = [];
 async function load() {
   const ts = '?t=' + Date.now();
@@ -80,19 +98,24 @@ async function load() {
   ]);
   const opps = Array.isArray(o) ? o : (o.opportunities || []);
   const orders = Array.isArray(po) ? po : (po.orders || []);
-  P = opps.filter(x => String(x.id || '').startsWith('PAY-')).map(x => ({ ...x, b: bucket(x.status), seg: field(x.description, 'Segment') }));
+  P = opps.filter(x => String(x.id || '').startsWith('PAY-')).map(x => ({ ...x, b: bucket(x.status), seg: field(x.description, 'Segment') }))
+    .map(x => ({ ...x, est: estimate(x) }));
   const live = orders.filter(x => !/cancel/i.test(x.status || ''));
   const kg = live.reduce((a, x) => a + (Number(x.mass_kg) || 0), 0);
   const usd = live.reduce((a, x) => a + (Number(x.contract_value) || 0), 0);
   const n = k => P.filter(x => x.b === k).length;
   const pct = Math.min(100, Math.round(kg / BAY_KG * 100));
+  const pipe = P.reduce((a, x) => a + x.est.usd, 0) + usd;
+  const weighted = P.reduce((a, x) => a + x.est.usd * WEIGHT[x.b], 0);
   document.getElementById('kpis').innerHTML = `
+    <div class="kpi green"><div class="num">${money(pipe)}</div><div class="lbl">BLK3 Pipeline Value</div><div class="note">estimated · unweighted · ${money(weighted)} stage-weighted</div></div>
+    <div class="kpi cyan"><div class="num">${money(pipe - usd)}</div><div class="lbl">Unbooked Pipeline</div><div class="note">${P.length} prospects still to close</div></div>
     <div class="kpi gold"><div class="num">${money(usd)}</div><div class="lbl">Booked contract value</div><div class="note">${live.length} payload order(s)</div></div>
     <div class="kpi purple"><div class="num">${kg} / ${BAY_KG} kg</div><div class="lbl">Bay filled</div><div class="bar"><div style="width:${pct}%"></div></div></div>
     <div class="kpi green"><div class="num">${n('active')}</div><div class="lbl">Active conversations</div></div>
     <div class="kpi cyan"><div class="num">${n('outreach')}</div><div class="lbl">Outreach sent</div></div>
     <div class="kpi"><div class="num">${n('ready') + n('early')}</div><div class="lbl">Ready + researching</div><div class="note">${n('ready')} ready / ${n('early')} researching</div></div>`;
-  document.getElementById('notice').innerHTML = `Source: the BLK3 Payload Sales Engine pipeline (daily 05:45), bridged into Opportunities as <b>PAY-</b> buyers, plus <a href="payload-orders.html">Payload Orders</a> for booked deals. Pipeline rows show list pricing only (full bay $1,012,500); a real quote is priced off the rate card, so prospects aren't summed into a dollar total.`;
+  document.getElementById('notice').innerHTML = `Source: the BLK3 Payload Sales Engine pipeline (daily 05:45), bridged into Opportunities as <b>PAY-</b> buyers, plus <a href="payload-orders.html">Payload Orders</a> for booked deals. ℹ️ Pipeline value is an ESTIMATE (unweighted), not booked revenue: each prospect is sized to its likely slot off the <a href="https://www.exosaero.com/pricing">published rate card</a> by segment (gov/defense/commercial buyers = quarter bay $255K, commercial/sensor = 6U $45K, university = 3U $22.5K, education = 1U $7.5K); a real quote on the row replaces the estimate. Stage-weighted uses active 50% · outreach 20% · ready 10% · researching 5%. Full bay = $1,012,500 per flight, so the pipeline is ${(pipe / 1012500).toFixed(1)}× one bay.`;
   document.getElementById('booked').innerHTML = live.map(x => `<tr><td>${esc(x.customer)}</td><td>${esc(x.payload_name)}</td><td>${esc(x.flight)}${x.flight_date ? ' · ' + esc(x.flight_date) : ''}</td><td>${esc(x.mass_kg)} kg</td><td class="val">${money(x.contract_value)}</td><td>${esc(x.owner)}</td><td><span class="badge s-booked">${esc(x.status || 'booked')}</span></td></tr>`).join('') || '<tr><td colspan="7" class="muted">No booked payloads yet.</td></tr>';
   render();
 }
@@ -106,8 +129,8 @@ function render() {
     <tr class="row" onclick="const d=document.getElementById('d${i}');d.style.display=d.style.display?'':'none'">
       <td><b>${esc(x.title)}</b><div class="muted" style="font-size:12px">${esc(x.id)}</div></td>
       <td><span class="badge s-${x.b}" title="${esc(x.status)}">${LABEL[x.b]}</span></td>
-      <td>${esc(x.seg)}</td><td>${esc(x.next_action)}</td><td>${esc(x.priority)}</td></tr>
-    <tr class="detail" id="d${i}" style="display:none"><td colspan="5">${esc(x.description)}</td></tr>`).join('');
+      <td>${esc(x.seg)}</td><td class="val" title="${esc(x.est.tier)}">${money(x.est.usd)}<div class="muted" style="font-size:11px">${esc(x.est.tier)}</div></td><td>${esc(x.next_action)}</td><td>${esc(x.priority)}</td></tr>
+    <tr class="detail" id="d${i}" style="display:none"><td colspan="6">${esc(x.description)}</td></tr>`).join('');
 }
 document.getElementById('q').addEventListener('input', render);
 document.getElementById('st').addEventListener('change', render);
