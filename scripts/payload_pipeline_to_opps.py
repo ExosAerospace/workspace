@@ -30,8 +30,8 @@ END   = "<!-- PAYLOAD-PIPELINE-AUTO:END -->"
 # Full-bay list anchor for scoring/display; the processor computes the real quote
 # off pricing/rate-card.json. List price only — no discount baked in.
 DEFAULT_VALUE = "$1,012,500 (full-bay list; final quote priced off rate card)"
-DUE = "BLK3 Flight 2 — March 2027"
-OPP_TYPE = "Payload Sale (BLK3 March 2027)"
+DUE = "BLK3 Flight 2 — early 2027"
+OPP_TYPE = "Payload Sale (BLK3 early 2027)"
 
 # Statuses in the pipeline that mean the prospect is dead/lost — don't stage them.
 DEAD = ("CLOSED", "LOST", "PASS", "DEAD", "DROPPED")

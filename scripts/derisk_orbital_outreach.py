@@ -225,7 +225,7 @@ def render_block(oid, it, foreign):
         f"**Segment:** {POOL_LABEL.get(pool, 'Orbital')}\n"
         f"**Country:** {g('country') or 'unknown'}\n"
         f"**Value:** {g('value') or '$1,012,500 (full-bay list; final quote priced off rate card)'}\n"
-        f"**Due:** BLK3 Flight 2 — March 2027\n"
+        f"**Due:** BLK3 Flight 2 — early 2027\n"
         f"**POC:** {poc or 'TBD — enrich'}\n"
         f"**Why fit:** {g('why_fit')}\n"
         f"**Owner:** {region_owner(g('country')) or 'jquinn@exosaero.com'}\n"
