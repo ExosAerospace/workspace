@@ -1,5 +1,5 @@
 {
-  "_note": "Registry of payload Launch Services Agreements being tracked for commission triggering. A QB payment from any customer listed here fires an MC payload-commission-check task via scripts/payload_commission_trigger.py (receipt of funds is the commission trigger). Each row carries an honest execution status — a doc is 'fully_executed' ONLY when BOTH parties have signed AND all dates are filled in; do NOT mark fully_executed otherwise. attributed_agent=null means no commission salesperson (task still fires and asks Jon to confirm attribution or waive). The task surfaces the execution status so an incomplete contract with money already received is flagged. Add a row when a new payload LSA is signed.",
+  "_note": "Registry of payload Launch Services Agreements being tracked for commission triggering. A QB payment from any customer listed here fires an MC payload-commission-check task via scripts/payload_commission_trigger.py (receipt of funds is the commission trigger). Each row carries an honest execution status \u2014 a doc is 'fully_executed' ONLY when BOTH parties have signed AND all dates are filled in; do NOT mark fully_executed otherwise. attributed_agent=null means no commission salesperson (task still fires and asks Jon to confirm attribution or waive). The task surfaces the execution status so an incomplete contract with money already received is flagged. Add a row when a new payload LSA is signed.",
   "contracts": [
     {
       "qb_customer": "entX Limited",
@@ -10,15 +10,58 @@
       "exos_signed": true,
       "exos_signed_by": "John Quinn (CEO)",
       "exos_signed_date": "2026-02-20",
-      "pending_for_full_execution": ["entX countersignature", "all dates filled (Effective Date, milestone due dates, launch date)"],
+      "pending_for_full_execution": [
+        "entX countersignature",
+        "all dates filled (Effective Date, milestone due dates, launch date)"
+      ],
       "contract_total": 820000,
       "currency": "USD",
       "attributed_agent": null,
       "signed_docs": {
-        "lsa": {"upload_id": "12cc017f0d91843b", "filename": "entX_LSA_Appendix_A_SIGNED-by-Exos_pending-execution.pdf", "docusign_envelope_id": "3E382971-CA8F-4681-8CD3-20E03274DC0D", "status": "Exos-signed only, NOT fully executed"},
-        "subpart_a_cross_waiver": {"upload_id": "4b05d7c01cd4eaf4", "filename": "entX_Subpart_A_CrossWaiver_SIGNED.pdf"}
+        "lsa": {
+          "upload_id": "12cc017f0d91843b",
+          "filename": "entX_LSA_Appendix_A_SIGNED-by-Exos_pending-execution.pdf",
+          "docusign_envelope_id": "3E382971-CA8F-4681-8CD3-20E03274DC0D",
+          "status": "Exos-signed only, NOT fully executed"
+        },
+        "subpart_a_cross_waiver": {
+          "upload_id": "4b05d7c01cd4eaf4",
+          "filename": "entX_Subpart_A_CrossWaiver_SIGNED.pdf"
+        }
       },
-      "notes": "Docs on file in MC uploads (project OPP-007). LSA is SIGNED BY EXOS ONLY and NOT fully executed (pending entX countersignature + all dates). NOTE: $410,000 already received from entX per QB despite the contract not being fully executed — paperwork gap to close. No commission salesperson attributed."
+      "notes": "Docs on file in MC uploads (project OPP-007). LSA is SIGNED BY EXOS ONLY and NOT fully executed (pending entX countersignature + all dates). NOTE: $410,000 already received from entX per QB despite the contract not being fully executed \u2014 paperwork gap to close. No commission salesperson attributed."
+    },
+    {
+      "qb_customer": "Alchemy Technologies LLC DBA Scentience",
+      "qb_customer_id": "1115",
+      "contract_id": "PO2C-2026-001",
+      "program": "Scentience OPU, M6 BLK3 Flight 2 (Mar 2027)",
+      "exos_signed": false,
+      "contract_total": 8000,
+      "pending_for_full_execution": [
+        "Kordel France signature via MC e-sign",
+        "John countersignature"
+      ],
+      "notes": "Owner Lizi Quinn + Phil Eaton. Added 2026-10-05 so a Scentience payment fires a commission check; attribution (Lizi? split w/ Phil?) left null for Jon to confirm on first receipt. M1 QB invoice #0071 pending approval.",
+      "fully_executed": false,
+      "currency": "USD",
+      "attributed_agent": null
+    },
+    {
+      "qb_customer": "Matt Lesiw",
+      "qb_customer_id": null,
+      "contract_id": "PO2C-2026-002",
+      "program": "Commemorative 1U, M6 BLK3 Flight 2 (Mar 2027)",
+      "exos_signed": false,
+      "contract_total": 8000,
+      "pending_for_full_execution": [
+        "LSA signature",
+        "QB customer not yet created (resolved by name at run time)"
+      ],
+      "notes": "Owner Lizi Quinn + Phil Eaton. Added 2026-10-05; attribution null for Jon to confirm on first receipt.",
+      "fully_executed": false,
+      "currency": "USD",
+      "attributed_agent": null
     }
   ]
 }

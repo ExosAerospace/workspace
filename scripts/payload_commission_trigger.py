@@ -179,6 +179,15 @@ def main():
     accrual_failures = 0
     for c in contracts:
         cid = c.get("qb_customer_id")
+        if not cid:
+            # Customer may not exist in QB until its first invoice is approved;
+            # resolve by exact display name so the first payment still fires.
+            try:
+                r = qb.query("SELECT Id FROM Customer WHERE DisplayName = '%s'"
+                             % c["qb_customer"].replace("'", "\\'"))
+                cid = ((r or {}).get("Customer") or [{}])[0].get("Id")
+            except Exception:
+                cid = None
         pays = qb_payments_for(cid) if cid else []
         received = sorted([p for p in pays if p["amount"] > 0], key=lambda p: p.get("date") or "")
         total_recv = sum(p["amount"] for p in received)
