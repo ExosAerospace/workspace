@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exos Aerospace — RTO Due-Diligence Data Room</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;background:#0B0B0D;color:#EDEDEF;line-height:1.5}
+  .wrap{max-width:960px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #24242B;padding-bottom:18px;margin-bottom:8px}
+  .brand{font-size:13px;letter-spacing:2px;color:#F26A21;font-weight:700;text-transform:uppercase}
+  .who{font-size:12px;color:#8A8A92}
+  .who a{color:#8A8A92}
+  h1{font-size:26px;font-weight:700;margin:26px 0 6px}
+  .sub{color:#9A9AA2;font-size:13px;margin-bottom:26px}
+  .docs{display:grid;grid-template-columns:1fr;gap:12px}
+  .doc{background:#161619;border:1px solid #24242B;border-radius:10px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:border-color .15s}
+  .doc:hover{border-color:#F26A21}
+  .doc .t{font-size:15px;font-weight:600;color:#fff}
+  .doc .d{font-size:12.5px;color:#9A9AA2;margin-top:3px}
+  .doc .ext{font-size:10px;letter-spacing:1px;color:#F26A21;text-transform:uppercase;margin-top:6px}
+  .btn{background:#F26A21;color:#0B0B0D;border:none;border-radius:7px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap}
+  .btn.secondary{background:transparent;border:1px solid #3A3A44;color:#EDEDEF}
+  .btns{display:flex;gap:8px}
+  .note{margin-top:30px;padding:16px 18px;background:#131316;border:1px solid #24242B;border-radius:10px;font-size:12.5px;color:#9A9AA2}
+  .ask{margin-top:22px;padding:16px 18px;background:#131316;border:1px dashed #3A3A44;border-radius:10px;font-size:13px;color:#C2C2C8}
+  .ask b{color:#F26A21}
+  .empty{color:#8A8A92;font-size:14px;padding:20px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">EXOS AEROSPACE</div>
+    <div class="who" id="who"></div>
+  </header>
+  <a href="/mtp.html" title="Our Massive Transformative Purpose — details" style="display:block;text-decoration:none;background:#131316;border:1px solid #24242B;border-left:3px solid #F26A21;border-radius:8px;padding:10px 14px;margin-bottom:18px">
+    <span style="color:#8A8A92;font-size:10px;letter-spacing:2px;text-transform:uppercase">Our Massive Transformative Purpose</span><br>
+    <span style="color:#fff;font-size:16px;font-weight:800">Make Every Space Vehicle Reusable</span>
+    <span style="color:#F26A21;font-size:12px;font-weight:700;margin-left:8px">details →</span>
+  </a>
+  <h1 id="title">RTO Due-Diligence Data Room</h1>
+  <div class="sub" id="subtitle">Confidential · Provided under the executed mutual NDA · Not an offer of securities</div>
+  <div class="docs" id="docs"><div class="empty">Loading documents…</div></div>
+  <div class="doc" style="margin-top:12px">
+    <div><div class="t">Live Financials (QuickBooks)</div><div class="d">Current cash, burn, runway, and 504 raise status — updated from QuickBooks.</div><div class="ext">LIVE</div></div>
+    <div class="btns"><a class="btn" href="/finance.html">Open</a></div>
+  </div>
+  <div class="doc" style="margin-top:12px">
+    <div><div class="t">Your Decisions (FNEX term sheet)</div><div class="d">Term-sheet decision cards assigned to you — review the linked documents and answer each card.</div><div class="ext">ACTION</div></div>
+    <div class="btns"><a class="btn" href="/decisions.html">Open</a></div>
+  </div>
+  <div class="ask">
+    <b>Ask Exo</b> — use the chat button at the bottom-right to ask any reverse-takeover due-diligence question. Responses draw on the materials in this data room and Exos's business and financial information. Technical/export-controlled details are out of scope here — route those to John Quinn.
+  </div>
+  <div class="note">
+    These materials are confidential and shared solely for the purpose of evaluating a potential reverse-takeover transaction, under the executed mutual non-disclosure agreement between Exos Aerospace and Ainigma Capital. Nothing here constitutes an offer to sell or a solicitation to buy any security. <a href="/api/logout" style="color:#F26A21">Log out</a>
+  </div>
+</div>
+<script>
+function extOf(f){ const m=(f||'').split('.').pop().toUpperCase(); return m.length<=4?m:''; }
+async function load(){
+  try{
+    const me=await fetch('/api/me').then(r=>r.ok?r.json():null).catch(()=>null);
+    if(me && (me.name||me.email)) document.getElementById('who').textContent=(me.name||me.email);
+  }catch(e){}
+  let data;
+  try{ const r=await fetch('/api/dataroom'); if(r.status===401){location.href='/login';return;} data=await r.json(); }
+  catch(e){ document.getElementById('docs').innerHTML='<div class="empty">Could not load documents.</div>'; return; }
+  if(data.title) document.getElementById('title').textContent=data.title;
+  if(data.subtitle) document.getElementById('subtitle').textContent=data.subtitle;
+  const docs=data.docs||[];
+  if(!docs.length){ document.getElementById('docs').innerHTML='<div class="empty">No documents are available yet.</div>'; return; }
+  document.getElementById('docs').innerHTML=docs.map(d=>{
+    const ext=extOf(d.file); const url='/api/dataroom-doc?id='+encodeURIComponent(d.id);
+    const isPdf=ext==='PDF';
+    return `<div class="doc"><div><div class="t">${d.title||d.file}</div>${d.desc?`<div class="d">${d.desc}</div>`:''}<div class="ext">${ext}</div></div>
+      <div class="btns">${isPdf?`<a class="btn" href="${url}" target="_blank" rel="noopener">View</a>`:''}<a class="btn ${isPdf?'secondary':''}" href="${url}" download>Download</a></div></div>`;
+  }).join('');
+}
+load();
+</script>
+</body>
+</html>
