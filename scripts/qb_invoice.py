@@ -224,10 +224,11 @@ def write_cover_email(rec, contact_name=None):
     return fn
 
 
-def file_decision(rec):
+def file_decision(rec, dedupe_suffix="", preface=""):
     tok = open(TOKEN).read().strip()
     rel_pdf = os.path.relpath(rec["pdf"], WS)
-    ctx = (f"Customer: {rec['customer']} — invoice goes to {rec['email']}\n"
+    ctx = ((preface + "\n\n" if preface else "") +
+           f"Customer: {rec['customer']} — invoice goes to {rec['email']}\n"
            f"Amount: ${rec['amount']:,.2f} · Terms: {rec['terms']} · QB invoice #{rec['doc_number']} (QB Id {rec['qb_id']})\n"
            f"Line: {rec['desc']}\n"
            f"Invoice PDF (exactly what the customer gets): {rel_pdf}\n"
@@ -242,7 +243,7 @@ def file_decision(rec):
         "question": f"Send QuickBooks invoice #{rec['doc_number']} for ${rec['amount']:,.2f} to {rec['customer']} ({rec['email']})?",
         "context": ctx, "proposedAction": "Approve & send — QuickBooks emails the invoice + pay link; MC milestone marked invoiced.",
         "type": "choice", "options": [OPT_SEND, OPT_HOLD, OPT_CANCEL], "priority": "high",
-        "relatedItem": rec.get("order") or ((rec.get("offering") or {}).get("entry_id") or ""), "dedupeKey": f"qb-invoice:{rec['qb_id']}",
+        "relatedItem": rec.get("order") or ((rec.get("offering") or {}).get("entry_id") or ""), "dedupeKey": f"qb-invoice:{rec['qb_id']}{dedupe_suffix}",
         "approver": JON, "assignedTo": JON, "agentClass": "qb-invoice",
     }
     req = urllib.request.Request("http://localhost:8080/api/decisions/ingest", data=json.dumps(body).encode(),
@@ -508,6 +509,22 @@ def contact(a):
                 m["size"] = os.path.getsize(pdf)
         tmp = meta_path + ".tmp"; json.dump(meta, open(tmp, "w"), indent=2); os.replace(tmp, meta_path)
     gaps = contact_gaps(block, email)
+    # Jon answered the original card with an instruction (not Approve/Hold/Cancel): watch() never acts on
+    # that, so once the billing block is complete, re-file a fresh Approve & send card for this invoice.
+    if rec and not gaps and rec.get("status") == "pending":
+        decs = jload(DECISIONS, [])
+        decs = decs if isinstance(decs, list) else decs.get("decisions", [])
+        d = next((x for x in decs if x.get("id") == rec.get("decision_id")), {})
+        ans = (d.get("answer") or "").strip().lower()
+        if d.get("status") == "answered" and not ans.startswith(("approve", "hold", "cancel")):
+            n = len(rec.get("history", [])) + 2
+            rec["decision_id"] = file_decision(rec, dedupe_suffix=f":r{n}", preface=(
+                f"RE-FILED: per your note on {d.get('id')}, the invoice now shows the customer's address, phone and email "
+                f"(see the PDF). Ready to approve."))
+            rec.setdefault("history", []).append({"at": now(), "event": f"re-filed after {d.get('id')} instruction (contact block)"})
+            jsave(STATE, st)
+            attach_pdf_to_decision(rec)
+            log(f"re-filed Approve & send card {rec['decision_id']} for QB invoice {rec['doc_number']} (was {d.get('id')})")
     log(f"contact updated on QB invoice {inv.get('DocNumber')} (Id {inv['Id']}); still missing: {gaps or 'nothing'}")
     print(json.dumps({"doc": inv.get("DocNumber"), "BillAddr": block, "missing": gaps}, indent=1))
 
