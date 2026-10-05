@@ -120,7 +120,11 @@ async function load() {
     <div class="kpi green"><div class="num">${money(pipe)}</div><div class="lbl">BLK3 Pipeline Value</div><div class="note">estimated · unweighted · ${money(weighted + usd)} stage-weighted</div></div>
     <div class="kpi cyan"><div class="num">${money(pipe - usd)}</div><div class="lbl">Unbooked Pipeline</div><div class="note">${P.length} prospects still to close</div></div>
     <div class="kpi gold"><div class="num">${money(usd)}</div><div class="lbl">Booked contract value</div><div class="note">entX Mission 0 $820K + ${flight2.length} Flight-2 order(s)</div></div>
-    <div class="kpi purple"><div class="num">${kg} / ${BAY_KG} kg</div><div class="lbl">Flight 2 bay filled</div><div class="bar"><div style="width:${pct}%"></div></div></div>
+    <div class="kpi purple" style="min-width:230px"><div class="lbl" style="margin:0 0 4px">Bay filled by flight</div>
+      <div class="note" style="color:var(--text)">Flight 1 · Mission 0 (entX) <b style="float:right">100%</b></div>
+      <div class="bar" style="margin-top:3px"><div style="width:100%;background:var(--green)"></div></div>
+      <div class="note" style="color:var(--text);margin-top:8px">Flight 2 · M6 · ${kg} / ${BAY_KG} kg <b style="float:right">${pct}%</b></div>
+      <div class="bar" style="margin-top:3px"><div style="width:${Math.max(pct, 1)}%"></div></div></div>
     <div class="kpi green"><div class="num">${n('active')}</div><div class="lbl">Active conversations</div></div>
     <div class="kpi cyan"><div class="num">${n('outreach')}</div><div class="lbl">Outreach sent</div></div>
     <div class="kpi"><div class="num">${n('ready') + n('early')}</div><div class="lbl">Ready + researching</div><div class="note">${n('ready')} ready / ${n('early')} researching</div></div>`;
