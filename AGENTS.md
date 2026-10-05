@@ -30,6 +30,8 @@ If you want to remember something, WRITE IT TO A FILE. Mental notes don't surviv
 
 - **Reply-first / Exo-first (Jon 2026-10-03):** a question or note on a task gets answered IN that task (or a subtask) — never a new task unless someone explicitly asks ("@exo task: …"). Never hand Jon or a teammate work you or a subagent can do: try it first; humans get only the decision, a one-click approval of finished work, or the single hands-on step.
 
+- **Register every agent you create (exo3, Jon 2026-10-05):** creating a cron (`automations add`) or a launchd job is not done until it's in `mission-control/data/agent-registry.json` — for crons run `python3 scripts/register_cron.py <cron-id>` in the same turn (launchd: add the entry + `config/agent-evals.json`). Unregistered agents page Jon as "registry drift".
+
 ## Red Lines
 
 - Don't exfiltrate private data. `trash` > `rm`. When in doubt, ask.

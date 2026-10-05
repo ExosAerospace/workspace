@@ -88,6 +88,148 @@
     "turnaround_s": 126.5,
     "cost_tokens": 79227
    }
+  },
+  {
+   "id": "IMP-005",
+   "agent": "com.exos.followup-nudge-digest",
+   "govlog": null,
+   "cron": null,
+   "change": "43fbc11",
+   "hypothesis": "Grouping multi-recipient sends as one thread (and same-org replies) removes false 'no reply' nudges, e.g. Graham/Raquel on the Ainigma thread Michael answered; dry-run backlog 11 -> 7 false-free",
+   "metrics": [
+    "reliability",
+    "turnaround"
+   ],
+   "error_signature": null,
+   "at": "2026-10-04T17:03:32.923702+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 6,
+    "reliability": 0.833,
+    "quiet_errors": 0,
+    "turnaround_s": 34.8
+   }
+  },
+  {
+   "id": "IMP-006",
+   "agent": "com.exos.fleet-status-heartbeat",
+   "govlog": null,
+   "cron": null,
+   "change": "6355fda",
+   "hypothesis": "Reading the new state_json schema ends the hourly false 'Fleet exception' DMs; signature dedupe stops identical repeats",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-04T17:04:52.322626+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 133,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 11.1
+   }
+  },
+  {
+   "id": "IMP-007",
+   "agent": "com.exos.capstone-question-answerer",
+   "govlog": null,
+   "cron": null,
+   "change": "9a3c352",
+   "hypothesis": "Taking the model out of the posting path (agent returns marked text; script validates, posts, and verifies the row + Done) plus a 3x/15-min retry and a re-firing ETA watchdog plus a daily >8h stale check will cut unanswered UTD questions past ETA from 6 (10/2-10/3, 2 days silent) to 0, with every failure reaching Discord within one ETA. Baseline: 7 of 7 questions 3357-3363 failed agent self-post (no tools, false ANSWERED, truncation); watchdog fired once per task then latched.",
+   "metrics": [
+    "reliability",
+    "turnaround"
+   ],
+   "error_signature": null,
+   "at": "2026-10-04T17:27:50.261531+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 280,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 0.6
+   }
+  },
+  {
+   "id": "IMP-008",
+   "agent": "com.exos.decisions-discord-feed",
+   "govlog": null,
+   "cron": null,
+   "change": "0a386e9",
+   "hypothesis": "Treating CLI timeout as delivered (at-most-once) plus output eval catches duplicates => dup Discord posts drop to 0 over 7d (baseline: 6 dup posts on 2026-10-04)",
+   "metrics": [
+    "dup_sends"
+   ],
+   "error_signature": null,
+   "at": "2026-10-04T17:40:38.173269+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 398,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 0.3,
+    "dup_sends": 10
+   }
+  },
+  {
+   "id": "IMP-009",
+   "agent": "com.exos.exo3-gate",
+   "govlog": null,
+   "cron": null,
+   "change": "0a386e9",
+   "hypothesis": "Idempotent delivery + eval_type gate + blast-radius warn will eliminate dup-send class of incidents and enforce output eval coverage for side-effecting agents",
+   "metrics": [
+    "reliability",
+    "dup_send_rate",
+    "eval_coverage"
+   ],
+   "error_signature": null,
+   "at": "2026-10-04T17:48:02.018147+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
+   "id": "IMP-010",
+   "agent": "com.exos.mc-email-command",
+   "govlog": null,
+   "cron": null,
+   "change": "f21a25a",
+   "hypothesis": "Auto-attach of new task uploads now requires the reply to cite the task # or filename; stops concurrent Exo sessions' files (e.g. R&D QRE sheet on #1200) riding out on unrelated @exo replies. Expect 0 cross-task attachments in 7d.",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-04T18:56:20.175787+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 321,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 1.2
+   }
+  },
+  {
+   "id": "IMP-011",
+   "agent": "cron:fnex-term-sheet",
+   "govlog": null,
+   "cron": "7b3d90cd-010a-47ab-864d-96bb9e18bf1b",
+   "change": "registered + held-release-integrity output eval (10/5)",
+   "hypothesis": "Output eval catches any counterparty card released before John answers; loop stays ok until self-removal",
+   "metrics": [
+    "reliability",
+    "cost",
+    "turnaround"
+   ],
+   "error_signature": null,
+   "at": "2026-10-05T17:57:20.315793+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 10,
+    "reliability": 1.0,
+    "turnaround_s": 100.1,
+    "cost_tokens": 84610
+   }
   }
  ]
 }

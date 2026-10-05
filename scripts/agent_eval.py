@@ -291,6 +291,37 @@ def check_cron_prompt_guard(state):
         state[key] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
     return results, new_fails
 
+def check_held_release_integrity(state, now, _decisions=None):
+    """OUTPUT eval for gated-release loops (e.g. FNEX term sheet, 10/5): a counterparty card
+    (dedupeKey '...-ms') must never be released (assignedTo outside @exosaero.com) while John's
+    matching card ('...-jon') is still unanswered. FAIL names the prematurely released card."""
+    results, new_fails = [], []
+    try:
+        decs = _decisions if _decisions is not None else json.load(open(WS / "mission-control" / "data" / "decisions.json"))
+        decs = decs if isinstance(decs, list) else decs.get("decisions", [])
+    except Exception:
+        return results, new_fails
+    by_key = {str(d.get("dedupeKey") or ""): d for d in decs}
+    bad = []
+    for k, d in by_key.items():
+        if not k.endswith("-ms"):
+            continue
+        who = str(d.get("assignedTo") or "")
+        if str(d.get("status") or "").lower() not in ("open", "pending"):
+            continue   # closed/superseded cards aren't live in front of the counterparty
+        if "@" not in who or who.lower().endswith("@exosaero.com") or who.startswith("HELD"):
+            continue
+        jon = by_key.get(k[:-3] + "-jon")
+        if jon and jon.get("status") != "answered":
+            bad.append(f"{d.get('id')} released to {who} before John answered {jon.get('id')}")
+    label = "output:held-release-integrity"
+    status = "FAIL" if bad else "OK"
+    results.append((label, status, "; ".join(bad) or "no premature releases", "John Quinn"))
+    if bad and state.get(label, {}).get("status") != "FAIL":
+        new_fails.append((label, "; ".join(bad), "John Quinn"))
+    state[label] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds")}
+    return results, new_fails
+
 def check_duplicate_sends(state, now, _sent_dir=None):
     """OUTPUT-level eval: scan outbox/sent/ for duplicate (target, text-hash) pairs
     within 15 min, and entries where attempts>1 and last_error contains 'timeout'
@@ -491,8 +522,51 @@ def selftest():
     cron_prompt_guard.selftest()
     return 0
 
+AUTO_REG_DECISION = "exo3-auto-register-crons"
+
+def auto_register_enabled():
+    """Auto-registration of session-created OpenClaw crons is OFF until Jon approves the Decision
+    (dedupeKey exo3-auto-register-crons) with a HUMAN click; approval is then persisted in config."""
+    try:
+        cfg = json.load(open(CFG))
+        if cfg.get("auto_register_crons"): return True
+        decs = json.load(open(WS / "mission-control" / "data" / "decisions.json"))
+        decs = decs if isinstance(decs, list) else decs.get("decisions", [])
+        d = next((x for x in decs if x.get("dedupeKey") == AUTO_REG_DECISION), None)
+        if d and d.get("status") == "answered" and d.get("answeredByEmail") and \
+           str(d.get("answer") or "").lower().startswith(("approve", "apply", "yes")):
+            cfg["auto_register_crons"] = True; cfg["auto_register_crons_approved"] = d.get("id")
+            json.dump(cfg, open(CFG, "w"), indent=1)
+            return True
+    except Exception as e:
+        log(f"auto-register flag check failed: {e}")
+    return False
+
+def auto_register_crons():
+    """Register unregistered OpenClaw crons from their live definition (scripts/register_cron.py)."""
+    done = []
+    try:
+        jobs = cron_telemetry.load_cron_jobs(); reg = cron_telemetry.registry_crons(REGISTRY)
+        for jid in cron_drift_ids(jobs, reg):
+            r = subprocess.run([sys.executable, str(WS / "scripts" / "register_cron.py"), jid],
+                               capture_output=True, text=True, timeout=90)
+            if r.returncode == 0: done.append(r.stdout.strip())
+            else: log(f"auto-register {jid[:8]} failed: {r.stderr.strip()[:200]}")
+    except Exception as e:
+        log(f"auto-register skipped: {e}")
+    return done
+
+def cron_drift_ids(jobs, reg_crons):
+    tc = transient_class_entry()
+    return [jid for jid, j in jobs.items() if not reg_crons.get(jid) and j.get("payload_kind") != "heartbeat"
+            and not (tc and is_transient(j, None))]
+
 def check_registry_drift(state):
     """Returns the list of NEW unregistered labels (not yet alerted). Never raises."""
+    if auto_register_enabled():
+        for line in auto_register_crons():
+            log(f"auto-registered: {line}")
+            state.setdefault("_auto_registered", []).append(line)
     try:
         live = live_labels()
         drift = registry_drift(live, registry_labels())
@@ -582,6 +656,9 @@ def main():
     ds_results, ds_fails = check_duplicate_sends(state, now)
     results += ds_results
     new_fail_alerts += ds_fails
+    hr_results, hr_fails = check_held_release_integrity(state, now)
+    results += hr_results
+    new_fail_alerts += hr_fails
 
     npass = sum(1 for _, s, _, _ in results if s == "OK")
     nwarn = sum(1 for _, s, _, _ in results if s == "WARN")
