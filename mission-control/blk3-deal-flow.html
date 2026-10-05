@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BLK3 Deal Flow — Mission Control</title>
+<style>
+  :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--card:#0f1e38;--text:#e8edf5;
+    --text2:#8aa0bd;--border:#1c3052;--accent:#0080ff;--green:#22c55e;--red:#ff4444;--gold:#e8aa3c;--cyan:#46c8ff;--purple:#a855f7}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--navy);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.5}
+  header{padding:18px 24px;border-bottom:1px solid var(--border);background:var(--navy2);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  h1{font-size:20px;margin:0} .sub{color:var(--text2);font-size:13px;margin-top:3px}
+  a.home{color:var(--text2);font-size:13px;text-decoration:none} a{color:var(--accent)}
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 24px 60px}
+  .cards{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+  .kpi{flex:1;min-width:170px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:4px solid var(--accent)}
+  .kpi.green{border-left-color:var(--green)} .kpi.gold{border-left-color:var(--gold)} .kpi.cyan{border-left-color:var(--cyan)} .kpi.purple{border-left-color:var(--purple)}
+  .kpi .num{font-size:26px;font-weight:700} .kpi .lbl{color:var(--text2);font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+  .kpi .note{color:var(--text2);font-size:11.5px;margin-top:4px}
+  .bar{height:8px;background:var(--navy3);border-radius:6px;overflow:hidden;margin-top:8px} .bar>div{height:100%;background:var(--gold)}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+  input,select{background:var(--navy3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 11px;font-size:13px;outline:none}
+  input#q{flex:1;min-width:200px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{border-bottom:1px solid var(--border);padding:9px 11px;text-align:left;vertical-align:top}
+  th{color:var(--text2);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}
+  tr.row{cursor:pointer} tr.row:hover td{background:var(--navy3)}
+  .badge{display:inline-block;border-radius:8px;padding:2px 8px;font-size:11.5px;font-weight:600;white-space:nowrap}
+  .s-booked{background:rgba(232,170,60,.15);color:var(--gold);border:1px solid var(--gold)}
+  .s-active{background:rgba(34,197,94,.15);color:var(--green);border:1px solid var(--green)}
+  .s-outreach{background:rgba(70,200,255,.12);color:var(--cyan);border:1px solid var(--cyan)}
+  .s-ready{background:rgba(0,128,255,.15);color:var(--accent);border:1px solid var(--accent)}
+  .s-early{background:rgba(138,160,189,.12);color:var(--text2);border:1px solid var(--border)}
+  .val{color:var(--green);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .detail td{background:var(--navy2);color:#bcd0ee;font-size:13px;white-space:pre-wrap}
+  .muted{color:var(--text2)}
+  .notice{background:var(--navy2);border:1px dashed var(--border);border-radius:8px;padding:12px 15px;color:#bcd0ee;font-size:12.5px;margin-bottom:18px}
+  h3{font-size:14px;margin:22px 0 8px;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🚀 BLK3 Deal Flow</h1><div class="sub">BLK3 payload pipeline: booked payloads, active conversations and prospects for the March 2027 flight (135 kg bay)</div></div>
+  <a class="home" href="index.html">← Mission Control</a>
+</header>
+<div class="wrap">
+  <div class="cards" id="kpis"></div>
+  <div class="notice" id="notice">Loading…</div>
+  <h3>Booked payloads</h3>
+  <table><thead><tr><th>Customer</th><th>Payload</th><th>Flight</th><th>Mass</th><th>Contract</th><th>Owner</th><th>Status</th></tr></thead><tbody id="booked"></tbody></table>
+  <h3>Pipeline</h3>
+  <div class="toolbar">
+    <input id="q" placeholder="Search prospect, segment, next action…">
+    <select id="st"><option value="">All stages</option><option value="active">Active / meeting</option><option value="outreach">Outreach sent</option><option value="ready">Ready / draft</option><option value="early">Researching / new</option></select>
+    <span class="muted" id="count"></span>
+  </div>
+  <table><thead><tr><th>Prospect</th><th>Stage</th><th>Segment</th><th>Next action</th><th>Priority</th></tr></thead><tbody id="rows"></tbody></table>
+</div>
+<script>
+const BAY_KG = 135;
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => '$' + (Number(n) || 0).toLocaleString('en-US', {maximumFractionDigits: 0});
+// Stage buckets from the pipeline status text (the sales engine writes free-form status lines).
+function bucket(s) {
+  s = String(s || '').toUpperCase();
+  if (/ACTIVE|MEETING|CALL|LOI|QUOTE|NEGOTIAT|DEPOSIT/.test(s)) return 'active';
+  if (/OUTREACH SENT|SENT|REPLIED|FOLLOW/.test(s)) return 'outreach';
+  if (/READY|DRAFT/.test(s)) return 'ready';
+  return 'early';
+}
+const LABEL = {active: 'Active', outreach: 'Outreach sent', ready: 'Ready / draft', early: 'Researching'};
+const field = (desc, k) => { const m = String(desc || '').match(new RegExp('\\*\\*' + k + ':\\*\\*\\s*([^\\n]+)')); return m ? m[1].trim() : ''; };
+let P = [];
+async function load() {
+  const ts = '?t=' + Date.now();
+  const [o, po] = await Promise.all([
+    fetch('data/opportunities.json' + ts).then(r => r.json()).catch(() => []),
+    fetch('data/payload-orders.json' + ts).then(r => r.json()).catch(() => []),
+  ]);
+  const opps = Array.isArray(o) ? o : (o.opportunities || []);
+  const orders = Array.isArray(po) ? po : (po.orders || []);
+  P = opps.filter(x => String(x.id || '').startsWith('PAY-')).map(x => ({ ...x, b: bucket(x.status), seg: field(x.description, 'Segment') }));
+  const live = orders.filter(x => !/cancel/i.test(x.status || ''));
+  const kg = live.reduce((a, x) => a + (Number(x.mass_kg) || 0), 0);
+  const usd = live.reduce((a, x) => a + (Number(x.contract_value) || 0), 0);
+  const n = k => P.filter(x => x.b === k).length;
+  const pct = Math.min(100, Math.round(kg / BAY_KG * 100));
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi gold"><div class="num">${money(usd)}</div><div class="lbl">Booked contract value</div><div class="note">${live.length} payload order(s)</div></div>
+    <div class="kpi purple"><div class="num">${kg} / ${BAY_KG} kg</div><div class="lbl">Bay filled</div><div class="bar"><div style="width:${pct}%"></div></div></div>
+    <div class="kpi green"><div class="num">${n('active')}</div><div class="lbl">Active conversations</div></div>
+    <div class="kpi cyan"><div class="num">${n('outreach')}</div><div class="lbl">Outreach sent</div></div>
+    <div class="kpi"><div class="num">${n('ready') + n('early')}</div><div class="lbl">Ready + researching</div><div class="note">${n('ready')} ready / ${n('early')} researching</div></div>`;
+  document.getElementById('notice').innerHTML = `Source: the BLK3 Payload Sales Engine pipeline (daily 05:45), bridged into Opportunities as <b>PAY-</b> buyers, plus <a href="payload-orders.html">Payload Orders</a> for booked deals. Pipeline rows show list pricing only (full bay $1,012,500); a real quote is priced off the rate card, so prospects aren't summed into a dollar total.`;
+  document.getElementById('booked').innerHTML = live.map(x => `<tr><td>${esc(x.customer)}</td><td>${esc(x.payload_name)}</td><td>${esc(x.flight)}${x.flight_date ? ' · ' + esc(x.flight_date) : ''}</td><td>${esc(x.mass_kg)} kg</td><td class="val">${money(x.contract_value)}</td><td>${esc(x.owner)}</td><td><span class="badge s-booked">${esc(x.status || 'booked')}</span></td></tr>`).join('') || '<tr><td colspan="7" class="muted">No booked payloads yet.</td></tr>';
+  render();
+}
+const ORDER = {active: 0, outreach: 1, ready: 2, early: 3};
+function render() {
+  const q = document.getElementById('q').value.toLowerCase(), st = document.getElementById('st').value;
+  const rows = P.filter(x => (!st || x.b === st) && (!q || `${x.title} ${x.seg} ${x.next_action} ${x.status}`.toLowerCase().includes(q)))
+    .sort((a, b) => ORDER[a.b] - ORDER[b.b] || (b.priority || 0) - (a.priority || 0));
+  document.getElementById('count').textContent = `${rows.length} of ${P.length}`;
+  document.getElementById('rows').innerHTML = rows.map((x, i) => `
+    <tr class="row" onclick="const d=document.getElementById('d${i}');d.style.display=d.style.display?'':'none'">
+      <td><b>${esc(x.title)}</b><div class="muted" style="font-size:12px">${esc(x.id)}</div></td>
+      <td><span class="badge s-${x.b}" title="${esc(x.status)}">${LABEL[x.b]}</span></td>
+      <td>${esc(x.seg)}</td><td>${esc(x.next_action)}</td><td>${esc(x.priority)}</td></tr>
+    <tr class="detail" id="d${i}" style="display:none"><td colspan="5">${esc(x.description)}</td></tr>`).join('');
+}
+document.getElementById('q').addEventListener('input', render);
+document.getElementById('st').addEventListener('change', render);
+load();
+</script>
+</body>
+</html>
