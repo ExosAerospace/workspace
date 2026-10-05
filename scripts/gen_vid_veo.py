@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate one Veo image-to-video clip SYNCHRONOUSLY (polls until done).
 Usage: gen_vid_veo.py <outfile.mp4> <first_frame.jpg> <prompt> [seconds=8] [model=veo-3.1-fast-generate-preview]"""
-import base64, json, sys, time, urllib.error, urllib.request
+import base64, json, os, sys, time, urllib.error, urllib.request
 
 KEY = json.load(open('/Users/exomac/.openclaw/secrets.json'))['google_image_api_key']
 BASE = "https://generativelanguage.googleapis.com/v1beta"
@@ -24,7 +24,8 @@ def gen(out, image, prompt, seconds=8, model="veo-3.1-fast-generate-preview"):
     img = base64.b64encode(open(image, 'rb').read()).decode()
     op = call(f"{BASE}/models/{model}:predictLongRunning", {
         "instances": [{"prompt": prompt, "image": {"bytesBase64Encoded": img, "mimeType": "image/jpeg"}}],
-        "parameters": {"aspectRatio": "16:9", "durationSeconds": int(seconds), "resolution": "1080p"}})
+        "parameters": {"aspectRatio": "16:9", "durationSeconds": int(seconds), "resolution": "1080p",
+                       **({"negativePrompt": os.environ["VEO_NEGATIVE"]} if os.environ.get("VEO_NEGATIVE") else {})}})  # NEGATIVE prompt via env
     name = op["name"]
     for _ in range(90):
         time.sleep(10)

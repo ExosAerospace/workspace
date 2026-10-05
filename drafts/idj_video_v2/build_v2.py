@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Build Exos IDJ Japan intro/outro v2 (MC #2928). Real Exos hardware + Veo i2v seeded from real frames.
+2026-10-05 PM: smokeless LOX/ethanol re-cut per #2928 note (v01_liftoff_ns2_a, v05_hover_ns).
 Usage: /usr/bin/python3 build_v2.py intro|outro"""
 import os, subprocess, sys, math, shutil
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
@@ -181,7 +182,7 @@ def intro():
     else:
         shots.append(('s01', src, 0.2, 2.0, dict(crop=CROP, zoom=(1.0, 1.10), cy=0.35)))
     shots += [
-        ('s02', f'{V}/v01_liftoff.mp4', 0.6, 2.5, dict(zoom=(1.02, 1.08), cy=0.3)),
+        ('s02', f'{V}/v01_liftoff_ns2_a.mp4', 4.0, 2.5, dict(zoom=(1.02, 1.08), cy=0.3)),
         ('s03', src, 4.2, 1.5, dict(crop=CROP, zoom=(1.0, 1.05), cy=0.4)),
         ('s04', f'{V}/v07_ascent2.mp4', 3.0, 2.0, dict(zoom=(1.0, 1.04), cy=0.3)),
         ('s05', f'{V}/v03_limb.mp4', 0.4, 2.0, dict(zoom=(1.0, 1.05))),
@@ -190,7 +191,7 @@ def intro():
         ('s08', f'{M}/build/06_parafoil.mp4', 0.2, 2.0, dict(zoom=(1.16, 1.24), cx=0.12, cy=0.5)),
         ('s09', f'{M}/SARGE_recovery_ops.jpg', 0, 1.5, dict(still=True, zoom=(1.04, 1.12), cy=0.3)),
         ('s10', f'{V}/v09_hangar.mp4', 0.0, 2.0, dict(zoom=(1.0, 1.04))),
-        ('s11', f'{V}/v05_hover.mp4', 1.2, 1.7, dict(zoom=(1.0, 1.05), cy=0.3)),
+        ('s11', f'{V}/v05_hover_ns.mp4', 1.2, 1.7, dict(zoom=(1.0, 1.05), cy=0.3)),
         ('BLACK', None, 0, 1.3, {}),
         ('s13', f'{V}/v03_limb.mp4', 3.0, 4.6, dict(speed=0.8, zoom=(1.04, 1.16), cy=0.6,
                                                     extra='eq=brightness=-0.06:saturation=0.85')),
@@ -227,18 +228,18 @@ def intro():
         return img
 
     score = [('a', 6.0, 2.0), ('b', 36.0, total - 2.0)]
-    sfx = dict(roar=(f'{V}/v01_liftoff.mp4', 0.6, 2.0, 2.5, 0.55),   # (file, ss, at, dur, vol)
+    sfx = dict(roar=(f'{V}/v01_liftoff_ns2_a.mp4', 4.0, 2.0, 2.5, 0.55),   # (file, ss, at, dur, vol)
                roar2=(f'{V}/v07_ascent2.mp4', 3.0, 6.0, 2.0, 0.30))
     build('Intro', shots, ov, total, score, sfx, booms=(2.0, 21.5), whoosh=(20.4,))
 
 
 def outro():
     shots = [
-        ('o1', f'{V}/v01_liftoff.mp4', 1.0, 1.5, dict(zoom=(1.03, 1.08), cy=0.3)),
+        ('o1', f'{V}/v01_liftoff_ns2_a.mp4', 4.5, 1.5, dict(zoom=(1.03, 1.08), cy=0.3)),
         ('o2', f'{V}/v07_ascent2.mp4', 4.0, 1.5, dict(zoom=(1.0, 1.04), cy=0.3)),
         ('o3', f'{V}/v03_limb.mp4', 1.0, 1.5, dict(zoom=(1.0, 1.05))),
         ('o4', f'{M}/build/06_parafoil.mp4', 0.8, 1.2, dict(zoom=(1.16, 1.22), cx=0.12, cy=0.5)),
-        ('o5', f'{V}/v05_hover.mp4', 2.0, 1.0, dict(zoom=(1.0, 1.04), cy=0.3)),
+        ('o5', f'{V}/v05_hover_ns.mp4', 2.0, 1.0, dict(zoom=(1.0, 1.04), cy=0.3)),
         ('BLACK', None, 0, 1.3, {}),
         ('END', None, 0, 5.0, {}),
     ]
@@ -273,7 +274,7 @@ def outro():
         return img
 
     score = [('c', 47.5, total - 0.4)]
-    sfx = dict(roar=(f'{V}/v01_liftoff.mp4', 1.0, 0.0, 1.5, 0.45))
+    sfx = dict(roar=(f'{V}/v01_liftoff_ns2_a.mp4', 4.5, 0.0, 1.5, 0.45))
     build('Outro', shots, ov, total, score, sfx, booms=(0.0, 8.0), whoosh=(6.9,))
 
 
