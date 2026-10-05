@@ -566,7 +566,8 @@ def check_registry_drift(state):
     if auto_register_enabled():
         for line in auto_register_crons():
             log(f"auto-registered: {line}")
-            state.setdefault("_auto_registered", []).append(line)
+            state.setdefault("_auto_registered", []).append(
+                {"ts": datetime.datetime.now().isoformat(timespec="seconds"), "line": line})
     try:
         live = live_labels()
         drift = registry_drift(live, registry_labels())

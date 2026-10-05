@@ -249,6 +249,14 @@ def scorecard():
 def report_section():
     L = ["\n## 16. Improvement ledger — did our fixes actually work?"]
     L += cmd_measure(print_lines=False) or ["- no fixes due for verdict this week"]
+    try:   # crons auto-registered by agent_eval this week (D-7281949) — HIGH risk listed for review
+        st = json.load(open(os.path.join(WS, "state", "agent-eval-state.json")))
+        wk = (datetime.now() - WINDOW).isoformat()
+        ar = [x["line"] for x in st.get("_auto_registered", []) if isinstance(x, dict) and x.get("ts", "") >= wk]
+        if ar:
+            L.append(f"- auto-registered crons this week ({len(ar)}; review HIGH): " + "; ".join(ar))
+    except Exception:
+        pass
     cur, prev = scorecard()
     if cur:
         p = (lambda k: f" (prev {prev[k]})" if prev else "")
