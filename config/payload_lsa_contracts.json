@@ -29,7 +29,9 @@
           "filename": "entX_Subpart_A_CrossWaiver_SIGNED.pdf"
         }
       },
-      "notes": "Docs on file in MC uploads (project OPP-007). LSA is SIGNED BY EXOS ONLY and NOT fully executed (pending entX countersignature + all dates). NOTE: $410,000 already received from entX per QB despite the contract not being fully executed \u2014 paperwork gap to close. No commission salesperson attributed."
+      "notes": "Docs on file in MC uploads (project OPP-007). LSA is SIGNED BY EXOS ONLY and NOT fully executed (pending entX countersignature + all dates). NOTE: $410,000 already received from entX per QB despite the contract not being fully executed \u2014 paperwork gap to close. No commission salesperson attributed.",
+      "commission_waived": true,
+      "commission_note": "No commission \u2014 waived by Jon (D-7281955, 2026-10-05)."
     },
     {
       "qb_customer": "Alchemy Technologies LLC DBA Scentience",
@@ -45,7 +47,8 @@
       "notes": "Owner Lizi Quinn + Phil Eaton. Added 2026-10-05 so a Scentience payment fires a commission check; attribution (Lizi? split w/ Phil?) left null for Jon to confirm on first receipt. M1 QB invoice #0071 pending approval.",
       "fully_executed": false,
       "currency": "USD",
-      "attributed_agent": null
+      "attributed_agent": "agent-lquinn",
+      "commission_note": "Lizi 100% at agreement 5% ($400 on $8,000). Jon D-7281955 2026-10-05."
     },
     {
       "qb_customer": "Matt Lesiw",
@@ -61,7 +64,8 @@
       "notes": "Owner Lizi Quinn + Phil Eaton. Added 2026-10-05; attribution null for Jon to confirm on first receipt.",
       "fully_executed": false,
       "currency": "USD",
-      "attributed_agent": null
+      "attributed_agent": "agent-lquinn",
+      "commission_note": "Lizi FLAT $500 (Jon D-7281955 2026-10-05; ERP rate override 0.0625). Paid in watches \u2014 no QB cash receipt, so payout is a manual MC task on watch receipt."
     }
   ]
 }

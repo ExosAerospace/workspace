@@ -112,6 +112,9 @@ def file_task(task, source_key):
 
 def attribution_clause(c):
     agent = c.get("attributed_agent")
+    if c.get("commission_waived"):
+        return ("Commission WAIVED on this contract — %s No check to cut; audit record only."
+                % (c.get("commission_note") or "no agent."))
     if agent:
         return ("Commission agent **%s** is attributed to this contract — the commission tracker "
                 "(erp-foundation/record_payment.js) accrues the commission per agreement and files a "
