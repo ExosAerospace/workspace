@@ -14,9 +14,9 @@
   a.home{color:var(--text2);font-size:13px;text-decoration:none} a{color:var(--accent)}
   .wrap{max-width:1180px;margin:0 auto;padding:22px 24px 60px}
   .cards{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}
-  .kpi{flex:1;min-width:140px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:4px solid var(--accent)}
+  .kpi{flex:1;min-width:150px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:4px solid var(--accent)}
   .kpi.green{border-left-color:var(--green)} .kpi.gold{border-left-color:var(--gold)} .kpi.cyan{border-left-color:var(--cyan)} .kpi.purple{border-left-color:var(--purple)}
-  .kpi .num{font-size:26px;font-weight:700} .kpi .lbl{color:var(--text2);font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+  .kpi .num{font-size:22px;font-weight:700;white-space:nowrap} .kpi .lbl{color:var(--text2);font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
   .kpi .note{color:var(--text2);font-size:11.5px;margin-top:4px}
   .bar{height:8px;background:var(--navy3);border-radius:6px;overflow:hidden;margin-top:8px} .bar>div{height:100%;background:var(--gold)}
   .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
@@ -100,23 +100,32 @@ async function load() {
   const orders = Array.isArray(po) ? po : (po.orders || []);
   P = opps.filter(x => String(x.id || '').startsWith('PAY-')).map(x => ({ ...x, b: bucket(x.status), seg: field(x.description, 'Segment') }))
     .map(x => ({ ...x, est: estimate(x) }));
-  const live = orders.filter(x => !/cancel/i.test(x.status || ''));
-  const kg = live.reduce((a, x) => a + (Number(x.mass_kg) || 0), 0);
+  const flight2 = orders.filter(x => !/cancel/i.test(x.status || ''));
+  // Jon 10/5: entX (OPP-007, Mission 0, Flight 1) counts as booked BLK3 value.
+  // It lives in Opportunities, not payload-orders.json (that file drives QB
+  // invoicing + commissions), so it is overlaid here. Figures of record:
+  // $820,000 signed-LSA total, $410,000 received per QuickBooks.
+  const e7 = opps.find(x => x.id === 'OPP-007');
+  const live = (e7 ? [{ customer: 'entX Limited', payload_name: 'Project Lazarus RHU demo (OPP-007)',
+    flight: 'Mission 0 · BLK3 Flight 1 · Spaceport America', flight_date: 'Q1 2027', mass_kg: '',
+    contract_value: 820000, owner: 'John Quinn', status: 'booked · $410K received · LSA Exos-signed only', m0: true }] : [])
+    .concat(flight2);
+  const kg = flight2.reduce((a, x) => a + (Number(x.mass_kg) || 0), 0);
   const usd = live.reduce((a, x) => a + (Number(x.contract_value) || 0), 0);
   const n = k => P.filter(x => x.b === k).length;
   const pct = Math.min(100, Math.round(kg / BAY_KG * 100));
   const pipe = P.reduce((a, x) => a + x.est.usd, 0) + usd;
   const weighted = P.reduce((a, x) => a + x.est.usd * WEIGHT[x.b], 0);
   document.getElementById('kpis').innerHTML = `
-    <div class="kpi green"><div class="num">${money(pipe)}</div><div class="lbl">BLK3 Pipeline Value</div><div class="note">estimated · unweighted · ${money(weighted)} stage-weighted</div></div>
+    <div class="kpi green"><div class="num">${money(pipe)}</div><div class="lbl">BLK3 Pipeline Value</div><div class="note">estimated · unweighted · ${money(weighted + usd)} stage-weighted</div></div>
     <div class="kpi cyan"><div class="num">${money(pipe - usd)}</div><div class="lbl">Unbooked Pipeline</div><div class="note">${P.length} prospects still to close</div></div>
-    <div class="kpi gold"><div class="num">${money(usd)}</div><div class="lbl">Booked contract value</div><div class="note">${live.length} payload order(s)</div></div>
-    <div class="kpi purple"><div class="num">${kg} / ${BAY_KG} kg</div><div class="lbl">Bay filled</div><div class="bar"><div style="width:${pct}%"></div></div></div>
+    <div class="kpi gold"><div class="num">${money(usd)}</div><div class="lbl">Booked contract value</div><div class="note">entX Mission 0 $820K + ${flight2.length} Flight-2 order(s)</div></div>
+    <div class="kpi purple"><div class="num">${kg} / ${BAY_KG} kg</div><div class="lbl">Flight 2 bay filled</div><div class="bar"><div style="width:${pct}%"></div></div></div>
     <div class="kpi green"><div class="num">${n('active')}</div><div class="lbl">Active conversations</div></div>
     <div class="kpi cyan"><div class="num">${n('outreach')}</div><div class="lbl">Outreach sent</div></div>
     <div class="kpi"><div class="num">${n('ready') + n('early')}</div><div class="lbl">Ready + researching</div><div class="note">${n('ready')} ready / ${n('early')} researching</div></div>`;
-  document.getElementById('notice').innerHTML = `Source: the BLK3 Payload Sales Engine pipeline (daily 05:45), bridged into Opportunities as <b>PAY-</b> buyers, plus <a href="payload-orders.html">Payload Orders</a> for booked deals. ℹ️ Pipeline value is an ESTIMATE (unweighted), not booked revenue: each prospect is sized to its likely slot off the <a href="https://www.exosaero.com/pricing">published rate card</a> by segment (gov/defense/commercial buyers = quarter bay $255K, commercial/sensor = 6U $45K, university = 3U $22.5K, education = 1U $7.5K); a real quote on the row replaces the estimate. Stage-weighted uses active 50% · outreach 20% · ready 10% · researching 5%. Full bay = $1,012,500 per flight, so the pipeline is ${(pipe / 1012500).toFixed(1)}× one bay.`;
-  document.getElementById('booked').innerHTML = live.map(x => `<tr><td>${esc(x.customer)}</td><td>${esc(x.payload_name)}</td><td>${esc(x.flight)}${x.flight_date ? ' · ' + esc(x.flight_date) : ''}</td><td>${esc(x.mass_kg)} kg</td><td class="val">${money(x.contract_value)}</td><td>${esc(x.owner)}</td><td><span class="badge s-booked">${esc(x.status || 'booked')}</span></td></tr>`).join('') || '<tr><td colspan="7" class="muted">No booked payloads yet.</td></tr>';
+  document.getElementById('notice').innerHTML = `Source: the BLK3 Payload Sales Engine pipeline (daily 05:45), bridged into Opportunities as <b>PAY-</b> buyers, plus <a href="payload-orders.html">Payload Orders</a> for booked deals. ℹ️ Pipeline value is an ESTIMATE (unweighted), not booked revenue: each prospect is sized to its likely slot off the <a href="https://www.exosaero.com/pricing">published rate card</a> by segment (gov/defense/commercial buyers = quarter bay $255K, commercial/sensor = 6U $45K, university = 3U $22.5K, education = 1U $7.5K); a real quote on the row replaces the estimate. Stage-weighted uses active 50% · outreach 20% · ready 10% · researching 5%. Pipeline value = all booked value (entX Mission 0 $820K + Flight-2 orders) + estimated value of the payloads we're pursuing. Full bay = $1,012,500 per flight.`;
+  document.getElementById('booked').innerHTML = live.map(x => `<tr><td>${esc(x.customer)}</td><td>${esc(x.payload_name)}</td><td>${esc(x.flight)}${x.flight_date ? ' · ' + esc(x.flight_date) : ''}</td><td>${x.mass_kg === "" ? "—" : esc(x.mass_kg) + " kg"}</td><td class="val">${money(x.contract_value)}</td><td>${esc(x.owner)}</td><td><span class="badge s-booked">${esc(x.status || 'booked')}</span></td></tr>`).join('') || '<tr><td colspan="7" class="muted">No booked payloads yet.</td></tr>';
   render();
 }
 const ORDER = {active: 0, outreach: 1, ready: 2, early: 3};
