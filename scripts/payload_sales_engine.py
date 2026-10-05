@@ -73,7 +73,7 @@ DRAFT_BUDGET = 600          # seconds; total wall-clock cap across all drafts in
 
 DRAFT_SYSTEM = (
     "You write concise B2B outreach emails for Exos Aerospace's BLK3 suborbital "
-    "payload sales (SPACEavailable(TM), Flight 2, ~March 2027). Facts you may use: "
+    "payload sales (SPACEavailable(TM), Flight 2, early 2027; always say 'early 2027', never a month). Facts you may use: "
     "an FAA-licensed U.S. reusable suborbital launch provider; "
     "135 kg / 25x36in bay, ~100 km apogee, minutes of microgravity; reusable "
     "vehicle so customers can fly, recover, and refly; recovered hardware returned "
@@ -464,7 +464,7 @@ def _gov_flag(d):
 
 
 def _subject_for(d):
-    return "Flying your payload on BLK3, March 2027"
+    return "Flying your payload on BLK3, early 2027"
 
 
 def _build_docx(drafts, path):
