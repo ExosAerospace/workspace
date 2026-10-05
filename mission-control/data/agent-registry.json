@@ -5196,6 +5196,27 @@
    "lifecycle": "self-removing (prompt has an end condition)",
    "registered": "2026-10-05",
    "envelope_source": "register_cron.py derivation from the live cron"
+  },
+  {
+   "label": "com.exos.lizi-eai-board",
+   "script": "lizi-eai-board-reminder.py",
+   "kind": "one-shot",
+   "schedule": "once 2026-10-07 08:00 CT",
+   "purpose": "One-shot reminder email to Lizi to schedule the EAI annual board meeting (MC #3088, notice #3225). Skips if #3088 is Done; self-unloads after running.",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "Supabase read (task #3088 state); ONE internal email via msmtp to lquinn@exosaero.com; deletes its own plist + launchctl bootout. No external sends.",
+   "memory_boundary": "none (stateless)",
+   "escalation": "Lizi acts on the reminder; MC #3088",
+   "eval_type": "output",
+   "eval_suite": "one-shot liveness (exit 0, self-unload) + OUTPUT: ~/.msmtp.log must show exactly one send to lquinn@exosaero.com on 10/7 OR #3088 Done (skip); recipient hard-coded internal",
+   "telemetry": "logs/lizi-eai-board.log",
+   "reusability_scope": "single-use",
+   "risk_tier": "LOW",
+   "lifecycle": "self-removing",
+   "registered": "2026-10-05",
+   "envelope_source": "hand review of scripts/lizi-eai-board-reminder.py, 2026-10-05"
   }
  ],
  "eval_wave_1": {
