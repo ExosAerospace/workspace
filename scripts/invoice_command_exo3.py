@@ -54,6 +54,7 @@ INTERNAL_DOMAINS = ("exosaero.com", "pm.me", "proton.me", "protonmail.com")
 TELEMETRY = True   # selftest turns this off so evals never write fleet/trace/log records
 
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(?:\.[A-Za-z0-9\-]+)*\.[A-Za-z]{2,}")
+PHONE_RE = re.compile(r"(?<!\d)(?:\+?1[\s.\-]?)?\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]\d{4}(?!\d)")
 CMD_RE = re.compile(r"@\s*ex(?:o(?:bot|bto|boto|bott)?|bot)\b[\s:,\-]*invoice\b[ \t:,\-]*([^\n]*)", re.I)
 # Start of quoted / forwarded material: everything above is the sender's own text.
 FWD_RE = re.compile(r"(?im)^\s*(?:_{8,}|-{2,}\s*(?:forwarded message|original message)|begin forwarded message"
@@ -63,7 +64,10 @@ FWD_RE = re.compile(r"(?im)^\s*(?:_{8,}|-{2,}\s*(?:forwarded message|original me
 NAME_L = r"(?:buyer'?s?\s+(?:full\s+)?name|customer\s+name|full\s+name|bill\s+to|buyer|customer|name)"
 EMAIL_L = r"(?:billing\s+e-?mail(?:\s+address)?|buyer'?s?\s+e-?mail|e-?mail(?:\s+address)?)"
 QTY_L = r"(?:qty|quantity|units|count|how\s+many)"
-ALL_L = rf"(?:{NAME_L}|{EMAIL_L}|{QTY_L})"
+PHONE_L = r"(?:(?:buyer'?s?\s+)?(?:phone|tel|telephone|mobile|cell)(?:\s+(?:number|no\.?|#))?)"
+ADDR_L = r"(?:(?:billing|mailing|shipping|street|home|buyer'?s?)\s+address|address)"
+ALL_L = rf"(?:{NAME_L}|{EMAIL_L}|{QTY_L}|{PHONE_L}|{ADDR_L})"
+EXOS_PHONES = {"9727408355", "4309664005"}   # Jon mobile, Exos main: never a buyer's number
 NUM_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10}
 NAME_STOP = {"for", "to", "qty", "quantity", "units", "unit", "x", "please", "pls", "the", "buyer", "name", "email",
              "e-mail", "invoice", "of", "at", "is", "a", "an", "pcs", "pc", "billing", "customer", "thanks", "thank", "you"}
@@ -230,7 +234,7 @@ def parse_command(body, offerings, exclude_names=()):
     exclude = {n.lower() for n in exclude_names if n}
     own, fwd = split_own_text(body)
     m = CMD_RE.search(own)
-    res = {"product": None, "product_word": "", "name": None, "email": None, "qty": None,
+    res = {"product": None, "product_word": "", "name": None, "email": None, "qty": None, "phone": None, "address": None,
            "email_source": None, "missing": [], "ambiguous": []}
     if not m:
         res["missing"].append("the command line '@Exobot invoice <product>'")
@@ -240,7 +244,7 @@ def parse_command(body, offerings, exclude_names=()):
     if key is None:
         rest = m.group(1)[len(rest):] if rest else m.group(1)
 
-    names, emails, qtys = [], [], []
+    names, emails, qtys, phones, addrs = [], [], [], [], []
     # (a) labeled fields anywhere in the sender's own text (explicit labels are safe to read anywhere)
     lab_re = re.compile(rf"(?i)(?<![\w])({ALL_L})\s*[:=]\s*(.+?)(?=[\s,;|]+{ALL_L}\s*[:=]|\n|$)")
     labeled_spans = []
@@ -249,6 +253,11 @@ def parse_command(body, offerings, exclude_names=()):
         labeled_spans.append((lm.start(), lm.end()))
         if re.fullmatch(EMAIL_L, label, re.I):
             emails += EMAIL_RE.findall(val)
+        elif re.fullmatch(PHONE_L, label, re.I):
+            phones += [ph.strip() for ph in PHONE_RE.findall(val)]
+        elif re.fullmatch(ADDR_L, label, re.I):
+            if re.search(r"\d", val) and len(val) >= 8:
+                addrs.append(val.strip())
         elif re.fullmatch(QTY_L, label, re.I):
             q = _qty_val(val)
             if q is not None:
@@ -318,6 +327,13 @@ def parse_command(body, offerings, exclude_names=()):
                     emails.append(cands[0]); res["email_source"] = src
                     break
 
+    # (e) phone fallback (task #3418): exactly one non-Exos phone number in the forwarded buyer email
+    if not phones and fwd:
+        cands = {re.sub(r"\D", "", ph)[-10:]: ph.strip() for ph in PHONE_RE.findall(fwd)}
+        cands = {k: v for k, v in cands.items() if k not in EXOS_PHONES}
+        if len(cands) == 1:
+            phones.append(next(iter(cands.values()))); res["phone_source"] = "forwarded email"
+
     def uniq(xs, key=lambda x: x):
         out, seen = [], set()
         for x in xs:
@@ -357,6 +373,21 @@ def parse_command(body, offerings, exclude_names=()):
             res["qty"] = qtys[0]
     else:
         res["missing"].append("the quantity")
+    # Task #3418 (10/5): an invoice must carry the customer's address, phone and email.
+    phones = uniq(phones, key=lambda x: re.sub(r"\D", "", x)[-10:])
+    if len(phones) > 1:
+        res["ambiguous"].append("phone number (I see " + " / ".join(phones) + ")")
+    elif phones:
+        res["phone"] = phones[0]
+    else:
+        res["missing"].append("the buyer's phone number")
+    addrs = uniq(addrs, key=lambda x: x.lower())
+    if len(addrs) > 1:
+        res["ambiguous"].append("mailing address (I see " + " / ".join(addrs) + ")")
+    elif addrs:
+        res["address"] = addrs[0]
+    else:
+        res["missing"].append("the buyer's mailing address (street, city, state, ZIP)")
     return res
 
 
@@ -513,9 +544,12 @@ def _fmt_missing_reply(p, product_word, offerings):
     if p.get("name"): have.append(f"Name: {p['name']}")
     if p.get("email"): have.append(f"Email: {p['email']}")
     if p.get("qty"): have.append(f"Qty: {p['qty']}")
+    if p.get("phone"): have.append(f"Phone: {p['phone']}")
+    if p.get("address"): have.append(f"Address: {p['address']}")
     asks = p["missing"] + [f"a single, unambiguous {a}" for a in p["ambiguous"]]
     ex = (f"@Exobot invoice {product_word or 'watch'}\nName: {p.get('name') or 'Jane Doe'}, "
-          f"Email: {p.get('email') or 'jane@example.com'}, Qty: {p.get('qty') or 1}")
+          f"Email: {p.get('email') or 'jane@example.com'}, Qty: {p.get('qty') or 1}\n"
+          f"Phone: {p.get('phone') or '214-555-0100'}\nAddress: {p.get('address') or '123 Main St, Dallas, TX 75201'}")
     return ("No invoice was created. I need:\n" + "\n".join(f"- {a}" for a in asks)
             + ("\n\nWhat I did get: " + "; ".join(have) if have else "")
             + "\n\nPlease forward the buyer's email again with the command filled in, for example:\n\n" + ex)
@@ -565,7 +599,7 @@ def handle(mid, sender, subject, body, *, dry_run=False, ledger_path=None, offer
     # 3. parse
     excl = set(names_exclude if names_exclude is not None else roster_names())
     p = parse_command(body, offerings, excl)
-    R["detail"] = {k: p.get(k) for k in ("product", "name", "email", "qty", "email_source")}
+    R["detail"] = {k: p.get(k) for k in ("product", "name", "email", "qty", "email_source", "phone", "address")}
     if p["product"] is None:
         known = ", ".join(sorted(offerings)) or "(none)"
         word = p.get("product_word") or ""
@@ -667,6 +701,7 @@ def handle(mid, sender, subject, body, *, dry_run=False, ledger_path=None, offer
             import qb_invoice
             prepare_fn = qb_invoice.prepare
         ns = argparse.Namespace(order=None, milestone=None, customer=name, email=email, amount=f"{total:.2f}", desc=desc,
+                                phone=p.get("phone"), address=p.get("address"),
                                 item=off["qb_item"], terms=off["terms"], note=note, doc_number=None, dry_run=dry_run,
                                 qty=qty, unit_price=f"{unit:.2f}", offering={"product": p["product"], "entry_id": entry["id"]})
         rec = prepare_fn(ns) or {}
@@ -733,9 +768,19 @@ def _selftest():
     fwd_rt = fwd.replace(" Sent:", " Reply-To: ben.personal@home.example\n Sent:")
     chk("email fallback prefers forwarded Reply-To", fwd_rt, email="ben.personal@home.example", email_source="forwarded Reply-To")
     chk("missing qty", "@Exobot invoice watch Name: Jane Doe Email: jane@example.com", qty=None)
-    p = parse_command("@Exobot invoice watch Name: Jane Doe Email: jane@example.com", offs, ex)
+    p = parse_command("@Exobot invoice watch Name: Jane Doe Email: jane@example.com" + "\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201", offs, ex)
     ok = p["missing"] == ["the quantity"]
     print(("PASS " if ok else "FAIL ") + "missing qty -> asks only for quantity", p["missing"]); ok or fails.append("missing-list")
+    # task #3418: phone + address are required; labeled fields parse, phone falls back to the forwarded buyer email
+    chk("phone+address labeled", "@Exobot invoice watch\nName: Jane Doe, Email: jane@example.com, Qty: 1\nPhone: (214) 555-0100\nAddress: 12 Elm St, Dallas, TX 75201",
+        phone="(214) 555-0100", address="12 Elm St, Dallas, TX 75201")
+    p = parse_command("@Exobot invoice watch Name: Jane Doe Email: jane@example.com Qty: 1", offs, ex)
+    ok = any("phone" in m for m in p["missing"]) and any("mailing address" in m for m in p["missing"])
+    print(("PASS " if ok else "FAIL ") + "no phone/address -> asks for both", p["missing"]); ok or fails.append("contact-required")
+    chk("phone from forwarded buyer signature (not Exos numbers)",
+        "@Exobot invoice watch Name: Timm Anderson Email: mrrocket@mac.com Qty: 1 Address: 9 Oak Ln, Houston, TX 77002\n"
+        "Lizi Quinn\nMob. +1-972-740-8355\n\nFrom: Timm Anderson <mrrocket@mac.com>\nSent: Friday\nLizi, I want a watch!\nTimm Anderson\n832-551-7138",
+        phone="832-551-7138")
     p = parse_command("@Exobot invoice watch Jane jane@example.com 1", offs, ex)
     ok = p["name"] is None and any("FULL name" in m for m in p["missing"])
     print(("PASS " if ok else "FAIL ") + "single-word name -> asks for full name"); ok or fails.append("full-name")
@@ -768,46 +813,46 @@ def _selftest():
         hit = lambda n: [{"listed_name": "BAD ACTOR", "source": "SDN", "score": 1.0, "countries": "IR"}]
         kw = dict(ledger_path=led, wb_path=os.path.join(tmp, "none.xlsx"), prepare_fn=fake_prepare, screen_fn=clear, names_exclude=ex)
         L = "lquinn@exosaero.com"
-        r = handle("<m1>", L, "Fw: watch", "@Exobot invoice watch Jane Doe jane@x.com 2", **kw)
+        r = handle("<m1>", L, "Fw: watch", "@Exobot invoice watch Jane Doe jane@x.com 2\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201", **kw)
         ok = r["outcome"] == "success" and "Remaining: 8 of 10" in r["reply"] and calls[-1].qty == 2 and calls[-1].amount == "1350.00" \
             and calls[-1].desc == "Exos flight watch pre-order (qty 2). Pre-order — ships after the BLK3 flight, targeted 2027." \
             and calls[-1].terms == "Due on receipt"
         print(("PASS " if ok else "FAIL ") + "success path", r["outcome"]); ok or fails.append("success")
-        r = handle("<m1>", L, "Fw: watch", "@Exobot invoice watch Jane Doe jane@x.com 2", **kw)
+        r = handle("<m1>", L, "Fw: watch", "@Exobot invoice watch Jane Doe jane@x.com 2\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201", **kw)
         ok = r["outcome"] == "duplicate" and len(calls) == 1
         print(("PASS " if ok else "FAIL ") + "duplicate Message-ID -> no second invoice"); ok or fails.append("dup")
-        r = handle("<m2>", "phil@exosaero.com", "Fw", "@Exobot invoice watch Jane Doe jane@x.com 1", **kw)
+        r = handle("<m2>", "phil@exosaero.com", "Fw", "@Exobot invoice watch Jane Doe jane@x.com 1\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201", **kw)
         ok = r["outcome"] == "unauthorized" and r["reply"] is None and len(calls) == 1
         print(("PASS " if ok else "FAIL ") + "unauthorized sender ignored"); ok or fails.append("unauth")
-        r = handle("<m3>", L, "Fw", "@Exobot invoice watch Jane Doe 1", **kw)
+        r = handle("<m3>", L, "Fw", "@Exobot invoice watch Jane Doe 1\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201", **kw)
         ok = r["outcome"] == "missing_info" and "billing email" in r["reply"] and len(calls) == 1
         print(("PASS " if ok else "FAIL ") + "missing info -> reply, no invoice"); ok or fails.append("missing")
-        r = handle("<m4>", L, "Fw", "@Exobot invoice watch Bad Actor bad@x.com 1", **dict(kw, screen_fn=hit))
+        r = handle("<m4>", L, "Fw", "@Exobot invoice watch Bad Actor bad@x.com 1\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201", **dict(kw, screen_fn=hit))
         ok = r["outcome"] == "csl_hold" and r["jon_alert"] and len(calls) == 1
         print(("PASS " if ok else "FAIL ") + "CSL hit -> hold + Jon alert, no invoice"); ok or fails.append("csl")
-        r = handle("<m5>", L, "Fw", "@Exobot invoice watch Err Person err@x.com 1",
+        r = handle("<m5>", L, "Fw", "@Exobot invoice watch Err Person err@x.com 1\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201",
                    **dict(kw, screen_fn=lambda n: (_ for _ in ()).throw(RuntimeError("net down"))))
         ok = r["outcome"] == "csl_hold" and len(calls) == 1
         print(("PASS " if ok else "FAIL ") + "CSL screen error -> fail closed"); ok or fails.append("csl-err")
-        r = handle("<m6>", L, "Fw", "@Exobot invoice watch Big Buyer big@x.com 9", **kw)
+        r = handle("<m6>", L, "Fw", "@Exobot invoice watch Big Buyer big@x.com 9\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201", **kw)
         ok = r["outcome"] == "sold_out" and "only 8 of 10" in r["reply"] and len(calls) == 1
         print(("PASS " if ok else "FAIL ") + "over cap -> 'only N left', no invoice"); ok or fails.append("cap")
-        r = handle("<m7>", L, "Fw", "@Exobot invoice watch Last Eight le@x.com 8", **kw)
-        r2 = handle("<m8>", L, "Fw", "@Exobot invoice watch One More om@x.com 1", **kw)
+        r = handle("<m7>", L, "Fw", "@Exobot invoice watch Last Eight le@x.com 8\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201", **kw)
+        r2 = handle("<m8>", L, "Fw", "@Exobot invoice watch One More om@x.com 1\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201", **kw)
         ok = r["outcome"] == "success" and r2["outcome"] == "sold_out" and "SOLD OUT" in r2["reply"]
         print(("PASS " if ok else "FAIL ") + "cap reached -> sold out"); ok or fails.append("soldout")
         rec = {"offering": {"product": "watch", "entry_id": json.load(open(led))["offerings"]["watch"]["entries"][0]["id"]}}
         ledger_mark(rec, "Cancelled", ledger_path=led)
-        r3 = handle("<m9>", L, "Fw", "@Exobot invoice watch One More om@x.com 1", **kw)
+        r3 = handle("<m9>", L, "Fw", "@Exobot invoice watch One More om@x.com 1\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201", **kw)
         ok = r3["outcome"] == "success" and "Remaining: 1 of 10" in r3["reply"]
         print(("PASS " if ok else "FAIL ") + "Cancel releases units back to the cap"); ok or fails.append("cancel")
-        r = handle("<m10>", L, "Fw", "@Exobot invoice watch Q Err qe@x.com 1",
+        r = handle("<m10>", L, "Fw", "@Exobot invoice watch Q Err qe@x.com 1\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201",
                    **dict(kw, prepare_fn=lambda ns: (_ for _ in ()).throw(SystemExit("QB Item 'Sales' not found"))))
         st = json.load(open(led))
         ent = [e for e in st["offerings"]["watch"]["entries"] if e["mid"] == "<m10>"][0]
         ok = r["outcome"] == "error" and ent["status"] == "failed" and r["jon_alert"]
         print(("PASS " if ok else "FAIL ") + "QB prepare error -> failed (not counted), Jon alerted"); ok or fails.append("qb-err")
-        r = handle("<m10>", L, "Fw", "@Exobot invoice watch Q Err qe@x.com 1", **kw)
+        r = handle("<m10>", L, "Fw", "@Exobot invoice watch Q Err qe@x.com 1\nPhone: 214-555-0100\nAddress: 1 Main St, Dallas, TX 75201", **kw)
         ok = r["outcome"] == "duplicate"
         print(("PASS " if ok else "FAIL ") + "failed message is NOT auto-retried (no half-created duplicate)"); ok or fails.append("qb-err-dup")
     finally:

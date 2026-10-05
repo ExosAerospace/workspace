@@ -123,6 +123,55 @@ def find_or_create_customer(name, email, dry):
     return c["Id"], True
 
 
+PHONE_RE = re.compile(r"\+?1?[\s.\-]?\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}")
+
+
+def bill_block(customer, email, phone, address):
+    """Task #3418 (10/5): every invoice must show the customer's address, phone AND email. QB's invoice PDF
+    prints BillAddr only (not the customer's phone/email), so put all of them in BillAddr as free-form lines (max 5)."""
+    addr = [s.strip() for s in re.split(r"\n|;", address or "") if s.strip()]
+    if len(addr) > 2:   # name + 2 address lines + phone + email = 5 lines, which is QB's limit
+        addr = [addr[0], ", ".join(addr[1:])]
+    lines = [customer] + addr + [f"Phone: {phone}", f"Email: {email}"]
+    return {f"Line{i + 1}": l[:500] for i, l in enumerate(lines[:5])}
+
+
+def contact_gaps(bill_addr, email):
+    """What's missing from an invoice's billing block, as a list of words (empty = OK to send)."""
+    lines = [str(v) for k, v in (bill_addr or {}).items() if k.startswith("Line") and v]
+    gaps = []
+    if not email:
+        gaps.append("email")
+    if not any(PHONE_RE.search(l) for l in lines):
+        gaps.append("phone")
+    if not any(re.search(r"\d", l) and not l.startswith(("Phone:", "Email:")) for l in lines[1:]) and not (bill_addr or {}).get("City"):
+        gaps.append("address")
+    return gaps
+
+
+def customer_contact(cid):
+    """(phone, address) already on the QB customer record, if any."""
+    c = (q.query(f"select * from Customer where Id = '{cid}'").get("Customer") or [{}])[0]
+    phone = (c.get("PrimaryPhone") or {}).get("FreeFormNumber") or (c.get("Mobile") or {}).get("FreeFormNumber")
+    b = c.get("BillAddr") or {}
+    parts = [b.get(k) for k in ("Line1", "Line2", "Line3") if b.get(k)]
+    cityline = " ".join(x for x in [(b.get("City") or "") + ("," if b.get("City") else ""), b.get("CountrySubDivisionCode"), b.get("PostalCode")] if x)
+    if cityline.strip(" ,"):
+        parts.append(cityline.strip())
+    return phone, "; ".join(parts) or None
+
+
+def update_customer_contact(cid, phone, address):
+    c = (q.query(f"select * from Customer where Id = '{cid}'").get("Customer") or [{}])[0]
+    body = {"Id": cid, "SyncToken": c["SyncToken"], "sparse": True}
+    if phone:
+        body["PrimaryPhone"] = {"FreeFormNumber": phone}
+    if address:
+        parts = [s.strip() for s in re.split(r"\n|;", address) if s.strip()]
+        body["BillAddr"] = {f"Line{i + 1}": p for i, p in enumerate(parts[:4])}
+    _api("POST", "customer", body)
+
+
 def ref_by_name(entity, name):
     r = q.query(f"select Id, Name from {entity} where Name = '{qesc(name)}'")
     rows = r.get(entity) or []
@@ -254,6 +303,8 @@ def prepare(a):
         item = a.item or "Contract Services"
     if not email:
         raise SystemExit("no customer billing email — QB can't send without one")
+    phone = getattr(a, "phone", None) or (order or {}).get("contact_phone")
+    address = getattr(a, "address", None) or (order or {}).get("billing_address")
 
     if banned_terms(desc):
         raise SystemExit(f"invoice text contains internal term(s) {banned_terms(desc)} — not allowed on a customer invoice")
@@ -265,13 +316,28 @@ def prepare(a):
     offering = getattr(a, "offering", None)
     if a.dry_run:
         cid, new = find_or_create_customer(customer, email, True)
+        if not new:
+            p0, a0 = customer_contact(cid)
+            phone, address = phone or p0, address or a0
+        gaps = contact_gaps(bill_block(customer, email, phone, address) if address else {"Line1": customer, "Line2": f"Phone: {phone}" if phone else ""}, email)
+        if gaps:
+            raise SystemExit(f"invoice must carry the customer's address, phone and email — missing: {', '.join(gaps)} (task #3418)")
         out = {"doc_number": a.doc_number or next_doc_number(), "customer": customer, "qb_customer": cid, "new_customer": new, "email": email, "amount": amount,
                "qty": qty, "unit_price": unit, "item": item, "item_id": ref_by_name("Item", item), "terms": terms,
                "terms_id": ref_by_name("Term", terms), "desc": desc, "dry_run": True}
         print(json.dumps(out, indent=1))
         return out
+    found = q.query(f"select Id from Customer where DisplayName = '{qesc(customer)}'").get("Customer")
+    if found:
+        p0, a0 = customer_contact(found[0]["Id"])
+        phone, address = phone or p0, address or a0
+    gaps = contact_gaps(bill_block(customer, email, phone, address) if address else {"Line1": customer, "Line2": f"Phone: {phone}" if phone else ""}, email)
+    if gaps:   # checked BEFORE creating anything in QB
+        raise SystemExit(f"invoice must carry the customer's address, phone and email — missing: {', '.join(gaps)} (task #3418)")
     cid, _ = find_or_create_customer(customer, email, False)
+    update_customer_contact(cid, phone, address)
     inv = {
+        "BillAddr": bill_block(customer, email, phone, address),
         "CustomerRef": {"value": cid},
         "Line": [{"DetailType": "SalesItemLineDetail", "Amount": amount, "Description": desc,
                   "SalesItemLineDetail": {"ItemRef": {"value": ref_by_name("Item", item)}, "Qty": qty, "UnitPrice": unit}}],
@@ -354,6 +420,11 @@ def watch(a):
                 if bad:
                     log(f"BLOCKED send of QB invoice {r['doc_number']}: line text contains {bad} — fix the invoice, then re-approve")
                     continue
+                gaps = contact_gaps(live[0].get("BillAddr"), (live[0].get("BillEmail") or {}).get("Address"))
+                if gaps:
+                    log(f"BLOCKED send of QB invoice {r['doc_number']}: billing block missing {', '.join(gaps)} (task #3418) — "
+                        f"run `qb_invoice.py contact --qb-id {r['qb_id']} --phone ... --address ...`; the approval stands and it sends on the next watch")
+                    continue
                 if a.dry_run:
                     print("WOULD SEND", r["doc_number"], r["email"]); continue
                 res = _api("POST", f"invoice/{r['qb_id']}/send", params={"sendTo": r["email"]})["Invoice"]
@@ -407,17 +478,56 @@ def watch(a):
         jsave(STATE, st)
 
 
+def contact(a):
+    """Add/fix the customer's phone + address on an UNSENT invoice (and its QB customer), then refresh the PDF
+    that Jon reviews on the Decision. Task #3418."""
+    inv = (q.query(f"select * from Invoice where Id = '{a.qb_id}'").get("Invoice") or [None])[0]
+    if not inv:
+        raise SystemExit(f"QB invoice Id {a.qb_id} not found")
+    if inv.get("EmailStatus") == "EmailSent":
+        raise SystemExit(f"invoice {inv.get('DocNumber')} was already sent; not editing it")
+    cid, name = inv["CustomerRef"]["value"], inv["CustomerRef"].get("name")
+    email = (inv.get("BillEmail") or {}).get("Address")
+    p0, a0 = customer_contact(cid)
+    phone, address = a.phone or p0, a.address or a0
+    block = bill_block(name, email, phone, address) if address else {"Line1": name, "Line2": f"Phone: {phone}" if phone else "", "Line3": f"Email: {email}"}
+    if a.dry_run:
+        print(json.dumps({"BillAddr": block, "gaps": contact_gaps(block, email)}, indent=1)); return
+    update_customer_contact(cid, a.phone, a.address)
+    _api("POST", "invoice", {"Id": inv["Id"], "SyncToken": inv["SyncToken"], "sparse": True, "BillAddr": {k: v for k, v in block.items() if v}})
+    st = jload(STATE, {"invoices": []})
+    rec = next((r for r in st["invoices"] if r["qb_id"] == str(a.qb_id)), None)
+    if rec:
+        pdf = invoice_pdf(rec["qb_id"], rec["doc_number"])
+        meta_path = os.path.join(WS, "mission-control/uploads/_meta.json")
+        meta = json.load(open(meta_path))
+        for m in meta:   # refresh the copy on the Decision card in place
+            if m.get("decision_id") == rec.get("decision_id") and m.get("doc_key") == f"qb-invoice-{rec['qb_id']}":
+                import shutil
+                shutil.copy2(pdf, os.path.join(WS, "mission-control/uploads", m["stored_name"]))
+                m["size"] = os.path.getsize(pdf)
+        tmp = meta_path + ".tmp"; json.dump(meta, open(tmp, "w"), indent=2); os.replace(tmp, meta_path)
+    gaps = contact_gaps(block, email)
+    log(f"contact updated on QB invoice {inv.get('DocNumber')} (Id {inv['Id']}); still missing: {gaps or 'nothing'}")
+    print(json.dumps({"doc": inv.get("DocNumber"), "BillAddr": block, "missing": gaps}, indent=1))
+
+
 def main():
     ap = argparse.ArgumentParser()
     sp = ap.add_subparsers(dest="cmd", required=True)
     p = sp.add_parser("prepare")
-    for f in ("order", "milestone", "customer", "email", "amount", "desc", "item", "terms", "note", "doc_number"):
+    for f in ("order", "milestone", "customer", "email", "phone", "address", "amount", "desc", "item", "terms", "note", "doc_number"):
         p.add_argument("--" + f.replace("_", "-"), dest=f)
     p.add_argument("--dry-run", action="store_true")
     w = sp.add_parser("watch")
     w.add_argument("--dry-run", action="store_true")
+    c = sp.add_parser("contact", help="add/fix customer phone + address on an unsent invoice")
+    c.add_argument("--qb-id", required=True)
+    c.add_argument("--phone")
+    c.add_argument("--address", help="street; city, ST zip  (';' or newline separates lines)")
+    c.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
-    prepare(a) if a.cmd == "prepare" else watch(a)
+    {"prepare": prepare, "watch": watch, "contact": contact}[a.cmd](a)
 
 
 if __name__ == "__main__":
