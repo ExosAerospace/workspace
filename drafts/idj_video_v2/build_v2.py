@@ -182,9 +182,9 @@ def intro():
     else:
         shots.append(('s01', src, 0.2, 2.0, dict(crop=CROP, zoom=(1.0, 1.10), cy=0.35)))
     shots += [
-        ('s02', f'{V}/v01_liftoff_ns2_a.mp4', 4.0, 2.5, dict(zoom=(1.02, 1.08), cy=0.3)),
-        ('s03', src, 4.2, 1.5, dict(crop=CROP, zoom=(1.0, 1.05), cy=0.4)),
-        ('s04', f'{V}/v07_ascent2.mp4', 3.0, 2.0, dict(zoom=(1.0, 1.04), cy=0.3)),
+        # v4 (#2928 10/5): only clean, near-transparent LOX/ethanol flame on screen - no white plume shots
+        ('s02', f'{V}/v07_ascent2.mp4', 4.5, 2.5, dict(speed=0.67, zoom=(1.0, 1.06), cy=0.3)),
+        ('s03', f'{V}/v07_ascent2.mp4', 6.2, 3.5, dict(speed=0.48, zoom=(1.10, 1.22), cy=0.2)),
         ('s05', f'{V}/v03_limb.mp4', 0.4, 2.0, dict(zoom=(1.0, 1.05))),
         ('s06', f'{V}/v04_sep.mp4', 0.3, 1.5, dict(speed=0.75, zoom=(1.0, 1.06), cx=0.6, cy=0.5)),
         ('s07', f'{M}/build/05_drogue.mp4', 0.4, 1.5, dict(zoom=(1.0, 1.06))),
@@ -206,7 +206,7 @@ def intro():
         fade_text(img, t, 0.35, 1.95, 'エクソス・エアロスペース', fj, 965, (230, 230, 230))
         kinetic(img, t, 2.30, 4.45, 'REUSABLE.', '再使用型ロケット')
         kinetic(img, t, 4.55, 5.95, 'SUBORBITAL.', 'サブオービタル（準軌道）')
-        label(img, t, 6.10, 7.95, 'SARGE  |  FLIGHT FOOTAGE', 'SARGE 実飛行映像')
+        label(img, t, 6.10, 7.95, 'SARGE  |  SUBORBITAL VEHICLE', 'SARGE 準軌道ロケット')
         kinetic(img, t, 8.10, 9.95, 'FLOWN.', '飛行実証済み')
         label(img, t, 10.05, 11.45, 'NOSE CONE SEPARATION', 'ノーズコーン分離')
         kinetic(img, t, 13.10, 14.95, 'RECOVERED.', '機体を回収')
@@ -228,18 +228,17 @@ def intro():
         return img
 
     score = [('a', 6.0, 2.0), ('b', 36.0, total - 2.0)]
-    sfx = dict(roar=(f'{V}/v01_liftoff_ns2_a.mp4', 4.0, 2.0, 2.5, 0.55),   # (file, ss, at, dur, vol)
-               roar2=(f'{V}/v07_ascent2.mp4', 3.0, 6.0, 2.0, 0.30))
+    sfx = dict(roar=(f'{V}/v07_ascent2.mp4', 4.5, 2.0, 2.5, 0.55),   # (file, ss, at, dur, vol)
+               roar2=(f'{V}/v07_ascent2.mp4', 6.0, 4.5, 2.0, 0.30))
     build('Intro', shots, ov, total, score, sfx, booms=(2.0, 21.5), whoosh=(20.4,))
 
 
 def outro():
     shots = [
-        ('o1', f'{V}/v01_liftoff_ns2_a.mp4', 4.5, 1.5, dict(zoom=(1.03, 1.08), cy=0.3)),
-        ('o2', f'{V}/v07_ascent2.mp4', 4.0, 1.5, dict(zoom=(1.0, 1.04), cy=0.3)),
-        ('o3', f'{V}/v03_limb.mp4', 1.0, 1.5, dict(zoom=(1.0, 1.05))),
-        ('o4', f'{M}/build/06_parafoil.mp4', 0.8, 1.2, dict(zoom=(1.16, 1.22), cx=0.12, cy=0.5)),
-        ('o5', f'{V}/v05_hover_ns.mp4', 2.0, 1.0, dict(zoom=(1.0, 1.04), cy=0.3)),
+        # v4 (#2928 10/5): BLK3 only on screen (no aluminum SARGE), no plume shots
+        ('o1', f'{V}/v03_limb.mp4', 1.0, 3.0, dict(speed=0.8, zoom=(1.0, 1.08))),
+        ('o2', f'{V}/v09_hangar.mp4', 1.0, 1.85, dict(zoom=(1.0, 1.06))),
+        ('o3', f'{V}/v05_hover_ns.mp4', 1.0, 1.85, dict(zoom=(1.0, 1.05), cy=0.3)),
         ('BLACK', None, 0, 1.3, {}),
         ('END', None, 0, 5.0, {}),
     ]
@@ -255,6 +254,8 @@ def outro():
         img = Image.new('RGBA', (1920, 1080), (0, 0, 0, 0))
         kinetic(img, t, 0.25, 3.0, 'FLOWN. RECOVERED.', '飛行・回収を実証', size=120)
         kinetic(img, t, 3.05, 6.65, "LET'S BUILD IT TOGETHER.", '共に、宇宙の未来をつくる。', size=110)
+        fade_text(img, t, 3.45, 6.65, 'EXOS AEROSPACE SYSTEMS JAPAN', font(FONT_EN, 42, 2), 915, track=10)
+        fade_text(img, t, 3.10, 6.65, 'BLK3  |  IN DEVELOPMENT', font(FONT_EN, 30, 2), 60, track=4, center=False, x=110)
         bug(img, t, 0, 6.7)
         flash(img, t, 0.0); flash(img, t, 3.0)
         E = 8.0
@@ -274,7 +275,7 @@ def outro():
         return img
 
     score = [('c', 47.5, total - 0.4)]
-    sfx = dict(roar=(f'{V}/v01_liftoff_ns2_a.mp4', 4.5, 0.0, 1.5, 0.45))
+    sfx = dict(roar=(f'{V}/v05_hover_ns.mp4', 1.0, 4.85, 1.85, 0.40))
     build('Outro', shots, ov, total, score, sfx, booms=(0.0, 8.0), whoosh=(6.9,))
 
 
