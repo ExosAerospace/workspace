@@ -1546,6 +1546,8 @@ const server = http.createServer((req, res) => {
           created_at: new Date().toISOString(),
           active: true
         };
+        // Admin-issued password for someone outside Exos = temp → forced change at first login (Jon 10/5)
+        if (!/@exosaero\.com$/i.test(email)) newUser.must_reset = true;
         if (role === 'early_adopter' && project) newUser.project = project;
         users.push(newUser);
         saveUsers(users);
@@ -1573,6 +1575,7 @@ const server = http.createServer((req, res) => {
           const salt = crypto.randomBytes(32).toString('hex');
           users[idx].password_hash = hashPassword(password, salt);
           users[idx].password_salt = salt;
+          if (!/@exosaero\.com$/i.test(users[idx].email || '')) users[idx].must_reset = true;  // admin-set = temp (Jon 10/5)
         }
         saveUsers(users);
         // Invalidate this user's sessions if deactivated
@@ -1765,6 +1768,25 @@ const server = http.createServer((req, res) => {
   // ── ROLE RESTRICTIONS ──
   // member role: block deals, templates, admin, dashboard endpoints
   const session = getSession(req);
+  // Forced first-login reset for EVERYONE outside Exos (Jon 2026-10-05): any non-@exosaero.com
+  // account carrying must_reset (set whenever Exo issues a temp password) can reach ONLY the
+  // set-password page until they choose their own. /api/change-password, /api/me and /api/login are
+  // handled above this point, so the reset itself still works; change-password clears must_reset.
+  if (session && !/@exosaero\.com$/i.test(session.email || '')) {
+    const extUser = loadUsers().find(u => u.id === session.userId);
+    if (extUser && extUser.must_reset) {
+      const rp = req.url.split('?')[0];
+      if (rp.startsWith('/api/')) {
+        if (!['/api/me', '/api/logout', '/api/change-password'].includes(rp)) {
+          res.writeHead(403, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Please set your own password first.', redirect: '/set-password.html' }));
+          return;
+        }
+      } else if (!['/set-password', '/set-password.html', '/login', '/login.html'].includes(rp) && !rp.startsWith('/brand-assets')) {
+        res.writeHead(302, { 'Location': '/set-password.html' }); res.end(); return;
+      }
+    }
+  }
   if (session && session.role === 'member') {
     const fp = req.url.split('?')[0];
     // API + data endpoints members may not read. Includes the sensitive pages' data sources so
