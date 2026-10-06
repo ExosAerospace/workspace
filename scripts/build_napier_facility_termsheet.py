@@ -12,7 +12,7 @@ sys.path.insert(0, "scripts")
 from _letterhead_fix import apply_letterhead_fixes
 
 LH = "assets/EXOS_Letterhead_Greenville_TX_address_PRIMARY.docx"
-OUT = "drafts/Exos_Napier_Park_Milestone_Facility_TermSheet_DRAFT_2026-10-06_v3.docx"
+OUT = "drafts/Exos_Napier_Park_Milestone_Facility_TermSheet_DRAFT_2026-10-06_v4.docx"
 ORANGE = RGBColor(0xF2, 0x6A, 0x21)
 GREY = RGBColor(0x55, 0x55, 0x55)
 
@@ -156,7 +156,7 @@ bullet([("Acquired contract book (C). ", True),
         ("Scorpius builds composite cryogenic tanks for Intuitive Machines (lunar landers and orbital transfer vehicles). "
          "~$5M of firm 2027 orders (14–16 tanks); Exos targets a 20% EBITDA margin on that book. Exos already owns 18% of Scorpius.", False)])
 bullet([("Not loan-to-own. ", True),
-        ("Exos is asking for a credit facility it repays in cash. We recently repaid $500K of notes.", False)])
+        ("Exos is asking for a credit facility it repays in cash. We recently repaid ~$600K of notes.", False)])
 
 # ---------- 4. Indicative terms ----------
 head("4. Indicative terms (Exos proposal, open to Napier Park's structure)")
@@ -171,9 +171,9 @@ table([
                       "no liquidation preference, board or voting rights"],
     ["Exos buyback (call) right", "If warrants are issued, Exos may repurchase all or part of the warrants, or any shares issued on "
                       "exercise, at any time, for cash equal to their value at the then-current 409A fair market value "
-                      "(warrants: that FMV minus the $8.66 strike). Warrants not exercised by [JON: 5] years expire. Exos holds a "
+                      "(warrants: that FMV minus the $8.66 strike). Expiry: any warrants issued lapse if not exercised within 5 years of issue, which caps how long they can sit on the cap table. Exos holds a "
                       "right of first refusal on any transfer. Purpose: Napier Park is a lender, not a long-term shareholder"],
-    ["Cash sweep", "Tranche A: [JON: 50%] of Flight 2 payload deposits swept to Napier Park until repaid. B / C: dedicated collection accounts"],
+    ["Cash sweep", "Tranche A: 50% of every Flight 2 payload collection (signing deposits and T-90 to T-120 payments) goes to a Napier Park-controlled collection account until Tranche A is repaid; Exos keeps the other 50% to build and fly Flight 2, which is what produces the remaining receivables. A full bay collects ~$911K before flight (90% of $1,012,500), so the sweep alone repays ~$456K; any Tranche A balance is due as a bullet on Mar 30, 2027. B / C: dedicated collection accounts"],
     ["Maturity", "A: Mar 30, 2027.  B: on TACFI milestone receipts.  C: 12 months from draw"],
     ["Reporting", "Monthly booking / receivables report from Exos Mission Control; quarterly financials"],
 ], [1.3, 5.75])

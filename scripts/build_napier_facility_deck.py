@@ -9,7 +9,7 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.chart.data import CategoryChartData
 from pptx.enum.chart import XL_CHART_TYPE, XL_LEGEND_POSITION
 
-OUT = "drafts/Exos_Napier_Park_Milestone_Facility_Deck_DRAFT_2026-10-06_v4.pptx"
+OUT = "drafts/Exos_Napier_Park_Milestone_Facility_Deck_DRAFT_2026-10-06_v5.pptx"
 import re, sys; sys.path.insert(0, "scripts"); from blk3_pipeline_stats import R as PIPE  # live MC BLK3 Deal Flow math (blk3-deal-flow.html)
 VID = "drafts/Exos_NapierPark_Japan_Potential_Video_2026-10-05.mp4"
 OUTRO = "/tmp/np/outro_small.mp4"
@@ -238,8 +238,8 @@ table(s, [
     ["Structure", "Senior secured delayed-draw facility; B and C uncommitted until triggered"],
     ["Pricing", "To be proposed by Napier Park"],
     ["Equity backing (default-only)", "Warrants issued ONLY on an uncured Event of Default; none while Exos is current. Capped at 86,605 Exos common shares (~0.69% fully diluted) = 100% coverage of the $750K Tranche A ($750,000 / $8.66 per-share 409A FMV after the proposed 36.51% DLOM, Eqvista 03/31/26). Common: no liquidation preference, board or voting rights"],
-    ["Exos buyback right", "If issued, Exos may repurchase warrants / exercised shares at then-current 409A FMV at any time (warrants: FMV minus $8.66 strike); unexercised warrants expire at [JON: 5] years; Exos ROFR on transfers"],
-    ["Cash sweep", "A: 50% of Flight 2 payload deposits until repaid [JON to confirm]; B / C: dedicated collection accounts"],
+    ["Exos buyback right", "If issued, Exos may repurchase warrants / exercised shares at then-current 409A FMV at any time (warrants: FMV minus $8.66 strike); unexercised warrants expire 5 years after issue; Exos ROFR on transfers"],
+    ["Cash sweep", "A: 50% of Flight 2 payload collections to a lender-controlled account until repaid (full bay sweeps ~$456K pre-flight); balance bullet Mar 30, 2027; B / C: dedicated collection accounts"],
     ["Maturity", "A: Mar 30, 2027  ·  B: on TACFI milestone receipts  ·  C: 12 months from draw"],
     ["Reporting", "Monthly booking / receivables report; quarterly financials"],
     ["Next step", "Discuss Thu Oct 8 → IOI → Tranche A close before Oct 23"],
