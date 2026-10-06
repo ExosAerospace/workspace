@@ -9,7 +9,7 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.chart.data import CategoryChartData
 from pptx.enum.chart import XL_CHART_TYPE, XL_LEGEND_POSITION
 
-OUT = "drafts/Exos_Napier_Park_Milestone_Facility_Deck_DRAFT_2026-10-06_v3.pptx"
+OUT = "drafts/Exos_Napier_Park_Milestone_Facility_Deck_DRAFT_2026-10-06_v4.pptx"
 import re, sys; sys.path.insert(0, "scripts"); from blk3_pipeline_stats import R as PIPE  # live MC BLK3 Deal Flow math (blk3-deal-flow.html)
 VID = "drafts/Exos_NapierPark_Japan_Potential_Video_2026-10-05.mp4"
 OUTRO = "/tmp/np/outro_small.mp4"
@@ -118,7 +118,7 @@ bullets(s, [
     ("It collects today.", "Flight 1 customer entX: $820,000 contract, $410,000 received (QuickBooks). Flight 1 cash stays with Flight 1."),
     ("Government contract (B).", "$2M USAF TACFI + $2M Texas Space Commission statutory match on SBIR Phase II FA9300-25-C-6022. No award, no draw."),
     ("Acquired contract book (C).", "Scorpius tanks for Intuitive Machines landers and orbital transfer vehicles: ~$5M firm 2027 orders (14–16 tanks). Exos already owns 18%."),
-    ("Credit, not loan-to-own.", "Exos repays in cash; recently retired ~$600K of notes. Equity backing: warrants on 86,605 common shares cover 100% of the $750K Tranche A at the post-DLOM 409A value."),
+    ("Credit, not loan-to-own.", "Exos repays in cash; recently retired ~$600K of notes. Default-only equity backing: warrants on up to 86,605 common shares (~0.69%) issue only on an Event of Default, covering 100% of Tranche A; Exos buyback right."),
 ], 0.7, 2.1, 12, size=17, gap=12)
 
 # 4b — BLK3 Deal Flow (live Mission Control, Oct 6, 2026)
@@ -237,8 +237,8 @@ table(s, [
     ["Term", "Proposal"],
     ["Structure", "Senior secured delayed-draw facility; B and C uncommitted until triggered"],
     ["Pricing", "To be proposed by Napier Park"],
-    ["Equity backing", "Warrants for 86,605 Exos common shares = 100% coverage of the $750K Tranche A ($750,000 / $8.66 per-share 409A FMV after the proposed 36.51% DLOM, Eqvista 03/31/26); ~0.69% of Exos fully diluted. Common: no liquidation preference, board or voting rights"],
-    ["Exos buyback right", "After Tranche A is repaid, Exos may repurchase warrants / exercised shares at then-current 409A FMV (warrants: FMV minus $8.66 strike); unexercised warrants expire at [JON: 5] years; Exos ROFR on transfers"],
+    ["Equity backing (default-only)", "Warrants issued ONLY on an uncured Event of Default; none while Exos is current. Capped at 86,605 Exos common shares (~0.69% fully diluted) = 100% coverage of the $750K Tranche A ($750,000 / $8.66 per-share 409A FMV after the proposed 36.51% DLOM, Eqvista 03/31/26). Common: no liquidation preference, board or voting rights"],
+    ["Exos buyback right", "If issued, Exos may repurchase warrants / exercised shares at then-current 409A FMV at any time (warrants: FMV minus $8.66 strike); unexercised warrants expire at [JON: 5] years; Exos ROFR on transfers"],
     ["Cash sweep", "A: 50% of Flight 2 payload deposits until repaid [JON to confirm]; B / C: dedicated collection accounts"],
     ["Maturity", "A: Mar 30, 2027  ·  B: on TACFI milestone receipts  ·  C: 12 months from draw"],
     ["Reporting", "Monthly booking / receivables report; quarterly financials"],
