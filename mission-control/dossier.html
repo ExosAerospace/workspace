@@ -79,6 +79,28 @@ function _mnorm(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');}
 function mndaFor(name){const key=_mnorm(name);if(!key)return null;if(MNDAREG[key])return MNDAREG[key];
   for(const k in MNDAREG){if(k.length<4||key.length<4)continue;const a=key.length<=k.length?key:k,b=key.length<=k.length?k:key;if(b.startsWith(a)&&a.length/b.length>=0.5)return MNDAREG[k];}return null;}
 function byId(id){return ALL.find(x=>x.id===id);}
+let PROFILES={};
+// Company info (data/company-profiles.json, keyed by dossier id; survives build-dossiers.py rebuilds).
+function companyHtml(x){const c=PROFILES[x.id];if(!c)return'';
+  const src=u=>u?` <a href="${esc(u)}" target="_blank" rel="noopener" style="font-size:10.5px">source</a>`:'';
+  const rows=(a)=>(a||[]).map(r=>`<tr><td style="color:var(--text2);padding:3px 8px 3px 0;vertical-align:top;white-space:nowrap">${esc(r[0])}</td><td style="padding:3px 0">${esc(r[1])}${src(r[2])}</td></tr>`).join('');
+  const seg=(c.segments||[]).map(r=>`<tr><td style="padding:3px 8px 3px 0;white-space:nowrap"><b>${esc(r[0])}</b></td><td style="padding:3px 8px 3px 0;white-space:nowrap">${esc(r[1])}</td><td style="padding:3px 0;color:var(--text2)">${esc(r[2])}</td></tr>`).join('');
+  const fit=(c.fit||[]).map(r=>`<li><b>${esc(r[0])}</b> — ${esc(r[1])}: ${esc(r[2])}</li>`).join('');
+  const li=a=>(a||[]).map(t=>`<li>${esc(t)}</li>`).join('');
+  return `<details class="sec" style="background:rgba(70,200,255,.05);border:1px solid var(--border);border-radius:8px;padding:8px 10px"><summary style="cursor:pointer;font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.5px">🏢 Company info — ${esc(c.legal_name||x.name)}</summary>
+    <div style="font-size:12.5px;line-height:1.5;margin-top:8px">
+    <p style="margin:0 0 8px">${esc(c.overview)}</p>
+    <table style="font-size:12px;border-collapse:collapse;width:100%">${rows(c.facts)}</table>
+    <h4 style="margin:10px 0 4px">Financials</h4><table style="font-size:12px;border-collapse:collapse;width:100%">${rows(c.financials)}</table>
+    <h4 style="margin:10px 0 4px">Segments (FY2025 revenue)</h4><table style="font-size:12px;border-collapse:collapse;width:100%">${seg}</table>
+    ${c.markets?`<p style="margin:6px 0">${esc(c.markets)}</p>`:''}
+    ${c.space_defense?`<h4 style="margin:10px 0 4px">Space &amp; defense exposure</h4><p style="margin:0">${esc(c.space_defense)}</p>`:''}
+    ${c.ma?`<h4 style="margin:10px 0 4px">M&amp;A &amp; capital</h4><p style="margin:0">${esc(c.ma)}</p>`:''}
+    ${(c.red_flags||[]).length?`<h4 style="margin:10px 0 4px">Adverse matters</h4><ul>${li(c.red_flags)}</ul>`:''}
+    ${fit?`<h4 style="margin:10px 0 4px">Fit with Exos (Exo judgment)</h4><ul>${fit}</ul>`:''}
+    ${(c.before_approach||[]).length?`<h4 style="margin:10px 0 4px">Resolve before any approach</h4><ul>${li(c.before_approach)}</ul>`:''}
+    <div style="color:var(--text2);font-size:11px;margin-top:8px">${esc(c.as_of||'')}${c.memo?' · Full memo: '+esc(c.memo):''}</div>
+    </div></details>`;}
 function cardHtml(x){const failed=x.dd_status==='failed';
   const m=mndaFor(x.name);const onRec=m&&m.on_record;
   let mBadge='';
@@ -92,6 +114,7 @@ function cardHtml(x){const failed=x.dd_status==='failed';
         <span class="pill ${x.stage_color||'orange'}">${esc(x.stage)}</span>
       </div>
       <p class="headline">${esc(x.headline)}</p>
+      ${companyHtml(x)}
       <div class="sec"><h4>Contacts</h4>${liList(x.contacts)}</div>
       <div class="sec"><h4>Deals</h4>${liList(x.deals)}</div>
       ${(x.agreements&&x.agreements.length)?`<div class="sec"><h4>Agreements</h4>${liList(x.agreements)}</div>`:''}
@@ -142,6 +165,7 @@ async function toggleDD(id,toFailed){
 function render(list){document.getElementById('grid').innerHTML=list.map(cardHtml).join('')||'<div class="updated">No matches.</div>';}
 async function reload(){
   try{const mr=await fetch('/api/mnda',{credentials:'same-origin'});if(mr.ok){MNDAREG=(await mr.json()).registry||{};}}catch(e){}
+  try{PROFILES=await (await fetch('data/company-profiles.json?_='+Date.now())).json();}catch(e){PROFILES={};}
   const d=await (await fetch('data/dossiers.json?_='+Date.now())).json();
   ALL=d.dossiers;
   document.getElementById('updated').textContent='Updated '+(d.generated_display||'')+' · '+ALL.length+' relationships';

@@ -1,0 +1,148 @@
+{
+ "dd-howmet-aerospace": {
+  "legal_name": "Howmet Aerospace Inc. (NYSE: HWM)",
+  "as_of": "DD memo 2026-10-02 (figures as of cited filings; verify before external use)",
+  "memo": "drafts/Howmet_Aerospace_DD_2026-10-02.docx — attached on MC task #2596 (internal only, not for Howmet/Ainigma)",
+  "overview": "Pittsburgh-based Tier-1 aerospace supplier: jet-engine airfoil castings and rings, aerospace fasteners, titanium/aluminum structures, and forged truck wheels. Large, profitable, investment-grade (Fitch A-, S&P BBB+, Moody's Baa1); raised FY2026 guidance in August 2026.",
+  "facts": [
+   [
+    "HQ",
+    "Pittsburgh, PA (Delaware corp.)",
+    "https://www.sec.gov/Archives/edgar/data/4281/000000428126000012/hwm-20251231.htm"
+   ],
+   [
+    "Employees",
+    "~25,430 in 23 countries (end 2025); ~26% of US workforce unionized",
+    "https://www.sec.gov/Archives/edgar/data/4281/000000428126000012/hwm-20251231.htm"
+   ],
+   [
+    "History",
+    "Alcoa → Arconic Inc. (2016) → renamed Howmet Aerospace at the Arconic Corp spin-off, Apr 1 2020",
+    "https://www.sec.gov/Archives/edgar/data/4281/000000428126000012/hwm-20251231.htm"
+   ],
+   [
+    "CEO",
+    "John C. Plant, Executive Chairman & CEO (no succession announced)",
+    "https://www.howmet.com/press-release/2026-08-06/howmet-aerospace-reports-second-quarter-2026-results"
+   ],
+   [
+    "CFO",
+    "Patrick Winterlich (ex-Hexcel), since Dec 1 2025",
+    "https://www.stocktitan.net/news/HWM/howmet-aerospace-announces-executive-leadership-hhdjg4i6cped.html"
+   ],
+   [
+    "Lead independent director",
+    "James F. Albaugh",
+    "https://www.howmet.com/wp-content/uploads/sites/3/2026/04/HWM-2026-Proxy-Statement_FINAL.pdf"
+   ],
+   [
+    "Customer concentration",
+    "RTX and GE Aerospace each ~11% of 2025 sales",
+    "https://www.sec.gov/Archives/edgar/data/4281/000000428126000012/hwm-20251231.htm"
+   ],
+   [
+    "Credit",
+    "Fitch A- (Feb 2026), S&P BBB+, Moody's Baa1",
+    "https://www.fitchratings.com/research/corporate-finance/fitch-upgrades-howmet-aerospace-idr-to-a-outlook-stable-13-02-2026"
+   ]
+  ],
+  "financials": [
+   [
+    "FY2025 revenue",
+    "$8.252B (+11%)",
+    "https://www.sec.gov/Archives/edgar/data/4281/000000428126000012/hwm-20251231.htm"
+   ],
+   [
+    "FY2025 GAAP net income",
+    "$1.508B ($3.71/diluted share)",
+    "https://www.sec.gov/Archives/edgar/data/4281/000000428126000012/hwm-20251231.htm"
+   ],
+   [
+    "Q2 2026 revenue",
+    "$2.547B (+24%; +21% organic)",
+    "https://www.howmet.com/press-release/2026-08-06/howmet-aerospace-reports-second-quarter-2026-results"
+   ],
+   [
+    "Q2 2026 adj. EBITDA",
+    "$817M (32.1% margin)",
+    "https://www.howmet.com/press-release/2026-08-06/howmet-aerospace-reports-second-quarter-2026-results"
+   ],
+   [
+    "FY2026 guidance (raised Aug)",
+    "Rev $10.0–10.1B · adj. EBITDA $3.21–3.25B · FCF $1.85–1.95B",
+    "https://www.howmet.com/press-release/2026-08-06/howmet-aerospace-reports-second-quarter-2026-results"
+   ],
+   [
+    "Cash / debt (6/30/26)",
+    "$563M cash · ~$4.50B debt (up with CAM financing)",
+    "https://www.sec.gov/Archives/edgar/data/4281/000000428126000025/hwm-20260630.htm"
+   ],
+   [
+    "Market cap",
+    "~$90B (early Oct 2026; price secondary — re-check live)",
+    "https://stockanalysis.com/stocks/hwm"
+   ]
+  ],
+  "segments": [
+   [
+    "Engine Products",
+    "$4,320M (52%)",
+    "Airfoil castings (blades/vanes), seamless rolled rings for jet engines & industrial gas turbines"
+   ],
+   [
+    "Fastening Systems",
+    "$1,745M (21%)",
+    "Aerospace fasteners; now includes CAM and Brunner"
+   ],
+   [
+    "Engineered Structures",
+    "$1,148M (14%)",
+    "Titanium & aluminum structural forgings, extrusions, titanium ingot/mill products"
+   ],
+   [
+    "Forged Wheels",
+    "$1,039M (13%)",
+    "Forged aluminum wheels for commercial trucks"
+   ]
+  ],
+  "markets": "2025 revenue by market: commercial aerospace 53%, defense 17%, commercial transportation 15%, gas turbines 11%, other 4%. Defense grew 21% in 2025 and 11% in Q2 2026.",
+  "space_defense": "Management names space, missiles, drones and CCAs as developing/defense growth areas (Mar 2026 Technology & Markets Day). No disclosed rocket-engine, launch-vehicle structures, composites, or named space customers. Plant said additive manufacturing isn't an attractive profit pool. Competitive pressure: SpaceX in-sourcing turbine blades (Aug) and GE Aerospace buying CPP for ~$11.75B (Sep 8).",
+  "ma": "CAM (Consolidated Aerospace Mfg) ~$1.8B, closed Apr 6 2026 (~13x adj. EBITDA); Brunner Manufacturing ~$120M (Feb 2026); sold Savannah disk-forging plant ~$230M (Mar 2026). Buybacks $800M YTD through Jul 2026; dividend +17%. Stated appetite 'very selective' — profitable, segment-fit component makers; no venture arm.",
+  "red_flags": [
+   "Grenfell Tower (2017): Arconic Corp indemnifies Howmet under the 2020 separation, but Howmet is a named defendant in the RBKC UK civil suit (trial expected Oct 2028–Jul 2029); Met Police investigation ongoing. Reputational, not a partnership blocker.",
+   "Environmental: 30+ cleanup sites incl. Superfund; $16M reserve; guarantees ~$1.14B of an Alcoa energy contract (remote).",
+   "Export controls: no ITAR/EAR violations disclosed (BIS/DDTC databases not checked directly).",
+   "Compliance screen: SAM.gov exclusions + OFAC SDN clear (Exos DD engine 2026-10-02)."
+  ],
+  "fit": [
+   [
+    "Supplier / partnership",
+    "Most realistic first step",
+    "Exos buys or co-develops metallic parts; Howmet gets a flight-test window into space/missile/drone markets"
+   ],
+   [
+    "Joint venture",
+    "Possible after a working relationship",
+    "e.g. flight qualification of Howmet hardware once there's a track record"
+   ],
+   [
+    "Acquisition of Exos",
+    "Low near term",
+    "Howmet buys profitable segment-fit component makers; Ainigma's 'few hundred million' value is an advisor estimate (unverified)"
+   ]
+  ],
+  "before_approach": [
+   "Counsel: does a Howmet deal trigger FNEX/Ainigma fees (§9 resolved 10/6: no fee on JV/license/partnership)",
+   "Export review before any technical exchange (23-country ops; two Ainigma principals are foreign persons)",
+   "Needs an internal Howmet champion — corp-dev/technology intro via Ainigma",
+   "Data gaps: live market cap, any current space-launch supply, corp-dev contact, Ainigma's actual Howmet relationship"
+  ],
+  "sources": [
+   "https://www.sec.gov/Archives/edgar/data/4281/000000428126000012/hwm-20251231.htm",
+   "https://www.howmet.com/press-release/2026-08-06/howmet-aerospace-reports-second-quarter-2026-results",
+   "https://www.sec.gov/Archives/edgar/data/4281/000000428126000025/hwm-20260630.htm",
+   "https://www.howmet.com/press-release/2026-05-07/howmet-aerospace-reports-first-quarter-2026-results",
+   "https://www.cnbc.com/2026/09/08/ge-aerospace-to-buy-castings-maker-cpp-for-nearly-12-billion.html"
+  ]
+ }
+}
