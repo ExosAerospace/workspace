@@ -103,7 +103,7 @@ function render(){
   if(global){
     DATA.sheets.forEach(sh=>{sh.rows.forEach(r=>{
       if(missOnly && !(r['Extended Cost']==null)) return;
-      if(COLS.some(c=>String(r[c]??'').toLowerCase().includes(q))) rows.push(Object.assign({Section:sh.name},r));
+      if(COLS.some(c=>String(r[c]??'').toLowerCase().includes(q))||String(r._serial||'').toLowerCase().includes(q)) rows.push(Object.assign({Section:sh.name},r));
     });});
   } else {
     rows=s.rows.filter(r=>!(missOnly && !(r['Extended Cost']==null)));
@@ -122,7 +122,9 @@ function render(){
       if(c==='Quantity') return '<td class="num">'+(v===''||v==null?'':v)+'</td>';
       if(c==='Basis') return '<td>'+basisPill(r._basis)+'</td>';
       if(c==='Source') return '<td class="src" title="'+String(r._costsrc||'').replace(/"/g,'&quot;')+'">'+String(r._costsrc||'').replace(/[<>&]/g,ch=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[ch]))+'</td>';
-      return '<td>'+String(v??'').replace(/[<>&]/g,ch=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[ch]))+'</td>';
+      const cell=String(v??'').replace(/[<>&]/g,ch=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[ch]));
+      if(c==='Description'&&r._serial) return '<td>'+cell+'<div style="font-size:11px;color:var(--mut,#8aa0bd);margin-top:2px">S/N: '+String(r._serial).replace(/[<>&]/g,ch=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[ch]))+'</div></td>';
+      return '<td>'+cell+'</td>';
     }).join('')+
       '<td class="ecell">'+(r._eby?'<span class="etag" title="edited by '+String(r._eby).replace(/"/g,'')+' on '+String(r._eat||'').slice(0,10)+(r._enote?(' · '+String(r._enote).replace(/"/g,'')):'')+'">✎</span> ':'')+
       '<button class="ebtn" title="Edit line" onclick="bomEdit(\''+encodeURIComponent(r._key||'')+'\')">✎</button></td></tr>';
@@ -145,6 +147,7 @@ function bomEdit(k){
   document.getElementById('be_description').value=editRow.Description||'';
   document.getElementById('be_req').value=(editRow.Quantity==null?'':editRow.Quantity);
   document.getElementById('be_location').value=editRow._loc||'';
+  document.getElementById('be_serial').value=editRow._serial||'';
   document.getElementById('be_note').value='';
   document.getElementById('be_diff').innerHTML='';
   document.getElementById('be_review').style.display='';
@@ -156,17 +159,19 @@ function _bef(){if(!editRow)return{};const f={};
   const d=document.getElementById('be_description').value;
   const rq=document.getElementById('be_req').value;
   const lc=document.getElementById('be_location').value;
+  const sn=document.getElementById('be_serial').value.trim();
   const nt=document.getElementById('be_note').value.trim();
   if(d!==(editRow.Description||''))f.description=d;
   if(String(rq)!==String(editRow.Quantity==null?'':editRow.Quantity))f.req=rq;
   if(lc!==(editRow._loc||''))f.location=lc;
+  if(sn!==(editRow._serial||''))f.serial=sn;
   if(nt)f.note=nt; return f;}
 function _esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function bomEditReview(){
   const f=_bef();const keys=Object.keys(f).filter(k=>k!=='note');
   if(!keys.length&&!f.note){document.getElementById('be_diff').innerHTML='<div class="diffbox">No changes to confirm.</div>';return;}
-  const label={description:'Description',req:'Quantity',location:'Location'};
-  const cur=k=>k==='description'?(editRow.Description||''):k==='location'?(editRow._loc||''):(editRow.Quantity==null?'':editRow.Quantity);
+  const label={description:'Description',req:'Quantity',location:'Location',serial:'Serial #'};
+  const cur=k=>k==='description'?(editRow.Description||''):k==='location'?(editRow._loc||''):k==='serial'?(editRow._serial||''):(editRow.Quantity==null?'':editRow.Quantity);
   let html='<div class="diffbox"><strong>Confirm these changes:</strong>';
   keys.forEach(k=>{const oldv=cur(k);
     html+='<div class="d">'+label[k]+': <span class="o">'+_esc(oldv)+'</span> → <span class="n2">'+_esc(f[k])+'</span></div>';});
@@ -186,6 +191,7 @@ async function bomEditConfirm(){
     if(f.description!==undefined)editRow.Description=f.description;
     if(f.req!==undefined){editRow.Quantity=f.req;_recost(editRow);}
     if(f.location!==undefined)editRow._loc=f.location;
+    if(f.serial!==undefined)editRow._serial=f.serial;
     if(f.note!==undefined)editRow._enote=f.note;
     editRow._eby=j.edited_by;editRow._eat=j.edited_at;
     bomEditClose();render();
@@ -214,6 +220,7 @@ init();
     <label>Description</label><textarea id="be_description"></textarea>
     <label>Quantity</label><input id="be_req" type="number" step="any">
     <label>Location</label><input id="be_location" type="text" placeholder="e.g. Parts Room B3, Shelf 2">
+    <label>Serial # (one or more, comma-separated)</label><input id="be_serial" type="text" placeholder="e.g. SN-00412, SN-00413">
     <label>Note (optional — reason for the change)</label><input id="be_note" type="text" placeholder="e.g. corrected qty per drawing rev">
     <div id="be_diff"></div>
     <div class="acts">

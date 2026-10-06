@@ -4799,7 +4799,7 @@ const server = http.createServer((req, res) => {
         it.photos = invPhotos.photosFor('shop#' + it.id, [], phStore);
         const e = shopEdits[it.id];
         if (!e) continue;
-        for (const k of ['contents', 'description', 'qty', 'location']) {
+        for (const k of ['contents', 'description', 'qty', 'location', 'serial']) {
           if (e[k] !== undefined && e[k] !== '') it[k] = e[k];
         }
         it.edited_by = e._by || ''; it.edited_at = e._at || ''; it.edit_note = e.note || '';
@@ -4814,7 +4814,7 @@ const server = http.createServer((req, res) => {
       if (loc) items = items.filter(i => String(i.location || '').toLowerCase().includes(loc));
       if (rocket === '1') items = items.filter(i => i.is_rocket);
       if (rocket === '0') items = items.filter(i => !i.is_rocket);
-      if (q) items = items.filter(i => [i.id, i.contents, i.description, i.exos_sku, i.source_sku, i.location, i.comments]
+      if (q) items = items.filter(i => [i.id, i.contents, i.description, i.exos_sku, i.source_sku, i.location, i.comments, i.serial]
         .some(v => String(v || '').toLowerCase().includes(q)));
       let value = 0; for (const i of items) value += (parseFloat(i.total) || (parseFloat(i.value) || 0) * (parseFloat(i.qty) || 0)) || 0;
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -4977,12 +4977,13 @@ const server = http.createServer((req, res) => {
         // Apply manual line edit override (keyed by section#item) + carry attribution.
         const ekey = `${sec}#${item}`;
         const ed = bomEdits[ekey] || null;
-        let edited_by = '', edited_at = '', edit_note = '', edit_loc = '';
+        let edited_by = '', edited_at = '', edit_note = '', edit_loc = '', serial = '';
         if (ed) {
           if (ed.description !== undefined && ed.description !== '') desc = ed.description;
           if (ed.req !== undefined && ed.req !== '') reqVal = ed.req;
           if (ed.on_hand !== undefined && ed.on_hand !== '') oh = Number(ed.on_hand);
           if (ed.location !== undefined && ed.location !== '') edit_loc = String(ed.location);
+          if (ed.serial !== undefined) serial = String(ed.serial);  // serial number(s), Jon 10/6
           edited_by = ed._by || ''; edited_at = ed._at || ''; edit_note = ed.note || '';
         }
         const req2 = parseFloat(String(reqVal).trim()); const hasReq = !isNaN(req2);
@@ -4999,7 +5000,7 @@ const server = http.createServer((req, res) => {
           map_location: edit_loc ? '' : (mm ? `${mm.location} (${mm.area})` : ''),
           photos, updated_at: rec ? (rec.updated_at || '') : '',
           unit_cost: cost.unit_cost, cost_basis: cost.cost_basis, cost_source: cost.cost_source, cost_ref: cost.cost_ref,
-          key: ekey, edited_by, edited_at, edit_note, edit_location: edit_loc });
+          key: ekey, edited_by, edited_at, edit_note, edit_location: edit_loc, serial });
         const s = secmap[sec] || (secmap[sec] = { section: sec, lines: 0, onhand_lines: 0, short_lines: 0 });
         s.lines++; if (oh > 0) s.onhand_lines++; if (sh) s.short_lines++;
       }
@@ -5962,6 +5963,7 @@ const server = http.createServer((req, res) => {
   if (req.url.split('?')[0] === '/api/bom' && req.method === 'GET') {
     if (!getSession(req)) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
     try {
+      const readJSON = (p, d) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return d; } };  // was undefined here → /api/bom 500 (fixed 10/6)
       const bom      = readJSON(path.join(__dirname, 'data', 'bom-index.json'), { rows: [] });
       const bomEdits = readJSON(path.join(__dirname, 'data', 'bom-edits.json'), {});
       const bomCosts = (readJSON(path.join(__dirname, 'data', 'bom-costs.json'), { costs: {} }).costs) || {};
@@ -5999,7 +6001,7 @@ const server = http.createServer((req, res) => {
           // Edit overlay (description / req / location).
           const ed  = bomEdits[key] || null;
           let desc  = row.description || '';
-          let loc   = '', eby = '', eat = '', enote = '';
+          let loc   = '', eby = '', eat = '', enote = '', serial = '';
           if (ed) {
             if (ed.description !== undefined && ed.description !== '') desc = ed.description;
             if (ed.req !== undefined && ed.req !== '') {
@@ -6008,6 +6010,7 @@ const server = http.createServer((req, res) => {
               extCost = (!isNaN(qn) && costNum > 0) ? Math.round(costNum * qn * 100) / 100 : null;
             }
             if (ed.location !== undefined) loc = String(ed.location);
+            if (ed.serial !== undefined) serial = String(ed.serial);
             eby = ed._by || ''; eat = ed._at || ''; enote = ed.note || '';
           }
           if (extCost == null) missing++;
@@ -6018,7 +6021,7 @@ const server = http.createServer((req, res) => {
             'Description': desc, 'Vendor': row.vendor || '',
             'Secondary Supplier': '', 'Tertiary Supplier': '',
             'Cost ea': costNum || '', 'Extended Cost': extCost,
-            '_key': key, '_loc': loc, '_eby': eby, '_eat': eat, '_enote': enote,
+            '_key': key, '_loc': loc, '_serial': serial, '_eby': eby, '_eat': eat, '_enote': enote,
             '_basis': basis, '_costsrc': costsrc,
           };
         });
@@ -6050,7 +6053,7 @@ const server = http.createServer((req, res) => {
         const p = JSON.parse(body || '{}');
         const key = (p.key || '').toString().trim();
         if (!key) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'missing key' })); return; }
-        const ALLOWED = ['description', 'req', 'on_hand', 'location', 'note'];
+        const ALLOWED = ['description', 'req', 'on_hand', 'location', 'note', 'serial'];
         const fields = {};
         for (const k of ALLOWED) {
           if (p.fields && p.fields[k] !== undefined && p.fields[k] !== null) {
@@ -6094,7 +6097,7 @@ const server = http.createServer((req, res) => {
         const p = JSON.parse(body || '{}');
         const id = (p.id || '').toString().trim();
         if (!id) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'missing id' })); return; }
-        const ALLOWED = ['contents', 'description', 'qty', 'location', 'note'];
+        const ALLOWED = ['contents', 'description', 'qty', 'location', 'note', 'serial'];
         const fields = {};
         for (const k of ALLOWED) {
           if (p.fields && p.fields[k] !== undefined && p.fields[k] !== null) {

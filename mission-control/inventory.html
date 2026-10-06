@@ -196,7 +196,7 @@ function render(){
     if(sec&&r.section!==sec)return false;
     if(shortOnly&&!r.short)return false;
     if(haveOnly&&!(r.on_hand>0))return false;
-    if(q){const h=(r.vendor_pn+' '+r.mfg_pn+' '+r.description+' '+r.section+' '+r.item+' '+(r.locations||[]).join(' ')).toLowerCase();
+    if(q){const h=(r.vendor_pn+' '+r.mfg_pn+' '+r.description+' '+r.section+' '+r.item+' '+(r.locations||[]).join(' ')+' '+(r.serial||'')).toLowerCase();
       if(!h.includes(q))return false;}
     return true;});
   rows.sort((a,b)=>{let x=a[sortK],y=b[sortK];
@@ -211,7 +211,7 @@ function render(){
       '<button class="phbtn" title="View / add / delete photos" onclick="photoOpen(\''+pk+'\')">'+(np>3?'+'+(np-3)+' ':'')+'📷'+(np?'':' Add')+'</button>';
     const edtag=r.edited_by?'<span class="editedtag">✎ '+esc(r.edited_by)+' · '+esc((r.edited_at||'').slice(0,10))+(r.edit_note?' · '+esc(r.edit_note):'')+'</span>':'';
     return '<tr class="'+cls+'"><td>'+esc(r.section)+'</td><td>'+esc(r.item)+'</td>'+
-      '<td class="pn">'+esc(r.vendor_pn||r.mfg_pn||'')+'</td><td>'+esc(r.description)+edtag+'</td>'+
+      '<td class="pn">'+esc(r.vendor_pn||r.mfg_pn||'')+'</td><td>'+esc(r.description)+edtag+(r.serial?'<div class="muted" style="font-size:11px;margin-top:2px">S/N: '+esc(r.serial)+'</div>':'')+'</td>'+
       '<td class="num">'+esc(r.req)+'</td><td class="num">'+r.on_hand+'</td>'+
       '<td class="num">'+(r.short?'<span class="short-b">'+r.short+'</span>':'')+'</td>'+
       '<td class="num">'+money(r.unit_cost)+'</td>'+
@@ -279,6 +279,7 @@ function bomEditOpen(k){
   document.getElementById('ed_req').value=(editRow.req===''||editRow.req==null)?'':editRow.req;
   document.getElementById('ed_on_hand').value=editRow.on_hand;
   document.getElementById('ed_location').value=curLoc(editRow);
+  document.getElementById('ed_serial').value=editRow.serial||'';
   document.getElementById('ed_note').value='';
   document.getElementById('editDiff').innerHTML='';
   document.getElementById('editReviewBtn').style.display='';
@@ -293,11 +294,13 @@ function bomEditFields(){
   const rq=document.getElementById('ed_req').value;
   const oh=document.getElementById('ed_on_hand').value;
   const lc=document.getElementById('ed_location').value;
+  const sn=document.getElementById('ed_serial').value.trim();
   const nt=document.getElementById('ed_note').value.trim();
   if(d!==(editRow.description||''))f.description=d;
   if(String(rq)!==String(editRow.req==null?'':editRow.req))f.req=rq;
   if(String(oh)!==String(editRow.on_hand))f.on_hand=oh;
   if(lc!==curLoc(editRow))f.location=lc;
+  if(sn!==(editRow.serial||''))f.serial=sn;
   if(nt)f.note=nt;
   return f;
 }
@@ -305,7 +308,7 @@ function bomEditReview(){
   const f=bomEditFields();
   const keys=Object.keys(f).filter(k=>k!=='note');
   if(!keys.length&&!f.note){document.getElementById('editDiff').innerHTML='<div class="diffbox">No changes to confirm.</div>';return;}
-  const label={description:'Description',req:'Req',on_hand:'On-hand',location:'Location'};
+  const label={description:'Description',req:'Req',on_hand:'On-hand',location:'Location',serial:'Serial #'};
   const cur=k=>k==='description'?(editRow.description||''):k==='location'?curLoc(editRow):(editRow[k]==null?'':editRow[k]);
   let html='<div class="diffbox"><strong>Confirm these changes:</strong>';
   keys.forEach(k=>{const oldv=cur(k);
@@ -323,12 +326,13 @@ function bomEditReview(){
 function bomEditConfirm(){
   const row=editRow;const f=bomEditFields();
   if(!row||!Object.keys(f).length){bomEditClose();return;}
-  const before={description:row.description,req:row.req,on_hand:row.on_hand,edit_location:row.edit_location,locations:row.locations,map_location:row.map_location,edit_note:row.edit_note,edited_by:row.edited_by,edited_at:row.edited_at,short:row.short};
+  const before={description:row.description,req:row.req,on_hand:row.on_hand,edit_location:row.edit_location,serial:row.serial,locations:row.locations,map_location:row.map_location,edit_note:row.edit_note,edited_by:row.edited_by,edited_at:row.edited_at,short:row.short};
   if(f.description!==undefined)row.description=f.description;
   if(f.req!==undefined)row.req=f.req;
   if(f.on_hand!==undefined)row.on_hand=Number(f.on_hand);
   if(f.location!==undefined){row.edit_location=f.location;row.locations=f.location?[f.location]:[];row.map_location='';}
   if(f.note!==undefined)row.edit_note=f.note;
+  if(f.serial!==undefined)row.serial=f.serial;
   const req2=parseFloat(String(row.req).trim());
   row.short=(!isNaN(req2)&&row.on_hand<req2)?Math.round((req2-row.on_hand)*1000)/1000:0;
   bomEditClose();render();
@@ -405,6 +409,7 @@ load(); setInterval(load,30000); loadProps(); setInterval(loadProps,30000);
       <div><label>On-hand</label><input id="ed_on_hand" type="number" step="any"></div>
     </div>
     <label>Location</label><input id="ed_location" type="text" placeholder="e.g. Parts Room B3, Shelf 2">
+    <label>Serial # (one or more, comma-separated)</label><input id="ed_serial" type="text" placeholder="e.g. SN-00412, SN-00413">
     <label>Note (optional — reason for the change)</label><input id="ed_note" type="text" placeholder="e.g. recount 2026-09-24, corrected qty">
     <div id="editDiff"></div>
     <div class="acts">

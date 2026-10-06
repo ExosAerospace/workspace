@@ -107,7 +107,7 @@ function sortAndRender(){
   $('body').innerHTML=VIEW.map(i=>`<tr>
     <td>${i.category||''}${i.sale_or_trash?' <span class="tag">S/T</span>':''}<span class="sid" title="Permanent Exos ID (last column of Steve's sheet)">${esc(i.id)}</span></td>
     <td>${esc(i.location)}</td>
-    <td class="${i.is_rocket?'rocket':''}">${esc(i.contents)}</td>
+    <td class="${i.is_rocket?'rocket':''}">${esc(i.contents)}${i.serial?`<div class="muted" style="font-size:11px">S/N: ${esc(i.serial)}</div>`:''}</td>
     <td class="muted">${esc(i.description)}${i.edited_by?` <span class="etag" title="edited by ${esc(i.edited_by)} on ${esc((i.edited_at||'').slice(0,10))}${i.edit_note?' · '+esc(i.edit_note):''}">✎</span>`:''}</td>
     <td>${esc(i.exos_sku)}</td><td>${esc(i.source_sku)}</td>
     <td>${i.qty||0}</td><td>${i.unit||''}</td><td>${fmt(i.value)}</td><td>${i.jurisdiction||''}</td>
@@ -135,6 +135,7 @@ function shopEdit(id){
   $('se_description').value=shopRow.description||'';
   $('se_qty').value=(shopRow.qty==null?'':shopRow.qty);
   $('se_location').value=shopRow.location||'';
+  $('se_serial').value=shopRow.serial||'';
   $('se_note').value='';
   $('se_diff').innerHTML='';
   $('se_review').style.display='';
@@ -148,11 +149,12 @@ function _sef(){if(!shopRow)return{};const f={};
   if(d!==(shopRow.description||''))f.description=d;
   if(String(q)!==String(shopRow.qty==null?'':shopRow.qty))f.qty=q;
   if(l!==(shopRow.location||''))f.location=l;
+  const sn=$('se_serial').value.trim();if(sn!==(shopRow.serial||''))f.serial=sn;
   if(n)f.note=n;return f;}
 function shopEditReview(){
   const f=_sef();const keys=Object.keys(f).filter(k=>k!=='note');
   if(!keys.length&&!f.note){$('se_diff').innerHTML='<div class="diffbox">No changes to confirm.</div>';return;}
-  const label={contents:'Contents',description:'Description',qty:'Qty',location:'Location'};
+  const label={contents:'Contents',description:'Description',qty:'Qty',location:'Location',serial:'Serial #'};
   let html='<div class="diffbox"><strong>Confirm these changes:</strong>';
   keys.forEach(k=>{const oldv=shopRow[k]==null?'':shopRow[k];
     html+='<div class="d">'+label[k]+': <span class="o">'+esc(oldv)+'</span> → <span class="n2">'+esc(f[k])+'</span></div>';});
@@ -168,12 +170,13 @@ function shopToast(msg,ok=true){const t=$('se_toast');t.textContent=msg;t.style.
 function shopEditConfirm(){
   const row=shopRow;const f=_sef();
   if(!row||!Object.keys(f).length){shopEditClose();return;}
-  const before={contents:row.contents,description:row.description,qty:row.qty,location:row.location,edit_note:row.edit_note,edited_by:row.edited_by,edited_at:row.edited_at};
+  const before={contents:row.contents,description:row.description,qty:row.qty,location:row.location,serial:row.serial,edit_note:row.edit_note,edited_by:row.edited_by,edited_at:row.edited_at};
   // optimistic local apply
   if(f.contents!==undefined)row.contents=f.contents;
   if(f.description!==undefined)row.description=f.description;
   if(f.qty!==undefined)row.qty=Number(f.qty);
   if(f.location!==undefined)row.location=f.location;
+  if(f.serial!==undefined)row.serial=f.serial;
   if(f.note!==undefined)row.edit_note=f.note;
   shopEditClose();sortAndRender();
   shopToast('Saving…');
@@ -254,6 +257,7 @@ load();
       <div><label>Qty</label><input id="se_qty" type="number" step="any"></div>
       <div><label>Location</label><input id="se_location" type="text"></div>
     </div>
+    <label>Serial # (one or more, comma-separated)</label><input id="se_serial" type="text" placeholder="e.g. SN-00412, SN-00413">
     <label>Note (optional — reason for the change)</label><input id="se_note" type="text" placeholder="e.g. moved to Trailer 2">
     <div id="se_diff"></div>
     <div class="acts">
