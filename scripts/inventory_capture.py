@@ -134,6 +134,15 @@ def cmd_enqueue(a):
         # non-image uploads are ignored (only photos become inventory captures)
         print("skip non-image")
         return
+    # pasted text-strip screenshots (e.g. an 888x62 clipping on a deal task) are never part photos
+    try:
+        from PIL import Image
+        w, h = Image.open(os.path.join(UPLOADS, a.file)).size
+        if min(w, h) < 200:
+            print(f"skip tiny image {w}x{h}")
+            return
+    except Exception:
+        pass
     entries = read_queue()
     # de-dupe by upload id
     if a.upload and any(e.get("upload_id") == a.upload for e in entries):
