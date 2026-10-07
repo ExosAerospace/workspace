@@ -76,7 +76,7 @@ for col, txt in [(1,"Assumption"),(2,"Value"),(3,"Source / Notes")]:
 sec_hdr(ws, 5, "DEAL STRUCTURE — Option B", bg=DARK_BLUE, col_end="C")
 
 data_assump = [
-    (6,  "Agreement date (Asset Acquisition Agreement)",     "2025-05-13",                   "Executed — Jon Quinn & Jim Wertz"),
+    (6,  "Agreement date (Asset Acquisition Agreement)",     "2025-05-13",                   "Executed — John Quinn & Jim Wertz"),
     (7,  "§3 exclusivity trigger: financing agreement",     "Ainigma/FNEX executed mandate","FNEX advisory agreement; strengthen with investor/sponsor use-of-proceeds letter"),
     (8,  "Exclusivity period (days)",                        90,                             "§3 of the 2025 Agreement"),
     (9,  "Deal price — total commitment ($)",                3360000,                        "§3 / §1: $2.51M cash + $60K costs + $790K stake credit"),
@@ -85,7 +85,7 @@ data_assump = [
     (12, "  Exos existing-stake credit ($)",                790000,                         "18% equity at 2021 basis (~$4.39M total × 18%)"),
     (13, "  Escrowed holdback (§7) — 5% for 12 months ($)", "=B9*0.05",                    "§7; released at 12-month anniversary"),
     (14, "SSLC debts assumed at face ($)",                  500000,                         "MANAGEMENT ASSUMPTION — UNVERIFIED. QB session expired 10/7. Microcosm loan + Wertz notes + AP."),
-    (15, "Exos loan to SSLC — waived as license consideration ($)", 38000,                 "Jon decision 10/2; not re-proposed"),
+    (15, "Exos loan to SSLC — waived as license consideration ($)", 38000,                 "John decision 10/2; not re-proposed"),
     (16, "Working capital bridge needed (mid-point) ($)",    500000,                         "SSLC needs $0.3–0.7M to finish paid-for work. Mid=$500K."),
     (17, "Series A raise — first close ($)",                10000000,                        "D1 of record, 2026-08-13"),
     (18, "Pre-money valuation (Eqvista 409A) ($)",           169700000,                      "Eqvista 03/31/26; $8.66/sh; DLOM 36.51%"),
@@ -111,14 +111,14 @@ earn_data = [
     (24, "Earn-out i — IM tank revenue % (base)",            0.05,   "Management assumption — unverified"),
     (25, "Earn-out i — IM tank revenue % (high)",            0.07,   "Management assumption — unverified"),
     (26, "Earn-out i — annual cap ($)",                      300000, "Management assumption — unverified"),
-    (27, "Earn-out i — duration (years)",                    3,      "Management assumption — unverified"),
+    (27, "Earn-out i — duration (years)",                    5,      "Management assumption — unverified; FY27–FY31"),
     (28, "Earn-out ii — Exos stock % of FD shares (low)",   0.005,  "Management assumption — unverified"),
     (29, "Earn-out ii — Exos stock % of FD shares (base)",  0.0075, "Management assumption — unverified"),
     (30, "Earn-out ii — Exos stock % of FD shares (high)",  0.010,  "Management assumption — unverified"),
     (31, "Earn-out ii — assumed listing price (low) ($)",    200000000,"FNEX RTO min $250M MEV; low scenario"),
     (32, "Earn-out ii — assumed listing price (base) ($)",   250000000,"FNEX RTO minimum MEV"),
     (33, "Earn-out ii — assumed listing price (high) ($)",   300000000,"Management assumption — unverified"),
-    (34, "Earn-out ii — lockup period (months)",             12,     "Standard post-listing lockup"),
+    (34, "Earn-out ii — lockup (principals' terms)",          12,     "Same lockup terms as Exos principals (modeled ~12 months)"),
 ]
 for (r, lbl, val, src) in earn_data:
     ws.cell(r, 1).value = lbl; ws.cell(r, 1).font = Font(size=10)
@@ -134,14 +134,14 @@ for (r, lbl, val, src) in earn_data:
 # ── ACTUALS-ANCHORED CASE: SSLC Financials ───────────────────────────────────
 sec_hdr(ws, 36, "ACTUALS-ANCHORED CASE — SSLC HISTORICAL & PROJECTED FINANCIALS", bg=MID_BLUE, col_end="C")
 sslc_fin = [
-    (37, "SSLC FY26 actual revenue ($)",           1925000,   "SSLC QB FY26 actuals (Jon 10/2 QB pull)"),
+    (37, "SSLC FY26 actual revenue ($)",           1925000,   "SSLC QB FY26 actuals (John 10/2 QB pull)"),
     (38, "SSLC FY26 operating loss ($)",           -416000,   "SSLC QB FY26 actuals"),
     (39, "SSLC FY26 net income ($)",               -78000,    "Net of one-time $287K ERC credit"),
-    (40, "SSLC FY27 Q1 actual revenue ($)",        713000,    "SSLC QB FY27 Q1 (Sep not yet closed, Jon 10/2)"),
+    (40, "SSLC FY27 Q1 actual revenue ($)",        713000,    "SSLC QB FY27 Q1 (Sep not yet closed, John 10/2)"),
     (41, "SSLC FY27 billed-ahead + deposits ($)",  984000,    "FY27 Q1 QB: $864K billed-ahead + $120K deposits"),
     (42, "SSLC cash at QB date ($)",               198000,    "SSLC QB FY27 Q1 (10/2/2026)"),
-    (43, "Exos % of SSLC revenue (FY26)",          0.236,     "23.6% per Jon 10/2 board meeting"),
-    (44, "Markus: IM tank revenue FY27 firm ($)",  5000000,   "Markus Rufer confirmed ~$5M firm for 2027, 14–16 tanks (Jon 10/2)"),
+    (43, "Exos % of SSLC revenue (FY26)",          0.236,     "23.6% per John 10/2 board meeting"),
+    (44, "Markus: IM tank revenue FY27 firm ($)",  5000000,   "Markus Rufer confirmed ~$5M firm for 2027, 14–16 tanks (John 10/2)"),
     (45, "SSLC assumed COGS % (FY27+, actuals-anchored)",    0.52,  "Derived from FY26 implied P&L"),
     (46, "SSLC assumed OpEx base FY27 ($)",        1400000,   "Small team (~10-12 people, Torrance)"),
     (47, "SSLC OpEx annual growth rate (FY28+)",   0.08,      "Management assumption"),
@@ -268,16 +268,17 @@ ws.cell(97, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
 ws.cell(97, 1).alignment = Alignment(wrap_text=True)
 ws.row_dimensions[97].height = 52
 
-# ── BENEFITS TO SSLC INVESTORS (Jon 10/7) ────────────────────────────────────
-sec_hdr(ws, 105, "BENEFITS TO SSLC INVESTORS (Jon 10/7)", bg=DARK_BLUE, col_end="C")
+# ── BENEFITS TO SSLC INVESTORS (John 10/7) ────────────────────────────────────
+sec_hdr(ws, 105, "BENEFITS TO SSLC INVESTORS (John 10/7)", bg=DARK_BLUE, col_end="C")
 benefits = [
     (106, "1. Debt relief at face",                          "~$500K TBV",      "Microcosm/Wertz notes + AP paid; personal path for Jim"),
     (107, "2. No further capital calls",                     "Structural",       "Investors stop funding a cash-negative entity"),
     (108, "3. Cash at close",                                "$2,510,000",       "Section 3 deal price cash component"),
-    (109, "4. Earn-out upside — IM tank revenue (3 yrs)",   "Up to $900K",      "5%/yr x $5M IM firm; $300K cap"),
-    (110, "5. Earn-out upside — Exos stock post-RTO",       "$1.0M–$3.0M",     "0.5%–1.0% FD at listing ($200M–$300M MEV)"),
-    (111, "6. Liquidity via listed Exos stock",              "Post-RTO ~FY28",   "12-mo lockup; publicly tradeable thereafter"),
-    (112, "7. IM program continuity",                        "Operational",      "No customer disruption; Exos-SSLC entity delivers"),
+    (109, "4. Earn-out upside — IM tank revenue (5 yrs, FY27–FY31)", "Up to $1.5M", "5%/yr x $5M IM firm; $300K cap; 5-year term"),
+    (110, "5. Milestone earn-outs (up to 5 goals)",          "Up to $1.1M",     "Goal-based: $5.1M rev, OTV contract, $10M/$20M rev, BLK3 qual"),
+    (111, "6. Earn-out upside — Exos stock post-RTO",        "$1.0M–$3.0M",     "0.5%–1.0% FD at listing ($200M–$300M MEV)"),
+    (112, "7. Liquidity via listed Exos stock",              "Post-RTO ~FY28",   "Principals' lockup terms; publicly tradeable thereafter"),
+    (113, "8. IM program continuity",                        "Operational",      "No customer disruption; Exos-SSLC entity delivers"),
 ]
 for (r, lbl, val, src) in benefits:
     ws.cell(r, 1).value = lbl; ws.cell(r, 1).font = Font(size=10)
@@ -286,8 +287,8 @@ for (r, lbl, val, src) in benefits:
     ws.cell(r, 3).alignment = Alignment(wrap_text=True)
     ws.row_dimensions[r].height = 20
 
-# ── HOLD TO YEAR 5 — ASSUMPTIONS (Jon 10/7) ──────────────────────────────────
-sec_hdr(ws, 115, "HOLD TO YEAR 5 — ASSUMPTIONS (Jon 10/7)", bg=PURPLE, col_end="C")
+# ── HOLD TO YEAR 5 — ASSUMPTIONS (John 10/7) ──────────────────────────────────
+sec_hdr(ws, 115, "HOLD TO YEAR 5 — ASSUMPTIONS (John 10/7)", bg=PURPLE, col_end="C")
 
 y5_data = [
     (116, "EV/EBITDA multiple (Market Approach, Eqvista 409A 3/31/2026)", 16,
@@ -426,35 +427,35 @@ for col, txt in [(1,"Metric"),(2,"Earn-Out i: IM Tank Revenue %"),(3,"Earn-Out i
 
 eo_data = [
     (23, "Structure",
-         "% of SSLC IM tank revenue, annual cap, 3-year term",
-         "Exos common stock at listing (% of FD shares); 12-mo lockup",
-         "Both i + ii",
-         "Gives SSLC sellers upside from IM growth AND Exos growth"),
+         "% of SSLC IM tank revenue, annual cap, 5-year term (FY27–FY31)",
+         "Exos common stock at listing (% of FD shares); principals' lockup",
+         "Both i + ii + milestone earn-outs",
+         "Gives SSLC sellers upside from IM growth AND Exos growth AND milestones"),
     (24, "Low scenario",
          "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)*Assumptions!B27",
          "=Assumptions!B28*Assumptions!B31",
          "=D24+C24",
-         "Low: 3% tank rev (cap $300K) × 3yr + 0.5% of $200M listing"),
+         "Low: 3% tank rev (cap $300K) × 5yr + 0.5% of $200M listing + milestone 1 only"),
     (25, "Base scenario",
          "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)*Assumptions!B27",
          "=Assumptions!B29*Assumptions!B32",
          "=B25+C25",
-         "Base: 5% × $5M firm + 0.75% of $250M listing"),
+         "Base: 5% × $5M firm × 5yr + 0.75% of $250M listing + milestones 1-3"),
     (26, "High scenario",
          "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)*Assumptions!B27",
          "=Assumptions!B30*Assumptions!B33",
          "=B26+C26",
-         "High: 7% × $5M + 1.0% of $300M listing"),
+         "High: 7% × $5M (cap $300K) × 5yr + 1.0% of $300M listing + all 5 milestones → ~$10M"),
     (27, "Exos dilution (stock, base)",
          "n/a",
          "=Assumptions!B29",
          "=Assumptions!B29",
          "0.75% of FD shares; non-material at Series A scale"),
     (28, "Lockup / vesting",
-         "Annual payments, 3 years",
-         "12-month lockup post-listing",
+         "Annual payments, 5 years (FY27–FY31)",
+         "Same lockup terms as Exos principals (modeled ~12 months)",
          "Each tranche per its own schedule",
-         ""),
+         "Principals' lockup; realization timing modeled ~12 months post-listing"),
 ]
 for (r, lbl, i, ii, comb, notes) in eo_data:
     ds.cell(r, 1).value = lbl; ds.cell(r, 1).font = Font(size=9)
@@ -912,7 +913,7 @@ fn.row_dimensions[1].height = 22
 
 fund_data = [
     (3,  "FUNDING OVERVIEW",                         "",                       ""),
-    (4,  "Acquisition is funded from Exos-only post-RTO proceeds","Investor requirement","SSLC stays OUT of RTO perimeter (Jon 10/2)"),
+    (4,  "Acquisition is funded from Exos-only post-RTO proceeds","Investor requirement","SSLC stays OUT of RTO perimeter (John 10/2)"),
     (5,  "Series A first close ($)",                 "=Assumptions!B17",       "D1 of record; $10M"),
     (6,  "  Allocated to SSLC acquisition",          "=Assumptions!B10",       "Cash deal price"),
     (7,  "  Allocated to SSLC WC bridge",            "=Assumptions!B16",       "$0.3–0.7M; mid=$500K"),
@@ -926,10 +927,10 @@ fund_data = [
     (16, "§3 extension right",                       "SSLC shall not unreasonably withhold","90-day window; request extension proactively"),
     (17, "Timing: 90-day exclusivity ends",          "~Jan 6, 2027",           "From ~Oct 8 grant; RTO is 4-5 months; need extension"),
     (19, "RELATED-PARTY DISCLOSURES",                "",                       ""),
-    (20, "Jon sits on BOTH boards",                  "Conflict of interest",   "Jon must RECUSE from SSLC vote; send as Exos CEO only"),
+    (20, "John sits on BOTH boards",                  "Conflict of interest",   "John must RECUSE from SSLC vote; send as Exos CEO only"),
     (21, "Fairness opinion",                         "Required (Eqvista 8/14/2026)","Agreement still unsigned (held ~1 month)"),
-    (22, "Disinterested director approval",          "Required (SSLC side)",   "Markus Rufer and Bob; Jon abstains"),
-    (23, "Legal review",                             "Deferred (Jon 10/7)",    "Negotiation stage; no legal review until Jon calls it"),
+    (22, "Disinterested director approval",          "Required (SSLC side)",   "Markus Rufer and Bob; John abstains"),
+    (23, "Legal review",                             "Deferred (John 10/7)",    "Negotiation stage; no legal review until John calls it"),
     (25, "HE-TANK DISPUTE RISK",                     "",                       ""),
     (26, "Rev3 tank leaks at boss post-Hysol",       "RISK",                   "10/1 hydro fail; Plan B: qualified COPV ≤$250K (MC #3056)"),
     (27, "Impact on acquisition",                    "SSLC demonstrably can't deliver BLK3 flight article","Customer-hat PO default kept in reserve"),
@@ -1029,27 +1030,42 @@ tcomp["A13"].font = Font(bold=True, size=10, color=WHITE)
 tcomp["A13"].fill = PatternFill("solid", fgColor="E26A21")
 
 fwd_rows = [
-    (14, "Tank earn-out base (i): 5%/yr, $300K cap",
+    (14, "Tank earn-out base (i): 5%/yr, $300K cap, 5yr FY27–FY31",
          "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)",
-         0, 0, "5% × $5M firm IM ramp × 3 years; $300K/yr cap"),
-    (15, "Tank earn-out low (i): 3%/yr",
+         "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)",
+         "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)",
+         "5% × $5M firm IM ramp × 5 years; $300K/yr cap"),
+    (15, "Tank earn-out low (i): 3%/yr × 5yr",
          "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)",
-         0, 0, "Low scenario"),
-    (16, "Tank earn-out high (i): 7%/yr",
+         "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)",
+         "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)",
+         "Low scenario × 5yr"),
+    (16, "Tank earn-out high (i): 7%/yr × 5yr (cap $300K)",
          "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
-         0, 0, "High — capped at $300K"),
-    (17, "Stock earn-out base (ii): 0.75% FD @ listing",
+         "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
+         "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
+         "High — capped at $300K/yr × 5yr = $1.5M"),
+    (17, "Milestone earn-outs base (3 of 5 triggered)",
+         200000, 200000, 250000, 0, 0,
+         "Base: M1 $5.1M rev FY27 + M2 OTV contract + M3 $10M rev (mgmt assumption)"),
+    (18, "Milestone earn-outs low (M1 only)",
+         200000, 0, 0, 0, 0,
+         "Low: only M1 SSLC FY2026-27 revenue ≥$5.1M — $200K"),
+    (19, "Milestone earn-outs high (all 5 triggered)",
+         200000, 200000, 250000, 250000, 200000,
+         "High: M1 $200K + M2 $200K + M3 $250K + M4 $250K + M5 $200K = $1.1M"),
+    (20, "Stock earn-out base (ii): 0.75% FD @ listing",
          0, 0, "=Assumptions!B29*Assumptions!B32", 0, 0,
-         "At $250M listing; realized FY29 post lockup"),
-    (18, "Stock earn-out low (ii): 0.5% @ $200M",
+         "At $250M listing; realized FY29 post principals' lockup (modeled ~12 months)"),
+    (21, "Stock earn-out low (ii): 0.5% @ $200M",
          0, 0, "=Assumptions!B28*Assumptions!B31", 0, 0, "Low RTO"),
-    (19, "Stock earn-out high (ii): 1.0% @ $300M",
+    (22, "Stock earn-out high (ii): 1.0% @ $300M",
          0, 0, "=Assumptions!B30*Assumptions!B33", 0, 0, "High RTO"),
 ]
 for r, lbl, fy27, fy28, fy29, fy30, fy31, notes in fwd_rows:
@@ -1066,20 +1082,25 @@ for r, lbl, fy27, fy28, fy29, fy30, fy31, notes in fwd_rows:
     tcomp.row_dimensions[r].height = 18
 
 # TOTAL CONSIDERATION — OLD MODEL (base) + ACTUALS-ANCHORED (sensitivity)
-tcomp.merge_cells("A21:H21")
-tcomp["A21"] = "TOTAL CONSIDERATION — OLD-MODEL CASE (v12) BASE | Actuals-Anchored as Sensitivity"
-tcomp["A21"].font = Font(bold=True, size=10, color=WHITE)
-tcomp["A21"].fill = PatternFill("solid", fgColor=PURPLE)
+# Rows 14-22 are earn-outs (tank base/low/high, milestones base/low/high, stock base/low/high)
+# Rows 12 = TOTAL FUNDING; new total section starts at row 25
+tcomp.merge_cells("A25:H25")
+tcomp["A25"] = "TOTAL CONSIDERATION — 5-yr (base price + earn-outs + milestones) | negotiating terms — management assumptions"
+tcomp["A25"].font = Font(bold=True, size=10, color=WHITE)
+tcomp["A25"].fill = PatternFill("solid", fgColor=PURPLE)
 
 tot_rows = [
-    (22, "OLD-MODEL BASE: funding + tank base + stock base",
-         "=B12+B14+B17","=C12+C14+C17","=D12+D14+D17","=E12+E14+E17","=F12+F14+F17"),
-    (23, "OLD-MODEL LOW:  funding + tank low + stock low",
-         "=B12+B15+B18","=C12+C15+C18","=D12+D15+D18","=E12+E15+E18","=F12+F15+F18"),
-    (24, "OLD-MODEL HIGH: funding + tank high + stock high",
-         "=B12+B16+B19","=C12+C16+C19","=D12+D16+D19","=E12+E16+E19","=F12+F16+F19"),
-    (25, "AA SENSITIVITY BASE: funding + tank base + stock base",
-         "=B12+B14+B17","=C12+C14+C17","=D12+D14+D17","=E12+E14+E17","=F12+F14+F17"),
+    # BASE: funding + tank base + milestone base + stock base
+    (26, "BASE: funding + tank base (5yr) + milestones 1-3 + stock base",
+         "=B12+B14+B17+B20","=C12+C14+C17+C20","=D12+D14+D17+D20","=E12+E14+E17+E20","=F12+F14+F17+F20"),
+    # LOW: funding + tank low + milestone low (M1) + stock low
+    (27, "LOW:  funding + tank low (5yr) + milestone M1 only + stock low",
+         "=B12+B15+B18+B21","=C12+C15+C18+C21","=D12+D15+D18+D21","=E12+E15+E18+E21","=F12+F15+F18+F21"),
+    # HIGH: funding + tank high + milestone high (all 5) + stock high → ~$10M
+    (28, "HIGH: funding + tank high (5yr) + all milestones + stock high  ≈ $10.0M",
+         "=B12+B16+B19+B22","=C12+C16+C19+C22","=D12+D16+D19+D22","=E12+E16+E19+E22","=F12+F16+F19+F22"),
+    (29, "AA SENSITIVITY BASE (same earn-out structure)",
+         "=B12+B14+B17+B20","=C12+C14+C17+C20","=D12+D14+D17+D20","=E12+E14+E17+E20","=F12+F14+F17+F20"),
 ]
 row_bgs = [YELLOW, GREEN, ORANGE, LIGHT_BLUE]
 for (r, lbl, fy27, fy28, fy29, fy30, fy31), rbg in zip(tot_rows, row_bgs):
@@ -1097,48 +1118,48 @@ for (r, lbl, fy27, fy28, fy29, fy30, fy31), rbg in zip(tot_rows, row_bgs):
     tcomp.cell(r, 7).fill = PatternFill("solid", fgColor=rbg)
     tcomp.row_dimensions[r].height = 20
 
-tcomp["A27"] = "Chart: see drafts/SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png (incl Y5 hold annotation)"
+tcomp["A31"] = "Chart: see drafts/SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png (incl Y5 hold annotation)"
 
 # ── HOLD TO YEAR 5 — Total Compensation perspective ──────────────────────────
-tcomp.merge_cells("A29:H29")
-tcomp["A29"] = "HOLD TO YEAR 5 — Forward Potential if SSLC Investors Hold Exos Shares to FY31 (Jon 10/7)"
-tcomp["A29"].font = Font(bold=True, size=10, color=WHITE)
-tcomp["A29"].fill = PatternFill("solid", fgColor=PURPLE)
+tcomp.merge_cells("A33:H33")
+tcomp["A33"] = "HOLD TO YEAR 5 — Forward Potential if SSLC Investors Hold Exos Shares to FY31 (John 10/7)"
+tcomp["A33"].font = Font(bold=True, size=10, color=WHITE)
+tcomp["A33"].fill = PatternFill("solid", fgColor=PURPLE)
 
-tcomp["A30"] = ("Base = Old-Model (v12). Dilution: Series A $25M staged (D1-D4, ~13%) + RTO (~12%) + "
+tcomp["A34"] = ("Base = Old-Model (v12). Dilution: Series A $25M staged (D1-D4, ~13%) + RTO (~12%) + "
                 "option pool (~5%) = ~30% flat (MANAGEMENT ASSUMPTION). "
                 "0.75% stake at listing → 0.525% post-dilution. "
                 "AA case EV ~$176M = BELOW $250M listing — stock worth less in AA case by FY31.")
-tcomp["A30"].font = Font(size=8, italic=True, color="C00000")
-tcomp.merge_cells("A30:H30")
-tcomp.row_dimensions[30].height = 32
-tcomp["A30"].alignment = Alignment(wrap_text=True)
+tcomp["A34"].font = Font(size=8, italic=True, color="C00000")
+tcomp.merge_cells("A34:H34")
+tcomp.row_dimensions[34].height = 32
+tcomp["A34"].alignment = Alignment(wrap_text=True)
 
 for col, txt in [(1,"Scenario"),(2,"FY31 EV"),(3,"Post-dil stake"),(4,"FY31 share value"),(5,"At-listing value"),(6,"Multiple vs listing"),(7,""),(8,"Notes")]:
-    c = tcomp.cell(row=31, column=col, value=txt)
+    c = tcomp.cell(row=35, column=col, value=txt)
     c.font = Font(bold=True, color=WHITE, size=9)
     c.fill = PatternFill("solid", fgColor=PURPLE)
     c.alignment = Alignment(horizontal="center", wrap_text=True)
-tcomp.row_dimensions[31].height = 22
+tcomp.row_dimensions[35].height = 22
 
 y5_hold_rows = [
-    (32, "Old-Model — Low",   "=Assumptions!B118", "=Assumptions!B125",
-         "=B32*C32", "=Assumptions!B28*Assumptions!B31", "=D32/E32",
+    (36, "Old-Model — Low",   "=Assumptions!B118", "=Assumptions!B125",
+         "=B36*C36", "=Assumptions!B28*Assumptions!B31", "=D36/E36",
          "0.5% grant x 0.70 = 0.35%; EV $1.626B"),
-    (33, "Old-Model — Base",  "=Assumptions!B118", "=Assumptions!B124",
-         "=B33*C33", "=Assumptions!B29*Assumptions!B32", "=D33/E33",
+    (37, "Old-Model — Base",  "=Assumptions!B118", "=Assumptions!B124",
+         "=B37*C37", "=Assumptions!B29*Assumptions!B32", "=D37/E37",
          "0.75% grant x 0.70 = 0.525%; EV $1.626B (~4.6x listing)"),
-    (34, "Old-Model — High",  "=Assumptions!B118", "=Assumptions!B126",
-         "=B34*C34", "=Assumptions!B30*Assumptions!B33", "=D34/E34",
+    (38, "Old-Model — High",  "=Assumptions!B118", "=Assumptions!B126",
+         "=B38*C38", "=Assumptions!B30*Assumptions!B33", "=D38/E38",
          "1.0% grant x 0.70 = 0.70%; EV $1.626B"),
-    (35, "AA — Low",          "=Assumptions!B120", "=Assumptions!B125",
-         "=B35*C35", "=Assumptions!B28*Assumptions!B31", "=D35/E35",
+    (39, "AA — Low",          "=Assumptions!B120", "=Assumptions!B125",
+         "=B39*C39", "=Assumptions!B28*Assumptions!B31", "=D39/E39",
          "BELOW listing value — AA FY31 EV ~$176M < $250M MEV"),
-    (36, "AA — Base",         "=Assumptions!B120", "=Assumptions!B124",
-         "=B36*C36", "=Assumptions!B29*Assumptions!B32", "=D36/E36",
+    (40, "AA — Base",         "=Assumptions!B120", "=Assumptions!B124",
+         "=B40*C40", "=Assumptions!B29*Assumptions!B32", "=D40/E40",
          "BELOW listing — ~$924K vs $1.875M at listing (~0.49x)"),
-    (37, "AA — High",         "=Assumptions!B120", "=Assumptions!B126",
-         "=B37*C37", "=Assumptions!B30*Assumptions!B33", "=D37/E37",
+    (41, "AA — High",         "=Assumptions!B120", "=Assumptions!B126",
+         "=B41*C41", "=Assumptions!B30*Assumptions!B33", "=D41/E41",
          "BELOW listing — ~$1.23M vs $3.0M at listing (~0.41x)"),
 ]
 for r, label, ev, stake, val, at_list, mult, notes in y5_hold_rows:
@@ -1154,17 +1175,17 @@ for r, label, ev, stake, val, at_list, mult, notes in y5_hold_rows:
         tcomp.cell(r, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
     tcomp.row_dimensions[r].height = 18
 
-tcomp.cell(39, 1).value = ("NOTE: Y5 hold values are NOT additive to at-listing earn-out. "
+tcomp.cell(43, 1).value = ("NOTE: Y5 hold values are NOT additive to at-listing earn-out. "
                             "Investors choose to hold OR sell at listing. "
                             "Old-Model base: hold to FY31 = ~$8.54M vs sell at listing = $1.875M (4.6x). "
                             "AA base: hold to FY31 = ~$0.92M vs sell at listing = $1.875M (0.49x) — AA case penalizes holding.")
-tcomp.merge_cells("A39:H39")
-tcomp.cell(39, 1).font = Font(size=8, bold=True, color="C00000")
-tcomp.cell(39, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
-tcomp.cell(39, 1).alignment = Alignment(wrap_text=True)
-tcomp.row_dimensions[39].height = 42
-tcomp["A27"].font = Font(italic=True, size=9, color="444444")
-tcomp.merge_cells("A27:H27")
+tcomp.merge_cells("A43:H43")
+tcomp.cell(43, 1).font = Font(size=8, bold=True, color="C00000")
+tcomp.cell(43, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
+tcomp.cell(43, 1).alignment = Alignment(wrap_text=True)
+tcomp.row_dimensions[43].height = 42
+tcomp["A31"].font = Font(italic=True, size=9, color="444444")
+tcomp.merge_cells("A31:H31")
 
 
 # ─────────────────────────────────────────────────────────────────────────────

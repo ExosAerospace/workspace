@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Add 'With vs Without Exos Capital' sheet to EXOS_SSLC_OptionB_Acquisition_Model_2026-10-07.xlsx.
 Compares SSLC standalone (status-quo) vs SSLC with Exos offer (v12 trajectory → $54.7M Y5).
-Jon instructions 2026-10-07: show funding gap, doubling stat, CAGR comparison, cumulative gap.
+John instructions 2026-10-07: show funding gap, doubling stat, CAGR comparison, cumulative gap.
 """
 import openpyxl
 from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
@@ -84,9 +84,9 @@ ws.row_dimensions[2].height = 28
 # ── KEY FACT callout ─────────────────────────────────────────────────────────
 ws.merge_cells("A4:L6")
 ws["A4"].value = (
-    "KEY FACT:  Reaching $5M in FY27 requires averaging $1.43M/quarter for Q2–Q4  "
-    "($5,000K − $713K Q1 actual ÷ 3 quarters = $1,429K/qtr)  —  "
-    "exactly 2.0× the most recent quarter's $713K  —  starting immediately.  "
+    "KEY FACT:  Reaching $5.1M in FY27 requires averaging $1.46M/quarter for Q2–Q4  "
+    "($5,100K − $713K Q1 actual ÷ 3 quarters = $1,462K/qtr)  —  "
+    "approximately 2.05× the most recent quarter's $713K  —  starting immediately.  "
     "Without Exos capital to fund working capital and IM ramp, that doubling is not achievable on SSLC's $198K cash position."
 )
 ws["A4"].font = Font(bold=True, size=11, color=BLACK)
@@ -359,9 +359,9 @@ narrative_blocks = [
         f"5-yr CAGR (with Exos, v12):  ~{cagr_wi*100:.1f}%",
     ]),
     ("The Doubling Requirement", YELLOW_DARK, [
-        "FY27 $5M target − Q1 $713K actual = $4,287K remaining",
-        "Over 3 quarters (Q2–Q4) = $1,429K/qtr required",
-        "vs. Q1 $713K actual = 2.0× immediate ramp",
+        "FY27 $5.1M target − Q1 $713K actual = $4,387K remaining",
+        "Over 3 quarters (Q2–Q4) = $1,462K/qtr required",
+        "vs. Q1 $713K actual = 2.05× immediate ramp",
         "Only funded if Exos capital bridges the working-capital gap",
         "Without capital → Q2–Q4 stays ≈ $713K/qtr = $2.85M FY27",
     ]),
@@ -423,4 +423,4 @@ print(f"FY31 without:  ${wo_rev[-1]:,.0f}")
 print(f"FY31 with(v12):${wi_rev[-1]:,.0f}")
 print(f"Y5 gap:        ${gap_y5:,.0f}")
 print(f"Cumulative gap:${gap_cum:,.0f}")
-print(f"Doubling req:  ${(5_000_000 - 713_000) / 3:,.0f}/qtr vs $713K = {(5_000_000 - 713_000)/3/713_000:.2f}×")
+print(f"Doubling req:  ${(5_100_000 - 713_000) / 3:,.0f}/qtr vs $713K = {(5_100_000 - 713_000)/3/713_000:.2f}× (target $5.1M)")
