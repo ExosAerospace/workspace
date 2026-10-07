@@ -5217,6 +5217,28 @@
    "lifecycle": "self-removing",
    "registered": "2026-10-05",
    "envelope_source": "hand review of scripts/lizi-eai-board-reminder.py, 2026-10-05"
+  },
+  {
+   "label": "com.exos.naftu-attestation-ready",
+   "script": "scripts/naftu_attestation_ready_watch.py",
+   "kind": "launchd",
+   "schedule": "every 5 min (one-shot; self-retires on completion or envelope expiry 2026-10-12)",
+   "purpose": "Watches MC e-sign envelope ad6e2584504a (NASA NAFTU Cybersecurity Attestation). On Jon's signature, emails Jon a READY-TO-SEND for Dennis Small (NASA GSFC) with the signed PDF + filled worksheet, files the signed PDF on MC #2970, then boots itself out.",
+   "stack_layer": "EXECUTE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "may email ONLY jquinn@exosaero.com and attach to MC task #2970; never emails NASA (gov send stays with Jon)",
+   "memory_boundary": "reads mission-control/data/envelopes.json; writes drafts/naftu/*SIGNED*.pdf, logs/naftu-attestation-ready.done",
+   "escalation": "send failure exits 1 -> run_logged run-failures report",
+   "eval_suite": "dry run 2026-10-07 (waiting state verified); stamp placement verified with synthetic signature",
+   "telemetry": "~/.openclaw/logs/naftu-attestation-ready.launchd.log; logs/runs/YYYY-MM-DD.jsonl",
+   "reusability_scope": "one-off",
+   "risk_tier": "LOW",
+   "envelope_source": "Jon email-command 2026-10-07 00:41: 'send the document I need to sign to me through our docusign and once signed send ready to send to me with emails'",
+   "eval_type": "liveness",
+   "change_log": [
+    "2026-10-07 created (Exo, email-command)"
+   ]
   }
  ],
  "eval_wave_1": {

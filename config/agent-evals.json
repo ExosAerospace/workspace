@@ -1509,6 +1509,12 @@
         "failure count in exo3-field-failures.json non-decreasing → else WARN",
         "exactly one open Decision dedupeKey=exo3-field-report-<week> per 7d window → else WARN"
       ]
+    },
+    "com.exos.naftu-attestation-ready": {
+      "cadence_s": 300,
+      "warn_grace": 2.5,
+      "fail_grace": 6,
+      "owner": "John Quinn"
     }
   },
   "_eval_wave_2": {
@@ -1520,5 +1526,7 @@
     "added": 57,
     "date": "2026-09-29",
     "note": "kind openclaw-cron entries are scored by agent_eval.check_crons() from the OpenClaw state DB (read-only): FAIL on consecutive_errors >= fail_consecutive_errors (escalates once); WARN if no run within warn_grace x cadence_s (cadence = longest gap in the cron schedule), or a one-shot still unrun 24h after due. Disabled crons are skipped (drift-checked only). cadence_s is recomputed live if null."
-  }
+  },
+  "auto_register_crons": true,
+  "auto_register_crons_approved": "D-7281949"
 }
