@@ -129,23 +129,19 @@ B("Cash at close  ", "$2,510,000 delivered to SSLC at acquisition close.")
 B("Debt relief  ",
   "All SSLC debts paid at face value at close, including the Microcosm loan and Wertz notes "
   "(est. ~$500K, to be verified in QuickBooks). Jim Wertz's personal loans are made whole at closing.")
-B("Prepaid-work relief  ",
-  "$984,062 in already-billed and deposited work is assumed by Exos and funded to completion "
-  "(Exos working-capital cost: $300K–$700K). SSLC customers receive uninterrupted delivery. "
-  "No SSLC shareholder funds this obligation.")
 B("No further capital calls  ",
   "Once closed, SSLC's standalone cash drain stops. Shareholders stop funding a working-capital-negative entity.")
 B("Earn-out — IM tank revenue  ",
   "5% of Intuitive Machines tank revenue for 3 years, capped at $300K/year (up to $900K total). "
   "Tied to SSLC's existing firm IM demand.")
 B("Earn-out — Exos stock  ",
-  "0.3%–0.7% of Exos fully diluted shares post-RTO listing "
-  "(est. $600K–$2.1M at a $200M–$300M listing; $250M minimum MEV per Ainigma/FNEX mandate).")
+  "0.5%–1.0% of Exos fully diluted shares post-RTO listing "
+  "(est. $1.0M–$3.0M at a $200M–$300M listing; $250M minimum MEV per Ainigma/FNEX mandate).")
 B("Exos shares + Y5 hold value  ",
   "Stock earn-out is tradeable post-12-month lockup. "
-  "Held to FY31 at a 16× EV/EBITDA multiple on the Exos plan (~$1.63B EV), a 0.5% grant "
-  "(~0.35% after ~30% assumed dilution) is worth ~$5.7M (range $3.4M–$8.0M), "
-  "~4.5× its ~$1.25M value at listing. Management assumptions.")
+  "Held to FY31 at a 16× EV/EBITDA multiple on the Exos plan (~$1.63B EV), a 0.75% grant "
+  "(~0.525% after ~30% assumed dilution) is worth ~$8.5M (range $5.7M–$11.4M), "
+  "~4.6× its ~$1.875M value at listing. Management assumptions.")
 B("IM program continuity  ",
   "No delivery interruption to Intuitive Machines; Exos-SSLC entity continues the contract, "
   "preserving SSLC's strongest commercial relationship.")
@@ -165,9 +161,9 @@ P("Standalone constraints (SSLC's own numbers):",
   bold=True, size=10, sa=2, sb=3)
 
 B("Cash position  ", "$198K at October 2, 2026 — roughly one month of operating burn.")
-B("Prepaid-work gap  ",
-  "$300K–$700K needed just to finish $984K already billed or deposited — "
-  "before SSLC can collect on any new work.")
+B("Working capital gap  ",
+  "$300K–$700K needed to maintain delivery commitments and service new IM orders — "
+  "before SSLC can ramp to the $5M/year run rate.")
 B("Operating history  ", "FY26 operating loss: −$416K. No self-funding path to production scale.")
 B("He-tank rework  ",
   "Rev3 GHe tank 4,400 psi proof issue unresolved (MC #3056). "
@@ -195,10 +191,10 @@ comp_rows = [
     ["SSLC closing costs (Seller)",  "Close",           "$60,000"],
     ["Exos stake credit (non-cash)", "Close (credit)",  "$790,000"],
     ["Debt relief (est., TBV)",      "Close",           "~$500,000"],
-    ["Prepaid-work delivery funded", "Post-close",      "$984K face / $500K Exos cost"],
+    ["WC bridge",                    "Close",           "$500,000"],
     ["Earn-out — IM tanks (3 yr)",   "FY27–FY29",       "Up to $900,000"],
-    ["Earn-out — Exos stock (RTO)",  "Post-RTO ~FY28",  "$600K–$2.1M"],
-    ["TOTAL (low / mid / high)",     "FY27–FY31",       "$5.3M / $5.9M / $6.9M"],
+    ["Earn-out — Exos stock (RTO)",  "Post-RTO ~FY28",  "$1.0M–$3.0M"],
+    ["TOTAL (low / mid / high)",     "FY27–FY31",       "$5.8M / $7.0M / $8.3M"],
 ]
 add_table(comp_rows, [2.3, 1.4, 1.8])
 

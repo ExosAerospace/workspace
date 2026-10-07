@@ -117,7 +117,7 @@ ws.row_dimensions[R].height = 22
 # sub-header: constraints
 R += 1
 ws.merge_cells(f"A{R}:F{R}")
-ws[f"A{R}"].value = ("Constraints: Cash $198K | $984K prepaid work needs $300–700K to complete | FY26 op loss −$416K | "
+ws[f"A{R}"].value = ("Constraints: Cash $198K | ~1 month burn | WC bridge $300–700K needed | FY26 op loss −$416K | "
                      "He-tank rework unresolved | No capex | No IM ramp capital → growth capped by self-funded working capital")
 ws[f"A{R}"].font = Font(italic=True, size=9, color=RED_DARK)
 ws[f"A{R}"].alignment = Alignment(horizontal="left", wrap_text=True)
@@ -143,7 +143,7 @@ wo_gr  = [None, 0.10, 0.10, 0.10, 0.10]
 wo_ebitda = [-416_000, -200_000, 50_000, 200_000, 350_000]  # derived: FY26 actual + slow improvement
 wo_notes = [
     "Run-rate from Q1 actual $713K × 4  (Actual anchor)",
-    "+10% CAGR — organic only; WC-constrained; stall risk if prepaid-work gap not funded",
+    "+10% CAGR — organic only; WC-constrained; stall risk if working-capital gap not funded",
     "+10%",
     "+10%",
     "+10%",
@@ -183,7 +183,7 @@ for lbl, vals, fmt, is_cum, notes in rows_wo:
 
 # stall-risk note
 ws.merge_cells(f"A{R}:F{R}")
-ws[f"A{R}"].value = ("⚠  Stall Risk: SSLC needs $300–700K to deliver $984K prepaid/deposited work already billed. "
+ws[f"A{R}"].value = ("⚠  Stall Risk: SSLC needs $300–700K in working capital to maintain delivery commitments. "
                      "On $198K cash, a working-capital crunch could interrupt deliveries in Q2–Q3 FY27, "
                      "reducing FY27 below the $2.85M run-rate. The 10% CAGR assumes the crunch is survived.")
 ws[f"A{R}"].font = Font(italic=True, size=9, color=RED_DARK)
@@ -205,7 +205,7 @@ R += 1
 
 ws.merge_cells(f"A{R}:F{R}")
 ws[f"A{R}"].value = ("Exos offer provides: Cash at close $2.51M | Debts paid at face | "
-                     "$984K prepaid-work funded (cost $500K) | WC bridge | Exos channel + IM ramp capex | "
+                     "WC bridge ($300–700K) | Exos channel + IM ramp capex | "
                      "v12 tank-unit/ASP ramp model. Figures: v12 Annual P&L, recalculated 2026-10-07.")
 ws[f"A{R}"].font = Font(italic=True, size=9, color=GREEN_DARK)
 ws[f"A{R}"].alignment = Alignment(horizontal="left", wrap_text=True)
@@ -337,8 +337,7 @@ SR += 1
 narrative_blocks = [
     ("Without Exos: Status-Quo Constraints", RED_DARK, [
         "Cash on hand (10/2/26):  $198K",
-        "Prepaid work to deliver:  $984K face",
-        "Cost to complete that work:  $300K–$700K",
+        "Working capital needed to maintain deliveries:  $300K–$700K",
         "FY26 operating loss:  −$416K",
         "He-tank rework unresolved — no resolution path without new owner",
         "No capex capacity → headcount/equipment frozen",

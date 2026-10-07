@@ -112,9 +112,9 @@ earn_data = [
     (25, "Earn-out i — IM tank revenue % (high)",            0.07,   "Management assumption — unverified"),
     (26, "Earn-out i — annual cap ($)",                      300000, "Management assumption — unverified"),
     (27, "Earn-out i — duration (years)",                    3,      "Management assumption — unverified"),
-    (28, "Earn-out ii — Exos stock % of FD shares (low)",   0.003,  "Management assumption — unverified"),
-    (29, "Earn-out ii — Exos stock % of FD shares (base)",  0.005,  "Management assumption — unverified"),
-    (30, "Earn-out ii — Exos stock % of FD shares (high)",  0.007,  "Management assumption — unverified"),
+    (28, "Earn-out ii — Exos stock % of FD shares (low)",   0.005,  "Management assumption — unverified"),
+    (29, "Earn-out ii — Exos stock % of FD shares (base)",  0.0075, "Management assumption — unverified"),
+    (30, "Earn-out ii — Exos stock % of FD shares (high)",  0.010,  "Management assumption — unverified"),
     (31, "Earn-out ii — assumed listing price (low) ($)",    200000000,"FNEX RTO min $250M MEV; low scenario"),
     (32, "Earn-out ii — assumed listing price (base) ($)",   250000000,"FNEX RTO minimum MEV"),
     (33, "Earn-out ii — assumed listing price (high) ($)",   300000000,"Management assumption — unverified"),
@@ -268,35 +268,16 @@ ws.cell(97, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
 ws.cell(97, 1).alignment = Alignment(wrap_text=True)
 ws.row_dimensions[97].height = 52
 
-# ── PREPAID-WORK DELIVERY OBLIGATION (Jon 10/7) ──────────────────────────────
-sec_hdr(ws, 99, "PREPAID-WORK DELIVERY OBLIGATION (Jon 10/7)", bg=DARK_BLUE, col_end="C")
-prepaid_data = [
-    (100, "SSLC prepaid-work face value — billed-ahead + deposits ($)", 984000,
-          "per 10/2 SSLC QB pull; verify. $864K billed-ahead + $120K deposits."),
-    (101, "  of which: billed-ahead ($)", 864000,  "per 10/2 SSLC QB pull; verify"),
-    (102, "  of which: deposits ($)",     120000,  "per 10/2 SSLC QB pull; verify"),
-    (103, "Cost to Exos to fund completion (mid = WC bridge) ($)", 500000,
-          "Same as B16 — $0.3–$0.7M to finish paid-for IM work; mid=$500K"),
-]
-for (r, lbl, val, src) in prepaid_data:
-    ws.cell(r, 1).value = lbl; ws.cell(r, 1).font = Font(size=10)
-    ws.cell(r, 2).value = val; ws.cell(r, 2).font = Font(size=10, bold=True)
-    ws.cell(r, 2).number_format = '$#,##0'
-    ws.cell(r, 3).value = src; ws.cell(r, 3).font = Font(size=9, italic=True, color="444444")
-    ws.cell(r, 3).alignment = Alignment(wrap_text=True)
-    ws.row_dimensions[r].height = 22
-
 # ── BENEFITS TO SSLC INVESTORS (Jon 10/7) ────────────────────────────────────
 sec_hdr(ws, 105, "BENEFITS TO SSLC INVESTORS (Jon 10/7)", bg=DARK_BLUE, col_end="C")
 benefits = [
     (106, "1. Debt relief at face",                          "~$500K TBV",      "Microcosm/Wertz notes + AP paid; personal path for Jim"),
-    (107, "2. Delivery obligations assumed & funded",        "$984K face/$500K cost", "Exos funds completion; per 10/2 QB pull; verify"),
-    (108, "3. No further capital calls",                     "Structural",       "Investors stop funding a cash-negative entity"),
-    (109, "4. Cash at close",                                "$2,510,000",       "Section 3 deal price cash component"),
-    (110, "5. Earn-out upside — IM tank revenue (3 yrs)",   "Up to $900K",      "5%/yr x $5M IM firm; $300K cap"),
-    (111, "6. Earn-out upside — Exos stock post-RTO",       "$0.6M–$2.1M",     "0.3–0.7% FD at listing ($200M–$300M MEV)"),
-    (112, "7. Liquidity via listed Exos stock",              "Post-RTO ~FY28",   "12-mo lockup; publicly tradeable thereafter"),
-    (113, "8. IM program continuity",                        "Operational",      "No customer disruption; Exos-SSLC entity delivers"),
+    (107, "2. No further capital calls",                     "Structural",       "Investors stop funding a cash-negative entity"),
+    (108, "3. Cash at close",                                "$2,510,000",       "Section 3 deal price cash component"),
+    (109, "4. Earn-out upside — IM tank revenue (3 yrs)",   "Up to $900K",      "5%/yr x $5M IM firm; $300K cap"),
+    (110, "5. Earn-out upside — Exos stock post-RTO",       "$1.0M–$3.0M",     "0.5%–1.0% FD at listing ($200M–$300M MEV)"),
+    (111, "6. Liquidity via listed Exos stock",              "Post-RTO ~FY28",   "12-mo lockup; publicly tradeable thereafter"),
+    (112, "7. IM program continuity",                        "Operational",      "No customer disruption; Exos-SSLC entity delivers"),
 ]
 for (r, lbl, val, src) in benefits:
     ws.cell(r, 1).value = lbl; ws.cell(r, 1).font = Font(size=10)
@@ -319,22 +300,22 @@ y5_data = [
           "AA consolidated FY31 (SSLC ~$6.0M + Exos $5.0M); derived from PL sheet"),
     (120, "Actuals-Anchored FY31 implied EV ($)", "=B119*B116",
           "~$176M — BELOW $250M RTO listing value; see warning row 136"),
-    (121, "SSLC earn-out stock stake at listing (base)", 0.005,
-          "Base earn-out grant = 0.5% FD shares at listing"),
+    (121, "SSLC earn-out stock stake at listing (base)", 0.0075,
+          "Base earn-out grant = 0.75% FD shares at listing"),
     (122, "Post-listing dilution assumption (flat, mgmt)", 0.30,
           "MANAGEMENT ASSUMPTION: Series A $25M staged (D1-D4, ~13%) + RTO issuance (~12%) + option pool (~5%) = ~30% dilution total"),
     (123, "Dilution factor (1 minus dilution)",  "=1-B122",   "0.70"),
-    (124, "SSLC stake FY31 — base post-dilution", "=B121*B123",   "0.5% x 0.70 = 0.35%"),
-    (125, "SSLC stake FY31 — low post-dilution",  "=Assumptions!B28*(1-B122)", "0.3% x 0.70 = 0.21%"),
-    (126, "SSLC stake FY31 — high post-dilution", "=Assumptions!B30*(1-B122)", "0.7% x 0.70 = 0.49%"),
-    (127, "Old-Model FY31 share value — low ($)",  "=B118*B125",   "~$3.41M"),
-    (128, "Old-Model FY31 share value — base ($)", "=B118*B124",   "~$5.69M"),
-    (129, "Old-Model FY31 share value — high ($)", "=B118*B126",   "~$7.97M"),
-    (130, "AA FY31 share value — low ($)",         "=B120*B125",   "~$370K"),
-    (131, "AA FY31 share value — base ($)",        "=B120*B124",   "~$616K"),
-    (132, "AA FY31 share value — high ($)",        "=B120*B126",   "~$862K"),
+    (124, "SSLC stake FY31 — base post-dilution", "=B121*B123",   "0.75% x 0.70 = 0.525%"),
+    (125, "SSLC stake FY31 — low post-dilution",  "=Assumptions!B28*(1-B122)", "0.5% x 0.70 = 0.35%"),
+    (126, "SSLC stake FY31 — high post-dilution", "=Assumptions!B30*(1-B122)", "1.0% x 0.70 = 0.70%"),
+    (127, "Old-Model FY31 share value — low ($)",  "=B118*B125",   "~$5.69M"),
+    (128, "Old-Model FY31 share value — base ($)", "=B118*B124",   "~$8.54M"),
+    (129, "Old-Model FY31 share value — high ($)", "=B118*B126",   "~$11.38M"),
+    (130, "AA FY31 share value — low ($)",         "=B120*B125",   "~$616K"),
+    (131, "AA FY31 share value — base ($)",        "=B120*B124",   "~$924K"),
+    (132, "AA FY31 share value — high ($)",        "=B120*B126",   "~$1.23M"),
     (133, "Multiple v at-listing — Old-Model base", "=B128/(Assumptions!B29*Assumptions!B32)",
-          "~4.5x the at-listing stock earn-out value ($1.25M)"),
+          "~4.6x the at-listing stock earn-out value ($1.875M)"),
     (134, "Multiple v at-listing — AA base",        "=B131/(Assumptions!B29*Assumptions!B32)",
           "~0.49x — AA FY31 EV BELOW listing; stock worth less by FY31 in AA case"),
 ]
@@ -361,7 +342,7 @@ ws.cell(136, 1).value = (
     "WARNING: AA CASE Y5 HOLD — Actuals-Anchored FY31 EV (~$176M) is BELOW the $250M RTO "
     "listing value. In the AA case, holding to FY31 yields LESS than the at-listing earn-out. "
     "This reflects conservative actuals-based projections, not a flaw in the deal. "
-    "Old-Model (v12) FY31 EV ~$1.63B yields ~4.5x the at-listing stock value."
+    "Old-Model (v12) FY31 EV ~$1.63B yields ~4.6x the at-listing stock value."
 )
 ws.merge_cells("A136:C136")
 ws.cell(136, 1).font = Font(size=9, bold=True, color="C00000")
@@ -453,22 +434,22 @@ eo_data = [
          "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)*Assumptions!B27",
          "=Assumptions!B28*Assumptions!B31",
          "=D24+C24",
-         "Low: 3% tank rev (cap $300K) × 3yr + 0.3% of $200M listing"),
+         "Low: 3% tank rev (cap $300K) × 3yr + 0.5% of $200M listing"),
     (25, "Base scenario",
          "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)*Assumptions!B27",
          "=Assumptions!B29*Assumptions!B32",
          "=B25+C25",
-         "Base: 5% × $5M firm + 0.5% of $250M listing"),
+         "Base: 5% × $5M firm + 0.75% of $250M listing"),
     (26, "High scenario",
          "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)*Assumptions!B27",
          "=Assumptions!B30*Assumptions!B33",
          "=B26+C26",
-         "High: 7% × $5M + 0.7% of $300M listing"),
+         "High: 7% × $5M + 1.0% of $300M listing"),
     (27, "Exos dilution (stock, base)",
          "n/a",
          "=Assumptions!B29",
          "=Assumptions!B29",
-         "0.5% of FD shares; non-material at Series A scale"),
+         "0.75% of FD shares; non-material at Series A scale"),
     (28, "Lockup / vesting",
          "Annual payments, 3 years",
          "12-month lockup post-listing",
@@ -954,7 +935,7 @@ fund_data = [
     (27, "Impact on acquisition",                    "SSLC demonstrably can't deliver BLK3 flight article","Customer-hat PO default kept in reserve"),
     (29, "SSLC CASH RISK",                           "",                       ""),
     (30, "SSLC cash at close (est.)",                "=Assumptions!B42+Assumptions!B41-Assumptions!B16","FY27 Q1 cash + billed-ahead minus WC need"),
-    (31, "Risk: SSLC runs out before close",         "MEDIUM",                 "Cash $198K + collections on $984K prepaid"),
+    (31, "Risk: SSLC runs out before close",         "MEDIUM",                 "Cash $198K + collections on billed-ahead work; ~1 month burn"),
     (32, "Mitigation: Option C pre-cliff bridge",    "Secured prepaid BLK3 tank PO $300-700K","Option C held for follow-up"),
     (34, "DATA NOT VERIFIED IN SSLC QB (CRITICAL)",  "",                       ""),
     (35, "SSLC total liabilities / AP",              "~$500K est. — TO VERIFY","QB session expired 10/7; cannot confirm Microcosm/Wertz amounts"),
@@ -1016,10 +997,9 @@ fund_rows = [
     (7,  "SSLC closing costs",                          "=Assumptions!B11", 0,0,0,0,"Seller's costs"),
     (8,  "Exos stake credit (non-cash)",                "=Assumptions!B12", 0,0,0,0,"18% equity at 2021 basis"),
     (9,  "SSLC debts assumed at face (TBV)",            "=Assumptions!B14", 0,0,0,0,"per 10/2 SSLC QB pull; verify"),
-    (10, "Prepaid-work delivery obligations assumed",   "=Assumptions!B100",0,0,0,0,"$984K face (billed-ahead $864K + deposits $120K); per 10/2 SSLC QB pull; verify"),
-    (11, "Working-capital bridge (completion cost)",    "=Assumptions!B16", 0,0,0,0,"Mid=$500K; funds completion of prepaid IM work"),
+    (10, "Working-capital bridge (completion cost)",    "=Assumptions!B16", 0,0,0,0,"Mid=$500K; funds completion of in-flight IM work"),
     (12, "TOTAL FUNDING DELIVERED",
-         "=SUM(B6:B11)","=SUM(C6:C11)","=SUM(D6:D11)","=SUM(E6:E11)","=SUM(F6:F11)",
+         "=SUM(B6:B10)","=SUM(C6:C10)","=SUM(D6:D10)","=SUM(E6:E10)","=SUM(F6:F10)",
          "All at close in FY27"),
 ]
 for r, lbl, fy27, fy28, fy29, fy30, fy31, notes in fund_rows:
@@ -1064,12 +1044,12 @@ fwd_rows = [
          "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
          0, 0, "High — capped at $300K"),
-    (17, "Stock earn-out base (ii): 0.5% FD @ listing",
+    (17, "Stock earn-out base (ii): 0.75% FD @ listing",
          0, 0, "=Assumptions!B29*Assumptions!B32", 0, 0,
          "At $250M listing; realized FY29 post lockup"),
-    (18, "Stock earn-out low (ii): 0.3% @ $200M",
+    (18, "Stock earn-out low (ii): 0.5% @ $200M",
          0, 0, "=Assumptions!B28*Assumptions!B31", 0, 0, "Low RTO"),
-    (19, "Stock earn-out high (ii): 0.7% @ $300M",
+    (19, "Stock earn-out high (ii): 1.0% @ $300M",
          0, 0, "=Assumptions!B30*Assumptions!B33", 0, 0, "High RTO"),
 ]
 for r, lbl, fy27, fy28, fy29, fy30, fy31, notes in fwd_rows:
@@ -1117,7 +1097,7 @@ for (r, lbl, fy27, fy28, fy29, fy30, fy31), rbg in zip(tot_rows, row_bgs):
     tcomp.cell(r, 7).fill = PatternFill("solid", fgColor=rbg)
     tcomp.row_dimensions[r].height = 20
 
-tcomp["A27"] = "Chart: see drafts/SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png (incl prepaid-work + Y5 hold annotation)"
+tcomp["A27"] = "Chart: see drafts/SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png (incl Y5 hold annotation)"
 
 # ── HOLD TO YEAR 5 — Total Compensation perspective ──────────────────────────
 tcomp.merge_cells("A29:H29")
@@ -1127,7 +1107,7 @@ tcomp["A29"].fill = PatternFill("solid", fgColor=PURPLE)
 
 tcomp["A30"] = ("Base = Old-Model (v12). Dilution: Series A $25M staged (D1-D4, ~13%) + RTO (~12%) + "
                 "option pool (~5%) = ~30% flat (MANAGEMENT ASSUMPTION). "
-                "0.5% stake at listing → 0.35% post-dilution. "
+                "0.75% stake at listing → 0.525% post-dilution. "
                 "AA case EV ~$176M = BELOW $250M listing — stock worth less in AA case by FY31.")
 tcomp["A30"].font = Font(size=8, italic=True, color="C00000")
 tcomp.merge_cells("A30:H30")
@@ -1144,22 +1124,22 @@ tcomp.row_dimensions[31].height = 22
 y5_hold_rows = [
     (32, "Old-Model — Low",   "=Assumptions!B118", "=Assumptions!B125",
          "=B32*C32", "=Assumptions!B28*Assumptions!B31", "=D32/E32",
-         "0.3% grant x 0.70 = 0.21%; EV $1.626B"),
+         "0.5% grant x 0.70 = 0.35%; EV $1.626B"),
     (33, "Old-Model — Base",  "=Assumptions!B118", "=Assumptions!B124",
          "=B33*C33", "=Assumptions!B29*Assumptions!B32", "=D33/E33",
-         "0.5% grant x 0.70 = 0.35%; EV $1.626B (~4.5x listing)"),
+         "0.75% grant x 0.70 = 0.525%; EV $1.626B (~4.6x listing)"),
     (34, "Old-Model — High",  "=Assumptions!B118", "=Assumptions!B126",
          "=B34*C34", "=Assumptions!B30*Assumptions!B33", "=D34/E34",
-         "0.7% grant x 0.70 = 0.49%; EV $1.626B"),
+         "1.0% grant x 0.70 = 0.70%; EV $1.626B"),
     (35, "AA — Low",          "=Assumptions!B120", "=Assumptions!B125",
          "=B35*C35", "=Assumptions!B28*Assumptions!B31", "=D35/E35",
          "BELOW listing value — AA FY31 EV ~$176M < $250M MEV"),
     (36, "AA — Base",         "=Assumptions!B120", "=Assumptions!B124",
          "=B36*C36", "=Assumptions!B29*Assumptions!B32", "=D36/E36",
-         "BELOW listing — ~$616K vs $1.25M at listing (~0.49x)"),
+         "BELOW listing — ~$924K vs $1.875M at listing (~0.49x)"),
     (37, "AA — High",         "=Assumptions!B120", "=Assumptions!B126",
          "=B37*C37", "=Assumptions!B30*Assumptions!B33", "=D37/E37",
-         "BELOW listing — ~$862K vs $2.1M at listing (~0.41x)"),
+         "BELOW listing — ~$1.23M vs $3.0M at listing (~0.41x)"),
 ]
 for r, label, ev, stake, val, at_list, mult, notes in y5_hold_rows:
     tcomp.cell(r, 1).value = label; tcomp.cell(r, 1).font = Font(size=9)
@@ -1176,8 +1156,8 @@ for r, label, ev, stake, val, at_list, mult, notes in y5_hold_rows:
 
 tcomp.cell(39, 1).value = ("NOTE: Y5 hold values are NOT additive to at-listing earn-out. "
                             "Investors choose to hold OR sell at listing. "
-                            "Old-Model base: hold to FY31 = ~$5.69M vs sell at listing = $1.25M (4.5x). "
-                            "AA base: hold to FY31 = ~$0.62M vs sell at listing = $1.25M (0.49x) — AA case penalizes holding.")
+                            "Old-Model base: hold to FY31 = ~$8.54M vs sell at listing = $1.875M (4.6x). "
+                            "AA base: hold to FY31 = ~$0.92M vs sell at listing = $1.875M (0.49x) — AA case penalizes holding.")
 tcomp.merge_cells("A39:H39")
 tcomp.cell(39, 1).font = Font(size=8, bold=True, color="C00000")
 tcomp.cell(39, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
