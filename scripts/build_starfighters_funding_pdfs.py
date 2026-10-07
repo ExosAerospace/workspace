@@ -313,7 +313,7 @@ def story_external(ss):
          "applicable securities laws, including material non-public information (MNPI) obligations.", italic=True)
 
     h1("1. Why Exos and Starfighters")
-    body('Exos Aerospace Systems & Technologies, Inc. is a Texas-based reusable launch company. Exos has flown commercial payloads since 2018 on its SARGE vehicle. Block 3 (BLK3), the enhanced successor to SARGE, is FAA-licensed for reusable suborbital flight (license issued March 2026), with the first commercial flight of BLK3, our latest FAA-licensed vehicle, planned for early 2027.')
+    body('Exos Aerospace Systems & Technologies, Inc. is a Texas-based reusable launch company and one of three FAA-licensed providers of vertical-takeoff reusable rockets with demonstrated recovery and reflight [SOURCE CHECK BEFORE RELEASE: cite Exos FAA license number]. Exos has flown commercial payloads since 2018 on its SARGE vehicle. Block 3 (BLK3), the enhanced successor to SARGE, is FAA-licensed for reusable suborbital flight (license issued March 2026), with the first commercial flight of BLK3, our latest FAA-licensed vehicle, planned for early 2027.')
     body("Starfighters operates a commercial fleet of supersonic aircraft and is developing the STARLAUNCH "
          "air-launch program from Kennedy Space Center. STARLAUNCH 1 has completed wind tunnel testing "
          "(Mach 0.85 and 1.3, January 2026), and Starfighters has established partnerships with Blackstar "
