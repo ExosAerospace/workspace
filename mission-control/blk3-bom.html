@@ -145,6 +145,8 @@ function bomEdit(k){
   k=decodeURIComponent(k); editRow=_findRow(k); if(!editRow)return;
   document.getElementById('be_key').textContent=k;
   document.getElementById('be_description').value=editRow.Description||'';
+  document.getElementById('be_vpn').value=editRow['Vendor P/N']||'';
+  document.getElementById('be_mpn').value=editRow['Manufacturer P/N']||'';
   document.getElementById('be_req').value=(editRow.Quantity==null?'':editRow.Quantity);
   document.getElementById('be_location').value=editRow._loc||'';
   document.getElementById('be_serial').value=editRow._serial||'';
@@ -157,11 +159,15 @@ function bomEdit(k){
 function bomEditClose(){document.getElementById('be_ovl').classList.remove('on');editRow=null;}
 function _bef(){if(!editRow)return{};const f={};
   const d=document.getElementById('be_description').value;
+  const vp=document.getElementById('be_vpn').value.trim();
+  const mp=document.getElementById('be_mpn').value.trim();
   const rq=document.getElementById('be_req').value;
   const lc=document.getElementById('be_location').value;
   const sn=document.getElementById('be_serial').value.trim();
   const nt=document.getElementById('be_note').value.trim();
   if(d!==(editRow.Description||''))f.description=d;
+  if(vp!==(editRow['Vendor P/N']||''))f.vendor_pn=vp;
+  if(mp!==(editRow['Manufacturer P/N']||''))f.mfg_pn=mp;
   if(String(rq)!==String(editRow.Quantity==null?'':editRow.Quantity))f.req=rq;
   if(lc!==(editRow._loc||''))f.location=lc;
   if(sn!==(editRow._serial||''))f.serial=sn;
@@ -170,8 +176,8 @@ function _esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;',
 function bomEditReview(){
   const f=_bef();const keys=Object.keys(f).filter(k=>k!=='note');
   if(!keys.length&&!f.note){document.getElementById('be_diff').innerHTML='<div class="diffbox">No changes to confirm.</div>';return;}
-  const label={description:'Description',req:'Quantity',location:'Location',serial:'Serial #'};
-  const cur=k=>k==='description'?(editRow.Description||''):k==='location'?(editRow._loc||''):k==='serial'?(editRow._serial||''):(editRow.Quantity==null?'':editRow.Quantity);
+  const label={description:'Description',vendor_pn:'Vendor P/N',mfg_pn:'Manufacturer P/N',req:'Quantity',location:'Location',serial:'Serial #'};
+  const cur=k=>k==='vendor_pn'?(editRow['Vendor P/N']||''):k==='mfg_pn'?(editRow['Manufacturer P/N']||''):k==='description'?(editRow.Description||''):k==='location'?(editRow._loc||''):k==='serial'?(editRow._serial||''):(editRow.Quantity==null?'':editRow.Quantity);
   let html='<div class="diffbox"><strong>Confirm these changes:</strong>';
   keys.forEach(k=>{const oldv=cur(k);
     html+='<div class="d">'+label[k]+': <span class="o">'+_esc(oldv)+'</span> → <span class="n2">'+_esc(f[k])+'</span></div>';});
@@ -189,6 +195,8 @@ async function bomEditConfirm(){
     if(r.status===401){location='/login';return;}
     if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
     if(f.description!==undefined)editRow.Description=f.description;
+    if(f.vendor_pn!==undefined)editRow['Vendor P/N']=f.vendor_pn;
+    if(f.mfg_pn!==undefined)editRow['Manufacturer P/N']=f.mfg_pn;
     if(f.req!==undefined){editRow.Quantity=f.req;_recost(editRow);}
     if(f.location!==undefined)editRow._loc=f.location;
     if(f.serial!==undefined)editRow._serial=f.serial;
@@ -217,6 +225,8 @@ init();
   <div class="modal">
     <h3>✎ Edit BOM line</h3>
     <div class="k" id="be_key"></div>
+    <label>Vendor P/N</label><input id="be_vpn" type="text">
+    <label>Manufacturer P/N</label><input id="be_mpn" type="text">
     <label>Description</label><textarea id="be_description"></textarea>
     <label>Quantity</label><input id="be_req" type="number" step="any">
     <label>Location</label><input id="be_location" type="text" placeholder="e.g. Parts Room B3, Shelf 2">

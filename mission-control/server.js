@@ -4965,7 +4965,10 @@ const server = http.createServer((req, res) => {
       let short = 0, onhandUnits = 0;
       for (const row of (bom.rows || [])) {
         const sec = row.section || '', item = row.item || '';
-        const vpn = row.vendor_pn || '', mpn = row.mfg_pn || '';
+        // Edited P/N (bom-edits overlay) wins for display + inventory matching.
+        const edPn = bomEdits[`${sec}#${item}`] || {};
+        const vpn = edPn.vendor_pn !== undefined ? String(edPn.vendor_pn) : (row.vendor_pn || '');
+        const mpn = edPn.mfg_pn !== undefined ? String(edPn.mfg_pn) : (row.mfg_pn || '');
         let rec = null;
         for (const k of [vpn, mpn]) if (k && by[String(k).trim().toUpperCase()]) { rec = by[String(k).trim().toUpperCase()]; break; }
         if (!rec && item) rec = by[`${sec.toUpperCase()}#${item}`];
@@ -6022,7 +6025,7 @@ const server = http.createServer((req, res) => {
           grand += extCost || 0;
           return {
             'Item': item, 'Quantity': qty,
-            'Vendor P/N': row.vendor_pn || '', 'Manufacturer P/N': row.mfg_pn || '',
+            'Vendor P/N': vpn, 'Manufacturer P/N': mpn,
             'Description': desc, 'Vendor': row.vendor || '',
             'Secondary Supplier': '', 'Tertiary Supplier': '',
             'Cost ea': costNum || '', 'Extended Cost': extCost,
@@ -6058,7 +6061,7 @@ const server = http.createServer((req, res) => {
         const p = JSON.parse(body || '{}');
         const key = (p.key || '').toString().trim();
         if (!key) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'missing key' })); return; }
-        const ALLOWED = ['description', 'req', 'on_hand', 'location', 'note', 'serial'];
+        const ALLOWED = ['description', 'req', 'on_hand', 'location', 'note', 'serial', 'vendor_pn', 'mfg_pn'];  // P/N edits: snorsworthy 10/7
         const fields = {};
         for (const k of ALLOWED) {
           if (p.fields && p.fields[k] !== undefined && p.fields[k] !== null) {
@@ -6149,9 +6152,12 @@ const server = http.createServer((req, res) => {
         let ov = {}; try { ov = JSON.parse(fs.readFileSync(ovPath, 'utf-8')); } catch {}
         ov[firm] = Object.assign({}, ov[firm] || {}, fields, { _updated: new Date().toISOString(), _by: (session.email || '') });
         fs.mkdirSync(path.dirname(ovPath), { recursive: true });
+          let vpn   = row.vendor_pn || '', mpn = row.mfg_pn || '';
         fs.writeFileSync(ovPath, JSON.stringify(ov, null, 2));
         try {
           const crmPath = path.join(__dirname, 'data', 'crm.json');
+            if (ed.vendor_pn !== undefined) vpn = String(ed.vendor_pn);
+            if (ed.mfg_pn !== undefined) mpn = String(ed.mfg_pn);
           const cj = JSON.parse(fs.readFileSync(crmPath, 'utf-8'));
           const arr = cj.contacts || [];
           const it = arr.find(c => c.firm === firm);
