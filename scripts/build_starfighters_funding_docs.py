@@ -161,7 +161,7 @@ def build_internal():
 
     sp = doc.add_paragraph()
     sp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r = sp.add_run("INTERNAL — FOR JON QUINN / COUNSEL REVIEW ONLY  |  October 6, 2026")
+    r = sp.add_run("INTERNAL — FOR JON QUINN ONLY  |  October 6, 2026")
     r.italic = True; r.font.size = Pt(9); r.font.color.rgb = GRAY; r.font.name = "Calibri"
 
     # ── SECTION 0: FJET SNAPSHOT ──────────────────────────────────────────────
@@ -219,9 +219,9 @@ def build_internal():
 
     body(doc, "Active funding paths (running in parallel per project_rto_rollup_capital_path):")
     kv(doc, "A. Reg D Rule 504 offering",
-       "Up to $25M staged at ≈$10M/yr. No public solicitation. Counsel-confirmed structure. "
+       "Up to $25M staged at ≈$10M/yr. No public solicitation. "
        "Rule 504 rolls 12-month cap: $10M total (see https://www.sec.gov/smallbusiness/exemptofferings/rule504). "
-       "Existing 504 sales + Capital Bridge consume some of this capacity — exact remaining headroom requires Counsel confirmation.")
+       "Existing 504 sales + Capital Bridge consume some of this capacity — Exos to confirm remaining 504 capacity.")
     kv(doc, "B. Japan Reg S round",
        "EAI unit structure, offshore, separate from U.S. 504. K.K. wholly owned. Toshihisa Kumazawa leading BD.")
     kv(doc, "C. Ainigma RTO",
@@ -235,7 +235,7 @@ def build_internal():
     kv(doc, "BLK3 first flight",   "Early 2027 (FAA license March 2026; never cite a specific month externally)")
 
     warning(doc, "Before executing any structure involving an RTO / reverse merger / public shell, "
-            "confirm with Counsel whether the Ainigma term sheet contains an exclusivity or no-shop provision "
+            "Jon to confirm Ainigma terms — specifically whether the term sheet contains an exclusivity or no-shop provision "
             "that would restrict Exos from entering such a transaction. This is a go/no-go gate for Structures B and C below.")
 
     # ── SECTION 2: STRUCTURE A ────────────────────────────────────────────────
@@ -247,7 +247,7 @@ def build_internal():
             "check could consume all remaining 504 headroom and block other 504 sales for the rest of the window. "
             "FJET is also a public institutional company — not an existing-relationship individual — which creates "
             "additional considerations under the no-general-solicitation requirement. "
-            "Two sub-options are set out below; Counsel must confirm the chosen path before proceeding.")
+            "Two sub-options are set out below; open item — Exos to confirm the chosen path before proceeding.")
 
     h2(doc, "Concept")
     body(doc, "FJET deploys capital into Exos at Exos's current 409A valuation ($169.7M pre-money). FJET becomes "
@@ -256,7 +256,7 @@ def build_internal():
          "Rule 506(b) offering (Sub-Option A2).")
 
     h2(doc, "Sub-Option A1 — Size Within Remaining 504 Capacity")
-    bullet(doc, "Counsel confirms the 12-month rolling balance available under the current 504 offering "
+    bullet(doc, "Exos confirms the 12-month rolling balance available under the current 504 offering "
            "after accounting for all prior sales and Capital Bridge commitments. FJET's check is sized "
            "to stay within that balance (likely well under $5M; exact figure TBD).")
     bullet(doc, "Advantage: no new offering exemption needed; flows directly into the existing 504 offering.")
@@ -270,8 +270,8 @@ def build_internal():
     bullet(doc, "Rule 152 integration analysis required: concurrent 504 and 506(b) offerings may be "
            "integrated as a single offering if the SEC deems them part of the same plan of financing. "
            "Rule 152 safe harbor (https://www.sec.gov/smallbusiness/exemptofferings/rule152) provides "
-           "protection in certain circumstances — Counsel to confirm whether the 504 and 506(b) offerings "
-           "can be structured to avoid integration. [COUNSEL TO CONFIRM]")
+           "protection in certain circumstances — open item: confirm whether the 504 and 506(b) offerings "
+           "can be structured to avoid integration. [OPEN ITEM — CONFIRM BEFORE CLOSING]")
     bullet(doc, "If integration risk is manageable, A2 is the cleaner path: investment size $5M–$10M, "
            "506(b) filing, separate Form D for the 506(b) tranche.")
     bullet(doc, "Exos post-money: $175–$180M at $5–$10M;  FJET dilution at Exos: ≈2.9%–5.6% — minimal.")
@@ -296,17 +296,17 @@ def build_internal():
     h2(doc, "Cons")
     bullet(doc, "FJET may not have $5–10M available given its cash position and burn rate")
     bullet(doc, "Minority stake does not materially re-rate FJET stock")
-    bullet(doc, "Rule 152 integration analysis adds Counsel time before closing A2")
+    bullet(doc, "Rule 152 integration analysis adds time before closing A2")
     bullet(doc, "May not satisfy Exos's full capital raise need as a standalone tranche")
 
     h2(doc, "Timeline estimate")
     body(doc, "Sub-Option A1: 4–8 weeks if 504 capacity exists. "
          "Sub-Option A2: 6–10 weeks (add time for Rule 152 analysis and 506(b) Form D). "
-         "Most time-efficient of all four structures once the exemption path is confirmed by Counsel.")
+         "Most time-efficient of all four structures once the exemption path is confirmed.")
 
     h2(doc, "Recommendation")
-    body(doc, "Confirm with Counsel: (1) remaining 504 capacity and (2) Rule 152 integration analysis for "
-         "a concurrent 506(b) tranche. Proceed with whichever sub-option Counsel approves. "
+    body(doc, "Exos internal checks: (1) confirm remaining 504 capacity and (2) Rule 152 integration analysis for "
+         "a concurrent 506(b) tranche. Proceed with whichever sub-option Jon approves. "
          "Propose this as the second track at the Tim meeting, with Structure C (JV/teaming) as Ask 1.",
          bold=True)
 
@@ -317,7 +317,7 @@ def build_internal():
 
     warning(doc, "AINIGMA CONFLICT CHECK REQUIRED BEFORE PROCEEDING. If Ainigma term sheet "
             "includes an exclusivity or no-shop for RTO / reverse merger / public-company combination, "
-            "this structure may be blocked until Ainigma resolves. Confirm with Counsel first.")
+            "this structure may be blocked until Ainigma resolves. Jon to confirm Ainigma terms first.")
 
     h2(doc, "Concept")
     body(doc, "Exos merges into Starfighters Space (or a newly formed FJET subsidiary). Exos shareholders "
@@ -348,7 +348,7 @@ def build_internal():
            "initiate delisting proceedings — this is a timing risk that could disrupt or terminate a deal")
     bullet(doc, "Reg D / Reg S compatibility: existing Exos Reg D 504 offering and Japan Reg S round must be "
            "suspended or terminated at the time of the S-4 filing to avoid integration-of-offerings issues; "
-           "Counsel must confirm timing")
+           "open item — confirm timing before filing")
     bullet(doc, "ITAR/EAR: any transfer of Exos assets or technical data to a public company (even as a sub) "
            "requires export-control review if foreign shareholders are involved (Citadel, BlackRock, any "
            "foreign institutional holders of FJET)")
@@ -463,7 +463,7 @@ def build_internal():
            "prepaid service, not as a security")
     bullet(doc, "Warrants: same Reg D analysis as Structure C")
     bullet(doc, "IP license: standard commercial license; no securities issues")
-    bullet(doc, "If prepayment + warrants are combined, Counsel should confirm whether the package "
+    bullet(doc, "If prepayment + warrants are combined, open item — confirm whether the package "
            "constitutes a 'security' under the Howey test")
 
     h2(doc, "Pros")
@@ -490,21 +490,20 @@ def build_internal():
     # ── SECTION 6: SIDE-BY-SIDE SUMMARY ───────────────────────────────────────
     h1(doc, "6. Summary Comparison")
 
-    body(doc, "Structure A = Strategic Equity Investment  |  504 capacity check required; 506(b)/Rule 152 path preferred — Counsel must confirm")
+    body(doc, "Structure A = Strategic Equity Investment  |  504 capacity check required; 506(b)/Rule 152 path preferred — open item for Exos to confirm")
     body(doc, "Structure B = Stock-for-Stock Merger       |  Highest strategic value; blocked by Ainigma risk and FJET condition")
     body(doc, "Structure C = JV / Teaming + Warrants      |  Best near-term move; execute immediately")
     body(doc, "Structure D = Asset Deal + Warrants        |  Supplemental; useful if FJET can't write an equity check")
 
     body(doc, "\nRecommended sequence: Execute Structure C (JV/teaming) immediately (Ask 1). "
-         "Propose Structure A (equity investment) at Tim meeting — but ONLY after Counsel confirms "
-         "the 504 capacity remaining and approves the Rule 506(b)/Rule 152 path (Ask 2). "
+         "Propose Structure A (equity investment) at Tim meeting as Ask 2; Exos to confirm remaining "
+         "504 capacity and the Rule 506(b)/Rule 152 path before closing. "
          "Add Structure D (prepayment) if FJET needs an easier entry point. "
          "Keep Structure B available as a 12–18 month strategic option if Ainigma resolves and FJET stabilizes.",
          bold=True)
 
-    warning(doc, "NOTHING in this document has been reviewed by Counsel. All figures, structures, "
-            "and timelines are internal analysis only. Do not share externally until Counsel review "
-            "and Jon approval.")
+    warning(doc, "Internal analysis only — do not share externally without Jon's approval. All figures, "
+            "structures, and timelines are internal working analysis.")
 
     # Footer note
     fn = doc.add_paragraph()
@@ -529,7 +528,7 @@ def build_external():
     # DRAFT watermark header
     wp = doc.add_paragraph()
     wp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r = wp.add_run("[ DRAFT — NON-BINDING — FOR DISCUSSION ONLY — REQUIRES COUNSEL REVIEW BEFORE TRANSMISSION ]")
+    r = wp.add_run("[ DRAFT — NON-BINDING — FOR DISCUSSION ONLY — REQUIRES JON QUINN APPROVAL BEFORE TRANSMISSION ]")
     r.bold = True; r.font.size = Pt(9); r.font.color.rgb = RED; r.font.name = "Calibri"
 
     # Title block
@@ -555,8 +554,8 @@ def build_external():
 
     body(doc, "This letter is a non-binding expression of interest only. Nothing here constitutes a commitment, "
          "offer, or agreement. All terms discussed below are subject to definitive documentation, satisfactory "
-         "due diligence, and approval by each company's board of directors. Exos will not proceed on any "
-         "securities-related matter without review by our legal counsel. Starfighters' obligations as a "
+         "due diligence, and approval by each company's board of directors. Any securities-related matter is "
+         "subject to applicable securities exemptions and definitive agreements. Starfighters' obligations as a "
          "public company are acknowledged, and we will manage this discussion in strict compliance with "
          "applicable securities laws, including material non-public information (MNPI) obligations.", italic=True, size=9, color=GRAY)
 
@@ -594,7 +593,7 @@ def build_external():
 
     h2(doc, "B. Strategic Equity Investment by Starfighters in Exos")
     body(doc, "We would welcome a discussion of a strategic equity investment by Starfighters in Exos, "
-         "subject to applicable securities exemptions and Counsel review on both sides. "
+         "subject to applicable securities exemptions and definitive agreements. "
          "Exos's most recent 409A independent valuation (March 31, 2026) provides "
          "a reference point for this discussion. A strategic investment would deepen the relationship, "
          "provide Starfighters strategic exposure to Exos's BLK3 flight cadence and reusable-launch "
@@ -616,8 +615,8 @@ def build_external():
 
     body(doc, "To be clear, this letter does not propose any acquisition of, or by, either party; "
          "and does not constitute an offer to purchase FJET shares or to sell Exos shares on any basis "
-         "other than through a properly disclosed offering process with counsel engaged on both sides. "
-         "All securities-related discussions are subject to applicable securities exemptions and Counsel review.",
+         "other than through a properly disclosed offering process. "
+         "All securities-related discussions are subject to applicable securities exemptions and definitive agreements.",
          italic=True)
 
     body(doc, " ")
@@ -630,8 +629,8 @@ def build_external():
          "driven by defense modernization, the SpaceX IPO repricing of the sector, and generational "
          "demand for affordable, frequent flight qualification.")
 
-    body(doc, "We look forward to a substantive conversation in late October and are happy to have our "
-         "counsel coordinate with yours on any of the topics above.")
+    body(doc, "We look forward to a substantive conversation in late October on any of the topics above, "
+         "subject to mutual due diligence and definitive agreements.")
 
     body(doc, " ")
     body(doc, "Sincerely,", size=10)
@@ -645,7 +644,7 @@ def build_external():
     # DRAFT footer
     fp = doc.add_paragraph()
     fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r = fp.add_run("DRAFT — NON-BINDING INDICATION OF INTEREST ONLY — REQUIRES COUNSEL REVIEW BEFORE TRANSMISSION\n"
+    r = fp.add_run("DRAFT — NON-BINDING INDICATION OF INTEREST ONLY — REQUIRES JON QUINN APPROVAL BEFORE TRANSMISSION\n"
                    "This document does not constitute a commitment, contract, or offer of securities. "
                    "Exos Aerospace Systems & Technologies, Inc.  |  Proprietary — Do Not Distribute")
     r.italic = True; r.font.size = Pt(8); r.font.color.rgb = RED; r.font.name = "Calibri"
@@ -697,8 +696,8 @@ def build_brief():
            "revenue share + mutual warrants. 30–60 day close. Supports AEDC, AFRL, NASA pursuits jointly.",
            bold_prefix="Ask 1 (Priority):")
     bullet(doc, "Strategic equity investment in Exos: $5M–$10M at 409A valuation ($169.7M pre-money), "
-           "subject to applicable securities exemptions and Counsel review (Exos's 504 capacity is limited; "
-           "a separate accredited-investor offering may be required — Counsel to confirm). "
+           "subject to applicable securities exemptions and definitive agreements (Exos's 504 capacity is limited; "
+           "a separate accredited-investor offering may be required — Exos to confirm remaining 504 capacity). "
            "Requires FJET board approval. Tim takes it to the board. Timeline: 6–10 weeks once structure confirmed.",
            bold_prefix="Ask 2 (Secondary):")
     bullet(doc, "Launch-slot prepayment: $2M–$5M commercial deposit against future BLK3 flights, "
@@ -710,7 +709,7 @@ def build_brief():
     bullet(doc, "No deal that doesn't have Ask 1 (teaming) as the minimum outcome.")
     bullet(doc, "No share price or structure that values Exos below the March 31, 2026 409A ($169.7M pre-money).")
     bullet(doc, "No merger, acquisition, or reverse-merger discussion until: (a) Ainigma term sheet "
-           "exclusivity is cleared by Counsel, and (b) FJET stock is stable above $2.00.")
+           "exclusivity is cleared (Jon to confirm Ainigma terms), and (b) FJET stock is stable above $2.00.")
     bullet(doc, "Do not reference Scorpius acquisition, ROFR, or any Scorpius ownership change with Tim.")
     bullet(doc, "Do not commit to any specific BLK3 flight date — use 'early 2027.'")
 

@@ -148,7 +148,7 @@ def story_internal(ss):
 
     # Title
     s.append(Paragraph("EXOS AEROSPACE — STARFIGHTERS SPACE (FJET)<br/>FUNDING STRUCTURE OPTIONS", ss["DocTitle"]))
-    s.append(Paragraph("INTERNAL — FOR JON QUINN / COUNSEL REVIEW ONLY  |  October 6, 2026", ss["Subtitle"]))
+    s.append(Paragraph("INTERNAL — FOR JON QUINN ONLY  |  October 6, 2026", ss["Subtitle"]))
     s.append(Spacer(1, 6))
 
     # Section 0
@@ -189,9 +189,9 @@ def story_internal(ss):
 
     # Section 1
     h1("1. Exos Funding Context — October 6, 2026")
-    kv("A. Reg D Rule 504", "Up to $25M staged ≈$10M/yr. No public solicitation. Counsel-confirmed structure. "
+    kv("A. Reg D Rule 504", "Up to $25M staged ≈$10M/yr. No public solicitation. "
        "Rule 504 rolls 12-month cap: $10M total. Existing 504 sales + Capital Bridge consume some capacity — "
-       "exact remaining headroom requires Counsel confirmation. "
+       "Exos to confirm remaining 504 capacity. "
        "See https://www.sec.gov/smallbusiness/exemptofferings/rule504")
     kv("B. Japan Reg S", "EAI units, offshore, separate from U.S. 504. K.K. wholly owned.")
     kv("C. Ainigma RTO", "Series A worklist PAUSED pending Ainigma resolution.")
@@ -199,34 +199,34 @@ def story_internal(ss):
     kv("Exos 409A valuation", "$169.7M  (March 31, 2026)")
     kv("Series A target", "$10M–$25M  (D1–D4 locked Aug 13, 2026)")
     kv("BLK3 first flight", "Early 2027  (FAA-licensed March 2026)")
-    warn("Before executing any RTO / reverse-merger structure: confirm with Counsel whether "
-         "Ainigma term sheet contains exclusivity that would block Structures B. This is a go/no-go gate.")
+    warn("Before executing any RTO / reverse-merger structure: Jon to confirm Ainigma terms — whether the "
+         "term sheet contains exclusivity that would block Structures B. This is a go/no-go gate.")
 
     # Section 2
     h1("2. Structure A — Strategic Equity Investment by FJET in Exos")
     warn("RULE 504 CAPACITY ISSUE: Rule 504 caps total raises at $10M per rolling 12 months "
          "(https://www.sec.gov/smallbusiness/exemptofferings/rule504). Existing 504 sales + Capital Bridge "
          "already consume some capacity. A $5–$10M FJET check could exhaust the remaining window. "
-         "Two sub-options below — Counsel must confirm path before proceeding.")
+         "Two sub-options below — open item: Exos to confirm path before proceeding.")
     body("FJET deploys capital into Exos at Exos's 409A valuation ($169.7M pre-money). "
          "No change in Exos control. Exemption path depends on remaining 504 capacity.", bold=True)
     h2("Sub-Option A1 — Size Within Remaining 504 Capacity")
-    bl("Counsel confirms rolling balance available in 504 offering; FJET check sized to stay within that balance (likely well under $5M; TBD).")
+    bl("Exos confirms rolling balance available in 504 offering; FJET check sized to stay within that balance (likely well under $5M; TBD).")
     bl("Flows directly into existing 504 offering; no new exemption needed. Risk: may severely limit FJET check size.")
     h2("Sub-Option A2 — Separate Rule 506(b) Offering for FJET (Preferred if Rule 152 analysis is favorable)")
     bl("FJET qualifies as accredited institutional investor under Rule 501(a). 506(b) has no $10M cap — "
        "accommodates $5M–$10M without consuming 504 window.")
     bl("Rule 152 integration analysis required: concurrent 504 + 506(b) may be integrated by SEC. "
-       "See https://www.sec.gov/smallbusiness/exemptofferings/rule152  [COUNSEL TO CONFIRM]")
+       "See https://www.sec.gov/smallbusiness/exemptofferings/rule152  [OPEN ITEM — CONFIRM BEFORE CLOSING]")
     bl("If approved: investment $5M–$10M; Exos post-money $175–$180M; FJET dilution ≈2.9%–5.6%; separate Form D filed for 506(b) tranche.")
     bl("FJET-side: no shareholder vote at this size (<20% of FJET outstanding); FJET board approval required.")
     bl("No Ainigma exclusivity conflict expected (pure equity, not RTO/merger).")
     body("TIMELINE: A1: 4–8 weeks if 504 capacity exists. A2: 6–10 weeks (add Rule 152 analysis). "
-         "Confirm exemption path with Counsel BEFORE raising at Tim meeting.", italic=True)
+         "Open item — Exos to confirm exemption path before closing.", italic=True)
 
     # Section 3
     h1("3. Structure B — Stock-for-Stock Merger (Exos as FJET Subsidiary)")
-    warn("AINIGMA CONFLICT CHECK REQUIRED. Confirm with Counsel before discussing with Tim.")
+    warn("AINIGMA CONFLICT CHECK REQUIRED. Jon to confirm Ainigma terms before discussing with Tim.")
     body("Exos merges into FJET (or FJET sub). Exos shareholders receive FJET stock. Exos acquires "
          "public-company access without a separate IPO.")
     bl("Exchange ratio illustrative: $169.7M Exos / $1.63 FJET = ≈1.89 FJET shares per Exos share")
@@ -250,18 +250,18 @@ def story_internal(ss):
     body("FJET makes a $2M–$5M launch-slot deposit against future BLK3 missions at published rates, "
          "paired with Exos warrants. Non-dilutive cash for Exos without equity issuance paperwork.")
     bl("Fastest path to non-dilutive cash if FJET has liquidity")
-    bl("Counsel must confirm prepayment + warrant package structure under Howey test")
+    bl("Open item — confirm prepayment + warrant package structure under Howey test")
     body("TIMELINE: 2–4 weeks.  Layer onto Structure C or A.", italic=True)
 
     # Section 6
     h1("6. Summary & Recommendation")
     bl("Execute Structure C (JV/teaming) immediately — 30–60 day close", prefix="Now:")
-    bl("Structure A (equity): Counsel must confirm 504 capacity + Rule 152 analysis BEFORE raising at Tim meeting. "
-       "Once approved: 6–10 weeks to close.", prefix="Gate:")
+    bl("Structure A (equity): raise at Tim meeting as Ask 2; Exos to confirm 504 capacity + Rule 152 analysis before closing. "
+       "Once confirmed: 6–10 weeks to close.", prefix="Next:")
     bl("Add Structure D (prepayment) if FJET can't write equity check", prefix="If needed:")
     bl("Keep Structure B for after Ainigma resolves and FJET stabilizes", prefix="12–18 mo:")
-    warn("NOTHING in this document reviewed by Counsel. Do not share externally. "
-         "Structure A requires Counsel sign-off on securities path before it is raised with FJET.")
+    warn("Internal analysis only — do not share externally without Jon's approval. "
+         "Structure A securities path is an open item — confirm before closing.")
 
     s.append(Paragraph(
         "Exos Aerospace Systems & Technologies, Inc.  |  299 FM 1903, Greenville, TX 75402  |  "
@@ -288,7 +288,7 @@ def story_external(ss):
 
     # DRAFT banner
     s.append(Paragraph(
-        "[ DRAFT — NON-BINDING — FOR DISCUSSION ONLY — REQUIRES COUNSEL REVIEW BEFORE TRANSMISSION ]",
+        "[ DRAFT — NON-BINDING — FOR DISCUSSION ONLY — REQUIRES JON QUINN APPROVAL BEFORE TRANSMISSION ]",
         ss["DraftBanner"]))
 
     s.append(Paragraph(
@@ -307,8 +307,8 @@ def story_external(ss):
          "late 2026 and 2027.")
     body("This letter is a non-binding expression of interest only. Nothing here constitutes a commitment, "
          "offer, or agreement. All terms discussed below are subject to definitive documentation, satisfactory "
-         "due diligence, and approval by each company's board of directors. Exos will not proceed on any "
-         "securities-related matter without review by our legal counsel. Starfighters' obligations as a "
+         "due diligence, and approval by each company's board of directors. Any securities-related matter is "
+         "subject to applicable securities exemptions and definitive agreements. Starfighters' obligations as a "
          "public company are acknowledged, and we will manage this discussion in strict compliance with "
          "applicable securities laws, including material non-public information (MNPI) obligations.", italic=True)
 
@@ -337,7 +337,7 @@ def story_external(ss):
 
     h2("B. Strategic Equity Investment by Starfighters in Exos")
     body("We would welcome a discussion of a strategic equity investment by Starfighters in Exos, "
-         "subject to applicable securities exemptions and Counsel review on both sides. "
+         "subject to applicable securities exemptions and definitive agreements. "
          "Exos's most recent 409A independent valuation (March 31, 2026) provides a reference point for this "
          "discussion. A strategic investment would deepen the relationship, provide Starfighters strategic "
          "exposure to Exos's BLK3 flight cadence and reusable-launch upside, and accelerate our combined "
@@ -354,8 +354,8 @@ def story_external(ss):
     h1("3. What We Are Not Proposing")
     body("To be clear, this letter does not propose any acquisition of, or by, either party; "
          "and does not constitute an offer to purchase FJET shares or to sell Exos shares on any basis "
-         "other than through a properly disclosed offering process with counsel engaged on both sides. "
-         "All securities-related discussions are subject to applicable securities exemptions and Counsel review.",
+         "other than through a properly disclosed offering process. "
+         "All securities-related discussions are subject to applicable securities exemptions and definitive agreements.",
          italic=True)
 
     h1("4. Our Commitment")
@@ -363,8 +363,8 @@ def story_external(ss):
          "companies and their stakeholders. We approach this as a partnership between two mission-driven "
          "teams that believe the commercial aerospace test-infrastructure market is at an inflection point "
          "driven by defense modernization and generational demand for affordable, frequent flight qualification.")
-    body("We look forward to a substantive conversation in late October and are happy to have our counsel "
-         "coordinate with yours on any of the topics above.")
+    body("We look forward to a substantive conversation in late October on any of the topics above, "
+         "subject to mutual due diligence and definitive agreements.")
 
     s.append(Spacer(1, 10))
     body("Sincerely,")
@@ -374,7 +374,7 @@ def story_external(ss):
 
     s.append(Spacer(1, 12))
     s.append(Paragraph(
-        "DRAFT — NON-BINDING INDICATION OF INTEREST ONLY — REQUIRES COUNSEL REVIEW BEFORE TRANSMISSION<br/>"
+        "DRAFT — NON-BINDING INDICATION OF INTEREST ONLY — REQUIRES JON QUINN APPROVAL BEFORE TRANSMISSION<br/>"
         "This document does not constitute a commitment, contract, or offer of securities.<br/>"
         "Exos Aerospace Systems &amp; Technologies, Inc.  |  Proprietary — Do Not Distribute",
         ss["DraftBanner"]))
@@ -422,8 +422,8 @@ def story_brief(ss):
        "30–60 day close. Supports AEDC, AFRL, NASA pursuits jointly.",
        prefix="Ask 1 (Priority):")
     bl("Strategic equity investment in Exos: $5M–$10M at 409A valuation ($169.7M pre-money), subject to "
-       "applicable securities exemptions and Counsel review (504 capacity limited; separate accredited-investor "
-       "offering may be required — Counsel to confirm before raising). FJET board approval required. "
+       "applicable securities exemptions and definitive agreements (504 capacity limited; separate accredited-investor "
+       "offering may be required — Exos to confirm remaining 504 capacity). FJET board approval required. "
        "Timeline: 6–10 weeks once structure confirmed.",
        prefix="Ask 2 (Secondary):")
     bl("Launch-slot prepayment: $2M–$5M commercial deposit against future BLK3 flights, with warrants. "
@@ -433,7 +433,7 @@ def story_brief(ss):
     h1("Walk-Away Lines")
     bl("No deal that doesn't include Ask 1 (teaming) as the minimum outcome.")
     bl("No valuation of Exos below the March 31, 2026 409A ($169.7M pre-money).")
-    bl("No merger / acquisition / reverse-merger discussion until Ainigma exclusivity cleared by Counsel "
+    bl("No merger / acquisition / reverse-merger discussion until Ainigma exclusivity cleared (Jon to confirm Ainigma terms) "
        "AND FJET stock is stable above $2.00.")
     bl("Do not reference Scorpius acquisition, ROFR, or any Scorpius ownership change.")
     bl("Do not commit to a specific BLK3 flight date — use 'early 2027.'")
