@@ -111,6 +111,25 @@ def _plausible(path, it):
     return any(t in fn for t in toks)
 
 def resolve_draft(it):
+    """Resolve the draft, then upgrade it to the NEWEST copy of the same doc (Jon 10/7: "how do we
+    not send an outdated one?" — 45 open send-Decisions still pointed at July/Aug drafts while daily
+    regenerations sat newer in drafts/). Never sends an older dated copy when a newer one exists."""
+    d = _resolve_draft_raw(it)
+    if not d:
+        return d
+    try:
+        import importlib.util
+        sp = importlib.util.spec_from_file_location("pfc", os.path.join(WS, "scripts", "proposal_freshness_check.py"))
+        pfc = importlib.util.module_from_spec(sp); sp.loader.exec_module(pfc)
+        latest = pfc.latest_copy(d)
+        if latest and latest != d:
+            log(f"STALE-UPGRADE {it.get('id')}: {os.path.basename(d)} -> {os.path.basename(latest)}")
+            return latest
+    except Exception as e:
+        log(f"freshness check failed (sending resolved draft as-is): {e}")
+    return d
+
+def _resolve_draft_raw(it):
     # 1) explicit file path in any field
     for k in ("proposedAction","context","note","answer","title","question"):
         m = FILE_RX.search(str(it.get(k,"")))
