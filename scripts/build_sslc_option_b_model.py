@@ -268,6 +268,107 @@ ws.cell(97, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
 ws.cell(97, 1).alignment = Alignment(wrap_text=True)
 ws.row_dimensions[97].height = 52
 
+# ── PREPAID-WORK DELIVERY OBLIGATION (Jon 10/7) ──────────────────────────────
+sec_hdr(ws, 99, "PREPAID-WORK DELIVERY OBLIGATION (Jon 10/7)", bg=DARK_BLUE, col_end="C")
+prepaid_data = [
+    (100, "SSLC prepaid-work face value — billed-ahead + deposits ($)", 984000,
+          "per 10/2 SSLC QB pull; verify. $864K billed-ahead + $120K deposits."),
+    (101, "  of which: billed-ahead ($)", 864000,  "per 10/2 SSLC QB pull; verify"),
+    (102, "  of which: deposits ($)",     120000,  "per 10/2 SSLC QB pull; verify"),
+    (103, "Cost to Exos to fund completion (mid = WC bridge) ($)", 500000,
+          "Same as B16 — $0.3–$0.7M to finish paid-for IM work; mid=$500K"),
+]
+for (r, lbl, val, src) in prepaid_data:
+    ws.cell(r, 1).value = lbl; ws.cell(r, 1).font = Font(size=10)
+    ws.cell(r, 2).value = val; ws.cell(r, 2).font = Font(size=10, bold=True)
+    ws.cell(r, 2).number_format = '$#,##0'
+    ws.cell(r, 3).value = src; ws.cell(r, 3).font = Font(size=9, italic=True, color="444444")
+    ws.cell(r, 3).alignment = Alignment(wrap_text=True)
+    ws.row_dimensions[r].height = 22
+
+# ── BENEFITS TO SSLC INVESTORS (Jon 10/7) ────────────────────────────────────
+sec_hdr(ws, 105, "BENEFITS TO SSLC INVESTORS (Jon 10/7)", bg=DARK_BLUE, col_end="C")
+benefits = [
+    (106, "1. Debt relief at face",                          "~$500K TBV",      "Microcosm/Wertz notes + AP paid; personal path for Jim"),
+    (107, "2. Delivery obligations assumed & funded",        "$984K face/$500K cost", "Exos funds completion; per 10/2 QB pull; verify"),
+    (108, "3. No further capital calls",                     "Structural",       "Investors stop funding a cash-negative entity"),
+    (109, "4. Cash at close",                                "$2,510,000",       "Section 3 deal price cash component"),
+    (110, "5. Earn-out upside — IM tank revenue (3 yrs)",   "Up to $900K",      "5%/yr x $5M IM firm; $300K cap"),
+    (111, "6. Earn-out upside — Exos stock post-RTO",       "$0.6M–$2.1M",     "0.3–0.7% FD at listing ($200M–$300M MEV)"),
+    (112, "7. Liquidity via listed Exos stock",              "Post-RTO ~FY28",   "12-mo lockup; publicly tradeable thereafter"),
+    (113, "8. IM program continuity",                        "Operational",      "No customer disruption; Exos-SSLC entity delivers"),
+]
+for (r, lbl, val, src) in benefits:
+    ws.cell(r, 1).value = lbl; ws.cell(r, 1).font = Font(size=10)
+    ws.cell(r, 2).value = val; ws.cell(r, 2).font = Font(size=10)
+    ws.cell(r, 3).value = src; ws.cell(r, 3).font = Font(size=9, italic=True, color="444444")
+    ws.cell(r, 3).alignment = Alignment(wrap_text=True)
+    ws.row_dimensions[r].height = 20
+
+# ── HOLD TO YEAR 5 — ASSUMPTIONS (Jon 10/7) ──────────────────────────────────
+sec_hdr(ws, 115, "HOLD TO YEAR 5 — ASSUMPTIONS (Jon 10/7)", bg=PURPLE, col_end="C")
+
+y5_data = [
+    (116, "EV/EBITDA multiple (Market Approach, Eqvista 409A 3/31/2026)", 16,
+          "EV/EBITDA 16x — Eqvista 409A; Market Approach"),
+    (117, "Old-Model (v12) FY31 EBITDA ($)",    101610000,
+          "v12 Annual P&L Y5 total EBITDA; recalculated 10/7"),
+    (118, "Old-Model FY31 implied EV ($)",       "=B117*B116",
+          "FY31 EBITDA x 16x = ~$1.626B"),
+    (119, "Actuals-Anchored FY31 EBITDA (est.) ($)", 11000000,
+          "AA consolidated FY31 (SSLC ~$6.0M + Exos $5.0M); derived from PL sheet"),
+    (120, "Actuals-Anchored FY31 implied EV ($)", "=B119*B116",
+          "~$176M — BELOW $250M RTO listing value; see warning row 136"),
+    (121, "SSLC earn-out stock stake at listing (base)", 0.005,
+          "Base earn-out grant = 0.5% FD shares at listing"),
+    (122, "Post-listing dilution assumption (flat, mgmt)", 0.30,
+          "MANAGEMENT ASSUMPTION: Series A $25M staged (D1-D4, ~13%) + RTO issuance (~12%) + option pool (~5%) = ~30% dilution total"),
+    (123, "Dilution factor (1 minus dilution)",  "=1-B122",   "0.70"),
+    (124, "SSLC stake FY31 — base post-dilution", "=B121*B123",   "0.5% x 0.70 = 0.35%"),
+    (125, "SSLC stake FY31 — low post-dilution",  "=Assumptions!B28*(1-B122)", "0.3% x 0.70 = 0.21%"),
+    (126, "SSLC stake FY31 — high post-dilution", "=Assumptions!B30*(1-B122)", "0.7% x 0.70 = 0.49%"),
+    (127, "Old-Model FY31 share value — low ($)",  "=B118*B125",   "~$3.41M"),
+    (128, "Old-Model FY31 share value — base ($)", "=B118*B124",   "~$5.69M"),
+    (129, "Old-Model FY31 share value — high ($)", "=B118*B126",   "~$7.97M"),
+    (130, "AA FY31 share value — low ($)",         "=B120*B125",   "~$370K"),
+    (131, "AA FY31 share value — base ($)",        "=B120*B124",   "~$616K"),
+    (132, "AA FY31 share value — high ($)",        "=B120*B126",   "~$862K"),
+    (133, "Multiple v at-listing — Old-Model base", "=B128/(Assumptions!B29*Assumptions!B32)",
+          "~4.5x the at-listing stock earn-out value ($1.25M)"),
+    (134, "Multiple v at-listing — AA base",        "=B131/(Assumptions!B29*Assumptions!B32)",
+          "~0.49x — AA FY31 EV BELOW listing; stock worth less by FY31 in AA case"),
+]
+for (r, lbl, val, src) in y5_data:
+    ws.cell(r, 1).value = lbl; ws.cell(r, 1).font = Font(size=10)
+    ws.cell(r, 1).fill = PatternFill("solid", fgColor=LIGHT_PURPLE)
+    ws.cell(r, 2).value = val; ws.cell(r, 2).font = Font(size=10, bold=True)
+    ws.cell(r, 2).fill = PatternFill("solid", fgColor=LIGHT_PURPLE)
+    if isinstance(val, float) and 0 < abs(val) <= 1:
+        ws.cell(r, 2).number_format = '0.00%'
+    elif isinstance(val, (int, float)) and abs(val) >= 1000:
+        ws.cell(r, 2).number_format = '$#,##0'
+    elif isinstance(val, str) and val.startswith("="):
+        if any(x in val for x in ["B122","B123","B124","B125","B126","B28","B29","B30"]):
+            ws.cell(r, 2).number_format = '0.00%'
+        else:
+            ws.cell(r, 2).number_format = '$#,##0'
+    ws.cell(r, 3).value = src; ws.cell(r, 3).font = Font(size=9, italic=True, color="444444")
+    ws.cell(r, 3).fill = PatternFill("solid", fgColor=LIGHT_PURPLE)
+    ws.cell(r, 3).alignment = Alignment(wrap_text=True)
+    ws.row_dimensions[r].height = 28
+
+ws.cell(136, 1).value = (
+    "WARNING: AA CASE Y5 HOLD — Actuals-Anchored FY31 EV (~$176M) is BELOW the $250M RTO "
+    "listing value. In the AA case, holding to FY31 yields LESS than the at-listing earn-out. "
+    "This reflects conservative actuals-based projections, not a flaw in the deal. "
+    "Old-Model (v12) FY31 EV ~$1.63B yields ~4.5x the at-listing stock value."
+)
+ws.merge_cells("A136:C136")
+ws.cell(136, 1).font = Font(size=9, bold=True, color="C00000")
+ws.cell(136, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
+ws.cell(136, 1).alignment = Alignment(wrap_text=True)
+ws.row_dimensions[136].height = 42
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SHEET 2: Deal Structure (unchanged from prior version)
@@ -911,13 +1012,14 @@ tcomp["A5"].font = Font(bold=True, size=10, color=WHITE)
 tcomp["A5"].fill = PatternFill("solid", fgColor="444444")
 
 fund_rows = [
-    (6,  "Cash at close",                "=Assumptions!B10",0,0,0,0,"§3 deal price"),
-    (7,  "SSLC closing costs",           "=Assumptions!B11",0,0,0,0,"Seller's costs"),
-    (8,  "Exos stake credit (non-cash)", "=Assumptions!B12",0,0,0,0,"18% equity at 2021 basis"),
-    (9,  "SSLC debts paid at face (TBV)","=Assumptions!B14",0,0,0,0,"TO VERIFY IN SSLC QB"),
-    (10, "Working-capital bridge",       "=Assumptions!B16",0,0,0,0,"Mid=$500K"),
-    (11, "TOTAL FUNDING DELIVERED",
-         "=SUM(B6:B10)","=SUM(C6:C10)","=SUM(D6:D10)","=SUM(E6:E10)","=SUM(F6:F10)",
+    (6,  "Cash at close",                               "=Assumptions!B10", 0,0,0,0,"§3 deal price"),
+    (7,  "SSLC closing costs",                          "=Assumptions!B11", 0,0,0,0,"Seller's costs"),
+    (8,  "Exos stake credit (non-cash)",                "=Assumptions!B12", 0,0,0,0,"18% equity at 2021 basis"),
+    (9,  "SSLC debts assumed at face (TBV)",            "=Assumptions!B14", 0,0,0,0,"per 10/2 SSLC QB pull; verify"),
+    (10, "Prepaid-work delivery obligations assumed",   "=Assumptions!B100",0,0,0,0,"$984K face (billed-ahead $864K + deposits $120K); per 10/2 SSLC QB pull; verify"),
+    (11, "Working-capital bridge (completion cost)",    "=Assumptions!B16", 0,0,0,0,"Mid=$500K; funds completion of prepaid IM work"),
+    (12, "TOTAL FUNDING DELIVERED",
+         "=SUM(B6:B11)","=SUM(C6:C11)","=SUM(D6:D11)","=SUM(E6:E11)","=SUM(F6:F11)",
          "All at close in FY27"),
 ]
 for r, lbl, fy27, fy28, fy29, fy30, fy31, notes in fund_rows:
@@ -991,13 +1093,13 @@ tcomp["A21"].fill = PatternFill("solid", fgColor=PURPLE)
 
 tot_rows = [
     (22, "OLD-MODEL BASE: funding + tank base + stock base",
-         "=B11+B14+B17","=C11+C14+C17","=D11+D14+D17","=E11+E14+E17","=F11+F14+F17"),
+         "=B12+B14+B17","=C12+C14+C17","=D12+D14+D17","=E12+E14+E17","=F12+F14+F17"),
     (23, "OLD-MODEL LOW:  funding + tank low + stock low",
-         "=B11+B15+B18","=C11+C15+C18","=D11+D15+D18","=E11+E15+E18","=F11+F15+F18"),
+         "=B12+B15+B18","=C12+C15+C18","=D12+D15+D18","=E12+E15+E18","=F12+F15+F18"),
     (24, "OLD-MODEL HIGH: funding + tank high + stock high",
-         "=B11+B16+B19","=C11+C16+C19","=D11+D16+D19","=E11+E16+E19","=F11+F16+F19"),
+         "=B12+B16+B19","=C12+C16+C19","=D12+D16+D19","=E12+E16+E19","=F12+F16+F19"),
     (25, "AA SENSITIVITY BASE: funding + tank base + stock base",
-         "=B11+B14+B17","=C11+C14+C17","=D11+D14+D17","=E11+E14+E17","=F11+F14+F17"),
+         "=B12+B14+B17","=C12+C14+C17","=D12+D14+D17","=E12+E14+E17","=F12+F14+F17"),
 ]
 row_bgs = [YELLOW, GREEN, ORANGE, LIGHT_BLUE]
 for (r, lbl, fy27, fy28, fy29, fy30, fy31), rbg in zip(tot_rows, row_bgs):
@@ -1015,7 +1117,72 @@ for (r, lbl, fy27, fy28, fy29, fy30, fy31), rbg in zip(tot_rows, row_bgs):
     tcomp.cell(r, 7).fill = PatternFill("solid", fgColor=rbg)
     tcomp.row_dimensions[r].height = 20
 
-tcomp["A27"] = "Chart: see drafts/SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png (regenerate with updated v12 base)"
+tcomp["A27"] = "Chart: see drafts/SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png (incl prepaid-work + Y5 hold annotation)"
+
+# ── HOLD TO YEAR 5 — Total Compensation perspective ──────────────────────────
+tcomp.merge_cells("A29:H29")
+tcomp["A29"] = "HOLD TO YEAR 5 — Forward Potential if SSLC Investors Hold Exos Shares to FY31 (Jon 10/7)"
+tcomp["A29"].font = Font(bold=True, size=10, color=WHITE)
+tcomp["A29"].fill = PatternFill("solid", fgColor=PURPLE)
+
+tcomp["A30"] = ("Base = Old-Model (v12). Dilution: Series A $25M staged (D1-D4, ~13%) + RTO (~12%) + "
+                "option pool (~5%) = ~30% flat (MANAGEMENT ASSUMPTION). "
+                "0.5% stake at listing → 0.35% post-dilution. "
+                "AA case EV ~$176M = BELOW $250M listing — stock worth less in AA case by FY31.")
+tcomp["A30"].font = Font(size=8, italic=True, color="C00000")
+tcomp.merge_cells("A30:H30")
+tcomp.row_dimensions[30].height = 32
+tcomp["A30"].alignment = Alignment(wrap_text=True)
+
+for col, txt in [(1,"Scenario"),(2,"FY31 EV"),(3,"Post-dil stake"),(4,"FY31 share value"),(5,"At-listing value"),(6,"Multiple vs listing"),(7,""),(8,"Notes")]:
+    c = tcomp.cell(row=31, column=col, value=txt)
+    c.font = Font(bold=True, color=WHITE, size=9)
+    c.fill = PatternFill("solid", fgColor=PURPLE)
+    c.alignment = Alignment(horizontal="center", wrap_text=True)
+tcomp.row_dimensions[31].height = 22
+
+y5_hold_rows = [
+    (32, "Old-Model — Low",   "=Assumptions!B118", "=Assumptions!B125",
+         "=B32*C32", "=Assumptions!B28*Assumptions!B31", "=D32/E32",
+         "0.3% grant x 0.70 = 0.21%; EV $1.626B"),
+    (33, "Old-Model — Base",  "=Assumptions!B118", "=Assumptions!B124",
+         "=B33*C33", "=Assumptions!B29*Assumptions!B32", "=D33/E33",
+         "0.5% grant x 0.70 = 0.35%; EV $1.626B (~4.5x listing)"),
+    (34, "Old-Model — High",  "=Assumptions!B118", "=Assumptions!B126",
+         "=B34*C34", "=Assumptions!B30*Assumptions!B33", "=D34/E34",
+         "0.7% grant x 0.70 = 0.49%; EV $1.626B"),
+    (35, "AA — Low",          "=Assumptions!B120", "=Assumptions!B125",
+         "=B35*C35", "=Assumptions!B28*Assumptions!B31", "=D35/E35",
+         "BELOW listing value — AA FY31 EV ~$176M < $250M MEV"),
+    (36, "AA — Base",         "=Assumptions!B120", "=Assumptions!B124",
+         "=B36*C36", "=Assumptions!B29*Assumptions!B32", "=D36/E36",
+         "BELOW listing — ~$616K vs $1.25M at listing (~0.49x)"),
+    (37, "AA — High",         "=Assumptions!B120", "=Assumptions!B126",
+         "=B37*C37", "=Assumptions!B30*Assumptions!B33", "=D37/E37",
+         "BELOW listing — ~$862K vs $2.1M at listing (~0.41x)"),
+]
+for r, label, ev, stake, val, at_list, mult, notes in y5_hold_rows:
+    tcomp.cell(r, 1).value = label; tcomp.cell(r, 1).font = Font(size=9)
+    tcomp.cell(r, 2).value = ev;    tcomp.cell(r, 2).number_format = "$#,##0"
+    tcomp.cell(r, 3).value = stake; tcomp.cell(r, 3).number_format = "0.00%"
+    tcomp.cell(r, 4).value = val;   tcomp.cell(r, 4).number_format = "$#,##0"
+    tcomp.cell(r, 5).value = at_list; tcomp.cell(r, 5).number_format = "$#,##0"
+    tcomp.cell(r, 6).value = mult;  tcomp.cell(r, 6).number_format = "0.00x"
+    tcomp.cell(r, 8).value = notes; tcomp.cell(r, 8).font = Font(size=8, italic=True, color="444444")
+    bg = LIGHT_PURPLE if "Old" in label else YELLOW
+    if "AA" in label:
+        tcomp.cell(r, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
+    tcomp.row_dimensions[r].height = 18
+
+tcomp.cell(39, 1).value = ("NOTE: Y5 hold values are NOT additive to at-listing earn-out. "
+                            "Investors choose to hold OR sell at listing. "
+                            "Old-Model base: hold to FY31 = ~$5.69M vs sell at listing = $1.25M (4.5x). "
+                            "AA base: hold to FY31 = ~$0.62M vs sell at listing = $1.25M (0.49x) — AA case penalizes holding.")
+tcomp.merge_cells("A39:H39")
+tcomp.cell(39, 1).font = Font(size=8, bold=True, color="C00000")
+tcomp.cell(39, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
+tcomp.cell(39, 1).alignment = Alignment(wrap_text=True)
+tcomp.row_dimensions[39].height = 42
 tcomp["A27"].font = Font(italic=True, size=9, color="444444")
 tcomp.merge_cells("A27:H27")
 

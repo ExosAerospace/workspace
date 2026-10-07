@@ -145,13 +145,33 @@ terms = [
     ["  SSLC costs",                        "$60,000",          "Seller's costs (§3)"],
     ["  Exos stake credit (18%)",           "($790,000)",       "Non-cash; existing 18% equity at 2021 basis"],
     ["5% escrow holdback (§7, 12 mo.)",     "$168,000",         "Released at 12-month anniversary"],
-    ["SSLC debts assumed at face",          "~$500K (TBV)",     "Microcosm/Wertz notes + AP — to verify in SSLC QB"],
+    ["SSLC debts assumed at face (TBV)",    "~$500K (TBV)",     "Microcosm/Wertz notes + AP — per 10/2 SSLC QB pull; verify"],
+    ["Prepaid-work delivery obligations assumed", "~$984K (TBV)", "Exos assumes & funds $864K billed-ahead + $120K deposits — per 10/2 SSLC QB pull; verify"],
     ["Earn-out i: IM tank revenue",         "5% of rev, $300K cap/yr, 3 yrs", "Low/Base/High: $450K / $750K / $900K"],
     ["Earn-out ii: Exos stock post-RTO",    "0.5% of FD shares, 12-mo lockup", "Low/Base/High: $600K / $1.25M / $2.1M"],
     ["TOTAL CONSIDERATION (Base, combined)","$5,860,000",       "Low: $4.91M | Base: $5.86M | High: $6.86M"],
+    ["TOTAL VALUE DELIVERED (incl. prepaid-work)", "$7,344,000 base", "5-yr total incl. prepaid obligation $984K; Low $6.39M / High $8.34M"],
 ]
 add_table(terms, [2.2, 1.8, 2.7])
-note("TBV = to be verified in SSLC QuickBooks (QB session expired 10/7; must verify before signing).")
+note("TBV = to be verified in SSLC QuickBooks (QB session expired 10/7; must verify before signing). "
+     "Prepaid-work and debts are separate lines — debts relieve personal obligations; "
+     "prepaid-work assumes the delivery liability so SSLC investors bear no completion risk.")
+
+# --- Benefits to SSLC Investors -----------------------------------------------
+head1("BENEFITS TO SSLC INVESTORS", space_before=4)
+note("Jon 10/7: debts and prepaid-work are separate relief lines; not double-counted.")
+ben_rows = [
+    ["#", "Benefit",                                    "Mechanism / Amount"],
+    ["1", "Debt relief at face",                        "~$500K TBV — Microcosm/Wertz notes + AP cleared; personal path to yes for Jim"],
+    ["2", "Delivery obligations assumed & funded",      "$984K face value (billed-ahead $864K + deposits $120K) — Exos funds completion; per 10/2 QB pull; verify"],
+    ["3", "No further capital calls",                   "Structural — investors stop funding a cash-negative entity"],
+    ["4", "Cash at close",                              "$2,510,000 — Section 3 deal price cash component"],
+    ["5", "Earn-out upside — IM tank revenue (3 yrs)", "Up to $900K — 5%/yr × $5M IM firm; $300K annual cap"],
+    ["6", "Earn-out upside — Exos stock post-RTO",     "$0.6M–$2.1M — 0.3–0.7% FD shares at listing ($200M–$300M MEV)"],
+    ["7", "Liquidity via listed Exos stock",            "Post-RTO ~FY28; 12-mo lockup then publicly tradeable"],
+    ["8", "IM program continuity",                      "No customer disruption — Exos-SSLC combined entity continues IM deliveries"],
+]
+add_table(ben_rows, [0.3, 1.8, 3.6])
 
 # --- Financial Summary — TWO CASES ------------------------------------------
 head1("1-YEAR AND 5-YEAR HEADLINE NUMBERS — TWO CASES", space_before=4)
@@ -278,20 +298,44 @@ else:
 head2("5-Year Total Compensation Summary")
 comp_table = [
     ["Scenario",       "Funding Delivered\n(at close, FY27)", "Forward Potential\n(earn-outs, 3-yr)",  "5-Yr Total",    "Notes"],
-    ["Base",           "$4,360,000",                           "$2,000,000",                             "$6,360,000",    "Tank $750K + Stock $1.25M"],
-    ["Low",            "$4,360,000",                           "$1,050,000",                             "$5,410,000",    "Tank $450K + Stock $600K"],
-    ["High",           "$4,360,000",                           "$3,000,000",                             "$7,360,000",    "Tank $900K (capped) + Stock $2.1M"],
-    ["Model 'Total\nConsideration'\n(base; excl. WC bridge)", "$3,860,000", "$2,000,000",               "$5,860,000",    "Deal Structure sheet; WC bridge excluded from consideration"],
+    ["Base",           "$5,344,000",                           "$2,000,000",                             "$7,344,000",    "Tank $750K + Stock $1.25M"],
+    ["Low",            "$5,344,000",                           "$1,050,000",                             "$6,394,000",    "Tank $450K + Stock $600K"],
+    ["High",           "$5,344,000",                           "$3,000,000",                             "$8,344,000",    "Tank $900K (capped) + Stock $2.1M"],
+    ["Model 'Total\nConsideration'\n(base; Deal Structure)", "$3,860,000", "$2,000,000",               "$5,860,000",    "Deal Structure sheet definition; prepaid-work obligation excluded from stated price"],
 ]
 add_table(comp_table, [1.2, 1.6, 1.6, 1.3, 1.75])
-note("'Funding delivered' includes: cash at close $2.51M + SSLC costs $60K + Exos stake credit (non-cash) $790K + "
-     "SSLC debts paid at face ~$500K (TBV) + WC bridge $500K. "
-     "Model 'Total Consideration' row follows the Deal Structure sheet definition (excl. WC bridge).")
+note("'Funding delivered' (5-yr total): cash at close $2.51M + SSLC costs $60K + Exos stake credit (non-cash) $790K + "
+     "SSLC debts at face ~$500K (TBV) + prepaid-work obligations assumed ~$984K (TBV) + WC bridge $500K = $5.344M. "
+     "Model 'Total Consideration' follows Deal Structure sheet definition (debt + earn-out + base price; excl. WC bridge and prepaid obligation). "
+     "All figures marked TBV per 10/2 SSLC QB pull; verify before signing.")
 
 add_para("Chart file: drafts/SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png",
          size=8, italic=True, color=RGBColor(0x50,0x50,0x50), space_after=2)
 add_para("Total Compensation sheet in the model xlsx has formulas linked to Assumptions.",
          size=8, italic=True, color=RGBColor(0x50,0x50,0x50), space_after=4)
+
+head1("FORWARD POTENTIAL — HOLD TO YEAR 5 (FY31)", space_before=6)
+note("Jon 10/7. If SSLC investors hold Exos shares post-listing to FY31 instead of selling at the "
+     "12-month lockup expiry, what is the value? "
+     "FY31 EV = consolidated EBITDA × 16× EV/EBITDA (Eqvista 409A Market Approach, 3/31/2026). "
+     "Dilution applied: Series A $25M staged (D1-D4, ~13%) + RTO listing (~12%) + option pool (~5%) = ~30% flat. "
+     "MANAGEMENT ASSUMPTION — label accordingly. "
+     "Not additive to the at-listing earn-out (investors choose to hold OR sell at lockup expiry).")
+
+y5_tbl = [
+    ["Case / Scenario",      "FY31 Implied EV",  "Post-dilution stake", "Y5 share value",  "At-listing value",  "Multiple vs listing",  "Notes"],
+    ["Old-Model — Low",      "~$1.626B",          "0.21% (0.3%×0.70)",  "~$3.41M",         "~$0.60M",           "~5.7×",                "v12 FY31 EBITDA $101.6M × 16×"],
+    ["Old-Model — Base",     "~$1.626B",          "0.35% (0.5%×0.70)",  "~$5.69M",         "~$1.25M",           "~4.5×",                "Headline: 4.5× the at-listing earn-out"],
+    ["Old-Model — High",     "~$1.626B",          "0.49% (0.7%×0.70)",  "~$7.97M",         "~$2.10M",           "~3.8×",                ""],
+    ["AA — Low",             "~$176M",            "0.21%",               "~$370K",           "~$0.60M",           "~0.62×",               "⚠ AA FY31 EV BELOW $250M listing — holding hurts"],
+    ["AA — Base",            "~$176M",            "0.35%",               "~$616K",           "~$1.25M",           "~0.49×",               "⚠ Below listing — worth less by FY31 in AA case"],
+    ["AA — High",            "~$176M",            "0.49%",               "~$862K",           "~$2.10M",           "~0.41×",               "⚠ Below listing"],
+]
+add_table(y5_tbl, [1.3, 0.95, 1.15, 1.0, 1.05, 1.05, 1.2])
+note("AA case FY31 EV (~$176M) < $250M RTO minimum listing EV — the AA case explicitly says holding to FY31 "
+     "yields LESS than selling at listing. This is NOT a flaw in the deal; it reflects conservative "
+     "actuals-based projections. The Old-Model (v12) case at ~$1.63B FY31 EV yields ~4.5× the at-listing value. "
+     "These values are NOT shown in the stacked bar (no double-counting); Y5 hold is a separate bracket annotation on the chart.")
 
 # --- apply letterhead fixes --------------------------------------------------
 sys.path.insert(0, os.path.join(WS, "scripts"))
