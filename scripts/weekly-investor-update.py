@@ -157,16 +157,18 @@ def build_draft(today):
                 L.append("   - " + ln)
     else:
         L.append("\n• No major new milestones logged in the capture feed this week. "
-                 "Steady execution on the Series A raise, the BLK3 build toward the "
-                 "Q1/Q2 2027 flights, and payload/partnership pipeline development. "
-                 "[Lizi: add anything from this week before sending.]")
+                 "Steady execution on the BLK3 build toward the early 2027 flights "
+                 "and payload/partnership pipeline development. "
+                 "[Lizi: add anything from this week before sending. If the monthly "
+                 "investor report goes out this week, SKIP this weekly so investors "
+                 "do not get two updates.]")
     # Pipeline movement intentionally excluded — investor update carries only solidified
     # items (logged milestones / closed or committed events), not in-progress conversations.
     # (recent_pipeline() retained below if a "signed/closed" section is ever wanted.)
 
     L += ["", "Standing status (confirm/update as needed before sending):",
           "• Series A: raise open (Scorpius ROFR, RDRE development, BLK4).",
-          "• BLK3: first two flights targeted Q1/Q2 2027; NASA IDIQ on-ramp anticipated mid-2027.",
+          "• BLK3: first two flights targeted early 2027; NASA Flight Opportunities on-ramp anticipated mid-2027.",
           "• Pipeline: active payload and partnership discussions in progress.",
           "",
           "Thank you, and please reach out with any questions.", "",
