@@ -375,7 +375,7 @@ def main():
         try:
             if cur_folder != fol:
                 m.select(fol, readonly=True); cur_folder = fol
-            st, raw = m.fetch(num, "(BODY.PEEK[])")
+            st, raw = m.fetch(num, "(RFC822)")
             if st != "OK" or not raw or not raw[0]:
                 continue
             msg = email.message_from_bytes(raw[0][1])

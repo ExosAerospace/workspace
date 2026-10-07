@@ -50,7 +50,7 @@ def main():
         _,data=m.search(None,"SINCE","28-Aug-2026")
         ids=(data[0].split() if data and data[0] else [])
         for i in ids:
-            t,d=m.fetch(i,"(BODY.PEEK[])")
+            t,d=m.fetch(i,"(RFC822)")
             if t!="OK" or not d or not d[0]: continue
             msg=email.message_from_bytes(d[0][1])
             frm=dh(msg.get("From")); mid=msg.get("Message-ID") or f"{folder}:{i.decode()}"

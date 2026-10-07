@@ -187,7 +187,7 @@ def main():
 
     changes = []
     for i in ids[-120:]:
-        t, d = m.fetch(i, "(BODY.PEEK[])")
+        t, d = m.fetch(i, "(RFC822)")
         if t != "OK": continue
         msg = email.message_from_bytes(d[0][1])
         mid = msg.get("Message-ID") or f"idx:{i.decode()}"

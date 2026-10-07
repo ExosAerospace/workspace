@@ -140,7 +140,7 @@ def imap_sent_to(recipients, since):
         M = imaplib.IMAP4(IMAP_HOST, IMAP_PORT); M.starttls(); M.login(IMAP_USER, pw)
         for folder in ("INBOX", "Sent"):
             try:
-                if M.select(folder, readonly=True)[0] != "OK":
+                if M.select(folder)[0] != "OK":
                     continue
             except Exception:
                 continue

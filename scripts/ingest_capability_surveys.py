@@ -91,12 +91,12 @@ def main():
     matrix = load(MATRIX, {})
     members = matrix.get("members", {})
     seen = set(load(STATE, {}).get("seen", []))
-    m = imaplib.IMAP4("127.0.0.1", 1143); m.login("jquinnexo@pm.me", pw); m.select("INBOX", readonly=True)  # read-only: never alter Jon's \Seen flags
+    m = imaplib.IMAP4("127.0.0.1", 1143); m.login("jquinnexo@pm.me", pw); m.select("INBOX")
     _s, data = m.search(None, "SINCE", "01-Jul-2026")
     ids = (data[0].split() if data and data[0] else [])
     captured, review = [], []
     for num in ids:
-        _s, d = m.fetch(num, "(BODY.PEEK[])")
+        _s, d = m.fetch(num, "(RFC822)")
         if not d or not d[0]:
             continue
         msg = email.message_from_bytes(d[0][1])

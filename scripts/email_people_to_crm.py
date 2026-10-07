@@ -207,7 +207,7 @@ def main():
         for uid in uids:
             uidk = "%s:%s" % (folder, uid.decode())
             if uidk in seen: continue
-            typ, md = m.uid("FETCH", uid, "(BODY.PEEK[])")
+            typ, md = m.uid("FETCH", uid, "(RFC822)")
             if not md or not md[0]: continue
             msg = email.message_from_bytes(md[0][1])
             subj = dec(msg.get("Subject", "")); frm = dec(msg.get("From", ""))

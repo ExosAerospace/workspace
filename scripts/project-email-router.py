@@ -376,7 +376,7 @@ def scan_project_emails():
         return
 
     try:
-        mail.select('INBOX', readonly=True)  # never alter Jon's \Seen flags
+        mail.select('INBOX')
 
         # Search for recent emails (last 3 days to catch any we missed)
         from datetime import timedelta
@@ -400,7 +400,7 @@ def scan_project_emails():
             if eid_str in processed:
                 continue
 
-            status, data = mail.fetch(eid, '(BODY.PEEK[])')
+            status, data = mail.fetch(eid, '(RFC822)')
             if status != 'OK':
                 continue
 

@@ -781,7 +781,7 @@ def check_inbox():
         mail.sock.settimeout(15)
         mail.starttls()
         mail.login(EMAIL_USER, EMAIL_PASS)
-        mail.select('inbox', readonly=True)  # never alter Jon's \Seen flags
+        mail.select('inbox')
 
         processed = load_tracker(INBOX_TRACKER)
         new_processed = set(processed)

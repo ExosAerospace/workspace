@@ -167,7 +167,7 @@ def main():
         # One-time full-history pass over the entire mailbox (All Mail, no date floor).
         # Direction inferred per message: sent if From is one of our own addresses.
         try:
-            m.select('"All Mail"', readonly=True)
+            m.select('"All Mail"')
             typ, data = m.uid("search", None, "ALL")
             uids = [int(x) for x in data[0].split()] if data and data[0] else []
         except Exception as e:
@@ -195,7 +195,7 @@ def main():
     else:
         for folder, direction in [("INBOX", "in"), ("Sent", "out")]:
             try:
-                m.select(folder, readonly=True)
+                m.select(folder)
             except Exception:
                 continue
             last_uid = int(state.get(folder, 0))

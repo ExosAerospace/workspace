@@ -140,7 +140,7 @@ def main():
     ids = data[0].split()
     captured = 0; scanned = 0; new_state = list(state)
     for i in ids[-400:]:
-        st, d = m.fetch(i, "(BODY.PEEK[])")
+        st, d = m.fetch(i, "(RFC822)")
         if st != "OK" or not d or not d[0]:
             continue
         msg = email.message_from_bytes(d[0][1])
