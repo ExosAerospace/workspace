@@ -5722,6 +5722,8 @@ const server = http.createServer((req, res) => {
     } catch (e) { /* attachments are best-effort */ }
     res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(arr)); return;
   }
+        // Options must be plain strings: {label:...} objects crashed the whole Decisions page (D-7281984, 10/7).
+        if (Array.isArray(p.options)) p.options = p.options.map(o => typeof o === 'string' ? o : String((o && (o.label ?? o.value ?? o.text)) ?? '')).filter(Boolean);
 
   // Create a decision from inside the dashboard (session-gated)
   if (req.url === '/api/decisions' && req.method === 'POST') {

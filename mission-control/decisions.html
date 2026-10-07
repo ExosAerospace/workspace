@@ -158,7 +158,8 @@ function render(){
   if(!rows.length){el.innerHTML='<div class="empty">'+(q?('No decisions match "'+esc(searchQuery)+'".'):(tab==='open'?'🎉 Nothing waiting on you. Inbox zero.':'No answered items yet.'))+'</div>';return;}
   const prio={high:0,med:1,low:2};
   const sorted=[...rows].sort((a,b)=>((prio[a.priority]??1)-(prio[b.priority]??1))||(new Date(b.created||0)-new Date(a.created||0)));
-  el.innerHTML=sorted.map(d=>card(d)).join('');
+  // One malformed card must never blank the whole list (10/7: D-7281984 hid all 15 open decisions).
+  el.innerHTML=sorted.map(d=>{try{return card(d);}catch(e){console.error('decision card render failed',d&&d.id,e);return `<div class="card"><b>${esc(String(d&&d.id||'?'))}</b> ${esc(String(d&&d.title||''))}<div style="color:var(--muted);font-size:12px">This card couldn't be displayed (${esc(String(e&&e.message||e))}).</div></div>`;}}).join('');
 }
 // Build the related-item chip(s) in the meta line. A bare-number relatedItem (e.g. "802")
 // is a TASK id, not an opportunity — and dedicated task fields may also be set. Route tasks
@@ -196,7 +197,7 @@ function card(d){
       ${attachHtml(d)}${emailHtml(d)}
     </div>`;
   }
-  const opts=(d.options&&d.options.length?d.options:['Yes','No']);
+  const opts=(d.options&&d.options.length?d.options:['Yes','No']).map(o=>typeof o==='string'?o:String((o&&(o.label??o.value??o.text))??'')).filter(Boolean);
   return `<div class="card ${pr}">
     <div class="row1"><div><p class="title">${statusMark(false)}${esc(d.title)}<span class="pill ${pr}">${pr}</span></p>
     <div class="meta">${d.id}${relatedLinks(d)} · ${esc(d.source||'')}${ownerTag(d)}</div></div></div>
