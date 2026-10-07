@@ -40,6 +40,12 @@ def slug(s):
     return s or "document"
 
 
+def doc_date(name):
+    """Last ISO date embedded in a filename (e.g. _2026-10-05), or None."""
+    d = re.findall(r'(\d{4}-\d{2}-\d{2})', os.path.basename(name or ""))
+    return d[-1] if d else None
+
+
 def load_meta():
     try:
         with open(META) as f:
@@ -55,6 +61,8 @@ def main():
     ap.add_argument("--doc-key", default=None)
     ap.add_argument("--by", default="Exo")
     ap.add_argument("--title", default=None)
+    ap.add_argument("--allow-older", action="store_true",
+                    help="permit an OLDER-dated file to become current (deliberate rollback only)")
     a = ap.parse_args()
 
     if not os.path.isfile(a.file):
@@ -82,12 +90,34 @@ def main():
     title = a.title or fname
     if title.lower().endswith((".md", ".txt")):
         title = os.path.splitext(title)[0] + ".docx"
+    meta = load_meta()
+    # Stale-version guard (Jon 10/7 "how do we not send an outdated one?"): an older copy must
+    # never supersede a newer one. On #2488 a re-attach of the 09-22 HyCAT file demoted the 10-05
+    # revision, so the board's "current" — the copy that gets sent — was the outdated one.
+    same = [m for m in meta if str(m.get("task_id")) == str(a.task) and m.get("doc_key") == doc_key]
+    src_hash = hashlib.sha256(open(src, "rb").read()).hexdigest()
+    for m in same:
+        if m.get("current") is False:
+            continue
+        try:
+            if hashlib.sha256(open(os.path.join(UPLOADS, m["stored_name"]), "rb").read()).hexdigest() == src_hash:
+                print(f"unchanged: '{fname}' is already the current v{m.get('version', 1)} on task {a.task}")
+                return
+        except Exception:
+            pass
+    new_d = doc_date(fname)
+    newer = [m for m in same if new_d and doc_date(m.get("stored_name")) and doc_date(m.get("stored_name")) > new_d]
+    if newer and not a.allow_older:
+        n = max(newer, key=lambda m: doc_date(m.get("stored_name")))
+        print(f"REFUSED (stale): '{fname}' ({new_d}) is older than '{n.get('filename')}' "
+              f"({doc_date(n.get('stored_name'))}) already on task {a.task}. Not superseding the newer "
+              f"version. Use --allow-older only for a deliberate rollback.")
+        sys.exit(3)
+
     ts = int(time.time() * 1000)
     stored = f"{ts}_{re.sub(r'[^A-Za-z0-9._-]', '_', fname)}"
     shutil.copy2(src, os.path.join(UPLOADS, stored))
     size = os.path.getsize(src)
-
-    meta = load_meta()
     # supersede the current version of this doc on this task
     prev_ver = 0
     for m in meta:
@@ -113,8 +143,10 @@ def main():
         "uploaded_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
     meta.append(rec)
-    with open(META, "w") as f:
+    tmp = META + f".tmp{os.getpid()}"
+    with open(tmp, "w") as f:
         json.dump(meta, f, indent=2)
+    os.replace(tmp, META)  # atomic: never leave a truncated _meta.json
 
     action = "attached (v1)" if version == 1 else f"revised (v{version}, prior archived)"
     print(f"{action}: '{rec['filename']}' -> task {a.task}")
