@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.exos.blk3-send-pack-apply</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/bin/python3</string>
+		<string>/Users/exomac/.openclaw/workspace/scripts/run_logged.py</string>
+		<string>com.exos.blk3-send-pack-apply</string>
+		<string>--</string>
+		<string>/usr/bin/python3</string>
+		<string>/Users/exomac/.openclaw/workspace/scripts/blk3_send_pack.py</string>
+		<string>apply</string>
+	</array>
+	<key>RunAtLoad</key>
+	<false/>
+	<key>StartInterval</key>
+	<integer>600</integer>
+	<key>StandardErrorPath</key>
+	<string>/Users/exomac/.openclaw/workspace/logs/blk3-send-pack-apply.out</string>
+	<key>StandardOutPath</key>
+	<string>/Users/exomac/.openclaw/workspace/logs/blk3-send-pack-apply.out</string>
+</dict>
+</plist>

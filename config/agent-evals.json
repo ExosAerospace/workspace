@@ -1516,6 +1516,25 @@
    "warn_grace": 2.5,
    "fail_grace": 6,
    "owner": "John Quinn"
+  },
+  "com.exos.blk3-send-pack-build": {
+   "cadence_s": 86400,
+   "warn_grace": 4,
+   "fail_grace": 8,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/blk3_send_pack.py selftest",
+   "note": "weekdays only; weekend gap is expected"
+  },
+  "com.exos.blk3-send-pack-apply": {
+   "cadence_s": 600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/blk3_send_pack.py eval",
+   "governance_checks": [
+    "output eval: duplicate-send check + recipient-domain guard (blk3_send_pack.py eval) must PASS",
+    "human-click gate: answeredByEmail in {lquinn@,jquinn@}"
+   ]
   }
  },
  "_eval_wave_2": {
