@@ -566,6 +566,8 @@ def build(dry):
             skipped.append((c, c["hold_flag"])); continue
         if c.get("dnc") and not c.get("email"):
             skipped.append((c, c["dnc"])); continue
+        if str(c.get("review") or "").startswith("FAIL"):   # never offer a draft a student QC failed (Jon 10/7)
+            skipped.append((c, f"failed student QC ({c['review']}) — fix before it can be offered")); continue
         if c.get("fit") is not None and c["fit"] <= 2:
             skipped.append((c, f"student fit score {c['fit']}/5")); continue
         c["subject"], c["body"] = compose(c)
