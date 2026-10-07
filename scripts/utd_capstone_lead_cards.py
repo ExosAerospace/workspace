@@ -33,6 +33,7 @@ STUDENTS = {
 # (student, pipeline heading prefix, draft label or None, due, extra note)
 # First two per researcher are due Thu 10/1 (the meeting); the rest Thu 10/8.
 WK1, WK2 = "2026-10-01T16:59:00+00:00", "2026-10-08T16:59:00+00:00"
+WK3 = "2026-10-15T16:59:00+00:00"   # batch 3 (Jon 10/6): the 25 unassigned queue leads, deduped
 ASSIGN = [
     ("Laura", "LASP (Laboratory for Atmospheric", "AH", WK1, ""),
     ("Laura", "Texas A&M — Aerospace Engineering", "file:Texas A&M", WK1,
@@ -59,6 +60,25 @@ ASSIGN = [
     ("Roel", "Firehawk Aerospace", "AM", WK2, ""),
     ("Roel", "X-Bow Launch Systems", "AX", WK2, ""),
     ("Roel", "Phase Four", "AS", WK2, ""),
+    # ── Batch 3 (Jon 10/6, D-7281980): unassigned student-queue leads, deduped, split by segment.
+    # Held back from students: Kratos (active conversation), JHU APL (NDA #22684), DIU HyCAT (Jon-tracked gov program).
+    ("Laura", "Embry-Riddle Aeronautical University", None, WK3, ""),
+    ("Laura", "Purdue University — Zucrow Labs", None, WK3, ""),
+    ("Laura", "UMontana — University of Montana", None, WK3, ""),
+    ("Karan", "NCATS / Tissue Chips in Space 2.0", None, WK3, "There is an older NCATS entry too; this card uses the updated one."),
+    ("Karan", "Draper Laboratory — DMEN Team", None, WK3, ""),
+    ("Karan", "Bridger Photonics (Bozeman)", None, WK3, ""),
+    ("Adrian", "Impulse Space", None, WK3, ""),
+    ("Adrian", "Sierra Space", None, WK3, ""),
+    ("Adrian", "Space Forge", None, WK3, "Space Forge is UK-based. Public research only, same as every lead."),
+    ("Adrian", "York Space Systems", None, WK3, ""),
+    ("Roel", "Ursa Major Technologies — Chris Spagnoletti (CEO) ⭐⭐ AFRL", None, WK3, "There is a second Ursa Major entry (propulsion avionics angle); note if it's a different buyer."),
+    ("Roel", "Hermeus", None, WK3, ""),
+    ("Roel", "Castelion — UPDATED", None, WK3, ""),
+    ("Roel", "Hypersonix Launch Systems USA", None, WK3, ""),
+    ("Sunidhi", "United Therapeutics", None, WK3, ""),
+    ("Sunidhi", "Rhea Space Activity", None, WK3, ""),
+    ("Sunidhi", "Exobiosphere — POC CONFIRMED", None, WK3, ""),
 ]
 # Sunidhi: leads the AI already marked READY that no person has checked.
 QC = [
