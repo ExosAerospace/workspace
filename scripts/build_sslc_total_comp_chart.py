@@ -21,26 +21,24 @@ debts_paid    = [  500_000, 0, 0, 0, 0]   # ~$500K TBV
 wc_bridge     = [  500_000, 0, 0, 0, 0]   # BASE/HIGH; LOW = $0
 
 # ── Earn-out data (negotiating terms — management assumptions) ────────────────
-# Tank earn-out: 5% of SSLC/IM tank revenue per year, cap $250K/yr, 5yr FY27-FY31
-# BASE: 5% × avg $4M/yr = $200K/yr × 5 = $1,000K
-# HIGH: 5% × $5M/yr = $250K/yr (at cap) × 5 = $1,250K
-# LOW: $0 (IM demand does not materialize)
-tank_earnout = [200_000, 200_000, 200_000, 200_000, 200_000]  # BASE: $1,000K
-tank_high    = [250_000, 250_000, 250_000, 250_000, 250_000]  # HIGH: $1,250K
-tank_low     = [      0,       0,       0,       0,       0]  # LOW:  $0
+# Matches offer summary Section 1 table (reconciled 10/7 15:58).
+# Tank earn-out: % of IM/SSLC tank revenue, cap $300K/yr, 5 yrs FY27-FY31
+# LOW 3% → $150K/yr = $750K | BASE 5% → $250K/yr = $1,250K | HIGH at cap $300K/yr = $1,500K
+tank_earnout = [250_000]*5   # BASE $1,250K
+tank_high    = [300_000]*5   # HIGH $1,500K
+tank_low     = [150_000]*5   # LOW  $750K
 
-# Goal-based milestones (year distributed for BASE chart):
-# M1: FY27 $5M revenue on schedule  → $200K, pays FY28
-# M2: Nebula/OTV production contract → $300K, pays FY29 (base est.)
-# M3: SSLC annual rev ≥$10M          → $300K, pays FY29 (HIGH) / not hit (BASE)
-# M4: SSLC annual rev ≥$20M          → $400K, pays FY31 (HIGH only)
-# M5: BLK3 tank qual complete         → $150K, pays FY28
-# BASE (M1+M2+M5): $650K   HIGH (all): $1,350K   LOW: $0
-milestone_base = [0, 200_000+150_000,  300_000,       0,       0]  # $650K: M1+M5 FY28, M2 FY29
-milestone_high = [0, 200_000+150_000,  300_000+300_000, 0, 400_000]  # $1,350K: all 5
-milestone_low  = [0,               0,               0, 0,       0]  # $0
+# Goal-based milestones (paid only if hit):
+# M1 SSLC FY2026-27 rev >= $5.1M → $200K, pays FY28 (L/B/H)
+# M2 Nebula/OTV production contract → $200K, FY28 (B/H)
+# M3 SSLC annual rev >= $10M → $250K, FY29 (B/H)
+# M4 SSLC annual rev >= $20M → $250K, FY31 (H)
+# M5 BLK3 tank qualification → $200K, FY28 (H)
+milestone_base = [0, 200_000+200_000, 250_000, 0, 0]          # $650K
+milestone_high = [0, 200_000+200_000+200_000, 250_000, 0, 250_000]  # $1,100K
+milestone_low  = [0, 200_000, 0, 0, 0]                          # $200K
 
-# Stock earn-out — realized FY29 (listed ~FY28, 12-mo lockup)
+# Stock earn-out — realized FY29 (listed ~FY28; principals' lockup, modeled ~12 mo)
 stock_base = [0, 0, 1_875_000, 0, 0]   # 0.75% × $250M
 stock_high = [0, 0, 3_000_000, 0, 0]   # 1.0%  × $300M
 stock_low  = [0, 0, 1_000_000, 0, 0]   # 0.5%  × $200M
@@ -55,7 +53,7 @@ base_annual = [a+b+c+d+e+f+g+h for a,b,c,d,e,f,g,h in
 cumulative  = np.cumsum(base_annual)
 
 total_base  = sum(base_annual)                                                          # $7,885K
-total_low   = CLOSE_FIXED + sum(tank_low) + sum(milestone_low) + sum(stock_low)        # $4,860K (no WC)
+total_low   = CLOSE_BASE  + sum(tank_low) + sum(milestone_low) + sum(stock_low)        # $4,860K (no WC)
 total_high  = CLOSE_BASE  + sum(tank_high) + sum(milestone_high) + sum(stock_high)     # $9,960K ≈$10M
 
 # ── Y5 hold values (Old-Model base case; FY31 EV = $101.6M × 16× = $1.626B)
@@ -224,8 +222,8 @@ legend_patches = [
     mpatches.Patch(color=C_STAKE,     label="Stake credit non-cash ($790K)"),
     mpatches.Patch(color=C_DEBTS,     label="SSLC debts at face ~$500K TBV"),
     mpatches.Patch(color=C_WC,        label="WC bridge ($500K)"),
-    mpatches.Patch(color=C_TANK,      label=f"Tank earn-out 5%/yr ×5yr ($1.0M base / $1.25M high)"),
-    mpatches.Patch(color=C_MILESTONE, label=f"Milestone earn-outs ($650K base / $1.35M high)"),
+    mpatches.Patch(color=C_TANK,      label="Tank earn-out ×5yr ($1.25M base / $1.5M high)"),
+    mpatches.Patch(color=C_MILESTONE, label="Milestone earn-outs (M1-M5; $650K base / $1.1M high)"),
     mpatches.Patch(color=C_STOCK,     label="Stock earn-out 0.75% FD @ $250M ($1.875M base)"),
     plt.Line2D([0],[0], color=LINE_CUM, linewidth=2, marker='o', markersize=4, label=f"Cumulative BASE → ${total_base/1e6:.2f}M  |  HIGH ~${total_high/1e6:.1f}M  |  LOW ${total_low/1e6:.2f}M"),
     mlines.Line2D([0],[0], color=C_Y5_V12, linewidth=2, label="v12 Y5 hold (≠ realized; 0.525% post-dilution)"),

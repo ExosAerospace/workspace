@@ -274,12 +274,12 @@ comp_rows = [
     ["SSLC closing costs (Seller)",      "Close",           "$60K"],
     ["Exos stake credit (non-cash)",     "Close (credit)",  "$790K"],
     ["Debt relief (est., TBV)",          "Close",           "~$500K"],
-    ["WC bridge",                        "Close",           "— / $500K / $500K"],
-    ["Subtotal: funding at close",       "Close",           "$3,860K / $4,360K / $4,360K"],
-    ["Tank earn-out (5 yr, 5%/yr)",      "FY27–FY31",       "— / $1,000K / $1,250K"],
-    ["Milestone earn-outs (5 triggers)", "FY27–FY31",       "— / $650K / $1,350K"],
+    ["WC bridge",                        "Close",           "$500K / $500K / $500K"],
+    ["Subtotal: funding at close",       "Close",           "$4,360K / $4,360K / $4,360K"],
+    ["Tank earn-out (5 yr, 5%/yr)",      "FY27–FY31",       "$750K / $1,250K / $1,500K"],
+    ["Milestone earn-outs (5 triggers)", "FY27–FY31",       "$200K / $650K / $1,100K"],
     ["Exos stock earn-out",              "Post-RTO ~FY28",  "$1,000K / $1,875K / $3,000K"],
-    ["TOTAL OFFER VALUE (5-yr)",         "FY27–FY31",       "$4.9M / $7.9M / $10.0M"],
+    ["TOTAL OFFER VALUE (5-yr)",         "FY27–FY31",       "$6.3M / $8.1M / $10.0M"],
 ]
 add_table(comp_rows, [2.3, 1.4, 1.8])
 
