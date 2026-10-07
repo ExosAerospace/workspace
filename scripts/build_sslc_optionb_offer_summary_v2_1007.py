@@ -105,6 +105,83 @@ def add_table(rows_data, col_widths, hdr_fill="1F3A68"):
     P(sa=3)
     return t
 
+def add_offer_table():
+    """Offer value table: Component | Low | Base | High | When/Notes.
+    Subtotal row = light gray + bold; Total row = light green + bold;
+    Memo row = amber + italic + gray text."""
+    from docx.enum.text import WD_ALIGN_PARAGRAPH as WDA
+
+    DARK  = "1F3A68"
+    GRAY  = "F3F4F6"
+    GREEN = "D1FAE5"
+    AMBER = "FEF3C7"
+
+    col_w = [2.1, 0.85, 0.85, 0.85, 1.85]   # inches; total ~6.5"
+
+    # (Component, Low, Base, High, Notes, kind)
+    # kind: "header","data","subtotal","total","memo"
+    rows = [
+        ("Component",                           "Low",      "Base",     "High",     "When / Notes",                                       "header"),
+        ("Cash at close",                        "$2,510K",  "$2,510K",  "$2,510K",  "Close ~Q1 FY27",                                     "data"),
+        ("SSLC transaction costs",               "$60K",     "$60K",     "$60K",     "Close; seller-side",                                 "data"),
+        ("Credit for Exos's existing stake",     "$790K",    "$790K",    "$790K",    "Close (non-cash credit)",                            "data"),
+        ("SSLC debts paid at face",              "$500K",    "$500K",    "$500K",    "Close; ~$500K TBV in QB",                            "data"),
+        ("Working-capital bridge",               "—",        "$500K",    "$500K",    "Close; only if it remains after prepaid removal",    "data"),
+        ("Subtotal: funding at close",           "$3,860K",  "$4,360K",  "$4,360K",  "",                                                   "subtotal"),
+        ("Tank earn-out (3 yrs, capped)",        "—",        "$750K",    "$900K",    "FY27–FY29; 5%/yr; cap $300K/yr",                    "data"),
+        ("Exos stock earn-out at listing",       "$1,000K",  "$1,875K",  "$3,000K",  "Post-RTO ~FY28; 0.5% / 0.75% / 1.0% FD",           "data"),
+        ("TOTAL OFFER VALUE (5-yr)",             "$4,860K",  "$6,985K",  "$8,260K",  "FY27–FY31",                                          "total"),
+        ("Memo: Exos stock if held to FY31\n(not additive to total above)",
+                                                 "$5.7M",    "$8.5M",    "$11.4M",   "16× EV/EBITDA; ~30% dilution;\nmgmt assumption — not a guarantee",  "memo"),
+    ]
+
+    t = doc.add_table(rows=len(rows), cols=5)
+    try:    t.style = "Table Grid"
+    except: pass
+    t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    t.autofit = False
+
+    for gc, w in zip(t._tbl.tblGrid.findall(qn("w:gridCol")), col_w):
+        gc.set(qn("w:w"), str(int(w * 1440)))
+
+    GREY_COLOR = RGBColor(0x6B, 0x72, 0x80)
+
+    for i, (comp, lo, ba, hi, notes, kind) in enumerate(rows):
+        vals = [comp, lo, ba, hi, notes]
+        for j, val in enumerate(vals):
+            cell = t.cell(i, j)
+            cell.width = Inches(col_w[j])
+            cell.text = ""
+            p = cell.paragraphs[0]
+            if j in (1, 2, 3):
+                p.alignment = WDA.RIGHT
+
+            # shading
+            if   kind == "header":   shaded_cell(cell, DARK)
+            elif kind == "subtotal": shaded_cell(cell, GRAY)
+            elif kind == "total":    shaded_cell(cell, GREEN)
+            elif kind == "memo":     shaded_cell(cell, AMBER)
+
+            for line in val.split("\n"):
+                r = p.add_run(line)
+                r.font.size = Pt(8.5)
+                if kind == "header":
+                    r.bold = True
+                    r.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
+                elif kind in ("subtotal", "total"):
+                    r.bold = True
+                elif kind == "memo":
+                    r.italic = True
+                    r.font.color.rgb = GREY_COLOR
+                elif j == 0:
+                    r.bold = (kind == "total")
+                # line break between lines
+                if line != val.split("\n")[-1]:
+                    p.add_run().add_break()
+
+    P(sa=3)
+    return t
+
 # ────────────────────────────────────────────────────────────────────────────
 # DOCUMENT HEADER
 # ────────────────────────────────────────────────────────────────────────────
@@ -122,29 +199,15 @@ P("October 7, 2026  ·  Exos Aerospace Systems & Technologies, Inc.",
 # ────────────────────────────────────────────────────────────────────────────
 H1("1.  What SSLC Holders Receive")
 
-body("The Exos offer delivers liquidity, relief, and upside across four dimensions — "
-     "without requiring any additional capital call from current SSLC shareholders.")
+body("The Exos offer delivers liquidity, debt relief, and equity upside — "
+     "without requiring any additional capital call from current SSLC shareholders:")
 
-B("Cash at close  ", "$2,510,000 delivered to SSLC at acquisition close.")
-B("Debt relief  ",
-  "All SSLC debts paid at face value at close, including the Microcosm loan and Wertz notes "
-  "(est. ~$500K, to be verified in QuickBooks). Jim Wertz's personal loans are made whole at closing.")
-B("No further capital calls  ",
-  "Once closed, SSLC's standalone cash drain stops. Shareholders stop funding a working-capital-negative entity.")
-B("Earn-out — IM tank revenue  ",
-  "5% of Intuitive Machines tank revenue for 3 years, capped at $300K/year (up to $900K total). "
-  "Tied to SSLC's existing firm IM demand.")
-B("Earn-out — Exos stock  ",
-  "0.5%–1.0% of Exos fully diluted shares post-RTO listing "
-  "(est. $1.0M–$3.0M at a $200M–$300M listing; $250M minimum MEV per Ainigma/FNEX mandate).")
-B("Exos shares + Y5 hold value  ",
-  "Stock earn-out is tradeable post-12-month lockup. "
-  "Held to FY31 at a 16× EV/EBITDA multiple on the Exos plan (~$1.63B EV), a 0.75% grant "
-  "(~0.525% after ~30% assumed dilution) is worth ~$8.5M (range $5.7M–$11.4M), "
-  "~4.6× its ~$1.875M value at listing. Management assumptions.")
+add_offer_table()
+
+B("No additional capital calls  ",
+  "Once closed, SSLC's standalone cash burn stops entirely.")
 B("IM program continuity  ",
-  "No delivery interruption to Intuitive Machines; Exos-SSLC entity continues the contract, "
-  "preserving SSLC's strongest commercial relationship.")
+  "Exos-SSLC continues the Intuitive Machines contract with no delivery interruption.")
 
 # ────────────────────────────────────────────────────────────────────────────
 # SECTION 2 — WHY GROWTH REQUIRES EXOS CAPITAL
