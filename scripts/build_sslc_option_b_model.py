@@ -240,7 +240,7 @@ ds["A1"].fill = PatternFill("solid", fgColor=DARK_BLUE)
 ds["A1"].alignment = Alignment(horizontal="center", vertical="center")
 ds.row_dimensions[1].height = 22
 
-ds["A2"] = "Option B: invoke §3 exclusivity at $3.36M base + earn-out (IM tank revenue and/or Exos stock post-listing). SSLC debts paid at face. DRAFT — [Counsel review required]."
+ds["A2"] = "Option B: invoke §3 exclusivity at $3.36M base + earn-out (IM tank revenue and/or Exos stock post-listing). SSLC debts paid at face. DRAFT — negotiation-stage terms."
 ds["A2"].font = Font(italic=True, size=9, color="444444")
 ds.merge_cells("A2:E2")
 ds.row_dimensions[2].height = 30
@@ -715,7 +715,7 @@ fund_data = [
     (12, "§3 FINANCING TRIGGER GAP (CRITICAL RISK)", "",                       ""),
     (13, "FNEX/Ainigma role",                        "Advisor / broker-dealer","FNEX is NOT itself the 'investor or lender' under §3"),
     (14, "Risk: SSLC counsel (Danny) challenges trigger","HIGH",                "§3 requires 'investor or lender capable of financing'; advisory mandate may not qualify"),
-    (15, "Mitigation required",                      "Attach FNEX countersigned agreement + investor/sponsor use-of-proceeds letter naming SSLC asset purchase","[Counsel review] — [Confirm FNEX agreement countersigned per D-7281974 10/6]"),
+    (15, "Mitigation required",                      "Attach FNEX countersigned agreement + investor/sponsor use-of-proceeds letter naming SSLC asset purchase","[Confirm FNEX agreement countersigned per D-7281974 10/6]"),
     (16, "§3 extension right",                       "SSLC shall not unreasonably withhold","90-day window from exclusivity grant; request extension proactively while good-faith progress shown"),
     (17, "Timing: 90-day exclusivity ends",          "~Jan 6, 2027",           "From ~Oct 8 grant; RTO is 4-5 months; need extension"),
     (19, "RELATED-PARTY DISCLOSURES",                "",                       ""),
