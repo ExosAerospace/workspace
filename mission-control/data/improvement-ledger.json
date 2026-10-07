@@ -385,6 +385,25 @@
     "quiet_errors": 0,
     "turnaround_s": 0.9
    }
+  },
+  {
+   "id": "IMP-021",
+   "agent": "com.exos.blk3-send-pack-apply",
+   "govlog": null,
+   "cron": null,
+   "change": "a16cffc",
+   "hypothesis": "Student-verified BLK3 leads get emailed within 1 business day of Lizi's click (was 13 of 16 never sent); zero duplicate sends and zero gov/foreign recipients (output eval PASS); apply job reliability >= 0.99",
+   "metrics": [
+    "reliability",
+    "turnaround",
+    "dup_sends"
+   ],
+   "error_signature": null,
+   "at": "2026-10-07T19:25:39.803932+00:00",
+   "status": "measuring",
+   "baseline": {
+    "dup_sends": 6
+   }
   }
  ]
 }
