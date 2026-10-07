@@ -143,8 +143,9 @@ B("Earn-out — Exos stock  ",
   "(est. $600K–$2.1M at a $200M–$300M listing; $250M minimum MEV per Ainigma/FNEX mandate).")
 B("Exos shares + Y5 hold value  ",
   "Stock earn-out is tradeable post-12-month lockup. "
-  "At Eqvista's March 2026 EV/EBITDA 16× multiple, the v12 trajectory implies "
-  "a significant FY31 enterprise value — the detail is in the model spreadsheet.")
+  "Held to FY31 at a 16× EV/EBITDA multiple on the Exos plan (~$1.63B EV), a 0.5% grant "
+  "(~0.35% after ~30% assumed dilution) is worth ~$5.7M (range $3.4M–$8.0M), "
+  "~4.5× its ~$1.25M value at listing. Management assumptions.")
 B("IM program continuity  ",
   "No delivery interruption to Intuitive Machines; Exos-SSLC entity continues the contract, "
   "preserving SSLC's strongest commercial relationship.")
@@ -227,8 +228,8 @@ terms_rows = [
     ["SSLC debts assumed",           "Paid at face at close (est. ~$500K; verify QuickBooks)"],
     ["Disinterested directors",      "Jon Quinn abstains from SSLC board vote; sends as Exos CEO "
                                      "(Cal. Corp. Code §310)"],
-    ["Fairness opinion",             "Eqvista 409A (03/31/2026, $8.66/sh, DLOM 36.51%) — engagement "
-                                     "to be updated at signing"],
+    ["Fairness opinion",             "Eqvista engaged 8/14/2026; agreement still unsigned "
+                                     "(held ~1 month)"],
     ["Status",                       "DRAFT — NEGOTIATING TERMS — not a final or binding offer"],
 ]
 add_table(terms_rows, [1.9, 4.1])
