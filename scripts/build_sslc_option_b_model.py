@@ -71,7 +71,7 @@ ws["A1"].fill = PatternFill("solid", fgColor=DARK_BLUE)
 ws["A1"].alignment = Alignment(horizontal="center", vertical="center")
 ws.row_dimensions[1].height = 24
 
-ws["A2"] = "Prepared: 2026-10-07 | DRAFT — [Counsel review required] | INTERNAL — Exo/CEO only"
+ws["A2"] = "Prepared: 2026-10-07 | DRAFT — NEGOTIATING TERMS | INTERNAL — Exo/CEO only"
 ws["A2"].font = Font(italic=True, size=9, color="666666")
 ws.merge_cells("A2:C2")
 
@@ -90,7 +90,7 @@ ws["A5"].fill = PatternFill("solid", fgColor=DARK_BLUE)
 data_assump = [
     # row: label, value, source
     (6,  "Agreement date (Asset Acquisition Agreement)",     "2025-05-13",                   "Executed — Jon Quinn & Jim Wertz"),
-    (7,  "§3 exclusivity trigger: financing agreement",     "Ainigma/FNEX executed mandate","FNEX advisory agreement — [Counsel: confirm binding]"),
+    (7,  "§3 exclusivity trigger: financing agreement",     "Ainigma/FNEX executed mandate","FNEX advisory agreement; strengthen with investor/sponsor use-of-proceeds letter"),
     (8,  "Exclusivity period (days)",                        90,                             "§3 of the 2025 Agreement"),
     (9,  "Deal price — total commitment ($)",                3360000,                        "§3 / §1: $2.51M cash + $60K costs + $790K stake credit"),
     (10, "  Cash at close ($)",                              2510000,                        "Stated deal price — cash component"),
@@ -722,14 +722,14 @@ fund_data = [
     (20, "Jon sits on BOTH boards",                  "Conflict of interest",   "Jon must RECUSE from SSLC vote; send as Exos CEO only"),
     (21, "Fairness opinion",                         "Required (Eqvista engaged)","Eqvista engaged for 409A + fairness opinion per D1-D4 of record"),
     (22, "Disinterested director approval",          "Required (SSLC side)",   "Markus Rufer and Bob as disinterested directors approve; Jon abstains"),
-    (23, "Keyes (Counsel) review",                   "Pre-send required",      "[[feedback_keyes_presignature_only]] — Counsel confirms §3 still in force + not 'agreement to agree'"),
+    (23, "Legal review",                             "Deferred (Jon 10/7)",    "Negotiation stage; no legal review until Jon calls it"),
     (25, "HE-TANK DISPUTE RISK",                     "",                       ""),
     (26, "Rev3 tank leaks at boss post-Hysol",       "RISK",                   "10/1 hydro fail; Morey questions as flight article. Plan B: qualified COPV ≤$250K (MC #3056, D-7281994)"),
     (27, "Impact on acquisition",                    "SSLC demonstrably can't deliver BLK3 flight article","Customer-hat PO default (due 9/24/2025) kept in reserve; resolves post-acquisition"),
     (29, "SSLC CASH RISK",                           "",                       ""),
     (30, "SSLC cash at close (est.)",                "=Assumptions!B42+Assumptions!B41-Assumptions!B16","FY27 Q1 cash + billed-ahead minus WC need"),
     (31, "Risk: SSLC runs out of cash before close", "MEDIUM",                 "Cash $198K + collections on $984K prepaid; needs $0.3-0.7M to finish work"),
-    (32, "Mitigation: Option C pre-cliff bridge",    "Secured prepaid BLK3 tank PO $300-700K","[Counsel: insider lending — use only disclosed SSLC numbers] Option C held for follow-up"),
+    (32, "Mitigation: Option C pre-cliff bridge",    "Secured prepaid BLK3 tank PO $300-700K","Use only disclosed SSLC numbers; Option C held for follow-up"),
     (34, "DATA NOT VERIFIED IN SSLC QB (CRITICAL GAPS)", "", ""),
     (35, "SSLC total liabilities / AP",              "~$500K est. — TO VERIFY IN SSLC QB","QB session expired 10/7; cannot confirm Microcosm/Wertz note amounts. Must verify before signing."),
     (36, "SSLC total debt assumed at face",          "TO VERIFY IN SSLC QB",   "Critical for Bob/Jim: personal path to yes depends on debt payoff amount"),

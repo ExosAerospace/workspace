@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build Exos_SSLC_OptionB_Offer_Summary_2026-10-07.docx + .pdf on Exos PRIMARY letterhead.
 2-page board-ready summary of the SSLC Option B acquisition offer.
-Jon Quinn, CEO — INTERNAL / DRAFT — [Counsel review required before any external send]
+Jon Quinn, CEO — INTERNAL / DRAFT — negotiating terms
 """
 import os, sys, subprocess, shutil
 from docx import Document
@@ -118,7 +118,7 @@ for child in list(body_el):
 # =============================================================================
 # PAGE 1
 # =============================================================================
-add_para("INTERNAL — DRAFT — [Counsel review required] — CEO eyes only",
+add_para("INTERNAL — DRAFT — NEGOTIATING TERMS — CEO eyes only",
          size=8, italic=True, color=RGBColor(0x80,0x00,0x00), space_after=2)
 
 add_para("EXOS AEROSPACE — SSLC OPTION B ACQUISITION OFFER",
@@ -203,12 +203,11 @@ bullet("Mitigation: ", "Plan B: qualified COPV ≤$250K (Jon cap), $0.3M gap. Re
 
 head2("SSLC Cash Risk")
 bullet("Risk: ", "SSLC cash at QB date: $198K. Needs $0.3–0.7M to finish $984K in prepaid work. Risk of distress before close.")
-bullet("Mitigation: ", "Option C (held): prepaid BLK3 tank PO $300–700K as bridge. [Counsel: insider lending.] OR close quickly before cash depletes.")
+bullet("Mitigation: ", "Option C (held): prepaid BLK3 tank PO $300–700K as bridge. OR close quickly before cash depletes.")
 
 head2("Related-Party / Governance")
 bullet("Jon Quinn: ", "on both boards. Jon recuses from SSLC board vote; sends as Exos CEO only. Eqvista engaged for fairness opinion.")
 bullet("Disinterested directors: ", "Markus Rufer and Bob approve on SSLC side; Jon abstains.")
-bullet("Counsel: ", "[Keyes — review §3 still in force + not 'agreement to agree' before sending §3 notice.]")
 
 head2("Timing")
 bullet("Exclusivity window: ", "90 days from ~Oct 8 = ~Jan 6, 2027. RTO close ~Mar 2027. Request extension proactively under the 'not unreasonably withhold' clause.")
@@ -218,14 +217,13 @@ head1("ASKS — Board Decision Points", space_before=6)
 
 asks = [
     ["#", "Ask",                                                          "Owner",          "Timing"],
-    ["1", "Go/No-Go: Option A, A+B (recommended), or A+B+C?",           "Jon (CEO)",       "Today 10/7"],
+    ["1", "DECIDED 10/7: Option B (A+B), Counsel deferred while negotiating","Jon (CEO)",       "Done"],
     ["2", "Confirm earn-out variant: tank-only, stock-only, or combined?","Jon (CEO)",       "Today 10/7"],
     ["3", "Confirm FNEX agreement is countersigned (D-7281974)?",         "Jon",             "Before send"],
     ["4", "Obtain investor use-of-proceeds letter naming SSLC purchase?","Jon + FNEX",      "Before send"],
     ["5", "Name Exos officer to sign while Jon is in Japan?",            "Jon (CEO)",       "Today 10/7"],
     ["6", "Set reply-by date to Jim Wertz?",                             "Jon (CEO)",       "Today 10/7"],
-    ["7", "Keyes (Counsel) review §3 + fairness opinion completion?",   "Counsel",         "Pre-send"],
-    ["8", "Verify SSLC liabilities in QB before signing?",              "Exo / Jon",       "Before sign"],
+    ["7", "Verify SSLC liabilities in QB before signing?",              "Exo / Jon",       "Before sign"],
 ]
 add_table(asks, [0.3, 2.8, 1.4, 1.2])
 
