@@ -230,6 +230,26 @@
     "turnaround_s": 100.1,
     "cost_tokens": 84610
    }
+  },
+  {
+   "id": "IMP-018",
+   "agent": "com.exos.priority-inbox-watcher",
+   "govlog": null,
+   "cron": null,
+   "change": "c96a667",
+   "hypothesis": "IMAP pollers of Jon's Proton INBOX (priority-inbox-watcher, mc-email-command, project-email-router, transcript-ingest, survey-ingest, doc-manager, payload-intake + 12 hardened) now select readonly + fetch BODY.PEEK[]; expect Jon's unread (\\Seen-absent) INBOX count to stay >0 for mail he hasn't opened (was 0 of 3209 on 10/7) with no drop in poller reliability",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-07T17:02:37.009993+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 1001,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 0.5
+   }
   }
  ]
 }
