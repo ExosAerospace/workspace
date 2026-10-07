@@ -26,8 +26,14 @@ def stem(name):
     (Stricter than mc-attach's slug, which would fold OPP_PAY-5095 and OPP_PAY-4618 together.)"""
     s = os.path.splitext(os.path.basename(name))[0].lower()
     s = re.sub(r"[\s_.\-]*\(?\d{4}-\d{2}-\d{2}\)?", "", s)
-    s = re.sub(r"[\s_.\-]+v\d+(\.\d+)*$|[\s_.\-]+draft$", "", s)
+    s = re.sub(r"[\s_.\-]+(?:v|rev)\d+(\.\d+)*$|[\s_.\-]+draft$", "", s)
     return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
+
+
+def rank(name):
+    """(ISO date, _vN/_revN) so a same-day _v2 outranks _v1."""
+    m = re.search(r"[\s_.\-](?:v|rev)(\d+)(?:\.\d+)*$", os.path.splitext(os.path.basename(name))[0], re.I)
+    return (doc_date(name) or "", int(m.group(1)) if m else 1)
 
 
 def check(path):
@@ -47,8 +53,7 @@ def check(path):
             why.append(f"task #{m.get('task_id')} current version is {m.get('filename')} ({md})")
     if d and os.path.isdir(DRAFTS):
         for f in os.listdir(DRAFTS):
-            fd = doc_date(f)
-            if fd and fd > d and stem(f) == stem(fn) and os.path.splitext(f)[1].lower() == ext:
+            if doc_date(f) and rank(f) > rank(fn) and stem(f) == stem(fn) and os.path.splitext(f)[1].lower() == ext:
                 why.append(f"newer draft exists: drafts/{f}")
     return why
 
@@ -58,11 +63,10 @@ def latest_copy(path):
     fn = os.path.basename(path); d = doc_date(fn); ext = os.path.splitext(fn)[1].lower()
     if not d or not os.path.isdir(DRAFTS):
         return path
-    best, bd = path, d
+    best, br = path, rank(fn)
     for f in os.listdir(DRAFTS):
-        fd = doc_date(f)
-        if fd and fd > bd and stem(f) == stem(fn) and os.path.splitext(f)[1].lower() == ext:
-            best, bd = os.path.join(DRAFTS, f), fd
+        if doc_date(f) and rank(f) > br and stem(f) == stem(fn) and os.path.splitext(f)[1].lower() == ext:
+            best, br = os.path.join(DRAFTS, f), rank(f)
     return best
 
 
