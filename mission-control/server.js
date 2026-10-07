@@ -5562,7 +5562,10 @@ const server = http.createServer((req, res) => {
         // one decision for its whole life. If it was already answered/closed, an agent re-raising the
         // same key must NOT spawn a fresh duplicate — that was the "same card multiple times a day"
         // bug (overnight resolver + morning digest each re-created the rollup after Jon answered it).
-        const isOpenStatus = s => { s = (s || 'open'); return s === 'open' || s === 'pending'; };
+        // 'delegated'/'reassigning' are still un-actioned: refresh their content in place (status and
+        // assignee untouched). Treating them as answered froze 45 send-Decisions on July drafts while
+        // the Opportunity Engine regenerated newer copies daily (Jon 10/7 "how do we not send an outdated one?").
+        const isOpenStatus = s => { s = (s || 'open'); return s === 'open' || s === 'pending' || s === 'delegated' || s === 'reassigning'; };
         if (p.dedupeKey) {
           const already = arr.find(d => d.dedupeKey === p.dedupeKey && !isOpenStatus(d.status));
           if (already) {

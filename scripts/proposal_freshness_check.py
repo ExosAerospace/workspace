@@ -36,6 +36,29 @@ def rank(name):
     return (doc_date(name) or "", int(m.group(1)) if m else 1)
 
 
+# Copy rules every outbound proposal/outreach must pass (USER.md claim caveat, Lizi 10/5 timing rule,
+# AGENTS.md "no turnaround times unless sourced"). (pattern, replacement) — applied by copy_fix().
+COPY_RULES = [
+    (r"one of only three FAA-licensed reusable rocket launch (?:providers|companies)(?: in the (?:US|U\.S\.|country|United States))?",
+     "one of only three FAA-licensed vertical-takeoff reusable rocket providers with demonstrated recovery and reflight"),
+    (r"\b(?:in |for |by )?(?:March|Mar\.?) 2027\b", lambda m: ("in " if m.group(0).lower().startswith("in ") else
+                                                               "for " if m.group(0).lower().startswith("for ") else
+                                                               "by " if m.group(0).lower().startswith("by ") else "") + "early 2027"),
+    (r",? and with fewer than 3,000 parts, turnaround is measured in weeks, not quarters", ", and the vehicle is built for reflight"),
+    (r",? turnaround is measured in weeks,? not quarters", ""),
+]
+
+
+def copy_fix(text):
+    """Return (fixed_text, [rule hits]) for one string."""
+    hits = []
+    for pat, rep in COPY_RULES:
+        text, n = re.subn(pat, rep, text, flags=re.I)
+        if n:
+            hits.append(f"{n}x {pat[:40]}")
+    return text, hits
+
+
 def check(path):
     """Return list of reasons the file is stale (empty = fresh)."""
     fn = os.path.basename(re.sub(r"^\d{13}_", "", os.path.basename(path)))

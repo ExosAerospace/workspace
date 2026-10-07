@@ -49,7 +49,7 @@ FROM = "jquinnexo@pm.me"
 # A finished deliverable is ONLY ever one of these. We NEVER attach code/build scripts (.py/.js/.sh),
 # data (.json/.csv/.log), or notebooks — attaching those is what filled Jon's inbox with useless files.
 DELIVERABLE_EXT = (".docx", ".pdf", ".pptx", ".xlsx")
-FILE_RX = re.compile(r"((?:drafts|captures|tasks|submissions-archive)/[\w./\- ]+?\.(?:docx|pdf|md|txt|pptx|xlsx))", re.I)
+FILE_RX = re.compile(r"((?:drafts|captures|capture|tasks|submissions-archive)/[\w./\- ]+?\.(?:docx|pdf|md|txt|pptx|xlsx))", re.I)
 SEND_RX = re.compile(r"\b(re-?send|send it|send me|send to me|send the draft|email me|for me to send|send drafted|send response|send draft to my inbox)\b", re.I)  # +exo3 field-report option (10/4)
 # Jon 2026-07-31: a decision whose ONLY action is "deliver this draft to your inbox to send" is
 # redundant — delivering to Jon's own inbox is NOT an external send (he still sends it himself), so
@@ -158,7 +158,7 @@ def _resolve_draft_raw(it):
     words = list(dict.fromkeys(w.lower() for w in re.findall(r"[A-Za-z]{3,}", hay) if w.lower() not in stop))
     if words:
         scored=[]
-        for root in ("drafts","captures"):
+        for root in ("drafts","captures","capture"):
             d=os.path.join(WS,root)
             if not os.path.isdir(d): continue
             for fn in os.listdir(d):
@@ -290,9 +290,18 @@ def auto_deliver(it, draft):
     m = EmailMessage(); m["From"] = FROM; m["To"] = to
     title = it.get("title", "(draft)")
     m["Subject"] = f"[Ready to send — from you] {title}"
+    preview = it.get("proposedAction", "")
+    # If resolve_draft upgraded to a newer copy, the stored proposedAction is the OLD text — show the
+    # current draft's text instead so body and attachment can never disagree (Jon 10/7).
+    if draft and draft.lower().endswith(".docx") and os.path.basename(draft) not in json.dumps(it):
+        try:
+            from docx import Document
+            preview = "\n".join(p.text for p in Document(draft).paragraphs)
+        except Exception:
+            preview = f"(Current version attached: {os.path.basename(draft)} — supersedes the earlier text on this Decision.)"
     body = (f"This draft is ready to send from your own email (it was NOT sent externally by the system — "
             f"you review it and hit send yourself).\n\n"
-            f"{it.get('proposedAction','')}\n\n"
+            f"{preview}\n\n"
             f"{('Attached: '+os.path.basename(draft)) if draft and draft.lower().endswith(DELIVERABLE_EXT) else ''}\n"
             f"(auto-delivered to your inbox from your pending Decisions — internal only, never external.)")
     m.set_content(body)

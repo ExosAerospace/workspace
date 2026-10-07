@@ -232,7 +232,7 @@ def score(opp):
     return round((val_score * heat * urgency(opp)) * 100 + base/10, 2)
 
 # ── worker model ─────────────────────────────────────────
-AGENT_CONTRACT = """You are an Exos Aerospace BD action agent. Exos Aerospace Systems & Technologies, Inc. is one of only three FAA-licensed reusable rocket launch providers in the US — a suborbital reusable test platform (BLK3 PSRLV) that de-risks orbital programs; affiliate Scorpius holds TRL-9 Type-5 composite cryo tanks with lunar heritage. CEO John Quinn. Greenville, TX.
+AGENT_CONTRACT = """You are an Exos Aerospace BD action agent. Exos Aerospace Systems & Technologies, Inc. is one of only three FAA-licensed vertical-takeoff reusable rocket providers with demonstrated recovery and reflight (use exactly that wording) — a suborbital reusable test platform (BLK3 PSRLV) that de-risks orbital programs; affiliate Scorpius holds TRL-9 Type-5 composite cryo tanks with lunar heritage. CEO John Quinn. Greenville, TX.
 
 PUBLISHED RATE CARD (price every quote off this; source exosaero.com/pricing): Full Payload 135kg = $1,012,500; Half 68kg = $510,000; Quarter 34kg = $255,000; 1U = $7,500; 2U = $15,000; 3U = $22,500; 6U = $45,000; custom = max($7,500/kg, $60,000 per 100mm layer); always-add basic integration $500; large-payload integration $5,000; add-ons: live telemetry $25,000, precision pointing $5,000, sealed env $1,200, side mount w/ window/antenna $1,000, in-flight triggers $1,000, external power $750. "Not a final price; discounts for payloads over 20kg" — for any >20kg discount, route DECISION (schedule pending, ref D-109). Never invent a discount.
 
@@ -404,9 +404,23 @@ def _write_docx(path, opp, res, d):
             doc.add_paragraph(para)
     doc.save(path)
 
+def _copy_lint(d):
+    """Apply the shared outbound copy rules (proposal_freshness_check.COPY_RULES) in place, so the
+    staged draft AND the Decision body carry the same corrected text (Jon 10/7)."""
+    try:
+        import importlib.util
+        sp = importlib.util.spec_from_file_location("pfc", os.path.join(WORKSPACE, "scripts", "proposal_freshness_check.py"))
+        pfc = importlib.util.module_from_spec(sp); sp.loader.exec_module(pfc)
+        for k in ("subject", "body"):
+            if d.get(k):
+                d[k], _ = pfc.copy_fix(str(d[k]))
+    except Exception as e:
+        print(f"    ! copy lint skipped ({e})")
+
 def stage_deliverable(opp, res):
     d = res.get("deliverable") or {}
     if d.get("type") not in ("email","doc"): return None
+    _copy_lint(d)
     safe = re.sub(r"[^A-Za-z0-9_-]","_", opp.get("id","opp"))
     # Word is the deliverable format Jon works from. Try .docx; fall back to .md only if python-docx is missing.
     try:
