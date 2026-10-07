@@ -24,9 +24,9 @@ wc_bridge     = [  500_000, 0, 0, 0, 0]   # BASE/HIGH; LOW = $0
 # Matches offer summary Section 1 table (reconciled 10/7 15:58).
 # Tank earn-out: % of IM/SSLC tank revenue, cap $300K/yr, 5 yrs FY27-FY31
 # LOW 3% → $150K/yr = $750K | BASE 5% → $250K/yr = $1,250K | HIGH at cap $300K/yr = $1,500K
-tank_earnout = [200_000]*5   # BASE $1,000K
-tank_high    = [250_000]*5   # HIGH $1,250K
-tank_low     = [0]*5          # LOW  $0
+tank_earnout = [250_000]*5   # BASE $1,250K
+tank_high    = [300_000]*5   # HIGH $1,500K
+tank_low     = [150_000]*5   # LOW  $750K
 
 # Goal-based milestones (paid only if hit):
 # M1 SSLC FY2026-27 rev >= $5.1M → $200K, pays FY28 (L/B/H)
@@ -34,9 +34,9 @@ tank_low     = [0]*5          # LOW  $0
 # M3 SSLC annual rev >= $10M → $250K, FY29 (B/H)
 # M4 SSLC annual rev >= $20M → $250K, FY31 (H)
 # M5 BLK3 tank qualification → $200K, FY28 (H)
-milestone_base = [0, 200_000+150_000, 300_000, 0, 0]          # $650K: M1+M5 FY28, M2 FY29
-milestone_high = [0, 200_000+150_000, 300_000+300_000, 0, 400_000]  # $1,350K: all 5
-milestone_low  = [0, 0, 0, 0, 0]                                 # $0
+milestone_base = [0, 200_000+200_000, 250_000, 0, 0]          # $650K
+milestone_high = [0, 200_000+200_000+200_000, 250_000, 0, 250_000]  # $1,100K
+milestone_low  = [0, 200_000, 0, 0, 0]                          # $200K
 
 # Stock earn-out — realized FY29 (listed ~FY28; principals' lockup, modeled ~12 mo)
 stock_base = [0, 0, 1_875_000, 0, 0]   # 0.75% × $250M
@@ -53,7 +53,7 @@ base_annual = [a+b+c+d+e+f+g+h for a,b,c,d,e,f,g,h in
 cumulative  = np.cumsum(base_annual)
 
 total_base  = sum(base_annual)                                                          # $7,885K
-total_low   = CLOSE_FIXED + sum(tank_low) + sum(milestone_low) + sum(stock_low)        # $4,860K (no WC)
+total_low   = CLOSE_BASE  + sum(tank_low) + sum(milestone_low) + sum(stock_low)        # $4,860K (no WC)
 total_high  = CLOSE_BASE  + sum(tank_high) + sum(milestone_high) + sum(stock_high)     # $9,960K ≈$10M
 
 # ── Y5 hold values (Old-Model base case; FY31 EV = $101.6M × 16× = $1.626B)
