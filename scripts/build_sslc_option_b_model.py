@@ -720,7 +720,7 @@ fund_data = [
     (17, "Timing: 90-day exclusivity ends",          "~Jan 6, 2027",           "From ~Oct 8 grant; RTO is 4-5 months; need extension"),
     (19, "RELATED-PARTY DISCLOSURES",                "",                       ""),
     (20, "Jon sits on BOTH boards",                  "Conflict of interest",   "Jon must RECUSE from SSLC vote; send as Exos CEO only"),
-    (21, "Fairness opinion",                         "Required (Eqvista engaged)","Eqvista engaged for 409A + fairness opinion per D1-D4 of record"),
+    (21, "Fairness opinion",                         "Required (Eqvista engaged 8/14/2026)","Eqvista fairness opinion: engaged 8/14/2026; agreement still unsigned (held ~1 month)"),
     (22, "Disinterested director approval",          "Required (SSLC side)",   "Markus Rufer and Bob as disinterested directors approve; Jon abstains"),
     (23, "Legal review",                             "Deferred (Jon 10/7)",    "Negotiation stage; no legal review until Jon calls it"),
     (25, "HE-TANK DISPUTE RISK",                     "",                       ""),
@@ -753,6 +753,170 @@ for (r, lbl, val, notes) in fund_data:
     if val in ("HIGH","MEDIUM"):
         fn.cell(r, 2).font = Font(bold=True, color="FF0000" if val=="HIGH" else "FF8C00")
     fn.row_dimensions[r].height = 28
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SHEET 6: Total Compensation (FY27–FY31; formulas linked to Assumptions)
+# ─────────────────────────────────────────────────────────────────────────────
+tc = wb.create_sheet("Total Compensation")
+tc.column_dimensions["A"].width = 38
+for col in ["B","C","D","E","F","G","H"]:
+    tc.column_dimensions[col].width = 14
+
+tc.merge_cells("A1:H1")
+tc["A1"] = "SSLC Option B — Total Compensation to SSLC Shareholders/Stakeholders (FY27–FY31)"
+tc["A1"].font = Font(bold=True, color=WHITE, size=12)
+tc["A1"].fill = PatternFill("solid", fgColor=DARK_BLUE)
+tc["A1"].alignment = Alignment(horizontal="center", vertical="center")
+tc.row_dimensions[1].height = 22
+
+tc["A2"] = "negotiating terms — management assumptions; SSLC debt unverified"
+tc["A2"].font = Font(italic=True, size=9, color="C00000")
+tc.merge_cells("A2:H2")
+
+for col, txt in [(1,"Component"),(2,"FY27 (Close)"),(3,"FY28"),(4,"FY29"),(5,"FY30"),(6,"FY31"),(7,"5-Yr Total"),(8,"Notes")]:
+    c = tc.cell(row=4, column=col, value=txt)
+    c.font = Font(bold=True, color=WHITE)
+    c.fill = PatternFill("solid", fgColor=DARK_BLUE)
+    c.alignment = Alignment(horizontal="center", wrap_text=True)
+
+# Section: Funding Delivered (at close — FY27)
+tc.merge_cells("A5:H5")
+tc["A5"] = "FUNDING DELIVERED AT CLOSE (FY27)"
+tc["A5"].font = Font(bold=True, size=10, color=WHITE)
+tc["A5"].fill = PatternFill("solid", fgColor="444444")
+
+fund_rows = [
+    (6,  "Cash at close",                    "=Assumptions!B10",  0, 0, 0, 0, "§3 deal price — cash component"),
+    (7,  "SSLC closing costs",               "=Assumptions!B11",  0, 0, 0, 0, "Seller's costs (§3)"),
+    (8,  "Exos stake credit (non-cash)",     "=Assumptions!B12",  0, 0, 0, 0, "18% equity at 2021 basis; reduces cash out-of-pocket"),
+    (9,  "SSLC debts paid at face (TBV)",    "=Assumptions!B14",  0, 0, 0, 0, "Microcosm/Wertz notes + AP — TO VERIFY IN SSLC QB"),
+    (10, "Working-capital bridge",           "=Assumptions!B16",  0, 0, 0, 0, "SSLC bridge to finish paid-for work (mid=$500K)"),
+    (11, "TOTAL FUNDING DELIVERED",
+         "=SUM(B6:B10)", "=SUM(C6:C10)", "=SUM(D6:D10)", "=SUM(E6:E10)", "=SUM(F6:F10)", "All at close in FY27"),
+]
+for r, lbl, fy27, fy28, fy29, fy30, fy31, notes in fund_rows:
+    tc.cell(r, 1).value = lbl
+    tc.cell(r, 8).value = notes
+    tc.cell(r, 8).font = Font(size=9, italic=True, color="444444")
+    tc.cell(r, 8).alignment = Alignment(wrap_text=True)
+    for col, val in [(2,fy27),(3,fy28),(4,fy29),(5,fy30),(6,fy31)]:
+        tc.cell(r, col).value = val
+        tc.cell(r, col).number_format = "$#,##0"
+    if "TOTAL" in lbl:
+        for col in range(1, 8):
+            tc.cell(r, col).font = Font(bold=True, size=10)
+            tc.cell(r, col).fill = PatternFill("solid", fgColor="666666")
+            if col > 1:
+                tc.cell(r, col).font = Font(bold=True, size=10, color=WHITE)
+    else:
+        tc.cell(r, 1).font = Font(size=10)
+        tc.cell(r, 1).fill = PatternFill("solid", fgColor=GREY)
+    # FY total
+    tc.cell(r, 7).value = f"=SUM(B{r}:F{r})"
+    tc.cell(r, 7).number_format = "$#,##0"
+    tc.row_dimensions[r].height = 18
+
+# Section: Forward Potential (earn-outs)
+tc.merge_cells("A13:H13")
+tc["A13"] = "FORWARD POTENTIAL — EARN-OUTS"
+tc["A13"].font = Font(bold=True, size=10, color=WHITE)
+tc["A13"].fill = PatternFill("solid", fgColor="E26A21")  # Exos orange
+
+# Tank earn-out: FY27-FY29 — capped at $300K/yr; =MIN(5%×IM_tanks, cap)
+# Row 14: Base earn-out i
+fwd_rows = [
+    # (row, label, fy27_formula, fy28, fy29, fy30, fy31, notes)
+    (14, "Tank earn-out base (i): 5%/yr, $300K cap",
+         "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)",
+         "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)",
+         "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)",
+         0, 0, "5% of SSLC IM tank revenue × 3 years; $300K/yr cap"),
+    (15, "Tank earn-out low (i): 3%/yr, $300K cap",
+         "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)",
+         "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)",
+         "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)",
+         0, 0, "Low scenario: 3%/yr"),
+    (16, "Tank earn-out high (i): 7%/yr, $300K cap",
+         "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
+         "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
+         "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
+         0, 0, "High scenario: 7%/yr — capped at $300K"),
+    (17, "Stock earn-out base (ii): 0.5% FD @ listing",
+         0, 0, "=Assumptions!B29*Assumptions!B32", 0, 0,
+         "At listing ($250M base) + 12-mo lockup → realized FY29"),
+    (18, "Stock earn-out low (ii): 0.3% @ $200M",
+         0, 0, "=Assumptions!B28*Assumptions!B31", 0, 0,
+         "Low RTO scenario"),
+    (19, "Stock earn-out high (ii): 0.7% @ $300M",
+         0, 0, "=Assumptions!B30*Assumptions!B33", 0, 0,
+         "High RTO scenario"),
+]
+for r, lbl, fy27, fy28, fy29, fy30, fy31, notes in fwd_rows:
+    tc.cell(r, 1).value = lbl
+    tc.cell(r, 1).font = Font(size=10)
+    tc.cell(r, 1).fill = PatternFill("solid", fgColor=GREY)
+    tc.cell(r, 8).value = notes
+    tc.cell(r, 8).font = Font(size=9, italic=True, color="444444")
+    tc.cell(r, 8).alignment = Alignment(wrap_text=True)
+    for col, val in [(2,fy27),(3,fy28),(4,fy29),(5,fy30),(6,fy31)]:
+        tc.cell(r, col).value = val
+        tc.cell(r, col).number_format = "$#,##0"
+    tc.cell(r, 7).value = f"=SUM(B{r}:F{r})"
+    tc.cell(r, 7).number_format = "$#,##0"
+    tc.row_dimensions[r].height = 18
+
+# TOTAL CONSIDERATION summary rows
+tc.merge_cells("A21:H21")
+tc["A21"] = "TOTAL CONSIDERATION (Base price + earn-out + debts; base/low/high)"
+tc["A21"].font = Font(bold=True, size=10, color=WHITE)
+tc["A21"].fill = PatternFill("solid", fgColor=DARK_BLUE)
+
+tot_rows = [
+    (22, "TOTAL (Base): funding + tank base + stock base",
+         "=B11+B14+B17", "=C11+C14+C17", "=D11+D14+D17", "=E11+E14+E17", "=F11+F14+F17"),
+    (23, "TOTAL (Low):  funding + tank low  + stock low",
+         "=B11+B15+B18", "=C11+C15+C18", "=D11+D15+D18", "=E11+E15+E18", "=F11+F15+F18"),
+    (24, "TOTAL (High): funding + tank high + stock high",
+         "=B11+B16+B19", "=C11+C16+C19", "=D11+D16+D19", "=E11+E16+E19", "=F11+F16+F19"),
+    (25, "5-Yr TOTAL BASE",
+         "=B22", "=C22", "=D22", "=E22", "=F22"),
+]
+for r, lbl, fy27, fy28, fy29, fy30, fy31 in tot_rows:
+    tc.cell(r, 1).value = lbl
+    tc.cell(r, 1).font = Font(bold=True, size=10)
+    tc.cell(r, 1).fill = PatternFill("solid", fgColor=YELLOW)
+    for col, val in [(2,fy27),(3,fy28),(4,fy29),(5,fy30),(6,fy31)]:
+        tc.cell(r, col).value = val
+        tc.cell(r, col).number_format = "$#,##0"
+        tc.cell(r, col).font = Font(bold=True, size=10)
+        tc.cell(r, col).fill = PatternFill("solid", fgColor=YELLOW)
+    tc.cell(r, 7).value = f"=SUM(B{r}:F{r})"
+    tc.cell(r, 7).number_format = "$#,##0"
+    tc.cell(r, 7).font = Font(bold=True, size=10)
+    tc.cell(r, 7).fill = PatternFill("solid", fgColor=YELLOW)
+    tc.row_dimensions[r].height = 20
+
+# Split: Funding vs Forward
+tc.merge_cells("A27:H27")
+tc["A27"] = "FUNDING vs FORWARD SPLIT (5-Year)"
+tc["A27"].font = Font(bold=True, size=9, color=WHITE)
+tc["A27"].fill = PatternFill("solid", fgColor=MID_BLUE)
+
+for r, lbl, formula in [
+    (28, "Funding delivered (at close, fixed)",    "=B11"),
+    (29, "Forward potential (earn-outs, base)",    "=B14*3+B17"),
+    (30, "Forward potential (earn-outs, low)",     "=B15*3+B18"),
+    (31, "Forward potential (earn-outs, high)",    "=B16*3+B19"),
+]:
+    tc.cell(r, 1).value = lbl
+    tc.cell(r, 1).font = Font(size=10)
+    tc.cell(r, 2).value = formula
+    tc.cell(r, 2).number_format = "$#,##0"
+    tc.cell(r, 2).font = Font(bold=True, size=10)
+    tc.row_dimensions[r].height = 18
+
+tc["A32"] = "Chart: see drafts/SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png"
+tc["A32"].font = Font(italic=True, size=9, color="444444")
 
 # ── Save ──────────────────────────────────────────────────────────────────────
 wb.save(OUT)

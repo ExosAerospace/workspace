@@ -206,7 +206,7 @@ bullet("Risk: ", "SSLC cash at QB date: $198K. Needs $0.3–0.7M to finish $984K
 bullet("Mitigation: ", "Option C (held): prepaid BLK3 tank PO $300–700K as bridge. OR close quickly before cash depletes.")
 
 head2("Related-Party / Governance")
-bullet("Jon Quinn: ", "on both boards. Jon recuses from SSLC board vote; sends as Exos CEO only. Eqvista engaged for fairness opinion.")
+bullet("Jon Quinn: ", "on both boards. Jon recuses from SSLC board vote; sends as Exos CEO only. Eqvista fairness opinion: engaged 8/14/2026; agreement still unsigned (held ~1 month).")
 bullet("Disinterested directors: ", "Markus Rufer and Bob approve on SSLC side; Jon abstains.")
 
 head2("Timing")
@@ -233,6 +233,46 @@ add_para("Draft message to Wertz/board: see SSLC_Exclusivity_Rescue_Options_and_
          size=8, italic=True, color=RGBColor(0x50,0x50,0x50), space_after=2)
 add_para("Decision card for Jon's approval is on Mission Control under task #3544.",
          size=8, italic=True, color=RGBColor(0x50,0x50,0x50), space_after=6)
+
+# =============================================================================
+# PAGE 3 — Total Compensation Chart
+# =============================================================================
+doc.add_page_break()
+
+head1("TOTAL COMPENSATION — 5-YEAR VIEW (FY27–FY31)", space_before=4)
+note("Stacked bar: funding delivered at close + forward potential (earn-outs). Base scenario shown; "
+     "stock earn-out whiskers show low/high range. "
+     "negotiating terms — management assumptions; SSLC debt unverified.")
+
+# Embed chart image
+CHART_PNG = os.path.join(WS, "drafts", "SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png")
+if os.path.exists(CHART_PNG):
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.space_after = Pt(6)
+    run = p.add_run()
+    run.add_picture(CHART_PNG, width=Inches(6.2))
+else:
+    add_para("[Chart not yet generated — run scripts/build_sslc_total_comp_chart.py first]",
+             italic=True, color=RED, size=9)
+
+head2("5-Year Total Compensation Summary")
+comp_table = [
+    ["Scenario",       "Funding Delivered\n(at close, FY27)", "Forward Potential\n(earn-outs, 3-yr)",  "5-Yr Total",    "Notes"],
+    ["Base",           "$4,360,000",                           "$2,000,000",                             "$6,360,000",    "Tank $750K + Stock $1.25M"],
+    ["Low",            "$4,360,000",                           "$1,050,000",                             "$5,410,000",    "Tank $450K + Stock $600K"],
+    ["High",           "$4,360,000",                           "$3,000,000",                             "$7,360,000",    "Tank $900K (capped) + Stock $2.1M"],
+    ["Model 'Total\nConsideration'\n(base; excl. WC bridge)", "$3,860,000", "$2,000,000",               "$5,860,000",    "Deal Structure sheet; WC bridge excluded from consideration"],
+]
+add_table(comp_table, [1.2, 1.6, 1.6, 1.3, 1.75])
+note("'Funding delivered' includes: cash at close $2.51M + SSLC costs $60K + Exos stake credit (non-cash) $790K + "
+     "SSLC debts paid at face ~$500K (TBV) + WC bridge $500K. "
+     "Model 'Total Consideration' row follows the Deal Structure sheet definition (excl. WC bridge).")
+
+add_para("Chart file: drafts/SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png",
+         size=8, italic=True, color=RGBColor(0x50,0x50,0x50), space_after=2)
+add_para("Total Compensation sheet in the model xlsx has formulas linked to Assumptions.",
+         size=8, italic=True, color=RGBColor(0x50,0x50,0x50), space_after=4)
 
 # --- apply letterhead fixes --------------------------------------------------
 sys.path.insert(0, os.path.join(WS, "scripts"))
