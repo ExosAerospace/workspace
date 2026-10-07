@@ -200,7 +200,12 @@ P("October 7, 2026  ·  Exos Aerospace Systems & Technologies, Inc.",
 H1("1.  What SSLC Holders Receive")
 
 body("The Exos offer delivers liquidity, debt relief, and equity upside — "
-     "without requiring any additional capital call from current SSLC shareholders:")
+     "without requiring any additional capital call from current SSLC shareholders.")
+
+P("The up-front price reflects what the numbers support today. "
+  "The earn-outs are how that value grows: as IM tank deliveries and the Exos listing happen, "
+  "SSLC holders share directly in that upside.",
+  italic=True, size=9.5, color=BLUE, sa=4)
 
 add_offer_table()
 
