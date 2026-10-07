@@ -20,7 +20,7 @@ from exos_capability_gate import is_aligned, filter_new_aligned, escalate
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
 import os  # supabase secret key loader (exo3 audit fix #1)
 KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
-DONE = {"Done", "Completed", "Closed", "Archived"}
+DONE = {"Done", "Completed", "Closed", "Archived", "Cancelled"}  # Cancelled was leaking into OVERDUE (fix 2026-10-07)
 HORIZON_DAYS = 14
 
 def q(path):
@@ -90,7 +90,14 @@ def sam_open_solicitations(today):
 def main():
     today = datetime.date.today()
     horizon = today + datetime.timedelta(days=HORIZON_DAYS)
-    tasks = q("tasks?select=id,title,owner,state,priority,due_date,category,completed_at,updated_at&order=priority.desc&limit=1000")
+    # Page past Supabase's 1000-row cap (board has ~3k rows; limit=1000 silently dropped most of it)
+    tasks, off = [], 0
+    while True:
+        batch = q(f"tasks?select=id,title,owner,state,priority,due_date,category,completed_at,updated_at&order=id&limit=1000&offset={off}")
+        tasks += batch
+        if len(batch) < 1000:
+            break
+        off += 1000
 
     open_tasks = [t for t in tasks if (t.get("state") or "") not in DONE]
 
