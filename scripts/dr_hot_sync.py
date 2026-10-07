@@ -137,6 +137,10 @@ def main():
             if dry:
                 c.insert(1, "-n")
             p = subprocess.run(c, capture_output=True, text=True, timeout=600)
+            if p.returncode == 255 and remote and not dry:   # SSH transport blip (banner timeout / closed): retry once
+                logline("WARN rsync rc=255 (ssh): %s — retrying in 20s" % p.stderr.strip()[:160])
+                time.sleep(20)
+                p = subprocess.run(c, capture_output=True, text=True, timeout=600)
             sent = [ln for ln in p.stdout.splitlines() if ln.startswith("Total bytes sent") or ln.startswith("Total sent:")]
             stats.append(sent[0].split(":", 1)[1].strip() if sent else "?")
             if p.returncode not in (0, 23, 24):
@@ -158,6 +162,16 @@ def main():
         logline("%s files=%d dur=%ss sent=%s rc=%s" % ("DRY" if dry else "OK" if rc_all == 0 else "FAIL",
                                                    len(files), dur, stats, rc_all))
         fleet("ok" if rc_all == 0 else "error", stamp)
+        if rc_all != 0 and not dry:
+            # Exit non-zero (→ agent_eval FAIL page) only when the RPO is actually at risk: last successful
+            # sync older than 3x the 5-min target. A single transient SSH blip stays a logged WARN (10/7).
+            try:
+                last_ok = json.load(open(STATE)).get("epoch", 0)
+            except Exception:
+                last_ok = 0
+            if time.time() - last_ok < 900:
+                logline("WARN transient failure; last good sync %ds ago (< 15 min) — not escalating" % (time.time() - last_ok))
+                return 0
         return 0 if rc_all == 0 else 1
     finally:
         shutil.rmtree(tmpdir, ignore_errors=True)

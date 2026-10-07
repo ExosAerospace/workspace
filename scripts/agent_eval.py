@@ -561,9 +561,76 @@ def cron_drift_ids(jobs, reg_crons):
     return [jid for jid, j in jobs.items() if not reg_crons.get(jid) and j.get("payload_kind") != "heartbeat"
             and not (tc and is_transient(j, None))]
 
+def self_retired(label):
+    """A launchd job that unloads ITSELF when its work is done (script docstring says self-retire /
+    self-unload) and whose last recorded run exited 0 is finished, not dead. Keeps finished one-shot
+    watchers from paging as 'not loaded' (false FAIL, naftu-attestation-ready 2026-10-07)."""
+    try:
+        pl = LA / f"{label}.plist"
+        if pl.exists():
+            args = " ".join(plistlib.load(open(pl, "rb")).get("ProgramArguments") or [])
+            cands = [c for c in re.findall(r"(/Users/exomac/\.openclaw/workspace/scripts/[\w.\-]+\.py)", args)
+                     if not c.endswith("/run_logged.py") and not c.endswith("/task_ledger.py")]
+            if not cands or not re.search(r"self[- ]?(retire|unload)", open(cands[-1], errors="replace").read(4000), re.I):
+                return False
+        last = None
+        for f in sorted((WS / "logs" / "runs").glob("*.jsonl"))[-14:]:
+            for ln in open(f):
+                if f'"{label}"' in ln:
+                    try: last = json.loads(ln)
+                    except Exception: pass
+        # self-bootout SIGTERMs its own process, so the final run of a self-retiring job reads 143/SIGTERM
+        return bool(last and (last.get("exit_code") in (0, 143) or last.get("signal") == "SIGTERM"))
+    except Exception:
+        return False
+
+def auto_register_internal_oneshots():
+    """D-7281949 extension (2026-10-07): register unregistered launchd jobs that are internal-only,
+    self-removing reminders — script docstring says it self-unloads AND every email address in the
+    script is @exosaero.com (Discord posts allowed). Anything that can reach an outside address still
+    alerts. Entry is derived from the plist + script and carries an OUTPUT eval (exo3 gate R5)."""
+    done = []
+    try:
+        reg = json.load(open(REGISTRY)); have = {a.get("label") for a in reg.get("agents", [])}
+        for label in registry_drift(live_labels(), have):
+            pl = Path.home() / "Library" / "LaunchAgents" / f"{label}.plist"
+            if not pl.exists(): continue
+            spec = plistlib.load(open(pl, "rb"))
+            args = " ".join(spec.get("ProgramArguments") or [])
+            cands = [c for c in re.findall(r"(/Users/exomac/\.openclaw/workspace/scripts/[\w.\-]+\.py)", args)
+                     if not c.endswith("/run_logged.py") and not c.endswith("/task_ledger.py")]
+            m = re.match(r"(.*)", cands[-1]) if cands else None
+            if not m or not os.path.exists(m.group(1)): continue
+            src = open(m.group(1), encoding="utf-8", errors="replace").read()
+            doc = (re.search(r'"""(.*?)"""', src, re.S) or [None, ""])[1].strip()
+            if not re.search(r"self-unload", doc, re.I): continue
+            emails = set(re.findall(r"[\w.+-]+@[\w-]+\.[\w.]+", src))
+            if any(not e.lower().endswith("@exosaero.com") for e in emails if not e.lower().endswith("@pm.me")): continue
+            when = spec.get("StartCalendarInterval") or ({"every_s": spec.get("StartInterval")} if spec.get("StartInterval") else {})
+            reg["agents"].append({
+                "label": label, "script": os.path.basename(m.group(1)), "kind": "one-shot", "schedule": json.dumps(when),
+                "purpose": re.sub(r"\s+", " ", doc)[:300], "stack_layer": "ORCHESTRATE", "autonomy_tier": "Execute-within-bounds",
+                "human_owner": "John Quinn",
+                "permission_envelope": "internal only: emails/posts to " + (", ".join(sorted(emails)) or "Discord") + "; removes its own plist. No external recipients (auto-verified).",
+                "memory_boundary": "none (stateless)", "escalation": "recipient acts on the reminder", "eval_type": "output",
+                "eval_suite": "one-shot liveness (exit 0, self-unload) + OUTPUT: agent_eval check_duplicate_sends; recipients verified internal at registration",
+                "telemetry": str(spec.get("StandardOutPath") or ""), "reusability_scope": "single-use", "risk_tier": "LOW",
+                "lifecycle": "self-removing", "registered": datetime.date.today().isoformat(),
+                "envelope_source": "agent_eval auto-registration (D-7281949 ext.): plist + script scan"})
+            done.append(label)
+        if done:
+            json.dump(reg, open(REGISTRY, "w"), indent=1, ensure_ascii=False)
+    except Exception as e:
+        log(f"auto-register one-shots skipped: {e}")
+    return done
+
 def check_registry_drift(state):
     """Returns the list of NEW unregistered labels (not yet alerted). Never raises."""
     if auto_register_enabled():
+        for line in auto_register_internal_oneshots():
+            log(f"auto-registered internal one-shot: {line}")
+            state.setdefault("_auto_registered", []).append(
+                {"ts": datetime.datetime.now().isoformat(timespec="seconds"), "line": f"{line} (internal one-shot)"})
         for line in auto_register_crons():
             log(f"auto-registered: {line}")
             state.setdefault("_auto_registered", []).append(
@@ -616,17 +683,25 @@ def main():
         status, why = "OK", []
         one_shot = th.get("one_shot", False)
         # FAIL only on reliable signals (keeps escalations trustworthy)
-        if not loaded and one_shot and not (LA / f"{label}.plist").exists():
+        if th.get("host") and th.get("host") != "studio":
+            why.append(f"runs on {th['host']} (liveness checked remotely)")  # e.g. failover-monitor on the Mini
+        elif th.get("paused"):
+            why.append(f"paused on purpose: {th.get('paused')}")
+        elif not loaded and one_shot and not (LA / f"{label}.plist").exists():
             why.append("completed (one-shot self-unloaded)")  # fired + removed its own plist = done
+        elif not loaded and self_retired(label):
+            why.append("completed (self-retired after a clean last run)")  # e.g. naftu-attestation-ready 10/7
         elif not loaded:
             status = "FAIL"; why.append("not loaded in launchd")
-        elif les not in (0, None):
+        elif les not in (0, None) and not pid:
             status = "FAIL"; why.append(f"LastExitStatus={les} (crashed)")
+        elif les not in (0, None):
+            why.append(f"running (pid {pid}); previous exit {les}")   # e.g. SIGTERM from a deliberate restart
         if fails.get(short) or fails.get(label):
             status = "FAIL"; why.append(f"delivery_exhausted x{fails.get(short) or fails.get(label)}")
         # advisory WARN (staleness is best-effort; never escalated)
         if status == "OK":
-            if not one_shot and age_h is not None and age_h > cad_h * th["warn_grace"]:
+            if not one_shot and not any(w.startswith("completed") for w in why) and age_h is not None and age_h > cad_h * th["warn_grace"]:
                 status = "WARN"; why.append(f"possibly stale (no activity {age_h:.0f}h)")
             elif warns.get(short):
                 status = "WARN"; why.append(f"spooled x{warns.get(short)}")

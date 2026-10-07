@@ -232,6 +232,99 @@
    }
   },
   {
+   "id": "IMP-012",
+   "agent": "invoice-command-exo3",
+   "govlog": null,
+   "cron": null,
+   "change": "2c83492",
+   "hypothesis": "Invoices carry customer address+phone+email; sends without them are blocked, so no invoice goes out without contact info (#3418)",
+   "metrics": [
+    "reliability",
+    "turnaround"
+   ],
+   "error_signature": null,
+   "at": "2026-10-05T19:51:56.526175+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
+   "id": "IMP-013",
+   "agent": "payload-commission-trigger",
+   "govlog": null,
+   "cron": null,
+   "change": "49cdeb0",
+   "hypothesis": "Flight-2 payload payments (Scentience, Lesiw) now fire a commission-check task on first QB receipt; previously unregistered so commissions would be silently missed",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-05T20:59:34.564360+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
+   "id": "IMP-014",
+   "agent": "qb-invoice",
+   "govlog": null,
+   "cron": null,
+   "change": "67994b2",
+   "hypothesis": "Invoices whose Decision was answered with an instruction (not Approve/Hold/Cancel) used to stall forever; auto re-filing a fresh Approve&send card once the contact block is complete should cut instruction-to-send turnaround to one Jon click with zero manual re-files",
+   "metrics": [
+    "reliability",
+    "turnaround"
+   ],
+   "error_signature": null,
+   "at": "2026-10-05T21:29:39.286806+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
+   "id": "IMP-015",
+   "agent": "payload-sales-engine",
+   "govlog": null,
+   "cron": null,
+   "change": "bdeec5e",
+   "hypothesis": "Drafts told Lizi to send from her mailbox but signed as John, forcing a manual re-sign on every draft; signing as Lizi removes that edit and the risk of sending under the wrong name",
+   "metrics": [
+    "reliability",
+    "turnaround"
+   ],
+   "error_signature": null,
+   "at": "2026-10-05T21:38:57.398499+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
+   "id": "IMP-016",
+   "agent": "decision-send-watcher",
+   "govlog": null,
+   "cron": null,
+   "change": "2f80fb7",
+   "hypothesis": "Stale-draft sends drop to 0: watcher upgrades every resolved draft to newest dated copy; mc-attach refuses older-over-newer (6b29a96). Baseline 10/7: 45 open send-Decisions referenced a stale file.",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-07T13:49:25.542916+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
+   "id": "IMP-017",
+   "agent": "opportunity-engine",
+   "govlog": null,
+   "cron": null,
+   "change": "8c7a67e",
+   "hypothesis": "Delegated send-Decisions refresh in place and drafts pass COPY_RULES at generation, so open send-Decisions referencing a stale or off-rule draft stay at 0 (baseline 10/7: 45 stale, 3 with March 2027 copy)",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-07T14:00:46.592176+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
    "id": "IMP-018",
    "agent": "com.exos.priority-inbox-watcher",
    "govlog": null,
@@ -249,6 +342,48 @@
     "reliability": 1.0,
     "quiet_errors": 0,
     "turnaround_s": 0.5
+   }
+  },
+  {
+   "id": "IMP-019",
+   "agent": "com.exos.dr-hot-sync",
+   "govlog": null,
+   "cron": null,
+   "change": "ssh retry + RPO-aware exit; Mini SystemUIServer runaway killed (10/7)",
+   "hypothesis": "Transient SSH blips no longer page; real RPO breaches (>15 min) still do; Mini CPU freed",
+   "metrics": [
+    "reliability",
+    "turnaround"
+   ],
+   "error_signature": "Connection timed out during banner exchange",
+   "at": "2026-10-07T19:13:52.838326+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 1466,
+    "reliability": 0.999,
+    "quiet_errors": 0,
+    "turnaround_s": 3.5,
+    "sig_errors": 0
+   }
+  },
+  {
+   "id": "IMP-020",
+   "agent": "com.exos.agent-eval",
+   "govlog": null,
+   "cron": null,
+   "change": "self-retired/remote-host/paused/running-after-restart handling + internal one-shot auto-registration (10/7)",
+   "hypothesis": "Removes false FAIL/drift pages (naftu done, failover-monitor on Mini, series-a paused, MC restart, one-shot reminders) without hiding real failures",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-07T19:13:53.133433+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 168,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 0.9
    }
   }
  ]
