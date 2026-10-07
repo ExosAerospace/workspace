@@ -3123,7 +3123,10 @@ const server = http.createServer((req, res) => {
       // -- Supabase-backed entities (live) --
       const sb = async (label, icon, table, cols, selectCols, mapper) => {
         try {
-          const r = await supabaseRequest('GET', `${table}?select=${selectCols}&${ilikeOr(cols)}&limit=25`);
+          // Tasks: title matches first, then newest — an unordered limit=25 dropped live tasks (SSLC #3544, 10/7).
+          const r = table === 'tasks'
+            ? await supabaseRequest('GET', `${table}?select=${selectCols}&${ilikeOr(cols)}&order=id.desc&limit=60`)
+            : await supabaseRequest('GET', `${table}?select=${selectCols}&${ilikeOr(cols)}&limit=25`);
           let rows = Array.isArray(r.data) ? r.data : [];
           if (table === 'tasks') rows = rows.filter(taskVisible);
           if (rows.length) groups.push({ key: table, label, icon, results: rows.map(mapper) });
