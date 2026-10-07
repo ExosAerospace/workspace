@@ -25,6 +25,18 @@ pfc = importlib.util.module_from_spec(sp); sp.loader.exec_module(pfc)
 from docx import Document
 
 
+def task_closed(tid):
+    """True if the Decision's spawned MC task is Done/Cancelled — never re-stage a send for a closed task."""
+    if not tid:
+        return False
+    try:
+        sys.path.insert(0, os.path.join(WS, "scripts")); import capstone_capture as cc
+        r = cc.supa("GET", f"tasks?select=state&id=eq.{int(tid)}")
+        return bool(r) and r[0].get("state") in ("Done", "Cancelled")
+    except Exception:
+        return False
+
+
 def revise(path):
     """Apply copy rules to a docx; return (path_to_use, hits). Writes a new revision only if changed."""
     doc = Document(path); hits = []
@@ -55,6 +67,12 @@ def main(apply):
         if not pfc.check(p):
             continue
         it = byid[did]
+        if task_closed(it.get("spawned_task")):
+            report.append((did, os.path.relpath(p, WS), "(skipped: task closed)", [], False))
+            if apply:
+                it.update(status="answered", answer="Withdrawn — source task closed", answeredAt=now, updated=now,
+                          note=(it.get("note") or "") + f" [withdrawn {TODAY}: task #{it['spawned_task']} closed; no send]")
+            continue
         latest = pfc.latest_copy(p)
         if latest not in cache:
             cache[latest] = revise(latest) if apply else (latest, pfc.copy_fix("\n".join(x.text for x in Document(latest).paragraphs))[1])
