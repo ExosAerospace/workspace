@@ -10,6 +10,8 @@ _Source: faa.gov/data_research/commercial_space_data_
 | Blue Origin | Part 450 VOL | New Shepard | Reusable suborbital |
 | Exos Aerospace | LRLO 18-109 (§431, renewed 2026-03-13) | SARGE/BLK3 | Reusable suborbital |
 
+**Jon 2026-10-07 (authoritative):** Exos holds an issued, current Part 431 license (LRLO 18-109). Conversion to a Part 450 license is in progress to support the BLK3 launch planned for March–April 2027 (external copy says "early 2027"). Never describe Part 450 as already granted.
+
 **2026-10-07 check:** faa.gov/data_research/commercial_space_data/licenses now redirects to the Commercial Space Data landing page (last updated 2026-09-22). The licensee table no longer renders in static HTML or the headless browser; /space/licenses and /space/licenses/operator_licenses_permits list no licensees. Re-verify the roster in an interactive browser or via drs.faa.gov before quoting it externally. Cite Exos as LRLO 18-109.
 
 ## Exos Messaging
