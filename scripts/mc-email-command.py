@@ -933,14 +933,14 @@ def main():
     since = (datetime.now(timezone.utc) - timedelta(days=3)).strftime("%d-%b-%Y")
 
     m = imap_conn()
-    m.select("INBOX", readonly=False)
+    m.select("INBOX", readonly=True)  # read-only: never alter Jon's \Seen flags
     st, data = m.search(None, "SINCE", since)
     nums = data[0].split() if (st == "OK" and data and data[0]) else []
     processed = 0
     for num in nums[::-1]:
         if processed >= MAX_PER_RUN:
             break
-        st, raw = m.fetch(num, "(RFC822)")
+        st, raw = m.fetch(num, "(BODY.PEEK[])")
         if st != "OK" or not raw or not raw[0]:
             continue
         msg = email.message_from_bytes(raw[0][1])

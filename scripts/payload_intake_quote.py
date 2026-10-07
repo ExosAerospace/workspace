@@ -123,13 +123,13 @@ def main():
     if not pw:
         print("ERROR: protonmail_bridge_smtp_password missing"); sys.exit(1)
     seen = set(load(STATE, {}).get("seen", []))
-    m = imaplib.IMAP4(IMAP_HOST, IMAP_PORT); m.login(EMAIL_USER, pw); m.select("INBOX")
+    m = imaplib.IMAP4(IMAP_HOST, IMAP_PORT); m.login(EMAIL_USER, pw); m.select("INBOX", readonly=True)  # read-only: never alter Jon's \Seen flags
     since = (datetime.date.today() - datetime.timedelta(days=2)).strftime("%d-%b-%Y")
     _st, data = m.search(None, "SINCE", since)
     ids = (data[0].split() if data and data[0] else [])
     processed = []
     for num in ids:
-        _s, d = m.fetch(num, "(RFC822)")
+        _s, d = m.fetch(num, "(BODY.PEEK[])")
         if not d or not d[0]:
             continue
         msg = email.message_from_bytes(d[0][1])

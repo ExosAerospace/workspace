@@ -150,13 +150,13 @@ def collect():
     if pw:
         try:
             m = imaplib.IMAP4(IMAP_HOST, IMAP_PORT); m.starttls(); m.login(EMAIL_USER, pw)
-            m.select("INBOX")
+            m.select("INBOX", readonly=True)  # never alter Jon's \Seen flags
             typ, data = m.uid("search", None, "SINCE", "01-Jun-2026", "SUBJECT", '"[TRANSCRIPT]"')
             for u in (data[0].split() if data and data[0] else []):
                 uid = u.decode()
                 if uid in seen:
                     continue
-                typ, d = m.uid("fetch", u, "(RFC822)")
+                typ, d = m.uid("fetch", u, "(BODY.PEEK[])")
                 if not d or not d[0]:
                     continue
                 msg = email.message_from_bytes(d[0][1])

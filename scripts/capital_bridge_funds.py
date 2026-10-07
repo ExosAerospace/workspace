@@ -171,7 +171,7 @@ def main():
         ids = data[0].split() if status == "OK" and data and data[0] else []
         log(f"scanning {len(ids)} inbox messages since {since}")
         for num in ids:
-            st, md = mail.fetch(num, "(RFC822)")
+            st, md = mail.fetch(num, "(BODY.PEEK[])")
             if st != "OK" or not md or not md[0]:
                 continue
             msg = email.message_from_bytes(md[0][1])

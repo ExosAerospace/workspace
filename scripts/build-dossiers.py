@@ -99,7 +99,7 @@ def main():
             conn = imaplib.IMAP4(IMAP_HOST, IMAP_PORT)
             conn.starttls()
             conn.login(EMAIL_USER, pw)
-            conn.select('"All Mail"')
+            conn.select('"All Mail"', readonly=True)
     except Exception:
         conn = None
 

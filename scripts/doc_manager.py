@@ -134,12 +134,12 @@ def process_email():
         print("no proton bridge password"); return
     state_p = os.path.join(LIB, ".email-state.json")
     seen = set(json.load(open(state_p)).get("seen", []) if os.path.exists(state_p) else [])
-    m = imaplib.IMAP4("127.0.0.1", 1143); m.login("jquinnexo@pm.me", pw); m.select("INBOX")
+    m = imaplib.IMAP4("127.0.0.1", 1143); m.login("jquinnexo@pm.me", pw); m.select("INBOX", readonly=True)  # read-only: never alter Jon's \Seen flags
     since = (datetime.date.today() - datetime.timedelta(days=3)).strftime("%d-%b-%Y")
     _s, data = m.search(None, "SINCE", since)
     got = 0
     for num in (data[0].split() if data and data[0] else []):
-        _s, d = m.fetch(num, "(RFC822)")
+        _s, d = m.fetch(num, "(BODY.PEEK[])")
         if not d or not d[0]:
             continue
         msg = email.message_from_bytes(d[0][1])

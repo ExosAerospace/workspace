@@ -218,7 +218,7 @@ def main():
         m = imaplib.IMAP4(IMAP_HOST, IMAP_PORT)
         m.starttls()
         m.login(EMAIL_USER, pw)
-        m.select("INBOX")
+        m.select("INBOX", readonly=True)  # never alter Jon's \Seen flags
     except Exception as e:
         logline(f"ERROR: IMAP connect/login failed: {e}")
         sys.exit(0)
@@ -235,7 +235,7 @@ def main():
 
     for uid in sorted(uids):
         max_uid = max(max_uid, uid)
-        typ, d = m.uid("fetch", str(uid), "(RFC822)")
+        typ, d = m.uid("fetch", str(uid), "(BODY.PEEK[])")
         if not d or not d[0]:
             continue
         msg = email.message_from_bytes(d[0][1])

@@ -67,7 +67,7 @@ def scan(since_days=5):
         typ, d = m.search(None, f'(SINCE {since} FROM "{JON}")')
         if typ != "OK" or not d or not d[0]: continue
         for uid in d[0].split():
-            msg = email.message_from_bytes(m.fetch(uid, "(RFC822)")[1][0][1])
+            msg = email.message_from_bytes(m.fetch(uid, "(BODY.PEEK[])")[1][0][1])
             subj = dec(msg.get("Subject"))
             if not re.match(r"^\s*(fw|fwd)\s*:", subj, re.I):  # only forwards
                 continue
