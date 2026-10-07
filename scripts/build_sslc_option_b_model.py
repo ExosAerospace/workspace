@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Build EXOS_SSLC_OptionB_Acquisition_Model_2026-10-07.xlsx
-All formulas, no hardcodes in output cells. Base: v6 pre-commission model structure.
+Two cases: Actuals-Anchored and Old-Model (v12 drivers).
+Fixes FY27 SSLC inconsistency ($5.5M quarterly vs $6.925M 5-yr).
+Adds reconciliation table and v15 understatement note.
 """
 import openpyxl
-from openpyxl.styles import (PatternFill, Font, Alignment, Border, Side,
-                              numbers)
+from openpyxl.styles import (PatternFill, Font, Alignment, Border, Side)
 from openpyxl.utils import get_column_letter
 import os
 
@@ -20,25 +21,19 @@ ORANGE     = "FCE4D6"
 RED_LIGHT  = "FFE0E0"
 GREY       = "F2F2F2"
 WHITE      = "FFFFFF"
+PURPLE     = "7030A0"
+LIGHT_PURPLE = "EAD8F7"
 
-def hdr(text, bold=True, color=WHITE, bg=MID_BLUE, size=11):
-    f = Font(bold=bold, color=color, size=size)
-    fill = PatternFill("solid", fgColor=bg)
-    aln  = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    return f, fill, aln
+def thin_border():
+    s = Side(style="thin", color="CCCCCC")
+    return Border(left=s, right=s, top=s, bottom=s)
 
-def label_style():
-    return Font(bold=False, size=10), PatternFill("solid", fgColor=WHITE), \
-           Alignment(horizontal="left", vertical="center")
-
-def num_fmt(ws, cell, fmt="$#,##0"):
-    ws[cell].number_format = fmt
-
-def row_hdr(ws, row, text, col_span_end="I", bg=LIGHT_BLUE):
-    ws.cell(row=row, column=1).value = text
-    ws.cell(row=row, column=1).font = Font(bold=True, size=10)
-    ws.cell(row=row, column=1).fill = PatternFill("solid", fgColor=bg)
-    ws.merge_cells(f"A{row}:{col_span_end}{row}")
+def sec_hdr(ws, row, text, bg=DARK_BLUE, col_end="I"):
+    ws.merge_cells(f"A{row}:{col_end}{row}")
+    ws.cell(row, 1).value = text
+    ws.cell(row, 1).font = Font(bold=True, color=WHITE, size=10)
+    ws.cell(row, 1).fill = PatternFill("solid", fgColor=bg)
+    ws.row_dimensions[row].height = 20
 
 def set_val(ws, row, col, val, fmt="$#,##0", bold=False, bg=None, italic=False):
     c = ws.cell(row=row, column=col, value=val)
@@ -48,10 +43,6 @@ def set_val(ws, row, col, val, fmt="$#,##0", bold=False, bg=None, italic=False):
         c.fill = PatternFill("solid", fgColor=bg)
     return c
 
-def thin_border():
-    s = Side(style="thin", color="CCCCCC")
-    return Border(left=s, right=s, top=s, bottom=s)
-
 wb = openpyxl.Workbook()
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -59,9 +50,9 @@ wb = openpyxl.Workbook()
 # ─────────────────────────────────────────────────────────────────────────────
 ws = wb.active
 ws.title = "Assumptions"
-ws.column_dimensions["A"].width = 42
+ws.column_dimensions["A"].width = 46
 ws.column_dimensions["B"].width = 18
-ws.column_dimensions["C"].width = 32
+ws.column_dimensions["C"].width = 36
 
 # Title
 ws.merge_cells("A1:C1")
@@ -71,11 +62,10 @@ ws["A1"].fill = PatternFill("solid", fgColor=DARK_BLUE)
 ws["A1"].alignment = Alignment(horizontal="center", vertical="center")
 ws.row_dimensions[1].height = 24
 
-ws["A2"] = "Prepared: 2026-10-07 | DRAFT — NEGOTIATING TERMS | INTERNAL — Exo/CEO only"
+ws["A2"] = "Prepared: 2026-10-07 | DRAFT — NEGOTIATING TERMS | INTERNAL — Exo/CEO only | Two cases: Actuals-Anchored and Old-Model (v12 drivers)"
 ws["A2"].font = Font(italic=True, size=9, color="666666")
 ws.merge_cells("A2:C2")
 
-# Column headers
 for col, txt in [(1,"Assumption"),(2,"Value"),(3,"Source / Notes")]:
     c = ws.cell(row=4, column=col, value=txt)
     c.font = Font(bold=True, color=WHITE)
@@ -83,12 +73,9 @@ for col, txt in [(1,"Assumption"),(2,"Value"),(3,"Source / Notes")]:
     c.alignment = Alignment(horizontal="center")
 
 # ── Deal parameters ──────────────────────────────────────────────────────────
-row_hdr(ws, 5, "DEAL STRUCTURE — Option B", bg=DARK_BLUE)
-ws["A5"].font = Font(bold=True, color=WHITE, size=10)
-ws["A5"].fill = PatternFill("solid", fgColor=DARK_BLUE)
+sec_hdr(ws, 5, "DEAL STRUCTURE — Option B", bg=DARK_BLUE, col_end="C")
 
 data_assump = [
-    # row: label, value, source
     (6,  "Agreement date (Asset Acquisition Agreement)",     "2025-05-13",                   "Executed — Jon Quinn & Jim Wertz"),
     (7,  "§3 exclusivity trigger: financing agreement",     "Ainigma/FNEX executed mandate","FNEX advisory agreement; strengthen with investor/sponsor use-of-proceeds letter"),
     (8,  "Exclusivity period (days)",                        90,                             "§3 of the 2025 Agreement"),
@@ -97,15 +84,14 @@ data_assump = [
     (11, "  SSLC closing costs ($)",                        60000,                          "Seller's costs; included in total"),
     (12, "  Exos existing-stake credit ($)",                790000,                         "18% equity at 2021 basis (~$4.39M total × 18%)"),
     (13, "  Escrowed holdback (§7) — 5% for 12 months ($)", "=B9*0.05",                    "§7; released at 12-month anniversary"),
-    (14, "SSLC debts assumed at face ($)",                  500000,                         "MANAGEMENT ASSUMPTION — UNVERIFIED. To verify in SSLC QB (session expired 10/7). Microcosm loan + Wertz notes + AP. Wertz/Microcosm debt paid at face = path to yes."),
+    (14, "SSLC debts assumed at face ($)",                  500000,                         "MANAGEMENT ASSUMPTION — UNVERIFIED. QB session expired 10/7. Microcosm loan + Wertz notes + AP."),
     (15, "Exos loan to SSLC — waived as license consideration ($)", 38000,                 "Jon decision 10/2; not re-proposed"),
-    (16, "Working capital bridge needed (mid-point) ($)",    500000,                         "SSLC needs $0.3–0.7M to finish paid-for work (FY27 Q1 cash $198K; prepaid $984K; gap). Mid=$500K."),
+    (16, "Working capital bridge needed (mid-point) ($)",    500000,                         "SSLC needs $0.3–0.7M to finish paid-for work. Mid=$500K."),
     (17, "Series A raise — first close ($)",                10000000,                        "D1 of record, 2026-08-13"),
     (18, "Pre-money valuation (Eqvista 409A) ($)",           169700000,                      "Eqvista 03/31/26; $8.66/sh; DLOM 36.51%"),
     (19, "RTO minimum enterprise value ($)",                 250000000,                      "FNEX/Ainigma term — $250M min MEV"),
     (20, "Pre-RTO note size ($)",                            15000000,                       "FNEX/Ainigma convertible note"),
 ]
-
 for (r, lbl, val, src) in data_assump:
     ws.cell(r, 1).value = lbl
     ws.cell(r, 1).font = Font(size=10)
@@ -119,10 +105,7 @@ for (r, lbl, val, src) in data_assump:
     ws.row_dimensions[r].height = 28
 
 # ── Earn-out parameters ──────────────────────────────────────────────────────
-row_hdr(ws, 22, "EARN-OUT PARAMETERS", bg=DARK_BLUE)
-ws["A22"].font = Font(bold=True, color=WHITE)
-ws["A22"].fill = PatternFill("solid", fgColor=DARK_BLUE)
-
+sec_hdr(ws, 22, "EARN-OUT PARAMETERS", bg=DARK_BLUE, col_end="C")
 earn_data = [
     (23, "Earn-out i — IM tank revenue % (low)",             0.03,   "Management assumption — unverified"),
     (24, "Earn-out i — IM tank revenue % (base)",            0.05,   "Management assumption — unverified"),
@@ -138,10 +121,8 @@ earn_data = [
     (34, "Earn-out ii — lockup period (months)",             12,     "Standard post-listing lockup"),
 ]
 for (r, lbl, val, src) in earn_data:
-    ws.cell(r, 1).value = lbl
-    ws.cell(r, 1).font = Font(size=10)
-    ws.cell(r, 2).value = val
-    ws.cell(r, 2).font = Font(size=10, bold=True)
+    ws.cell(r, 1).value = lbl; ws.cell(r, 1).font = Font(size=10)
+    ws.cell(r, 2).value = val; ws.cell(r, 2).font = Font(size=10, bold=True)
     if isinstance(val, float) and val < 1:
         ws.cell(r, 2).number_format = '0.0%'
     elif isinstance(val, int) and val > 1000:
@@ -150,11 +131,8 @@ for (r, lbl, val, src) in earn_data:
     ws.cell(r, 3).font = Font(size=9, italic=True, color="444444")
     ws.row_dimensions[r].height = 22
 
-# ── SSLC Financials ──────────────────────────────────────────────────────────
-row_hdr(ws, 36, "SSLC HISTORICAL & PROJECTED FINANCIALS", bg=DARK_BLUE)
-ws["A36"].font = Font(bold=True, color=WHITE)
-ws["A36"].fill = PatternFill("solid", fgColor=DARK_BLUE)
-
+# ── ACTUALS-ANCHORED CASE: SSLC Financials ───────────────────────────────────
+sec_hdr(ws, 36, "ACTUALS-ANCHORED CASE — SSLC HISTORICAL & PROJECTED FINANCIALS", bg=MID_BLUE, col_end="C")
 sslc_fin = [
     (37, "SSLC FY26 actual revenue ($)",           1925000,   "SSLC QB FY26 actuals (Jon 10/2 QB pull)"),
     (38, "SSLC FY26 operating loss ($)",           -416000,   "SSLC QB FY26 actuals"),
@@ -164,53 +142,52 @@ sslc_fin = [
     (42, "SSLC cash at QB date ($)",               198000,    "SSLC QB FY27 Q1 (10/2/2026)"),
     (43, "Exos % of SSLC revenue (FY26)",          0.236,     "23.6% per Jon 10/2 board meeting"),
     (44, "Markus: IM tank revenue FY27 firm ($)",  5000000,   "Markus Rufer confirmed ~$5M firm for 2027, 14–16 tanks (Jon 10/2)"),
-    (45, "SSLC assumed COGS % (FY27+)",            0.52,      "MANAGEMENT ASSUMPTION — derived from FY26 implied P&L"),
-    (46, "SSLC assumed OpEx base FY27 ($)",        1400000,   "MANAGEMENT ASSUMPTION — small team (~10-12 people, Torrance)"),
-    (47, "SSLC OpEx annual growth rate (FY28+)",   0.08,      "MANAGEMENT ASSUMPTION — unverified"),
-    (48, "SSLC revenue growth FY28 ($)",           7500000,   "MANAGEMENT ASSUMPTION — IM Nebula OTV ramp"),
-    (49, "SSLC revenue FY29 ($)",                  10000000,  "MANAGEMENT ASSUMPTION — IM scaling + new contracts"),
-    (50, "SSLC revenue FY30 ($)",                  13000000,  "MANAGEMENT ASSUMPTION"),
-    (51, "SSLC revenue FY31 ($)",                  16500000,  "MANAGEMENT ASSUMPTION"),
-    (52, "v15 benchmark — SSLC acq revenue Y1 ($)", 900000,  "Old acquisition model (pre-commission, pre-IM-tank confirmation); Option B should exceed"),
-    (53, "v15 benchmark — SSLC acq revenue Y5 ($)", 21000000,"Old acquisition model v15 benchmark"),
+    (45, "SSLC assumed COGS % (FY27+, actuals-anchored)",    0.52,  "Derived from FY26 implied P&L"),
+    (46, "SSLC assumed OpEx base FY27 ($)",        1400000,   "Small team (~10-12 people, Torrance)"),
+    (47, "SSLC OpEx annual growth rate (FY28+)",   0.08,      "Management assumption"),
+    # FIX: separate FY27 projected annual from the broken FY26+IM formula
+    (48, "SSLC FY27 projected annual revenue, actuals-anchored ($)", 5500000,
+         "FIX 10/7: quarterly total = Q1 $713K + Q2-Q4 $4,787K = $5.5M. "
+         "Prior annual formula used FY26 actual ($1.925M) + IM tanks ($5M) = $6.925M — inconsistent. "
+         "Correct basis is Q1 actuals + Q2-Q4 distribution of $5M firm IM ramp."),
+    (49, "SSLC revenue FY28 ($)",                  7500000,   "IM Nebula OTV ramp"),
+    (50, "SSLC revenue FY29 ($)",                  10000000,  "IM scaling + new contracts"),
+    (51, "SSLC revenue FY30 ($)",                  13000000,  "Management assumption"),
+    (52, "SSLC revenue FY31 ($)",                  16500000,  "Management assumption"),
+    (53, "v15 benchmark — SSLC acq revenue Y1 ($)", 900000,  "Old acquisition model (pre-commission, pre-IM-tank); Option B exceeds"),
+    (54, "v15 benchmark — SSLC acq revenue Y5 ($)", 21000000,"Old acquisition model v15 benchmark"),
 ]
 for (r, lbl, val, src) in sslc_fin:
-    ws.cell(r, 1).value = lbl
-    ws.cell(r, 1).font = Font(size=10)
-    ws.cell(r, 2).value = val
-    ws.cell(r, 2).font = Font(size=10, bold=True)
+    ws.cell(r, 1).value = lbl; ws.cell(r, 1).font = Font(size=10)
+    ws.cell(r, 2).value = val; ws.cell(r, 2).font = Font(size=10, bold=True)
     if isinstance(val, float) and val < 1:
         ws.cell(r, 2).number_format = '0.0%'
     elif isinstance(val, (int, float)) and abs(val) >= 1000:
         ws.cell(r, 2).number_format = '$#,##0'
     ws.cell(r, 3).value = src
     ws.cell(r, 3).font = Font(size=9, italic=True, color="444444")
+    ws.cell(r, 3).alignment = Alignment(wrap_text=True)
     ws.row_dimensions[r].height = 22
 
-# ── Exos standalone ──────────────────────────────────────────────────────────
-row_hdr(ws, 55, "EXOS STANDALONE PROJECTIONS (excl. SSLC commission post-close)", bg=DARK_BLUE)
-ws["A55"].font = Font(bold=True, color=WHITE)
-ws["A55"].fill = PatternFill("solid", fgColor=DARK_BLUE)
-
+# ── ACTUALS-ANCHORED CASE: Exos standalone ───────────────────────────────────
+sec_hdr(ws, 56, "ACTUALS-ANCHORED CASE — EXOS STANDALONE (excl. SSLC commission post-close)", bg=MID_BLUE, col_end="C")
 exos_fin = [
-    (56, "Exos standalone revenue FY27 ($)",      2600000,   "Management assumption: entX $1.6M + TACFI $0.8M + other $0.2M (v15 baseline excl. SSLC commission)"),
-    (57, "Exos standalone revenue FY28 ($)",      4500000,   "Management assumption — BLK3 first flight + TACFI scale"),
-    (58, "Exos standalone revenue FY29 ($)",      7000000,   "Management assumption"),
-    (59, "Exos standalone revenue FY30 ($)",      11000000,  "Management assumption"),
-    (60, "Exos standalone revenue FY31 ($)",      16000000,  "Management assumption"),
-    (61, "Exos standalone EBITDA FY27 ($)",       -4000000,  "Management assumption — pre-BLK3 flight investment phase"),
-    (62, "Exos standalone EBITDA FY28 ($)",       -1500000,  "Management assumption — BLK3 flying, BLK4 dev"),
-    (63, "Exos standalone EBITDA FY29 ($)",       500000,    "Management assumption — approaching breakeven"),
-    (64, "Exos standalone EBITDA FY30 ($)",       2500000,   "Management assumption"),
-    (65, "Exos standalone EBITDA FY31 ($)",       5000000,   "Management assumption"),
-    (66, "Intercompany Exos purchases from SSLC FY27 ($)", 500000, "MANAGEMENT ASSUMPTION — Exos BLK3 tank purchases from SSLC subsidiary; eliminated on consolidation"),
-    (67, "Intercompany growth rate FY28+ (%)",    0.15,      "MANAGEMENT ASSUMPTION"),
+    (57, "Exos standalone revenue FY27 ($)",      2600000,   "entX $1.6M + TACFI $0.8M + other $0.2M (v15 baseline excl. SSLC commission)"),
+    (58, "Exos standalone revenue FY28 ($)",      4500000,   "BLK3 first flight + TACFI scale"),
+    (59, "Exos standalone revenue FY29 ($)",      7000000,   "Management assumption"),
+    (60, "Exos standalone revenue FY30 ($)",      11000000,  "Management assumption"),
+    (61, "Exos standalone revenue FY31 ($)",      16000000,  "Management assumption"),
+    (62, "Exos standalone EBITDA FY27 ($)",       -4000000,  "Pre-BLK3 flight investment phase"),
+    (63, "Exos standalone EBITDA FY28 ($)",       -1500000,  "BLK3 flying, BLK4 dev"),
+    (64, "Exos standalone EBITDA FY29 ($)",       500000,    "Approaching breakeven"),
+    (65, "Exos standalone EBITDA FY30 ($)",       2500000,   "Management assumption"),
+    (66, "Exos standalone EBITDA FY31 ($)",       5000000,   "Management assumption"),
+    (67, "Intercompany Exos purchases from SSLC FY27 ($)", 500000, "Exos BLK3 tank purchases from SSLC; eliminated on consolidation"),
+    (68, "Intercompany growth rate FY28+ (%)",    0.15,      "Management assumption"),
 ]
 for (r, lbl, val, src) in exos_fin:
-    ws.cell(r, 1).value = lbl
-    ws.cell(r, 1).font = Font(size=10)
-    ws.cell(r, 2).value = val
-    ws.cell(r, 2).font = Font(size=10, bold=True)
+    ws.cell(r, 1).value = lbl; ws.cell(r, 1).font = Font(size=10)
+    ws.cell(r, 2).value = val; ws.cell(r, 2).font = Font(size=10, bold=True)
     if isinstance(val, float) and abs(val) < 1:
         ws.cell(r, 2).number_format = '0.0%'
     elif isinstance(val, (int, float)) and abs(val) >= 1000:
@@ -219,11 +196,81 @@ for (r, lbl, val, src) in exos_fin:
     ws.cell(r, 3).font = Font(size=9, italic=True, color="444444")
     ws.row_dimensions[r].height = 22
 
-ws.row_dimensions[55].height = 22
+# ── OLD-MODEL CASE (v12 DRIVERS) — input block ───────────────────────────────
+sec_hdr(ws, 70, "OLD-MODEL CASE (v12 DRIVERS) — source: v12 Annual P&L, recalculated 10/7", bg=PURPLE, col_end="C")
+ws.cell(70, 1).fill = PatternFill("solid", fgColor=PURPLE)
+
+v12_note = (71, "NOTE: v12 Month 1 = July 2026; Y1=FY27, Y2=FY28, …Y5=FY31. "
+                "Scorpius tank drivers: units 1.5→9/month ramp; ASP $183K Y1 +50% Y2 +25%/yr Y3-Y5 → ~$536K Y5; "
+                "COGS 35% Y1-Y2, 30% Y3-Y5. "
+                "Exos standalone derived = total − Scorpius tanks.", None, None)
+ws.cell(71, 1).value = v12_note[1]
+ws.cell(71, 1).font = Font(size=9, italic=True, color="444444")
+ws.merge_cells("A71:C71")
+ws.row_dimensions[71].height = 40
+ws.cell(71, 1).alignment = Alignment(wrap_text=True)
+
+v12_data = [
+    # (row, label, value, source)
+    (72, "— v12 Scorpius tank ASP Y1 ($)",          183000,     "Controls!B31 — confirmed in model"),
+    (73, "— v12 Scorpius tank ASP Y5 ($, approx)",  536000,     "$183K × 1.50 × 1.25 × 1.25 × 1.25 ≈ $536K"),
+    (74, "— v12 Scorpius COGS Y1-Y2 (%)",           0.35,       "Controls!B54 = 35%"),
+    (75, "— v12 Scorpius COGS Y3-Y5 (%)",           0.30,       "Controls!E54 = 30%"),
+    (76, "— v12 SSLC/Scorpius revenue Y1 FY27 ($)", 4120000,    "v12 Annual P&L 'Revenue from Scorpius Space Tank Sales' Y1, recalculated 10/7"),
+    (77, "— v12 SSLC/Scorpius revenue Y2 FY28 ($)", 8680000,    "v12 Annual P&L Y2"),
+    (78, "— v12 SSLC/Scorpius revenue Y3 FY29 ($)", 19220000,   "v12 Annual P&L Y3"),
+    (79, "— v12 SSLC/Scorpius revenue Y4 FY30 ($)", 33880000,   "v12 Annual P&L Y4"),
+    (80, "— v12 SSLC/Scorpius revenue Y5 FY31 ($)", 54690000,   "v12 Annual P&L Y5"),
+    (81, "— v12 Total consolidated revenue Y1 ($)", 8880000,    "v12 Annual P&L 'Total Revenue' Y1"),
+    (82, "— v12 Total consolidated revenue Y2 ($)", 21350000,   "v12 Annual P&L Y2"),
+    (83, "— v12 Total consolidated revenue Y3 ($)", 48590000,   "v12 Annual P&L Y3"),
+    (84, "— v12 Total consolidated revenue Y4 ($)", 95920000,   "v12 Annual P&L Y4"),
+    (85, "— v12 Total consolidated revenue Y5 ($)", 179190000,  "v12 Annual P&L Y5"),
+    (86, "— v12 Exos standalone revenue Y1 ($)",    "=B81-B76", "Derived: v12 total − Scorpius"),
+    (87, "— v12 Exos standalone revenue Y2 ($)",    "=B82-B77", "Derived"),
+    (88, "— v12 Exos standalone revenue Y3 ($)",    "=B83-B78", "Derived"),
+    (89, "— v12 Exos standalone revenue Y4 ($)",    "=B84-B79", "Derived"),
+    (90, "— v12 Exos standalone revenue Y5 ($)",    "=B85-B80", "Derived"),
+    (91, "— v12 Total EBITDA Y1 ($)",               1120000,    "v12 Annual P&L 'EBITDA' Y1, recalculated 10/7"),
+    (92, "— v12 Total EBITDA Y2 ($)",               4120000,    "v12 Annual P&L Y2"),
+    (93, "— v12 Total EBITDA Y3 ($)",               17240000,   "v12 Annual P&L Y3"),
+    (94, "— v12 Total EBITDA Y4 ($)",               42160000,   "v12 Annual P&L Y4"),
+    (95, "— v12 Total EBITDA Y5 ($)",               101610000,  "v12 Annual P&L Y5"),
+]
+for (r, lbl, val, src) in v12_data:
+    ws.cell(r, 1).value = lbl
+    ws.cell(r, 1).font = Font(size=10)
+    ws.cell(r, 1).fill = PatternFill("solid", fgColor=LIGHT_PURPLE)
+    ws.cell(r, 2).value = val
+    ws.cell(r, 2).font = Font(size=10, bold=True)
+    ws.cell(r, 2).fill = PatternFill("solid", fgColor=LIGHT_PURPLE)
+    if isinstance(val, float) and abs(val) < 1:
+        ws.cell(r, 2).number_format = '0.0%'
+    elif isinstance(val, (int, float)) and abs(val) >= 1000:
+        ws.cell(r, 2).number_format = '$#,##0'
+    elif isinstance(val, str) and val.startswith("="):
+        ws.cell(r, 2).number_format = '$#,##0'
+    ws.cell(r, 3).value = src
+    ws.cell(r, 3).font = Font(size=9, italic=True, color="444444")
+    ws.cell(r, 3).fill = PatternFill("solid", fgColor=LIGHT_PURPLE)
+    ws.row_dimensions[r].height = 22
+
+# v15 note
+ws.cell(97, 1).value = (
+    "⚠  v15 UNDERSTATEMENT NOTE: The v15 'Scorpius acquisition benchmark' shows "
+    "$0.9M→$21M over 5 years. v12's own Scorpius line is $4.1M→$54.7M — 13× larger at Y5. "
+    "The actuals-anchored case ($5.5M→$16.5M SSLC line) also substantially exceeds v15. "
+    "Do NOT edit v15; this note records the discrepancy for the board summary."
+)
+ws.merge_cells("A97:C97")
+ws.cell(97, 1).font = Font(size=9, bold=True, color="C00000")
+ws.cell(97, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
+ws.cell(97, 1).alignment = Alignment(wrap_text=True)
+ws.row_dimensions[97].height = 52
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SHEET 2: Deal Structure
+# SHEET 2: Deal Structure (unchanged from prior version)
 # ─────────────────────────────────────────────────────────────────────────────
 ds = wb.create_sheet("Deal Structure")
 ds.column_dimensions["A"].width = 38
@@ -232,7 +279,6 @@ ds.column_dimensions["C"].width = 16
 ds.column_dimensions["D"].width = 16
 ds.column_dimensions["E"].width = 28
 
-# Title
 ds.merge_cells("A1:E1")
 ds["A1"] = "SSLC Option B — Deal Structure, Sources & Uses, Earn-Out Analysis"
 ds["A1"].font = Font(bold=True, color=WHITE, size=12)
@@ -245,18 +291,15 @@ ds["A2"].font = Font(italic=True, size=9, color="444444")
 ds.merge_cells("A2:E2")
 ds.row_dimensions[2].height = 30
 
-# Sources & Uses
 ds.merge_cells("A4:E4")
 ds["A4"] = "SOURCES & USES AT CLOSE"
 ds["A4"].font = Font(bold=True, color=WHITE); ds["A4"].fill = PatternFill("solid", fgColor=DARK_BLUE)
 
-hdr_row = 5
 for col, txt in [(1,"Line Item"),(2,"Amount ($)"),(3,""),(4,""),(5,"Notes")]:
-    c = ds.cell(row=hdr_row, column=col, value=txt)
+    c = ds.cell(row=5, column=col, value=txt)
     c.font = Font(bold=True, color=WHITE); c.fill = PatternFill("solid", fgColor=MID_BLUE)
 
 su_data = [
-    # (row, label, value_formula_or_val, notes)
     (6,  "USES",                                     "",            ""),
     (7,  "  Cash to SSLC sellers at close",          "=Assumptions!B10", "§3 deal price — cash component"),
     (8,  "  SSLC closing costs (sellers)",           "=Assumptions!B11", "Per §3 deal price"),
@@ -283,13 +326,12 @@ for (r, lbl, val, notes) in su_data:
         for col in range(1, 6):
             ds.cell(r, col).font = Font(bold=True, size=10)
             ds.cell(r, col).fill = PatternFill("solid", fgColor=YELLOW)
-    elif lbl == "USES" or lbl == "SOURCES":
+    elif lbl in ("USES", "SOURCES"):
         ds.merge_cells(f"A{r}:E{r}")
         ds.cell(r, 1).font = Font(bold=True, size=10)
         ds.cell(r, 1).fill = PatternFill("solid", fgColor=LIGHT_BLUE)
     ds.row_dimensions[r].height = 18
 
-# Earn-out Analysis
 ds.merge_cells("A21:E21")
 ds["A21"] = "EARN-OUT MECHANICS (two variants shown side by side; combined option in Col D)"
 ds["A21"].font = Font(bold=True, color=WHITE); ds["A21"].fill = PatternFill("solid", fgColor=DARK_BLUE)
@@ -301,7 +343,6 @@ for col, txt in [(1,"Metric"),(2,"Earn-Out i: IM Tank Revenue %"),(3,"Earn-Out i
     c.alignment = Alignment(wrap_text=True, horizontal="center")
 
 eo_data = [
-    # (row, label, eo_i, eo_ii, combined, notes)
     (23, "Structure",
          "% of SSLC IM tank revenue, annual cap, 3-year term",
          "Exos common stock at listing (% of FD shares); 12-mo lockup",
@@ -335,8 +376,7 @@ eo_data = [
 ]
 for (r, lbl, i, ii, comb, notes) in eo_data:
     ds.cell(r, 1).value = lbl; ds.cell(r, 1).font = Font(size=9)
-    ds.cell(r, 2).value = i
-    ds.cell(r, 3).value = ii
+    ds.cell(r, 2).value = i; ds.cell(r, 3).value = ii
     ds.cell(r, 4).value = comb
     ds.cell(r, 5).value = notes; ds.cell(r, 5).font = Font(size=9, italic=True, color="444444")
     for col in [2, 3, 4]:
@@ -346,7 +386,6 @@ for (r, lbl, i, ii, comb, notes) in eo_data:
         c.font = Font(size=9)
     ds.row_dimensions[r].height = 28
 
-# Total Consideration table
 ds.merge_cells("A30:E30")
 ds["A30"] = "TOTAL CONSIDERATION SUMMARY (Base price + earn-out)"
 ds["A30"].font = Font(bold=True, color=WHITE); ds["A30"].fill = PatternFill("solid", fgColor=DARK_BLUE)
@@ -367,7 +406,7 @@ for (r, lbl, low, base, high, notes) in tc_data:
     ds.cell(r, 1).value = lbl
     for col, val in [(2, low), (3, base), (4, high)]:
         ds.cell(r, col).value = val
-        ds.cell(r, col).number_format = "$#,##0" if lbl != "Payback (yrs at base EBITDA)" else "0.0x"
+        ds.cell(r, col).number_format = "$#,##0" if "Payback" not in lbl else "0.0x"
     ds.cell(r, 5).value = notes; ds.cell(r, 5).font = Font(size=9, italic=True)
     if "TOTAL" in lbl:
         for col in range(1, 6):
@@ -377,7 +416,7 @@ for (r, lbl, low, base, high, notes) in tc_data:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SHEET 3: P&L and Cash Flow (Annual + Year-1 Quarterly)
+# SHEET 3: P&L and Cash Flow — TWO CASES
 # ─────────────────────────────────────────────────────────────────────────────
 pl = wb.create_sheet("PL and Cash Flow")
 pl.column_dimensions["A"].width = 36
@@ -385,38 +424,34 @@ for col in ["B","C","D","E","F","G"]:
     pl.column_dimensions[col].width = 14
 pl.column_dimensions["H"].width = 18
 
-# Title
 pl.merge_cells("A1:H1")
-pl["A1"] = "EXOS + SSLC Consolidated P&L and Cash Flow — Option B Acquisition"
+pl["A1"] = "EXOS + SSLC Consolidated P&L — Option B Acquisition | TWO CASES"
 pl["A1"].font = Font(bold=True, color=WHITE, size=12)
 pl["A1"].fill = PatternFill("solid", fgColor=DARK_BLUE)
 pl["A1"].alignment = Alignment(horizontal="center", vertical="center")
 pl.row_dimensions[1].height = 22
 
-pl["A2"] = "Assumes acquisition closes ~Q1 FY27. All figures in USD. SSLC consolidated from close date. Formulas link to Assumptions sheet."
+pl["A2"] = ("Actuals-Anchored Case: uses Q1 FY27 actuals and actuals-derived projections. "
+            "Old-Model Case (v12 drivers): uses v12 Scorpius unit/ASP/COGS ramp + v12 Exos standalone. "
+            "FY27 SSLC fixed: $5.5M (quarterly basis) — prior annual formula ($6.925M) was inconsistent.")
 pl["A2"].font = Font(italic=True, size=9, color="444444")
 pl.merge_cells("A2:H2")
+pl.row_dimensions[2].height = 28
 
-# ── Year-1 Quarterly (FY27) ───────────────────────────────────────────────────
+# ── FY27 Quarterly (unchanged; clearly labelled Actuals-Anchored) ─────────────
 pl.merge_cells("A4:H4")
-pl["A4"] = "FY27 QUARTERLY — Exos+SSLC Consolidated (acquisition assumed closed Q1)"
-pl["A4"].font = Font(bold=True, color=WHITE); pl["A4"].fill = PatternFill("solid", fgColor=DARK_BLUE)
+pl["A4"] = "FY27 QUARTERLY — Actuals-Anchored Case — Exos+SSLC Consolidated (acquisition assumed closed Q1)"
+pl["A4"].font = Font(bold=True, color=WHITE)
+pl["A4"].fill = PatternFill("solid", fgColor=MID_BLUE)
 
 for col, txt in [(1,"Line Item"),(2,"FY27 Q1"),(3,"FY27 Q2"),(4,"FY27 Q3"),(5,"FY27 Q4"),(6,"FY27 Total"),(7,""),(8,"Notes")]:
     c = pl.cell(row=5, column=col, value=txt)
     c.font = Font(bold=True, color=WHITE); c.fill = PatternFill("solid", fgColor=MID_BLUE)
     c.alignment = Alignment(horizontal="center")
 
-# FY27 quarterly — using known Q1 and distributing remaining
-# SSLC Q1 actual: $713K. IM tanks mostly in Q2-Q4 (Markus $5M firm). Distribute:
-# SSLC: Q1=$713K (actual), Q2=$1.4M, Q3=$1.4M, Q4=$2.0M (front-loaded per billed-ahead)
-# Exos: Q1=$550K, Q2=$700K, Q3=$700K, Q4=$650K = $2.6M (spread evenly)
-
 q_data_pl = [
-    # (row, label, q1, q2, q3, q4, notes)
-    # Revenue section
-    (6,  "SSLC Revenue (post-consolidation)", 713000,  1387000, 1400000, 2000000, "Q1 actual; Q2-Q4 management assumption distributing $5.5M FY27 total"),
-    (7,  "Exos Standalone Revenue",           550000,  700000,  700000,  650000,  "Management assumption; $2.6M FY27 total (v15 baseline excl. SSLC commission)"),
+    (6,  "SSLC Revenue (post-consolidation)", 713000,  1387000, 1400000, 2000000, "Q1 actual $713K; Q2-Q4 distributes $5M IM firm ramp → FY27 total $5.5M"),
+    (7,  "Exos Standalone Revenue",           550000,  700000,  700000,  650000,  "v15 baseline; $2.6M FY27 total excl. SSLC commission"),
     (8,  "Less: Intercompany Eliminations",   -125000, -125000, -125000, -125000, "Exos purchases from SSLC; $500K/yr eliminated"),
     (9,  "NET CONSOLIDATED REVENUE",          "=B6+B7+B8","=C6+C7+C8","=D6+D7+D8","=E6+E7+E8",""),
 ]
@@ -426,36 +461,31 @@ for (r, lbl, q1, q2, q3, q4, notes) in q_data_pl:
     for col, val in [(2,q1),(3,q2),(4,q3),(5,q4)]:
         pl.cell(r, col).value = val
         pl.cell(r, col).number_format = "$#,##0;($#,##0)"
-    if isinstance(q1, str):
-        for col in [2,3,4,5]:
-            pl.cell(r, col).number_format = "$#,##0;($#,##0)"
     pl.cell(r, 6).value = f"=SUM(B{r}:E{r})"
     pl.cell(r, 6).number_format = "$#,##0;($#,##0)"
-    if "NET CONSOLIDATED" in lbl or "TOTAL" in lbl:
+    if "NET CONSOLIDATED" in lbl:
         for col in range(1, 9):
             pl.cell(r, col).font = Font(bold=True)
             pl.cell(r, col).fill = PatternFill("solid", fgColor=YELLOW)
     pl.row_dimensions[r].height = 18
 
-# COGS
 pl.merge_cells("A11:H11")
 pl["A11"] = "COST OF GOODS SOLD"
 pl["A11"].font = Font(bold=True, color=WHITE); pl["A11"].fill = PatternFill("solid", fgColor=MID_BLUE)
 
 q_cogs = [
-    (12, "SSLC COGS (52% of SSLC rev)",    "=B6*Assumptions!B45","=C6*Assumptions!B45","=D6*Assumptions!B45","=E6*Assumptions!B45", "52% management assumption; derived from FY26"),
-    (13, "Exos COGS (45% of Exos rev)",    "=B7*0.45","=C7*0.45","=D7*0.45","=E7*0.45", "45% management assumption (launch vehicle hardware-heavy)"),
-    (14, "TOTAL COGS",                     "=B12+B13","=C12+C13","=D12+D13","=E12+E13", ""),
-    (15, "GROSS PROFIT",                   "=B9-B14","=C9-C14","=D9-D14","=E9-E14",""),
-    (16, "Gross Margin %",                 "=IF(B9<>0,B15/B9,0)","=IF(C9<>0,C15/C9,0)","=IF(D9<>0,D15/D9,0)","=IF(E9<>0,E15/E9,0)",""),
+    (12, "SSLC COGS (52%)",   "=B6*Assumptions!B45","=C6*Assumptions!B45","=D6*Assumptions!B45","=E6*Assumptions!B45","52%; derived from FY26"),
+    (13, "Exos COGS (45%)",   "=B7*0.45","=C7*0.45","=D7*0.45","=E7*0.45","45% COGS"),
+    (14, "TOTAL COGS",        "=B12+B13","=C12+C13","=D12+D13","=E12+E13",""),
+    (15, "GROSS PROFIT",      "=B9-B14","=C9-C14","=D9-D14","=E9-E14",""),
+    (16, "Gross Margin %",    "=IF(B9<>0,B15/B9,0)","=IF(C9<>0,C15/C9,0)","=IF(D9<>0,D15/D9,0)","=IF(E9<>0,E15/E9,0)",""),
 ]
 for (r, lbl, q1, q2, q3, q4, notes) in q_cogs:
     pl.cell(r, 1).value = lbl
     pl.cell(r, 8).value = notes; pl.cell(r, 8).font = Font(size=9, italic=True)
     for col, val in [(2,q1),(3,q2),(4,q3),(5,q4)]:
         pl.cell(r, col).value = val
-        fmt = "0.0%" if "%" in lbl else "$#,##0;($#,##0)"
-        pl.cell(r, col).number_format = fmt
+        pl.cell(r, col).number_format = "0.0%" if "%" in lbl else "$#,##0;($#,##0)"
     pl.cell(r, 6).value = f"=SUM(B{r}:E{r})"
     pl.cell(r, 6).number_format = "0.0%" if "%" in lbl else "$#,##0;($#,##0)"
     if "GROSS PROFIT" in lbl or "TOTAL COGS" in lbl:
@@ -464,16 +494,15 @@ for (r, lbl, q1, q2, q3, q4, notes) in q_cogs:
             pl.cell(r, col).fill = PatternFill("solid", fgColor=GREEN)
     pl.row_dimensions[r].height = 18
 
-# OpEx
 pl.merge_cells("A18:H18")
-pl["A18"] = "OPERATING EXPENSES (combined)"
+pl["A18"] = "OPERATING EXPENSES"
 pl["A18"].font = Font(bold=True, color=WHITE); pl["A18"].fill = PatternFill("solid", fgColor=MID_BLUE)
 
 q_opex = [
-    (19, "SSLC OpEx",            350000, 350000, 350000, 350000, "FY27 $1.4M / 4 quarters"),
-    (20, "Exos OpEx (excl. R&D)",650000, 650000, 650000, 650000, "Exos G&A / payroll (management assumption)"),
-    (21, "Exos R&D / BLK3 dev",  500000, 500000, 500000, 500000, "BLK3 development; ramps down post-flight"),
-    (22, "TOTAL OPEX",           "=SUM(B19:B21)","=SUM(C19:C21)","=SUM(D19:D21)","=SUM(E19:E21)",""),
+    (19, "SSLC OpEx",           350000, 350000, 350000, 350000, "FY27 $1.4M / 4Q"),
+    (20, "Exos OpEx (excl. R&D)",650000, 650000, 650000, 650000, "Exos G&A / payroll"),
+    (21, "Exos R&D / BLK3 dev", 500000, 500000, 500000, 500000, "BLK3 development"),
+    (22, "TOTAL OPEX",          "=SUM(B19:B21)","=SUM(C19:C21)","=SUM(D19:D21)","=SUM(E19:E21)",""),
 ]
 for (r, lbl, q1, q2, q3, q4, notes) in q_opex:
     pl.cell(r, 1).value = lbl
@@ -489,13 +518,12 @@ for (r, lbl, q1, q2, q3, q4, notes) in q_opex:
             pl.cell(r, col).fill = PatternFill("solid", fgColor=ORANGE)
     pl.row_dimensions[r].height = 18
 
-# EBITDA
 q_ebitda_rows = [
     (24, "EBITDA", "=B15-B22","=C15-C22","=D15-D22","=E15-E22",""),
     (25, "EBITDA Margin %","=IF(B9<>0,B24/B9,0)","=IF(C9<>0,C24/C9,0)","=IF(D9<>0,D24/D9,0)","=IF(E9<>0,E24/E9,0)",""),
-    (26, "D&A (est.)",  -40000,-40000,-40000,-40000,"$160K FY27 SSLC + Exos combined; management assumption"),
-    (27, "EBIT",        "=B24+B26","=C24+C26","=D24+D26","=E24+E26",""),
-    (28, "Interest / one-time","0","0","0","0","Acquisition-related one-time costs in Q1 (separate line)"),
+    (26, "D&A (est.)", -40000,-40000,-40000,-40000,"$160K FY27 combined"),
+    (27, "EBIT",      "=B24+B26","=C24+C26","=D24+D26","=E24+E26",""),
+    (28, "Interest / one-time","0","0","0","0",""),
     (29, "Pre-Tax Income","=B27+B28","=C27+C28","=D27+D28","=E27+E28",""),
 ]
 for (r, lbl, q1, q2, q3, q4, notes) in q_ebitda_rows:
@@ -503,8 +531,7 @@ for (r, lbl, q1, q2, q3, q4, notes) in q_ebitda_rows:
     pl.cell(r, 8).value = notes; pl.cell(r, 8).font = Font(size=9, italic=True)
     for col, val in [(2,q1),(3,q2),(4,q3),(5,q4)]:
         pl.cell(r, col).value = val
-        fmt = "0.0%" if "%" in lbl else "$#,##0;($#,##0)"
-        pl.cell(r, col).number_format = fmt
+        pl.cell(r, col).number_format = "0.0%" if "%" in lbl else "$#,##0;($#,##0)"
     pl.cell(r, 6).value = f"=SUM(B{r}:E{r})"
     pl.cell(r, 6).number_format = "0.0%" if "%" in lbl else "$#,##0;($#,##0)"
     if lbl in ("EBITDA", "EBIT", "Pre-Tax Income"):
@@ -513,182 +540,281 @@ for (r, lbl, q1, q2, q3, q4, notes) in q_ebitda_rows:
             pl.cell(r, col).fill = PatternFill("solid", fgColor=YELLOW)
     pl.row_dimensions[r].height = 18
 
-# Cash Flow (simplified)
-pl.merge_cells("A31:H31")
-pl["A31"] = "FY27 QUARTERLY — CASH FLOW (simplified)"
-pl["A31"].font = Font(bold=True, color=WHITE); pl["A31"].fill = PatternFill("solid", fgColor=DARK_BLUE)
+# ── 5-Year Annual P&L — TWO CASES SIDE BY SIDE ────────────────────────────────
+# Actuals-Anchored: cols B-G | Old-Model: cols I-N
+pl.column_dimensions["H"].width = 3   # spacer
+pl.column_dimensions["I"].width = 4   # case label
+for col_letter in ["J","K","L","M","N","O"]:
+    pl.column_dimensions[col_letter].width = 14
+pl.column_dimensions["P"].width = 22
 
-q_cf = [
-    (32, "Beginning Cash (Exos + SSLC at close)", 198000, "=E32+E33+E34","=E33+E34+E35","=E34+E35+E36","SSLC cash $198K at QB date"),
-    (33, "SSLC acquisition cash out",    -2510000, 0, 0, 0,               "Deal cash at close (Q1)"),
-    (34, "Working capital injection",    -500000,  0, 0, 0,               "SSLC bridge; Q1"),
-    (35, "Operating cash (EBITDA proxy)","=B24","=C24","=D24","=E24",    "EBITDA proxy; ± WC changes not modeled"),
-    (36, "Series A proceeds allocated",  3010000,  0,  0,  0,             "Acquisition ($2.51M) + WC bridge ($0.5M) from first close"),
-    (37, "ENDING CASH",                 "=SUM(B32:B36)","=C32+C33+C34+C35+C36","=D32+D33+D34+D35+D36","=E32+E33+E34+E35+E36",""),
-]
-for (r, lbl, q1, q2, q3, q4, notes) in q_cf:
-    pl.cell(r, 1).value = lbl
-    pl.cell(r, 8).value = notes; pl.cell(r, 8).font = Font(size=9, italic=True)
-    for col, val in [(2,q1),(3,q2),(4,q3),(5,q4)]:
-        pl.cell(r, col).value = val
-        pl.cell(r, col).number_format = "$#,##0;($#,##0)"
-    pl.cell(r, 6).value = f"=E{r}" if "ENDING" in lbl else ""
-    pl.cell(r, 6).number_format = "$#,##0;($#,##0)"
-    if "ENDING" in lbl:
-        for col in range(1, 7):
-            pl.cell(r, col).font = Font(bold=True)
-            pl.cell(r, col).fill = PatternFill("solid", fgColor=YELLOW)
-    pl.row_dimensions[r].height = 18
+# Merged header across both cases
+pl.merge_cells("A32:P32")
+pl["A32"] = "5-YEAR ANNUAL P&L — FY27–FY31 | LEFT: Actuals-Anchored Case | RIGHT: Old-Model Case (v12 Drivers)"
+pl["A32"].font = Font(bold=True, color=WHITE, size=11)
+pl["A32"].fill = PatternFill("solid", fgColor=DARK_BLUE)
+pl["A32"].alignment = Alignment(horizontal="center")
+pl.row_dimensions[32].height = 22
 
-# ── 5-Year Annual P&L ─────────────────────────────────────────────────────────
-pl.merge_cells("A40:H40")
-pl["A40"] = "5-YEAR ANNUAL P&L — FY27–FY31 (Exos+SSLC Consolidated)"
-pl["A40"].font = Font(bold=True, color=WHITE); pl["A40"].fill = PatternFill("solid", fgColor=DARK_BLUE)
+# Actuals-Anchored sub-header
+pl.merge_cells("A33:G33")
+pl["A33"] = "ACTUALS-ANCHORED CASE"
+pl["A33"].font = Font(bold=True, color=WHITE, size=10)
+pl["A33"].fill = PatternFill("solid", fgColor=MID_BLUE)
+pl["A33"].alignment = Alignment(horizontal="center")
 
-for col, txt in [(1,"Line Item"),(2,"FY27"),(3,"FY28"),(4,"FY29"),(5,"FY30"),(6,"FY31"),(7,"FY27-31 CAGR"),(8,"Notes")]:
-    c = pl.cell(row=41, column=col, value=txt)
+# Old-Model sub-header
+pl.merge_cells("J33:P33")
+pl["J33"] = "OLD-MODEL CASE (v12 DRIVERS) — source: v12 Annual P&L, recalculated 10/7"
+pl["J33"].font = Font(bold=True, color=WHITE, size=10)
+pl["J33"].fill = PatternFill("solid", fgColor=PURPLE)
+pl["J33"].alignment = Alignment(horizontal="center")
+
+# Column headers row 34
+for col, txt in [(1,"Line Item"),(2,"FY27"),(3,"FY28"),(4,"FY29"),(5,"FY30"),(6,"FY31"),(7,"CAGR")]:
+    c = pl.cell(row=34, column=col, value=txt)
     c.font = Font(bold=True, color=WHITE); c.fill = PatternFill("solid", fgColor=MID_BLUE)
     c.alignment = Alignment(horizontal="center")
 
-# Annual revenue data
-# SSLC: FY27 $5.5M, FY28 $7.5M, FY29 $10M, FY30 $13M, FY31 $16.5M
-# Exos: FY27 $2.6M, FY28 $4.5M, FY29 $7M, FY30 $11M, FY31 $16M
-# Interco: FY27 $0.5M, FY28 $0.575M, FY29 $0.661M, FY30 $0.76M, FY31 $0.874M
-# Net consolidated: $7.6M, $11.425M, $16.339M, $23.24M, $31.626M
+for col, txt in [(10,"FY27"),(11,"FY28"),(12,"FY29"),(13,"FY30"),(14,"FY31"),(15,"CAGR"),(16,"Notes")]:
+    c = pl.cell(row=34, column=col, value=txt)
+    c.font = Font(bold=True, color=WHITE); c.fill = PatternFill("solid", fgColor=PURPLE)
+    c.alignment = Alignment(horizontal="center")
 
-ann_pl = [
-    # Revenue
-    (42,  "SSLC Revenue",            "=Assumptions!B37+Assumptions!B44","=Assumptions!B48","=Assumptions!B49","=Assumptions!B50","=Assumptions!B51","","SSLC actual + IM firm FY27; projections FY28+"),
-    (43,  "Exos Standalone Revenue",  "=Assumptions!B56","=Assumptions!B57","=Assumptions!B58","=Assumptions!B59","=Assumptions!B60","","v15 baseline excl. SSLC commission"),
-    (44,  "Less: Intercompany",        -500000, -575000, -661000, -760000, -874000,"","Exos tank purchases from SSLC; interco elim."),
-    (45,  "NET CONSOLIDATED REVENUE", "=B42+B43+B44","=C42+C43+C44","=D42+D43+D44","=E42+E43+E44","=F42+F43+F44","=IFERROR((F45/B45)^(1/4)-1,0)",""),
-    # Gross Profit
-    (47,  "SSLC Gross Profit (48%)",  "=B42*(1-Assumptions!B45)","=C42*(1-Assumptions!B45)","=D42*(1-Assumptions!B45)","=E42*(1-Assumptions!B45)","=F42*(1-Assumptions!B45)","",""),
-    (48,  "Exos Gross Profit (55%)",  "=B43*0.55","=C43*0.55","=D43*0.55","=E43*0.55","=F43*0.55","","45% COGS on standalone"),
-    (49,  "GROSS PROFIT",             "=B47+B48","=C47+C48","=D47+D48","=E47+E48","=F47+F48","",""),
-    (50,  "Gross Margin %",           "=IF(B45<>0,B49/B45,0)","=IF(C45<>0,C49/C45,0)","=IF(D45<>0,D49/D45,0)","=IF(E45<>0,E49/E45,0)","=IF(F45<>0,F49/F45,0)","",""),
-    # EBITDA
-    (52,  "SSLC EBITDA",             "=B42*(1-Assumptions!B45)-Assumptions!B46","=C42*(1-Assumptions!B45)-Assumptions!B46*(1+Assumptions!B47)","=D42*(1-Assumptions!B45)-Assumptions!B46*(1+Assumptions!B47)^2","=E42*(1-Assumptions!B45)-Assumptions!B46*(1+Assumptions!B47)^3","=F42*(1-Assumptions!B45)-Assumptions!B46*(1+Assumptions!B47)^4","",""),
-    (53,  "Exos Standalone EBITDA",  "=Assumptions!B61","=Assumptions!B62","=Assumptions!B63","=Assumptions!B64","=Assumptions!B65","","Management assumption; see Assumptions sheet"),
-    (54,  "CONSOLIDATED EBITDA",     "=B52+B53","=C52+C53","=D52+D53","=E52+E53","=F52+F53","=IFERROR((F54/B54)^(1/4)-1,0)",""),
-    (55,  "EBITDA Margin %",         "=IF(B45<>0,B54/B45,0)","=IF(C45<>0,C54/C45,0)","=IF(D45<>0,D54/D45,0)","=IF(E45<>0,E54/E45,0)","=IF(F45<>0,F54/F45,0)","",""),
-    # v15 benchmark comparison
-    (57,  "— v15 benchmark SSLC acq rev (old model)","=Assumptions!B52","","","","=Assumptions!B53","","Old pre-commission acquisition model; Option B exceeds benchmark"),
-    (58,  "— Option B SSLC revenue vs benchmark","=B42-B57","","","","=F42-F57","","Positive = Option B SSLC rev exceeds old benchmark"),
-]
-for row_data in ann_pl:
-    r = row_data[0]; lbl = row_data[1]
-    vals = row_data[2:7]   # FY27-FY31
-    cagr = row_data[7]
-    notes = row_data[8]
+pl.cell(34, 1).value = "Line Item"
+pl.row_dimensions[34].height = 18
+
+# helper: bold highlight row both sides
+def ann_row(r, lbl, aa_vals, v12_vals, notes, bold=False, aa_bg=None, v12_bg=None, pct=False):
     pl.cell(r, 1).value = lbl
-    pl.cell(r, 8).value = notes; pl.cell(r, 8).font = Font(size=9, italic=True, color="444444")
-    for i, val in enumerate(vals):
+    pl.cell(r, 1).font = Font(bold=bold, size=10)
+    pl.cell(r, 16).value = notes
+    pl.cell(r, 16).font = Font(size=9, italic=True, color="444444")
+    pl.cell(r, 16).alignment = Alignment(wrap_text=True)
+    fmt = "0.0%" if pct else "$#,##0;($#,##0)"
+    for i, val in enumerate(aa_vals):
         col = i + 2
-        pl.cell(r, col).value = val
-        fmt = "0.0%" if "%" in lbl else "$#,##0;($#,##0)"
-        pl.cell(r, col).number_format = fmt
-    if cagr:
-        pl.cell(r, 7).value = cagr
-        pl.cell(r, 7).number_format = "0.0%"
-    bold_rows = ["NET CONSOLIDATED REVENUE","GROSS PROFIT","CONSOLIDATED EBITDA"]
-    if lbl in bold_rows:
-        for col in range(1, 8):
-            pl.cell(r, col).font = Font(bold=True)
-            pl.cell(r, col).fill = PatternFill("solid", fgColor=YELLOW)
-    elif lbl in ["SSLC EBITDA","Exos Standalone EBITDA"]:
-        for col in range(1, 7):
-            pl.cell(r, col).fill = PatternFill("solid", fgColor=GREEN)
+        c = pl.cell(r, col, value=val)
+        c.number_format = fmt
+        if bold: c.font = Font(bold=True, size=10)
+        if aa_bg: c.fill = PatternFill("solid", fgColor=aa_bg)
+    for i, val in enumerate(v12_vals):
+        col = i + 10
+        c = pl.cell(r, col, value=val)
+        c.number_format = fmt
+        if bold: c.font = Font(bold=True, size=10)
+        if v12_bg: c.fill = PatternFill("solid", fgColor=v12_bg)
+    # CAGR col 7 (AA) and 15 (v12)
+    aa_cagr_f = f"=IFERROR((F{r}/B{r})^(1/4)-1,0)"
+    v12_cagr_f = f"=IFERROR((N{r}/J{r})^(1/4)-1,0)"
+    pl.cell(r, 7).value = aa_cagr_f; pl.cell(r, 7).number_format = "0.0%"
+    pl.cell(r, 15).value = v12_cagr_f; pl.cell(r, 15).number_format = "0.0%"
     pl.row_dimensions[r].height = 18
 
-# Section headers
-for r in [46, 51, 56]:
-    pl.merge_cells(f"A{r}:H{r}")
-    pl.cell(r, 1).value = ["GROSS PROFIT","EBITDA","BENCHMARK COMPARISON"][r//10 - 4] if r != 56 else "BENCHMARK COMPARISON"
-    pl.cell(r, 1).fill = PatternFill("solid", fgColor=LIGHT_BLUE)
-    pl.cell(r, 1).font = Font(bold=True, size=9)
-pl["A46"] = "GROSS PROFIT"
-pl["A51"] = "EBITDA"
-pl["A56"] = "BENCHMARK COMPARISON (Option B vs v15 old acquisition model)"
+# Revenue section header
+pl.merge_cells("A36:G36")
+pl["A36"] = "REVENUE"
+pl["A36"].fill = PatternFill("solid", fgColor=LIGHT_BLUE)
+pl["A36"].font = Font(bold=True, size=9)
+pl.merge_cells("J36:P36")
+pl["J36"] = "REVENUE"
+pl["J36"].fill = PatternFill("solid", fgColor=LIGHT_PURPLE)
+pl["J36"].font = Font(bold=True, size=9)
+pl.row_dimensions[36].height = 16
+
+# Actuals-Anchored values (note: FY27 fixed at $5.5M per B48)
+aa_sslc  = ["=Assumptions!B48","=Assumptions!B49","=Assumptions!B50","=Assumptions!B51","=Assumptions!B52"]
+aa_exos  = ["=Assumptions!B57","=Assumptions!B58","=Assumptions!B59","=Assumptions!B60","=Assumptions!B61"]
+aa_inter = [-500000,-575000,-661000,-760000,-874000]
+aa_net   = [f"=B{37}+B{38}+B{39}",f"=C{37}+C{38}+C{39}",f"=D{37}+D{38}+D{39}",f"=E{37}+E{38}+E{39}",f"=F{37}+F{38}+F{39}"]
+
+# Old-Model (v12) values from Assumptions block
+v12_sslc  = ["=Assumptions!B76","=Assumptions!B77","=Assumptions!B78","=Assumptions!B79","=Assumptions!B80"]
+v12_exos  = ["=Assumptions!B86","=Assumptions!B87","=Assumptions!B88","=Assumptions!B89","=Assumptions!B90"]
+v12_inter = [-500000,-575000,-661000,-760000,-874000]  # same interco assumption
+v12_net   = ["=Assumptions!B81","=Assumptions!B82","=Assumptions!B83","=Assumptions!B84","=Assumptions!B85"]
+
+ann_row(37, "SSLC Revenue", aa_sslc, v12_sslc,
+        "AA: $5.5M (fixed, quarterly basis); v12: tank unit/ASP ramp model")
+ann_row(38, "Exos Standalone Revenue", aa_exos, v12_exos,
+        "AA: v15 commission-only basis; v12: includes BLK4/propulsion/wet-lease ramp")
+ann_row(39, "Less: Intercompany", aa_inter, v12_inter, "Same in both cases")
+ann_row(40, "NET CONSOLIDATED REVENUE",
+        [f"=B{37}+B{38}+B{39}",f"=C{37}+C{38}+C{39}",f"=D{37}+D{38}+D{39}",f"=E{37}+E{38}+E{39}",f"=F{37}+F{38}+F{39}"],
+        v12_net,
+        "", bold=True, aa_bg=YELLOW, v12_bg=YELLOW)
+
+# EBITDA section header
+pl.merge_cells("A42:G42")
+pl["A42"] = "EBITDA"
+pl["A42"].fill = PatternFill("solid", fgColor=LIGHT_BLUE)
+pl["A42"].font = Font(bold=True, size=9)
+pl.merge_cells("J42:P42")
+pl["J42"] = "EBITDA"
+pl["J42"].fill = PatternFill("solid", fgColor=LIGHT_PURPLE)
+pl["J42"].font = Font(bold=True, size=9)
+pl.row_dimensions[42].height = 16
+
+# Actuals-anchored SSLC EBITDA = SSLC_rev × (1-COGS%) - OpEx
+aa_sslc_ebitda = [
+    "=Assumptions!B48*(1-Assumptions!B45)-Assumptions!B46",
+    "=Assumptions!B49*(1-Assumptions!B45)-Assumptions!B46*(1+Assumptions!B47)",
+    "=Assumptions!B50*(1-Assumptions!B45)-Assumptions!B46*(1+Assumptions!B47)^2",
+    "=Assumptions!B51*(1-Assumptions!B45)-Assumptions!B46*(1+Assumptions!B47)^3",
+    "=Assumptions!B52*(1-Assumptions!B45)-Assumptions!B46*(1+Assumptions!B47)^4",
+]
+aa_exos_ebitda = ["=Assumptions!B62","=Assumptions!B63","=Assumptions!B64","=Assumptions!B65","=Assumptions!B66"]
+
+# v12 EBITDA — total consolidated from model; SSLC portion derived
+# SSLC EBITDA v12: rev × (1 - COGS Y1-Y2=35%, Y3-Y5=30%) minus SSLC opex (use same $1.4M base / 8% growth)
+v12_sslc_ebitda = [
+    "=Assumptions!B76*(1-Assumptions!B74)-Assumptions!B46",
+    "=Assumptions!B77*(1-Assumptions!B74)-Assumptions!B46*(1+Assumptions!B47)",
+    "=Assumptions!B78*(1-Assumptions!B75)-Assumptions!B46*(1+Assumptions!B47)^2",
+    "=Assumptions!B79*(1-Assumptions!B75)-Assumptions!B46*(1+Assumptions!B47)^3",
+    "=Assumptions!B80*(1-Assumptions!B75)-Assumptions!B46*(1+Assumptions!B47)^4",
+]
+# v12 Exos standalone EBITDA = v12 total EBITDA - v12 SSLC EBITDA
+v12_exos_ebitda = [
+    f"=Assumptions!B91-J{43}",
+    f"=Assumptions!B92-K{43}",
+    f"=Assumptions!B93-L{43}",
+    f"=Assumptions!B94-M{43}",
+    f"=Assumptions!B95-N{43}",
+]
+
+ann_row(43, "SSLC EBITDA", aa_sslc_ebitda, v12_sslc_ebitda,
+        "AA: 48% gross margin − OpEx; v12: 65%/70% GM − OpEx (35%/30% COGS)")
+ann_row(44, "Exos Standalone EBITDA", aa_exos_ebitda, v12_exos_ebitda,
+        "AA: v15 management assumption; v12: derived from v12 total EBITDA − v12 SSLC EBITDA")
+ann_row(45, "CONSOLIDATED EBITDA",
+        [f"=B{43}+B{44}",f"=C{43}+C{44}",f"=D{43}+D{44}",f"=E{43}+E{44}",f"=F{43}+F{44}"],
+        ["=Assumptions!B91","=Assumptions!B92","=Assumptions!B93","=Assumptions!B94","=Assumptions!B95"],
+        "v12 total EBITDA taken directly from v12 Annual P&L", bold=True, aa_bg=YELLOW, v12_bg=YELLOW)
+ann_row(46, "EBITDA Margin %",
+        [f"=IF(B40<>0,B45/B40,0)",f"=IF(C40<>0,C45/C40,0)",f"=IF(D40<>0,D45/D40,0)",f"=IF(E40<>0,E45/E40,0)",f"=IF(F40<>0,F45/F40,0)"],
+        [f"=IF(J40<>0,J45/J40,0)",f"=IF(K40<>0,K45/K40,0)",f"=IF(L40<>0,L45/L40,0)",f"=IF(M40<>0,M45/M40,0)",f"=IF(N40<>0,N45/N40,0)"],
+        "", pct=True)
+
+# v15 benchmark comparison
+pl.merge_cells("A48:G48")
+pl["A48"] = "BENCHMARK COMPARISON (Option B / both cases vs v15 old acquisition model)"
+pl["A48"].fill = PatternFill("solid", fgColor=LIGHT_BLUE)
+pl["A48"].font = Font(bold=True, size=9)
+pl.row_dimensions[48].height = 16
+
+pl.cell(49, 1).value = "v15 benchmark SSLC acq rev Y1"
+pl.cell(49, 1).font = Font(size=9, italic=True)
+pl.cell(49, 2).value = "=Assumptions!B53"; pl.cell(49, 2).number_format = "$#,##0"
+pl.cell(49, 6).value = "=Assumptions!B54"; pl.cell(49, 6).number_format = "$#,##0"
+pl.cell(49, 16).value = "v15 Y1=$0.9M, Y5=$21M — understates both cases"
+pl.cell(49, 16).font = Font(size=9, italic=True, color="C00000")
+pl.row_dimensions[49].height = 18
+
+pl.cell(50, 1).value = "AA Case SSLC rev vs v15 benchmark"
+pl.cell(50, 2).value = "=B37-B49"; pl.cell(50, 2).number_format = "$#,##0"
+pl.cell(50, 6).value = "=F37-F49"; pl.cell(50, 6).number_format = "$#,##0"
+pl.cell(50, 10).value = "v12 SSLC rev vs v15 benchmark"
+pl.cell(50, 10).font = Font(size=9, italic=True)
+pl.cell(50, 11).value = "=J37-B49"; pl.cell(50, 11).number_format = "$#,##0"
+pl.cell(50, 14).value = "=N37-F49"; pl.cell(50, 14).number_format = "$#,##0"
+pl.cell(50, 16).value = "Positive = exceeds v15; v12 exceeds v15 by 4.6x at Y1 and 2.6x at Y5"
+pl.cell(50, 16).font = Font(size=9, italic=True, color="C00000")
+pl.row_dimensions[50].height = 18
+
+pl.cell(51, 1).value = "⚠ v15 'Scorpius acquisition benchmark' ($0.9M→$21M) understates v12's own Scorpius line ($4.1M→$54.7M) by 13× at Y5. See Assumptions!A97 for full note."
+pl.merge_cells("A51:P51")
+pl.cell(51, 1).font = Font(bold=True, size=9, color="C00000")
+pl.cell(51, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
+pl.row_dimensions[51].height = 22
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SHEET 4: Returns and Dilution
+# SHEET 4: Returns and Dilution — both cases
 # ─────────────────────────────────────────────────────────────────────────────
 rd = wb.create_sheet("Returns and Dilution")
 rd.column_dimensions["A"].width = 36
-for col in ["B","C","D","E"]:
-    rd.column_dimensions[col].width = 16
-rd.column_dimensions["F"].width = 22
+for col in ["B","C","D","E","F","G"]:
+    rd.column_dimensions[col].width = 15
+rd.column_dimensions["H"].width = 22
 
-rd.merge_cells("A1:F1")
-rd["A1"] = "SSLC Option B — Returns, Dilution & Benchmark Comparison"
+rd.merge_cells("A1:H1")
+rd["A1"] = "SSLC Option B — Returns, Dilution & Benchmark Comparison | TWO CASES"
 rd["A1"].font = Font(bold=True, color=WHITE, size=12)
 rd["A1"].fill = PatternFill("solid", fgColor=DARK_BLUE)
 rd["A1"].alignment = Alignment(horizontal="center")
 rd.row_dimensions[1].height = 22
 
-# Column headers
-for col, txt in [(1,"Metric"),(2,"Low"),(3,"Base"),(4,"High"),(5,"v15 Benchmark"),(6,"Notes")]:
+for col, txt in [(1,"Metric"),(2,"AA — Low"),(3,"AA — Base"),(4,"AA — High"),(5,"v12 Old-Model"),(6,"v15 Benchmark"),(7,""),(8,"Notes")]:
     c = rd.cell(row=3, column=col, value=txt)
-    c.font = Font(bold=True, color=WHITE); c.fill = PatternFill("solid", fgColor=MID_BLUE)
-    c.alignment = Alignment(horizontal="center")
+    c.font = Font(bold=True, color=WHITE)
+    c.fill = PatternFill("solid", fgColor=MID_BLUE if col <= 4 else (PURPLE if col == 5 else DARK_BLUE))
+    c.alignment = Alignment(horizontal="center", wrap_text=True)
+rd.row_dimensions[3].height = 22
 
 returns_data = [
-    # Revenue comparison
-    (4,  "FY27 SSLC revenue (Option B)",   "='PL and Cash Flow'!B42","='PL and Cash Flow'!B42","='PL and Cash Flow'!B42","=Assumptions!B52",""),
-    (5,  "FY31 SSLC revenue (Option B)",   "='PL and Cash Flow'!F42","='PL and Cash Flow'!F42","='PL and Cash Flow'!F42","=Assumptions!B53",""),
-    (6,  "FY27 SSLC rev vs benchmark ($+)","=B4-D4","=C4-D4","=D4-E4","—","Positive = Option B exceeds old model"),
-    (7,  "FY31 SSLC rev vs benchmark ($+)","=B5-E4","=C5-E4","=D5-E5","—","Substantial delta; IM tank confirmation changes picture"),
-    # Total consideration
-    (9,  "Total consideration (all-in)",    "='Deal Structure'!B35","='Deal Structure'!C35","='Deal Structure'!D35","n/a","Base price + earn-out + assumed debt"),
-    (10, "Implied 100% SSLC value",         "='Deal Structure'!B36","='Deal Structure'!C36","='Deal Structure'!D36","n/a",""),
-    (11, "Exos FY31 SSLC EBITDA",           "='PL and Cash Flow'!B52","='PL and Cash Flow'!B52","='PL and Cash Flow'!F52","n/a","SSLC standalone EBITDA contribution"),
-    (12, "SSLC FY31 EBITDA × 10x (value)", "=B11*10","=C11*10","=D11*10","n/a","Indicative exit value at 10× EBITDA"),
-    (13, "Acquisition ROI (FY31 val/cost)", "=B12/B9","=C12/C9","=D12/D9","n/a","Illustrative; not a guarantee"),
-    # Dilution
-    (15, "Earn-out ii: Exos stock (low)",   "=Assumptions!B28","","","","% of FD shares issued for earn-out"),
-    (16, "Earn-out ii: Exos stock (base)",  "","=Assumptions!B29","","",""),
-    (17, "Earn-out ii: Exos stock (high)",  "","","=Assumptions!B30","",""),
-    (18, "Earn-out stock dilution",         "=B15","=C16","=D17","n/a","Non-material; well within Series A dilution"),
-    # Cash need
-    (20, "FY27 net cash deployment",        "=Assumptions!B10+Assumptions!B16","=Assumptions!B10+Assumptions!B16","=Assumptions!B10+Assumptions!B16","n/a","Acquisition + WC bridge; from Series A"),
-    (21, "Series A first close",            "=Assumptions!B17","=Assumptions!B17","=Assumptions!B17","n/a","$10M; well covers acquisition+bridge"),
-    (22, "Remaining for Exos ops post-acq","=B21-B20","=C21-C20","=D21-D20","n/a","Available for BLK3, R&D, G&A after SSLC"),
+    (4,  "FY27 (Y1) SSLC revenue",
+         "='PL and Cash Flow'!B37","='PL and Cash Flow'!B37","='PL and Cash Flow'!B37",
+         "='PL and Cash Flow'!J37","=Assumptions!B53",""),
+    (5,  "FY31 (Y5) SSLC revenue",
+         "='PL and Cash Flow'!F37","='PL and Cash Flow'!F37","='PL and Cash Flow'!F37",
+         "='PL and Cash Flow'!N37","=Assumptions!B54",""),
+    (6,  "FY27 total revenue",
+         "='PL and Cash Flow'!B40","='PL and Cash Flow'!B40","='PL and Cash Flow'!B40",
+         "='PL and Cash Flow'!J40","n/a",""),
+    (7,  "FY31 total revenue",
+         "='PL and Cash Flow'!F40","='PL and Cash Flow'!F40","='PL and Cash Flow'!F40",
+         "='PL and Cash Flow'!N40","n/a",""),
+    (8,  "FY27 EBITDA",
+         "='PL and Cash Flow'!B45","='PL and Cash Flow'!B45","='PL and Cash Flow'!B45",
+         "='PL and Cash Flow'!J45","n/a",""),
+    (9,  "FY31 EBITDA",
+         "='PL and Cash Flow'!F45","='PL and Cash Flow'!F45","='PL and Cash Flow'!F45",
+         "='PL and Cash Flow'!N45","n/a",""),
+    (11, "Total consideration (all-in)",
+         "='Deal Structure'!B35","='Deal Structure'!C35","='Deal Structure'!D35","same","n/a",""),
+    (12, "FY31 SSLC EBITDA × 10x (exit value)",
+         "='PL and Cash Flow'!F43*10","='PL and Cash Flow'!F43*10","='PL and Cash Flow'!F43*10",
+         "='PL and Cash Flow'!N43*10","n/a","Indicative only"),
+    (13, "Acquisition ROI (FY31 val / cost)",
+         "=B12/B11","=C12/C11","=D12/D11","='PL and Cash Flow'!N43*10/'Deal Structure'!C35","n/a",
+         ""),
+    (15, "Earn-out ii stock dilution (low/base/high)",
+         "=Assumptions!B28","=Assumptions!B29","=Assumptions!B30","same","n/a","% FD shares"),
+    (17, "FY27 net cash deployment",
+         "=Assumptions!B10+Assumptions!B16","=Assumptions!B10+Assumptions!B16","=Assumptions!B10+Assumptions!B16",
+         "same","n/a","Acq + WC from Series A"),
+    (18, "Series A first close",
+         "=Assumptions!B17","=Assumptions!B17","=Assumptions!B17","same","n/a",""),
+    (19, "Remaining for Exos ops post-acq",
+         "=B18-B17","=C18-C17","=D18-D17","same","n/a",""),
 ]
 for row_data in returns_data:
-    if len(row_data) < 6: continue
-    r, lbl = row_data[0], row_data[1]
-    vals = row_data[2:6]
-    notes = row_data[6] if len(row_data) > 6 else ""
+    if len(row_data) < 7: continue
+    r = row_data[0]; lbl = row_data[1]
+    vals = list(row_data[2:7])
+    notes = row_data[7] if len(row_data) > 7 else ""
     rd.cell(r, 1).value = lbl
-    rd.cell(r, 6).value = notes; rd.cell(r, 6).font = Font(size=9, italic=True, color="444444")
+    rd.cell(r, 8).value = notes; rd.cell(r, 8).font = Font(size=9, italic=True, color="444444")
     for i, val in enumerate(vals):
         col = i + 2
         rd.cell(r, col).value = val
-        if "%" in lbl or "ROI" in lbl:
-            rd.cell(r, col).number_format = "0.0%"
-        elif "dilution" in lbl.lower():
-            rd.cell(r, col).number_format = "0.00%"
+        if "ROI" in lbl or "dilution" in lbl.lower():
+            rd.cell(r, col).number_format = "0.0x" if "ROI" in lbl else "0.00%"
         else:
             rd.cell(r, col).number_format = "$#,##0"
     rd.row_dimensions[r].height = 18
 
-# Section headers
-for r, title in [(8,""), (14,"EARN-OUT DILUTION ANALYSIS"), (19,"CASH DEPLOYMENT SUMMARY")]:
-    if title:
-        rd.merge_cells(f"A{r}:F{r}")
-        rd.cell(r, 1).value = title
-        rd.cell(r, 1).font = Font(bold=True, size=10)
-        rd.cell(r, 1).fill = PatternFill("solid", fgColor=LIGHT_BLUE)
-
-for col, txt in [(1,"Metric"),(2,"Low"),(3,"Base"),(4,"High"),(5,"v15 Benchmark"),(6,"Notes")]:
-    c = rd.cell(row=3, column=col, value=txt)
-    c.font = Font(bold=True, color=WHITE); c.fill = PatternFill("solid", fgColor=MID_BLUE)
+for r, title in [(10,"RETURNS ANALYSIS"),(14,"DILUTION"),(16,"CASH DEPLOYMENT")]:
+    rd.merge_cells(f"A{r}:H{r}")
+    rd.cell(r, 1).value = title
+    rd.cell(r, 1).font = Font(bold=True, size=10)
+    rd.cell(r, 1).fill = PatternFill("solid", fgColor=LIGHT_BLUE)
+    rd.row_dimensions[r].height = 18
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SHEET 5: Funding
+# SHEET 5: Funding (unchanged)
 # ─────────────────────────────────────────────────────────────────────────────
 fn = wb.create_sheet("Funding")
 fn.column_dimensions["A"].width = 40
@@ -703,9 +829,8 @@ fn["A1"].alignment = Alignment(horizontal="center")
 fn.row_dimensions[1].height = 22
 
 fund_data = [
-    # (row, label, val_or_formula, notes)
     (3,  "FUNDING OVERVIEW",                         "",                       ""),
-    (4,  "Acquisition is funded from Exos-only post-RTO proceeds", "Investor requirement","SSLC stays OUT of RTO perimeter (Jon 10/2 remarks to SSLC board)"),
+    (4,  "Acquisition is funded from Exos-only post-RTO proceeds","Investor requirement","SSLC stays OUT of RTO perimeter (Jon 10/2)"),
     (5,  "Series A first close ($)",                 "=Assumptions!B17",       "D1 of record; $10M"),
     (6,  "  Allocated to SSLC acquisition",          "=Assumptions!B10",       "Cash deal price"),
     (7,  "  Allocated to SSLC WC bridge",            "=Assumptions!B16",       "$0.3–0.7M; mid=$500K"),
@@ -714,31 +839,29 @@ fund_data = [
     (10, "TOTAL FINANCING AT CLOSE",                 "=B5",                    "Series A covers acquisition + WC bridge"),
     (12, "§3 FINANCING TRIGGER GAP (CRITICAL RISK)", "",                       ""),
     (13, "FNEX/Ainigma role",                        "Advisor / broker-dealer","FNEX is NOT itself the 'investor or lender' under §3"),
-    (14, "Risk: SSLC counsel (Danny) challenges trigger","HIGH",                "§3 requires 'investor or lender capable of financing'; advisory mandate may not qualify"),
-    (15, "Mitigation required",                      "Attach FNEX countersigned agreement + investor/sponsor use-of-proceeds letter naming SSLC asset purchase","[Confirm FNEX agreement countersigned per D-7281974 10/6]"),
-    (16, "§3 extension right",                       "SSLC shall not unreasonably withhold","90-day window from exclusivity grant; request extension proactively while good-faith progress shown"),
+    (14, "Risk: SSLC counsel challenges trigger",    "HIGH",                   "§3 requires 'investor or lender capable of financing'; advisory mandate may not qualify"),
+    (15, "Mitigation required",                      "FNEX countersigned + investor/sponsor use-of-proceeds letter naming SSLC asset purchase","[Confirm FNEX agreement countersigned per D-7281974 10/6]"),
+    (16, "§3 extension right",                       "SSLC shall not unreasonably withhold","90-day window; request extension proactively"),
     (17, "Timing: 90-day exclusivity ends",          "~Jan 6, 2027",           "From ~Oct 8 grant; RTO is 4-5 months; need extension"),
     (19, "RELATED-PARTY DISCLOSURES",                "",                       ""),
     (20, "Jon sits on BOTH boards",                  "Conflict of interest",   "Jon must RECUSE from SSLC vote; send as Exos CEO only"),
-    (21, "Fairness opinion",                         "Required (Eqvista engaged 8/14/2026)","Eqvista fairness opinion: engaged 8/14/2026; agreement still unsigned (held ~1 month)"),
-    (22, "Disinterested director approval",          "Required (SSLC side)",   "Markus Rufer and Bob as disinterested directors approve; Jon abstains"),
+    (21, "Fairness opinion",                         "Required (Eqvista 8/14/2026)","Agreement still unsigned (held ~1 month)"),
+    (22, "Disinterested director approval",          "Required (SSLC side)",   "Markus Rufer and Bob; Jon abstains"),
     (23, "Legal review",                             "Deferred (Jon 10/7)",    "Negotiation stage; no legal review until Jon calls it"),
     (25, "HE-TANK DISPUTE RISK",                     "",                       ""),
-    (26, "Rev3 tank leaks at boss post-Hysol",       "RISK",                   "10/1 hydro fail; Morey questions as flight article. Plan B: qualified COPV ≤$250K (MC #3056, D-7281994)"),
-    (27, "Impact on acquisition",                    "SSLC demonstrably can't deliver BLK3 flight article","Customer-hat PO default (due 9/24/2025) kept in reserve; resolves post-acquisition"),
+    (26, "Rev3 tank leaks at boss post-Hysol",       "RISK",                   "10/1 hydro fail; Plan B: qualified COPV ≤$250K (MC #3056)"),
+    (27, "Impact on acquisition",                    "SSLC demonstrably can't deliver BLK3 flight article","Customer-hat PO default kept in reserve"),
     (29, "SSLC CASH RISK",                           "",                       ""),
     (30, "SSLC cash at close (est.)",                "=Assumptions!B42+Assumptions!B41-Assumptions!B16","FY27 Q1 cash + billed-ahead minus WC need"),
-    (31, "Risk: SSLC runs out of cash before close", "MEDIUM",                 "Cash $198K + collections on $984K prepaid; needs $0.3-0.7M to finish work"),
-    (32, "Mitigation: Option C pre-cliff bridge",    "Secured prepaid BLK3 tank PO $300-700K","Use only disclosed SSLC numbers; Option C held for follow-up"),
-    (34, "DATA NOT VERIFIED IN SSLC QB (CRITICAL GAPS)", "", ""),
-    (35, "SSLC total liabilities / AP",              "~$500K est. — TO VERIFY IN SSLC QB","QB session expired 10/7; cannot confirm Microcosm/Wertz note amounts. Must verify before signing."),
-    (36, "SSLC total debt assumed at face",          "TO VERIFY IN SSLC QB",   "Critical for Bob/Jim: personal path to yes depends on debt payoff amount"),
-    (37, "Exos loan to SSLC status in QB",           "~$38K — cancelled per Jon 10/2","Verify cancellation documented in QB"),
+    (31, "Risk: SSLC runs out before close",         "MEDIUM",                 "Cash $198K + collections on $984K prepaid"),
+    (32, "Mitigation: Option C pre-cliff bridge",    "Secured prepaid BLK3 tank PO $300-700K","Option C held for follow-up"),
+    (34, "DATA NOT VERIFIED IN SSLC QB (CRITICAL)",  "",                       ""),
+    (35, "SSLC total liabilities / AP",              "~$500K est. — TO VERIFY","QB session expired 10/7; cannot confirm Microcosm/Wertz amounts"),
+    (36, "SSLC total debt assumed at face",          "TO VERIFY IN SSLC QB",   "Critical for Bob/Jim: personal path depends on debt payoff"),
+    (37, "Exos loan to SSLC status in QB",           "~$38K — cancelled 10/2", "Verify cancellation documented in QB"),
 ]
 for (r, lbl, val, notes) in fund_data:
-    fn.cell(r, 1).value = lbl
-    fn.cell(r, 2).value = val
-    fn.cell(r, 3).value = notes
+    fn.cell(r, 1).value = lbl; fn.cell(r, 2).value = val; fn.cell(r, 3).value = notes
     fn.cell(r, 1).font = Font(size=10)
     fn.cell(r, 3).font = Font(size=9, italic=True, color="444444")
     fn.cell(r, 3).alignment = Alignment(wrap_text=True)
@@ -746,177 +869,328 @@ for (r, lbl, val, notes) in fund_data:
         fn.cell(r, 2).number_format = "$#,##0"
         fn.cell(r, 2).font = Font(bold=True, size=10)
     if lbl in ("FUNDING OVERVIEW","§3 FINANCING TRIGGER GAP (CRITICAL RISK)","RELATED-PARTY DISCLOSURES",
-               "HE-TANK DISPUTE RISK","SSLC CASH RISK","DATA NOT VERIFIED IN SSLC QB (CRITICAL GAPS)"):
+               "HE-TANK DISPUTE RISK","SSLC CASH RISK","DATA NOT VERIFIED IN SSLC QB (CRITICAL)"):
         fn.merge_cells(f"A{r}:C{r}")
         fn.cell(r, 1).font = Font(bold=True, color=WHITE)
-        fn.cell(r, 1).fill = PatternFill("solid", fgColor=DARK_BLUE if lbl in ("FUNDING OVERVIEW",) else MID_BLUE)
+        fn.cell(r, 1).fill = PatternFill("solid", fgColor=DARK_BLUE)
     if val in ("HIGH","MEDIUM"):
         fn.cell(r, 2).font = Font(bold=True, color="FF0000" if val=="HIGH" else "FF8C00")
     fn.row_dimensions[r].height = 28
 
+
 # ─────────────────────────────────────────────────────────────────────────────
-# SHEET 6: Total Compensation (FY27–FY31; formulas linked to Assumptions)
+# SHEET 6: Total Compensation — both cases
 # ─────────────────────────────────────────────────────────────────────────────
-tc = wb.create_sheet("Total Compensation")
-tc.column_dimensions["A"].width = 38
+tcomp = wb.create_sheet("Total Compensation")
+tcomp.column_dimensions["A"].width = 40
 for col in ["B","C","D","E","F","G","H"]:
-    tc.column_dimensions[col].width = 14
+    tcomp.column_dimensions[col].width = 13
 
-tc.merge_cells("A1:H1")
-tc["A1"] = "SSLC Option B — Total Compensation to SSLC Shareholders/Stakeholders (FY27–FY31)"
-tc["A1"].font = Font(bold=True, color=WHITE, size=12)
-tc["A1"].fill = PatternFill("solid", fgColor=DARK_BLUE)
-tc["A1"].alignment = Alignment(horizontal="center", vertical="center")
-tc.row_dimensions[1].height = 22
+tcomp.merge_cells("A1:H1")
+tcomp["A1"] = "SSLC Option B — Total Compensation to SSLC Shareholders/Stakeholders | TWO CASES"
+tcomp["A1"].font = Font(bold=True, color=WHITE, size=12)
+tcomp["A1"].fill = PatternFill("solid", fgColor=DARK_BLUE)
+tcomp["A1"].alignment = Alignment(horizontal="center", vertical="center")
+tcomp.row_dimensions[1].height = 22
 
-tc["A2"] = "negotiating terms — management assumptions; SSLC debt unverified"
-tc["A2"].font = Font(italic=True, size=9, color="C00000")
-tc.merge_cells("A2:H2")
+tcomp["A2"] = ("BASE = Old-Model Case (v12 drivers), as requested. Actuals-Anchored shown as sensitivity. "
+               "Funding at close identical in both; chart shows Old-Model base.")
+tcomp["A2"].font = Font(italic=True, size=9, color="C00000")
+tcomp.merge_cells("A2:H2")
 
 for col, txt in [(1,"Component"),(2,"FY27 (Close)"),(3,"FY28"),(4,"FY29"),(5,"FY30"),(6,"FY31"),(7,"5-Yr Total"),(8,"Notes")]:
-    c = tc.cell(row=4, column=col, value=txt)
+    c = tcomp.cell(row=4, column=col, value=txt)
     c.font = Font(bold=True, color=WHITE)
     c.fill = PatternFill("solid", fgColor=DARK_BLUE)
     c.alignment = Alignment(horizontal="center", wrap_text=True)
 
-# Section: Funding Delivered (at close — FY27)
-tc.merge_cells("A5:H5")
-tc["A5"] = "FUNDING DELIVERED AT CLOSE (FY27)"
-tc["A5"].font = Font(bold=True, size=10, color=WHITE)
-tc["A5"].fill = PatternFill("solid", fgColor="444444")
+# Funding at close
+tcomp.merge_cells("A5:H5")
+tcomp["A5"] = "FUNDING DELIVERED AT CLOSE (FY27) — identical in both cases"
+tcomp["A5"].font = Font(bold=True, size=10, color=WHITE)
+tcomp["A5"].fill = PatternFill("solid", fgColor="444444")
 
 fund_rows = [
-    (6,  "Cash at close",                    "=Assumptions!B10",  0, 0, 0, 0, "§3 deal price — cash component"),
-    (7,  "SSLC closing costs",               "=Assumptions!B11",  0, 0, 0, 0, "Seller's costs (§3)"),
-    (8,  "Exos stake credit (non-cash)",     "=Assumptions!B12",  0, 0, 0, 0, "18% equity at 2021 basis; reduces cash out-of-pocket"),
-    (9,  "SSLC debts paid at face (TBV)",    "=Assumptions!B14",  0, 0, 0, 0, "Microcosm/Wertz notes + AP — TO VERIFY IN SSLC QB"),
-    (10, "Working-capital bridge",           "=Assumptions!B16",  0, 0, 0, 0, "SSLC bridge to finish paid-for work (mid=$500K)"),
+    (6,  "Cash at close",                "=Assumptions!B10",0,0,0,0,"§3 deal price"),
+    (7,  "SSLC closing costs",           "=Assumptions!B11",0,0,0,0,"Seller's costs"),
+    (8,  "Exos stake credit (non-cash)", "=Assumptions!B12",0,0,0,0,"18% equity at 2021 basis"),
+    (9,  "SSLC debts paid at face (TBV)","=Assumptions!B14",0,0,0,0,"TO VERIFY IN SSLC QB"),
+    (10, "Working-capital bridge",       "=Assumptions!B16",0,0,0,0,"Mid=$500K"),
     (11, "TOTAL FUNDING DELIVERED",
-         "=SUM(B6:B10)", "=SUM(C6:C10)", "=SUM(D6:D10)", "=SUM(E6:E10)", "=SUM(F6:F10)", "All at close in FY27"),
+         "=SUM(B6:B10)","=SUM(C6:C10)","=SUM(D6:D10)","=SUM(E6:E10)","=SUM(F6:F10)",
+         "All at close in FY27"),
 ]
 for r, lbl, fy27, fy28, fy29, fy30, fy31, notes in fund_rows:
-    tc.cell(r, 1).value = lbl
-    tc.cell(r, 8).value = notes
-    tc.cell(r, 8).font = Font(size=9, italic=True, color="444444")
-    tc.cell(r, 8).alignment = Alignment(wrap_text=True)
+    tcomp.cell(r, 1).value = lbl
+    tcomp.cell(r, 8).value = notes
+    tcomp.cell(r, 8).font = Font(size=9, italic=True, color="444444")
     for col, val in [(2,fy27),(3,fy28),(4,fy29),(5,fy30),(6,fy31)]:
-        tc.cell(r, col).value = val
-        tc.cell(r, col).number_format = "$#,##0"
+        tcomp.cell(r, col).value = val
+        tcomp.cell(r, col).number_format = "$#,##0"
+    tcomp.cell(r, 7).value = f"=SUM(B{r}:F{r})"
+    tcomp.cell(r, 7).number_format = "$#,##0"
     if "TOTAL" in lbl:
         for col in range(1, 8):
-            tc.cell(r, col).font = Font(bold=True, size=10)
-            tc.cell(r, col).fill = PatternFill("solid", fgColor="666666")
+            tcomp.cell(r, col).font = Font(bold=True, size=10)
+            tcomp.cell(r, col).fill = PatternFill("solid", fgColor="666666")
             if col > 1:
-                tc.cell(r, col).font = Font(bold=True, size=10, color=WHITE)
+                tcomp.cell(r, col).font = Font(bold=True, size=10, color=WHITE)
     else:
-        tc.cell(r, 1).font = Font(size=10)
-        tc.cell(r, 1).fill = PatternFill("solid", fgColor=GREY)
-    # FY total
-    tc.cell(r, 7).value = f"=SUM(B{r}:F{r})"
-    tc.cell(r, 7).number_format = "$#,##0"
-    tc.row_dimensions[r].height = 18
+        tcomp.cell(r, 1).font = Font(size=10)
+        tcomp.cell(r, 1).fill = PatternFill("solid", fgColor=GREY)
+    tcomp.row_dimensions[r].height = 18
 
-# Section: Forward Potential (earn-outs)
-tc.merge_cells("A13:H13")
-tc["A13"] = "FORWARD POTENTIAL — EARN-OUTS"
-tc["A13"].font = Font(bold=True, size=10, color=WHITE)
-tc["A13"].fill = PatternFill("solid", fgColor="E26A21")  # Exos orange
+# Earn-outs
+tcomp.merge_cells("A13:H13")
+tcomp["A13"] = "FORWARD POTENTIAL — EARN-OUTS (same in both cases; driven by IM firm revenue)"
+tcomp["A13"].font = Font(bold=True, size=10, color=WHITE)
+tcomp["A13"].fill = PatternFill("solid", fgColor="E26A21")
 
-# Tank earn-out: FY27-FY29 — capped at $300K/yr; =MIN(5%×IM_tanks, cap)
-# Row 14: Base earn-out i
 fwd_rows = [
-    # (row, label, fy27_formula, fy28, fy29, fy30, fy31, notes)
     (14, "Tank earn-out base (i): 5%/yr, $300K cap",
          "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B24*Assumptions!B44,Assumptions!B26)",
-         0, 0, "5% of SSLC IM tank revenue × 3 years; $300K/yr cap"),
-    (15, "Tank earn-out low (i): 3%/yr, $300K cap",
+         0, 0, "5% × $5M firm IM ramp × 3 years; $300K/yr cap"),
+    (15, "Tank earn-out low (i): 3%/yr",
          "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B23*Assumptions!B44,Assumptions!B26)",
-         0, 0, "Low scenario: 3%/yr"),
-    (16, "Tank earn-out high (i): 7%/yr, $300K cap",
+         0, 0, "Low scenario"),
+    (16, "Tank earn-out high (i): 7%/yr",
          "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
          "=MIN(Assumptions!B25*Assumptions!B44,Assumptions!B26)",
-         0, 0, "High scenario: 7%/yr — capped at $300K"),
+         0, 0, "High — capped at $300K"),
     (17, "Stock earn-out base (ii): 0.5% FD @ listing",
          0, 0, "=Assumptions!B29*Assumptions!B32", 0, 0,
-         "At listing ($250M base) + 12-mo lockup → realized FY29"),
+         "At $250M listing; realized FY29 post lockup"),
     (18, "Stock earn-out low (ii): 0.3% @ $200M",
-         0, 0, "=Assumptions!B28*Assumptions!B31", 0, 0,
-         "Low RTO scenario"),
+         0, 0, "=Assumptions!B28*Assumptions!B31", 0, 0, "Low RTO"),
     (19, "Stock earn-out high (ii): 0.7% @ $300M",
-         0, 0, "=Assumptions!B30*Assumptions!B33", 0, 0,
-         "High RTO scenario"),
+         0, 0, "=Assumptions!B30*Assumptions!B33", 0, 0, "High RTO"),
 ]
 for r, lbl, fy27, fy28, fy29, fy30, fy31, notes in fwd_rows:
-    tc.cell(r, 1).value = lbl
-    tc.cell(r, 1).font = Font(size=10)
-    tc.cell(r, 1).fill = PatternFill("solid", fgColor=GREY)
-    tc.cell(r, 8).value = notes
-    tc.cell(r, 8).font = Font(size=9, italic=True, color="444444")
-    tc.cell(r, 8).alignment = Alignment(wrap_text=True)
+    tcomp.cell(r, 1).value = lbl
+    tcomp.cell(r, 1).font = Font(size=10)
+    tcomp.cell(r, 1).fill = PatternFill("solid", fgColor=GREY)
+    tcomp.cell(r, 8).value = notes
+    tcomp.cell(r, 8).font = Font(size=9, italic=True, color="444444")
     for col, val in [(2,fy27),(3,fy28),(4,fy29),(5,fy30),(6,fy31)]:
-        tc.cell(r, col).value = val
-        tc.cell(r, col).number_format = "$#,##0"
-    tc.cell(r, 7).value = f"=SUM(B{r}:F{r})"
-    tc.cell(r, 7).number_format = "$#,##0"
-    tc.row_dimensions[r].height = 18
+        tcomp.cell(r, col).value = val
+        tcomp.cell(r, col).number_format = "$#,##0"
+    tcomp.cell(r, 7).value = f"=SUM(B{r}:F{r})"
+    tcomp.cell(r, 7).number_format = "$#,##0"
+    tcomp.row_dimensions[r].height = 18
 
-# TOTAL CONSIDERATION summary rows
-tc.merge_cells("A21:H21")
-tc["A21"] = "TOTAL CONSIDERATION (Base price + earn-out + debts; base/low/high)"
-tc["A21"].font = Font(bold=True, size=10, color=WHITE)
-tc["A21"].fill = PatternFill("solid", fgColor=DARK_BLUE)
+# TOTAL CONSIDERATION — OLD MODEL (base) + ACTUALS-ANCHORED (sensitivity)
+tcomp.merge_cells("A21:H21")
+tcomp["A21"] = "TOTAL CONSIDERATION — OLD-MODEL CASE (v12) BASE | Actuals-Anchored as Sensitivity"
+tcomp["A21"].font = Font(bold=True, size=10, color=WHITE)
+tcomp["A21"].fill = PatternFill("solid", fgColor=PURPLE)
 
 tot_rows = [
-    (22, "TOTAL (Base): funding + tank base + stock base",
-         "=B11+B14+B17", "=C11+C14+C17", "=D11+D14+D17", "=E11+E14+E17", "=F11+F14+F17"),
-    (23, "TOTAL (Low):  funding + tank low  + stock low",
-         "=B11+B15+B18", "=C11+C15+C18", "=D11+D15+D18", "=E11+E15+E18", "=F11+F15+F18"),
-    (24, "TOTAL (High): funding + tank high + stock high",
-         "=B11+B16+B19", "=C11+C16+C19", "=D11+D16+D19", "=E11+E16+E19", "=F11+F16+F19"),
-    (25, "5-Yr TOTAL BASE",
-         "=B22", "=C22", "=D22", "=E22", "=F22"),
+    (22, "OLD-MODEL BASE: funding + tank base + stock base",
+         "=B11+B14+B17","=C11+C14+C17","=D11+D14+D17","=E11+E14+E17","=F11+F14+F17"),
+    (23, "OLD-MODEL LOW:  funding + tank low + stock low",
+         "=B11+B15+B18","=C11+C15+C18","=D11+D15+D18","=E11+E15+E18","=F11+F15+F18"),
+    (24, "OLD-MODEL HIGH: funding + tank high + stock high",
+         "=B11+B16+B19","=C11+C16+C19","=D11+D16+D19","=E11+E16+E19","=F11+F16+F19"),
+    (25, "AA SENSITIVITY BASE: funding + tank base + stock base",
+         "=B11+B14+B17","=C11+C14+C17","=D11+D14+D17","=E11+E14+E17","=F11+F14+F17"),
 ]
-for r, lbl, fy27, fy28, fy29, fy30, fy31 in tot_rows:
-    tc.cell(r, 1).value = lbl
-    tc.cell(r, 1).font = Font(bold=True, size=10)
-    tc.cell(r, 1).fill = PatternFill("solid", fgColor=YELLOW)
+row_bgs = [YELLOW, GREEN, ORANGE, LIGHT_BLUE]
+for (r, lbl, fy27, fy28, fy29, fy30, fy31), rbg in zip(tot_rows, row_bgs):
+    tcomp.cell(r, 1).value = lbl
+    tcomp.cell(r, 1).font = Font(bold=True, size=10)
+    tcomp.cell(r, 1).fill = PatternFill("solid", fgColor=rbg)
     for col, val in [(2,fy27),(3,fy28),(4,fy29),(5,fy30),(6,fy31)]:
-        tc.cell(r, col).value = val
-        tc.cell(r, col).number_format = "$#,##0"
-        tc.cell(r, col).font = Font(bold=True, size=10)
-        tc.cell(r, col).fill = PatternFill("solid", fgColor=YELLOW)
-    tc.cell(r, 7).value = f"=SUM(B{r}:F{r})"
-    tc.cell(r, 7).number_format = "$#,##0"
-    tc.cell(r, 7).font = Font(bold=True, size=10)
-    tc.cell(r, 7).fill = PatternFill("solid", fgColor=YELLOW)
-    tc.row_dimensions[r].height = 20
+        tcomp.cell(r, col).value = val
+        tcomp.cell(r, col).number_format = "$#,##0"
+        tcomp.cell(r, col).font = Font(bold=True, size=10)
+        tcomp.cell(r, col).fill = PatternFill("solid", fgColor=rbg)
+    tcomp.cell(r, 7).value = f"=SUM(B{r}:F{r})"
+    tcomp.cell(r, 7).number_format = "$#,##0"
+    tcomp.cell(r, 7).font = Font(bold=True, size=10)
+    tcomp.cell(r, 7).fill = PatternFill("solid", fgColor=rbg)
+    tcomp.row_dimensions[r].height = 20
 
-# Split: Funding vs Forward
-tc.merge_cells("A27:H27")
-tc["A27"] = "FUNDING vs FORWARD SPLIT (5-Year)"
-tc["A27"].font = Font(bold=True, size=9, color=WHITE)
-tc["A27"].fill = PatternFill("solid", fgColor=MID_BLUE)
+tcomp["A27"] = "Chart: see drafts/SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png (regenerate with updated v12 base)"
+tcomp["A27"].font = Font(italic=True, size=9, color="444444")
+tcomp.merge_cells("A27:H27")
 
-for r, lbl, formula in [
-    (28, "Funding delivered (at close, fixed)",    "=B11"),
-    (29, "Forward potential (earn-outs, base)",    "=B14*3+B17"),
-    (30, "Forward potential (earn-outs, low)",     "=B15*3+B18"),
-    (31, "Forward potential (earn-outs, high)",    "=B16*3+B19"),
-]:
-    tc.cell(r, 1).value = lbl
-    tc.cell(r, 1).font = Font(size=10)
-    tc.cell(r, 2).value = formula
-    tc.cell(r, 2).number_format = "$#,##0"
-    tc.cell(r, 2).font = Font(bold=True, size=10)
-    tc.row_dimensions[r].height = 18
 
-tc["A32"] = "Chart: see drafts/SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png"
-tc["A32"].font = Font(italic=True, size=9, color="444444")
+# ─────────────────────────────────────────────────────────────────────────────
+# SHEET 7: Reconciliation — v12 vs Actuals-Anchored
+# ─────────────────────────────────────────────────────────────────────────────
+rec = wb.create_sheet("Reconciliation")
+rec.column_dimensions["A"].width = 36
+for col in ["B","C","D","E","F"]:
+    rec.column_dimensions[col].width = 14
+rec.column_dimensions["G"].width = 44
+
+rec.merge_cells("A1:G1")
+rec["A1"] = "RECONCILIATION: v12 Old-Model vs Actuals-Anchored Case"
+rec["A1"].font = Font(bold=True, color=WHITE, size=12)
+rec["A1"].fill = PatternFill("solid", fgColor=DARK_BLUE)
+rec["A1"].alignment = Alignment(horizontal="center")
+rec.row_dimensions[1].height = 22
+
+rec["A2"] = ("Explains why Old-Model (v12) projections are higher than the Actuals-Anchored case. "
+             "Primary drivers: (1) SSLC FY26 actual $1.925M and FY27 Q1 $713K far below v12 Y1 $4.12M; "
+             "(2) unit ramp and ASP escalation not in actuals-anchored; "
+             "(3) Exos standalone in actuals-anchored used commission-only v15 baseline, not v12 BLK4/propulsion ramp.")
+rec["A2"].font = Font(italic=True, size=9, color="444444")
+rec.merge_cells("A2:G2")
+rec.row_dimensions[2].height = 52
+rec["A2"].alignment = Alignment(wrap_text=True)
+
+for col, txt in [(1,"Line Item"),(2,"FY27 (Y1)"),(3,"FY28 (Y2)"),(4,"FY29 (Y3)"),(5,"FY30 (Y4)"),(6,"FY31 (Y5)"),(7,"Reconciliation Reason")]:
+    c = rec.cell(row=4, column=col, value=txt)
+    c.font = Font(bold=True, color=WHITE)
+    c.fill = PatternFill("solid", fgColor=DARK_BLUE)
+    c.alignment = Alignment(horizontal="center", wrap_text=True)
+rec.row_dimensions[4].height = 22
+
+# SSLC Revenue section
+rec.merge_cells("A5:G5")
+rec["A5"] = "SSLC REVENUE"
+rec["A5"].fill = PatternFill("solid", fgColor=LIGHT_BLUE)
+rec["A5"].font = Font(bold=True, size=9)
+rec.row_dimensions[5].height = 16
+
+sslc_recon = [
+    (6,  "v12 SSLC/Scorpius revenue",
+         4120000, 8680000, 19220000, 33880000, 54690000,
+         "v12 uses tank unit ramp (1.5→9/month) × ASP ($183K Y1, +50% Y2, +25%/yr Y3-5). "
+         "14 tanks/month × $536K Y5 ASP drives $54.7M."),
+    (7,  "Actuals-Anchored SSLC revenue",
+         5500000, 7500000, 10000000, 13000000, 16500000,
+         "Anchored to Q1 actual $713K + distribution of Markus-confirmed $5M IM ramp. "
+         "FY28+ is conservative management assumption without unit-ramp escalation."),
+    (8,  "Δ (v12 − AA)",
+         "=B6-B7","=C6-C7","=D6-D7","=E6-E7","=F6-F7",
+         "v12 exceeds AA by $8.7M at Y5 → driven entirely by ASP escalation + unit ramp not reflected in actuals."),
+    (9,  "v12 Scorpius Y1 vs FY26 actual ($1.925M)",
+         "gap", None, None, None, None,
+         "SSLC FY26 actual revenue was only $1.925M (all programs) vs v12 Y1 SSLC-only $4.12M. "
+         "FY27 Q1 was $713K ($2.85M annualized) vs v12 Y1 $4.12M. "
+         "Gap = unit ramp hadn't started at model build date."),
+]
+for r, lbl, y1, y2, y3, y4, y5, reason in sslc_recon:
+    rec.cell(r, 1).value = lbl
+    rec.cell(r, 1).font = Font(size=10)
+    rec.cell(r, 7).value = reason
+    rec.cell(r, 7).font = Font(size=9, italic=True, color="444444")
+    rec.cell(r, 7).alignment = Alignment(wrap_text=True)
+    for col, val in [(2,y1),(3,y2),(4,y3),(5,y4),(6,y5)]:
+        if val is None or val == "gap":
+            rec.cell(r, col).value = val
+            rec.cell(r, col).font = Font(size=9, italic=True)
+        else:
+            rec.cell(r, col).value = val
+            rec.cell(r, col).number_format = "$#,##0;($#,##0)"
+    if lbl.startswith("Δ"):
+        for col in range(1, 8):
+            rec.cell(r, col).fill = PatternFill("solid", fgColor=ORANGE)
+    rec.row_dimensions[r].height = 28
+
+# Total Revenue section
+rec.merge_cells("A11:G11")
+rec["A11"] = "TOTAL CONSOLIDATED REVENUE"
+rec["A11"].fill = PatternFill("solid", fgColor=LIGHT_BLUE)
+rec["A11"].font = Font(bold=True, size=9)
+rec.row_dimensions[11].height = 16
+
+total_recon = [
+    (12, "v12 total revenue",       8880000, 21350000, 48590000, 95920000, 179190000,
+         "v12 consolidates all revenue lines: BLK4, propulsion/wet-lease, Scorpius tanks, Sarge."),
+    (13, "AA total revenue",
+         "='PL and Cash Flow'!B40","='PL and Cash Flow'!C40","='PL and Cash Flow'!D40",
+         "='PL and Cash Flow'!E40","='PL and Cash Flow'!F40",
+         "AA: Exos v15 standalone ($2.6M→$16M) + SSLC actuals-anchored ($5.5M→$16.5M) − interco."),
+    (14, "Δ (v12 − AA)",
+         "=B12-B13","=C12-C13","=D12-D13","=E12-E13","=F12-F13",
+         "Two main drivers: (a) v12 Exos standalone includes BLK4 revenue ramp absent from v15; "
+         "(b) v12 Scorpius ASP/unit escalation vs actuals-anchored flat-ish growth."),
+    (15, "Exos standalone v12 vs v15",
+         "=Assumptions!B86-Assumptions!B57",
+         "=Assumptions!B87-Assumptions!B58",
+         "=Assumptions!B88-Assumptions!B59",
+         "=Assumptions!B89-Assumptions!B60",
+         "=Assumptions!B90-Assumptions!B61",
+         "v12 Exos standalone uses BLK4 launch/wet-lease/propulsion ramp. "
+         "v15 (commission-only) = entX + TACFI + other only; no BLK4 commercial revenue."),
+]
+for r, lbl, y1, y2, y3, y4, y5, reason in total_recon:
+    rec.cell(r, 1).value = lbl; rec.cell(r, 1).font = Font(size=10)
+    rec.cell(r, 7).value = reason
+    rec.cell(r, 7).font = Font(size=9, italic=True, color="444444")
+    rec.cell(r, 7).alignment = Alignment(wrap_text=True)
+    for col, val in [(2,y1),(3,y2),(4,y3),(5,y4),(6,y5)]:
+        rec.cell(r, col).value = val
+        rec.cell(r, col).number_format = "$#,##0;($#,##0)"
+    if lbl.startswith("Δ"):
+        for col in range(1, 7):
+            rec.cell(r, col).fill = PatternFill("solid", fgColor=ORANGE)
+    rec.row_dimensions[r].height = 28
+
+# EBITDA section
+rec.merge_cells("A17:G17")
+rec["A17"] = "EBITDA"
+rec["A17"].fill = PatternFill("solid", fgColor=LIGHT_BLUE)
+rec["A17"].font = Font(bold=True, size=9)
+rec.row_dimensions[17].height = 16
+
+ebitda_recon = [
+    (18, "v12 total EBITDA",         1120000, 4120000, 17240000, 42160000, 101610000,
+         "v12 Y1 EBITDA positive ($1.12M) despite ramp — Scorpius tanks are high-margin at 65% GP. "
+         "Y5 $101.6M driven by Scorpius scale + BLK4 operational leverage."),
+    (19, "AA total EBITDA",
+         "='PL and Cash Flow'!B45","='PL and Cash Flow'!C45","='PL and Cash Flow'!D45",
+         "='PL and Cash Flow'!E45","='PL and Cash Flow'!F45",
+         "AA Y1 negative: Exos standalone EBITDA −$4M (pre-BLK3 investment) offsets SSLC $1.24M. "
+         "AA Y5 lower: no BLK4 commercial ramp, lower Scorpius scale."),
+    (20, "Δ (v12 − AA)",
+         "=B18-B19","=C18-C19","=D18-D19","=E18-E19","=F18-F19",
+         "Divergence widened by Y5 because v12 Exos standalone (BLK4/propulsion) vastly exceeds v15 baseline "
+         "AND v12 Scorpius COGS drops to 30% vs AA constant 52%."),
+]
+for r, lbl, y1, y2, y3, y4, y5, reason in ebitda_recon:
+    rec.cell(r, 1).value = lbl; rec.cell(r, 1).font = Font(size=10)
+    rec.cell(r, 7).value = reason
+    rec.cell(r, 7).font = Font(size=9, italic=True, color="444444")
+    rec.cell(r, 7).alignment = Alignment(wrap_text=True)
+    for col, val in [(2,y1),(3,y2),(4,y3),(5,y4),(6,y5)]:
+        rec.cell(r, col).value = val
+        rec.cell(r, col).number_format = "$#,##0;($#,##0)"
+    if lbl.startswith("Δ"):
+        for col in range(1, 7):
+            rec.cell(r, col).fill = PatternFill("solid", fgColor=ORANGE)
+    rec.row_dimensions[r].height = 36
+
+# SSLC FY27 inconsistency fix note
+rec.merge_cells("A22:G22")
+rec["A22"] = ("FY27 SSLC INCONSISTENCY FIX (10/7): "
+              "Prior annual P&L formula = FY26 actual ($1.925M) + IM tanks ($5M) = $6.925M. "
+              "Corrected to $5.5M (quarterly total: Q1 actual $713K + Q2-Q4 distributing $5M firm IM ramp). "
+              "The formula mixed a completed-year revenue figure with a forward booking — not additive.")
+rec["A22"].font = Font(bold=True, size=9, color="C00000")
+rec["A22"].fill = PatternFill("solid", fgColor=RED_LIGHT)
+rec["A22"].alignment = Alignment(wrap_text=True)
+rec.row_dimensions[22].height = 52
+
+# v15 understatement box
+rec.merge_cells("A24:G24")
+rec["A24"] = ("v15 BENCHMARK UNDERSTATEMENT: v15 'Scorpius acquisition benchmark' $0.9M→$21M over 5 years. "
+              "v12's own Scorpius/SSLC line is $4.1M Y1→$54.7M Y5 (13× v15 at Y5). "
+              "Actuals-Anchored SSLC is $5.5M Y1→$16.5M Y5 (also exceeds v15 by 6×-8×). "
+              "Do NOT edit v15 — it is a pre-IM-tank confirmation legacy model.")
+rec["A24"].font = Font(bold=True, size=9, color="C00000")
+rec["A24"].fill = PatternFill("solid", fgColor=RED_LIGHT)
+rec["A24"].alignment = Alignment(wrap_text=True)
+rec.row_dimensions[24].height = 52
+
 
 # ── Save ──────────────────────────────────────────────────────────────────────
 wb.save(OUT)

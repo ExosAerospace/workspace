@@ -153,25 +153,44 @@ terms = [
 add_table(terms, [2.2, 1.8, 2.7])
 note("TBV = to be verified in SSLC QuickBooks (QB session expired 10/7; must verify before signing).")
 
-# --- Financial Summary -------------------------------------------------------
-head1("1-YEAR AND 5-YEAR HEADLINE NUMBERS (Exos + SSLC Consolidated)", space_before=4)
-note("All figures management assumptions. Exos standalone from v15 commission-only baseline. SSLC FY27 "
-     "IM tanks $5M confirmed by Markus Rufer (10/2). Post-acquisition: 15% commission eliminated as intercompany.")
+# --- Financial Summary — TWO CASES ------------------------------------------
+head1("1-YEAR AND 5-YEAR HEADLINE NUMBERS — TWO CASES", space_before=4)
+note("Actuals-Anchored (AA): uses Q1 FY27 actuals and actuals-derived projections (FY27 SSLC fixed at $5.5M; "
+     "quarterly-basis correction from prior $6.925M formula). "
+     "Old-Model Case (v12 drivers): uses v12 Scorpius unit/ASP/COGS ramp (ASP $183K→$536K, units 1.5→9/mo, "
+     "COGS 35%→30%) + v12 Exos standalone (BLK4/propulsion ramp). "
+     "⚠ v15 'Scorpius acquisition benchmark' ($0.9M→$21M) understates v12 Scorpius line ($4.1M→$54.7M) by 13× at Y5.")
 
-fin = [
-    ["Metric",                       "FY27 (Year 1)",  "FY31 (Year 5)",  "Notes"],
-    ["SSLC Revenue",                 "$5,500,000",     "$16,500,000",    "IM tanks $5M firm + $0.5M other FY27"],
-    ["Exos Standalone Revenue",      "$2,600,000",     "$16,000,000",    "v15 baseline excl. SSLC commission"],
-    ["Net Consolidated Revenue",     "$7,600,000",     "$31,600,000",    "After intercompany elimination ($500K FY27)"],
-    ["SSLC EBITDA",                  "+$1,240,000",    "+$6,015,000",    "Positive from close; accretive to Exos"],
-    ["Exos Standalone EBITDA",       "−$4,000,000",    "+$5,000,000",    "BLK3 investment phase FY27; improving FY28+"],
-    ["Consolidated EBITDA",          "−$2,760,000",    "+$11,015,000",   "Exos development costs dominate FY27"],
-    ["v15 Benchmark SSLC revenue",   "$900,000",       "$21,000,000",    "Old acquisition model; Option B FY27 ×6.1×"],
-    ["Cash need at close",           "$3,010,000",     "—",              "Acquisition $2.51M + WC bridge $0.5M"],
-    ["Series A first close",         "$10,000,000",    "—",              "Covers acquisition, WC bridge, and Exos ops"],
-    ["Net remaining for Exos ops",   "$6,990,000",     "—",              "After SSLC cash deployment"],
+fin_hdr = [
+    ["Metric",                       "AA — FY27",      "AA — FY31",      "v12 Old-Model — FY27", "v12 Old-Model — FY31", "Notes"],
 ]
-add_table(fin, [2.2, 1.5, 1.5, 1.5])
+fin_rows = [
+    ["SSLC Revenue",                 "$5,500,000",     "$16,500,000",    "$4,120,000",           "$54,690,000",
+     "AA: actuals-anchored + IM firm; v12: unit/ASP ramp"],
+    ["Exos Standalone Revenue",      "$2,600,000",     "$16,000,000",    "$4,760,000",           "$124,500,000",
+     "AA: v15 commission-only; v12: BLK4/propulsion/wet-lease ramp"],
+    ["Net Consolidated Revenue",     "$7,600,000",     "$31,600,000",    "$8,880,000",           "$179,190,000",
+     "After interco elimination. v12 = v12 total direct."],
+    ["SSLC EBITDA",                  "+$1,240,000",    "+$6,000,000",    "$1,910,000",           "$35,420,000",
+     "v12 SSLC EBITDA derived: tanks at 65%/70% GM"],
+    ["Exos Standalone EBITDA",       "−$4,000,000",    "+$5,000,000",    "−$790,000",            "+$66,190,000",
+     "v12 Exos derived = v12 total EBITDA − v12 SSLC EBITDA"],
+    ["Consolidated EBITDA",          "−$2,760,000",    "+$11,000,000",   "$1,120,000",           "$101,610,000",
+     "v12 EBITDA from v12 Annual P&L directly"],
+    ["v15 Benchmark (SSLC only)",    "$900,000",       "$21,000,000",    "$900,000",             "$21,000,000",
+     "⚠ Legacy pre-IM-confirmation model. Both cases exceed by ≥6×."],
+    ["Cash need at close",           "$3,010,000",     "—",              "same",                 "—",
+     "Acquisition $2.51M + WC bridge $0.5M"],
+    ["Series A first close",         "$10,000,000",    "—",              "same",                 "—",
+     "Covers acquisition, WC bridge, Exos ops"],
+    ["Net remaining for Exos ops",   "$6,990,000",     "—",              "same",                 "—",
+     "After SSLC cash deployment"],
+]
+add_table(fin_hdr + fin_rows, [1.8, 1.1, 1.1, 1.2, 1.2, 1.5])
+note("AA consolidated EBITDA FY27 negative: Exos −$4M investment phase offsets SSLC +$1.24M. "
+     "v12 FY27 EBITDA positive ($1.12M) because v12 assumes smaller Exos standalone loss. "
+     "v12 Exos Y1 EBITDA derived = $1.12M total − ~$1.91M SSLC = −$0.79M. "
+     "See Reconciliation sheet in xlsx for full line-by-line explanation.")
 
 # =============================================================================
 # PAGE 2
