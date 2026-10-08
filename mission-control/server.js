@@ -520,7 +520,7 @@ async function esignDeliverCompleted(env) {
     </div>
   </div>`;
   const recipients = Array.from(new Set(env.signers.map(s => s.email).concat(['jquinn@exosaero.com'])));
-  const info = await t.sendMail({ from: '"Exos Aerospace — DocuSign" <jquinnexo@pm.me>', replyTo: 'jquinn@exosaero.com', to: recipients.join(', '), subject: 'Fully Executed: ' + env.title, html: completedHtml, attachments });
+  const info = await t.sendMail({ from: '"Exos Aerospace — ExoSign" <jquinnexo@pm.me>', replyTo: 'jquinn@exosaero.com', to: recipients.join(', '), subject: 'Fully Executed: ' + env.title, html: completedHtml, attachments });
   console.log('[E-Sign] Completed doc delivered for envelope ' + env.id + ' to ' + recipients.join(', '));
   return info;
 }
@@ -1244,14 +1244,14 @@ function isDsAllowed(url) {
   return DS_ALLOWED.has((url || '').split('?')[0]);
 }
 function docusignGatePage() {
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Exos Aerospace — DocuSign</title>
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Exos Aerospace — ExoSign</title>
   <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,system-ui,sans-serif;background:#0a1628;color:#e8edf2;display:flex;align-items:center;justify-content:center;min-height:100vh}
   .box{background:#0f1e38;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:40px;width:90%;max-width:380px;text-align:center}
   h1{font-size:20px;margin-bottom:4px}h1 span{color:#f5a623}.sub{color:#a0aec0;font-size:13px;margin-bottom:24px;line-height:1.4}
   input{width:100%;padding:12px;background:#162a4a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#e8edf2;font-size:15px;outline:none;margin-bottom:16px;text-align:center;letter-spacing:2px}input:focus{border-color:#f5a623}
   button{width:100%;padding:12px;background:#f5a623;border:none;border-radius:6px;color:#0a1628;font-size:15px;font-weight:700;cursor:pointer}
   .err{color:#ff4444;font-size:13px;margin-top:10px;display:none}</style></head>
-  <body><div class="box"><h1>Exos Aerospace <span>DocuSign</span></h1><p class="sub">Enter the access passcode to send documents for signature.</p>
+  <body><div class="box"><h1>Exos Aerospace <span>ExoSign</span></h1><p class="sub">Enter the access passcode to send documents for signature.</p>
   <input type="password" id="pc" placeholder="Passcode" autofocus autocomplete="off">
   <button onclick="go()">Unlock</button><div class="err" id="err">Invalid passcode</div></div>
   <script>
@@ -1330,7 +1330,7 @@ h1{font-size:28px;margin-bottom:8px}h1 span{color:#0080ff}
 <div class="rules"><h3>Usage Guidelines</h3><ul>
 <li>You can view and manage tasks within <strong>${projectName}</strong> only</li>
 <li>Task deletion is reserved for Exos administrators</li>
-<li>CRM, DocuSign, Opportunities, and admin panels are not included in the early adopter preview</li>
+<li>CRM, ExoSign, Opportunities, and admin panels are not included in the early adopter preview</li>
 <li>All activity is logged and visible to the project team</li>
 <li>Do not share your login credentials with anyone outside your organization</li>
 <li>This is a confidential preview - do not distribute screenshots or data externally</li>
@@ -1686,7 +1686,7 @@ const server = http.createServer((req, res) => {
     if (full && (full.role === 'early_adopter' || full.role === 'montana_partner')) { res.writeHead(302, { 'Location': '/' }); res.end(); return; }
     if (full || getDsSession(req)) {
       try { res.writeHead(200, { 'Content-Type': 'text/html' }); res.end(fs.readFileSync(path.join(__dirname, 'docusign.html'))); }
-      catch (e) { res.writeHead(404); res.end('DocuSign panel not found'); }
+      catch (e) { res.writeHead(404); res.end('ExoSign panel not found'); }
     } else {
       res.writeHead(200, { 'Content-Type': 'text/html' });
       res.end(docusignGatePage());
@@ -1743,7 +1743,7 @@ const server = http.createServer((req, res) => {
       if (!isDsAllowed(req.url) && !isPublic) {
         if (req.url.startsWith('/api/')) {
           res.writeHead(403, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'This DocuSign link only permits sending documents for signature.' }));
+          res.end(JSON.stringify({ error: 'This ExoSign link only permits sending documents for signature.' }));
         } else {
           res.writeHead(302, { 'Location': '/docusign' });
           res.end();
@@ -4495,7 +4495,7 @@ const server = http.createServer((req, res) => {
               ${documentHtml || ''}
               <hr style="border:none;border-top:1px solid #eee;margin:20px 0;">
               <p style="font-size:12px;color:#888;line-height:1.5;">
-                This document was sent via Exos Aerospace DocuSign.<br>
+                This document was sent via Exos Aerospace ExoSign.<br>
                 To sign, please review the document above, print, sign, and return a scanned copy to
                 <a href="mailto:jquinn@exosaero.com">jquinn@exosaero.com</a>.<br><br>
                 <em>This is a legally binding document. By signing, you agree to the terms contained herein
@@ -4520,12 +4520,12 @@ const server = http.createServer((req, res) => {
           html: htmlBody
         });
 
-        console.log(`[DocuSign] Email sent to ${recipientEmails.join(', ')} — messageId: ${info.messageId}`);
+        console.log(`[ExoSign] Email sent to ${recipientEmails.join(', ')} — messageId: ${info.messageId}`);
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true, messageId: info.messageId, recipients: recipientEmails }));
       } catch(e) {
-        console.error('[DocuSign] Email send error:', e.message);
+        console.error('[ExoSign] Email send error:', e.message);
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Failed to send email: ' + e.message }));
       }
