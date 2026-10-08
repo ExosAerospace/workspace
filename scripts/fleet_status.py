@@ -152,7 +152,10 @@ def pipeline_value():
         else:
             m = re.search(r"\$([\d,]+(?:\.\d+)?)", str(x.get("value") or ""))
             val = float(m.group(1).replace(",", "")) if m else None
-        if val:
+        # BLK3 PAY- prospects all carry the same full-bay LIST price — summing them inflates the
+        # pipeline (~$60M+ of identical list prices), so they're counted as buyers, not dollars (10/8).
+        list_priced = str(x.get("id", "")).startswith("PAY-") and x.get("contract_value") is None
+        if val and not list_priced:
             total += val
             priced += 1
         # Booked payload value = only deals explicitly tagged payload_value
@@ -161,6 +164,20 @@ def pipeline_value():
             payload_value += float(x.get("payload_value"))
         if x.get("amount_received") is not None:
             payload_received += float(x.get("amount_received"))
+    # Booked payload value also includes signed Payload Orders and curated contracts of record
+    # (config/payload-booked.json, e.g. entX OPP-007) — previously only opp stamps counted, so $0 showed.
+    seen = {str(x.get("id")) for x in items if x.get("payload_value") is not None}
+    po = _load(os.path.join(WS, "mission-control", "data", "payload-orders.json"), [])
+    for o in (po if isinstance(po, list) else po.get("orders", [])):
+        if "cancel" in str(o.get("status") or "").lower():
+            continue
+        payload_value += float(o.get("contract_value") or 0)
+        payload_received += float(o.get("amount_received") or o.get("amount_paid") or 0)
+    for c in _load(os.path.join(WS, "config", "payload-booked.json"), {}).get("contracts", []):
+        if str(c.get("id")) in seen:
+            continue
+        payload_value += float(c.get("contract_value") or 0)
+        payload_received += float(c.get("amount_received") or 0)
     return {"total": total, "priced": priced, "payload_buyers": payload_buyers,
             "payload_value": payload_value, "payload_received": payload_received,
             "opps_live": sum(1 for x in items
@@ -234,6 +251,14 @@ def build():
         "drafts_staged": drafts_staged(),
         "agents_logged": agents_logged(),
     }
+    try:   # live health from the hourly agent_eval run (every checked agent), not the 12 legacy classes
+        last = [ln for ln in open(os.path.join(WS, "logs", "agent-eval.log")) if "] eval: " in ln][-1]
+        m = re.search(r"eval: (\d+) OK / (\d+) WARN / (\d+) FAIL across (\d+)", last)
+        if m:
+            kpis.update({"eval_ok": int(m.group(1)), "eval_warn": int(m.group(2)), "eval_fail": int(m.group(3)),
+                         "eval_total": int(m.group(4)), "eval_at": last[1:20]})
+    except Exception:
+        pass
     dep = agents_deployed(cr)
     kpis.update({"agents_deployed": dep["total"], "agents_deployed_launchd": dep["launchd"],
                  "agents_deployed_crons": dep["crons"], "agents_registered": dep["registered"]})

@@ -67,9 +67,9 @@ fetch('/data/fleet.json?t='+Date.now()).then(r=>r.json()).then(d=>{
   const kpi=(n,l,cls='')=>`<div class="kpi ${cls}"><div class="n">${n}</div><div class="l">${l}</div></div>`;
   $('kpis').innerHTML =
     (k.agents_deployed!=null?kpi(k.agents_deployed,`Agents deployed supporting all tasks · ${k.agents_deployed_launchd} background + ${k.agents_deployed_crons} scheduled AI${k.agents_registered!=null?` · ${k.agents_registered} registered`:''}`,'good'):'')+
-    kpi(`${k.agents_green}<span style="font-size:14px;color:var(--muted)"> / ${k.classes_total}</span>`,'Agents healthy (GREEN)', k.agents_red? 'bad':k.agents_amber?'warn':'good')+
+    (k.eval_total!=null?kpi(`${k.eval_ok}<span style="font-size:14px;color:var(--muted)"> / ${k.eval_total}</span>`,`Agents healthy (live check${k.eval_warn?` · ${k.eval_warn} warn`:''}${k.eval_fail?` · ${k.eval_fail} FAIL`:''})`, k.eval_fail?'bad':k.eval_warn>25?'warn':'good'):kpi(`${k.agents_green}<span style="font-size:14px;color:var(--muted)"> / ${k.classes_total}</span>`,'Agents healthy (GREEN)', k.agents_red? 'bad':k.agents_amber?'warn':'good'))+
     kpi(k.open_decisions,'Open decisions (fleet-wide)', k.open_decisions>50?'warn':'')+
-    kpi(fmtMoney(k.pipeline_value),`Pipeline (parsed, ${k.pipeline_priced} priced / ${k.opps_live} live)`)+
+    kpi(fmtMoney(k.pipeline_value),`Identified pipeline (parsed, unweighted; BLK3 list prices excluded · ${k.pipeline_priced} priced / ${k.opps_live} live)`)+
     kpi(k.payload_buyers,'BLK3 payload buyers')+
     kpi(fmtMoney(k.payload_value||0),`Payload value booked${k.payload_received?` · ${fmtMoney(k.payload_received)} received`:''}`)+
     kpi(k.drafts_staged,'Outreach drafts staged')+

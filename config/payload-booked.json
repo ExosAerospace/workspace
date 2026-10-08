@@ -1,0 +1,8 @@
+{
+ "_doc": "Booked payload contracts that are NOT in mission-control/data/payload-orders.json (read by scripts/fleet_status.py). Figures of record only; cite the source. Payload Orders + won-deal stamps (payload_value on an opportunity) are added automatically.",
+ "contracts": [
+  {"id": "OPP-007", "customer": "entX Limited", "mission": "M5 (BLK3 Flight 1)", "contract_value": 820000, "amount_received": 410000,
+   "source": "LSA Addendum A milestones 10/40/40/10; cash QB-verified 2026-09-01 (inv #0067 $82K + #0069 $328K)",
+   "note": "LSA signed by Exos only; entX countersignature pending"}
+ ]
+}
