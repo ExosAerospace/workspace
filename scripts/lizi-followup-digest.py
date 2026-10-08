@@ -9,8 +9,8 @@ DUE={
  "2026-10-14":[
   ("John Cothran: watch invoice #0075 (phone number needed)","cothranprp@gmail.com (reply on your earlier thread)","his invoice is ready except his phone number",
    "Hi John,\nJust following up on your watch order. I have everything I need for your invoice except a phone number. Could you send that over when you get a chance? Thank you!\nBest Regards,\nLizi"),
-  ("PIEE / SPRS: post our CMMC score (task #2813)","https://piee.eb.mil","you registered 10/8; John approval requested (D-7282021). SpaceWERX needs the score posted by 10/21",
-   "(No email.) 1) Log into PIEE. If the SPRS tile shows, you're approved. If not, ping John or Neil to approve your role. 2) Get our current NIST 800-171 / CMMC L2 self-assessment score and assessment date from Atomus. 3) In SPRS > Cyber Reports > NIST SP 800-171, enter it. Ask Exo in #lizi-channel-2 to walk through it.")],
+  ("PIEE / SPRS: confirm our 110/110 score is posted + affirmed (task #2813)","https://piee.eb.mil","you registered 10/8; John approval requested (D-7282021). SpaceWERX needs the score posted by 10/21",
+   "(No email.) 1) Log into PIEE. If the SPRS tile shows, you're approved. If not, ping John or Neil to approve your role. 2) In SPRS, confirm the 110/110 CMMC L2 (Self) entry John posted 8/31 is there AND shows as affirmed. 3) If it isn't affirmed, ping John to click Affirm. Ask Exo in #lizi-channel-2 to walk through it.")],
  "2026-10-15":[
   ("SpaceTango: Danielle Rosales","reply on your 10/5 thread","emailed 10/5 (#1001)",
    "Hi Danielle,\nJust checking in on my note from last week about BLK3. We're booking payloads for early 2027 flights, and I'd love to find a time to talk about how we might work together for your customers. Would a quick call work?\nBest Regards,\nLizi"),
