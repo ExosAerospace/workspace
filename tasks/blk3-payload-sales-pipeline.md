@@ -82,7 +82,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Active programs:** SpaceTango operates TangoLab facilities on ISS since 2016; expanding to LEO + lunar platforms. They actively resell payload integration slots to pharma, biotech, materials, and advanced manufacturing customers. They are always looking for new vehicle partners to expand their platform portfolio.
 - **Why BLK3 fits:** SpaceTango could act as a payload aggregator for BLK3 — filling the bay with 3-5 of their existing customer payloads instead of Exos selling one-by-one. One deal with SpaceTango = multiple customers. Suborbital is a lower-cost precursor they can sell to clients who want flight data before committing to ISS slots.
 - **Funding:** Commercial (revenue-funded); SpaceTango has raised VC and has active NASA agreements. No grant dependency — they pay from commercial revenue.
-- **Status:** RESEARCHING
+- **Status:** OUTREACH SENT (Exo 10/8: Lizi emailed Rosales 10/5)
 - **Next action:** Draft + send broker partnership pitch to Clements. ✅ Draft ready below.
 
 ---
@@ -231,7 +231,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **New angle vs. prior run:** SpaceTango’s expansion to lunar and beyond creates a new narrative hook: BLK3 suborbital = fast, cheap **R&D precursor** for their customers’ processes before committing ISS/lunar resources. SpaceTango’s customers are exactly the profile that benefits most from a quick fly-recover-iterate loop.
 - **Why BLK3 fits:** One SpaceTango deal fills multiple payload bays and seeds an ongoing commercial relationship. SpaceTango has existing customer relationships in biotech and materials — they can aggregate 3-6 payloads for a single BLK3 flight, covering the full SPACEavailable...™ manifest from one partnership conversation.
 - **Funding:** Commercial revenue + NASA agreements; well-funded, not grant-dependent. Can commit commercially.
-- **Status:** RESEARCHING → upgraded to READY (draft F below replaces prior draft B with stronger angle)
+- **Status:** OUTREACH SENT (Exo 10/8: Lizi emailed Rosales 10/5)
 - **Next action:** Send revised Draft F. This is the highest-leverage single conversation for manifest fill — one yes from SpaceTango could fill the bay.
 
 ---
@@ -299,7 +299,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **ISS retirement angle:** BioServe's entire business model depends on flight platforms. They are actively looking for new vehicle partners to survive the transition period. They have done programs on New Shepard (before pause) and are actively seeking replacements.
 - **Why urgent:** Blue Origin's New Shepard pause left BioServe without their primary suborbital option. We are the natural replacement, and they have been without one since ~2022.
 - **Funding:** Commercial (PI grants, NASA agreements) + CU institutional. Not grant-dependent for platform decisions.
-- **Status:** READY — Draft G below.
+- **Status:** OUTREACH SENT (Exo 10/8: Lizi emailed Countryman 10/7)
 - **Next action:** Jon to send Draft G. **This is the single highest-leverage new call we can make — one BioServe conversation unlocks 200+ PI clients.**
 
 ---
@@ -326,7 +326,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Why BLK3 fits:** Axiom's research clients are exactly our Bucket C — they're ISS customers who need interim platforms during the transition. Axiom cannot do suborbital (they're building orbital infrastructure). BLK3 suborbital is NOT a competitor to Axiom — it's a complementary interim platform their clients can use to maintain research cadence during the gap. Pitch: "Partner with us as the suborbital bridge for your research clients while AxStation ramps up — we keep their programs alive and TRL-advancing; they come to you ready for orbital operations."
 - **Why urgent:** Axiom's commercial model depends on their clients having continuous research programs. If ISS retires and clients have nowhere to fly, they lose the customer relationship. BLK3 as a bridge HELPS Axiom retain clients.
 - **Funding:** Axiom has raised $500M+ and has NASA contracts. Their research clients are commercial — can pay.
-- **Status:** ENGAGED ✅ — live call held 2026-08-18 (John + Lizi + Chyree Batton)
+- **Status:** OUTREACH SENT (Exo 10/8: Lizi replied on Batton thread 10/7)
 - **PRIMARY POC (engaged):** **Chyree Batton** — Global Lead, Advanced Materials Innovation, Axiom Space — **Chyree@axiomspace.com**. 4 yrs at Axiom; ex-materials industry (thermoelectrics/semi-volatile compounds); runs Axiom's advanced-materials POC program (identifies materials that benefit from microgravity manufacturing, builds POCs/tech demos toward AxStation).
 - **Secondary POC:** Dr. Lucie Low — Chief Scientist (research@axiomspace.com).
 - **Call intel (2026-08-18):**
@@ -617,7 +617,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **New context (ASCEND2026, May 2026):** Low announced expansion of Axiom University Alliance to 26 institutions across 4 continents and 12 nations (Australia, India, Italy, New Zealand, Portugal, Spain, South Korea, Taiwan, Turkey, UK, US, Uzbekistan). She stated mission: "Axiom Space is uniting the international research community." This is an active, growing network of microgravity research PIs — exactly our suborbital Bucket C target pool.
 - **Why upgraded:** The University Alliance is a live, growing PI network Low is actively building. Our pitch is: BLK3 is the Alliance's suborbital flight option — the step before AxStation for Alliance members who need flight heritage. It's a referral arrangement, not competition.
 - **New angle:** With 26 university partners across 12 nations actively developing microgravity experiments, many have the same ISS-gap problem. Low is building the client book; we're offering the bridge platform. Frame as: "Be Axiom's recommended suborbital option for Alliance researchers waiting for AxStation."
-- **Status:** RESEARCHING → **READY** ✅ Draft K below.
+- **Status:** OUTREACH SENT (Exo 10/8: Lizi replied on Batton thread 10/7)
 
 ---
 #### 12. NCATS / Tissue Chips in Space 2.0 — UPDATED
@@ -700,7 +700,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - **Reusable platform + high-tempo cadence** — BLK3's 2-3 day turnaround supports the "high operational tempo" testing model BLAST was designed to prove out.
   - **135 kg capacity** — BLK3's payload capacity likely exceeds Electron HASTE for this payload class.
 - **Funding:** MDA direct R&D budget (not grant-competitive); follow-on campaigns already planned. APL has institutional procurement authority.
-- **Status:** NEW → RESEARCHING ✅ Draft T below (gov route — Jon to send or identify warm path via AFRL/Kirtland DoD contacts).
+- **Status:** OUTREACH SENT (Exo 10/8: Lizi followed up with Wolk 10/7)
 - **Next action:** Jon to review Draft T; route via MDA/AFRL contacts or direct to Joshua Wolk. This is highest-value new prospect this run — they are **actively buying** commercial suborbital flight test and are explicitly planning follow-ons.
 
 ---
@@ -801,7 +801,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Prior Exos connection:** Exos previously flew payloads for UCF's NASA REDDI program. This is a warm reactivation, not cold outreach.
 - **Why BLK3 fits:** Metzger's regolith/granular-flow research requires microgravity flight environment validation — suborbital is the cheapest, most iterative path. BLK3's 2-3 day recover-and-refly returns hardware for post-flight analysis at sample integrity parabolic flight can't match. Florida SRI grants + NASA Flight Opportunities = existing funding pathways. Blue Origin's pause left this community without their primary suborbital option.
 - **Funding:** NASA Flight Opportunities, Florida SRI, NSF.
-- **Status:** NEW → **READY** ✅ Draft R below.
+- **Status:** OUTREACH SENT (Exo 10/8: Lizi spoke with Brisset; revisit Jul/Aug 2027)
 - **Next action:** Jon to send Draft R — warm reactivation; mention UCF REDDI heritage explicitly.
 
 ---
@@ -1389,7 +1389,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   3. **Rapid atmospheric campaign cadence** — Atmospheric research requires profiling during specific meteorological windows. BLK3's 2-3 day refly cadence allows multiple vertical profiles during a single atmospheric campaign — something no expendable sounding rocket can offer.
   4. **SACSS coordination synergy:** Jon is already cultivating NOAA contacts (Kopacz/Breeze/Frost) and CU Co-PI Darin Toohey for the SACSS atmospheric sampling payload. Toohey is at CU Boulder — the same university as NCAR. An NCAR introduction via Toohey is a natural warm path.
 - **Funding:** NSF core funding for NCAR operations; campaign-specific grants from NSF, NOAA, and NASA. Flight hardware budgets are real and established; sounding rocket campaigns are a regular budget item.
-- **Status:** NEW → RESEARCHING ✅ Draft AK below (warm path via Darin Toohey/CU or AGU conference intro recommended first).
+- **Status:** OUTREACH SENT (Exo 10/8: Apel replied 10/6; f/u 10/20)
 - **Next action:** Coordinate with SACSS/NOAA Capture Agent (cron 049e8c95). Darin Toohey (CU, Co-PI on SACSS) is the natural bridge to NCAR ACOM — same campus, overlapping scientific community. Ask Toohey for intro to Apel before cold outreach.
 
 ---
@@ -2035,7 +2035,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - Provides a faster screening step for pharma partner drug candidates (5-7 min microgravity vs. waiting for ISS slot)
   - BLK3 is a US-licensed platform — attractive for Exobiosphere's Asian pharma partners (Boryung/Korean; Space Data/Japan) who want a US-flight-qualified data package
 - **Note:** Very early-stage company (founded 2024, seed stage). Lower immediate revenue potential than other pipeline prospects, but right profile for the growing pharma-in-space pipeline. Monitor for Series A and OHTS commissioning timeline before heavy investment in outreach.
-- **Status:** NEW → RESEARCHING (HOLD on outreach — identify POC first; also evaluate OHTS ISS launch timeline to time the pitch correctly)
+- **Status:** OUTREACH SENT (Exo 10/8: Lizi LinkedIn 10/6)
 
 ---
 
@@ -2103,7 +2103,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - Building OHTS (Orbital High-Throughput Screener) for autonomous microgravity drug screening at scale
 - **Revised pitch:** Exobiosphere's OHTS platform launches to VAST in 2026 — but their Asian pharma partners (Boryung, Space Data Japan) want drug screening data. BLK3 gives them a fast, low-cost validation step BEFORE committing expensive OHTS operation hours to an unvalidated candidate. Also: BLK3 as the US-flight-qualified platform their Asian pharma partners want for US regulatory-grade data.
 - **Why timing matters:** They've launched their first payload and are actively building a customer pipeline. Now is the moment to engage Acierno as they're lining up their first paying pharma clients — before they commit to a long-term single-platform model.
-- **Status:** RESEARCHING (HOLD) → **READY** ✅ Draft AY below.
+- **Status:** OUTREACH SENT (Exo 10/8: Lizi LinkedIn 10/6)
 
 ---
 #### 52. Rhea Space Activity — Shawn Usman (CEO/Founder) ⭐⭐ HIGH VALUE NEW PROSPECT
@@ -2554,7 +2554,7 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** Angela Des Jardins, Ph.D. (Director, Montana Space Grant Consortium and Director, Montana NASA EPSCoR, angela.desjardins@montana.edu); Amy Brown (Deputy Director, Montana NASA EPSCoR, amy.brown11@montana.edu); Chris (Christina) Flynn (Program Coordinator, MSGC / Montana NASA EPSCoR, christina.flynn1@montana.edu)
 - **Why BLK3 fits:** Strong channel partner. BOREALIS students are the natural next step from balloon to suborbital rocket payloads, and the EPSCoR Research/ISS/Flight calls could fund Montana PI payloads on BLK3. Also a gateway to all 23 member campus reps.
 - **Funding:** NASA Flight Opportunities / TechRise, Montana Space Grant + NASA EPSCoR (Research/ISS/Flight calls), NASA SBIR/STTR (university partner)
-- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Status:** OUTREACH SENT (Exo 10/8: Lizi emailed Des Jardins 10/8)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
 
 #### 3. MTech — Montana Technological University (Butte)
