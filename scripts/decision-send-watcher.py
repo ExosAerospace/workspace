@@ -138,6 +138,11 @@ def resolve_draft(it):
         log(f"freshness check failed (sending resolved draft as-is): {e}")
     return d
 
+def _inline_drafts(it):
+    """Decision whose question carries the finished email(s) inline (To:/Subject: lines)."""
+    q = str(it.get("question",""))
+    return q if (re.search(r"^\s*To:", q, re.M) and re.search(r"^\s*Subject:", q, re.M)) else ""
+
 def _resolve_draft_raw(it):
     # 1) explicit file path in any field
     for k in ("proposedAction","context","note","answer","title","question"):
@@ -158,7 +163,12 @@ def _resolve_draft_raw(it):
                 p = os.path.join(WS, m.group(1).strip())
                 if os.path.exists(p) and _plausible(p, it): return p
     # 3) fuzzy: significant title words -> best matching file in drafts/
-    stop = {"send","draft","drafted","response","email","the","to","for","me","review","a","of","and",
+    # Skip fuzzy when the Decision already carries its drafts inline (To:/Subject: in the question):
+    # D-7282002 (2 gov emails) fuzzy-matched "blk/payload/emails" to Lizi's unrelated 8-draft batch doc
+    # and shipped the wrong attachment (Jon 10/8). Inline text is the deliverable there.
+    if _inline_drafts(it):
+        return None
+    stop = {"send","draft","drafted","response","email","emails","the","to","for","me","review","a","of","and",
             "form","submit","ready","overdue","days","day","sent","build","final","plan","this",
             "letter","support","phase","task","your","signature"}
     # Fuzzy on title + relatedItem + dedupeKey — the title alone (e.g. "…8 days overdue, ready for
@@ -222,11 +232,13 @@ def send(it, draft):
         if os.path.exists(cf):
             cover = ("EMAIL TO SEND (paste into a new message, attach the PDF below; fill any [____] first):\n"
                      + "-"*60 + "\n" + open(cf).read().strip() + "\n" + "-"*60 + "\n\n")
+    inline_block = ("EMAIL(S) TO SEND (copy each into a new message):\n" + "-"*60 + "\n"
+                    + _inline_drafts(it).strip() + "\n" + "-"*60) if _inline_drafts(it) else ""
     ctx=(cover +f"You authorized decision {it.get('id')} ({title}) with: {it.get('answer','')}.\n"
          f"Related: {it.get('relatedItem','')}\n\n"
          f"This is the ready message. SEND IT FROM YOUR OWN EMAIL to the intended recipient. "
          f"It was delivered here to you, and was NOT sent to the outside party by the system.\n\n"
-         f"{('Attached: '+os.path.basename(att)+'  (verify it matches before you send)') if att else ('NOTE: draft could not be delivered as Word (conversion issue). Source: '+os.path.basename(draft)+' — reply and I will resend as .docx.') if draft else 'NOTE: I could not confidently locate a draft file for this — decision context only. Point me at the file if needed.'}\n\n"
+         f"{('Attached: '+os.path.basename(att)+'  (verify it matches before you send)') if att else ('NOTE: draft could not be delivered as Word (conversion issue). Source: '+os.path.basename(draft)+' — reply and I will resend as .docx.') if draft else inline_block if inline_block else 'NOTE: I could not confidently locate a draft file for this — decision context only. Point me at the file if needed.'}\n\n"
          f"Context: {it.get('context','')[:800]}\n\n(auto-delivered by decision-send-watcher to YOUR inbox only, never external.)")
     m.set_content(ctx)
     if att:
@@ -259,6 +271,8 @@ def has_deliverable_content(it, draft):
     # would be dropped by send()'s attachment guard, leaving an empty "[Ready to send]" shell — the
     # exact fill-my-inbox failure. So those do NOT count as deliverable content.
     if draft and draft.lower().endswith(DELIVERABLE_EXT + (".md", ".txt")):
+        return True
+    if _inline_drafts(it):
         return True
     pa = (it.get("proposedAction") or "").strip()
     if not pa or META_ACTION.search(pa):
