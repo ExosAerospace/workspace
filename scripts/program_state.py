@@ -112,6 +112,45 @@ def milestone_status(m):
     return "On Hold"
 
 
+def day90_from_orders():
+    """Day-90 deliverables computed from the live payload order-to-cash store (Jon 10/8: the page
+    showed the first two completions — Kordel/Scentience and Matt Lesiw — as still in progress)."""
+    from datetime import datetime
+    po = load(os.path.join(WS, "mission-control", "data", "payload-orders.json"), [])
+    po = po if isinstance(po, list) else po.get("orders", [])
+    env = {e.get("id"): e for e in load(os.path.join(WS, "mission-control", "data", "envelopes.json"), [])}
+    def ts(x):
+        try: return datetime.fromisoformat(str(x).replace("Z", "+00:00"))
+        except Exception: return None
+    signed, hours = [], []
+    for o in po:
+        e = env.get(o.get("envelope_id")) or {}
+        done_at = o.get("lsa_signed_at") or (e.get("completedAt") or e.get("completed_at") if e.get("status") == "completed" else None)
+        if done_at:
+            signed.append(f"{o.get('customer','?')[:28]} (signed {str(done_at)[:10]})")
+        a, b = ts(o.get("created_at")), ts(o.get("lsa_sent_at"))
+        if a and b and b > a:
+            hours.append((b - a).total_seconds() / 3600)
+    waiver_pending = [o.get("customer","?")[:24] for o in po
+                      if not (o.get("waiver_wet_signed_at") and o.get("waiver_faa_submitted_at"))
+                      and (o.get("lsa_signed_at") or (env.get(o.get("envelope_id")) or {}).get("status") == "completed")]
+    out = [
+        deliverable("First customer lead → signed paper through the Desk",
+                    status_seed="done" if signed else "in_progress",
+                    note=("✅ " + "; ".join(signed)) if signed else "no executed LSA yet"),
+        deliverable("Human-touched only: relationship + signature",
+                    status_seed="done" if signed else "in_progress",
+                    note="Human touches = Jon approves the send + countersigns; scope/quote/contract/e-sign/invoice prep AI-run"),
+        deliverable("Order-to-contract time measured (target: minutes)",
+                    status_seed="done" if hours else "todo",
+                    note=(f"order opened → LSA out: {', '.join(f'{h:.1f} h' for h in sorted(hours))} (MC payload orders)" if hours else "")),
+        deliverable("FAA cross-waiver of claims (wet-signed at Exos by L-90 → FAA)",
+                    status_seed="in_progress" if waiver_pending else ("done" if signed else "todo"),
+                    note=("pending: " + ", ".join(waiver_pending) + " — tracked on Payload Orders (added 10/8)") if waiver_pending else ""),
+    ]
+    return out
+
+
 # ---- seed -------------------------------------------------------------------
 MILESTONES = [
     {"id": "PROG-001", "name": "Day 30 — Capture & Configure", "due": "2026-07-26", "gate": "D-109",
@@ -133,11 +172,7 @@ MILESTONES = [
     {"id": "PROG-003", "name": "Day 90 — First End-to-End", "due": "2026-09-25", "gate": "D-111",
      "depends_on": "PROG-002",
      "deliverables": [
-         deliverable("First customer lead → signed paper through the Desk", status_seed="in_progress",
-                     note="Matt Lesiw (1U, 420g, $8,000) — booking package prepared; send awaiting Jon (D-LESIW-EXO3-SEND)"),
-         deliverable("Human-touched only: relationship + signature", status_seed="in_progress",
-                     note="Human touches = Jon approves send + signature; all scope/quote/contract prep AI-run"),
-         deliverable("Inbound-to-quote time measured (target: minutes)", status_seed="todo"),
+         *day90_from_orders(),
      ]},
 ]
 for m in MILESTONES:
