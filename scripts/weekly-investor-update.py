@@ -16,7 +16,7 @@ Run:  python3 scripts/weekly-investor-update.py            # gated: only fires o
       python3 scripts/weekly-investor-update.py --force    # run now regardless of weekday
       python3 scripts/weekly-investor-update.py --force --dry  # build + print, no email/task
 """
-import os, sys, re, json, datetime, subprocess, urllib.request
+import json, os, sys, re, json, datetime, subprocess, urllib.request
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
@@ -181,7 +181,21 @@ def build_draft(today):
             "  [Lizi: confirm how many remain (ledger shows 3 reserved), attach EXOS_Watch_Graphic, and post the",
             "  same text on the website investor page before this goes out.]"],
     }
-    L += FEATURED.get(today.isoformat(), [])
+    feat = FEATURED.get(today.isoformat(), [])
+    if feat:
+        try:  # live count from the offering ledger: 10 set aside for investors (Lizi 10/8)
+            led = json.load(open(os.path.join(WS, "mission-control/data/offering-ledger.json")))
+            taken = sum(e.get("qty", 1) for e in led["offerings"]["watch"]["entries"]
+                        if str(e.get("status", "")).lower() not in ("cancelled", "canceled", "void"))
+            left = max(0, 10 - taken)
+        except Exception:
+            left = None
+        txt = f"Only {left} of the 10 set aside for Exos investors remain" if left is not None else "A limited number are set aside for Exos investors"
+        feat = [x.replace("A limited number are set aside for Exos investors, first come first served;",
+                          txt + ", first come first served;")
+                 .replace("Several have already been reserved.", "")
+                 .replace("confirm how many remain (ledger shows 3 reserved), ", "") for x in feat]
+    L += feat
 
     L += ["", "Standing status (confirm/update as needed before sending):",
           "• Series A: raise open (BLK3 flights, BLK4).",
