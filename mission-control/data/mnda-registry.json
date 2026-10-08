@@ -90,6 +90,13 @@
     "source": "MNDA sent to Dr. Ed Pope 8/13 \u2014 awaiting signature",
     "on_record": false
   },
+  "bancroftcapital": {
+    "company": "Bancroft Capital",
+    "status": "pending",
+    "date": "2026-10-08",
+    "source": "Bancroft form NDA/non-circ (9/25) received 9/29; Exos redline prepped 10/8 (task #3220, Decision D-7282007) \u2014 not signed",
+    "on_record": false
+  },
   "permianaerospacedevelopment": {
     "company": "Permian Aerospace Development",
     "status": "executed",

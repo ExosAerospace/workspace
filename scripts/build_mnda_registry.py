@@ -31,6 +31,7 @@ MANUAL_SEED = {
     "Gloyer-Taylor Laboratories":  {"status": "signature_ready", "date": None, "source": "uploads/MNDA_Exos_GloyerTaylorLabs (awaiting signature)"},
     "MATECH GSM":                  {"status": "sent", "date": "2026-08-13", "source": "MNDA sent to Dr. Ed Pope 8/13 — awaiting signature"},
     "Super Carbon Composites":     {"status": "sent", "date": "2026-08-13", "source": "MNDA sent to Dr. Ed Pope 8/13 — awaiting signature"},
+    "Bancroft Capital":            {"status": "pending", "date": "2026-10-08", "source": "Bancroft form NDA/non-circ (9/25) received 9/29; Exos redline prepped 10/8 (task #3220, Decision D-7282007) — not signed"},
     "Permian Aerospace Development": {"status": "executed", "date": "2026-09-17", "source": "DocuSign — Neil Milburn -> Oscar S. Garcia, 'PAD_NDA Generic.pdf', completed 2026-09-17 (real send; distinct from the 9/11 [TEST] envelope). Retrieve executed PDF to data-room/NDAs/."},
 }
 
