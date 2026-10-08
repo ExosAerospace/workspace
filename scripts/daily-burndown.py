@@ -53,7 +53,7 @@ def tag_send_tasks(opn):
         ext = [e for e in _EMAIL.findall(blob)
                if not e.lower().endswith("exosaero.com") and "proton" not in e.lower() and "pm.me" not in e.lower()]
         have = set(g.lower() for g in (t.get("tags") or []))
-        if ext and _SENDISH.search(blob) and not (have & {"outreach", "autoclose-on-send", "cold-outreach"}):
+        if ext and _SENDISH.search(blob) and not (have & {"outreach", "autoclose-on-send", "cold-outreach", "no-autoclose"}):
             try:
                 q(f"tasks?id=eq.{t['id']}", "PATCH", {"tags": list(dict.fromkeys((t.get("tags") or []) + ["autoclose-on-send"]))})
                 n += 1

@@ -177,6 +177,8 @@ def main():
         tags = set((str(x) or '').lower() for x in (t.get('tags') or []))
         if not (tags & AUTOCLOSE_TAGS):
             continue  # tag-gated: only opted-in outreach tasks are eligible
+        if 'no-autoclose' in tags:
+            continue  # hub/tracker tasks that a single send must never close (e.g. DIBC #870)
         hay = ((t.get('title') or '') + ' ' + (t.get('description') or '')).lower()
         matched = None
         # (1) exact recipient email present in the task — the gold-standard signal.

@@ -1,0 +1,27 @@
+{
+  "_doc": "DIBC membership leverage tracker (Jon 2026-10-08 '@exo Build tracking for leveraging this'). Hub task = MC #870. Lanes are edited here; scripts/dibc_leverage_watch.py rebuilds the .xlsx tracker from this + the M365 solicitation log.",
+  "hub_task": 870,
+  "member_since": "2026-09-28",
+  "ota": "HQ0034249C00B",
+  "renewal_note": "Free first year, then up to $250/yr (dibconsortium.org, checked 2026-08-31). First renewal window ~2026-09-28 + 1yr.",
+  "watch_sender_domains": ["ati.org", "dibconsortium.org"],
+  "watch_subject_terms": ["dibc", "dib consortium", "defense industrial base consortium"],
+  "solicitation_terms": ["rpp", "request for project proposal", "request for prototype proposal", "rfp", "solicitation", "white paper", "call for", "amendment", "q&a", "questions and answers", "industry day", "proposers day", "due", "focus area", "rfi", "request for information"],
+  "fit_terms": ["solid rocket", "srm", "motor case", "composite", "filament", "cryo", "copv", "pressure vessel", "tank", "propulsion", "energetic", "munition", "hypersonic", "test", "missile", "launch", "space"],
+  "lanes": [
+    {"id": "L1", "lane": "SRM composite-case DPA Title III proposal (~$25M)", "status": "Proposal APPROVED 9/30; waiting on Members-Only RPP", "next": "John forwards the SRM/composite RPP + any Q&A/amendments to @Exobot, then Exo fits the proposal to it", "owner": "John (portal) / Exo (fit)", "mc": "#870", "gate": "RPP in hand"},
+    {"id": "L2", "lane": "Cryo-tank / COPV (Scorpius Type-5) supply-chain-resiliency RPP", "status": "Watching", "next": "Screen each new DIBC solicitation for tank/COPV/pressure-vessel scope; reuse proposal shell", "owner": "Exo", "mc": "#870, #2287", "gate": "Matching RPP released"},
+    {"id": "L3", "lane": "Second Members-Only portal user", "status": "Open; only John is credentialed", "next": "John names one more Exos user to file the Members-Only access form, so solicitations aren't gated on John's inbox", "owner": "John (decision)", "mc": "#870", "gate": "Named user + form filed"},
+    {"id": "L4", "lane": "Collaboration Database / teaming visibility", "status": "Profile built during onboarding (#3241)", "next": "Keep profile current (Type-5 composite, RT-cure resin, flight-test platform); log every inbound teaming contact here", "owner": "Exo", "mc": "#870", "gate": "-"},
+    {"id": "L5", "lane": "Supplier to current SRM Title III awardees", "status": "Target list sourced (Award intel sheet)", "next": "Rank awardees by composite-case need; capability brief per target (drafts go to John before any send)", "owner": "Exo (draft) / John (send)", "mc": "#870", "gate": "John approves outreach"},
+    {"id": "L6", "lane": "Vaya Space as motor-builder partner", "status": "POC known: Rob Fabian (CRM #2626)", "next": "Confirm Vaya's partner role/LOI before the final proposal names them", "owner": "John", "mc": "#870, #2626", "gate": "Vaya agreement"},
+    {"id": "L7", "lane": "OTA follow-on production path", "status": "Framing only", "next": "Prototype OTAs can transition to sole-source follow-on production (10 U.S.C. 4022). Write that path into every DIBC proposal", "owner": "Exo", "mc": "#870", "gate": "-"},
+    {"id": "L8", "lane": "Membership renewal", "status": "Year 1 free (member 2026-09-28)", "next": "Confirm renewal fee/date with ATI ~Aug 2027", "owner": "Exo", "mc": "#870", "gate": "2027-08"}
+  ],
+  "award_intel": [
+    {"date": "2026", "what": "DPA Title III SRM awards: Americarb (Niagara Falls NY) + GD-OTS (Lincoln NE), $33.5M total; brings DIBC SRM awards to 6 / $87.3M", "url": "https://www.war.gov/News/Releases/Release/Article/4316035/department-of-war-awards-335-million-to-increase-solid-rocket-motor-capacity-an"},
+    {"date": "2026", "what": "DPA Title III SRM awards: Materials Resources LLC (Xenia OH), ICF Mercantile (Warren NJ), SPARC Research (Warrenton VA), $39.6M total", "url": "https://www.war.gov/News/Releases/Release/Article/4302474/department-of-war-awards-396-million-to-expand-solid-rocket-motor-industrial-ba"},
+    {"date": "2026-02-27", "what": "DIBC RPP on Strategic & Critical Materials (Phase 1 due 2026-03-20); DIBC solicitations are members-only, executed as OTAs with sole-source follow-on possible", "url": "https://www.insidegovernmentcontracts.com/2026/03/defense-industrial-base-consortium-issues-new-critical-minerals-request-for-project-proposals"},
+    {"date": "live", "what": "DIBC home page (managed by ATI): headline awards incl. $27.3M and $32.7M SRM investments", "url": "https://www.dibconsortium.org"}
+  ]
+}

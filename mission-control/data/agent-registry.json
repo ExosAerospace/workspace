@@ -1,7 +1,7 @@
 {
  "generated": "2026-10-04T12:49:13.103453-05:00",
- "total": 241,
- "standing": 112,
+ "total": 242,
+ "standing": 113,
  "ephemeral": 18,
  "service": 6,
  "agents": [
@@ -5389,6 +5389,27 @@
    "change_log": [
     "2026-10-08 created on Jon's instruction ('start saving out board meetings for our exos companies for compliance and business audit purposes'); approver John Quinn; first record MB-east-2026-10-06-bspe-min-v1"
    ]
+  },
+  {
+   "label": "com.exos.dibc-leverage-watch",
+   "script": "dibc_leverage_watch.py",
+   "kind": "recurring",
+   "schedule": "daily 07:20 + 13:20 CT",
+   "purpose": "DIBC membership leverage tracker (Jon 2026-10-08, hub MC #870): reads M365 headers for ATI/DIBC mail, flags new solicitations on #870 + Jon DM, rebuilds/attaches Exos_DIBC_Leverage_Tracker.xlsx",
+   "stack_layer": "SENSE",
+   "autonomy_tier": "Recommends-with-Context",
+   "human_owner": "John Quinn",
+   "permission_envelope": "M365 Graph Mail.ReadBasic headers only (graph.microsoft.us); Supabase tasks read + PATCH #870 description; mc-attach to #870; Discord DM Jon via deliver.py; own state/logs",
+   "memory_boundary": "workspace + MC/Supabase (#870 only)",
+   "escalation": "Jon DM + #870 note (solicitations only; R-NONEWS)",
+   "eval_suite": "output eval: scripts/dibc_leverage_watch.py --selftest (classifier routes solicitation/other, excludes own pm.me/exosaero traffic, alert dedupe unique per M365 message id, every lane has a next action) + agent_eval liveness",
+   "telemetry": "~/.openclaw/logs/dibc-leverage-watch.log; state/dibc-leverage-state.json",
+   "reusability_scope": "any consortium inbox watch (edit config/dibc-leverage.json)",
+   "risk_tier": "LOW",
+   "change_log": [
+    "2026-10-08 created via John email-command '@exo Build tracking for leveraging this' (DIBC)"
+   ],
+   "eval_type": "output"
   }
  ],
  "eval_wave_1": {
