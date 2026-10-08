@@ -16,6 +16,10 @@
 //   - Every order: export screen + CSL denied-party screen must be done before the LSA goes out or
 //     any invoice is recorded.
 //
+// FAA CROSS-WAIVER (Jon 2026-10-08): every executed order also needs the customer's WET-SIGNED reciprocal
+// waiver of claims (14 CFR 440.17) physically at Exos by L-90 (90 days before the scheduled launch), so Exos can
+// submit all waivers to the FAA for payload approval. Tracked as a required gate parallel to the money stages:
+// shown in next_action from execution onward, overdue after L-90, and the order cannot close without it.
 // Store: data/payload-orders.json (MC is the system of record for this; no generator touches it).
 const fs = require('fs');
 const path = require('path');
@@ -159,18 +163,29 @@ function view(o, envelopes) {
   else if (!ms[2].paid_at) { stage = 8; next = ms[2].invoiced_at ? 'Collect M3 payment (10%)' : 'Invoice M3 (10%) after post-flight data delivery'; }
   else { stage = 9; next = 'All payments received — close the order'; }
   const today = new Date().toISOString().slice(0, 10);
-  const overdue = (o.next_due && o.next_due < today) || (stage === 7 && !ms[1].invoiced_at && ms[1].due && ms[1].due <= today);
+  // FAA cross-waiver gate (parallel to the money stages once the LSA is executed)
+  const waiverDue = o.flight_date ? addDays(o.flight_date, -90) : null;
+  const waiverOk = !!(o.waiver_wet_signed_at && o.waiver_faa_submitted_at);
+  if (executed && !o.closed && !waiverOk) {
+    next += ' · ' + (!o.waiver_wet_signed_at
+      ? `Get the customer's WET-SIGNED cross-waiver of claims at Exos${waiverDue ? ' by ' + waiverDue + ' (L-90)' : ' (L-90; set the flight date)'}`
+      : 'Submit the waiver package to the FAA for payload approval');
+  }
+  const waiverOverdue = executed && !o.closed && !o.waiver_wet_signed_at && waiverDue && waiverDue <= today;
+  const overdue = waiverOverdue || (o.next_due && o.next_due < today) || (stage === 7 && !ms[1].invoiced_at && ms[1].due && ms[1].due <= today);
   const received = ms.reduce((a, m) => a + (Number(m.amount_received) || 0), 0);
   return {
     ...o, flight: o.mission ? missionLabel(o.mission) : o.flight, contract_value_effective: cv, milestones_view: ms, stage, next_action: next, overdue: !!overdue,
     controlled: CONTROLLED(x.status), export_ok: !!exportOk, csl_ok: cslOk, screened: !!screened,
     executed, envelope_status: envStatus, amount_received_total: received,
+    waiver_due: waiverDue, waiver_ok: waiverOk, waiver_overdue: !!waiverOverdue,
   };
 }
 
 // ── field rules ──
 const EDITABLE = ['customer', 'contact_name', 'contact_email', 'payload_name', 'mission', 'flight', 'flight_date', 'mass_kg',
-  'contract_value', 'owner', 'task_ids', 'opp_id', 'questionnaire_received', 'next_due', 'notes'];
+  'contract_value', 'owner', 'task_ids', 'opp_id', 'questionnaire_received', 'next_due', 'notes',
+  'waiver_wet_signed_at', 'waiver_faa_submitted_at'];
 function clean(fields, o) {
   const out = {};
   for (const k of EDITABLE) if (k in fields) out[k] = fields[k];
@@ -399,6 +414,10 @@ async function handle(req, res, ctx) {
   }
 
   if (fp === '/api/payload-orders/close') {
+    const vw = view(o, ctx.loadEnvelopes());
+    if (!body.reopen && vw.executed && !vw.waiver_ok && !String(body.reason || '').match(/cancel/i)) {
+      return send(res, 409, { error: 'Cannot close: the wet-signed cross-waiver of claims (and its FAA submission) is not recorded. Record it, or close with a reason mentioning "cancelled".' });
+    }
     o.closed = !body.reopen; o.closed_at = o.closed ? now() : null;
     log(o, s, o.closed ? 'closed' : 'reopened', String(body.reason || '').slice(0, 200));
     save(d); audit('close', '');
