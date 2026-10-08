@@ -522,6 +522,12 @@ async function esignDeliverCompleted(env) {
   const recipients = Array.from(new Set(env.signers.map(s => s.email).concat(['jquinn@exosaero.com'])));
   const info = await t.sendMail({ from: '"Exos Aerospace — ExoSign" <jquinnexo@pm.me>', replyTo: 'jquinn@exosaero.com', to: recipients.join(', '), subject: 'Fully Executed: ' + env.title, html: completedHtml, attachments });
   console.log('[E-Sign] Completed doc delivered for envelope ' + env.id + ' to ' + recipients.join(', '));
+  // Write the execution back to MC (Jon 10/8, #3323): payload order marked executed, PDF attached to the
+  // owning task as "EXECUTED — …", task note. Detached so the signer's response never waits on it.
+  try {
+    execFile('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'esign_executed_writeback.py'), '--envelope', env.id],
+      { timeout: 120000 }, (err, out) => { if (err) console.error('[E-Sign] write-back error:', err.message); else console.log('[E-Sign] write-back:', String(out).trim()); });
+  } catch (e) { console.error('[E-Sign] write-back spawn error:', e.message); }
   return info;
 }
 
