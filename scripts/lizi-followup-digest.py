@@ -14,8 +14,8 @@ DUE={
  "2026-10-15":[
   ("SpaceTango: Danielle Rosales","reply on your 10/5 thread","emailed 10/5 (#1001)",
    "Hi Danielle,\nJust checking in on my note from last week about BLK3. We're booking payloads for early 2027 flights, and I'd love to find a time to talk about how we might work together for your customers. Would a quick call work?\nBest Regards,\nLizi"),
-  ("Watch buyers (task #3408)","reply on each buyer's thread","watch-list email sent ~10/5",
-   "Hi [Name],\nJust following up on the watch. I wanted to make sure you got my last email, and I'm happy to answer any questions or get the invoice over to you whenever you're ready.\nBest Regards,\nLizi"),
+  ("Watch follow-up to the 531-investor list (task #3408)","the same investor list (via David or your send list), after the website post from the 10/14 weekly is live","first email went ~10/1; 3 reserved so far",
+   "Hi [Name],\nQuick follow-up on the BLK3 Edition space-flown watch: a limited number are still available to Exos investors at $675, with delivery after the early 2027 flight. Each one comes with a certificate of flight. You can read more in this week's investor update [link to website post]. If you'd like one, just reply and I'll get you set up!\nBest Regards,\nLizi"),
   ("David Mitchell: Nov 7 investor notice","reply on your Teams-link email to David","you sent him the Teams link 10/8; notice must go out by ~10/23 (15-day bylaw) / 10/28 (Texas 10-day min)",
    "Hi David,\nJust checking that the Nov 7 investor meeting notice went out with the Teams link and the record date. Anything you need from me?\nBest Regards,\nLizi")],
  "2026-10-20":[

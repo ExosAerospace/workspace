@@ -166,8 +166,25 @@ def build_draft(today):
     # items (logged milestones / closed or committed events), not in-progress conversations.
     # (recent_pipeline() retained below if a "signed/closed" section is ever wanted.)
 
+    # One-time featured sections keyed by date (Lizi 10/8: watch post rides the 10/14 weekly).
+    FEATURED = {
+        "2026-10-14": [
+            "", "Featured: BLK3 Edition space-flown watch (investor pre-order)",
+            "• One of the payloads on our early 2027 BLK3 flight is a 1U container of watch dials from our",
+            "  payload customer TDP International. Each dial flies to the edge of space and back, then is",
+            "  finished into a BLK3 Edition timepiece: blacked-out case, deep-blue aventurine dial, automatic",
+            "  Seiko movement, serialized caseback, and a certificate of flight (date, altitude, launch site).",
+            "• Investor price: $675. A limited number are set aside for Exos investors, first come first served;",
+            "  delivery follows the flight. Several have already been reserved.",
+            "• It's also a small proof of the SPACEavailable model: payload pre-orders that fund their own flight.",
+            "• To reserve one, reply to this email or contact Lizi Quinn (lquinn@exosaero.com).",
+            "  [Lizi: confirm how many remain (ledger shows 3 reserved), attach EXOS_Watch_Graphic, and post the",
+            "  same text on the website investor page before this goes out.]"],
+    }
+    L += FEATURED.get(today.isoformat(), [])
+
     L += ["", "Standing status (confirm/update as needed before sending):",
-          "• Series A: raise open (Scorpius ROFR, RDRE development, BLK4).",
+          "• Series A: raise open (BLK3 flights, BLK4).",
           "• BLK3: first two flights targeted early 2027; NASA Flight Opportunities on-ramp anticipated mid-2027.",
           "• Pipeline: active payload and partnership discussions in progress.",
           "",
