@@ -47,7 +47,9 @@ DUE={
   ("UND: Jake Carstens","jacob.carstens@und.edu (reply on thread)","nudge sent 10/8 asking for an intro to Dr. David Delene",
    "Hi Jake,\nJust a gentle bump on the intro to Dr. Delene. No rush at all, and thanks again for your help!\nBest Regards,\nLizi"),
   ("K2 Space: Karan Kunjur","karan@k2space.com (reply on thread; note karan@k2.space bounced)","referral-partnership note sent 10/8 (#2005): BLK3 as a pre-orbital step for K2 hosted-payload customers",
-   "Hi Karan,\nJust following up on my note about a referral partnership. A recovered BLK3 flight could give your hosted payload customers flight data on new hardware before they commit to an orbital slot. Would a 15-minute call work in the next couple of weeks?\nBest Regards,\nLizi")]}
+   "Hi Karan,\nJust following up on my note about a referral partnership. A recovered BLK3 flight could give your hosted payload customers flight data on new hardware before they commit to an orbital slot. Would a 15-minute call work in the next couple of weeks?\nBest Regards,\nLizi"),
+  ("BioServe: Stefanie Countryman","Stefanie.Countryman@colorado.edu (reply on your 10/8 thread)","10/8 you answered her pressurization/bay/ICD questions + sent the PUG (#1310); she has no current fit, so this is a light keep-warm touch",
+   "Hi Stefanie,\nI wanted to check whether the Payload User Guide answered your questions about the bay. If any of your teams have hardware that could use a quick flight check before a longer mission, I'd be happy to set up a short call with our engineers.\nBest Regards,\nLizi")]}
 today=date.today().isoformat()
 items=DUE.get(today,[])
 if items:
