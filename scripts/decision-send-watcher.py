@@ -86,6 +86,8 @@ def from_email_command(it):
     blob = " ".join(str(it.get(k, "") or "") for k in ("source", "origin", "channel", "via"))
     return bool(EMAIL_CMD_SOURCE_RX.search(blob))
 
+BARE_SEND_CUTOFF = "2026-10-08T07:00:00"  # after the 10/8 01:30 manual backlog handling
+
 def is_send_request(it):
     if str(it.get("status","")).lower() != "answered": return False
     if from_email_command(it): return False  # already delivered via the email-command reply
@@ -93,6 +95,13 @@ def is_send_request(it):
     title = str(it.get("title",""))
     # affirmative?
     affirmative = ans.strip().lower().startswith("yes") or "approve" in ans.lower()
+    # 10/8: bare option answers ("Send", "All three") were silently dropped. Forward-only: answers
+    # before the cutoff (128-item historical backlog) wait on Jon's backlog Decision, not auto-fire.
+    if ans.strip().lower() in ("send", "send all", "all three", "all") and \
+            str(it.get("answeredAt", "")) >= BARE_SEND_CUTOFF:
+        if re.search(r"^\s*send\b", title, re.I) or SEND_RX.search(str(it.get("proposedAction", ""))) \
+                or re.search(r"\bsend\b", str(it.get("proposedAction", "")), re.I):
+            return True
     # explicit send phrasing anywhere, OR (affirmative AND the decision is a "send X" request)
     text = " ".join([title, ans, note, str(it.get("proposedAction",""))])
     if SEND_RX.search(ans) or SEND_RX.search(note): return True
