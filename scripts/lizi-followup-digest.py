@@ -53,7 +53,9 @@ DUE={
   ("Salish Kootenai College: Dean Matt Seeley","matt_seeley@skc.edu (reply on thread)","sent 10/8 (#3287): student/faculty research on BLK3, 1U from $7,500, Montana Space Grant funding angle",
    "Hi Dean Seeley,\nJust following up on my note about a BLK3 flight for SKC student or faculty research. I'd be happy to send over our university payload one-pager, or set up a quick call if that's easier. Is there anyone on your team I should connect with?\nBest Regards,\nLizi"),
   ("CWRU: Dr. Mohammad Kassemi (ZBOT cryo research)","mohammad.kassemi@case.edu (reply on thread)","sent 10/8 (D-7282012)",
-   "Hello Dr. Kassemi,\nJust following up on my note about a recovered BLK3 flight as a complement to your ZBOT work. Would a short call in the next couple of weeks be useful?\nBest Regards,\nLizi")]}
+   "Hello Dr. Kassemi,\nJust following up on my note about a recovered BLK3 flight as a complement to your ZBOT work. Would a short call in the next couple of weeks be useful?\nBest Regards,\nLizi"),
+  ("Beyond Reach Labs: Mitchell Fogelson","founders@beyondreachlabs.io (reply on thread)","sent 10/8 (D-7282010): Flarewing fold-and-deploy test before their Q2 2027 orbital demo",
+   "Hi Mitchell,\nJust following up on my note about a BLK3 flight test for a small Flarewing unit ahead of your 2027 demo. Would a quick call be worthwhile?\nBest Regards,\nLizi")]}
 today=date.today().isoformat()
 items=DUE.get(today,[])
 if items:
