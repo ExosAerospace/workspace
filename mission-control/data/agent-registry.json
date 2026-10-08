@@ -5369,6 +5369,26 @@
    "authority": "Jon, Decision D-7281980 option A (2026-10-07): narrow exception to no-auto-send, BLK3 payload-prospect outreach only, sends only after Lizi's human click",
    "envelope_source": "hand-written at creation 2026-10-07 from scripts/blk3_send_pack.py",
    "permission_envelope": "EXTERNAL EMAIL via /opt/homebrew/bin/msmtp -a protonmail (From 'Lizi Quinn via Exos Aerospace' <jquinnexo@pm.me>, Reply-To + Cc lquinn@exosaero.com) to approved plan recipients only, max 8/day; writes logs/outreach-sent-registry.json entry, Supabase activities task_note on the lead card, pipeline Status line; one Discord line to #exomac-system. Never .gov/.mil/national-lab/foreign/CSL-hit recipients (code-enforced)."
+  },
+  {
+   "label": "minute-book-exo3",
+   "script": "minute_book.py",
+   "kind": "manual tool (on receipt of minutes)",
+   "schedule": "on demand",
+   "purpose": "File board/member minutes and written consents for every Exos company into an append-only, hash-verified Minute Book (data-room/Corporate/<Entity>/Minute_Book + minute-book-register.json) for compliance and business-audit purposes.",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "file I/O: copy into data-room/Corporate/*/Minute_Book, write minute-book-register.json + per-entity index, chmod read-only; soffice PDF render. No network, no sends, no deletes, no overwrites (corrections = new version).",
+   "memory_boundary": "workspace data-room/Corporate only",
+   "escalation": "verify failure -> Jon (Decision card) ; minutes content questions -> board secretary/Jon",
+   "eval_suite": "scripts/minute_book.py --selftest (file+hash, read-only, dedupe, correction=new version, tamper detected by verify, adopt recorded); minute_book.py verify (exit!=0 on missing/mismatch)",
+   "telemetry": "logs/fleet_log.jsonl (agent=minute-book-exo3: file/adopt/verify)",
+   "reusability_scope": "all Exos entities (east, eai_llc, japan_kk, italia)",
+   "risk_tier": "LOW",
+   "change_log": [
+    "2026-10-08 created on Jon's instruction ('start saving out board meetings for our exos companies for compliance and business audit purposes'); approver John Quinn; first record MB-east-2026-10-06-bspe-min-v1"
+   ]
   }
  ],
  "eval_wave_1": {
