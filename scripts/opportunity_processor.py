@@ -357,6 +357,29 @@ def call_claude(prompt):
         print(f"    claude CLI call failed: {str(e)[:80]}")
         return None
 
+LIZI = "lquinn@exosaero.com"
+
+def is_payload_opp(opp):
+    return str(opp.get("id","")).startswith("PAY-") or "payload sale" in str(opp.get("type","")).lower()
+
+def _route_payload_to_lizi(opp, res):
+    """Payload-sales outreach is Lizi's: she sends it, signed as her (Jon 10/8 — Salish Kootenai draft
+    came to Jon's inbox signed 'John Quinn'). Outlook appends her company signature, so sign-off is
+    just 'Best Regards,' + 'Lizi' (reference/Lizi_Quinn_email_voice.md)."""
+    if not is_payload_opp(opp):
+        return
+    res["owner"] = "Lizi Quinn"
+    d = res.get("deliverable") or {}
+    body = str(d.get("body") or "")
+    if d.get("type") == "email" and body:
+        cut = re.search(r"\n\s*(Best regards|Best Regards|Regards|Sincerely|Thanks|Thank you)\s*,?\s*\n", body)
+        if cut:
+            body = body[:cut.start()].rstrip()
+        else:
+            body = re.sub(r"\n\s*John Quinn[\s\S]*$", "", body).rstrip()
+        d["body"] = body + "\n\nBest Regards,\nLizi"
+
+
 def process_one(opp):
     top = is_top(opp)
     use_claude = top and claude_ok()          # only use Claude if the key actually works
@@ -371,6 +394,7 @@ def process_one(opp):
         res = call_ollama(build_prompt(opp)); worker = "qwen-fallback"
     if res:
         res["_worker"] = worker; res["_tier"] = "top" if top else "standard"
+        _route_payload_to_lizi(opp, res)
     else:
         print(f"  ! {opp.get('id')} produced no usable result")
     return res
@@ -480,7 +504,9 @@ def route_to_mc(opp, res, draft_path):
             "proposedAction": (d.get("body","") or "")[:1200],
             "type": "yesno", "options": ["Send","Edit","Hold"],
             "priority": "high" if res.get("_tier")=="top" else "med",
-            "relatedItem": opp.get("title","")[:120], "source": "Opportunity Engine", "dueDate": due})
+            "relatedItem": opp.get("title","")[:120], "source": "Opportunity Engine", "dueDate": due,
+            # payload outreach: the Send card belongs to Lizi, so the watcher delivers the draft to HER inbox
+            **({"assignedTo": LIZI} if is_payload_opp(opp) else {})})
     elif route == "DECISION":
         # Backstop (Jon 2026-07-31): never surface speculative "does a warm/known contact or intro
         # path EXIST?" asks as decisions — that's premature relationship-fishing. Divert to the
