@@ -23,8 +23,6 @@ DUE={
   ("NCAR: Eric Apel","reply on his 10/6 thread","warm reply 10/6",
    "Hi Eric,\nFollowing up on our exchange from earlier this month. I'd love to set up a short call to talk through what an atmospheric chemistry payload on BLK3 could look like. What times work for you in the next week or two?\nBest Regards,\nLizi")],
  "2026-10-21":[
-  ("BioServe: Stefanie Countryman","countrym@colorado.edu","sent 10/7",
-   "Hi Stefanie,\nJust bumping my note from last week about flying several BioServe experiments together on one recovered BLK3 flight in early 2027. Would a short call be useful?\nBest Regards,\nLizi"),
   ("Axiom: Chyree Batton","Chyree@axiomspace.com (reply on thread)","sent 10/7",
    "Hi Chyree,\nJust following up on my note about a recovered BLK3 test flight for your battery and vacuum qualification work. Happy to set up a short technical call whenever works for your team.\nBest Regards,\nLizi"),
   ("JHU/APL: Josh Wolk","joshua.wolk@jhuapl.edu (reply on thread)","follow-up sent 10/7",
@@ -47,7 +45,9 @@ DUE={
   ("ND Space Grant: Dr. Caitlin Milera","caitlin.milera@und.edu","sent 10/8 (#2038): funding a UND student flight via Space Grant / ND NASA EPSCoR",
    "Hi Dr. Milera,\nJust following up on my note about funding a UND student flight-test payload on BLK3 through Space Grant or ND NASA EPSCoR. Would a quick call work in the next couple of weeks?\nBest Regards,\nLizi"),
   ("UND: Jake Carstens","jacob.carstens@und.edu (reply on thread)","nudge sent 10/8 asking for an intro to Dr. David Delene",
-   "Hi Jake,\nJust a gentle bump on the intro to Dr. Delene. No rush at all, and thanks again for your help!\nBest Regards,\nLizi")]}
+   "Hi Jake,\nJust a gentle bump on the intro to Dr. Delene. No rush at all, and thanks again for your help!\nBest Regards,\nLizi"),
+  ("K2 Space: Karan Kunjur","karan@k2space.com (reply on thread; note karan@k2.space bounced)","referral-partnership note sent 10/8 (#2005): BLK3 as a pre-orbital step for K2 hosted-payload customers",
+   "Hi Karan,\nJust following up on my note about a referral partnership. A recovered BLK3 flight could give your hosted payload customers flight data on new hardware before they commit to an orbital slot. Would a 15-minute call work in the next couple of weeks?\nBest Regards,\nLizi")]}
 today=date.today().isoformat()
 items=DUE.get(today,[])
 if items:
