@@ -50,6 +50,8 @@ DUE={
    "Hi Karan,\nJust following up on my note about a referral partnership. A recovered BLK3 flight could give your hosted payload customers flight data on new hardware before they commit to an orbital slot. Would a 15-minute call work in the next couple of weeks?\nBest Regards,\nLizi"),
   ("BioServe: Stefanie Countryman","Stefanie.Countryman@colorado.edu (reply on your 10/8 thread)","10/8 you answered her pressurization/bay/ICD questions + sent the PUG (#1310); she has no current fit, so this is a light keep-warm touch",
    "Hi Stefanie,\nI wanted to check whether the Payload User Guide answered your questions about the bay. If any of your teams have hardware that could use a quick flight check before a longer mission, I'd be happy to set up a short call with our engineers.\nBest Regards,\nLizi"),
+  ("Salish Kootenai College: Dean Matt Seeley","matt_seeley@skc.edu (reply on thread)","sent 10/8 (#3287): student/faculty research on BLK3, 1U from $7,500, Montana Space Grant funding angle",
+   "Hi Dean Seeley,\nJust following up on my note about a BLK3 flight for SKC student or faculty research. I'd be happy to send over our university payload one-pager, or set up a quick call if that's easier. Is there anyone on your team I should connect with?\nBest Regards,\nLizi"),
   ("CWRU: Dr. Mohammad Kassemi (ZBOT cryo research)","mohammad.kassemi@case.edu (reply on thread)","sent 10/8 (D-7282012)",
    "Hello Dr. Kassemi,\nJust following up on my note about a recovered BLK3 flight as a complement to your ZBOT work. Would a short call in the next couple of weeks be useful?\nBest Regards,\nLizi")]}
 today=date.today().isoformat()
