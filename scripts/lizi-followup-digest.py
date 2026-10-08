@@ -58,7 +58,11 @@ DUE={
   ("PoliTo: Roberta Fusaro (requirements feedback + admin paperwork)","roberta.fusaro@polito.it, cc paola.callegari@polito.it (reply on the PoliTOrbital thread)","10/8 you sent the challenge requirements v0.1 + design-in-Italy/build-in-US one-pager and asked for the admin templates + company-register paperwork (#3398, #3403). Skip if Paola already sent the paperwork or answered the PEC/signature questions",
    "Hi Roberta,\nI hope the team has had a chance to look over the challenge requirements and the build approach. We'd be happy to work through any questions or changes by email.\nAlso, just checking on the admin templates and company-register paperwork, and whether Paola had a chance to look at our PEC and digital signature questions on the letter. Once we have those, we'll get everything signed and sent.\nBest Regards,\nLizi"),
   ("UAH Propulsion Research Center: Dr. David Lineberry","david.lineberry@uah.edu (reply on thread)","sent 10/8 (#3019): microgravity propellant/fluids experiments on BLK3, offered call + Payload User Guide",
-   "Hi Dr. Lineberry,\nJust following up on my note about flying a propellant or fluids experiment on BLK3 in early 2027. I've attached our Payload User Guide in case it's helpful, and I'd be happy to set up a quick call with our engineering team.\nBest Regards,\nLizi")]}
+   "Hi Dr. Lineberry,\nJust following up on my note about flying a propellant or fluids experiment on BLK3 in early 2027. I've attached our Payload User Guide in case it's helpful, and I'd be happy to set up a quick call with our engineering team.\nBest Regards,\nLizi"),
+  ("UAH Propulsion Research Center: Dr. David Lineberry","david.lineberry@uah.edu (reply on thread)","sent 10/8 (#3019)",
+   "Hi Dr. Lineberry,\nJust following up on my note about a recovered BLK3 flight for Propulsion Research Center work. Would a quick call be useful?\nBest Regards,\nLizi"),
+  ("Rhodium Scientific: Olivia Gamez Holzhaus","LEO.Life@RhodiumScientific.com (reply on thread)","sent 10/8 (#3019/#3619)",
+   "Hi Olivia,\nJust following up on my note about a recovered BLK3 pre-flight for Rhodium's biotech payloads. Would a quick call make sense?\nBest Regards,\nLizi")]}
 today=date.today().isoformat()
 items=DUE.get(today,[])
 if items:
