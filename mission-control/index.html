@@ -1358,6 +1358,38 @@ function render() {
   document.getElementById('count-blocked').textContent  = counts['To Do'] || 0;
   document.getElementById('count-progress').textContent = counts['In Progress'] || 0;
   document.getElementById('count-done').textContent     = counts['Done'] || 0;
+  showElsewhereHits(filtered.length);
+}
+
+// The board box only searches tasks. When a search finds no tasks, show what the site-wide search
+// finds instead (decisions, CRM, opportunities, dossiers...) — Jon 10/8: "Salish Kootenai College"
+// showed an empty board although 7 records existed elsewhere.
+let _ewTimer = null, _ewSeq = 0;
+function showElsewhereHits(taskCount) {
+  let box = document.getElementById('elsewhereHits');
+  if (!box) {
+    box = document.createElement('div'); box.id = 'elsewhereHits';
+    box.style.cssText = 'margin:0 16px 12px;padding:10px 14px;border:1px solid #2a3b5c;border-radius:8px;background:#0e1a33;font-size:13px;display:none';
+    const tb = document.querySelector('.toolbar'); tb.parentNode.insertBefore(box, tb.nextSibling);
+  }
+  const q = (document.getElementById('searchBox').value || '').trim();
+  clearTimeout(_ewTimer);
+  if (!q || q.length < 3 || taskCount > 0) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  const seq = ++_ewSeq;
+  _ewTimer = setTimeout(async () => {
+    try {
+      const r = await fetch('/api/search?q=' + encodeURIComponent(q), { credentials: 'same-origin' });
+      const d = await r.json(); if (seq !== _ewSeq) return;
+      const groups = (d && d.groups) || [];
+      const e = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      if (!groups.length) { box.innerHTML = `No tasks or other records match “${e(q)}”.`; box.style.display = 'block'; return; }
+      box.innerHTML = `<div style="margin-bottom:6px"><b>No tasks match “${e(q)}”</b> — found elsewhere in MC:</div>` +
+        groups.map(g => `<div style="margin:4px 0"><span style="color:#8fa3c7">${e(g.icon || '')} ${e(g.label)}:</span> ` +
+          (g.results || []).slice(0, 5).map(x => `<a href="${e(x.url)}" style="color:#5aa9ff;text-decoration:none">${e(x.title)}</a>` +
+            (x.badge ? ` <span style="color:#8fa3c7;font-size:11px">(${e(x.badge)})</span>` : '')).join(' · ') + '</div>').join('');
+      box.style.display = 'block';
+    } catch (err) { if (seq === _ewSeq) { box.style.display = 'none'; } }
+  }, 350);
 }
 
 // Canonical identity: one person is stored under many free-text spellings (name variants,
