@@ -6,9 +6,6 @@ from datetime import date
 from email.message import EmailMessage
 LABEL="com.exos.lizi-followup-digest"
 DUE={
- "2026-10-09":[
-  ("ECA certificate for CMMC (#2813): retrieve by Sat 10/10","your email: look for the 'Certificate Issuance Notice'","if it isn't retrieved within 30 days of the ~9/10 forms date, the application restarts; SpaceWERX (due 10/21) needs the SPRS score posted",
-   "(No email to send.) Steps: 1) find the Certificate Issuance Notice, 2) retrieve + install the cert in your browser, 3) confirm whose name it's under (it must match whoever posts the score in PIEE: John or Neil), 4) tell Exo in #lizi-channel-2 if you get stuck.")],
  "2026-10-14":[
   ("John Cothran: watch invoice #0075 (phone number needed)","cothranprp@gmail.com (reply on your earlier thread)","his invoice is ready except his phone number",
    "Hi John,\nJust following up on your watch order. I have everything I need for your invoice except a phone number. Could you send that over when you get a chance? Thank you!\nBest Regards,\nLizi")],
