@@ -67,6 +67,24 @@ def last_events():
     return out
 
 
+def agents_deployed(cr):
+    """Every live agent supporting Exos work (Jon 10/8): loaded com.exos.* launchd agents on this Mac
+    + enabled OpenClaw scheduled agents. Registered count shown alongside for coverage."""
+    import subprocess
+    try:
+        out = subprocess.run(["launchctl", "list"], capture_output=True, text=True, timeout=20).stdout
+        launchd = sorted({ln.split()[-1] for ln in out.splitlines() if ln.split() and ln.split()[-1].startswith("com.exos.")})
+    except Exception:
+        launchd = []
+    crons_on = [x for x in cr if x.get("enabled")]
+    try:
+        reg = json.load(open(os.path.join(WS, "mission-control", "data", "agent-registry.json"))).get("agents", [])
+        registered = sum(1 for a in reg if "retired" not in str(a.get("lifecycle", "")))
+    except Exception:
+        registered = None
+    return {"total": len(launchd) + len(crons_on), "launchd": len(launchd), "crons": len(crons_on), "registered": registered}
+
+
 def agents_logged():
     """Distinct agents emitting correlation-ID events = the unified log substrate
     coverage (govlog-native + task-ledger-wrapped jobs after unification)."""
@@ -216,6 +234,9 @@ def build():
         "drafts_staged": drafts_staged(),
         "agents_logged": agents_logged(),
     }
+    dep = agents_deployed(cr)
+    kpis.update({"agents_deployed": dep["total"], "agents_deployed_launchd": dep["launchd"],
+                 "agents_deployed_crons": dep["crons"], "agents_registered": dep["registered"]})
     return {"generated": _now(), "kpis": kpis, "classes": classes,
             "crons": cr, "decisions": dec}
 
