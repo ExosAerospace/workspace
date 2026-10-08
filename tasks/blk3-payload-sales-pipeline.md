@@ -2016,7 +2016,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   3. **Joint customer campaigns:** X-Bow's customers (Army/Navy missile programs) also need to qualify THEIR hardware in flight. BLK3 + an X-Bow-connected customer relationship = access to X-Bow's DoD customer book.
 - **Geographic differentiator:** X-Bow HQ is Albuquerque, NM. Spaceport America is 90 miles south. They are literal neighbors. Jon could propose a co-located NM defense tech partnership meeting — no travel required for either party.
 - **Funding:** $70M Series B + $11M MDA + $8.9M AFRL/Navy contracts. Not grant-dependent. Procurement authority is institutional.
-- **Status:** NEW → RESEARCHING ✅ Draft AX below. → OUTREACH SENT (Lizi via send pack 2026-10-08, D-7282013, to sales@xbowsystems.com)
+- **Status:** LOST (Exo 10/8: X-Bow builds its own suborbital launch vehicles and ground-tests its motors; competitor, not a payload buyer)
 - **Next action:** Jon to review Draft AX. . ; cold outreach also appropriate given peer company size.
 
 ---
