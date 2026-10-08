@@ -461,6 +461,13 @@ def process_outbound_to_team(msg, subject, body):
     if not team_recipients:
         return
 
+    # Exo's helper emails to a teammate (drafts to send, docs, private info) carry
+    # X-Exo-No-Task: 1. They are deliverables for an existing task, not new delegations;
+    # turning them into tasks created duplicates (Lizi 10/8: #3572, #3624, #3625).
+    if str(msg.get('X-Exo-No-Task', '')).strip() == '1':
+        print("  Skipped: Exo helper email (X-Exo-No-Task) — not a task")
+        return
+
     # (a) Exo's OWN automated status replies (subject "…, Exo update") are outbound from Exo to the
     # requester, not new delegations. They were looping back through this intake and spawning
     # duplicate reply-thread cards ("Re: X, Exo update"). Never turn them into tasks.

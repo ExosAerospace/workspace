@@ -56,7 +56,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Active programs:** Hypergolic propellant alternatives (green MMH replacements), hydrogen storage systems, altitude chamber testing for rocket propellants, liquid rocket engine combustors. Zucrow Labs operates altitude chambers for flight mission support — directly analogous to suborbital flight environment qualification.
 - **Why BLK3 fits:** Purdue's APECS research explicitly needs flight-relevant environments; lab ground testing + BLK3 suborbital flight = TRL step-up. Pourpoint's hypergolic/hydrogen work is ideal for a recover-and-inspect flight profile.
 - **Funding:** NASA SBIR/STTR, AFOSR, DOE (hydrogen storage). Well-funded NASA university research group with flight-heritage interest.
-- **Status:** RESEARCHING
+- **Status:** LOST (Exo 10/8, Lizi lead review: Pourpoint ground-stand work (one nudge only))
 - **Next action:** Draft + send tailored email to Pourpoint. ✅ Draft ready below.
 
 ---
@@ -73,6 +73,8 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 
 ---
 #### 3. SpaceTango (Lexington, KY) — Broker/Integrator
+> ⚠️ **SUPERSEDED — duplicate (UTD dedupe, Sunidhi #3140, 2026-10-07).** Use #8 SpaceTango (Twyman Clements) — Deepened Enrichment; POC → Danielle Rosales, Dir. BD Technologies. Do not work this entry.
+
 - **Segment:** Broker / aggregator
 - **POC:** Twyman Clements — CEO & Co-founder (confirmed public figure)
   - **Email (best-guess):** tclements@spacetango.com *(standard company format)*
@@ -92,7 +94,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Active programs:** Laser diagnostics for rocket combustion, reacting flows under elevated pressure, NASA-funded combustion research. TAMU is geographically close to Exos (Greenville, TX) — logistics + partnership angle.
 - **Why BLK3 fits:** TAMU propulsion researchers need flight-relevant pressure/vibration/thermal environments to validate combustion diagnostics. Geographic proximity = low integration cost and potential ongoing partnership.
 - **Funding:** NASA University Leadership Initiative, AFOSR YIP/grants, NSF. Actively funded research groups.
-- **Status:** RESEARCHING
+- **Status:** LOST (Exo 10/8, Lizi lead review: ground-lab work)
 - **Next action:** Jon has TX aerospace community relationships — warm intro via Jon directly or through Texas aerospace network. Draft outreach below.
 
 ---
@@ -104,7 +106,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Active programs:** Redwire operates in-space manufacturing (fiber optics, bioprinting, electronics) on ISS. They have flight-heritage across multiple missions and are actively expanding platform options. They routinely test new manufacturing processes.
 - **Why BLK3 fits:** Redwire's in-space manufacturing processes need microgravity exposure at various durations; suborbital is ideal for short-duration characterization experiments before committing to ISS slots. BLK3 recover-and-inspect is directly useful for post-flight material analysis.
 - **Funding:** Commercial revenue + NASA contracts; well-capitalized public company (RDW on NYSE). Can pay for a flight slot commercially.
-- **Status:** RESEARCHING
+- **Status:** LOST (Exo 10/8, Lizi lead review: Vellinger thread live; Rush left)
 - **Next action:** Jon to reach out at next conference or via warm intro. Redwire is public — BD contact info available on investor/partner pages.
 
 ---
@@ -311,7 +313,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Active programs:** Merck has run multiple ISS crystal growth campaigns (MK-1654, pembrolizumab). They've publicly stated microgravity protein crystallization enables larger, more uniform crystals that improve drug delivery (subcutaneous formulations vs. IV). This is an active research program with ongoing investment.
 - **Why BLK3 fits:** Merck's ISS crystal growth program faces the same continuity gap. Suborbital (~5-7 minutes microgravity) isn't identical to ISS (weeks), but it enables faster screening of crystallization conditions — they can run 10 BLK3 experiments in the time it takes to get one ISS slot. For early-stage candidates, suborbital is the screening stage before committing ISS resources. This maps to how Merck already uses parabolic flight (short-duration) alongside ISS (long-duration).
 - **Budget:** Merck is one of the top 5 pharma by R&D spend ($15B+/year). A suborbital payload slot ($37,500-$112,500 for 5-15 kg) is rounding error in their drug development budget.
-- **Status:** RESEARCHING — Draft H targeted for Jon to route via ISS National Lab intermediary path
+- **Status:** LOST (Exo 10/8, Lizi lead review: needs ISS-length runs)
 - **Next action:** (1) Identify Merck's current ISS/space program contact via ISS National Lab (CASIS connection) or LinkedIn; (2) Jon to reach out via warm path through ISS NL or directly to Merck External Innovation
 
 ---
@@ -345,7 +347,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Active programs:** NIH/NCATS Tissue Chips in Space — organ-on-a-chip experiments in microgravity to model disease and drug responses. 3 ISS cohorts completed; Cohort 4 pending. The program explicitly aims to continue post-ISS — but has no clear continuity plan for the 2030-2032 gap.
 - **Why BLK3 fits:** Tissue chip experiments at suborbital timescales (5-7 min) can screen for gravity-responsive phenotypes before committing to full ISS experiments. This maps to our existing NIH STTR pitch. Tagle is the exact person in our NIH pursuit (Capture Agent v3) — this bridges both tracks.
 - **Funding:** NIH NCATS budget; grants flow to university PIs. Tagle controls the flight coordination.
-- **Status:** RESEARCHING — already partially covered by NIH pursuit (Capture Agent v3)
+- **Status:** LOST (Exo 10/8, Lizi lead review: ISS weeks-long)
 - **Next action:** Coordinate with NIH Capture Agent — Tagle may be reachable through the NCATS/ISS-NL pathway we're already working. Do NOT duplicate outreach; coordinate.
 
 ---
@@ -424,7 +426,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - **BD/Partnerships entry:** partnerships@redwirespace.com | Media: jordan@redwirespace.com, (321) 536-8632
 - **Updated programs (2026):** Redwire is opening a new microgravity payload development facility at Novaparke Innovation & Technology Campus, Floyd County, Indiana — explicitly to expand "biomedical research payloads" for LEO microgravity R&D. Also: MSTIC semiconductor manufacturing payload (ISS National Lab / NASA In Space Production Applications). SpaceMD (drug crystal growth) is a separate Redwire spin-out under John Vellinger — Draft I already covers that.
 - **New angle:** The Indiana facility = Redwire is scaling its payload development business for customers who want microgravity. BLK3 pitch: Redwire's CUSTOMER payload clients (not Redwire itself) need pre-ISS flight validation. Redwire-Exos partnership: Redwire serves as payload integrator/developer for BLK3 suborbital missions, just as they do for ISS. One partnership conversation unlocks Redwire's entire biomedical/materials customer pipeline.
-- **Status:** RESEARCHING → **READY** ✅ Draft N below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: Vellinger thread live; Rush left)
 
 ---
 #### SpaceMD / John Vellinger — STATUS UPGRADE
@@ -507,7 +509,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - Reusable platform — enables multi-campaign scheduling without range time fights at Wallops
   - Recovered hardware — Sandia needs their sensors and materials back for post-flight analysis; BLK3 returns them in days
 - **Funding:** DOE/NNSA funding (Sandia is a national lab); DOD program funding via Conventional Prompt Strike / LRHW programs. Not grant-competitive — budget is institutional. Ben English has direct program authority.
-- **Status:** NEW → RESEARCHING ✅ Draft P below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: own sounding rockets)
 - **Next action:** Route Draft P through Jon; identify warm path via AFRL/Kirtland contacts (Kirtland and Sandia are institutional neighbors). This is a high-value gov relationship that could become a multi-flight campaign.
 
 ---
@@ -606,7 +608,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Why upgraded:** Reichert is the most public-facing Merck space scientist — featured in ISS NL podcast as "one of the most influential figures in space-based PCG research." His work directly led to the FDA-approved subcutaneous pembrolizumab formulation (approved Sep 2025, highlighted by NASA/ISS NL in April 2026). He is not only the PI but an active advocate for space-enabled drug discovery. He is the correct direct outreach target — not the generic ESAI team.
 - **Active programs:** Pembrolizumab crystal growth → FDA-approved. Pipeline almost certainly has next-generation mAb candidates for the same treatment. Merck R&D spend ~$15B/yr; a suborbital slot is rounding error.
 - **New angle:** Reichert explicitly discusses "what the future holds for space-enabled drug discovery" — he is thinking about what comes after ISS. Pitch BLK3 as the fast-screening layer: screen 5 candidates suborbital for every 1 that earns an ISS slot.
-- **Status:** RESEARCHING → **READY** ✅ Draft J below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: needs ISS-length runs)
 
 ---
 #### 11. Axiom Space — Dr. Lucie Low — TITLE CORRECTED + UPDATED
@@ -624,7 +626,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **New context:** "Tissue Chips in Space 2.0" is a formal new program phase (RFA-TR-24-025) funded by NCATS + NIBIB for multi-organ integrated microphysiological systems (MPS) to fly on ISS National Lab. The 27th NIH Tissue Chip Consortium Meeting was held April 2026, including a "CIVM Qualification Framework" workshop — these are active Cohort 4 PIs developing new chip systems for ISS.
 - **New angle:** The 2.0 program involves multi-organ platforms that need qualification/validation before ISS deployment. Ground testing validates chip function; suborbital validates chip survival in flight environment (vibration, g-loading, thermal) before committing ISS resources. BLK3 is the missing "pre-ISS flight qualification" step in the Tissue Chips 2.0 roadmap.
 - **Bridge to NIH pursuit:** Tagle is already in scope for our NIH STTR Capture Agent (cron 018a38fe). Coordinate: do NOT send duplicate outreach. This payload-sales pitch goes to Tagle only if NIH Capture Agent hasn't already contacted him via a different angle.
-- **Status:** RESEARCHING (no status change — coordinate with NIH Capture Agent before sending)
+- **Status:** LOST (Exo 10/8, Lizi lead review: ISS weeks-long)
 - **Next action:** Check with NIH Capture Agent status before sending Draft L below.
 
 ---
@@ -755,6 +757,9 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 ---
 
 #### 20. Stanford SPaSE / Prof. Tonghun Lee — STATUS + DRAFT ADDED
+**Status:** LOST (Exo 10/8, Lizi lead review: ground/wind-tunnel work)
+> ⚠️ **SUPERSEDED — duplicate (UTD dedupe, Sunidhi #3140, 2026-10-07).** Use the second #20 Stanford SPaSE — Prof. Tonghun Lee entry. Do not work this entry.
+
 - **Status update:** RESEARCHING → **READY** (lower urgency; draft added below).
 - **Note:** Lee's SPaSE lab focuses on ground-based laser/optical diagnostics with AFRL, Sandia, ARL, Argonne. No confirmed active suborbital flight hardware program — pursue as a warm intro via Sandia (Ben English, HOT-H, #16) or AFRL. Lee is a long-term strategic relationship, not near-term manifest fill.
 - **Next action:** Do NOT cold-email Lee directly. Instead, use Sandia HOT-H warm path — if Jon land the Sandia conversation, mention Lee as a potential follow-on academic collaborator.
@@ -820,7 +825,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - **Email (best-guess):** tonghun@stanford.edu *(standard Stanford format)*
 - **Active programs:** Combustion chemistry and reactive flows for advanced propulsion — hypersonic, laser diagnostics, AI-based combustion optimization. Partners: AFRL, ARL, Sandia National Labs, FAA, Argonne. Sandia connection overlaps with our HOT-H pursuit (#16 — Ben English).
 - **Why BLK3 fits:** Flight environment validation for laser diagnostic systems; Lee's Sandia/AFRL connections create warm-path crossover into prospects already in the pipeline.
-- **Status:** NEW → RESEARCHING (lower urgency; no current flight hardware program confirmed)
+- **Status:** LOST (Exo 10/8, Lizi lead review: ground/wind-tunnel work)
 - **Next action:** Pursue after Metzger, Hartwig, and LLanos. Use Sandia/AFRL connections as warm intro path.
 
 ---
@@ -882,7 +887,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - Bruey at ASCEND 2026: "It shows that space drugs have gone from research for science's sake to research and development for patients' sake." BLK3 is the R&D-speed tool that feeds Varda's manufacturing pipeline.
   - Varda is NOT a competitor — they go to orbit; BLK3 goes to 100 km. BLK3 is the step before Varda.
 - **Funding:** Commercial revenue + $329M raised. Can commit commercially.
-- **Status:** NEW → RESEARCHING ✅ Draft W below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: own capsules)
 - **Next action:** Jon to send Draft W. Cold outreach appropriate. Conference intro (ASCEND/Space Symposium) is ideal warm path.
 
 ---
@@ -896,7 +901,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Why BLK3 fits:** UT's Varda collaboration covers one drug family. Their R&D pipeline has MORE candidates. BLK3 suborbital = fast pre-screen for additional candidates before committing Varda orbital resources. Same escalation: parabolic flight (20 sec) → BLK3 suborbital (5-7 min) → Varda orbital (weeks) → manufacturing.
   - **Pitch angle:** "You're already using Varda for orbital manufacturing. BLK3 is how you screen your next 10 candidates before one earns a Varda slot."
 - **Budget:** UTHR R&D budget ~$1.5B/yr. A BLK3 payload slot is immaterial.
-- **Status:** NEW → RESEARCHING (Varda warm-intro REQUIRED before direct outreach)
+- **Status:** LOST (Exo 10/8, Lizi lead review: committed to Varda)
 - **Next action:** (1) After Draft W lands with Varda, ask Bruey to introduce Exos to UT. (2) Jon to identify UT External Innovation team contact via ISS NL or biotech conference connections. Draft X is HOLD — do NOT cold email Rothblatt.
 
 ---
@@ -910,7 +915,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Why BLK3 fits:** Impulse iterates fast on propulsion hardware. Flight environment validation (vibration, thermal cycling, near-vacuum at ~100 km apogee) of Deneb structural components and Helios subsystems before orbital mission integration is exactly the "test to failure first" culture Mueller built at SpaceX. BLK3 delivers 5-7 min near-vacuum + full ascent vibration profile + hardware back in 2-3 days.
   - Also: Orbit Fab + Impulse connection. Exos has flagged Orbit Fab intro (Daniel Faber) as a standing project. If that intro lands, Orbit Fab → Impulse warm-path opens naturally.
 - **Funding:** Commercial VC (Series B) + DIU via Orbit Fab contract. Can commit commercially.
-- **Status:** NEW → RESEARCHING ✅ Draft Y below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: ground-test engine maker)
 - **Next action:** Jon to review Draft Y.
 
 ---
@@ -1005,7 +1010,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   2. **QuadPack customer payloads:** Astrobotic's payload customers (universities, commercial, NASA) need flight heritage before committing expensive hardware to a one-shot lunar mission. BLK3 = the affordable pre-screening step.
   3. **Timing:** Griffin-1 is en route to JPL now. Griffin-2 engineering will be in active design through 2027 — exactly when BLK3 Flight 2 flies. The qualification campaign lines up.
 - **Funding:** NASA CLPS ($237M+ total task orders). Commercial customers pay Astrobotic per payload. Not grant-dependent for procurement decisions.
-- **Status:** NEW → RESEARCHING ✅ Draft AA below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: now Voyager; own vehicles)
 - **Next action:** Jon to send Draft AA or identify warm path via CLPS community (NASA GSFC/JPL CLPS program office is the mutual touchpoint). — Astrobotic is new-space; Thornton is well-networked in the commercial lunar community.
 
 ---
@@ -1107,7 +1112,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - Starlab isn't flying until 2029 at best. Rhodium has clients NOW who need data and can't wait 3 years. BLK3 bridges the gap.
 - **Warm path:** Starlab CEO Marshall Smith or ISS National Lab connections (Rhodium is listed on ISS NL). Jon's existing ISS NL relationships may open this door.
 - **Funding:** Commercial (client revenue). Rhodium is small but serves commercial pharma/biotech that can pay per experiment.
-- **Status:** NEW → RESEARCHING ✅ Draft AC below.
+- **Status:** NEW → RESEARCHING ✅ Draft AC below. → OUTREACH SENT (Lizi via send pack 2026-10-08, D-7282013, to olivia@rhodiumscientific.com)
 - **Next action:** Jon to send Draft AC, or identify warm intro via ISS NL or Starlab network first.
 
 ---
@@ -1121,11 +1126,13 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Active programs:** Lithuania-based life-sciences mission integrator. Active ISS mission (ESA partnership, launched early 2026, 3-year radiation/pharmaceutical stability study). Reserved Starlab utilization space (March 17, 2026) for: chemical stability and formulation research, biological and bioreactor studies, and medical technology validation. Milašius quote: "Medicines are designed with terrestrial logic, but space changes everything." CTO Žmuidinavičius actively speaking at BioProcess International forums. They enable commercial pharma companies to do space-based R&D under a service model.
 - **Why BLK3 fits:** Delta's pharma stability clients need to SCREEN formulations and excipient behavior in microgravity before committing to long-duration ISS/Starlab experiments. BLK3's 5-7 min of genuine microgravity + hardware returned in 2-3 days is the fast-screen layer: identify which formulation candidates behave interestingly in reduced gravity before they're locked into a 3-year ISS study or an expensive Starlab slot. Also: BLK3 can validate Delta's own payload hardware (bioreactor systems, sample containers) in actual flight vibration/thermal environment before orbital deployment — reducing the risk of hardware failure on a long-duration mission.
 - **Funding:** Commercial client revenue + ESA/European government research funding. International market access creates a unique angle — Delta serves non-US pharma companies who don't have a US suborbital flight path. BLK3's FAA-licensed US platform could be an attractive option for Delta's European pharma clients.
-- **Status:** NEW → RESEARCHING ✅ Draft AD below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: needs long-duration)
 - **Next action:** Cold outreach to dominykas@deltabiosciences.com is appropriate — they're a commercial company with an active business model. Starlab warm path via Marshall Smith is a secondary option.
 
 ---
 #### 31. Ursa Major Technologies — Chris Spagnoletti (CEO) ⭐⭐ AFRL/DoD BRIDGE
+> ⚠️ **SUPERSEDED — duplicate (UTD dedupe, Sunidhi #3140, 2026-10-07).** Use #53 Ursa Major — Propulsion Avionics Angle. Do not work this entry.
+
 - **Segment:** Defense / Propulsion — AM-manufactured engine component qualification + AFRL relationship crossover
 - **POC:** **Chris Spagnoletti** — CEO, Ursa Major Technologies (appointed Feb 19, 2026)
   - **Email (best-guess):** chris@ursamajor.com *(small/mid-size company; first-name email common; also: contact@ursamajor.com or cspagnoletti@ursamajor.com)*
@@ -1141,7 +1148,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   2. **AM material qualification:** Coupons of 3D-printed materials (Inconel, aluminum alloys) flown on BLK3 to characterize structural performance under real flight loads/vibration/thermal cycles — feeds Ursa Major's materials database for future designs.
   3. **AFRL relationship crossover:** Ursa Major is on AFRL contract. Exos has AFRL/SBIR Phase II (FA9300-25-C-6022). A BLK3-Ursa Major collaboration with AFRL involvement leverages both organizations' existing AFRL relationships for a joint flight experiment.
 - **Funding:** VC-backed ($69M+ raised); AFRL contracts (direct R&D budget). Commercial revenue from Hadley engine sales. Not grant-dependent for procurement decisions.
-- **Status:** NEW → RESEARCHING ✅ Draft AE below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: ground-test engine maker)
 - **Next action:** Jon to review Draft AE. Route via AFRL contact network if possible;
 
 ---
@@ -1205,6 +1212,8 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 
 ---
 #### 32. DIU HyCAT Program — Col. Nicholas Estep ⭐⭐⭐ ACTIVE COMMERCIAL SUBORBITAL BUYER
+> ⚠️ **SUPERSEDED — duplicate (UTD dedupe, Sunidhi #3140, 2026-10-07).** Use #54 DIU HyCAT Program Office (Estep left DIU Feb 2026); route = DIU Company Interest Form. Do not work this entry.
+
 - **Segment:** Gov / Defense — DoD active buyer of commercial suborbital hypersonic flight testing
 - **POC:** **Col. Nicholas Estep (LtCol, PhD)** — Technical Program Manager, DIU HyCAT (Hypersonic and High-Cadence Airborne Testing Capabilities)
   - **DIU public BD contact:** diu.mil/work-with-us (standard DIU entry); also press@diu.mil
@@ -1252,7 +1261,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   2. **Technology demonstrators** (mirror coatings, detectors, fiber optics) that need flight heritage to move up the TRL ladder
   3. **CU Boulder proximity to Exos** — Exos's Colorado connections (Scorpius, etc.) and LASP's connection to BioServe (also CU) create a university partnership angle
 - **Funding:** NASA ROSES, APRA, FINESST; NSF; NASA SBIR. LASP is well-funded and actively pursuing flight opportunities for instrument TRL. Flight Opportunities program is a direct funding path.
-- **Status:** NEW → RESEARCHING ✅ Draft AH below (warm outreach; confirmed email).
+- **Status:** NEW → RESEARCHING ✅ Draft AH below (warm outreach; confirmed email). → OUTREACH SENT (Lizi via send pack 2026-10-08, D-7282013, to brian.fleming@lasp.colorado.edu)
 - **Next action:** Jon to send Draft AH to Brian Fleming OR pursue via NASA Flight Opportunities programmatic route (Fleming is already a NASA FO community member — he actively puts payloads on sounding rockets).
 
 ---
@@ -1598,7 +1607,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   3. **Rapid iteration culture match** — Hermeus's entire philosophy is "hardware richness and rapid iterative prototyping" — Piplica explicitly said this in the Series C announcement. BLK3's 2-3 day recover-and-refly is the same philosophy applied to suborbital payload testing. They will understand this immediately.
   4. **DIU/AFRL TRL advancement** — Hermeus holds a DIU contract for hypersonic testing. Suborbital data from BLK3 would support that contract's TRL advancement deliverables.
 - **Funding:** $350M Series C fresh (April 2026); $1B valuation; DIU contract revenue. Well-capitalized; payload slot cost is not a constraint.
-- **Status:** NEW → RESEARCHING ✅ Draft AL below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: weak fit)
 - **Next action:** Jon cold-email AJ Piplica directly — peer-to-peer founder conversation, same launch site, natural partnership. This is the strongest peer-company BD conversation in the full pipeline. No warm intro needed; Spaceport America co-location is the opening line.
 
 ---
@@ -1622,7 +1631,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   3. **AFWERX alignment** — Both Exos and Firehawk have AFWERX SBIR relationships. Shared program office relationships at AFRL/SpaceWERX create a natural warm path. Joint SBIR program concept (Exos as flight platform + Firehawk as propellant/engine developer) is eligible under SpaceWERX open BAAs.
   4. **DoD customer overlap** — Firehawk's target customers (Army, Air Force, Raytheon) overlap exactly with BLK3's DoD payload customer targets (HyCAT, AFRL, Sandia). A Firehawk-BLK3 payload agreement could be presented jointly to shared DoD program offices as a cost-effective qualification campaign.
 - **Funding:** Raytheon + VC, $60M+ raised; AFWERX SBIR; well-funded for flight testing. Can pay commercially.
-- **Status:** NEW → RESEARCHING ✅ Draft AM below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: weak fit (Lizi 10/5))
 - **Next action:** Jon direct-outreach to Will Edwards — peer founder, Texas neighbor, AFWERX mutual ground. This could become an ongoing multi-flight relationship (they have multiple analog programs to qualify). — could turn this from cold to warm same week.
 
 ---
@@ -1645,7 +1654,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
     3. **Marshall Smith's NASA network** — Smith led Artemis and HLS; he personally knows the PI and agency community that BLK3 serves. A Starlab-Exos referral arrangement framed as "suborbital bridge for your clients" directly addresses the gap in his customer pipeline.
   - **Differentiated pitch from Axiom:** Axiom targets the premium researcher market; NanoRacks/Voyager has always been the democratized-access provider. Pitch BLK3 as the affordable entry ramp into Starlab's customer funnel — their gateway customer for smaller research teams that graduate to Starlab missions.
 - **Funding:** Commercial + NASA CLD contract (Commercial LEO Destinations program). Well-funded; Starlab is a NASA-backed program. BD budget is real.
-- **Status:** NEW → RESEARCHING ✅ Draft AN below.
+- **Status:** NEW → RESEARCHING ✅ Draft AN below. → OUTREACH SENT (Lizi via send pack 2026-10-08, D-7282013, to starlabcfp@starlab-space.com)
 - **Next action:** Jon outreach to Marshall Smith (peer-level: Exos CEO → Starlab CEO) or approach via NanoRacks BD team. Smith's NASA background means a well-framed letter from a fellow aerospace operator will land. This is cold outreach, but Smith is known to be accessible at industry events.
 
 ---
@@ -1764,8 +1773,8 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   3. **NASA Flight Opportunities path** — UM PEPL's research is explicitly fundable through NASA STMD/Flight Opportunities for the EP component qualification work; BLK3 can be on-ramped to that funding stream
   - **$35M SPAR funding** = flight experiment budget is real. SPAR explicitly aims to advance space propulsion systems toward operational readiness — flight demonstrations are a core deliverable.
 - **Funding:** AFOSR, NASA (Flight Opportunities eligible), DoD SBIR/STTR; $35M SPAR Institute institutional funding. Well-funded; Jorns has active grants.
-- **Status:** NEW → RESEARCHING ✅ Draft AT below.
-- **Next action:** Cold outreach to bjorns@umich.edu is appropriate; this is a research PI conversation. Consider mentioning SPAR Institute's TRL advancement mission as the hook. — worth an ask.
+- **Status:** SENT by Lizi 2026-10-05 16:47 CDT ("A flight-test option for PEPL hardware, early 2027") — MC #3145. Do NOT redraft; follow-up only.
+- **Next action (superseded):** Cold outreach to bjorns@umich.edu is appropriate; this is a research PI conversation. Consider mentioning SPAR Institute's TRL advancement mission as the hook. — worth an ask.
 
 ---
 
@@ -1850,7 +1859,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   2. **ASCENT/HTP propellant behavior in actual microgravity:** Ground thermal-vacuum chambers at 10^-7 Torr don't replicate in-space propellant slosh, pressurization dynamics, and interface behavior during actual free-fall. BLK3's 5-7 min of genuine microgravity at ~100 km provides the propellant behavior data that Benchmark needs for DARPA LASSO and future lunar missions where propellant management in very-low lunar orbit is a core technical challenge.
 - **AFRL crossover:** Benchmark's AFRL partnership at Edwards (Macaw hotfire) is the same AFRL Aerospace Systems Directorate that Exos engages via SBIR FA9300-25-C-6022. Shared AFRL relationship = warm institutional ground for this conversation.
 - **Funding:** VC-backed + DoD/DARPA contracts; commercial propulsion revenue. Not grant-dependent; can commit commercially.
-- **Status:** NEW → RESEARCHING ✅ Draft AU below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: ground-tested thrusters)
 - **Next action:** Jon cold-email McDevitt directly — peer founder, active AFRL propulsion relationship, imminent flight qualification milestone (Macaw). Timing is excellent: the AFRL hotfire proved ASCENT operational; BLK3 is the logical next flight-environment step.
 
 ---
@@ -2007,11 +2016,13 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   3. **Joint customer campaigns:** X-Bow's customers (Army/Navy missile programs) also need to qualify THEIR hardware in flight. BLK3 + an X-Bow-connected customer relationship = access to X-Bow's DoD customer book.
 - **Geographic differentiator:** X-Bow HQ is Albuquerque, NM. Spaceport America is 90 miles south. They are literal neighbors. Jon could propose a co-located NM defense tech partnership meeting — no travel required for either party.
 - **Funding:** $70M Series B + $11M MDA + $8.9M AFRL/Navy contracts. Not grant-dependent. Procurement authority is institutional.
-- **Status:** NEW → RESEARCHING ✅ Draft AX below.
+- **Status:** NEW → RESEARCHING ✅ Draft AX below. → OUTREACH SENT (Lizi via send pack 2026-10-08, D-7282013, to sales@xbowsystems.com)
 - **Next action:** Jon to review Draft AX. . ; cold outreach also appropriate given peer company size.
 
 ---
 #### 51. Exobiosphere — (CEO TBD — POC not fully confirmed) ⭐ EMERGING PHARMA CRO PLAY
+> ⚠️ **SUPERSEDED — duplicate (UTD dedupe, Sunidhi #3140, 2026-10-07).** Use #51 Exobiosphere — POC CONFIRMED (Kyle Acierno, Co-Founder & CEO). Do not work this entry.
+
 - **Segment:** Pharma/Biotech — space-based pre-clinical CRO, active ISS customer
 - **POC:** CEO/Founder not publicly confirmed from available sources
   - **BD/general contact:** info@exobiosphere.com or contact@exobiosphere.com (standard)
@@ -2136,7 +2147,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - Spagnoletti is 5 months into the CEO role — still establishing his external BD strategy. Early window.
 - **⚠️ Pitch calibration:** Ursa Major builds propulsion; they are not a payload customer in the traditional sense. The pitch must focus on avionics/integration hardware qualification, not the engine itself (they test their own engines independently). Do not pitch BLK3 as an engine test stand.
 - **Funding:** Commercial revenue + AFRL contracts (confirmed active); raised Series B previously. Can pay commercially.
-- **Status:** NEW → RESEARCHING ✅ Draft BA below. Lower immediate priority than RSA/Usman; warm intro via AFRL shared relationship is the best path.
+- **Status:** LOST (Exo 10/8, Lizi lead review: ground-test engine maker)
 - **Next action:** Jon: identify AFRL program manager common to both Ursa Major (Draper/ARMD) and Exos (FA9300) as warm intro path. Cold outreach acceptable given startup-to-startup dynamic, but AFRL warm path is cleaner.
 
 ---
@@ -2333,7 +2344,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   3. **Exos Italia international bridge:** BLK3 is operated by Exos (US-licensed); Exos Italia (Torino) is Exos's European subsidiary. UK-US cross-border payload logistics can be handled without requiring international transit of controlled technology (cleared via Payload User's Guide ITAR export screen).
 - **Note on crystal growth:** Space Forge's semiconductor crystal manufacturing requires SUSTAINED orbital microgravity (days to weeks). BLK3's 5-7 min suborbital microgravity is NOT suited for their core product. The pitch must focus on HARDWARE QUALIFICATION for satellite components, not on producing semiconductor crystals.
 - **Funding:** ~$40.9M raised; commercial revenue path via US semiconductor customer pipeline.
-- **Status:** NEW → RESEARCHING ✅ Draft BE below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: orbital rides; reentry test n/a)
 - **Next action:** Jon cold-email Joshua Western directly (CEO-to-CEO; company is 50-100 person range; Western reads his own email). Exos Italia connection is a useful credibility hook for a UK founder. Export screen reminder: cleared Payload User's Guide is fine; do not share engine internals or GNC/flight-SW in initial outreach.
 
 ---
@@ -2354,7 +2365,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   1. **Orbion in-space propulsion hardware qualification:** York's newly-acquired Orbion Hall effect thruster systems require full integration-stack flight environment data before they're committed to production SDA satellites. The PPU electronics, propellant management hardware (tanks, valves, feed lines), structural mounts, and avionics harnesses need to survive actual ascent vibration, thermal cycling, and near-vacuum. BLK3 provides that flight environment profile with hardware returned in 2-3 days — the step between Orbion's existing ground thermal-vac qualification and first integration on a York SDA bus.
   2. **Payload customer flight qualification referral:** York's SDA and DoD payload customers integrate their hardware onto York satellite buses. Before hand-off to York, those payload teams need to demonstrate their hardware survives the launch environment. BLK3 is the platform those teams use to flight-qualify their payloads before York integrates them — reducing integration risk on the bus and potentially compressing York's customer acceptance timeline. A York-Exos referral arrangement routes those payload customers to BLK3 at no cost to York.
 - **Funding:** $629M IPO (Jan 2026) + DoD contracts (SDA T1TL is a multi-hundred-million-dollar contract); well-capitalized. Can commit commercially to referral arrangement.
-- **Status:** NEW → RESEARCHING ✅ Draft BF below.
+- **Status:** LOST (Exo 10/8, Lizi lead review: Orbion already flying; pitched 7/27-28)
 - **Next action:** Jon CEO-to-CEO cold outreach to Dirk Wallinger (public company; Wallinger is active on CNBC and in press). Frame around Orbion EP hardware qual first, then referral arrangement as secondary. — could be a warm path given York's DoD prime status.
 
 ---
