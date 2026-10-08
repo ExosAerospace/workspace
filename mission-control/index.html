@@ -60,6 +60,16 @@
   .brand-text p { font-size: 11px; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; }
 
   .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  /* Grouped nav (Jon 10/8): categories as dropdowns; links keep their own ids/hrefs/role filtering */
+  .nav-dd { position: relative; }
+  .nav-dd-btn { background: transparent; border: 1px solid var(--border,#1c3052); color: var(--text,#e8edf5); border-radius: 14px; padding: 3px 11px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .nav-dd:hover .nav-dd-btn, .nav-dd.open .nav-dd-btn { border-color: var(--accent,#0080ff); }
+  .nav-dd-menu { display: none; position: absolute; top: 100%; left: 0; z-index: 200; min-width: 210px; padding: 6px; margin-top: 4px; background: var(--card,#0f1e38); border: 1px solid var(--border,#1c3052); border-radius: 10px; box-shadow: 0 10px 28px rgba(0,0,0,.45); }
+  .nav-dd:hover .nav-dd-menu, .nav-dd.open .nav-dd-menu, .nav-dd:focus-within .nav-dd-menu { display: block; }
+  .nav-dd-menu::before { content: ""; position: absolute; top: -8px; left: 0; right: 0; height: 8px; }
+  .nav-dd-menu a { display: block !important; margin: 0 !important; padding: 6px 10px; border-radius: 6px; white-space: nowrap; }
+  .nav-dd-menu a[style*="display:none"], .nav-dd-menu a[style*="display: none"] { display: none !important; }
+  .nav-dd-menu a:hover { background: var(--navy3,#112248); }
 
   .refresh-badge {
     font-size: 11px; color: var(--text2);
@@ -567,54 +577,57 @@
   </div>
   <div class="header-right">
     <a href="search.html" title="Global search (⌘K / Ctrl-K)" style="color:var(--text,#e8edf5);text-decoration:none;font-size:0.85rem;margin-right:8px;font-weight:600;background:#12244a;border:1px solid var(--line,#1c3052);border-radius:16px;padding:3px 12px;">🔎 Search <span style="opacity:.5;font-size:.75rem">⌘K</span></a>
-    <!-- Business Development -->
-    <a href="opportunities.html" style="color:var(--orange2);text-decoration:none;font-size:0.85rem;margin-right:4px;">Opportunities</a>
-    <a href="blk3-deal-flow.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🚀 BLK3 Deal Flow</a>
-    <a href="apac-opportunities.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🌏 APAC Deal Flow</a>
-    <a href="capability-gaps.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🧩 Gap Ledger</a>
-    <a href="consortium.html" style="color:var(--orange2,#ff8c33);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🤝 Consortium</a>
-    <a href="crm.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">CRM</a>
-    <a href="dossier.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;">Dossiers</a>
-    <a href="sent-review.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;">📤 Sent Review</a>
-    <a href="followups.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;">📮 Follow-ups</a>
-    <a href="program.html" style="color:var(--purple,#a855f7);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🛰️ Payloads-exo3</a>
-    <a href="research.html" style="color:var(--purple,#a855f7);text-decoration:none;font-size:0.85rem;margin-right:4px;">🔬 Research</a>
-    <a href="payload-orders.html" style="color:var(--purple,#a855f7);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🧾 Payload Orders</a>
-    <a href="docusign.html" style="color:var(--orange2);text-decoration:none;font-size:0.85rem;margin-right:4px;">ExoSign</a>
-    <span style="color:var(--muted,#8aa0bd);opacity:.4;margin:0 8px;">│</span>
-    <!-- Operations & ERP -->
-    <a href="erp-rollout.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">⚙️ ERP-exo3</a>
-    <a href="schedule.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">📅 BLK3 Schedule</a>
-    <a href="production.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">🏭 Production</a>
-    <a href="assets.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">🛰️ Assets</a>
-    <a href="hr.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">👥 HR</a>
-    <a href="people.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📊 Team Perf</a>
-    <a href="expenses.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">💵 Expenses</a>
-    <a href="finance.html" id="financeLink" style="display:none;color:var(--green,#22c55e);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🔒 Finance</a>
-    <script>fetch('/api/operational-finance',{credentials:'same-origin'}).then(r=>{if(r.ok){var l=document.getElementById('financeLink');if(l)l.style.display='';}}).catch(function(){});</script>
-    <a href="process-library.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📚 Procedures</a>
-    <a href="shop-inventory.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📦 Inventory</a>
-    <a href="inventory.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;">📋 Build Shortfall</a>
-    <a href="blk3-bom.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;">📋 BOM</a>
-    <a href="suppliers.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🏭 Suppliers &amp; POs</a>
-    <a href="mrp.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🧮 MRP</a>
-    <a href="receiving.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📥 Receiving</a>
-    <a href="jobcost.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">💰 Job Cost</a>
-    <a href="https://vault.exosaero.space" target="_blank" rel="noopener" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🔐 Vault</a>
-    <span style="color:var(--muted,#8aa0bd);opacity:.4;margin:0 8px;">│</span>
-    <!-- Governance & Ops -->
     <a href="decisions.html" id="decisionsLink" style="color:var(--green,#22c55e);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;"><span id="decisionsMark"></span>🗳️ Decisions <span id="decisionsBadge" style="display:none;background:#ff4444;color:#fff;border-radius:10px;padding:0 6px;font-size:0.7rem;"></span></a>
+    <div class="nav-dd"><button type="button" class="nav-dd-btn">💼 Sales ▾</button><div class="nav-dd-menu">
+      <a href="opportunities.html" style="color:var(--orange2);text-decoration:none;font-size:0.85rem;margin-right:4px;">Opportunities</a>
+      <a href="blk3-deal-flow.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🚀 BLK3 Deal Flow</a>
+      <a href="apac-opportunities.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🌏 APAC Deal Flow</a>
+      <a href="program.html" style="color:var(--purple,#a855f7);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🛰️ Payloads-exo3</a>
+      <a href="payload-orders.html" style="color:var(--purple,#a855f7);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🧾 Payload Orders</a>
+      <a href="followups.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;">📮 Follow-ups</a>
+      <a href="sent-review.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;">📤 Sent Review</a>
+    </div></div>
+    <div class="nav-dd"><button type="button" class="nav-dd-btn">🤝 Relationships ▾</button><div class="nav-dd-menu">
+      <a href="crm.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">CRM</a>
+      <a href="dossier.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;">Dossiers</a>
+      <a href="consortium.html" style="color:var(--orange2,#ff8c33);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🤝 Consortium</a>
+      <a href="capability-gaps.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🧩 Gap Ledger</a>
+      <a href="research.html" style="color:var(--purple,#a855f7);text-decoration:none;font-size:0.85rem;margin-right:4px;">🔬 Research</a>
+      <a href="ctd-dd.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🔎 CTD DD</a>
+    </div></div>
+    <div class="nav-dd"><button type="button" class="nav-dd-btn">🔧 Build & Supply ▾</button><div class="nav-dd-menu">
+      <a href="schedule.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">📅 BLK3 Schedule</a>
+      <a href="production.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">🏭 Production</a>
+      <a href="blk3-bom.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;">📋 BOM</a>
+      <a href="inventory.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;">📋 Build Shortfall</a>
+      <a href="shop-inventory.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📦 Inventory</a>
+      <a href="mrp.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🧮 MRP</a>
+      <a href="suppliers.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🏭 Suppliers &amp; POs</a>
+      <a href="receiving.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📥 Receiving</a>
+      <a href="assets.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">🛰️ Assets</a>
+    </div></div>
+    <div class="nav-dd"><button type="button" class="nav-dd-btn">🏢 Business Ops ▾</button><div class="nav-dd-menu">
+      <a href="erp-rollout.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">⚙️ ERP-exo3</a>
+      <a href="jobcost.html" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">💰 Job Cost</a>
+      <a href="finance.html" id="financeLink" style="display:none;color:var(--green,#22c55e);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🔒 Finance</a>
+      <a href="expenses.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">💵 Expenses</a>
+      <a href="docusign.html" style="color:var(--orange2);text-decoration:none;font-size:0.85rem;margin-right:4px;">ExoSign</a>
+      <a href="process-library.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📚 Procedures</a>
+      <a href="gov-readiness.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🛡️ Gov/DIB Readiness</a>
+      <a href="https://vault.exosaero.space" target="_blank" rel="noopener" style="color:var(--orange,#ff6b00);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🔐 Vault</a>
+    </div></div>
+    <div class="nav-dd"><button type="button" class="nav-dd-btn">👥 People & Help ▾</button><div class="nav-dd-menu">
+      <a href="hr.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;">👥 HR</a>
+      <a href="people.html" style="color:var(--blue2);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📊 Team Perf</a>
+      <a href="help.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🚀 Getting Started</a>
+      <a href="required-reading.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📋 Required Reading</a>
+      <a href="report.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;" title="Ethics &amp; Compliance / whistleblower report (Handbook 2.5)">🛡️ Report a Concern</a>
+      <a href="set-password.html" style="color:var(--muted,#8aa0bd);text-decoration:none;font-size:0.85rem;margin-right:4px;">🔑 Set Password</a>
+    </div></div>
     <a href="fleet.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🤖 Fleet</a>
-    <span style="color:var(--muted,#8aa0bd);opacity:.4;margin:0 8px;">│</span>
-    <!-- Utility -->
-    <a href="help.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🚀 Getting Started</a>
-    <a href="required-reading.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">📋 Required Reading</a>
-    <a href="report.html" style="color:var(--accent,#0080ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;" title="Ethics &amp; Compliance / whistleblower report (Handbook 2.5)">🛡️ Report a Concern</a>
-    <a href="set-password.html" style="color:var(--muted,#8aa0bd);text-decoration:none;font-size:0.85rem;margin-right:4px;">🔑 Set Password</a>
-    <script>fetch('/api/me',{credentials:'same-origin'}).then(r=>r.ok?r.json():{}).then(me=>{if(me&&me.role==='early_adopter')return;fetch('/api/decisions?status=open',{credentials:'same-origin'}).then(r=>r.ok?r.json():[]).then(d=>{var m=document.getElementById('decisionsMark');if(d&&d.length){var b=document.getElementById('decisionsBadge');b.textContent=d.length;b.style.display='inline-block';if(m){m.textContent='❓ ';m.style.color='#ff4444';}}else if(m){m.textContent='✅ ';m.style.color='#22c55e';}}).catch(()=>{});}).catch(()=>{});</script>
-    <a href="ctd-dd.html" style="color:var(--cyan,#46c8ff);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🔎 CTD DD</a>
-    <a href="gov-readiness.html" style="color:var(--gold,#e8aa3c);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">🛡️ Gov/DIB Readiness</a>
     <a href="#" onclick="fetch('/api/logout',{method:'POST'}).then(()=>location.href='/login');return false;" style="color:var(--red,#ff4444);text-decoration:none;font-size:0.85rem;margin-right:4px;font-weight:600;">Sign Out</a>
+    <script>fetch('/api/operational-finance',{credentials:'same-origin'}).then(r=>{if(r.ok){var l=document.getElementById('financeLink');if(l)l.style.display='';}}).catch(function(){});</script>
+    <script>fetch('/api/me',{credentials:'same-origin'}).then(r=>r.ok?r.json():{}).then(me=>{if(me&&me.role==='early_adopter')return;fetch('/api/decisions?status=open',{credentials:'same-origin'}).then(r=>r.ok?r.json():[]).then(d=>{var m=document.getElementById('decisionsMark');if(d&&d.length){var b=document.getElementById('decisionsBadge');b.textContent=d.length;b.style.display='inline-block';if(m){m.textContent='❓ ';m.style.color='#ff4444';}}else if(m){m.textContent='✅ ';m.style.color='#22c55e';}}).catch(()=>{});}).catch(()=>{});</script>
     <span id="refreshBadge" class="refresh-badge">Loading...</span>
     <button class="btn secondary" onclick="loadTasks(true)">Refresh</button>
   </div>
@@ -1005,7 +1018,7 @@ async function initUserRole() {
         // Sign Out + Refresh. Was a 3-link blocklist, so every nav link added since
         // (Decisions, Fleet, HR, Expenses, Procedures, CTD DD, Gov Readiness, …) leaked
         // into the external capstone sandbox as clickable buttons.
-        document.querySelectorAll('.header-right a, .header-right button').forEach(el => {
+        document.querySelectorAll('.header-right a, .header-right button:not(.nav-dd-btn)').forEach(el => {
           const oc = el.getAttribute('onclick') || '';
           const href = el.getAttribute('href') || '';
           // Keep Sign Out + Refresh, AND the self-service Set Password link so
@@ -1036,7 +1049,7 @@ async function initUserRole() {
           'consortium.html','crm.html','dossier.html','program.html','research.html',
           'docusign.html','schedule.html','process-library.html','decisions.html',
           'fleet.html','help.html','required-reading.html','set-password.html','expenses.html','report.html'];
-        document.querySelectorAll('.header-right a, .header-right button').forEach(el => {
+        document.querySelectorAll('.header-right a, .header-right button:not(.nav-dd-btn)').forEach(el => {
           const oc = el.getAttribute('onclick') || '';
           const href = (el.getAttribute('href') || '').replace(/^\//, '');
           const keep = /logout|loadTasks/.test(oc) || MEMBER_KEEP.indexOf(href) !== -1;
@@ -1046,7 +1059,11 @@ async function initUserRole() {
     }
   } catch(e) { /* ignore — will redirect to login if 401 */ }
 }
-initUserRole();
+
+// Grouped nav: tap-to-open on touch; hide a category whose links are all hidden for this role.
+function navTidy(){document.querySelectorAll('.nav-dd').forEach(d=>{const vis=[...d.querySelectorAll('.nav-dd-menu a')].some(a=>a.style.display!=='none'||a.id==='financeLink');d.style.display=vis?'':'none';});}
+document.addEventListener('click',e=>{const b=e.target.closest('.nav-dd-btn');document.querySelectorAll('.nav-dd.open').forEach(d=>{if(!b||d!==b.parentElement)d.classList.remove('open');});if(b)b.parentElement.classList.toggle('open');});
+initUserRole().then?.(navTidy); setTimeout(navTidy,1500);
 
 // ── API ──
 async function apiFetch(path, opts = {}) {
