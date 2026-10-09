@@ -1,0 +1,124 @@
+{
+  "title": "CUI / ITAR / EAR Controlled Document Transfer (Internal, Partner, Government)",
+  "doc_no": "SEC-CUI-XFER",
+  "area": "Security / CUI",
+  "area_id": "08-security-cui",
+  "owner": "CEO / Exo (Security)",
+  "rev": "0",
+  "status": "DRAFT",
+  "intl_release": "No",
+  "reference_docs": "SEC-CUI-STOR (CUI/ITAR/EAR Document Handling and Storage, SharePoint GCC High); Exos_CUI_Policies_and_Procedures.docx (SEC-CUI Rev 2); EXOS-SEC-001 AI Tool-Use Policy; 22 CFR Parts 120–130 (ITAR) — https://www.ecfr.gov/current/title-22/chapter-I/subchapter-M; 15 CFR Parts 730–774 (EAR) — https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C; 22 CFR 122.5 (ITAR recordkeeping) — https://www.ecfr.gov/current/title-22/chapter-I/subchapter-M/part-122/section-122.5; 22 CFR 127.12 (voluntary disclosure) — https://www.ecfr.gov/current/title-22/chapter-I/subchapter-M/part-127/section-127.12; 15 CFR Part 762 (EAR recordkeeping) — https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-762; 15 CFR 764.5 (EAR voluntary disclosure) — https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-764/section-764.5; 32 CFR Part 2002 (CUI); DFARS 252.204-7012; DoD SAFE — https://safe.apps.mil",
+  "remarks": "Companion to SEC-CUI-STOR (storage). This procedure governs the transfer step only. AI agents (Exo) must never touch controlled files — see EXOS-SEC-001.",
+  "objective": "define how Exos personnel initiate, authorize, and complete the transfer of CUI, ITAR technical data, and EAR-controlled documents to internal staff, U.S. partners/customers, and U.S. Government recipients, while maintaining export-control compliance, CUI handling rules, and complete transfer records.",
+  "overview": "Controlled documents (CUI, ITAR technical data, EAR-controlled) are stored ONLY in SharePoint GCC High (per SEC-CUI-STOR). This procedure governs the separate act of TRANSFERRING access or copies to a new recipient. Every transfer requires a pre-transfer export gate (Steps 1–5), followed by the correct transfer method for the recipient type. No email, Discord, chat, Mission Control, personal cloud, or AI tool may be used to transmit controlled content at any step. Foreign persons may only receive controlled documents under a valid ITAR license/TAA or EAR license; any other request is a STOP condition. Mission Control records only non-sensitive transfer metadata — no CUI content ever enters MC.",
+  "tasks": [
+    {
+      "name": "Task 1 — Pre-Transfer Export Gate",
+      "steps": [
+        "Identify the document(s) to be transferred and confirm they are stored in SharePoint GCC High (per SEC-CUI-STOR §2). Do NOT proceed with files stored outside the authorized enclave.",
+        "Classify the document: determine the applicable control — ITAR (identify the USML Category, e.g., Cat. IV rocket systems; see 22 CFR Part 121 — https://www.ecfr.gov/current/title-22/chapter-I/subchapter-M/part-121), EAR (identify the ECCN or confirm EAR99), CUI category (see 32 CFR Part 2002), or a combination. If classification is uncertain, stop and consult the Security/Atomus authority before proceeding.",
+        "Determine recipient U.S.-person status: ITAR technical data may only be transferred to U.S. persons (U.S. citizens, lawful permanent residents, U.S. entities) without a license. Confirm by verifying government-issued ID or company records on file. For any non-U.S. person or foreign entity, go to Task 4 (Foreign Persons — STOP).",
+        "Run denied-party screening on the recipient against the Consolidated Screening List (CSL). Use the official CSL search tool at https://www.trade.gov/consolidated-screening-list (maintained by Commerce/State/Treasury) or the existing Exos CSL screening process. Document the screening result and date. Do NOT proceed if the recipient appears on any list without obtaining legal guidance.",
+        "Confirm export authorization: (a) ITAR: identify the applicable license (e.g., DSP-5) or exemption (e.g., 22 CFR 125.4 — https://www.ecfr.gov/current/title-22/chapter-I/subchapter-M/part-125/section-125.4) or Technical Assistance Agreement (TAA); (b) EAR: identify the applicable BIS license (e.g., STA, NLR) or license exception (e.g., EAR §740 — https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-740); (c) For intra-company U.S. transfers and transfers to the U.S. Government, document 'No License Required' with rationale. Record the authorization basis in the transfer log (Task 5).",
+        "Confirm need-to-know: verify the recipient has a specific, current need for the controlled document in connection with an authorized program or contract.",
+        "Confirm NDA/CUI NDA on file: external recipients (partners, customers) must have a signed Exos-US-CUI_NDA (Exos-US-CUI_NDA_-_DFARS-CFR_v1.docx, stored in SharePoint GCC High) or an equivalent government-backed agreement. Internal U.S.-person staff covered by employment agreements may proceed without a separate NDA.",
+        "Obtain approver sign-off: the CEO (or designated export compliance authority) must approve all external transfers before any file access or package is released. Record the approver name and date in the transfer log."
+      ]
+    },
+    {
+      "name": "Task 2 — Transfer: Internal Exos U.S. Staff",
+      "steps": [
+        "Confirm the recipient is an active Exos U.S.-person employee with a current need-to-know for this document (Task 1 complete).",
+        "In SharePoint GCC High, grant the specific named individual permission on the specific file or folder — do NOT use org-wide or 'anyone with the link' sharing. Use the minimum permission level required (e.g., Read-only unless edit access is specifically required).",
+        "Notify the recipient via an internal Exos channel (Teams/GCC High only — no standard email) that access has been granted and reference the SharePoint path. Do not include the file content in the notification.",
+        "Record the transfer in the transfer log (Task 5): date, document identifier (non-sensitive), recipient, authorization basis, method (SharePoint GCC High internal share), approver."
+      ]
+    },
+    {
+      "name": "Task 3 — Transfer: U.S. Partner or Customer (External, U.S. Person / Entity)",
+      "steps": [
+        "Confirm the recipient organization has its own GCC High tenant, a government-equivalent authorized enclave, or is receiving via DoD SAFE (U.S. Government method, Task 4). Partners/customers without an authorized enclave cannot receive ITAR technical data by any digital method until an authorized channel is established — stop and consult Security.",
+        "In SharePoint GCC High, use the external sharing feature restricted to the specific named, authenticated individuals only (their verified government or corporate email addresses). Verify that: (a) 'Anyone with the link' sharing is DISABLED; (b) an expiration date is set on the shared link (30 days maximum unless the contract requires longer; document the exception if longer); (c) download is blocked where operationally possible and the sensitivity label is applied.",
+        "Send the SharePoint GCC High access link to the recipient via GCC High email or Teams only — no standard email, no Discord, no chat platforms.",
+        "Record the transfer in the transfer log (Task 5): date, document identifier (non-sensitive), recipient name and organization, authorization basis (ITAR exemption/license/TAA or EAR NLR/exception), method (SharePoint GCC High external share — named, authenticated), link expiry date, approver."
+      ]
+    },
+    {
+      "name": "Task 4 — Transfer: U.S. Government Recipient",
+      "steps": [
+        "Contact the Government Point of Contact (POC) and request that they initiate a DoD SAFE drop-off link for the delivery. DoD SAFE is the Government-operated large-file transfer service at https://safe.apps.mil — the Exos sender uploads; the Government recipient retrieves. Do NOT upload until the POC provides the drop-off link.",
+        "Upon receiving the DoD SAFE drop-off link from the Government POC, upload the controlled document(s) directly from the SharePoint GCC High environment (download to ExoMac only for the duration of the upload, then delete the local copy immediately). Apply the correct CUI banner and ITAR/EAR export warning statement to the file prior to upload (see Task 6 — Marking).",
+        "Confirm receipt with the Government POC after upload. Obtain written (GCC High email or Teams) confirmation from the POC that the file was received.",
+        "Delete the local copy from ExoMac immediately after confirming upload. Verify deletion.",
+        "Record the transfer in the transfer log (Task 5): date, document identifier (non-sensitive), Government recipient agency and POC, authorization basis (U.S. Government recipient — no export, ITAR exemption 22 CFR 125.4(b) if applicable), method (DoD SAFE), approver."
+      ]
+    },
+    {
+      "name": "Task 4b — STOP: Foreign Person or Foreign Entity",
+      "steps": [
+        "STOP. Do NOT proceed. Any transfer of ITAR technical data or EAR-controlled items to a foreign person or foreign entity requires an approved ITAR license (e.g., DSP-5), an approved Technical Assistance Agreement (TAA), or an applicable EAR license — and must use only the method that the license or TAA specifically authorizes.",
+        "Escalate immediately to the CEO and legal counsel. Provide the document classification, the recipient's identity, and the proposed purpose.",
+        "Do not share, forward, email, hand-carry, or transmit the document by any means pending license/TAA approval. Record the hold and escalation in the transfer log.",
+        "Once an approved license or TAA is in place, the transfer method must be strictly the one authorized by the license or TAA. Resume with the appropriate task above only after confirmed written approval from the CEO and confirmation that the license/TAA covers this specific transfer."
+      ]
+    },
+    {
+      "name": "Task 5 — Physical Media (Exception Only)",
+      "steps": [
+        "Physical media transfer (encrypted USB, encrypted hard drive) is permitted ONLY when no authorized digital channel is available AND the transfer is specifically required by contract or government direction. Obtain CEO approval before proceeding.",
+        "Use only encrypted, government-approved media (FIPS 140-2 compliant encryption). Apply physical CUI and ITAR/EAR markings to the media and its packaging.",
+        "Establish chain-of-custody documentation: sender, recipient, date/time of handoff, courier identity (if applicable), and recipient signature on delivery. Retain chain-of-custody records with the transfer log.",
+        "Record the transfer in the transfer log (Task 5): date, document identifier (non-sensitive), recipient, authorization basis, method (physical encrypted media — chain of custody attached), approver."
+      ]
+    },
+    {
+      "name": "Task 6 — Marking Requirements",
+      "steps": [
+        "Confirm the CUI banner is applied to every page of CUI documents: the banner reads 'CONTROLLED // [CUI Category]' at the top and bottom of each page, per 32 CFR Part 2002 — https://www.ecfr.gov/current/title-32/subtitle-A/chapter-XX/part-2002.",
+        "Confirm the ITAR export warning statement is present on ITAR technical data: 'This document contains technical data whose export is restricted by the Arms Export Control Act (Title 22, U.S.C., Sec. 2751 et seq.) or the Export Administration Act of 1979 (50 U.S.C., App. 2401 et seq.). Violations of these export laws are subject to severe criminal penalties. Disseminate in accordance with provisions of 22 CFR Part 125.' [verify wording with legal counsel for current approved form]",
+        "Confirm the EAR export warning statement is present on EAR-controlled documents: 'This document contains technology subject to the Export Administration Regulations (15 CFR Parts 730-774). Diversion contrary to U.S. law is prohibited.' [verify wording with legal counsel for current approved form]",
+        "Confirm the distribution statement is correct (e.g., 'Distribution authorized to U.S. Government agencies and their contractors only' or as directed by the contract). Do not remove or downgrade any marking without documented authority.",
+        "Apply the M365 GCC High sensitivity label matching the control type before sharing."
+      ]
+    },
+    {
+      "name": "Task 7 — Transfer Log and Record-Keeping",
+      "steps": [
+        "Record every transfer in the Exos Controlled Document Transfer Log (maintained in SharePoint GCC High). The log is CUI and must remain within the GCC High enclave — do NOT copy log entries into Mission Control, standard email, or any non-authorized system.",
+        "Minimum log fields per transfer: (1) Transfer date and time; (2) Document identifier and non-sensitive title only — no CUI content; (3) Recipient name, organization, and U.S.-person status; (4) Authorization basis (ITAR exemption/license/TAA, EAR NLR/exception, or 'U.S. Government recipient'); (5) Transfer method (SharePoint GCC High internal / external share, DoD SAFE, physical media); (6) Approver name and date; (7) CSL screening result and date.",
+        "In Mission Control, record ONLY: a non-sensitive reference to the fact that a controlled document transfer occurred, the document identifier (non-sensitive), and the MC task link — NO CUI content, no recipient details that are sensitive, no file content. This keeps MC CUI-free per SEC-CUI-STOR §5.",
+        "ITAR recordkeeping retention: retain all ITAR-related records for 5 years from the date of export or expiration of the license, per 22 CFR 122.5 — https://www.ecfr.gov/current/title-22/chapter-I/subchapter-M/part-122/section-122.5.",
+        "EAR recordkeeping retention: retain all EAR-related records for 5 years from the date of export or re-export, per 15 CFR Part 762 — https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-762."
+      ]
+    },
+    {
+      "name": "Task 8 — Prohibited Methods",
+      "steps": [
+        "NEVER transmit controlled documents by: standard email (including encrypted email and GCC High email with attachments); personal email; Discord, Slack, Teams chat, or any messaging platform; Mission Control task notes, attachments, or database fields; personal cloud storage (Google Drive, iCloud, Dropbox, OneDrive personal); ExoMac local storage beyond the minimum transit needed for a DoD SAFE upload; any AI tool or agent — including Exo. See EXOS-SEC-001 AI Tool-Use Policy (EXOS-SEC-001-0 in SharePoint GCC High): AI agents must never access, process, or transmit controlled files.",
+        "If a prohibited method was used inadvertently, treat as a spillage and proceed immediately to Task 9 (Spillage / Unauthorized Disclosure)."
+      ]
+    },
+    {
+      "name": "Task 9 — Spillage / Unauthorized Disclosure Reporting",
+      "steps": [
+        "If a controlled document was transmitted by a prohibited method, accessed by an unauthorized person, or otherwise leaves the authorized enclave, treat it as a spillage. STOP further distribution immediately.",
+        "Report the spillage immediately to the CEO and Security/Atomus. Provide: what document, what method, who received it, when, and how the error occurred.",
+        "For ITAR violations, Exos has a voluntary disclosure obligation under 22 CFR 127.12 — https://www.ecfr.gov/current/title-22/chapter-I/subchapter-M/part-127/section-127.12. The CEO (with legal counsel) will determine whether voluntary disclosure to DDTC (Directorate of Defense Trade Controls) is required and will manage that process.",
+        "For EAR violations, Exos has a voluntary self-disclosure (VSD) option under 15 CFR 764.5 — https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-764/section-764.5. The CEO (with legal counsel) will determine whether VSD to BIS is required.",
+        "Document the incident, the response actions, and the resolution in the Controlled Document Transfer Log (SharePoint GCC High). Do not document spillage details in Mission Control."
+      ]
+    },
+    {
+      "name": "Task 10 — GCC High Tenant Setup Checklist (One-Time, Tenant Administrator)",
+      "steps": [
+        "Verify external sharing in SharePoint Admin Center is set to 'Existing guests' or 'Specific people' — NOT 'Anyone' or 'New and existing guests'. [verify with tenant admin; see Microsoft Learn: 'Manage sharing settings' for SharePoint and OneDrive in Microsoft 365 Government — https://learn.microsoft.com/en-us/sharepoint/turn-external-sharing-on-or-off]",
+        "Confirm that shared link expiration is enforced: set a maximum link expiration of 30 days for external shares in the SharePoint Admin Center. [verify with tenant admin; Microsoft Learn — https://learn.microsoft.com/en-us/sharepoint/turn-external-sharing-on-or-off]",
+        "Confirm that Microsoft Purview sensitivity labels are deployed and applied to the controlled-document libraries: at minimum one label for CUI and one for ITAR technical data, with protection settings (encryption, access restriction) appropriate for GCC High. [verify with tenant admin and Atomus; Microsoft Learn: 'Learn about sensitivity labels' — https://learn.microsoft.com/en-us/purview/sensitivity-labels]",
+        "Confirm that SharePoint and OneDrive audit logging is enabled in the Microsoft Purview compliance portal and that logs are retained for at least 5 years to satisfy ITAR/EAR recordkeeping requirements. [verify with tenant admin; Microsoft Learn: 'Audit (Standard)' — https://learn.microsoft.com/en-us/purview/audit-standard-setup]",
+        "Confirm that download is disabled for external shares on the controlled-document library by default (SharePoint site settings — Advanced permissions settings). [verify with tenant admin]",
+        "Confirm that the controlled-document library has restricted membership (no org-wide or 'all employees' access) and that the approved-access list is reviewed at least annually and on every personnel change. [verify with tenant admin and Security/Atomus]",
+        "Atomus manages GCC High security configuration. Jon owns the Atomus relationship. Any configuration changes require Atomus coordination — do not make changes without Atomus review."
+      ]
+    }
+  ]
+}
