@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Rebuild Exos_SSLC_OptionB_Offer_Summary_2026-10-07.docx  — 2-page max.
-John rules 2026-10-07 15:22-15:28 + 2026-10-09 update:
+John rules 2026-10-07 15:22-15:28 + 2026-10-09 update (14:12):
   - Section 1: offer value TABLE (Component | Low | Base | High | Trigger/Timing)
-  - NEW 10/9: 0.5% EAI units at close (~$850K at 409A $169.7M); subtotal at close = ~$5.21M
-  - NEW 10/9: stock earn-out reduced to 0.0/0.25/0.5%; totals $6.16M/$7.74M/$9.31M
-  - HIGH < $10M target — not rebalanced per John's instruction
+  - 10/9 UPDATE: 1.0% EAI units at close (~$1.697M at 409A $169.7M); subtotal at close ~$6.06M
+  - 10/9 UPDATE: described as "EAI units issued as part of Exos's Rule 504 offering, at the 409A value"
+  - Stock earn-out: 0.0/0.25/0.5% (unchanged); total equity: 1.0%/1.25%/1.5%
+  - Expected totals: ~$7.0M / $8.58M / $10.16M (HIGH case back above $10M)
   - Framing line in John's voice after the table
   - No SSLC year-by-year revenue tables or growth projections
   - Keep 'negotiating terms', no Counsel gates, keep Eqvista wording
   - Name: John Quinn (not Jon Quinn); lockup: same as Exos principals
+  - Model note: Rule 504 $10M cap; Rule 504 is U.S.-only (distinct from Japan Reg S round)
 """
 import os, shutil, subprocess
 from docx import Document
@@ -132,9 +134,9 @@ def add_offer_table():
         ("Credit for Exos's existing stake",          "$790K",   "$790K",   "$790K",   "Close (non-cash credit)",                                   "data"),
         ("SSLC debts paid at face",                   "$500K",   "$500K",   "$500K",   "Close; ~$500K TBV in QB",                                   "data"),
         ("Working-capital bridge",                    "$500K",   "$500K",   "$500K",   "Close",                                                     "data"),
-        ("Exos equity — 0.5% EAI units\nat 409A (~$170M)",
-                                                      "$850K",   "$850K",   "$850K",   "Committed at SSLC board acceptance;\nissued at financing close",  "data"),
-        ("Subtotal: funding at close",                "$5,210K", "$5,210K", "$5,210K", "",                                                          "subtotal"),
+        ("Exos equity — 1.0% EAI units\n(Rule 504, at 409A ~$170M)",
+                                                      "$1,697K", "$1,697K", "$1,697K", "EAI units issued as part of Exos's\nRule 504 offering, at the 409A value;\nissued at financing close",  "data"),
+        ("Subtotal: funding at close",                "$6,057K", "$6,057K", "$6,057K", "",                                                          "subtotal"),
         # ── Earn-outs (negotiating terms — mgmt assumptions) ─────────────────────
         ("Tank earn-out (5 yrs, 5%/yr,\ncap $300K/yr)",
                                                       "$750K",   "$1,250K", "$1,500K", "FY27–FY31; low 3%/base 5%/high\n7% × IM rev; $300K/yr cap","data"),
@@ -146,11 +148,11 @@ def add_offer_table():
         ("Milestone M4: SSLC annual rev ≥$20M",       "—",       "—",       "$250K",   "Pays first year threshold hit\n(est. FY31 at high)",        "mstn"),
         ("Milestone M5: BLK3 tank qualification\ncomplete",
                                                       "—",       "—",       "$200K",   "Pays at Exos BLK3 tank cert\n(est. FY27–FY28)",             "mstn"),
-        ("Exos stock earn-out at listing\n(on top of 0.5% EAI up-front)",
-                                                      "$0",      "$625K",   "$1,500K", "Post-RTO ~FY28; earn-out 0.0%/0.25%/0.5% FD; lockup same as Exos principals.\nAt 409A ($170M): $0/$425K/$850K. Total Exos equity: 0.5%/0.75%/1.0%.", "data"),
-        ("TOTAL OFFER VALUE (5-yr)",                  "$6,160K", "$7,735K", "$9,310K", "FY27–FY31",                                                 "total"),
+        ("Exos stock earn-out at listing\n(on top of 1.0% EAI up-front)",
+                                                      "$0",      "$424K",   "$848K",   "Post-RTO ~FY28; earn-out 0.0%/0.25%/0.5% FD; lockup same as Exos principals.\nAt 409A ($170M): $0/$424K/$848K. Total Exos equity: 1.0%/1.25%/1.5%.", "data"),
+        ("TOTAL OFFER VALUE (5-yr)",                  "$7,007K", "$8,582K", "$10,157K","FY27–FY31",                                                 "total"),
         ("Memo: Exos stock if held to FY31\n(not additive to total above)",
-                                                      "$5.7M",   "$8.5M",   "$11.4M",  "16× EV/EBITDA; ~30% dilution;\ntotal stake 0.5/0.75/1.0% (EAI+earn-out);\nmgmt assumption", "memo"),
+                                                      "$5.7M",   "$8.5M",   "$11.4M",  "16× EV/EBITDA; ~30% dilution;\ntotal stake 1.0/1.25/1.5% (EAI+earn-out);\nmgmt assumption", "memo"),
     ]
 
     note_text = ("Earn-out rows: negotiating terms — management assumptions. "
@@ -229,8 +231,9 @@ P("The up-front price reflects what the numbers support today. "
 add_offer_table()
 
 # Why this structure — compact callout
-note("Why this structure: SSLC holders receive real Exos equity at close (409A-valued, ~$850K) — not only contingent upside. "
-     "It aligns them with Exos immediately. The earn-out stock is halved (0.0–0.5%), reducing Exos dilution risk.")
+note("Why this structure: SSLC holders receive real Exos equity at close (1.0% EAI units, 409A-valued ~$1.7M, "
+     "issued as part of Exos's Rule 504 offering) — not only contingent upside. "
+     "It aligns them with Exos immediately. The earn-out stock stays 0.0–0.5%, so total equity is 1.0–1.5%.")
 
 B("No additional capital calls  ",
   "Once closed, SSLC's standalone cash burn stops entirely.")
@@ -290,7 +293,8 @@ terms_rows = [
     ["Term",                         "Detail"],
     ["Agreement basis",              "May 2025 Asset Acquisition Agreement, §3 exclusivity trigger "
                                      "(non-exclusive → exclusive upon Exos financing agreement)"],
-    ["Total commitment",             "$4,210,000 base at close ($2.51M cash + $60K costs + $790K Exos stake credit + ~$850K EAI equity at 409A)"],
+    ["Total commitment",             "$5,057,000 base at close ($2.51M cash + $60K costs + $790K Exos stake credit + ~$1.70M EAI equity at 409A; "
+                                     "EAI units issued as part of Exos's Rule 504 offering)"],
     ["Exclusivity period",           "90 days from SSLC confirmation; extension not unreasonably withheld "
                                      "while financing works in good faith (§3)"],
     ["Holdback (§7)",                "5% escrow, released at 12-month anniversary"],
@@ -302,6 +306,14 @@ terms_rows = [
     ["Status",                       "DRAFT — NEGOTIATING TERMS — not a final or binding offer"],
 ]
 add_table(terms_rows, [1.9, 4.1])
+
+# Model notes
+SEC_504_URL = ("https://www.sec.gov/resources-small-businesses/exempt-offerings/"
+               "exemption-limited-offerings-not-exceeding-10-million-rule-504-regulation-d")
+note(f"Model notes: Exos equity at close (~$1.7M) counts toward the Rule 504 $10M rolling 12-month cap; "
+     f"confirm remaining 504 capacity before issuance. Rule 504 reference: {SEC_504_URL}. "
+     "Rule 504 is U.S.-only; EAI units used in the separate Reg S Japan round must be tracked "
+     "under a distinct exemption — the two offerings must remain separate.")
 
 # ────────────────────────────────────────────────────────────────────────────
 # FOOTER
