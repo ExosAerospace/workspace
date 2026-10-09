@@ -9,7 +9,7 @@ John rules 2026-10-07 15:22-15:28 + 2026-10-09 update (17:35):
   - Framing line in John's voice after the table
   - No SSLC year-by-year revenue tables or growth projections
   - Keep 'negotiating terms', no Counsel gates, keep Eqvista wording
-  - Name: John Quinn (not Jon Quinn); lockup: same as Exos principals
+  - Name: John Quinn (not Jon Quinn); EAI up-front units: float, no lockup at listing (John 10/9 option 2)
   - Model note: Rule 504 $10M cap; Rule 504 is U.S.-only (distinct from Japan Reg S round)
 """
 import os, shutil, subprocess
@@ -262,6 +262,7 @@ terms_rows = [
     ["Exclusivity period",           "90 days from SSLC confirmation; extension not unreasonably withheld (§3)"],
     ["Holdback (§7)",                "5% escrow, released at 12-month anniversary"],
     ["SSLC debts assumed",           "Paid at face at close (est. ~$500K; verify QuickBooks)"],
+    ["SSLC employees",               "Exos offers employment to SSLC employees on terms no less favorable than current (incl. comp & benefits), subject to Exos hiring policies + confirmatory diligence; key-employee option pool set in the Definitive Agreement"],
     ["Status",                       "DRAFT — NEGOTIATING TERMS — not a final or binding offer"],
 ]
 add_table(terms_rows, [1.9, 4.1])
@@ -283,8 +284,8 @@ H1("4.  EAI Unit Lockup & Liquidity", sb=3)
 lockup_bullets = [
     ("Part of the public float at going public.  ",
      "The $1.0M EAI units are structured to provide part of the float for the Exos RTO and become "
-     "tradeable at going public (the RTO listing), subject to the same lockup as Exos principals. "
-     "Specific lock terms are set in the RTO definitive agreement."),
+     "freely tradeable at going public (the RTO listing). No principals' lockup applies: locked-up "
+     "shares would not count as public float. Requires the RTO resale registration to include the units."),
     ("Restricted at issuance — Rule 504 Reg D.  ",
      f"Units carry a restrictive legend at issuance and are not freely tradeable prior to the RTO listing. "
      f"Rule 504 ref: {SEC_504_URL}"),
@@ -298,7 +299,7 @@ timeline_rows = [
     ["Board acceptance",                   "D+0 — units committed; not yet issued"],
     ["Financing close — units issued",     "Targeted Q1 FY27; units issued as restricted/legended securities"],
     ["Targeted RTO close",                 "~6 months post-financing (targeted, not assured)"],
-    ["Units tradeable at going public",    "At RTO listing, units part of public float; tradeable subject to principals' lockup"],
+    ["Units tradeable at going public",    "At RTO listing: part of the public float, freely tradeable (no lockup); covered by RTO resale registration"],
     ["ALL DATES",                          "Targeted, not assured. RTO may not close."],
 ]
 add_table(timeline_rows, [2.6, 3.9], hdr_fill="375623")
