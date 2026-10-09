@@ -185,13 +185,50 @@ def note_on_primary(primary, name, subj, iso):
     return "noted"
 
 
+def fetch_with_reconnect(m, connect, folder, uid):
+    """UID FETCH; on IMAP abort/socket error (Bridge idle-drop, EOF) reconnect, reselect, retry once."""
+    try:
+        return m, m.uid("FETCH", uid, "(RFC822)")[1]
+    except (imaplib.IMAP4.abort, OSError) as e:
+        print("  IMAP dropped (%s) — reconnecting" % e)
+        try: m.shutdown()
+        except Exception: pass
+        m = connect()
+        if m.select(folder, readonly=True)[0] != "OK": raise RuntimeError("reselect %s failed" % folder)
+        return m, m.uid("FETCH", uid, "(RFC822)")[1]
+
+def save_state(state, seen):
+    """Persist progress after every message so a mid-run crash doesn't throw away the whole batch."""
+    if DRY: return
+    state["seen_uids"] = sorted(seen)[-5000:]
+    tmp = STATE + ".tmp"
+    json.dump(state, open(tmp, "w"), indent=1); os.replace(tmp, STATE)
+
+def selftest():
+    """Replays the 2026-10-09 failure: UID FETCH -> imaplib.IMAP4.abort('socket error: EOF')."""
+    class Dead:
+        def select(self, f, readonly=False): return ("OK", [b"1"])
+        def uid(self, *a): raise imaplib.IMAP4.abort("command: UID => socket error: EOF")
+        def shutdown(self): pass
+    class Live:
+        def select(self, f, readonly=False): return ("OK", [b"1"])
+        def uid(self, *a): return ("OK", [(b"1 (RFC822 {3}", b"x:y"), b")"])
+    m, md = fetch_with_reconnect(Dead(), lambda: Live(), "INBOX", b"1")
+    assert isinstance(m, Live) and md[0][1] == b"x:y", md
+    try:
+        fetch_with_reconnect(Dead(), lambda: Dead(), "INBOX", b"1"); raise SystemExit("FAIL: second abort not raised")
+    except imaplib.IMAP4.abort: pass
+    print("selftest OK"); return 0
+
 def main():
     pw = SEC.get("protonmail_bridge_smtp_password")
     if not pw: print("no IMAP password; abort"); return
     state = json.load(open(STATE)) if os.path.exists(STATE) else {}
     since = (datetime.now() - timedelta(days=SINCE_DAYS)).strftime("%d-%b-%Y")
+    def connect():
+        c = imaplib.IMAP4(IMAP_HOST, IMAP_PORT, timeout=120); c.starttls(); c.login(EMAIL_USER, pw); return c
     try:
-        m = imaplib.IMAP4(IMAP_HOST, IMAP_PORT); m.starttls(); m.login(EMAIL_USER, pw)
+        m = connect()
     except Exception as e:
         print("IMAP login failed:", e); return
 
@@ -207,8 +244,12 @@ def main():
         for uid in uids:
             uidk = "%s:%s" % (folder, uid.decode())
             if uidk in seen: continue
-            typ, md = m.uid("FETCH", uid, "(RFC822)")
-            if not md or not md[0]: continue
+            # Bridge drops the session while we sit on long Ollama extractions -> reconnect + retry once
+            try:
+                m, md = fetch_with_reconnect(m, connect, folder, uid)
+            except Exception as e:
+                print("  IMAP fetch failed for %s, stopping run (progress saved): %s" % (uidk, e)); break
+            if not md or not md[0] or not isinstance(md[0], tuple): continue
             msg = email.message_from_bytes(md[0][1])
             subj = dec(msg.get("Subject", "")); frm = dec(msg.get("From", ""))
             to = dec(msg.get("To", "")); cc = dec(msg.get("Cc", ""))
@@ -239,14 +280,14 @@ def main():
                 else:
                     r = note_on_primary(primary, p["name"], subj, iso); stats[r] = stats.get(r, 0) + 1
             seen.add(uidk)
+            save_state(state, seen)
 
-    if not DRY:
-        state["seen_uids"] = sorted(seen)[-5000:]
-        json.dump(state, open(STATE, "w"), indent=1)
+    save_state(state, seen)
     print("\n%s — msgs:%d created:%d updated:%d exists:%d noted:%d" %
           ("DRY-RUN" if DRY else "LIVE", stats["msgs"], stats.get("created", 0), stats.get("updated", 0),
            stats.get("exists", 0), stats.get("noted", 0)))
 
 
 if __name__ == "__main__":
+    if "--selftest" in sys.argv: sys.exit(selftest())
     main()
