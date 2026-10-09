@@ -2562,7 +2562,7 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** Bryce Hill, Ph.D. (Professor and Department Head, Electrical Engineering, bhill@mtech.edu); Katie Hailer, Ph.D. (Vice Chancellor for Research and Dean of the Graduate School, khailer@mtech.edu); Xiaobing Zhou, Ph.D. (Professor of Geophysics, Geological Engineering; MSGC Campus Representative for Montana Tech, xzhou@mtech.edu)
 - **Why BLK3 fits:** Moderate, emerging fit. The RockOn! team is a natural candidate for a follow-on student rocket payload (RockSat-C-style) on BLK3, and a sensor/instrument qualification flight is plausible. Lower priority than MSU.
 - **Funding:** NASA Flight Opportunities / TechRise, Montana Space Grant + NASA EPSCoR (Research/ISS/Flight calls), NASA SBIR/STTR (university partner)
-- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Status:** NEW (HOLD per Lizi/Exo 10/9: send a short note to Bryce Hill only after Montana Space Grant (Angela Des Jardins) replies; ~10/22)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
 
 #### 4. UMontana — University of Montana (Missoula)
@@ -2570,7 +2570,7 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** Paul Lukacs, Ph.D. (Interim Vice President for Research and Creative Scholarship (from July 2, 2026), paul.lukacs@umontana.edu); Jeremy Crowley (Director, Autonomous Aerial Systems Office (AASO), jeremy.crowley@mso.umt.edu); Chani (Chantanelle) Nava (MSGC Campus Representative, University of Montana - Missoula, chantanelle.nava@mso.umt.edu)
 - **Why BLK3 fits:** Weak to moderate. Approach via the VPR's office to surface any microgravity or life-science PIs, and via AASO for sensor/remote-sensing payload testing. Do not claim prior UM space-flight heritage. Note that search results often conflate UM with MSU's SSEL.
 - **Funding:** NASA Flight Opportunities / TechRise, Montana Space Grant + NASA EPSCoR (Research/ISS/Flight calls), NASA SBIR/STTR (university partner)
-- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Status:** NEW (HOLD 10/9: weak fit, no payload identified; folded into Montana Space Grant thread)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
 
 #### 5. Salish Kootenai College (Pablo, MT — tribal college)
