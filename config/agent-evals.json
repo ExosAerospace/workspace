@@ -1548,6 +1548,21 @@
     "at most one Jon DM per solicitation message id (state/dibc-leverage-state.json)",
     "non-solicitation mail never alerts (R-NONEWS)"
    ]
+  },
+  "com.exos.failure-fixer-exo3": {
+   "cadence_s": 900,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/failure_fixer_exo3.py --selftest",
+   "eval_type": "output",
+   "governance_checks": [
+    "--selftest PASS (dedupe one-attempt, <=3 fix runs/hour, one run per file set, forbidden paths, allow-listed commands, verify guard)",
+    "every staged fix → exactly one Decision per signature episode (dedupeKey failure-fix:<sig>:e<N>)",
+    "approved fixes execute only on a human click (answeredByEmail / users.json name)",
+    "commits touching secrets/BOMs/decisions.json/migrate.js are auto-reverted (fleet_log guardrail_revert)",
+    "applied fixes reported once/day; silent when none (R-NONEWS)"
+   ]
   }
  },
  "_eval_wave_2": {

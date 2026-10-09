@@ -5517,6 +5517,31 @@
    "lifecycle": "self-removing (prompt has an end condition)",
    "registered": "2026-10-08",
    "envelope_source": "register_cron.py derivation from the live cron"
+  },
+  {
+   "label": "com.exos.failure-fixer-exo3",
+   "program": "failure-fixer-exo3",
+   "script": "failure_fixer_exo3.py run",
+   "kind": "recurring",
+   "schedule": "every 900s (+ invoked by com.exos.fleet-status-heartbeat before it DMs)",
+   "purpose": "Failure→fix dispatcher (Jon 10/8: 'launch a fix and I'll just approve the fix'). Collects fleet failures from the existing detectors (fleet_status_heartbeat.cron_health/launchd_bad, completion-watchdog.scan_events), gives each a stable signature (job + error class), and launches ONE headless `openclaw agent` fix run per new signature. Safe/internal/reversible fixes are applied (verify, scoped commit, improvement-ledger entry); anything needing Jon is staged as a patch + ONE 'Approve fix: <job> — <cause>' Decision. On a human 'Approve fix' click it applies the staged patch, verifies, commits and posts the result. Heartbeat DMs show failure + fix status; applied fixes go out in one daily digest line.",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds (safe internal fixes) / Execute-on-approval (everything else, human-click gated)",
+   "human_owner": "John Quinn",
+   "permission_envelope": "READ: ~/.openclaw/state/openclaw.sqlite (ro), launchctl list, ~/Library/LaunchAgents/com.exos.*.plist, logs/runs/*.jsonl, governance/events.jsonl, mission-control/data/decisions.json (read-only). WRITE: logs/failure-fixer/** (state, patches, prompts), logs/failure-fixer-exo3.log, fleet_log events; git commits limited to paths in a fix (pre-commit exo3 gate applies; never -A); improvement_ledger.py add; POST /api/decisions/ingest (one card per signature episode); one-line posts to #exomac-system via deliver.py. Spawns `openclaw agent` fix turns (<=3/hour, one per file set). Approved apply commands allow-listed: openclaw cron edit|run|enable, launchctl kickstart|bootstrap|bootout com.exos.*, /usr/bin/python3 scripts/*.py. NEVER: secrets/tokens, BOM files, decisions.json writes, migrate.js, openclaw.json protected paths, other sessions' uncommitted hunks, external email/message sends, git push. Commits touching forbidden paths are auto-reverted and escalated.",
+   "memory_boundary": "workspace (logs/failure-fixer/ state + patches) + MC Decisions (ingest only)",
+   "escalation": "Decision card 'Approve fix: <job> — <cause>' (options Approve fix (recommended)/Hold/Discuss); a signature that recurs after 2 fix episodes → one escalation Decision, no further auto runs",
+   "eval_suite": "/usr/bin/python3 scripts/failure_fixer_exo3.py --selftest (signature stability, one-attempt dedupe, 3/hour rate limit, one-agent-per-file-set lock, self-exclusion, forbidden-path + command allow-list + verify guard, heartbeat status lines, Decision shape, post-fix recurrence → new episode, outcome parsing) + fixture replay: run --test --fixture logs/failure-fixer/fixtures/fake-failing-job.json must stage a patch + [TEST] Decision and apply it on a simulated approval; agent_eval hourly liveness",
+   "eval_type": "output",
+   "telemetry": "logs/failure-fixer-exo3.log; logs/fleet-events.jsonl (agent failure-fixer-exo3: fix_run_launched/fix_applied/fix_staged/guardrail_revert/approved_fix_applied, corr id carried onto the Decision correlationId); logs/runs/YYYY-MM-DD.jsonl (run_logged)",
+   "decision_trace": "state.fixes[sig].decision_id + correlationId on the card; staged patch at logs/failure-fixer/patches/<sig>.e<N>.patch; agent prompt/reply under logs/failure-fixer/runs/",
+   "reusability_scope": "any launchd/OpenClaw-cron/govlog job in the ExoMac fleet; manual entry `report --job --error` for alerts Jon flags (e.g. misclassified alerts)",
+   "risk_tier": "HIGH",
+   "envelope_source": "hand review of scripts/failure_fixer_exo3.py, 2026-10-08",
+   "registered": "2026-10-08",
+   "change_log": [
+    "2026-10-08 created (Jon directive 10/8 'launch a fix and I'll just approve the fix'); fleet_status_heartbeat DM now appends fix status per failing job; completion-watchdog detection factored into scan_events() for reuse"
+   ]
   }
  ],
  "eval_wave_1": {

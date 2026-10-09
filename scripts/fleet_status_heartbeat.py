@@ -114,6 +114,25 @@ def dm(text):
         pass
 
 
+def fix_lines(persistent, bad):
+    """Jon 10/8: failures arrive as "failure + fix status", never bare. Runs one failure-fixer-exo3 sweep first
+    (detached fix runs → returns fast) so a fresh failure already shows "fix in progress"."""
+    if not (persistent or bad):
+        return []
+    try:
+        subprocess.run(["/usr/bin/python3", str(WS / "scripts" / "failure_fixer_exo3.py"), "run"],
+                       capture_output=True, text=True, timeout=150)
+    except Exception:
+        pass
+    try:
+        import failure_fixer_exo3 as ff
+        st = ff.load_state(ff.STATE)
+        return ([f"{n} {ff.fix_status_line('cron', n, st)}" for n in persistent] +
+                [f"{n} {ff.fix_status_line('launchd', n, st)}" for n, _ in bad])
+    except Exception as e:
+        return [f"(fix status unavailable: {str(e)[:60]})"]
+
+
 def main():
     now = datetime.datetime.now(CT) if CT else datetime.datetime.now()
 
@@ -130,6 +149,7 @@ def main():
     fleet = f"Fleet: {ch['ok']}/{total} crons OK"
     persistent = [n for n, _, c in ch["errors"] if (c or 0) >= 2]
     transient = ch["err"] - len(persistent)
+    fixes = fix_lines(persistent, bad)
     if persistent:
         fleet += f" · {len(persistent)} FAILING ({', '.join(persistent[:3])})"
     if transient:
@@ -138,6 +158,8 @@ def main():
         fleet += f" · launchd bad-exit: {', '.join(n for n, _ in bad[:3])}"
     else:
         fleet += " · launchd OK"
+    if fixes:
+        fleet += "".join(f"\n    • {l}" for l in fixes)
     if ch.get("db_error"):
         fleet += f"\n  ⚠ Cron status DB unreadable: {ch['db_error']}"
 

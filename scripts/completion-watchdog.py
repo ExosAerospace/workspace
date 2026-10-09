@@ -120,16 +120,17 @@ def file_queue(lines):
         logline(f"WARN queue write failed: {e}")
 
 
-def main():
-    dry = "--dry-run" in sys.argv
-    if not os.path.exists(EVENTS):
-        logline("no events.jsonl"); return
-    now = datetime.now(timezone.utc)
-    cutoff = now - timedelta(hours=LOOKBACK_H)
-
-    # Build per-run state from recent events.
+def scan_events(now=None, lookback_h=LOOKBACK_H, events_path=EVENTS):
+    """Read governance/events.jsonl → (runs, stalled, errored).
+    runs: cid -> {agent,start,end,errors[],last}; stalled: [(cid, agent, age_min)];
+    errored: [(cid, agent, first_error_detail)]. Pure read — also reused by
+    scripts/failure_fixer_exo3.py (failure→fix dispatcher) so detection lives in ONE place."""
+    now = now or datetime.now(timezone.utc)
+    cutoff = now - timedelta(hours=lookback_h)
     runs = {}  # cid -> {agent,start,end,errors[],last}
-    with open(EVENTS, encoding="utf-8", errors="ignore") as fh:
+    if not os.path.exists(events_path):
+        return runs, [], []
+    with open(events_path, encoding="utf-8", errors="ignore") as fh:
         for line in fh:
             line = line.strip()
             if not line:
@@ -168,6 +169,14 @@ def main():
             age = (now - d["start"]).total_seconds() / 60.0
             if age >= STALL_MIN:
                 stalled.append((cid, agent, round(age)))
+    return runs, stalled, errored
+
+
+def main():
+    dry = "--dry-run" in sys.argv
+    if not os.path.exists(EVENTS):
+        logline("no events.jsonl"); return
+    runs, stalled, errored = scan_events()
 
     # #1 — subagent/task completion (from the openclaw tasks registry).
     t_failed, t_stalled = scan_tasks()
