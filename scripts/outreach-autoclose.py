@@ -109,6 +109,16 @@ def _text_body(msg):
     return ''
 
 
+def _fetch_bytes(md):
+    """Raw message bytes from an imaplib FETCH response, or None. Bridge can return
+    untagged non-tuple items (bare bytes like b')' or FLAGS updates, or nothing for an
+    expunged UID); md[0][1] on bare bytes yields an int and crashes email parsing."""
+    for item in md or []:
+        if isinstance(item, tuple) and len(item) >= 2 and isinstance(item[1], (bytes, bytearray)):
+            return bytes(item[1])
+    return None
+
+
 def collect_recipients():
     """Set of external recipient emails from Jon's recent sends (BCC self-copies + forwards)."""
     since = (datetime.now() - timedelta(days=LOOKBACK_DAYS)).strftime('%d-%b-%Y')
@@ -130,9 +140,10 @@ def collect_recipients():
                     uids.update(data[0].split())
             for uid in uids:
                 t, md = mail.uid('fetch', uid, '(BODY.PEEK[HEADER.FIELDS (FROM TO CC SUBJECT)])')
-                if t != 'OK' or not md or not md[0]:
+                raw = _fetch_bytes(md) if t == 'OK' else None
+                if raw is None:
                     continue
-                msg = email.message_from_bytes(md[0][1])
+                msg = email.message_from_bytes(raw)
                 if not _is_self(msg.get('From', '')):
                     continue
                 SENT_SUBJECTS.add((msg.get('Subject', '') or '').lower())
@@ -140,8 +151,9 @@ def collect_recipients():
                              if a and EMAIL_RE.fullmatch(a.strip()) and not INTERNAL.search(a.lower()))
                 if not recips:  # forwarded-in: real recipients hidden in body
                     tb, bmd = mail.uid('fetch', uid, '(BODY.PEEK[])')
-                    if tb == 'OK' and bmd and bmd[0]:
-                        body = _text_body(email.message_from_bytes(bmd[0][1]))
+                    braw = _fetch_bytes(bmd) if tb == 'OK' else None
+                    if braw is not None:
+                        body = _text_body(email.message_from_bytes(braw))
                         for m in FWD_TO_RE.finditer(body or ''):
                             for e in EMAIL_RE.findall(m.group(1)):
                                 el = e.lower()
@@ -221,5 +233,17 @@ def main():
     print(f"\n{'DRY-RUN ' if DRY else ''}done — {len(closed)} outreach task(s) {'would be ' if DRY else ''}closed.")
 
 
+def selftest():
+    # replays 2026-10-09 failure: FETCH returned bare bytes -> md[0][1] was an int
+    assert _fetch_bytes([b'1 (UID 5 FLAGS (\\Seen))']) is None
+    assert _fetch_bytes([None]) is None and _fetch_bytes([]) is None
+    hdr = b'From: jquinn@exosaero.com\r\nSubject: Hi\r\n\r\n'
+    assert _fetch_bytes([b'2 (FLAGS ())', (b'3 (UID 9 BODY[HEADER] {40}', hdr), b')']) == hdr
+    print('selftest OK')
+
+
 if __name__ == '__main__':
-    main()
+    if '--selftest' in sys.argv:
+        selftest()
+    else:
+        main()
