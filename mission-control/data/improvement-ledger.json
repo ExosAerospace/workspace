@@ -406,6 +406,122 @@
    }
   },
   {
+   "id": "IMP-022",
+   "agent": "com.exos.outreach-autoclose",
+   "govlog": null,
+   "cron": null,
+   "change": "d2793d4",
+   "hypothesis": "no-autoclose opt-out tag stops hub/tracker tasks (DIBC #870) from being auto-closed by a single outbound send, and daily-burndown no longer re-tags them",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-08T06:08:06.592692+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 502,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 4.3
+   }
+  },
+  {
+   "id": "IMP-023",
+   "agent": "decision-send-watcher",
+   "govlog": null,
+   "cron": null,
+   "change": "9676c79",
+   "hypothesis": "Bare option answers (Send/All three) on send-Decisions now auto-deliver; expect 0 answered-but-undelivered send cards after 10/8 07:00Z",
+   "metrics": [
+    "reliability",
+    "turnaround"
+   ],
+   "error_signature": null,
+   "at": "2026-10-08T13:05:32.919328+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
+   "id": "IMP-024",
+   "agent": "decision-send-watcher",
+   "govlog": null,
+   "cron": null,
+   "change": "963a07f",
+   "hypothesis": "Inline-draft Decisions no longer get a fuzzy-matched wrong attachment; drafts go in the email body instead",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-08T14:52:35.204002+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
+   "id": "IMP-025",
+   "agent": "opportunity-engine",
+   "govlog": null,
+   "cron": null,
+   "change": "a7cbf69",
+   "hypothesis": "Payload outreach Send cards route to Lizi's inbox signed as Lizi; Jon stops receiving payload drafts meant for Lizi",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-08T16:02:40.891954+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
+   "id": "IMP-026",
+   "agent": "mission-control-imap",
+   "govlog": null,
+   "cron": null,
+   "change": "ff0bb98",
+   "hypothesis": "Exo helper emails tagged X-Exo-No-Task no longer become tasks; dropped leads marked LOST stop being re-drafted by the payload engine",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-08T16:52:24.481169+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
+   "id": "IMP-027",
+   "agent": "weekly-investor-update",
+   "govlog": null,
+   "cron": null,
+   "change": "441114f",
+   "hypothesis": "Stale ROFR claim removed from standing status; date-gated feature block lets one-off investor items ride the weekly without hand edits",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-08T22:37:45.440449+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
+   "id": "IMP-028",
+   "agent": "com.exos.outreach-reply-tracker",
+   "govlog": null,
+   "cron": null,
+   "change": "8fcf2bf",
+   "hypothesis": "Newsletter/bulk mail (incl. forwarded) no longer produces false NEGATIVE outreach-reply alerts",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-09T00:12:21.568228+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 455,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 3.8
+   }
+  },
+  {
    "id": "IMP-029",
    "agent": "com.exos.fleet-status-heartbeat",
    "govlog": null,
@@ -424,6 +540,83 @@
     "reliability": 1.0,
     "quiet_errors": 0,
     "turnaround_s": 0.8
+   }
+  },
+  {
+   "id": "IMP-030",
+   "agent": "com.exos.decisions-discord-feed",
+   "govlog": null,
+   "cron": null,
+   "change": "786bed40ce94675db5229069b9d3148d8b0d676e",
+   "hypothesis": "int priority score / dict options / null created crash fixed by type-tolerant card() + --selftest",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": "AttributeError: 'int' object has no attribute 'lower'",
+   "at": "2026-10-09T05:14:49.285225+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 3514,
+    "reliability": 0.893,
+    "quiet_errors": 0,
+    "turnaround_s": 0.3,
+    "sig_errors": 0
+   }
+  },
+  {
+   "id": "IMP-031",
+   "agent": "com.exos.email-people-crm",
+   "govlog": null,
+   "cron": null,
+   "change": "538724307cc0880ceb474ee645798c371acfa9b6",
+   "hypothesis": "Proton Bridge drops idle IMAP session during long Ollama extraction (UID FETCH EOF) fixed by reconnect+retry and per-message state persistence",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": "imaplib.IMAP4.abort: command: UID => socket error: EOF",
+   "at": "2026-10-09T08:29:21.118663+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 7,
+    "reliability": 0.857,
+    "quiet_errors": 0,
+    "turnaround_s": 1654.6,
+    "sig_errors": 0
+   }
+  },
+  {
+   "id": "IMP-032",
+   "agent": "lizi-piee-keepalive",
+   "govlog": null,
+   "cron": null,
+   "change": "4eaef5b",
+   "hypothesis": "Completion-based 30-day PIEE login reminders with daily overdue escalation keep Lizi's PIEE account from locking",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-09T13:40:06.606949+00:00",
+   "status": "measuring",
+   "baseline": {}
+  },
+  {
+   "id": "IMP-033",
+   "agent": "com.exos.task-note-command",
+   "govlog": null,
+   "cron": null,
+   "change": "dotted-subtask self-heal (10/9)",
+   "hypothesis": "No more 'NNNN.n' tasks appearing as duplicate top-level cards; they nest under the parent",
+   "metrics": [
+    "reliability"
+   ],
+   "error_signature": null,
+   "at": "2026-10-09T20:05:47.291477+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 2012,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 0.4
    }
   }
  ]

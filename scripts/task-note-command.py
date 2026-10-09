@@ -229,8 +229,29 @@ def directive_after(body):
     return tail.strip(" :,-—\n\t")
 
 
+def link_dotted_subtasks():
+    """Self-heal (Jon 10/9 "why do we keep duplicating this task?"): a task titled "<parent-id>.<n> ..."
+    is a subtask, but sessions created them without the parent:<id> tag, so the board showed them as
+    duplicate top-level cards next to the parent. Tag any such task created in the last 3 days."""
+    try:
+        since = (datetime.now(timezone.utc) - timedelta(days=3)).isoformat()
+        rows = supa("GET", "tasks?select=id,title,tags&created_at=gte." + urllib.parse.quote(since) + "&limit=500") or []
+        for t in rows:
+            m = re.match(r"\s*(\d{3,5})\.\d+\b", t.get("title") or "")
+            tg = t.get("tags") or []
+            if not m or any(str(x).startswith("parent:") for x in tg) or int(m.group(1)) == t["id"]:
+                continue
+            if not (supa("GET", f"tasks?select=id&id=eq.{m.group(1)}") or []):
+                continue
+            supa("PATCH", f"tasks?id=eq.{t['id']}", {"tags": sorted(set(tg + ["subtask", "parent:" + m.group(1)]))})
+            logline(f"linked dotted subtask #{t['id']} -> parent #{m.group(1)}")
+    except Exception as e:
+        logline(f"WARN link_dotted_subtasks: {e}")
+
+
 def main():
     import sys
+    link_dotted_subtasks()
     roster = load(ROSTER, [])
     by_email = {p["email"].lower(): p for p in roster}
     state = load(STATE, None)
