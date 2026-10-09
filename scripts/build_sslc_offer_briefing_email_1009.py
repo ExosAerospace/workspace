@@ -105,6 +105,14 @@ P("The up-front price reflects what the numbers support today; the earn-outs are
   "pace, this offer removes the funding risk and gives SSLC holders a direct share of the upside.",
   size=10.5, sa=6)
 
+P("SSLC employees. Jim, to your question: Exos shall offer employment to SSLC employees, including "
+  "management, support, engineering, and other technical and manufacturing employees, on terms no "
+  "less favorable than their current employment terms with SSLC (including compensation and "
+  "benefits), subject to each employee satisfying Exos's standard hiring policies and Exos's "
+  "completion of confirmatory due diligence. In addition, Exos will develop an option pool for key "
+  "SSLC employees, to be mutually agreed in the Definitive Agreement.",
+  size=10.5, sa=6)
+
 P("We ask the Board to confirm §3 exclusivity so we can proceed to close.", size=10.5, sa=8)
 
 # ── Signature ─────────────────────────────────────────────────────────────────
