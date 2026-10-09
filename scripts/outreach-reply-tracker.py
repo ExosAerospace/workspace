@@ -216,6 +216,23 @@ ACK = re.compile(r'\b(agreed|thanks?|thank you|got it|noted|received|acknowledge
                  r'will do|sounds good|perfect|appreciate)\b', re.I)
 
 
+# Bulk/newsletter content (incl. newsletters Jon FORWARDS, which carry no bulk headers): never an
+# outreach reply. 10/8: a forwarded "S2MARTS Updates" newsletter was flagged NEGATIVE because its
+# footer said "unsubscribe".
+BULK_TEXT = re.compile(r'(unsubscribe|manage (?:your )?(?:email )?preferences|update your preferences|'
+                       r'view (?:this email )?in (?:your )?browser|you are receiving this|you received this (?:email|message)|'
+                       r'opt[- ]out|email preferences|mailing list|this email was sent to)', re.I)
+BULK_NAME = re.compile(r'\b(updates?|newsletter|news|digest|bulletin|announcements?|opportunities|opps)\b', re.I)
+
+
+def is_bulk(msg, name, text):
+    if msg is not None and (msg.get("List-Unsubscribe") or msg.get("List-Id") or
+                            str(msg.get("Precedence", "")).lower() in ("bulk", "list", "junk")):
+        return True
+    return bool(BULK_NAME.search(name or "")) or len(BULK_TEXT.findall(text or "")) >= 1 and \
+        bool(re.search(r'(unsubscribe|preferences|opt[- ]out|view .*in .*browser)', text or "", re.I))
+
+
 def classify(text, body=None):
     if NEG.search(text):
         return ("negative", "🔴", "Log as declined; no further outreach unless re-engaged")
@@ -285,6 +302,9 @@ def main():
         # drop automated/marketing "Re:" noise and auto-replies / bounces / OOO
         if not real_person(faddr, fname) or AUTO_SUBJ.match(subj) or \
            "auto-replied" in str(msg.get("Auto-Submitted", "")).lower():
+            continue
+        if is_bulk(None if fwd_reply else msg, fname, fwd_reply if fwd_reply else body):
+            log(f"skip bulk/newsletter: {faddr} ({fname})")
             continue
         if ee.screen(subj + "\n" + body[:2500] + "\n" + faddr):
             log(f"HELD (export-control) reply skip: {faddr}")
