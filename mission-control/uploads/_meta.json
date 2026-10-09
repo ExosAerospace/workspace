@@ -27157,9 +27157,10 @@
     "decision_id": null,
     "doc_key": "sslc-exclusivity-rescue-options-and-draft-message",
     "version": 1,
-    "current": true,
+    "current": false,
     "uploaded_by": "Exo",
-    "uploaded_at": "2026-10-09T19:17:39Z"
+    "uploaded_at": "2026-10-09T19:17:39Z",
+    "superseded_at": "2026-10-09T19:40:48Z"
   },
   {
     "id": "03b70a6ecd0521f6",
@@ -27187,9 +27188,10 @@
     "decision_id": null,
     "doc_key": "exos-sslc-optionb-acquisition-model",
     "version": 3,
-    "current": true,
+    "current": false,
     "uploaded_by": "Exo",
-    "uploaded_at": "2026-10-09T19:27:26Z"
+    "uploaded_at": "2026-10-09T19:27:26Z",
+    "superseded_at": "2026-10-09T19:40:48Z"
   },
   {
     "id": "0eb8995b69b4eecd",
@@ -27233,8 +27235,70 @@
     "decision_id": null,
     "doc_key": "exos-sslc-optionb-offer-summary",
     "version": 4,
+    "current": false,
+    "uploaded_by": "Exo",
+    "uploaded_at": "2026-10-09T19:27:26Z",
+    "superseded_at": "2026-10-09T19:40:48Z"
+  },
+  {
+    "id": "f92ecc0e60d77993",
+    "filename": "SSLC Option B Offer Summary (v2 \u2014 1.0% EAI, Lockup, Projection)",
+    "stored_name": "1791574848634_Exos_SSLC_OptionB_Offer_Summary_2026-10-07.docx",
+    "size": 780986,
+    "extension": ".docx",
+    "task_id": "2414",
+    "project_id": null,
+    "decision_id": null,
+    "doc_key": "exos-sslc-optionb-offer-summary",
+    "version": 5,
+    "current": false,
+    "uploaded_by": "Exo",
+    "uploaded_at": "2026-10-09T19:40:48Z",
+    "superseded_at": "2026-10-09T19:40:48Z"
+  },
+  {
+    "id": "e360f2e4665bdf18",
+    "filename": "SSLC Option B Offer Summary PDF (v2 \u2014 1.0% EAI, Lockup, Projection)",
+    "stored_name": "1791574848685_Exos_SSLC_OptionB_Offer_Summary_2026-10-07.pdf",
+    "size": 251519,
+    "extension": ".pdf",
+    "task_id": "2414",
+    "project_id": null,
+    "decision_id": null,
+    "doc_key": "exos-sslc-optionb-offer-summary",
+    "version": 6,
     "current": true,
     "uploaded_by": "Exo",
-    "uploaded_at": "2026-10-09T19:27:26Z"
+    "uploaded_at": "2026-10-09T19:40:48Z"
+  },
+  {
+    "id": "e648a733fc06fba5",
+    "filename": "SSLC Option B Acquisition Model (v2 \u2014 EAI Lockup & Liquidity sheet)",
+    "stored_name": "1791574848736_EXOS_SSLC_OptionB_Acquisition_Model_2026-10-07.xlsx",
+    "size": 35025,
+    "extension": ".xlsx",
+    "task_id": "2414",
+    "project_id": null,
+    "decision_id": null,
+    "doc_key": "exos-sslc-optionb-acquisition-model",
+    "version": 4,
+    "current": true,
+    "uploaded_by": "Exo",
+    "uploaded_at": "2026-10-09T19:40:48Z"
+  },
+  {
+    "id": "b06f0c0961779f64",
+    "filename": "SSLC Exclusivity Rescue Options + Draft (v2 \u2014 Lockup, Projection)",
+    "stored_name": "1791574848786_SSLC_Exclusivity_Rescue_Options_and_Draft_Message_2026-10-07_DRAFT_v2.docx",
+    "size": 40959,
+    "extension": ".docx",
+    "task_id": "2414",
+    "project_id": null,
+    "decision_id": null,
+    "doc_key": "sslc-exclusivity-rescue-options-and-draft-message",
+    "version": 2,
+    "current": true,
+    "uploaded_by": "Exo",
+    "uploaded_at": "2026-10-09T19:40:48Z"
   }
 ]

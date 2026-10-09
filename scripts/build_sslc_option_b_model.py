@@ -1367,6 +1367,268 @@ rec["A24"].alignment = Alignment(wrap_text=True)
 rec.row_dimensions[24].height = 52
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# SHEET 9: EAI Lockup & Liquidity
+# ─────────────────────────────────────────────────────────────────────────────
+SEC_504_URL  = ("https://www.sec.gov/resources-small-businesses/exempt-offerings/"
+                "exemption-limited-offerings-not-exceeding-10-million-rule-504-regulation-d")
+RULE144_URL  = "https://www.ecfr.gov/current/title-17/chapter-II/part-230/section-230.144"
+RULE10B5_URL = "https://www.ecfr.gov/current/title-17/chapter-II/part-240/section-240.10b-5"
+
+liq = wb.create_sheet("EAI Lockup & Liquidity")
+liq.column_dimensions["A"].width = 34
+liq.column_dimensions["B"].width = 72
+liq.column_dimensions["C"].width = 32
+
+# Header
+liq.merge_cells("A1:C1")
+liq["A1"] = "EAI UNIT LOCKUP & LIQUIDITY — DETAIL"
+liq["A1"].font = Font(bold=True, color=WHITE, size=13)
+liq["A1"].fill = PatternFill("solid", fgColor=DARK_BLUE)
+liq["A1"].alignment = Alignment(horizontal="center")
+liq.row_dimensions[1].height = 24
+
+liq.merge_cells("A2:C2")
+liq["A2"] = ("INTERNAL — NEGOTIATING TERMS — Not a final or binding offer. "
+             "2026-10-09 update (John Quinn). Sources: "
+             "Ainigma_RTO_Board_Brief_2026-09-04.md:16; "
+             "Ainigma_RTO_Anticipated_Board_Questions_2026-09-08.md:36,44.")
+liq["A2"].font = Font(italic=True, size=8.5, color="C00000")
+liq["A2"].fill = PatternFill("solid", fgColor=RED_LIGHT)
+liq["A2"].alignment = Alignment(wrap_text=True, horizontal="center")
+liq.row_dimensions[2].height = 28
+
+# ── Section A: Legal status
+liq.merge_cells("A4:C4")
+liq["A4"] = "A.  Legal Status of EAI Units at Issuance"
+liq["A4"].font = Font(bold=True, size=11, color=DARK_BLUE)
+liq.row_dimensions[4].height = 18
+
+legal_rows = [
+    ("Instrument type",
+     "Exos Aerospace Investments LLC (EAI) units.",
+     ""),
+    ("Securities law status",
+     ("Restricted securities issued under Rule 504, Regulation D. "
+      "Bear a restrictive legend. Not freely tradeable at issuance."),
+     f"Rule 504: {SEC_504_URL}"),
+    ("Offering type",
+     "Rule 504 / Regulation D (U.S. domestic offering). NOT covered by the Reg S exemption used for the Japan round.",
+     "The two offerings must be tracked under distinct exemptions."),
+    ("409A value at issuance",
+     "1.0% × $169.7M (Eqvista 409A, valuation date 3/31/2026) = $1,697,000 (~$1.7M)",
+     "Issued at financing close, committed at SSLC board acceptance."),
+    ("Lockup — mirrors principals",
+     ("Same lockup terms as Exos Aerospace principals under the RTO transaction documents. "
+      "Specific lock periods in the RTO definitive agreement govern."),
+     "Ainigma mandate per Board Brief 2026-09-04."),
+]
+for i, (term, detail, src) in enumerate(legal_rows, start=5):
+    liq.cell(i, 1).value = term
+    liq.cell(i, 1).font = Font(bold=True, size=9)
+    liq.cell(i, 2).value = detail
+    liq.cell(i, 2).font = Font(size=9)
+    liq.cell(i, 2).alignment = Alignment(wrap_text=True)
+    liq.cell(i, 3).value = src
+    liq.cell(i, 3).font = Font(size=8.5, italic=True, color="444444")
+    liq.cell(i, 3).alignment = Alignment(wrap_text=True)
+    liq.row_dimensions[i].height = 30
+
+# ── Section B: Rule 144 resale
+liq.merge_cells("A11:C11")
+liq["A11"] = "B.  Rule 144 Resale Requirements  (17 CFR 230.144(d))"
+liq["A11"].font = Font(bold=True, size=11, color=DARK_BLUE)
+liq.row_dimensions[11].height = 18
+
+r144_rows = [
+    ("Rule 144 reference",
+     f"17 CFR 230.144(d) — Holding period requirement. URL: {RULE144_URL}",
+     "Verified 2026-10-09."),
+    ("Holding period — reporting issuer",
+     ("6 months from issuance date. "
+      "Applies ONLY after the issuer (or successor) is an SEC-reporting company "
+      "with current public information available."),
+     "17 CFR 230.144(d)(1)(i)."),
+    ("Holding period — non-reporting issuer",
+     ("1 year from issuance date. "
+      "Exos Aerospace Systems & Technologies, Inc. is NOT currently an SEC reporting company. "
+      "Until the RTO makes the successor entity reporting, the 1-year path applies."),
+     "17 CFR 230.144(d)(1)(ii)."),
+    ("6-month clock start",
+     ("The 6-month clock begins only AFTER the RTO close makes the issuer/successor a reporting company. "
+      "With a targeted RTO close ~6 months after financing close, the earliest Rule 144 window under the "
+      "6-month path is ~12 months post-issuance (close + 6 months). "
+      "Actual timing depends on RTO completion and the conversion/resale registration schedule."),
+     "Targeted, not assured."),
+]
+for i, (term, detail, src) in enumerate(r144_rows, start=12):
+    liq.cell(i, 1).value = term
+    liq.cell(i, 1).font = Font(bold=True, size=9)
+    liq.cell(i, 2).value = detail
+    liq.cell(i, 2).font = Font(size=9)
+    liq.cell(i, 2).alignment = Alignment(wrap_text=True)
+    liq.cell(i, 3).value = src
+    liq.cell(i, 3).font = Font(size=8.5, italic=True, color="444444")
+    liq.cell(i, 3).alignment = Alignment(wrap_text=True)
+    liq.row_dimensions[i].height = 42
+
+# ── Section C: RTO structure and preferred path
+liq.merge_cells("A17:C17")
+liq["A17"] = "C.  RTO Structure — Preferred-at-Close / Conversion Path"
+liq["A17"].font = Font(bold=True, size=11, color=DARK_BLUE)
+liq.row_dimensions[17].height = 18
+
+rto_rows = [
+    ("RTO mechanics",
+     ("Merger closes BEFORE the public stockholder vote using non-voting, non-convertible preferred stock "
+      "(avoids NASDAQ Rule 5635 early-stage trigger). "
+      "A proxy is filed within ~30 days of RTO close."),
+     "Source: Ainigma_RTO_Board_Brief_2026-09-04.md:16."),
+    ("Preferred → common",
+     ("Preferred converts to common and becomes liquid ONLY after: "
+      "(i) post-close public-shareholder vote (that founders do not control at the moment of close), AND "
+      "(ii) effective resale registration (S-1/S-3)."),
+     "Sources: Board Brief 2026-09-04.md:16; Board Questions 2026-09-08.md:36,44."),
+    ("EAI units follow same path",
+     ("The EAI units' liquidity follows the identical path: "
+      "committed at board acceptance → issued at financing close → "
+      "held as restricted/non-trading until RTO close → preferred conversion vote → "
+      "resale registration effective → Rule 144 / free-trading eligibility."),
+     "See timeline table below."),
+    ("Risk if vote fails / reg stalls",
+     ("If the conversion vote fails or the resale registration stalls, "
+      "holders of the EAI units (like founders) hold restricted, non-voting paper with no near-term liquidity. "
+      "This is a known RTO structure, not disqualifying, but must be understood."),
+     "Source: Board Brief:44; Board Questions:62."),
+]
+for i, (term, detail, src) in enumerate(rto_rows, start=18):
+    liq.cell(i, 1).value = term
+    liq.cell(i, 1).font = Font(bold=True, size=9)
+    liq.cell(i, 2).value = detail
+    liq.cell(i, 2).font = Font(size=9)
+    liq.cell(i, 2).alignment = Alignment(wrap_text=True)
+    liq.cell(i, 3).value = src
+    liq.cell(i, 3).font = Font(size=8.5, italic=True, color="444444")
+    liq.cell(i, 3).alignment = Alignment(wrap_text=True)
+    liq.row_dimensions[i].height = 48
+
+# ── Section D: Liquidity Timeline
+liq.merge_cells("A23:C23")
+liq["A23"] = "D.  Liquidity Timeline  (Targeted — Not Assured)"
+liq["A23"].font = Font(bold=True, size=11, color=DARK_BLUE)
+liq.row_dimensions[23].height = 18
+
+timeline_hdr = [("Milestone", "Target / Detail", "Status")]
+timeline_data = [
+    ("Board acceptance",
+     "D+0. EAI units committed; not yet issued. SSLC board confirms Option B.",
+     "Targeted"),
+    ("Financing close — units issued",
+     "Targeted Q1 FY27 (~2026-Q4/Q1 2027). EAI units formally issued. "
+     "Rule 144 holding period (1-year, non-reporting) clock starts.",
+     "Targeted, not assured"),
+    ("Targeted RTO close",
+     "~6 months post-financing close. Exos/NewCo merger closes using non-voting preferred. "
+     "NOT the liquidity event — preferred not yet tradeable.",
+     "Targeted, not assured"),
+    ("Proxy filed / shareholder vote",
+     "~30 days post-RTO close. Public stockholder vote on preferred → common conversion.",
+     "Targeted, not assured"),
+    ("Resale registration effective (S-1/S-3)",
+     "~30–90 days post-RTO close (concurrent with or following vote). "
+     "Registration must go effective before preferred converts to tradeable common.",
+     "Targeted, not assured"),
+    ("Rule 144 eligibility — 6-month path",
+     "AFTER reporting status is established AND ≥6 months from issuance date. "
+     "Earliest: ~12 months post-issuance (close + RTO ~6 mo + holding). "
+     "Requires current public information available.",
+     "Targeted, not assured"),
+    ("Rule 144 eligibility — 1-year path",
+     "1 year from issuance date (non-reporting issuer path). "
+     "If RTO does not close by 1-year mark, this is the available resale window.",
+     "Fallback if 6-mo path unavailable"),
+    ("ALL DATES", "TARGETED, NOT ASSURED. The RTO may not close.", "Risk"),
+]
+for col, hdr in enumerate(["Milestone", "Target / Detail", "Status"], start=1):
+    c = liq.cell(24, col, value=hdr)
+    c.font = Font(bold=True, color=WHITE, size=9)
+    c.fill = PatternFill("solid", fgColor="375623")
+    c.alignment = Alignment(horizontal="center", wrap_text=True)
+liq.row_dimensions[24].height = 18
+
+for i, (ms, detail, status) in enumerate(timeline_data, start=25):
+    liq.cell(i, 1).value = ms
+    liq.cell(i, 1).font = Font(bold=True, size=9)
+    liq.cell(i, 2).value = detail
+    liq.cell(i, 2).font = Font(size=9)
+    liq.cell(i, 2).alignment = Alignment(wrap_text=True)
+    liq.cell(i, 3).value = status
+    liq.cell(i, 3).font = Font(size=9, italic=True, color="C00000")
+    liq.cell(i, 3).alignment = Alignment(wrap_text=True, horizontal="center")
+    if status == "Risk":
+        liq.cell(i, 1).fill = PatternFill("solid", fgColor=RED_LIGHT)
+        liq.cell(i, 2).fill = PatternFill("solid", fgColor=RED_LIGHT)
+        liq.cell(i, 3).fill = PatternFill("solid", fgColor=RED_LIGHT)
+    liq.row_dimensions[i].height = 36
+
+# ── Section E: Projected Post-RTO Value
+liq.merge_cells("A34:C34")
+liq["A34"] = "E.  Projected Post-RTO Value  —  PROJECTION, NOT A PROMISE"
+liq["A34"].font = Font(bold=True, size=11, color=WHITE)
+liq["A34"].fill = PatternFill("solid", fgColor=PURPLE)
+liq.row_dimensions[34].height = 18
+
+liq.merge_cells("A35:C35")
+liq["A35"] = (
+    "CAUTIONARY STATEMENT: Forward-looking projection based on management assumptions "
+    "(RTO completion, listing valuation, ~30% dilution). Not a guarantee or promise of value; "
+    "actual results may differ materially. The RTO may not close. "
+    f"SEC Rule 10b-5 (17 CFR 240.10b-5; {RULE10B5_URL}) antifraud rules apply to projections. "
+    "Projections must have a reasonable basis; do not rely on this section as an offer to sell "
+    "or inducement beyond the framing above."
+)
+liq["A35"].font = Font(italic=True, size=8.5, color="C00000")
+liq["A35"].fill = PatternFill("solid", fgColor=RED_LIGHT)
+liq["A35"].alignment = Alignment(wrap_text=True)
+liq.row_dimensions[35].height = 60
+
+proj_hdr = ["Scenario", "RTO MEV", "1.0% pre-dilution", "~30% dilution", "1.0% post-dilution (up-front only)", "409A at issuance", "Additional: earn-out at listing"]
+for col, h in enumerate(proj_hdr, start=1):
+    c = liq.cell(36, col, value=h)
+    c.font = Font(bold=True, color=WHITE, size=9)
+    c.fill = PatternFill("solid", fgColor=PURPLE)
+    c.alignment = Alignment(horizontal="center", wrap_text=True)
+liq.row_dimensions[36].height = 28
+
+proj_data = [
+    ("Low (floor)",   "$200M",  "$2.00M",  "−$0.60M",  "$1.40M",  "~$1.70M (409A)", "$0  (0.0% earn-out)"),
+    ("Base",          "$250M",  "$2.50M",  "−$0.75M",  "$1.75M",  "~$1.70M (409A)", "+$424K  (0.25%)"),
+    ("High",          "$300M",  "$3.00M",  "−$0.90M",  "$2.10M",  "~$1.70M (409A)", "+$848K  (0.50%)"),
+]
+proj_fills = [YELLOW, GREEN, "D1FAE5"]
+for i, (row_data, fill) in enumerate(zip(proj_data, proj_fills), start=37):
+    for col, val in enumerate(row_data, start=1):
+        c = liq.cell(i, col, value=val)
+        c.font = Font(size=9)
+        c.fill = PatternFill("solid", fgColor=fill)
+        c.alignment = Alignment(horizontal="center", wrap_text=True)
+    liq.row_dimensions[i].height = 22
+
+liq.merge_cells("A41:C41")
+liq["A41"] = (
+    "Notes: MEV per Ainigma mandate ($250M min, $300M stretch). "
+    "Dilution ~30% (Series A D1–D4 ~13% + RTO ~12% + option pool ~5%) — management assumption. "
+    "Post-dil = (1.0%) × (1 − 0.30) × MEV. "
+    "Earn-out column is ADDITIONAL at listing price; not additive to 409A value. "
+    "Full Y5 hold analysis (16× EV/EBITDA): model 'Total Compensation' sheet. "
+    f"Rule 10b-5 reference: {RULE10B5_URL}. "
+    f"Rule 144 reference: {RULE144_URL}. "
+    f"Rule 504 reference: {SEC_504_URL}."
+)
+liq["A41"].font = Font(size=8, italic=True, color="444444")
+liq["A41"].alignment = Alignment(wrap_text=True)
+liq.row_dimensions[41].height = 60
+
 # ── Save ──────────────────────────────────────────────────────────────────────
 wb.save(OUT)
 print(f"Saved: {OUT}")

@@ -220,13 +220,10 @@ P("October 9, 2026  ·  Exos Aerospace Systems & Technologies, Inc.",
 # ────────────────────────────────────────────────────────────────────────────
 H1("1.  What SSLC Holders Receive")
 
-body("The Exos offer delivers liquidity, debt relief, and equity upside — "
-     "without requiring any additional capital call from current SSLC shareholders.")
 
-P("The up-front price reflects what the numbers support today. "
-  "The earn-outs are how that value grows: as goals are met — IM tank deliveries, "
-  "revenue milestones and the Exos listing — SSLC holders share directly in the upside.",
-  italic=True, size=9.5, color=BLUE, sa=4)
+P("Up-front price reflects today's numbers; earn-outs let SSLC holders share directly "
+  "in tank deliveries, revenue milestones, and the Exos listing.",
+  italic=True, size=9.5, color=BLUE, sa=3)
 
 add_offer_table()
 
@@ -235,85 +232,87 @@ note("Why this structure: SSLC holders receive real Exos equity at close (1.0% E
      "issued as part of Exos's Rule 504 offering) — not only contingent upside. "
      "It aligns them with Exos immediately. The earn-out stock stays 0.0–0.5%, so total equity is 1.0–1.5%.")
 
-B("No additional capital calls  ",
-  "Once closed, SSLC's standalone cash burn stops entirely.")
-B("IM program continuity  ",
-  "Exos-SSLC continues the Intuitive Machines contract with no delivery interruption.")
-
-# ────────────────────────────────────────────────────────────────────────────
-# SECTION 2 — WHY GROWTH REQUIRES EXOS CAPITAL
-# ────────────────────────────────────────────────────────────────────────────
-H1("2.  Why the Growth Trajectory Requires Exos Capital")
-
-body("The bottleneck is not the technology or the IM demand — it is working capital.  "
-     "SSLC's most recent quarter (FY27 Q1) came in at $713K in revenue.  "
-     "Hitting $5.1M for FY27 requires averaging $1.46M per quarter in Q2–Q4 — "
-     "approximately 2.05× that pace — starting immediately.  "
-     "That doubling is not achievable on SSLC's current $198K cash balance.")
-
-P("Standalone constraints (SSLC's own numbers):",
-  bold=True, size=10, sa=2, sb=3)
-
-B("Cash position  ", "$198K at October 2, 2026 — roughly one month of operating burn.")
-B("Working capital gap  ",
-  "$300K–$700K needed to maintain delivery commitments and service new IM orders — "
-  "before SSLC can ramp to the $5.1M/year target run rate.")
-B("Operating history  ", "FY26 operating loss: −$416K. No self-funding path to production scale.")
-B("He-tank rework  ",
-  "Rev3 GHe tank 4,400 psi proof issue unresolved (MC #3056). "
-  "Remediation cost ~$175K to COPV ($300K gap). Resolves cleanly as intercompany under Exos.")
-B("No capex capacity  ",
-  "Production-scale equipment and headcount additions are not fundable from SSLC's cash position. "
-  "Growth is capped at current run-rate without outside capital.")
-
-note("The With-vs-Without comparison, year-by-year CAGR figures, and cumulative revenue gap "
-     "are in the model spreadsheet: EXOS_SSLC_OptionB_Acquisition_Model_2026-10-07.xlsx, "
-     "sheet 'With vs Without Exos Capital'.")
-
-# ────────────────────────────────────────────────────────────────────────────
-# SECTION 3 — TOTAL COMPENSATION CHART
-# ────────────────────────────────────────────────────────────────────────────
-H1("3.  Total Compensation — 5-Year View (FY27–FY31)", sb=4)
-
-note("See chart: SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png  |  "
-     "Full model: EXOS_SSLC_OptionB_Acquisition_Model_2026-10-07.xlsx → 'Total Compensation' sheet.")
-
-# embed chart image if it exists (only if it fits on current page)
-chart_path = os.path.join(WS, "drafts", "SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png")
-if os.path.exists(chart_path):
-    doc.add_picture(chart_path, width=Inches(5.0))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+note("Chart: SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png  ·  "
+     "Full model: EXOS_SSLC_OptionB_Acquisition_Model_2026-10-07.xlsx → 'Total Compensation' sheet  ·  "
+     "IM program continuity: Exos-SSLC continues the Intuitive Machines contract with no delivery interruption.")
 
 # ────────────────────────────────────────────────────────────────────────────
 # SECTION 4 — TERMS (SHORT BOX)
 # ────────────────────────────────────────────────────────────────────────────
-H1("4.  Key Terms", sb=4)
+H1("3.  Key Terms", sb=3)
 
 terms_rows = [
     ["Term",                         "Detail"],
-    ["Agreement basis",              "May 2025 Asset Acquisition Agreement, §3 exclusivity trigger "
-                                     "(non-exclusive → exclusive upon Exos financing agreement)"],
-    ["Total commitment",             "$5,057,000 base at close ($2.51M cash + $60K costs + $790K Exos stake credit + ~$1.70M EAI equity at 409A; "
-                                     "EAI units issued as part of Exos's Rule 504 offering)"],
-    ["Exclusivity period",           "90 days from SSLC confirmation; extension not unreasonably withheld "
-                                     "while financing works in good faith (§3)"],
+    ["Agreement basis",              "May 2025 Asset Acquisition Agreement, §3 exclusivity trigger"],
+    ["Total commitment",             "$5,057,000 base at close ($2.51M cash + $60K costs + $790K Exos stake credit + ~$1.70M EAI equity at 409A, Rule 504)"],
+    ["Exclusivity period",           "90 days from SSLC confirmation; extension not unreasonably withheld (§3)"],
     ["Holdback (§7)",                "5% escrow, released at 12-month anniversary"],
     ["SSLC debts assumed",           "Paid at face at close (est. ~$500K; verify QuickBooks)"],
-    ["Disinterested directors",      "John Quinn abstains from SSLC board vote; sends as Exos CEO "
-                                     "(Cal. Corp. Code §310)"],
-    ["Fairness opinion",             "Eqvista engaged 8/14/2026; agreement still unsigned "
-                                     "(held ~1 month)"],
     ["Status",                       "DRAFT — NEGOTIATING TERMS — not a final or binding offer"],
 ]
 add_table(terms_rows, [1.9, 4.1])
 
-# Model notes
-SEC_504_URL = ("https://www.sec.gov/resources-small-businesses/exempt-offerings/"
-               "exemption-limited-offerings-not-exceeding-10-million-rule-504-regulation-d")
-note(f"Model notes: Exos equity at close (~$1.7M) counts toward the Rule 504 $10M rolling 12-month cap; "
-     f"confirm remaining 504 capacity before issuance. Rule 504 reference: {SEC_504_URL}. "
-     "Rule 504 is U.S.-only; EAI units used in the separate Reg S Japan round must be tracked "
-     "under a distinct exemption — the two offerings must remain separate.")
+SEC_504_URL  = ("https://www.sec.gov/resources-small-businesses/exempt-offerings/"
+                "exemption-limited-offerings-not-exceeding-10-million-rule-504-regulation-d")
+RULE144_URL  = "https://www.ecfr.gov/current/title-17/chapter-II/part-230/section-230.144"
+RULE10B5_URL = "https://www.ecfr.gov/current/title-17/chapter-II/part-240/section-240.10b-5"
+
+note(f"504 cap: ~$1.7M counts toward the Rule 504 $10M rolling 12-month cap; confirm remaining capacity. "
+     f"Rule 504 is U.S.-only; EAI units in the Japan round are Reg S — the two must remain distinct. "
+     f"See model → 'EAI Lockup & Liquidity' sheet for full detail.")
+
+# ────────────────────────────────────────────────────────────────────────────
+# SECTION 5 — EAI UNIT LOCKUP & LIQUIDITY
+# ────────────────────────────────────────────────────────────────────────────
+H1("4.  EAI Unit Lockup & Liquidity", sb=3)
+
+note(f"Restricted securities — Rule 504 Reg D, restrictive legend; not freely tradeable at issuance. "
+     f"Same lockup as Exos principals. Rule 504 ref: {SEC_504_URL}")
+
+lockup_bullets = [
+    ("Rule 144 resale.  ",
+     f"Holding period 6 months (reporting issuer) or 1 year (non-reporting). "
+     f"Exos is currently non-reporting; 6-month path opens only after RTO. "
+     f"17 CFR 230.144(d): {RULE144_URL}"),
+    ("RTO structure — preferred at close.  ",
+     "At RTO close, founders/legacy holders receive unregistered non-voting non-convertible preferred "
+     "(avoids NASDAQ Rule 5635). Converts to common + becomes liquid only after: (i) shareholder vote "
+     "(proxy ~30 days post-close) and (ii) effective resale registration (S-1/S-3). "
+     "EAI units follow this same path. "
+     "[Board Brief 2026-09-04:16; Board Questions 2026-09-08:36,44]"),
+]
+for lead, rest in lockup_bullets:
+    B(lead, rest)
+
+# Lockup timeline table
+timeline_rows = [
+    ["Milestone",                                "Target / Status"],
+    ["Board acceptance",                         "D+0 — units committed; not yet issued"],
+    ["Financing close — units issued",           "Targeted Q1 FY27; 1-yr Rule 144 clock starts"],
+    ["Targeted RTO close",                       "~6 months post-financing (targeted, not assured)"],
+    ["Conversion vote + resale reg. effective",  "~30–90 days post-RTO; preferred → common"],
+    ["Rule 144 eligibility",                     "6-mo (after reporting); 1-yr if non-reporting at issuance"],
+    ["ALL DATES",                                "Targeted, not assured. RTO may not close."],
+]
+add_table(timeline_rows, [2.6, 3.9], hdr_fill="375623")
+
+# ────────────────────────────────────────────────────────────────────────────
+# SECTION 6 — PROJECTED POST-RTO VALUE
+# ────────────────────────────────────────────────────────────────────────────
+H1("5.  Projected Post-RTO Value  (Projection — Not a Promise)", sb=3)
+
+note(f"Forward-looking projection — management assumptions (RTO completion, listing valuation, ~30% dilution). "
+     f"Not a guarantee; actual results may differ. RTO may not close. "
+     f"SEC Rule 10b-5, 17 CFR 240.10b-5 ({RULE10B5_URL}) antifraud rules apply. "
+     f"409A issuance value: ~$1.70M. Up-front 1.0% EAI only; earn-out column is additional at listing.")
+
+proj_rows = [
+    ["Scenario",  "RTO MEV",  "1.0% pre-dil",  "1.0% post-dil\n(~30% dil)",  "+ earn-out at listing"],
+    ["Low",       "$200M",    "$2.00M",         "$1.40M",                      "$0 (0.0%)"],
+    ["Base",      "$250M",    "$2.50M",         "$1.75M",                      "+$424K (0.25%)"],
+    ["High",      "$300M",    "$3.00M",         "$2.10M",                      "+$848K (0.50%)"],
+]
+add_table(proj_rows, [0.85, 0.85, 1.10, 1.30, 1.40])
 
 # ────────────────────────────────────────────────────────────────────────────
 # FOOTER
