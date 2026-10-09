@@ -32,12 +32,44 @@ def load(p, d):
 
 
 def for_jon(d):
-    return (d.get("assignedTo") or "").strip().lower() in JON and not d.get("standing")
+    return str(d.get("assignedTo") or "").strip().lower() in JON and not d.get("standing")
 
 
 def clip(s, n):
-    s = " ".join((s or "").split())
+    s = " ".join(str(s or "").split())
     return s if len(s) <= n else s[: n - 1] + "…"
+
+
+def is_high(p):
+    # priority is either a label ("high") or a 0-100 score (80 = high) depending on the producer
+    if isinstance(p, (int, float)) and not isinstance(p, bool):
+        return p >= 80
+    return str(p or "").strip().lower() in ("high", "urgent", "critical")
+
+
+def opt_text(o):
+    if isinstance(o, dict):
+        return str(o.get("label") or o.get("text") or o.get("value") or o.get("title") or "")
+    return str(o or "")
+
+
+def card(d):
+    flag = " · ⚠️ high priority" if is_high(d.get("priority")) else ""
+    opts = " / ".join(t for t in map(opt_text, d.get("options") or []) if t)
+    return (f"🔴 ❓ **{d['id']}** · {clip(d.get('title'), 180)}{flag}\n"
+            f"{clip(d.get('question'), 400)}\n"
+            + (f"Options: {clip(opts, 200)}\n" if opts else "")
+            + f"Source: {d.get('source') or 'MC'} · Answer in MC: <{MC}>")
+
+
+def selftest():
+    # replays 2026-10-09 failures: int priority score, dict options, null created
+    m = card({"id": "D1", "priority": 80, "options": [{"label": "Yes"}, "No"], "title": None, "question": 5})
+    assert "high priority" in m and "Options: Yes / No" in m, m
+    assert "high priority" not in card({"id": "D2", "priority": 55, "options": None})
+    assert "high priority" in card({"id": "D3", "priority": "Urgent"})
+    sorted([{"created": None}, {"created": "2026"}], key=lambda x: str(x.get("created") or ""))
+    print("selftest ok")
 
 
 def main():
@@ -50,15 +82,9 @@ def main():
     posted = st["posted"]
     changed = False
 
-    for d in sorted(decs.values(), key=lambda x: x.get("created", "")):
+    for d in sorted(decs.values(), key=lambda x: str(x.get("created") or "")):
         if d.get("status") == "open" and for_jon(d) and d["id"] not in posted:
-            pri = (d.get("priority") or "").lower()
-            flag = " · ⚠️ high priority" if pri in ("high", "urgent", "critical") else ""
-            opts = " / ".join(d.get("options") or [])
-            msg = (f"🔴 ❓ **{d['id']}** · {clip(d.get('title'), 180)}{flag}\n"
-                   f"{clip(d.get('question'), 400)}\n"
-                   + (f"Options: {clip(opts, 200)}\n" if opts else "")
-                   + f"Source: {d.get('source') or 'MC'} · Answer in MC: <{MC}>")
+            msg = card(d)
             if DRY:
                 print("[dry] NEW", msg, "\n")
             else:
@@ -90,4 +116,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    selftest() if "--selftest" in sys.argv else main()
