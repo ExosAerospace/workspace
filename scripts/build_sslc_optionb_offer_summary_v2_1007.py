@@ -134,9 +134,10 @@ def add_offer_table():
         ("Credit for Exos's existing stake",          "$790K",   "$790K",   "$790K",   "Close (non-cash credit)",                                   "data"),
         ("SSLC debts paid at face",                   "$500K",   "$500K",   "$500K",   "Close; ~$500K TBV in QB",                                   "data"),
         ("Working-capital bridge",                    "$500K",   "$500K",   "$500K",   "Close",                                                     "data"),
-        ("Exos equity — 1.0% EAI units\n(Rule 504, at 409A ~$170M)",
+        ("① Cash & debt relief at close",             "$4,360K", "$4,360K", "$4,360K", "Cash + costs + stake credit + debts + WC bridge",           "subtotal"),
+        ("+ Exos equity — 1.0% EAI units\n(Rule 504, at 409A ~$170M)",
                                                       "$1,697K", "$1,697K", "$1,697K", "EAI units issued as part of Exos's\nRule 504 offering, at the 409A value;\nissued at financing close",  "data"),
-        ("Subtotal: funding at close",                "$6,057K", "$6,057K", "$6,057K", "",                                                          "subtotal"),
+        ("② Total at financing close (① + equity)",   "$6,057K", "$6,057K", "$6,057K", "",                                                          "subtotal"),
         # ── Earn-outs (negotiating terms — mgmt assumptions) ─────────────────────
         ("Tank earn-out (5 yrs, 5%/yr,\ncap $300K/yr)",
                                                       "$750K",   "$1,250K", "$1,500K", "FY27–FY31; low 3%/base 5%/high\n7% × IM rev; $300K/yr cap","data"),
@@ -150,9 +151,12 @@ def add_offer_table():
                                                       "—",       "—",       "$200K",   "Pays at Exos BLK3 tank cert\n(est. FY27–FY28)",             "mstn"),
         ("Exos stock earn-out, valued at 409A\n(on top of 1.0% EAI up-front)",
                                                       "$0",      "$424K",   "$848K",   "Post-RTO ~FY28; earn-out 0.0%/0.25%/0.5% FD; lockup same as Exos principals.\nAt listing ($250M/$300M): $0/$625K/$1.5M. Total Exos equity: 1.0%/1.25%/1.5%.", "data"),
-        ("TOTAL OFFER VALUE (5-yr)",                  "$7,007K", "$8,582K", "$10,157K","FY27–FY31",                                                 "total"),
-        ("Memo: Exos stock if held to FY31\n(not additive to total above)",
-                                                      "$5.7M",   "$8.5M",   "$11.4M",  "16× EV/EBITDA; ~30% dilution;\ntotal stake 1.0/1.25/1.5% (EAI+earn-out);\nmgmt assumption", "memo"),
+        ("③ TOTAL OFFER VALUE, 5-yr\n(② + earn-outs; all stock at 409A)",
+                                                      "$7,007K", "$8,582K", "$10,157K","FY27–FY31",                                                 "total"),
+        ("IF HELD: all Exos stock projected\nin FY2031 (replaces 409A stock values)",
+                                                      "$11.4M",  "$14.2M",  "$17.1M",  "Total stake 1.0/1.25/1.5% → ~0.70/0.875/1.05% after\n~30% dilution × ~$1.63B FY31 EV (16× v12 EBITDA).\nProjection only; on SSLC-actuals case ~$1.2–1.8M.", "memo"),
+        ("④ TOTAL IF STOCK HELD TO 2031\n(① + tank + milestones + 2031 stock)",
+                                                      "$16.7M",  "$20.5M",  "$24.0M",  "Alternative to ③, NOT added to it. Forward-looking\nprojection, not a promise; RTO may not close.", "memo"),
     ]
 
     note_text = ("Earn-out rows: negotiating terms — management assumptions. "
