@@ -1148,22 +1148,22 @@ tcomp.row_dimensions[35].height = 22
 
 y5_hold_rows = [
     (36, "Old-Model — Low",   "=Assumptions!B118", "=Assumptions!B125",
-         "=B36*C36", "=Assumptions!B28*Assumptions!B31", "=D36/E36",
+         "=B36*C36", "=Assumptions!B28*Assumptions!B31", '=IFERROR(D36/E36,"n/a")',
          "~0.59% EAI only (0% earn-out) x 0.70 = ~0.4125%; EV $1.626B; ~$6.7M; multiple vs earn-out at listing ($0)"),
     (37, "Old-Model — Base",  "=Assumptions!B118", "=Assumptions!B124",
-         "=B37*C37", "=Assumptions!B29*Assumptions!B32", "=D37/E37",
+         "=B37*C37", "=Assumptions!B29*Assumptions!B32", '=IFERROR(D37/E37,"n/a")',
          "~0.59% EAI + 0.25% earn-out = ~0.84% x 0.70 = ~0.5875%; EV $1.626B; ~$9.6M; vs earn-out at listing $625K"),
     (38, "Old-Model — High",  "=Assumptions!B118", "=Assumptions!B126",
-         "=B38*C38", "=Assumptions!B30*Assumptions!B33", "=D38/E38",
+         "=B38*C38", "=Assumptions!B30*Assumptions!B33", '=IFERROR(D38/E38,"n/a")',
          "~0.59% EAI + 0.5% earn-out = ~1.09% x 0.70 = ~0.7625%; EV $1.626B; ~$12.4M; vs earn-out at listing $1.5M"),
     (39, "AA — Low",          "=Assumptions!B120", "=Assumptions!B125",
-         "=B39*C39", "=Assumptions!B28*Assumptions!B31", "=D39/E39",
+         "=B39*C39", "=Assumptions!B28*Assumptions!B31", '=IFERROR(D39/E39,"n/a")',
          "BELOW listing value — AA FY31 EV ~$176M < $250M MEV; earn-out = $0"),
     (40, "AA — Base",         "=Assumptions!B120", "=Assumptions!B124",
-         "=B40*C40", "=Assumptions!B29*Assumptions!B32", "=D40/E40",
+         "=B40*C40", "=Assumptions!B29*Assumptions!B32", '=IFERROR(D40/E40,"n/a")',
          "BELOW listing — ~$924K vs earn-out at listing $625K"),
     (41, "AA — High",         "=Assumptions!B120", "=Assumptions!B126",
-         "=B41*C41", "=Assumptions!B30*Assumptions!B33", "=D41/E41",
+         "=B41*C41", "=Assumptions!B30*Assumptions!B33", '=IFERROR(D41/E41,"n/a")',
          "BELOW listing — ~$1.23M vs earn-out at listing $1.5M"),
 ]
 for r, label, ev, stake, val, at_list, mult, notes in y5_hold_rows:

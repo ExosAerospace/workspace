@@ -114,14 +114,16 @@ def add_table(rows_data, col_widths, hdr_fill="1F3A68"):
 def add_offer_table():
     """Offer value table: Component | Low | Base | High | When/Notes.
     Subtotal = gray+bold; Total = green+bold; Milestone group = light blue-gray;
-    Memo = amber+italic. Earn-outs labeled as negotiating terms / mgmt assumptions."""
+    hold_tint = light orange+dark-bold (IF HELD row); hold = solid orange+white-bold (④ row)."""
     from docx.enum.text import WD_ALIGN_PARAGRAPH as WDA
 
-    DARK  = "1F3A68"
-    GRAY  = "F3F4F6"
-    GREEN = "D1FAE5"
-    AMBER = "FEF3C7"
-    MSTN  = "EFF6FF"   # milestone rows — very light blue
+    DARK        = "1F3A68"
+    GRAY        = "F3F4F6"
+    GREEN       = "D1FAE5"
+    AMBER       = "FEF3C7"
+    MSTN        = "EFF6FF"   # milestone rows — very light blue
+    ORANGE      = "F26A21"   # Exos brand orange — solid fill for ④ row
+    ORANGE_TINT = "FBD2BC"   # ~30% tint of #F26A21 — light fill for IF HELD row
 
     col_w = [2.25, 0.80, 0.80, 0.80, 1.85]   # inches; total ~6.5"
 
@@ -154,9 +156,9 @@ def add_offer_table():
         ("③ TOTAL OFFER VALUE, 5-yr\n(② + earn-outs; earn-out stock at listing)",
                                                       "$6,310K", "$7,885K", "$9,460K", "FY27–FY31. HIGH < $10M target — not rebalanced.",           "total"),
         ("IF HELD: all Exos stock projected\nin FY2031 (replaces listing earn-out)",
-                                                      "$6.7M",   "$9.6M",   "$12.4M",  "Total stake ~0.59/0.84/1.09% → ~0.41/0.59/0.76% after\n~30% dilution × ~$1.63B FY31 EV (16× v12 EBITDA).\nProjection only; on SSLC-actuals case ~$0.7–1.3M.", "memo"),
+                                                      "$6.7M",   "$9.6M",   "$12.4M",  "Total stake ~0.59/0.84/1.09% → ~0.41/0.59/0.76% after\n~30% dilution × ~$1.63B FY31 EV (16× v12 EBITDA).\nProjection only; on SSLC-actuals case ~$0.7–1.3M.", "hold_tint"),
         ("④ TOTAL IF STOCK HELD TO 2031\n(① + tank + milestones + 2031 stock)",
-                                                      "$12.0M",  "$15.8M",  "$19.4M",  "Alternative to ③, NOT added to it. Forward-looking\nprojection, not a promise; RTO may not close.", "memo"),
+                                                      "$12.0M",  "$15.8M",  "$19.4M",  "Alternative to ③, NOT added to it. Forward-looking\nprojection, not a promise; RTO may not close.", "hold"),
     ]
 
     note_text = ("Earn-out rows: negotiating terms — management assumptions. "
@@ -184,11 +186,13 @@ def add_offer_table():
             if j in (1, 2, 3):
                 p.alignment = WDA.RIGHT
 
-            if   kind == "header":   shaded_cell(cell, DARK)
-            elif kind == "subtotal": shaded_cell(cell, GRAY)
-            elif kind == "total":    shaded_cell(cell, GREEN)
-            elif kind == "memo":     shaded_cell(cell, AMBER)
-            elif kind == "mstn":     shaded_cell(cell, MSTN)
+            if   kind == "header":    shaded_cell(cell, DARK)
+            elif kind == "subtotal":  shaded_cell(cell, GRAY)
+            elif kind == "total":     shaded_cell(cell, GREEN)
+            elif kind == "memo":      shaded_cell(cell, AMBER)
+            elif kind == "mstn":      shaded_cell(cell, MSTN)
+            elif kind == "hold_tint": shaded_cell(cell, ORANGE_TINT)
+            elif kind == "hold":      shaded_cell(cell, ORANGE)
 
             for line in val.split("\n"):
                 r = p.add_run(line)
@@ -201,6 +205,12 @@ def add_offer_table():
                 elif kind == "memo":
                     r.italic = True
                     r.font.color.rgb = GREY_COLOR
+                elif kind == "hold_tint":
+                    r.bold = True
+                    r.font.color.rgb = RGBColor(0x1F, 0x3A, 0x68)  # navy, readable on light orange
+                elif kind == "hold":
+                    r.bold = True
+                    r.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)  # white on solid orange
                 if line != val.split("\n")[-1]:
                     p.add_run().add_break()
 
@@ -270,33 +280,26 @@ note(f"504 cap: $1.0M counts toward the Rule 504 $10M rolling 12-month cap; conf
 # ────────────────────────────────────────────────────────────────────────────
 H1("4.  EAI Unit Lockup & Liquidity", sb=3)
 
-note(f"Restricted securities — Rule 504 Reg D, restrictive legend; not freely tradeable at issuance. "
-     f"Same lockup as Exos principals. Rule 504 ref: {SEC_504_URL}")
-
 lockup_bullets = [
-    ("Rule 144 resale.  ",
-     f"Holding period 6 months (reporting issuer) or 1 year (non-reporting). "
-     f"Exos is currently non-reporting; 6-month path opens only after RTO. "
-     f"17 CFR 230.144(d): {RULE144_URL}"),
-    ("RTO structure — preferred at close.  ",
-     "At RTO close, founders/legacy holders receive unregistered non-voting non-convertible preferred "
-     "(avoids NASDAQ Rule 5635). Converts to common + becomes liquid only after: (i) shareholder vote "
-     "(proxy ~30 days post-close) and (ii) effective resale registration (S-1/S-3). "
-     "EAI units follow this same path. "
-     "[Board Brief 2026-09-04:16; Board Questions 2026-09-08:36,44]"),
+    ("Part of the public float at going public.  ",
+     "The $1.0M EAI units are structured to provide part of the float for the Exos RTO and become "
+     "tradeable at going public (the RTO listing), subject to the same lockup as Exos principals. "
+     "Specific lock terms are set in the RTO definitive agreement."),
+    ("Restricted at issuance — Rule 504 Reg D.  ",
+     f"Units carry a restrictive legend at issuance and are not freely tradeable prior to the RTO listing. "
+     f"Rule 504 ref: {SEC_504_URL}"),
 ]
 for lead, rest in lockup_bullets:
     B(lead, rest)
 
 # Lockup timeline table
 timeline_rows = [
-    ["Milestone",                                "Target / Status"],
-    ["Board acceptance",                         "D+0 — units committed; not yet issued"],
-    ["Financing close — units issued",           "Targeted Q1 FY27; 1-yr Rule 144 clock starts"],
-    ["Targeted RTO close",                       "~6 months post-financing (targeted, not assured)"],
-    ["Conversion vote + resale reg. effective",  "~30–90 days post-RTO; preferred → common"],
-    ["Rule 144 eligibility",                     "6-mo (after reporting); 1-yr if non-reporting at issuance"],
-    ["ALL DATES",                                "Targeted, not assured. RTO may not close."],
+    ["Milestone",                          "Target / Status"],
+    ["Board acceptance",                   "D+0 — units committed; not yet issued"],
+    ["Financing close — units issued",     "Targeted Q1 FY27; units issued as restricted/legended securities"],
+    ["Targeted RTO close",                 "~6 months post-financing (targeted, not assured)"],
+    ["Units tradeable at going public",    "At RTO listing, units part of public float; tradeable subject to principals' lockup"],
+    ["ALL DATES",                          "Targeted, not assured. RTO may not close."],
 ]
 add_table(timeline_rows, [2.6, 3.9], hdr_fill="375623")
 

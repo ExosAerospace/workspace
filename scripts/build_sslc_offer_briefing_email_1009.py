@@ -87,7 +87,10 @@ P("Attached is Exos's offer to acquire SSLC's assets under Section 3 of our May 
 
 bullet("At close: $4.36M in cash, transaction costs, credit for Exos's existing stake, "
        "payment of SSLC's debts at face, and a working-capital bridge — plus $1.0M of Exos "
-       "stock (EAI units at the current 409A value), for $5.36M at financing close.")
+       "stock (EAI units at the current 409A value), for $5.36M at financing close. "
+       "The EAI units are restricted at issuance (Rule 504 Reg D) and are structured to provide "
+       "part of the public float, becoming tradeable at the RTO listing subject to the same "
+       "lockup as Exos principals.")
 
 bullet("Over five years: earn-outs on IM tank revenue, five milestones (the first at $5.1M of "
        "FY2026-27 revenue), and additional Exos stock, bringing total value to $6.3M–$9.5M.")
