@@ -148,8 +148,8 @@ def add_offer_table():
         ("Milestone M4: SSLC annual rev ≥$20M",       "—",       "—",       "$250K",   "Pays first year threshold hit\n(est. FY31 at high)",        "mstn"),
         ("Milestone M5: BLK3 tank qualification\ncomplete",
                                                       "—",       "—",       "$200K",   "Pays at Exos BLK3 tank cert\n(est. FY27–FY28)",             "mstn"),
-        ("Exos stock earn-out at listing\n(on top of 1.0% EAI up-front)",
-                                                      "$0",      "$424K",   "$848K",   "Post-RTO ~FY28; earn-out 0.0%/0.25%/0.5% FD; lockup same as Exos principals.\nAt 409A ($170M): $0/$424K/$848K. Total Exos equity: 1.0%/1.25%/1.5%.", "data"),
+        ("Exos stock earn-out, valued at 409A\n(on top of 1.0% EAI up-front)",
+                                                      "$0",      "$424K",   "$848K",   "Post-RTO ~FY28; earn-out 0.0%/0.25%/0.5% FD; lockup same as Exos principals.\nAt listing ($250M/$300M): $0/$625K/$1.5M. Total Exos equity: 1.0%/1.25%/1.5%.", "data"),
         ("TOTAL OFFER VALUE (5-yr)",                  "$7,007K", "$8,582K", "$10,157K","FY27–FY31",                                                 "total"),
         ("Memo: Exos stock if held to FY31\n(not additive to total above)",
                                                       "$5.7M",   "$8.5M",   "$11.4M",  "16× EV/EBITDA; ~30% dilution;\ntotal stake 1.0/1.25/1.5% (EAI+earn-out);\nmgmt assumption", "memo"),
@@ -304,13 +304,13 @@ H1("5.  Projected Post-RTO Value  (Projection — Not a Promise)", sb=3)
 note(f"Forward-looking projection — management assumptions (RTO completion, listing valuation, ~30% dilution). "
      f"Not a guarantee; actual results may differ. RTO may not close. "
      f"SEC Rule 10b-5, 17 CFR 240.10b-5 ({RULE10B5_URL}) antifraud rules apply. "
-     f"409A issuance value: ~$1.70M. Up-front 1.0% EAI only; earn-out column is additional at listing.")
+     f"409A issuance value: ~$1.70M. Up-front 1.0% EAI only; earn-out column is additional, at listing, pre-dilution.")
 
 proj_rows = [
     ["Scenario",  "RTO MEV",  "1.0% pre-dil",  "1.0% post-dil\n(~30% dil)",  "+ earn-out at listing"],
     ["Low",       "$200M",    "$2.00M",         "$1.40M",                      "$0 (0.0%)"],
-    ["Base",      "$250M",    "$2.50M",         "$1.75M",                      "+$424K (0.25%)"],
-    ["High",      "$300M",    "$3.00M",         "$2.10M",                      "+$848K (0.50%)"],
+    ["Base",      "$250M",    "$2.50M",         "$1.75M",                      "+$625K (0.25% @ $250M)"],
+    ["High",      "$300M",    "$3.00M",         "$2.10M",                      "+$1.5M (0.50% @ $300M)"],
 ]
 add_table(proj_rows, [0.85, 0.85, 1.10, 1.30, 1.40])
 
