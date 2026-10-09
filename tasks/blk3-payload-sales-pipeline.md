@@ -901,7 +901,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Why BLK3 fits:** UT's Varda collaboration covers one drug family. Their R&D pipeline has MORE candidates. BLK3 suborbital = fast pre-screen for additional candidates before committing Varda orbital resources. Same escalation: parabolic flight (20 sec) → BLK3 suborbital (5-7 min) → Varda orbital (weeks) → manufacturing.
   - **Pitch angle:** "You're already using Varda for orbital manufacturing. BLK3 is how you screen your next 10 candidates before one earns a Varda slot."
 - **Budget:** UTHR R&D budget ~$1.5B/yr. A BLK3 payload slot is immaterial.
-- **Status:** LOST (Exo 10/8, Lizi lead review: committed to Varda)
+- **Status:** LOST (Exo 10/8, Lizi lead review: committed to Varda) → OUTREACH SENT (Lizi via send pack 2026-10-09, D-7282031, to communications@unither.com)
 - **Next action:** (1) After Draft W lands with Varda, ask Bruey to introduce Exos to UT. (2) Jon to identify UT External Innovation team contact via ISS NL or biotech conference connections. Draft X is HOLD — do NOT cold email Rothblatt.
 
 ---
@@ -1148,7 +1148,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   2. **AM material qualification:** Coupons of 3D-printed materials (Inconel, aluminum alloys) flown on BLK3 to characterize structural performance under real flight loads/vibration/thermal cycles — feeds Ursa Major's materials database for future designs.
   3. **AFRL relationship crossover:** Ursa Major is on AFRL contract. Exos has AFRL/SBIR Phase II (FA9300-25-C-6022). A BLK3-Ursa Major collaboration with AFRL involvement leverages both organizations' existing AFRL relationships for a joint flight experiment.
 - **Funding:** VC-backed ($69M+ raised); AFRL contracts (direct R&D budget). Commercial revenue from Hadley engine sales. Not grant-dependent for procurement decisions.
-- **Status:** LOST (Exo 10/8, Lizi lead review: ground-test engine maker)
+- **Status:** LOST (Exo 10/8, Lizi lead review: ground-test engine maker) → OUTREACH SENT (Lizi via send pack 2026-10-09, D-7282031, to info@ursamajor.com)
 - **Next action:** Jon to review Draft AE. Route via AFRL contact network if possible;
 
 ---
@@ -2125,7 +2125,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - Multi-flight cadence: RSA can iterate AutoNav algorithm versions across BLK3 Flight 2, Flight 3 — compressing what took Varda-level commitments into rapid quarterly campaigns.
   - USSF interest: BLK3 flights could generate DoD-relevant hypersonic nav flight data that strengthens RSA's VANGUARD case with USSF.
 - **Funding:** USSF VANGUARD contract (confirmed); likely SBIR/STTR pipeline for small defense startup. Not grant-dependent for the commercial angle; USSF contracts provide stable baseline.
-- **Status:** NEW → RESEARCHING ✅ Draft AZ below.
+- **Status:** NEW → RESEARCHING ✅ Draft AZ below. → OUTREACH SENT (Lizi via send pack 2026-10-09, D-7282031, to shawn.usman@rheaspaceactivity.com)
 - **Next action:** Jon to review Draft AZ; strong candidate for CEO-to-CEO cold outreach given startup-to-startup peer dynamic. Gov-funded angle route through Jon.
 
 ---
@@ -2562,7 +2562,7 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** Bryce Hill, Ph.D. (Professor and Department Head, Electrical Engineering, bhill@mtech.edu); Katie Hailer, Ph.D. (Vice Chancellor for Research and Dean of the Graduate School, khailer@mtech.edu); Xiaobing Zhou, Ph.D. (Professor of Geophysics, Geological Engineering; MSGC Campus Representative for Montana Tech, xzhou@mtech.edu)
 - **Why BLK3 fits:** Moderate, emerging fit. The RockOn! team is a natural candidate for a follow-on student rocket payload (RockSat-C-style) on BLK3, and a sensor/instrument qualification flight is plausible. Lower priority than MSU.
 - **Funding:** NASA Flight Opportunities / TechRise, Montana Space Grant + NASA EPSCoR (Research/ISS/Flight calls), NASA SBIR/STTR (university partner)
-- **Status:** IN DISCUSSION (Lizi emailed Bryce Hill 10/9; he replied same day: sharing with IEEE + Robotics clubs; follow-up 10/19)
+- **Status:** IN DISCUSSION (Lizi emailed Bryce Hill 10/9; he replied same day: sharing with IEEE + Robotics clubs; follow-up 10/19) → OUTREACH SENT (Lizi via send pack 2026-10-09, D-7282031, to bhill@mtech.edu)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
 
 #### 4. UMontana — University of Montana (Missoula)
@@ -2570,7 +2570,7 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** Paul Lukacs, Ph.D. (Interim Vice President for Research and Creative Scholarship (from July 2, 2026), paul.lukacs@umontana.edu); Jeremy Crowley (Director, Autonomous Aerial Systems Office (AASO), jeremy.crowley@mso.umt.edu); Chani (Chantanelle) Nava (MSGC Campus Representative, University of Montana - Missoula, chantanelle.nava@mso.umt.edu)
 - **Why BLK3 fits:** Weak to moderate. Approach via the VPR's office to surface any microgravity or life-science PIs, and via AASO for sensor/remote-sensing payload testing. Do not claim prior UM space-flight heritage. Note that search results often conflate UM with MSU's SSEL.
 - **Funding:** NASA Flight Opportunities / TechRise, Montana Space Grant + NASA EPSCoR (Research/ISS/Flight calls), NASA SBIR/STTR (university partner)
-- **Status:** NEW (HOLD 10/9: weak fit, no payload identified; folded into Montana Space Grant thread)
+- **Status:** IN DISCUSSION (Lizi emailed Paul Lukacs; he replied 10/9: coordinating with aligned faculty; follow-up 10/19) → OUTREACH SENT (Lizi via send pack 2026-10-09, D-7282031, to paul.lukacs@umontana.edu)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
 
 #### 5. Salish Kootenai College (Pablo, MT — tribal college)

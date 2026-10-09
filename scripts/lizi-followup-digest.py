@@ -20,7 +20,9 @@ DUE={
    "Hi David,\nJust checking that the Nov 7 investor meeting notice went out with the Teams link and the record date. Anything you need from me?\nBest Regards,\nLizi")],
  "2026-10-19":[
   ("Montana Tech: Dr. Bryce Hill","bhill@mtech.edu (reply on thread)","he replied 10/9: sharing BLK3 with the IEEE club and Robotics club",
-   "Hi Dr. Hill,\nThank you again for sharing BLK3 with your IEEE and Robotics clubs! I wanted to check in and see if either group had questions or interest. I'm happy to join a club meeting by video for 15 minutes to walk the students through how a flight works, and to send over our Payload User Guide.\nBest Regards,\nLizi")],
+   "Hi Dr. Hill,\nThank you again for sharing BLK3 with your IEEE and Robotics clubs! I wanted to check in and see if either group had questions or interest. I'm happy to join a club meeting by video for 15 minutes to walk the students through how a flight works, and to send over our Payload User Guide.\nBest Regards,\nLizi"),
+  ("University of Montana: Dr. Paul Lukacs (Interim VP Research)","paul.lukacs@umontana.edu (reply on thread)","he replied 10/9: coordinating with aligned faculty, will come back with questions",
+   "Hi Paul,\nThank you again for passing BLK3 along to your faculty. I wanted to check in and see if anyone has questions. I'm happy to set up a short call with interested researchers, or send over our Payload User Guide so they can see what fits.\nBest Regards,\nLizi")],
  "2026-10-20":[
   ("NCAR: Eric Apel","reply on his 10/6 thread","warm reply 10/6",
    "Hi Eric,\nFollowing up on our exchange from earlier this month. I'd love to set up a short call to talk through what an atmospheric chemistry payload on BLK3 could look like. What times work for you in the next week or two?\nBest Regards,\nLizi")],
