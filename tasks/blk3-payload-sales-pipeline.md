@@ -2562,7 +2562,7 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** Bryce Hill, Ph.D. (Professor and Department Head, Electrical Engineering, bhill@mtech.edu); Katie Hailer, Ph.D. (Vice Chancellor for Research and Dean of the Graduate School, khailer@mtech.edu); Xiaobing Zhou, Ph.D. (Professor of Geophysics, Geological Engineering; MSGC Campus Representative for Montana Tech, xzhou@mtech.edu)
 - **Why BLK3 fits:** Moderate, emerging fit. The RockOn! team is a natural candidate for a follow-on student rocket payload (RockSat-C-style) on BLK3, and a sensor/instrument qualification flight is plausible. Lower priority than MSU.
 - **Funding:** NASA Flight Opportunities / TechRise, Montana Space Grant + NASA EPSCoR (Research/ISS/Flight calls), NASA SBIR/STTR (university partner)
-- **Status:** NEW (HOLD per Lizi/Exo 10/9: send a short note to Bryce Hill only after Montana Space Grant (Angela Des Jardins) replies; ~10/22)
+- **Status:** IN DISCUSSION (Lizi emailed Bryce Hill 10/9; he replied same day: sharing with IEEE + Robotics clubs; follow-up 10/19)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
 
 #### 4. UMontana — University of Montana (Missoula)

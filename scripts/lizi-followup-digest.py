@@ -18,6 +18,9 @@ DUE={
    "Hi [Name],\nQuick follow-up on the BLK3 Edition space-flown watch: only 7 of the 10 set aside for Exos investors are left (check current count before sending) at $675, with delivery after the early 2027 flight. Each one comes with a certificate of flight. You can read more in this week's investor update [link to website post]. If you'd like one, just reply and I'll get you set up!\nBest Regards,\nLizi"),
   ("David Mitchell: Nov 7 investor notice","reply on your Teams-link email to David","you sent him the Teams link 10/8; notice must go out by ~10/23 (15-day bylaw) / 10/28 (Texas 10-day min)",
    "Hi David,\nJust checking that the Nov 7 investor meeting notice went out with the Teams link and the record date. Anything you need from me?\nBest Regards,\nLizi")],
+ "2026-10-19":[
+  ("Montana Tech: Dr. Bryce Hill","bhill@mtech.edu (reply on thread)","he replied 10/9: sharing BLK3 with the IEEE club and Robotics club",
+   "Hi Dr. Hill,\nThank you again for sharing BLK3 with your IEEE and Robotics clubs! I wanted to check in and see if either group had questions or interest. I'm happy to join a club meeting by video for 15 minutes to walk the students through how a flight works, and to send over our Payload User Guide.\nBest Regards,\nLizi")],
  "2026-10-20":[
   ("NCAR: Eric Apel","reply on his 10/6 thread","warm reply 10/6",
    "Hi Eric,\nFollowing up on our exchange from earlier this month. I'd love to set up a short call to talk through what an atmospheric chemistry payload on BLK3 could look like. What times work for you in the next week or two?\nBest Regards,\nLizi")],
