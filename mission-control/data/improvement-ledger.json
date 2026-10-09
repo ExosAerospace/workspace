@@ -404,6 +404,27 @@
    "baseline": {
     "dup_sends": 6
    }
+  },
+  {
+   "id": "IMP-029",
+   "agent": "com.exos.fleet-status-heartbeat",
+   "govlog": null,
+   "cron": null,
+   "change": "1a054ad",
+   "hypothesis": "Fleet failures reach Jon with a fix already launched (applied / awaiting approval D-xxx / in progress) via failure-fixer-exo3, so Jon no longer has to ask Exo to fix each failure; failing-job time-to-fix falls",
+   "metrics": [
+    "reliability",
+    "turnaround"
+   ],
+   "error_signature": null,
+   "at": "2026-10-09T00:29:40.526269+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 168,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 0.8
+   }
   }
  ]
 }
