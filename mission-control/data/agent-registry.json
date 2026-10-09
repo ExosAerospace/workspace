@@ -3032,7 +3032,7 @@
    "permission_envelope": "toolsAllow 32 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes, node_inference; NO exec); prompted actions: reads Supabase tasks (service key) + subject_dedup.py dry-run; posts one proposal to #exomac-system; announces final output to Discord 1501636814849577050",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads Supabase tasks (service key) + subject_dedup.py dry-run; posts one proposal to #exomac-system",
    "escalation": "Decision card via scripts/backlog_grind_apply.py propose (verified at source); executed by com.exos.backlog-grind-apply only after Jon's human click in MC (per-item hold overrides). Provably safe cleanups auto-applied with snapshot.",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:daily-task-backlog-grind-dedup-stale-close-batch-to-jon'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:daily-task-backlog-grind-dedup-stale-close-batch-to-jon'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:daily-task-backlog-grind-dedup-stale-close-batch-to-jon'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "decision-surfacing pattern reusable for any board (propose-then-confirm)",
    "risk_tier": "LOW",
@@ -3043,7 +3043,7 @@
    "model": "agent default",
    "ai_in_critical_path": true,
    "updated": "2026-10-04",
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:spacewerx-on-orbit-logistics-concept-paper-open-call-watch",
@@ -3081,7 +3081,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts brief to #series-a; announces final output to Discord channel:1501636728711282741",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts brief to #series-a",
    "escalation": "output: announces final output to Discord channel:1501636728711282741; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-investor-capital-markets'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-investor-capital-markets'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-investor-capital-markets'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable digest/brief pattern for any audience channel",
    "risk_tier": "LOW",
@@ -3091,7 +3091,7 @@
    "cron_name": "Research Team: Investor & Capital Markets",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:trending-content-scanner",
@@ -3105,7 +3105,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts drafts to the social channel (Lizi posts, never the agent); announces final output to Discord channel:1502869101507514418",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts drafts to the social channel (Lizi posts, never the agent)",
    "escalation": "output: announces final output to Discord channel:1502869101507514418; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:trending-content-scanner'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:trending-content-scanner'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:trending-content-scanner'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable digest/brief pattern for any audience channel",
    "risk_tier": "LOW",
@@ -3115,7 +3115,7 @@
    "cron_name": "Trending Content Scanner",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:industry-signal-posts",
@@ -3129,7 +3129,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts drafts to the social channel; announces final output to Discord channel:1502869101507514418",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts drafts to the social channel",
    "escalation": "output: announces final output to Discord channel:1502869101507514418; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:industry-signal-posts'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:industry-signal-posts'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:industry-signal-posts'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable digest/brief pattern for any audience channel",
    "risk_tier": "LOW",
@@ -3139,7 +3139,7 @@
    "cron_name": "Industry Signal Posts",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:japan-itz-bi-weekly-working-session-toshi-hospo-to-oct",
@@ -3153,7 +3153,7 @@
    "permission_envelope": "toolsAllow 32 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes, node_inference; NO exec); prompted actions: no tools; announces fixed reminder to Jon DM; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: no tools; announces fixed reminder to Jon DM",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:japan-itz-bi-weekly-working-session-toshi-hospo-to-oct'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:japan-itz-bi-weekly-working-session-toshi-hospo-to-oct'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:japan-itz-bi-weekly-working-session-toshi-hospo-to-oct'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "one-off/dated reminder; pattern only (fixed-text scheduled reminder)",
    "risk_tier": "LOW",
@@ -3163,7 +3163,7 @@
    "cron_name": "Japan/ITZ bi-weekly working session — Toshi + HOSPO (to Oct)",
    "model": "ollama/qwen3.6:35b-a3b",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:rto-dd-support-digest-ainigma",
@@ -3201,7 +3201,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: reads workspace trackers; writes reports/monthly-investor-report-YYYY-MM.md; emails jquinnexo@pm.me via local SMTP bridge (password read at run time by name from the secrets store; none in prompt since 2026-09-29); announces final output to Discord channel:1501636728711282741; credentials: none in prompt (read by name at run time from the secrets store)",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads workspace trackers; writes reports/monthly-investor-report-YYYY-MM.md; emails jquinnexo@pm.me via local SMTP bridge (password read at run time by name from the secrets store; none in prompt since 2026-09-29)",
    "escalation": "external/investor/gov actions are drafted and routed to Jon; nothing sent outside Exos by the agent; output: announces final output to Discord channel:1501636728711282741; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:monthly-investor-report'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:monthly-investor-report'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:monthly-investor-report'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "reusable digest/brief pattern for any audience channel",
    "risk_tier": "HIGH",
@@ -3215,7 +3215,7 @@
    "change_log": [
     "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): literal SMTP/IMAP password removed from prompt; bridge password read at run time from ~/.config/exos/bridge-studio.pw / mail via scripts/send_email.py; approver John Quinn; status pending Jon approval — D-7281867 (old exposed password: D-7281868)"
    ],
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:exos-capital-bridge-agent-1m",
@@ -3229,7 +3229,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: reads/writes capture/Capital_Bridge_pursuit.md (stages, statuses, decision log); drafts only; DMs Jon; never sends externally; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads/writes capture/Capital_Bridge_pursuit.md (stages, statuses, decision log); drafts only; DMs Jon; never sends externally",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-capital-bridge-agent-1m'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-capital-bridge-agent-1m'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:exos-capital-bridge-agent-1m'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable pursuit-capture pattern (tracker file as source of truth + draft-only outreach) for any new pursuit",
    "risk_tier": "MED",
@@ -3239,7 +3239,7 @@
    "cron_name": "Exos Capital Bridge Agent ($1M)",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:exos-sales-agent-payload-bd-full-time",
@@ -3253,7 +3253,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: reads MC CRM API + opportunities.json; writes capture/Sales_Pipeline.md + drafts; DMs Jon; never sends externally; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads MC CRM API + opportunities.json; writes capture/Sales_Pipeline.md + drafts; DMs Jon; never sends externally",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-sales-agent-payload-bd-full-time'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-sales-agent-payload-bd-full-time'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:exos-sales-agent-payload-bd-full-time'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable pursuit-capture pattern (tracker file as source of truth + draft-only outreach) for any new pursuit",
    "risk_tier": "MED",
@@ -3263,7 +3263,7 @@
    "cron_name": "Exos Sales Agent — Payload BD (full-time)",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:exos-national-charter-enterprise-agent-blk3-build",
@@ -3277,7 +3277,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: writes capture/NCE_BLK3_Build.md + drafts; DMs Jon; never sends externally; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: writes capture/NCE_BLK3_Build.md + drafts; DMs Jon; never sends externally",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-national-charter-enterprise-agent-blk3-build'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-national-charter-enterprise-agent-blk3-build'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:exos-national-charter-enterprise-agent-blk3-build'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable pursuit-capture pattern (tracker file as source of truth + draft-only outreach) for any new pursuit",
    "risk_tier": "MED",
@@ -3287,7 +3287,7 @@
    "cron_name": "Exos National Charter Enterprise Agent — BLK3 Build",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:exos-capture-agent-nasa-rdre-phase-iii",
@@ -3301,7 +3301,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: writes capture/NASA_RDRE_PhaseIII_pursuit.md, drafts, white-paper DOCX rebuild, outbox/drop report; prompt authorises msmtp email to Jon; never external; announces final output to Discord channel:1501636728711282741",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: writes capture/NASA_RDRE_PhaseIII_pursuit.md, drafts, white-paper DOCX rebuild, outbox/drop report; prompt authorises msmtp email to Jon; never external",
    "escalation": "external/investor/gov actions are drafted and routed to Jon; nothing sent outside Exos by the agent; output: announces final output to Discord channel:1501636728711282741; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-capture-agent-nasa-rdre-phase-iii'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-capture-agent-nasa-rdre-phase-iii'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:exos-capture-agent-nasa-rdre-phase-iii'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable pursuit-capture pattern (tracker file as source of truth + draft-only outreach) for any new pursuit",
    "risk_tier": "HIGH",
@@ -3311,7 +3311,7 @@
    "cron_name": "Exos Capture Agent — NASA RDRE Phase III",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:exos-capture-agent-noaa-erb-ac4-sacss",
@@ -3325,7 +3325,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: writes capture/NOAA_ERB_AC4_SACSS_pursuit.md + drafts; prompt authorises msmtp email to Jon; never external; announces final output to Discord channel:1501636728711282741",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: writes capture/NOAA_ERB_AC4_SACSS_pursuit.md + drafts; prompt authorises msmtp email to Jon; never external",
    "escalation": "external/investor/gov actions are drafted and routed to Jon; nothing sent outside Exos by the agent; output: announces final output to Discord channel:1501636728711282741; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-capture-agent-noaa-erb-ac4-sacss'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-capture-agent-noaa-erb-ac4-sacss'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:exos-capture-agent-noaa-erb-ac4-sacss'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable pursuit-capture pattern (tracker file as source of truth + draft-only outreach) for any new pursuit",
    "risk_tier": "HIGH",
@@ -3335,7 +3335,7 @@
    "cron_name": "Exos Capture Agent — NOAA ERB/AC4 SACSS",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:exos-capture-agent-nih-microgravity",
@@ -3349,7 +3349,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: writes capture/NIH_Microgravity_pursuit.md + drafts; prompt authorises msmtp email to Jon; never external; announces final output to Discord channel:1501636728711282741",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: writes capture/NIH_Microgravity_pursuit.md + drafts; prompt authorises msmtp email to Jon; never external",
    "escalation": "external/investor/gov actions are drafted and routed to Jon; nothing sent outside Exos by the agent; output: announces final output to Discord channel:1501636728711282741; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-capture-agent-nih-microgravity'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-capture-agent-nih-microgravity'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:exos-capture-agent-nih-microgravity'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable pursuit-capture pattern (tracker file as source of truth + draft-only outreach) for any new pursuit",
    "risk_tier": "HIGH",
@@ -3359,7 +3359,7 @@
    "cron_name": "Exos Capture Agent — NIH Microgravity",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:exos-aerospace-bd-daily-intel",
@@ -3373,7 +3373,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; appends reports/aligned-opportunities-YYYY-MM.md; posts brief to #rd-team; announces final output to Discord channel:1501636614034821320",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; appends reports/aligned-opportunities-YYYY-MM.md; posts brief to #rd-team",
    "escalation": "output: announces final output to Discord channel:1501636614034821320; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-aerospace-bd-daily-intel'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-aerospace-bd-daily-intel'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:exos-aerospace-bd-daily-intel'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "MED",
@@ -3383,7 +3383,7 @@
    "cron_name": "Exos Aerospace BD Daily Intel",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:decisions-matrix-daily-update-r-017",
@@ -3480,7 +3480,7 @@
    "permission_envelope": "RESTRICTED web-only tier (pilot, D-7281869/D-7281890): runs on OpenClaw agent 'research-web' whose agent-level tools policy allows ONLY group:web (web_search/x_search/web_fetch), group:memory (memory_search/memory_get), session_status, message, tavily_search/tavily_extract; denies group:runtime/fs/automation/nodes/ui/agents/media + sessions_spawn/send, subagents, conversations_send/turn; heartbeat disabled; sandbox off; enforced by the gateway for claude-cli runs. Posts brief to #rd-team via cron announce (channel:1501636614034821320); no file writes.",
    "memory_boundary": "fresh isolated session per run; research-web agent's own memory index (same workspace memory/ files, 434 indexed 2026-10-02); no filesystem tools",
    "escalation": "output: announces final output to Discord channel:1501636614034821320; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-grant-contract-scanner'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory). + cron_hygiene.restricted_tier_findings() hourly via agent_eval: FAIL if this job leaves agent research-web or the agent's tools policy widens/disappears, WARN if its heartbeat is re-enabled (python3 scripts/cron_hygiene.py --selftest, 37 checks)",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-grant-contract-scanner'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory). + cron_hygiene.restricted_tier_findings() hourly via agent_eval: FAIL if this job leaves agent research-web or the agent's tools policy widens/disappears, WARN if its heartbeat is re-enabled (python3 scripts/cron_hygiene.py --selftest, 37 checks); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log cron_run event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-grant-contract-scanner'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_receipts (OpenClaw >= 2026.9.7; adapter e3a40b7)",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "LOW",
@@ -3500,7 +3500,7 @@
      "rollback": "openclaw cron edit f4ea413e-c591-41ee-8933-7a927ed60c67 --agent main; drop the id from RESTRICTED_TIER in scripts/cron_hygiene.py"
     }
    ],
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:discord-mission-control-sync",
@@ -3514,7 +3514,7 @@
    "permission_envelope": "toolsAllow 16 tools (message, file_write, web_search/fetch, tavily, memory_search, session_status; NO exec, NO cron/gateway); prompted actions: reads Discord channels via message tool; DMs Jon; no writes; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads Discord channels via message tool; DMs Jon; no writes",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:discord-mission-control-sync'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:discord-mission-control-sync'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:discord-mission-control-sync'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable digest/brief pattern for any audience channel",
    "risk_tier": "LOW",
@@ -3524,7 +3524,7 @@
    "cron_name": "Discord → Mission Control Sync",
    "model": "ollama/qwen3.6:35b-a3b",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:research-team-technology-ip-monitor",
@@ -3538,7 +3538,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts brief to #rd-team; announces final output to Discord channel:1501636614034821320; no local file writes (run log removed 2026-09-30; cron_telemetry records each run); empty run -> NO_REPLY (R-NONEWS)",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts brief to #rd-team",
    "escalation": "output: announces final output to Discord channel:1501636614034821320; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-technology-ip-monitor'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-technology-ip-monitor'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-technology-ip-monitor'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "MED",
@@ -3551,7 +3551,7 @@
    "change_log": [
     "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): contradictory instructions removed: RUN LOG file-append section dropped (isolated run cannot write files), empty-run posts (Pulse/Posture/'✅ still 3'/'no roster change') -> NO_REPLY per R-NONEWS; toolsAllow cleared (none was set); approver John Quinn; status pending Jon approval — D-7281866"
    ],
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:exos-investor-update-weekly-feed-david",
@@ -3565,7 +3565,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: reads capture trackers; writes captures/EXOS_Investor_Update_Draft1.md; emails Jon via msmtp; DMs Jon; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads capture trackers; writes captures/EXOS_Investor_Update_Draft1.md; emails Jon via msmtp; DMs Jon",
    "escalation": "external/investor/gov actions are drafted and routed to Jon; nothing sent outside Exos by the agent; output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-investor-update-weekly-feed-david'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:exos-investor-update-weekly-feed-david'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:exos-investor-update-weekly-feed-david'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable digest/brief pattern for any audience channel",
    "risk_tier": "HIGH",
@@ -3575,7 +3575,7 @@
    "cron_name": "Exos Investor Update — Weekly Feed (David)",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:research-team-policy-regulatory-watch",
@@ -3589,7 +3589,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts brief to #rd-team; announces final output to Discord channel:1501636614034821320; no local file writes (run log removed 2026-09-30; cron_telemetry records each run); empty run -> NO_REPLY (R-NONEWS)",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts brief to #rd-team",
    "escalation": "output: announces final output to Discord channel:1501636614034821320; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-policy-regulatory-watch'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-policy-regulatory-watch'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-policy-regulatory-watch'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "MED",
@@ -3602,7 +3602,7 @@
    "change_log": [
     "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): contradictory instructions removed: RUN LOG file-append section dropped (isolated run cannot write files), empty-run posts (Pulse/Posture/'✅ still 3'/'no roster change') -> NO_REPLY per R-NONEWS; toolsAllow cleared (none was set); approver John Quinn; status pending Jon approval — D-7281866"
    ],
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:acqbot-awards-sync-follow-up",
@@ -3640,7 +3640,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: reads logs + cron list; appends memory/agent-performance-log.md; DMs Jon; read-only on crons; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads logs + cron list; appends memory/agent-performance-log.md; DMs Jon; read-only on crons",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:agent-meta-evaluator-nightly'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert.",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:agent-meta-evaluator-nightly'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert.; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:agent-meta-evaluator-nightly'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "fleet-wide learning loop (applies to any agent class)",
    "risk_tier": "MED",
@@ -3650,7 +3650,7 @@
    "cron_name": "Agent Meta-Evaluator (Nightly)",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:agent-self-improvement-implementer-weekly",
@@ -3733,7 +3733,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; DMs Jon; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; DMs Jon",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:nasa-sbir-cryo-phase-i-appendix-watch'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:nasa-sbir-cryo-phase-i-appendix-watch'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory).; OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:nasa-sbir-cryo-phase-i-appendix-watch'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "LOW",
@@ -3743,7 +3743,7 @@
    "cron_name": "NASA SBIR cryo Phase I appendix watch",
    "model": "anthropic/claude-sonnet-5",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:diu-hycat-open-solicitation-watch-bd-032",
@@ -3781,7 +3781,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: web search; posts to #rd-team; announces final output to Discord channel:1501636614034821320; no local file writes (run log removed 2026-09-30; cron_telemetry records each run); empty run -> NO_REPLY (R-NONEWS)",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts to #rd-team",
    "escalation": "output: announces final output to Discord channel:1501636614034821320; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-competitive-intelligence'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:research-team-competitive-intelligence'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:research-team-competitive-intelligence'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "MED",
@@ -3794,7 +3794,7 @@
    "change_log": [
     "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): contradictory instructions removed: RUN LOG file-append section dropped (isolated run cannot write files), empty-run posts (Pulse/Posture/'✅ still 3'/'no roster change') -> NO_REPLY per R-NONEWS; toolsAllow cleared (none was set); approver John Quinn; status pending Jon approval — D-7281866"
    ],
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:sam-gov-api-key-renewal-89-day-expiry",
@@ -3808,7 +3808,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full; toolsAllow cleared 2026-09-30 because claude-cli cannot enforce it); prompted action: output ONE fixed reminder text, no tool use; announces to Jon's Discord DM. Never asks for or handles the key itself.",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: announces fixed reminder to Jon DM",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel; key status question -> Decisions board (D-7281858)",
-   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:sam-gov-api-key-renewal-89-day-expiry'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "eval_suite": "agent_eval hourly (config/agent-evals.json 'cron:sam-gov-api-key-renewal-89-day-expiry'): registry drift; liveness: no finished run within 2.5x schedule interval -> WARN; consecutive_errors >= 2 -> FAIL + one deduped alert. Output quality scored nightly by cron:agent-meta-evaluator-nightly (advisory); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:sam-gov-api-key-renewal-89-day-expiry'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "one-off/dated reminder; pattern only (fixed-text scheduled reminder)",
    "risk_tier": "LOW",
@@ -3821,7 +3821,7 @@
    "change_log": [
     "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): model anthropic/claude-haiku-4-5 (allowlisted; dated id rejected 9/11), payload.toolsAllow cleared (claude-cli trap), reminder no longer asks Jon to send the key via Discord; approver John Quinn; status pending Jon approval — D-7281859 (key expiry check: D-7281858)"
    ],
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:m-star-fy27-pre-position",
@@ -3883,7 +3883,7 @@
    "permission_envelope": "toolsAllow 31 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes; NO exec); prompted actions: reads CRM API; writes Sales_Pipeline.md + drafts; posts to #blk3-payload; announces final output to Discord channel:1501636671492460554",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads CRM API; writes Sales_Pipeline.md + drafts; posts to #blk3-payload",
    "escalation": "output: announces final output to Discord channel:1501636671492460554; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:test-bucket-d-sales-agent-run-one-shot'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable pursuit-capture pattern (tracker file as source of truth + draft-only outreach) for any new pursuit",
    "risk_tier": "MED",
@@ -3893,7 +3893,7 @@
    "cron_name": "TEST — Bucket D Sales Agent run (one-shot)",
    "model": "anthropic/claude-sonnet-4-6",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:daily-10-pm-briefing-email",
@@ -3966,7 +3966,7 @@
    "permission_envelope": "toolsAllow 31 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes; NO exec); prompted actions: session reminder; drafts only; announces final output to Discord channel:1501636728711282741",
    "memory_boundary": "persistent custom session agent:main:discord:channel:1501636728711282741 (context carries across runs); data touched: session reminder; drafts only",
    "escalation": "output: announces final output to Discord channel:1501636728711282741; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:heliotech-speaker-slot-teasley-follow-up'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "one-off/dated reminder; pattern only (fixed-text scheduled reminder)",
    "risk_tier": "LOW",
@@ -3976,7 +3976,7 @@
    "cron_name": "HELIOTECH speaker slot + Teasley follow-up",
    "model": "agent default",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:exos-status-update",
@@ -3990,7 +3990,7 @@
    "permission_envelope": "toolsAllow 31 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes; NO exec); prompted actions: reads workspace files; DMs Jon; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads workspace files; DMs Jon",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:exos-status-update'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable digest/brief pattern for any audience channel",
    "risk_tier": "LOW",
@@ -4000,7 +4000,7 @@
    "cron_name": "Exos Status Update",
    "model": "ollama/qwen3.6:35b-a3b",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:verify-rdre-durable-drop-one-shot",
@@ -4014,7 +4014,7 @@
    "permission_envelope": "command payload (Gateway-executed argv, operator-admin authored; no model); prompted actions: runs scripts/verify-rdre-drop.py; announces final output to last ",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: runs scripts/verify-rdre-drop.py",
    "escalation": "output: announces final output to last ; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:verify-rdre-durable-drop-one-shot'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "fleet-wide governance/maintenance pattern",
    "risk_tier": "LOW",
@@ -4024,7 +4024,7 @@
    "cron_name": "Verify RDRE durable drop (one-shot)",
    "model": "agent default",
    "ai_in_critical_path": false,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:vfw-tundra-amp-powerstep-rfq-follow-up",
@@ -4038,7 +4038,7 @@
    "permission_envelope": "toolsAllow 31 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes; NO exec); prompted actions: scans Proton inbox; may resubmit the car-part.com RFQ externally; posts to #vfw-post2150; announces final output to Discord channel:1513191553462698115",
    "memory_boundary": "persistent custom session agent:main:discord:channel:1513191553462698115 (context carries across runs); data touched: scans Proton inbox; may resubmit the car-part.com RFQ externally; posts to #vfw-post2150",
    "escalation": "external/investor/gov actions are drafted and routed to Jon; nothing sent outside Exos by the agent; output: announces final output to Discord channel:1513191553462698115; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:vfw-tundra-amp-powerstep-rfq-follow-up'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "one-off/dated reminder; pattern only (fixed-text scheduled reminder)",
    "risk_tier": "HIGH",
@@ -4065,7 +4065,7 @@
     }
    ],
    "retired": "2026-09-30 ~13:01 — cron deleted by Exo main session on Jon's 'Delete the sixth' (#exomac-system); backup logs/audit-workers/cron-backups/3299389d-*.json; exo3 confirm pending D-7281856",
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:exomac-system-wake",
@@ -4079,7 +4079,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: posts a fixed status line; announces final output to Discord channel:1501636814849577050",
    "memory_boundary": "persistent custom session exomac-system-channel (context carries across runs); data touched: posts a fixed status line",
    "escalation": "output: announces final output to Discord channel:1501636814849577050; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:exomac-system-wake'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "one-off/dated reminder; pattern only (fixed-text scheduled reminder)",
    "risk_tier": "LOW",
@@ -4089,7 +4089,7 @@
    "cron_name": "Exomac System Wake",
    "model": "claude-sonnet-4-6",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:lquinn-weekly-crm-follow-up-report",
@@ -4103,7 +4103,7 @@
    "permission_envelope": "toolsAllow 32 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes, node_inference; NO exec); prompted actions: reads mission-control/data/crm-data.json; posts to #general; announces final output to Discord 1501635980975804590",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads mission-control/data/crm-data.json; posts to #general",
    "escalation": "output: announces final output to Discord 1501635980975804590; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:lquinn-weekly-crm-follow-up-report'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable digest/brief pattern for any audience channel",
    "risk_tier": "LOW",
@@ -4113,7 +4113,7 @@
    "cron_name": "LQuinn Weekly CRM Follow-Up Report",
    "model": "ollama/qwen3.6:35b-a3b",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:veteran-fund-mike-sherbakov-follow-up",
@@ -4127,7 +4127,7 @@
    "permission_envelope": "toolsAllow 31 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes; NO exec); prompted actions: checks Proton inbox; drafts nudge for Jon; updates MC task FUND-VF + tracker; announces final output to Discord channel:1501636728711282741",
    "memory_boundary": "persistent custom session agent:main:discord:channel:1501636728711282741 (context carries across runs); data touched: checks Proton inbox; drafts nudge for Jon; updates MC task FUND-VF + tracker",
    "escalation": "output: announces final output to Discord channel:1501636728711282741; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:veteran-fund-mike-sherbakov-follow-up'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "one-off/dated reminder; pattern only (fixed-text scheduled reminder)",
    "risk_tier": "MED",
@@ -4137,7 +4137,7 @@
    "cron_name": "Veteran Fund / Mike Sherbakov follow-up",
    "model": "agent default",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:diu-hycat-outreach-send-reminder",
@@ -4151,7 +4151,7 @@
    "permission_envelope": "toolsAllow 31 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes; NO exec); prompted actions: posts reminder to #blk3-payload; announces final output to Discord channel:1501636671492460554",
    "memory_boundary": "persistent custom session agent:main:discord:channel:1501636671492460554 (context carries across runs); data touched: posts reminder to #blk3-payload",
    "escalation": "output: announces final output to Discord channel:1501636671492460554; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:diu-hycat-outreach-send-reminder'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "one-off/dated reminder; pattern only (fixed-text scheduled reminder)",
    "risk_tier": "LOW",
@@ -4161,7 +4161,7 @@
    "cron_name": "DIU HyCAT outreach send reminder",
    "model": "agent default",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:dpa-title-iii-reauthorization-watch",
@@ -4175,7 +4175,7 @@
    "permission_envelope": "toolsAllow 32 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes, node_inference; NO exec); prompted actions: web search; DMs Jon; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; DMs Jon",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:dpa-title-iii-reauthorization-watch'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "LOW",
@@ -4185,7 +4185,7 @@
    "cron_name": "DPA Title III Reauthorization Watch",
    "model": "ollama/qwen3.6:35b-a3b",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:openclaw-update-to-2026-7-1-2-jon-scheduled-11pm",
@@ -4223,7 +4223,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: HTTP GET to Home Assistant (token read at run time from ~/.config/exos/home-assistant.token; never in prompt); posts to home channel; announces final output to Discord channel:1501636766258696333",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: HTTP GET to Home Assistant (token read at run time from ~/.config/exos/home-assistant.token; never in prompt); posts to home channel",
    "escalation": "output: announces final output to Discord channel:1501636766258696333; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:solar-report-7pm'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "LOW",
@@ -4237,7 +4237,7 @@
    "change_log": [
     "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): Home Assistant token removed from prompt, read by file name at run time (secrets store); approver John Quinn; status pending Jon approval — D-7281867 (rotation of the exposed token: D-7281868)"
    ],
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:karmen-watch-dow-sbir-26-bz-release-5-topics-opens-aug-26",
@@ -4251,7 +4251,7 @@
    "permission_envelope": "toolsAllow 16 tools (message, file_write, web_search/fetch, tavily, memory_search, session_status; NO exec, NO cron/gateway); prompted actions: web search; posts to #rd-team; announces final output to Discord channel:1501636614034821320",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; posts to #rd-team",
    "escalation": "output: announces final output to Discord channel:1501636614034821320; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:karmen-watch-dow-sbir-26-bz-release-5-topics-opens-aug-26'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "LOW",
@@ -4261,7 +4261,7 @@
    "cron_name": "KARMEN watch — DoW SBIR 26.BZ Release 5 topics (opens Aug 26)",
    "model": "ollama/qwen3.6:35b-a3b",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:blk3-payload-sales-engine",
@@ -4275,7 +4275,7 @@
    "permission_envelope": "toolsAllow 31 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes; NO exec); prompted actions: web search; writes tasks/blk3-payload-sales-pipeline.md; posts to #blk3-payload; announces final output to Discord channel:1501636671492460554",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; writes tasks/blk3-payload-sales-pipeline.md; posts to #blk3-payload",
    "escalation": "output: announces final output to Discord channel:1501636671492460554; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:blk3-payload-sales-engine'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable pursuit-capture pattern (tracker file as source of truth + draft-only outreach) for any new pursuit",
    "risk_tier": "MED",
@@ -4285,7 +4285,7 @@
    "cron_name": "BLK3 Payload Sales Engine",
    "model": "ollama/qwen3.6:35b-a3b",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:daily-email-opportunity-scanner",
@@ -4299,7 +4299,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: IMAP read (password read at run time by name from the secrets store; none in prompt since 2026-09-29); writes opportunities-tracker.md + drafts; emails Jon via SMTP; announces final output to Jon DM; credentials: none in prompt (read by name at run time from the secrets store)",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: IMAP read (password read at run time by name from the secrets store; none in prompt since 2026-09-29); writes opportunities-tracker.md + drafts; emails Jon via SMTP",
    "escalation": "external/investor/gov actions are drafted and routed to Jon; nothing sent outside Exos by the agent; output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); + cron_hygiene.py via agent_eval hourly: credential-in-prompt FAIL, model-allowlist FAIL, anthropic+toolsAllow WARN, conflicting-instructions WARN (python3 scripts/cron_hygiene.py --selftest 28/28); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:daily-email-opportunity-scanner'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs; guard results -> fleet_log agent_eval/cron_hygiene events (logs/fleet-events.jsonl)",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "HIGH",
@@ -4313,7 +4313,7 @@
    "change_log": [
     "2026-09-30 r2-cron-hygiene (exo3 r2, Jon directive 2026-09-29 22:38): literal SMTP/IMAP password removed from prompt; bridge password read at run time from ~/.config/exos/bridge-studio.pw / mail via scripts/send_email.py; approver John Quinn; status pending Jon approval — D-7281867 (old exposed password: D-7281868)"
    ],
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:mission-control-email-tracker",
@@ -4327,7 +4327,7 @@
    "permission_envelope": "toolsAllow 1 tools: exec; prompted actions: runs scripts/mission-control-imap.py; announces final output to Discord channel:1501636814849577050",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: runs scripts/mission-control-imap.py",
    "escalation": "output: announces final output to Discord channel:1501636814849577050; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:mission-control-email-tracker'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "MED",
@@ -4337,7 +4337,7 @@
    "cron_name": "Mission Control Email Tracker",
    "model": "claude-sonnet-4-6",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:overnight-resolver-opus-cost-review",
@@ -4351,7 +4351,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: reads usage log + cron run history; web search; DMs Jon; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads usage log + cron run history; web search; DMs Jon",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:overnight-resolver-opus-cost-review'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "fleet-wide learning loop (applies to any agent class)",
    "risk_tier": "LOW",
@@ -4361,7 +4361,7 @@
    "cron_name": "Overnight Resolver — Opus Cost Review",
    "model": "anthropic/claude-sonnet-4-6",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:crm-dashboard-refresh",
@@ -4375,7 +4375,7 @@
    "permission_envelope": "agent default tools (main agent tools.profile=full: exec/shell, file read/write, message, cron, gateway, browser, web); prompted actions: runs scripts/dashboard-data-generator.py; announces final output to Discord channel:1501636814849577050",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: runs scripts/dashboard-data-generator.py",
    "escalation": "output: announces final output to Discord channel:1501636814849577050; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:crm-dashboard-refresh'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "Exos-specific orchestration; pattern reusable for similar propose-then-confirm workflows",
    "risk_tier": "MED",
@@ -4385,7 +4385,7 @@
    "cron_name": "CRM Dashboard Refresh",
    "model": "ollama/qwen3.6:35b-a3b",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:file-maintenance-lessons-learned",
@@ -4399,7 +4399,7 @@
    "permission_envelope": "toolsAllow 31 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes; NO exec); prompted actions: reads logs; may append lessons to AGENTS.md; posts to #exomac-system; announces final output to Discord channel:1501636814849577050",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads logs; may append lessons to AGENTS.md; posts to #exomac-system",
    "escalation": "output: announces final output to Discord channel:1501636814849577050; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:file-maintenance-lessons-learned'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "fleet-wide governance/maintenance pattern",
    "risk_tier": "MED",
@@ -4409,7 +4409,7 @@
    "cron_name": "File Maintenance & Lessons Learned",
    "model": "ollama/qwen3.6:35b-a3b",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:overnight-resolver",
@@ -4458,7 +4458,7 @@
    "permission_envelope": "toolsAllow 31 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes; NO exec); prompted actions: reads exos-mission-control.md; DMs Jon; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: reads exos-mission-control.md; DMs Jon",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:exos-mission-control-weekly-review'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable digest/brief pattern for any audience channel",
    "risk_tier": "LOW",
@@ -4468,7 +4468,7 @@
    "cron_name": "Exos Mission Control Weekly Review",
    "model": "ollama/qwen3.6:35b-a3b",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "cron:exos-aerospace-daily-opportunity-scan",
@@ -4482,7 +4482,7 @@
    "permission_envelope": "toolsAllow 31 tools (message, file_write, file_fetch, dir_list, browser, web_search/fetch, cron, gateway, sessions_send/spawn, subagents, nodes; NO exec); prompted actions: web search; DMs Jon; announces final output to Jon DM",
    "memory_boundary": "fresh isolated session per run (no chat carry-over; OpenClaw memory_search available); data touched: web search; DMs Jon",
    "escalation": "output: announces final output to Jon DM; run failure -> OpenClaw consecutive_errors -> agent_eval FAIL alert (>=2 in a row) to the system channel",
-   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json)",
+   "eval_suite": "disabled: agent_eval registry drift only (an unregistered cron alerts); liveness and error checks resume automatically if re-enabled (config/agent-evals.json); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
    "telemetry": "scripts/cron_telemetry.py (com.exos.cron-telemetry, every 15 min) emits one fleet_log event per finished run to logs/fleet-events.jsonl (agent='cron:exos-aerospace-daily-opportunity-scan'); raw history in ~/.openclaw/state/openclaw.sqlite cron_run_logs",
    "reusability_scope": "reusable watch/scan pattern (date-hygiene + search budget + silent-unless-hit) for any solicitation or signal source",
    "risk_tier": "LOW",
@@ -4492,7 +4492,7 @@
    "cron_name": "Exos Aerospace Daily Opportunity Scan",
    "model": "ollama/qwen3.6:35b-a3b",
    "ai_in_critical_path": true,
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "com.exos.cron-telemetry",
@@ -5410,6 +5410,113 @@
     "2026-10-08 created via John email-command '@exo Build tracking for leveraging this' (DIBC)"
    ],
    "eval_type": "output"
+  },
+  {
+   "label": "com.exos.lizi-paxton-nudge-reminder",
+   "script": "lizi-paxton-nudge-reminder.py",
+   "kind": "one-shot",
+   "schedule": "{\"Month\": 10, \"Day\": 14, \"Hour\": 9, \"Minute\": 0}",
+   "purpose": "One-shot: Wed 2026-10-14 09:00 CT email Lizi to send the SHELLGAME nudge to Larry Paxton (JHU/APL). Self-unloads.",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "internal only: emails/posts to jquinnexo@pm.me, lquinn@exosaero.com; removes its own plist. No external recipients (auto-verified).",
+   "memory_boundary": "none (stateless)",
+   "escalation": "recipient acts on the reminder",
+   "eval_type": "output",
+   "eval_suite": "one-shot liveness (exit 0, self-unload) + OUTPUT: agent_eval check_duplicate_sends; recipients verified internal at registration",
+   "telemetry": "/Users/exomac/.openclaw/workspace/logs/lizi-paxton-nudge-reminder.log",
+   "reusability_scope": "single-use",
+   "risk_tier": "LOW",
+   "lifecycle": "self-removing",
+   "registered": "2026-10-08",
+   "envelope_source": "manual registration (Exo, 10/8)"
+  },
+  {
+   "label": "com.exos.lizi-zenit-r3-reminder",
+   "script": "lizi-zenit-r3-reminder.py",
+   "kind": "one-shot",
+   "schedule": "{\"Month\": 11, \"Day\": 16, \"Hour\": 9, \"Minute\": 0}",
+   "purpose": "One-shot: Mon 2026-11-16 09:00 CT email Lizi to check NSPIRES for NASA EPSCoR R3 and send dates to Roberto Zenit. Self-unloads.",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "internal only: emails/posts to jquinnexo@pm.me, lquinn@exosaero.com; removes its own plist. No external recipients (auto-verified).",
+   "memory_boundary": "none (stateless)",
+   "escalation": "recipient acts on the reminder",
+   "eval_type": "output",
+   "eval_suite": "one-shot liveness (exit 0, self-unload) + OUTPUT: agent_eval check_duplicate_sends; recipients verified internal at registration",
+   "telemetry": "/Users/exomac/.openclaw/workspace/logs/lizi-zenit-r3-reminder.log",
+   "reusability_scope": "single-use",
+   "risk_tier": "LOW",
+   "lifecycle": "self-removing",
+   "registered": "2026-10-08",
+   "envelope_source": "manual registration (Exo, 10/8)"
+  },
+  {
+   "label": "com.exos.lizi-followup-digest",
+   "script": "lizi-followup-digest.py",
+   "kind": "multi-shot",
+   "schedule": "10/15,10/20,10/21,10/22 09:00",
+   "purpose": "Dated follow-up digest emails to Lizi for this week's payload outreach sends. Self-unloads after 10/22.",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "internal only: emails/posts to jquinnexo@pm.me, lquinn@exosaero.com; removes its own plist. No external recipients (auto-verified).",
+   "memory_boundary": "none (stateless)",
+   "escalation": "recipient acts on the reminder",
+   "eval_type": "output",
+   "eval_suite": "one-shot liveness (exit 0, self-unload) + OUTPUT: agent_eval check_duplicate_sends; recipients verified internal at registration",
+   "telemetry": "/Users/exomac/.openclaw/workspace/logs/lizi-followup-digest.log",
+   "reusability_scope": "single-use",
+   "risk_tier": "LOW",
+   "lifecycle": "self-removing",
+   "registered": "2026-10-08",
+   "envelope_source": "manual registration (Exo, 10/8)"
+  },
+  {
+   "label": "cron:reminder-nasa-epscor-r3-dates-for-zenit-mc-1883",
+   "cron_id": "73f5f4f1-ef69-42ea-8797-50c8733ee9d4",
+   "kind": "openclaw-cron",
+   "script": "openclaw cron 73f5f4f1-ef69-42ea-8797-50c8733ee9d4 (systemEvent)",
+   "schedule": "once at 2026-11-16T15:00:00.000Z",
+   "purpose": "Reminder: NASA EPSCoR R3 dates for Zenit (MC #1883) — Reminder (set 10/8 from Lizi's email capture): Lizi promised Prof. Roberto Zenit (Brown) the NASA EPSCoR Rapid Response Research (R3) dates once the call posts. Check NSPIRES / nasa.gov EPSCoR for the FY27 R3 release (la",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "toolsAllow ALL (default) tools; delivery none → :none; exec/shell available",
+   "memory_boundary": "session target main; agent main",
+   "escalation": "agent_eval cron hygiene → Jon on FAIL; Decisions board for any Jon call",
+   "eval_suite": "agent_eval cron hygiene (lastRunStatus ok + not stale vs its own cadence; consecutiveErrors → FAIL); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
+   "eval_type": "output",
+   "telemetry": "openclaw cron runs --id 73f5f4f1-ef69-42ea-8797-50c8733ee9d4",
+   "reusability_scope": "single-purpose",
+   "risk_tier": "HIGH",
+   "lifecycle": "self-removing (prompt has an end condition)",
+   "registered": "2026-10-08",
+   "envelope_source": "register_cron.py derivation from the live cron"
+  },
+  {
+   "label": "cron:payload-manual-rev4-apply-cm-on-approval-d-7282024",
+   "cron_id": "7f508aba-0589-487e-9547-84e2a01b2845",
+   "kind": "openclaw-cron",
+   "script": "openclaw cron 7f508aba-0589-487e-9547-84e2a01b2845 (agentTurn)",
+   "schedule": "cron '0 9,17 * * *' America/Chicago",
+   "purpose": "Twice-daily check of D-7282024; on Jon's human Approve performs procedure CM (stamp Payload Process Manual Rev4 Approved, file in process-library, update Master List/register, attach to #2957, commit) then self-removes; on Revise applies the note and re-posts.",
+   "stack_layer": "GOVERN",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "toolsAllow 60 tools; delivery announce → discord:channel:1501636814849577050; writes Mission Control data (decisions/tasks/attachments); exec/shell available",
+   "memory_boundary": "session target isolated; agent main",
+   "escalation": "agent_eval cron hygiene → Jon on FAIL; Decisions board for any Jon call",
+   "eval_suite": "agent_eval cron hygiene (lastRunStatus ok + not stale vs its own cadence; consecutiveErrors → FAIL); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
+   "eval_type": "output",
+   "telemetry": "openclaw cron runs --id 7f508aba-0589-487e-9547-84e2a01b2845",
+   "reusability_scope": "single-purpose",
+   "risk_tier": "MEDIUM",
+   "lifecycle": "self-removing (prompt has an end condition)",
+   "registered": "2026-10-08",
+   "envelope_source": "register_cron.py derivation from the live cron"
   }
  ],
  "eval_wave_1": {
