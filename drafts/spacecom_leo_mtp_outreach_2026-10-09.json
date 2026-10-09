@@ -1,0 +1,139 @@
+{
+ "intro": "You asked for outreach to companies that fit the MTP. I screened all 20 contributors in SpaceCom Second Stage's 'LEO and Beyond: In-Space Infrastructure' spotlight (spacecomsecondstage.com) against 'Make Every Space Vehicle Reusable' and checked each one against the live CRM. Tier 1 (drafts 1-7) are IPS / reusability partner plays: they build vehicles that need lighter, refillable, cryo-capable pressurized structures. Tier 2 (drafts 8-11) are 'prove the systems before risking the orbital vehicle' flight-test plays. Each draft is in your ready-to-send format: recipient on the first line, then the subject, then the letter. Your Outlook signature adds the company block. Blanks marked [____] are yours to fill. Per your standing rule there will be no follow-up nags from me. Where a warm intro path exists I've noted it, and I'd use that path over a cold send.",
+ "excluded": [
+  "Palantir (Sammy Moseley), Amentum, HawkEye 360 (Patrick Zeitouni): software, ground and RF-ISR. They don't build vehicles, so there's no IPS or reuse hook.",
+  "The Aerospace Corporation (Bryan Hoke): FFRDC/government. Any approach goes through you, not cold BD.",
+  "ISS National Lab, Lt. Gen. John Shaw (ret.): institutional and thought-leadership contributors. Shaw is a possible advisor or conference contact, not a customer.",
+  "BioOrbit (Katie King) and Star Catcher (Andrew Rush): both got payload pitches in Jul/Aug 2026 (tasks #1446, #1873) with no reply logged. Skipped under the no-nag rule.",
+  "Cosmic Shielding: suborbital flight gives very little radiation dose, so we have no honest test value to offer them."
+ ],
+ "claims": [
+  "MTP and IPS wording come from the canonical one-pager and narrative (drafts/Exos_MTP_OnePager_Make_Every_Space_Vehicle_Reusable_2026-09-20.md; mc /mtp.html).",
+  "Scorpius Type V tanks flew on Intuitive Machines IM-2 (Athena): https://www.compositesworld.com/news/scorpius-type-5-tanks-underpin-second-intuitive-machines-mission-to-the-moon and https://scorpius.com/scorpius-space-launch-companys-methane-and-liquid-oxygen-tanks-fueling-intuitive-machines-im-2-athena-lunar-lander-on-its-journey-to-the-moon",
+  "Exos has flown commercial payloads since 2018 (SARGE), and BLK3 is our latest FAA-licensed vehicle, licensed 3/13/26. BLK3 timing is stated only as 'early 2027'. No pricing, no 'one of only three' claim, no RDRE or propulsion-provider language.",
+  "Each recipient's program is paraphrased from their own SpaceCom Second Stage article (Oct 2026), linked in each note."
+ ],
+ "drafts": [
+  {
+   "company": "Quantum Space",
+   "person": "Jim Bridenstine (CEO)",
+   "fit": "Ranger / mobility + refueling \u2192 IPS refillable cryo tankage, zero-loss transfer",
+   "rel": "WARM: Claremore intro (#1517), Sept visit with Hjelm/Ketchum",
+   "path": "You send directly. Warm.",
+   "note": "Article: spacecomsecondstage.com/the-unpredictable-advantage. Warm relationship. Keep it short and personal. I CC'd Steven Hjelm because he has been in the Claremore thread. Fill the bracket with where Claremore stands.",
+   "to": "jim.bridenstine@quantumspace.us; cc: steven.hjelm@quantumspace.us",
+   "subject": "Your \u201cUnpredictable Advantage\u201d piece, and refillable tankage for Ranger",
+   "body": "Jim,\n\nI read your SpaceCom Second Stage piece on mobility and refueling as the infrastructure of competitive endurance. It lines up almost exactly with where Exos has planted its flag. Our purpose is to make every space vehicle reusable, and the hard part of that isn't recovery. It's building structures and propellant systems that survive repeated cryogenic cycling, long-duration storage and refueling.\n\nThat's our Integrated Pressurized Structures (IPS) platform: Type V composite pressure vessels built into the load-bearing structure, from the same tank family our affiliate Scorpius flew to the Moon on Intuitive Machines' IM-2 lander. We are pairing it with zero-loss cryogenic transfer work with Princeton Cryogenics.\n\nFor a maneuverable vehicle like Ranger, lighter and refillable tankage turns into more maneuver per mission and a vehicle that can be topped off instead of replaced. I'd like to put our IPS team in front of Steven and your engineers for an hour to see where it fits on your roadmap.\n\nSeparately, thank you again for the Claremore introduction. [____ one line on where Claremore stands ____]\n\nBest,\nJohn"
+  },
+  {
+   "company": "Gravitics",
+   "person": "Colin Doughan (Founder & CEO)",
+   "fit": "Large pressurized modules + orbital carriers + Viper OTX \u2192 IPS is literally their problem",
+   "rel": "WARM-ish: CRM 'Active'; 2025 contact; Aug habitat-test draft (#1993) never sent",
+   "path": "You send. This replaces the stale #1993 draft.",
+   "note": "Article: spacecomsecondstage.com/pre-positioned-maneuver. This replaces the August habitat-validation draft in task #1993, which never went out and pitched a payload slot. The new angle is partnership: pressurized structure plus propellant for the carriers and Viper OTX. Email is in the CRM from 2025 and pattern-confirmed. Gravitics now leads with Orbital Carrier and Viper OTX, under a STRATFI of up to $60M with a 2027 flight-demo target.",
+   "to": "cdoughan@gravitics.com",
+   "subject": "Pre-positioned carriers + Viper: lighter pressurized structure and refillable propellant",
+   "body": "Colin,\n\nYour SpaceCom Second Stage piece on pre-positioned orbital carriers made a strong case: stage the capability in orbit, then move it when it's needed. That architecture only pays off if the carriers and the vehicles that leave them can be refilled and reused many times.\n\nThat is the problem Exos is built around. Our purpose is to make every space vehicle reusable, and our enabling technology is Integrated Pressurized Structures (IPS): Type V composite pressure vessels that serve as load-bearing structure and hold up to repeated cryogenic cycling. It's the same tank family our affiliate Scorpius flew to the Moon on Intuitive Machines' IM-2. We're pairing it with zero-loss cryogenic transfer work with Princeton Cryogenics.\n\nTwo places I think we can help Gravitics. First, propellant storage and transfer hardware for the carriers as refueling nodes and for Viper OTX. Second, flight validation on BLK3, our reusable FAA-licensed suborbital vehicle, so subsystems see real launch loads and come back for inspection before they're committed to orbit.\n\nWould you be open to a 30-minute call with our engineering lead to see whether either is worth pursuing?\n\nBest,\nJohn"
+  },
+  {
+   "company": "Lux Aeterna",
+   "person": "Brian Taylor (Founder & CEO)",
+   "fit": "Reusable satellite: the MTP in one product; IPS + return-hardware validation",
+   "rel": "Pitched Aug 2026 (#1807, TPS flight test); no reply logged",
+   "path": "You send once as a new-angle follow-up. No further nags.",
+   "note": "Article: spacecomsecondstage.com/the-reusable-satellite. We pitched TPS flight-testing in August (#1807). This is the one follow-up, on the MTP and IPS partnership angle, and the last touch.",
+   "to": "brian@luxaeterna.com",
+   "subject": "The reusable satellite, and the structure that has to survive the return",
+   "body": "Brian,\n\nI enjoyed your SpaceCom Second Stage piece on the reusable satellite: return, refurbish, upgrade and relaunch. Exos's stated purpose is to make every space vehicle reusable, so we are about as aligned as two companies can be.\n\nI wrote in August about flight-testing re-entry hardware. The bigger opportunity is the structure. Repeated return-and-relaunch cycles are hard on pressure vessels and propellant systems. Our Integrated Pressurized Structures (IPS) platform uses Type V composite vessels built as load-bearing structure and qualified for repeated cryogenic cycling. It's the same tank family our affiliate Scorpius flew to the Moon on Intuitive Machines' IM-2, and it's designed to be refilled rather than thrown away.\n\nIf it's useful, our reusable suborbital vehicle can also fly Delphi subsystems through real launch and descent loads and hand them back for inspection before you commit them to orbit.\n\nWorth 30 minutes to compare notes on where the structure and propulsion stack is heading?\n\nBest,\nJohn"
+  },
+  {
+   "company": "Dawn Aerospace",
+   "person": "Stefan Powell (CEO)",
+   "fit": "In-space refueling: 'propellant as infrastructure' \u2192 IPS storage + zero-loss transfer",
+   "rel": "COLD (Dawn $25M raise analyzed #1122; no contact)",
+   "path": "Cold. Send if you're comfortable, or ask for an intro first.",
+   "note": "Article: spacecomsecondstage.com/fuel-with-no-expiration-date. Dawn is in NZ and the Netherlands, both allied, so it's cleared for marketing. Dawn also flies the Aurora suborbital spaceplane, so they're a partial competitor on suborbital. Pitch only the in-space refueling and IPS angle. Email is pattern-derived (first@), not published. Verify before sending.",
+   "to": "stefan@dawnaerospace.com",
+   "subject": "Fuel with no expiration date needs tanks with no expiration date",
+   "body": "Stefan,\n\nYour SpaceCom Second Stage piece reframed propellant from a finite spacecraft resource into orbital infrastructure. I think that's exactly right, and it puts a new requirement on hardware: tanks and transfer systems that can be cycled, refilled and stored for years without degrading.\n\nThat is what Exos builds toward. Our purpose is to make every space vehicle reusable, and our enabling technology is Integrated Pressurized Structures (IPS): lightweight Type V composite pressure vessels built for repeated cryogenic loading and long-duration storage. It's the same tank family our affiliate Scorpius flew to the Moon on Intuitive Machines' IM-2. We're also working on zero-loss cryogenic transfer with Princeton Cryogenics.\n\nI'd like to explore whether IPS storage or transfer hardware has a place in Dawn's refueling architecture, as a supplier, a teaming partner, or both. [Optional: we are also assembling a team for the SpaceWERX In-Domain Orbital Logistics Challenge, which closes Oct 21.]\n\nOpen to a 30-minute call in the next couple of weeks?\n\nBest,\nJohn"
+  },
+  {
+   "company": "Agile Space Industries",
+   "person": "Kara Grubis (VP Strategic Defense Products)",
+   "fit": "'Maneuver without regret' propulsion \u2192 lighter refillable tankage = more delta-v; flight-host thrusters",
+   "rel": "COLD",
+   "path": "Cold. US defense-adjacent and commercial, so you send.",
+   "note": "Article: spacecomsecondstage.com/maneuver-without-regret. Agile is in Durango, CO, and builds in-space thrusters. Hosting engine experiments on BLK3 is offered as 'with approval', which follows the propulsion guardrail: we host, we don't provide propulsion. Email is pattern-derived (first.last, matches a published staff address). Verify before sending.",
+   "to": "kara.grubis@agilespaceindustries.com",
+   "subject": "Maneuver without regret starts with the tank",
+   "body": "Kara,\n\nYour SpaceCom Second Stage piece on maneuvering without regret framed the real constraint well. Operators ration every maneuver because propellant and the hardware that holds it are finite.\n\nExos works on the other half of that equation. Our purpose is to make every space vehicle reusable, and our enabling technology is Integrated Pressurized Structures (IPS): Type V composite pressure vessels built into load-bearing structure, lighter than conventional tankage and built for repeated cryogenic cycling and refueling. It's the same tank family our affiliate Scorpius flew to the Moon on Intuitive Machines' IM-2.\n\nPaired with Agile's thrusters, lighter and refillable tankage means more delta-v per kilogram and spacecraft that can be topped off instead of retired. Our reusable FAA-licensed suborbital vehicle can also host propulsion and subsystem experiments, with approval, under real flight loads before they go to orbit.\n\nWould a 30-minute intro call with our engineering team make sense?\n\nBest,\nJohn"
+  },
+  {
+   "company": "KMI Space",
+   "person": "Troy Morris (Co-founder & CEO)",
+   "fit": "Orbital tow trucks / logistics network \u2192 a reusable tug needs refillable IPS tankage",
+   "rel": "COLD",
+   "path": "Cold. You send.",
+   "note": "Article: spacecomsecondstage.com/tow-trucks-of-orbit. This fits the SpaceWERX Orbital Logistics Challenge teaming lane (task #3044) if you pick Submittal B, IPS tank sets for refuelable OTVs. Email is pattern-derived and LOW confidence; their mail domain may be kmi.space. Verify before sending. KMI is building the Laelaps servicer with the REACCH capture arm, funded by STRATFI, for a 2027 launch.",
+   "to": "troy.morris@kallmorris.com",
+   "subject": "Tow trucks that come back for the next call",
+   "body": "Troy,\n\nI read your SpaceCom Second Stage piece on the tow trucks of orbit: reposition, rescue, remove, and build a transportation network along the way. A network like that only works if the trucks keep running, and that means refilling and reusing them instead of flying them once.\n\nThat is Exos's focus. Our purpose is to make every space vehicle reusable, and our enabling technology is Integrated Pressurized Structures (IPS): lightweight Type V composite pressure vessels built into load-bearing structure for repeated cryogenic cycling and refueling. It's the same tank family our affiliate Scorpius flew to the Moon on Intuitive Machines' IM-2.\n\nI'd like to explore IPS tankage for KMI's vehicles, and whether we should team on in-space logistics opportunities. [Optional: the SpaceWERX In-Domain Orbital Logistics Challenge closes Oct 21.]\n\nDo you have 30 minutes in the next two weeks?\n\nBest,\nJohn"
+  },
+  {
+   "company": "ispace U.S.",
+   "person": "Elizabeth Kryst (CEO), cc Bretton Alexander (EVP Business Development)",
+   "fit": "Lunar landers + cislunar comms \u2192 lunar-flown IPS tankage is a direct heritage match",
+   "rel": "COLD (Japanese parent; U.S. arm in Denver)",
+   "path": "Cold. Possible warm path through Toshi or the Japan BD network.",
+   "note": "Article: spacecomsecondstage.com/beyond-line-of-sight. ispace's parent is in Japan, an ally, so it's cleared. Check whether Toshi (Japan BD) has a contact at ispace before sending cold. Emails are LOW confidence: this is the parent company's address format, and the U.S. arm may use ispace-us.com. Bretton Alexander joined in Jun 2026 as EVP Business Development and is the natural BD owner.",
+   "to": "e-kryst@ispace-inc.com; cc: b-alexander@ispace-inc.com",
+   "subject": "Lunar-flown composite tankage for ispace U.S. landers",
+   "body": "Elizabeth,\n\nYour SpaceCom Second Stage piece on shared lunar communications infrastructure made the point that sustained lunar operations depend on infrastructure that works mission after mission, not one-off hardware.\n\nExos's purpose is to make every space vehicle reusable, and our enabling technology is Integrated Pressurized Structures (IPS): lightweight Type V composite pressure vessels built into load-bearing structure. The same tank family, built by our affiliate Scorpius, has already flown to the Moon on Intuitive Machines' IM-2 lander. It's designed for repeated cryogenic cycling, long-duration storage and refueling, which is what a reusable lunar architecture will need.\n\nI'd welcome a conversation about whether IPS propellant and pressurant tankage could lighten ispace U.S. lander and relay designs.\n\nWould you have 30 minutes in the coming weeks?\n\nBest,\nJohn"
+  },
+  {
+   "company": "Starfish Space",
+   "person": "Michael Madrid",
+   "fit": "Servicing (Otter): prove GNC, sensors and capture hardware before orbit; refillable servicer",
+   "rel": "COLD",
+   "path": "Cold. You send.",
+   "note": "Article: spacecomsecondstage.com/extend-clear-repeat. The lead is the 'prove the systems before risking the orbital vehicle' pillar, with IPS second. Email is pattern-derived (first@). Michael Madrid is Chief Growth Officer. Starfish won $54.5M from the Space Force for a second Otter (Feb 2026).",
+   "to": "michael@starfishspace.com",
+   "subject": "Extend, clear, repeat, and fly it before you fly it",
+   "body": "Michael,\n\nYour SpaceCom Second Stage piece on servicing as a way to extend life and clear orbit is the reuse mindset applied to the whole orbital economy. That's very close to Exos's purpose: make every space vehicle reusable.\n\nWe can help in two ways. First, Exos operates BLK3, our latest FAA-licensed reusable suborbital vehicle (Exos has flown commercial payloads since 2018). Servicing teams can fly sensors, GNC components and capture mechanisms through real launch, vacuum and descent loads and get the hardware back within days, before risking an Otter on orbit. Second, our Integrated Pressurized Structures (IPS) platform provides lightweight, refillable Type V composite tankage. It's the same family our affiliate Scorpius flew to the Moon on Intuitive Machines' IM-2, which matters for a servicer that should itself be refuelable.\n\nOpen to a short call to see whether either fits your next build?\n\nBest,\nJohn"
+  },
+  {
+   "company": "Rendezvous Robotics",
+   "person": "Phil Frank (Co-founder & CEO)",
+   "fit": "TESSERAE self-assembly \u2192 validate under real flight loads + microgravity before orbit",
+   "rel": "COLD",
+   "path": "Cold. You send.",
+   "note": "Article: spacecomsecondstage.com/some-assembly-required. This is purely the flight-test pillar. Don't offer a free slot. The CEO is Phil Frank. Joe Landon is President.",
+   "to": "[EMAIL \u2014 none published; phil@rdvrobotics.com is a guess]",
+   "subject": "Prove TESSERAE self-assembly on a reusable flight before orbit",
+   "body": "Phil,\n\nYour SpaceCom Second Stage piece on TESSERAE tiles self-assembling into structures bigger than any fairing is exactly the kind of system that should be flight-proven before it's trusted on orbit.\n\nExos operates BLK3, our latest FAA-licensed reusable suborbital vehicle; Exos has flown commercial payloads since 2018. We fly hardware through real launch loads and a period of microgravity, then return it for inspection, so your team gets flight data on the docking, magnetic alignment and assembly behavior without betting an orbital mission on it. Our next flight window is early 2027.\n\nWould a 20-minute call to scope a flight test make sense?\n\nBest,\nJohn"
+  },
+  {
+   "company": "CisLunar Industries",
+   "person": "Joe Pawelski (Co-Founder & CTO)",
+   "fit": "Spacecraft power management for dynamic ops \u2192 flight-qualify power electronics before orbit",
+   "rel": "WARM: CRM Active; Ubaldo Ciminieri (CoS) contacted Apr 2026",
+   "path": "You send. CC Ubaldo to keep it warm.",
+   "note": "Article: spacecomsecondstage.com/dynamic-space. Existing relationship through Ubaldo Ciminieri (ubaldo@cislunarindustries.com, contacted 4/17/26). Fill the bracket with the April thread context if you remember it. Joe's email is pattern-derived (first@). Their EPIC power hardware flew on Transporter-16 (Mar 2026).",
+   "to": "joe@cislunarindustries.com; cc: ubaldo@cislunarindustries.com",
+   "subject": "Dynamic space and flight-proving the power stack",
+   "body": "Joe,\n\nI read your SpaceCom Second Stage piece on power management as the enabler of dynamic, maneuverable operations. It's a good reminder that the vehicles that maneuver freely and last longest are the ones whose subsystems were proven early. [____ reference to the April conversation with Ubaldo ____]\n\nExos's purpose is to make every space vehicle reusable. Part of how we do that is BLK3, our latest FAA-licensed reusable suborbital vehicle (Exos has flown commercial payloads since 2018). It lets teams fly power electronics and other subsystems through real launch, vacuum and descent loads and get them back within days, before they're committed to orbit. Our next flight window is early 2027.\n\nWould it be worth a call to see whether a CisLunar power module belongs on that flight?\n\nBest,\nJohn"
+  },
+  {
+   "company": "Helogen",
+   "person": "Shishir Bankapur (Founder & CEO)",
+   "fit": "Autonomous orbital factories \u2192 de-risk the factory hardware and processes on a recoverable flight first",
+   "rel": "COLD (LinkedIn connect sent through Up/Link, #2434)",
+   "path": "Cold, though we have a LinkedIn touch. Consider sending it via LinkedIn.",
+   "note": "Article: spacecomsecondstage.com/lights-out-in-orbit. 'Lights-out' echoes our own consortium goal of lights-out manufacturing about 16 hours a day. That's a natural rapport line. Email is pattern-derived (first.last). The alternative is shishir@helogen.com.",
+   "to": "shishir.bankapur@helogen.com",
+   "subject": "Lights-out in orbit, and on the ground",
+   "body": "Shishir,\n\nYour SpaceCom Second Stage piece on lights-out orbital factories struck a chord. Exos is pursuing lights-out production on the ground for our own space hardware, so we share the conviction that autonomy is what makes space manufacturing scale.\n\nOur purpose is to make every space vehicle reusable. One concrete way that helps Helogen: BLK3, our latest FAA-licensed reusable suborbital vehicle (Exos has flown commercial payloads since 2018), can fly factory subsystems and process experiments through real launch loads and a period of microgravity, then return them for inspection before you commit them to an orbital mission. Our next flight window is early 2027.\n\nWould you be open to a short call to see whether a flight test fits your development plan?\n\nBest,\nJohn"
+  }
+ ]
+}
