@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Rebuild Exos_SSLC_OptionB_Offer_Summary_2026-10-07.docx  — 2-page max.
-John rules 2026-10-07 15:22-15:28 + 2026-10-09 update (14:12):
+John rules 2026-10-07 15:22-15:28 + 2026-10-09 update (17:35):
   - Section 1: offer value TABLE (Component | Low | Base | High | Trigger/Timing)
-  - 10/9 UPDATE: 1.0% EAI units at close (~$1.697M at 409A $169.7M); subtotal at close ~$6.06M
-  - 10/9 UPDATE: described as "EAI units issued as part of Exos's Rule 504 offering, at the 409A value"
-  - Stock earn-out: 0.0/0.25/0.5% (unchanged); total equity: 1.0%/1.25%/1.5%
-  - Expected totals: ~$7.0M / $8.58M / $10.16M (HIGH case back above $10M)
+  - 10/9 UPDATE: FIXED $1.0M EAI equity (not 1.0%); ~0.589% of $169.7M 409A; Rule 504 at financing close
+  - ① $4,360K | ② $5,360K | ③ $6,310K / $7,885K / $9,460K (HIGH < $10M — not rebalanced)
+  - Earn-out stock row shows LISTING values ($0/$625K/$1,500K); 409A in notes
+  - Stock earn-out: 0.0/0.25/0.5% (unchanged); total equity: ~0.59%/~0.84%/~1.09%
   - Framing line in John's voice after the table
   - No SSLC year-by-year revenue tables or growth projections
   - Keep 'negotiating terms', no Counsel gates, keep Eqvista wording
@@ -135,9 +135,9 @@ def add_offer_table():
         ("SSLC debts paid at face",                   "$500K",   "$500K",   "$500K",   "Close; ~$500K TBV in QB",                                   "data"),
         ("Working-capital bridge",                    "$500K",   "$500K",   "$500K",   "Close",                                                     "data"),
         ("① Cash & debt relief at close",             "$4,360K", "$4,360K", "$4,360K", "Cash + costs + stake credit + debts + WC bridge",           "subtotal"),
-        ("+ Exos equity — 1.0% EAI units\n(Rule 504, at 409A ~$170M)",
-                                                      "$1,697K", "$1,697K", "$1,697K", "EAI units issued as part of Exos's\nRule 504 offering, at the 409A value;\nissued at financing close",  "data"),
-        ("② Total at financing close (① + equity)",   "$6,057K", "$6,057K", "$6,057K", "",                                                          "subtotal"),
+        ("+ Exos equity — $1.0M fixed EAI units\n(Rule 504, ~0.59% at 409A ~$170M)",
+                                                      "$1,000K", "$1,000K", "$1,000K", "EAI units issued as part of Exos's\nRule 504 offering, at the 409A value;\n$1.0M counts toward Rule 504 $10M cap;\nissued at financing close",  "data"),
+        ("② Total at financing close (① + equity)",   "$5,360K", "$5,360K", "$5,360K", "",                                                          "subtotal"),
         # ── Earn-outs (negotiating terms — mgmt assumptions) ─────────────────────
         ("Tank earn-out (5 yrs, 5%/yr,\ncap $300K/yr)",
                                                       "$750K",   "$1,250K", "$1,500K", "FY27–FY31; low 3%/base 5%/high\n7% × IM rev; $300K/yr cap","data"),
@@ -149,14 +149,14 @@ def add_offer_table():
         ("Milestone M4: SSLC annual rev ≥$20M",       "—",       "—",       "$250K",   "Pays first year threshold hit\n(est. FY31 at high)",        "mstn"),
         ("Milestone M5: BLK3 tank qualification\ncomplete",
                                                       "—",       "—",       "$200K",   "Pays at Exos BLK3 tank cert\n(est. FY27–FY28)",             "mstn"),
-        ("Exos stock earn-out, valued at 409A\n(on top of 1.0% EAI up-front)",
-                                                      "$0",      "$424K",   "$848K",   "Post-RTO ~FY28; earn-out 0.0%/0.25%/0.5% FD; lockup same as Exos principals.\nAt listing ($250M/$300M): $0/$625K/$1.5M. Total Exos equity: 1.0%/1.25%/1.5%.", "data"),
-        ("③ TOTAL OFFER VALUE, 5-yr\n(② + earn-outs; all stock at 409A)",
-                                                      "$7,007K", "$8,582K", "$10,157K","FY27–FY31",                                                 "total"),
-        ("IF HELD: all Exos stock projected\nin FY2031 (replaces 409A stock values)",
-                                                      "$11.4M",  "$14.2M",  "$17.1M",  "Total stake 1.0/1.25/1.5% → ~0.70/0.875/1.05% after\n~30% dilution × ~$1.63B FY31 EV (16× v12 EBITDA).\nProjection only; on SSLC-actuals case ~$1.2–1.8M.", "memo"),
+        ("Exos stock earn-out at listing\n(on top of ~0.59% EAI up-front)",
+                                                      "$0",      "$625K",   "$1,500K", "Post-RTO ~FY29; earn-out 0.0%/0.25%/0.5% FD; lockup same as Exos principals.\nAt 409A: $0/$424K/$848K. Total Exos equity: ~0.59%/~0.84%/~1.09%.", "data"),
+        ("③ TOTAL OFFER VALUE, 5-yr\n(② + earn-outs; earn-out stock at listing)",
+                                                      "$6,310K", "$7,885K", "$9,460K", "FY27–FY31. HIGH < $10M target — not rebalanced.",           "total"),
+        ("IF HELD: all Exos stock projected\nin FY2031 (replaces listing earn-out)",
+                                                      "$6.7M",   "$9.6M",   "$12.4M",  "Total stake ~0.59/0.84/1.09% → ~0.41/0.59/0.76% after\n~30% dilution × ~$1.63B FY31 EV (16× v12 EBITDA).\nProjection only; on SSLC-actuals case ~$0.7–1.3M.", "memo"),
         ("④ TOTAL IF STOCK HELD TO 2031\n(① + tank + milestones + 2031 stock)",
-                                                      "$16.7M",  "$20.5M",  "$24.0M",  "Alternative to ③, NOT added to it. Forward-looking\nprojection, not a promise; RTO may not close.", "memo"),
+                                                      "$12.0M",  "$15.8M",  "$19.4M",  "Alternative to ③, NOT added to it. Forward-looking\nprojection, not a promise; RTO may not close.", "memo"),
     ]
 
     note_text = ("Earn-out rows: negotiating terms — management assumptions. "
@@ -232,9 +232,9 @@ P("Up-front price reflects today's numbers; earn-outs let SSLC holders share dir
 add_offer_table()
 
 # Why this structure — compact callout
-note("Why this structure: SSLC holders receive real Exos equity at close (1.0% EAI units, 409A-valued ~$1.7M, "
+note("Why this structure: SSLC holders receive real Exos equity at close ($1.0M EAI units, ~0.59% of $169.7M 409A, "
      "issued as part of Exos's Rule 504 offering) — not only contingent upside. "
-     "It aligns them with Exos immediately. The earn-out stock stays 0.0–0.5%, so total equity is 1.0–1.5%.")
+     "It aligns them with Exos immediately. The earn-out stock stays 0.0–0.5%, so total equity is ~0.59–1.09%.")
 
 note("Chart: SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png  ·  "
      "Full model: EXOS_SSLC_OptionB_Acquisition_Model_2026-10-07.xlsx → 'Total Compensation' sheet  ·  "
@@ -248,7 +248,7 @@ H1("3.  Key Terms", sb=3)
 terms_rows = [
     ["Term",                         "Detail"],
     ["Agreement basis",              "May 2025 Asset Acquisition Agreement, §3 exclusivity trigger"],
-    ["Total commitment",             "$5,057,000 base at close ($2.51M cash + $60K costs + $790K Exos stake credit + ~$1.70M EAI equity at 409A, Rule 504)"],
+    ["Total commitment",             "$5,360,000 base at close ($2.51M cash + $60K costs + $790K Exos stake credit + $500K WC + $1.0M EAI equity at 409A, Rule 504)"],
     ["Exclusivity period",           "90 days from SSLC confirmation; extension not unreasonably withheld (§3)"],
     ["Holdback (§7)",                "5% escrow, released at 12-month anniversary"],
     ["SSLC debts assumed",           "Paid at face at close (est. ~$500K; verify QuickBooks)"],
@@ -261,7 +261,7 @@ SEC_504_URL  = ("https://www.sec.gov/resources-small-businesses/exempt-offerings
 RULE144_URL  = "https://www.ecfr.gov/current/title-17/chapter-II/part-230/section-230.144"
 RULE10B5_URL = "https://www.ecfr.gov/current/title-17/chapter-II/part-240/section-240.10b-5"
 
-note(f"504 cap: ~$1.7M counts toward the Rule 504 $10M rolling 12-month cap; confirm remaining capacity. "
+note(f"504 cap: $1.0M counts toward the Rule 504 $10M rolling 12-month cap; confirm remaining capacity. "
      f"Rule 504 is U.S.-only; EAI units in the Japan round are Reg S — the two must remain distinct. "
      f"See model → 'EAI Lockup & Liquidity' sheet for full detail.")
 
@@ -308,13 +308,13 @@ H1("5.  Projected Post-RTO Value  (Projection — Not a Promise)", sb=3)
 note(f"Forward-looking projection — management assumptions (RTO completion, listing valuation, ~30% dilution). "
      f"Not a guarantee; actual results may differ. RTO may not close. "
      f"SEC Rule 10b-5, 17 CFR 240.10b-5 ({RULE10B5_URL}) antifraud rules apply. "
-     f"409A issuance value: ~$1.70M. Up-front 1.0% EAI only; earn-out column is additional, at listing, pre-dilution.")
+     f"409A issuance value: $1.0M fixed (~0.59%). Up-front EAI only; earn-out column is additional, at listing, pre-dilution.")
 
 proj_rows = [
-    ["Scenario",  "RTO MEV",  "1.0% pre-dil",  "1.0% post-dil\n(~30% dil)",  "+ earn-out at listing"],
-    ["Low",       "$200M",    "$2.00M",         "$1.40M",                      "$0 (0.0%)"],
-    ["Base",      "$250M",    "$2.50M",         "$1.75M",                      "+$625K (0.25% @ $250M)"],
-    ["High",      "$300M",    "$3.00M",         "$2.10M",                      "+$1.5M (0.50% @ $300M)"],
+    ["Scenario",  "RTO MEV",  "~0.59% pre-dil",  "~0.59% post-dil\n(~30% dil)",  "+ earn-out at listing"],
+    ["Low",       "$200M",    "$1.18M",           "$0.83M",                         "$0 (0.0%)"],
+    ["Base",      "$250M",    "$1.47M",           "$1.03M",                         "+$625K (0.25% @ $250M)"],
+    ["High",      "$300M",    "$1.77M",           "$1.24M",                         "+$1,500K (0.50% @ $300M)"],
 ]
 add_table(proj_rows, [0.85, 0.85, 1.10, 1.30, 1.40])
 
