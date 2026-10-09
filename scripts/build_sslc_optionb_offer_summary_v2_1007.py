@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Rebuild Exos_SSLC_OptionB_Offer_Summary_2026-10-07.docx  — 2-page max.
-John rules 2026-10-07 15:22-15:28:
+John rules 2026-10-07 15:22-15:28 + 2026-10-09 update:
   - Section 1: offer value TABLE (Component | Low | Base | High | Trigger/Timing)
+  - NEW 10/9: 0.5% EAI units at close (~$850K at 409A $169.7M); subtotal at close = ~$5.21M
+  - NEW 10/9: stock earn-out reduced to 0.0/0.25/0.5%; totals $6.16M/$7.74M/$9.31M
+  - HIGH < $10M target — not rebalanced per John's instruction
   - Framing line in John's voice after the table
-  - HIGH total 5-yr value ≈ $10M; tank earn-out extended to 5yr; milestone earn-outs added
-  - Doubling stat updated to $5.1M target
   - No SSLC year-by-year revenue tables or growth projections
   - Keep 'negotiating terms', no Counsel gates, keep Eqvista wording
   - Name: John Quinn (not Jon Quinn); lockup: same as Exos principals
@@ -131,7 +132,9 @@ def add_offer_table():
         ("Credit for Exos's existing stake",          "$790K",   "$790K",   "$790K",   "Close (non-cash credit)",                                   "data"),
         ("SSLC debts paid at face",                   "$500K",   "$500K",   "$500K",   "Close; ~$500K TBV in QB",                                   "data"),
         ("Working-capital bridge",                    "$500K",   "$500K",   "$500K",   "Close",                                                     "data"),
-        ("Subtotal: funding at close",                "$4,360K", "$4,360K", "$4,360K", "",                                                          "subtotal"),
+        ("Exos equity — 0.5% EAI units\nat 409A (~$170M)",
+                                                      "$850K",   "$850K",   "$850K",   "Committed at SSLC board acceptance;\nissued at financing close",  "data"),
+        ("Subtotal: funding at close",                "$5,210K", "$5,210K", "$5,210K", "",                                                          "subtotal"),
         # ── Earn-outs (negotiating terms — mgmt assumptions) ─────────────────────
         ("Tank earn-out (5 yrs, 5%/yr,\ncap $300K/yr)",
                                                       "$750K",   "$1,250K", "$1,500K", "FY27–FY31; low 3%/base 5%/high\n7% × IM rev; $300K/yr cap","data"),
@@ -143,10 +146,11 @@ def add_offer_table():
         ("Milestone M4: SSLC annual rev ≥$20M",       "—",       "—",       "$250K",   "Pays first year threshold hit\n(est. FY31 at high)",        "mstn"),
         ("Milestone M5: BLK3 tank qualification\ncomplete",
                                                       "—",       "—",       "$200K",   "Pays at Exos BLK3 tank cert\n(est. FY27–FY28)",             "mstn"),
-        ("Exos stock earn-out at listing",            "$1,000K", "$1,875K", "$3,000K", "Post-RTO ~FY28; 0.5% / 0.75%\n/ 1.0% FD; principals' lockup", "data"),
-        ("TOTAL OFFER VALUE (5-yr)",                  "$6,310K", "$8,135K", "$9,960K", "FY27–FY31",                                                 "total"),
+        ("Exos stock earn-out at listing\n(on top of 0.5% EAI up-front)",
+                                                      "$0",      "$625K",   "$1,500K", "Post-RTO ~FY28; earn-out 0.0%/0.25%/0.5% FD; lockup same as Exos principals.\nAt 409A ($170M): $0/$425K/$850K. Total Exos equity: 0.5%/0.75%/1.0%.", "data"),
+        ("TOTAL OFFER VALUE (5-yr)",                  "$6,160K", "$7,735K", "$9,310K", "FY27–FY31",                                                 "total"),
         ("Memo: Exos stock if held to FY31\n(not additive to total above)",
-                                                      "$5.7M",   "$8.5M",   "$11.4M",  "16× EV/EBITDA; ~30% dilution;\nmgmt assumption",            "memo"),
+                                                      "$5.7M",   "$8.5M",   "$11.4M",  "16× EV/EBITDA; ~30% dilution;\ntotal stake 0.5/0.75/1.0% (EAI+earn-out);\nmgmt assumption", "memo"),
     ]
 
     note_text = ("Earn-out rows: negotiating terms — management assumptions. "
@@ -206,7 +210,7 @@ P("INTERNAL  ·  DRAFT  ·  NEGOTIATING TERMS  ·  CEO / Board Eyes Only",
 P("EXOS AEROSPACE — SSLC OPTION B: ACQUISITION OFFER SUMMARY",
   bold=True, size=14, color=NAVY, align=WD_ALIGN_PARAGRAPH.CENTER, sa=2, sb=0)
 
-P("October 7, 2026  ·  Exos Aerospace Systems & Technologies, Inc.",
+P("October 9, 2026  ·  Exos Aerospace Systems & Technologies, Inc.",
   size=9.5, italic=True, color=GREY, align=WD_ALIGN_PARAGRAPH.CENTER, sa=5)
 
 # ────────────────────────────────────────────────────────────────────────────
@@ -223,6 +227,10 @@ P("The up-front price reflects what the numbers support today. "
   italic=True, size=9.5, color=BLUE, sa=4)
 
 add_offer_table()
+
+# Why this structure — compact callout
+note("Why this structure: SSLC holders receive real Exos equity at close (409A-valued, ~$850K) — not only contingent upside. "
+     "It aligns them with Exos immediately. The earn-out stock is halved (0.0–0.5%), reducing Exos dilution risk.")
 
 B("No additional capital calls  ",
   "Once closed, SSLC's standalone cash burn stops entirely.")
@@ -264,34 +272,14 @@ note("The With-vs-Without comparison, year-by-year CAGR figures, and cumulative 
 # ────────────────────────────────────────────────────────────────────────────
 H1("3.  Total Compensation — 5-Year View (FY27–FY31)", sb=4)
 
-note("Stacked chart below: funding delivered at close + earn-out forward potential. "
-     "Base scenario shown; earn-out range (low/high) is in the model.")
+note("See chart: SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png  |  "
+     "Full model: EXOS_SSLC_OptionB_Acquisition_Model_2026-10-07.xlsx → 'Total Compensation' sheet.")
 
-# Compensation summary table — updated for 5-yr earn-out structure
-comp_rows = [
-    ["Component",                        "Timing",          "Low / Base / High"],
-    ["Cash at close",                    "Close ~Q1 FY27",  "$2,510K"],
-    ["SSLC closing costs (Seller)",      "Close",           "$60K"],
-    ["Exos stake credit (non-cash)",     "Close (credit)",  "$790K"],
-    ["Debt relief (est., TBV)",          "Close",           "~$500K"],
-    ["WC bridge",                        "Close",           "$500K / $500K / $500K"],
-    ["Subtotal: funding at close",       "Close",           "$4,360K / $4,360K / $4,360K"],
-    ["Tank earn-out (5 yr, 5%/yr)",      "FY27–FY31",       "$750K / $1,250K / $1,500K"],
-    ["Milestone earn-outs (5 triggers)", "FY27–FY31",       "$200K / $650K / $1,100K"],
-    ["Exos stock earn-out",              "Post-RTO ~FY28",  "$1,000K / $1,875K / $3,000K"],
-    ["TOTAL OFFER VALUE (5-yr)",         "FY27–FY31",       "$6.3M / $8.1M / $10.0M"],
-]
-add_table(comp_rows, [2.3, 1.4, 1.8])
-
-# embed chart image if it exists
+# embed chart image if it exists (only if it fits on current page)
 chart_path = os.path.join(WS, "drafts", "SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png")
 if os.path.exists(chart_path):
-    doc.add_picture(chart_path, width=Inches(5.5))
+    doc.add_picture(chart_path, width=Inches(5.0))
     doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
-    note("Chart: SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png  |  "
-         "Full model: EXOS_SSLC_OptionB_Acquisition_Model_2026-10-07.xlsx")
-else:
-    note("Chart file not found at expected path — see model xlsx → 'Total Compensation' sheet.")
 
 # ────────────────────────────────────────────────────────────────────────────
 # SECTION 4 — TERMS (SHORT BOX)
@@ -302,7 +290,7 @@ terms_rows = [
     ["Term",                         "Detail"],
     ["Agreement basis",              "May 2025 Asset Acquisition Agreement, §3 exclusivity trigger "
                                      "(non-exclusive → exclusive upon Exos financing agreement)"],
-    ["Total commitment",             "$3,360,000 ($2.51M cash + $60K costs + $790K Exos stake credit)"],
+    ["Total commitment",             "$4,210,000 base at close ($2.51M cash + $60K costs + $790K Exos stake credit + ~$850K EAI equity at 409A)"],
     ["Exclusivity period",           "90 days from SSLC confirmation; extension not unreasonably withheld "
                                      "while financing works in good faith (§3)"],
     ["Holdback (§7)",                "5% escrow, released at 12-month anniversary"],
@@ -322,7 +310,7 @@ note("Detail in model: drafts/EXOS_SSLC_OptionB_Acquisition_Model_2026-10-07.xls
      "With-vs-Without comparison: sheet 'With vs Without Exos Capital'  ·  "
      "Exclusivity rescue options: SSLC_Exclusivity_Rescue_Options_and_Draft_Message_2026-10-07_DRAFT_v2.docx")
 
-P("DRAFT — INTERNAL — NEGOTIATING TERMS — John Quinn, CEO, Exos Aerospace — 2026-10-07",
+P("DRAFT — INTERNAL — NEGOTIATING TERMS — John Quinn, CEO, Exos Aerospace — 2026-10-09",
   bold=True, size=8.5, color=RED, align=WD_ALIGN_PARAGRAPH.CENTER, sa=0, sb=4)
 
 # ── save raw, apply letterhead, convert to PDF ───────────────────────────────

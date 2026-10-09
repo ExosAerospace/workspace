@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Build SSLC_OptionB_Total_Compensation_5yr_2026-10-07.png
-Stacked bar: funding at close + earn-outs (5yr tank + milestones + stock) + Y5 hold annotation.
-John 10/7 15:22–15:28 update: tank earn-out extended to 5yr; milestone earn-outs added; HIGH ≈ $10M target.
+Stacked bar: funding at close + EAI equity + earn-outs (5yr tank + milestones + stock earn-out) + Y5 hold annotation.
+John 10/9 update: add 0.5% EAI at close (~$850K); stock earn-out reduced to 0.0/0.25/0.5%; totals ~$6.16M/$7.74M/$9.31M.
+HIGH < $10M target — not rebalanced per instruction.
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -19,9 +20,11 @@ sslc_costs    = [   60_000, 0, 0, 0, 0]
 stake_credit  = [  790_000, 0, 0, 0, 0]
 debts_paid    = [  500_000, 0, 0, 0, 0]   # ~$500K TBV
 wc_bridge     = [  500_000, 0, 0, 0, 0]   # BASE/HIGH; LOW = $0
+# NEW 10/9: 0.5% EAI units at 409A valuation ($169.7M × 0.5% = $848.5K → ~$850K)
+eai_equity    = [  848_500, 0, 0, 0, 0]   # committed at board acceptance; issued at financing close
 
 # ── Earn-out data (negotiating terms — management assumptions) ────────────────
-# Matches offer summary Section 1 table (reconciled 10/7 15:58).
+# Matches offer summary Section 1 table (reconciled 10/9).
 # Tank earn-out: % of IM/SSLC tank revenue, cap $300K/yr, 5 yrs FY27-FY31
 # LOW 3% → $150K/yr = $750K | BASE 5% → $250K/yr = $1,250K | HIGH at cap $300K/yr = $1,500K
 tank_earnout = [250_000]*5   # BASE $1,250K
@@ -38,33 +41,36 @@ milestone_base = [0, 200_000+200_000, 250_000, 0, 0]          # $650K
 milestone_high = [0, 200_000+200_000+200_000, 250_000, 0, 250_000]  # $1,100K
 milestone_low  = [0, 200_000, 0, 0, 0]                          # $200K
 
-# Stock earn-out — realized FY29 (listed ~FY28; principals' lockup, modeled ~12 mo)
-stock_base = [0, 0, 1_875_000, 0, 0]   # 0.75% × $250M
-stock_high = [0, 0, 3_000_000, 0, 0]   # 1.0%  × $300M
-stock_low  = [0, 0, 1_000_000, 0, 0]   # 0.5%  × $200M
+# Stock earn-out (earn-out only, on top of 0.5% EAI up-front) — realized FY29
+# LOW: 0.0% × $200M = $0 | BASE: 0.25% × $250M = $625K | HIGH: 0.5% × $300M = $1,500K
+# Total Exos equity to SSLC: 0.5% / 0.75% / 1.0% (EAI + earn-out)
+stock_base = [0, 0,   625_000, 0, 0]   # 0.25% × $250M
+stock_high = [0, 0, 1_500_000, 0, 0]   # 0.5%  × $300M
+stock_low  = [0, 0,         0, 0, 0]   # 0.0%  × $200M = $0
 
-CLOSE_FIXED = sum(cash_at_close)+sum(sslc_costs)+sum(stake_credit)+sum(debts_paid)  # $3,860K (no WC)
-CLOSE_BASE  = CLOSE_FIXED + sum(wc_bridge)                                           # $4,360K
+CLOSE_FIXED = sum(cash_at_close)+sum(sslc_costs)+sum(stake_credit)+sum(debts_paid)+sum(eai_equity)  # $4,708.5K (no WC)
+CLOSE_BASE  = CLOSE_FIXED + sum(wc_bridge)                                                           # $5,208.5K ≈ $5.21M
 
-# BASE stacked bar (WC bridge included; tank starts FY27)
-base_annual = [a+b+c+d+e+f+g+h for a,b,c,d,e,f,g,h in
+# BASE stacked bar (WC bridge + EAI included; tank starts FY27)
+base_annual = [a+b+c+d+e+f+g+h+i for a,b,c,d,e,f,g,h,i in
                zip(cash_at_close, sslc_costs, stake_credit, debts_paid,
-                   wc_bridge, tank_earnout, milestone_base, stock_base)]
+                   wc_bridge, eai_equity, tank_earnout, milestone_base, stock_base)]
 cumulative  = np.cumsum(base_annual)
 
-total_base  = sum(base_annual)                                                          # $7,885K
-total_low   = CLOSE_BASE  + sum(tank_low) + sum(milestone_low) + sum(stock_low)        # $4,860K (no WC)
-total_high  = CLOSE_BASE  + sum(tank_high) + sum(milestone_high) + sum(stock_high)     # $9,960K ≈$10M
+total_base  = sum(base_annual)                                                          # ~$7,733K ≈ $7.74M
+total_low   = CLOSE_BASE  + sum(tank_low) + sum(milestone_low) + sum(stock_low)        # ~$6,158K ≈ $6.16M
+total_high  = CLOSE_BASE  + sum(tank_high) + sum(milestone_high) + sum(stock_high)     # ~$9,308K ≈ $9.31M [< $10M target — not rebalanced]
 
 # ── Y5 hold values (Old-Model base case; FY31 EV = $101.6M × 16× = $1.626B)
-# Dilution: Series A $25M staged + RTO listing + option pool ≈ 30% flat dilution (mgmt assumption)
-# Post-dilution stakes: low 0.5%→0.35%, base 0.75%→0.525%, high 1.0%→0.70%
+# Total SSLC stake = 0.5% EAI up-front + earn-out %
+# Low: 0.5%+0.0%=0.5% | Base: 0.5%+0.25%=0.75% | High: 0.5%+0.5%=1.0%
+# Post-dilution (~30%): low 0.35%, base 0.525%, high 0.70% — unchanged from prior structure
 Y5_EV_OLDMODEL = 101_610_000 * 16          # $1.626B
 Y5_EV_AA       =  11_000_000 * 16          # $176M — below $250M listing value
 DILUTION = 0.30
-y5_low_stake  = 0.005 * (1 - DILUTION)    # 0.35%
-y5_base_stake = 0.0075 * (1 - DILUTION)   # 0.525%
-y5_high_stake = 0.010 * (1 - DILUTION)    # 0.70%
+y5_low_stake  = 0.005 * (1 - DILUTION)    # 0.5% total x 0.70 = 0.35%
+y5_base_stake = 0.0075 * (1 - DILUTION)   # 0.75% total x 0.70 = 0.525%
+y5_high_stake = 0.010 * (1 - DILUTION)    # 1.0% total x 0.70 = 0.70%
 
 y5_v12_base = Y5_EV_OLDMODEL * y5_base_stake   # $8.54M
 y5_v12_low  = Y5_EV_OLDMODEL * y5_low_stake    # $5.69M
@@ -80,6 +86,7 @@ C_COSTS   = "#AAAAAA"
 C_STAKE   = "#666666"
 C_DEBTS   = "#B0B0B0"
 C_WC      = "#D0D0D0"
+C_EAI     = "#7B61FF"   # purple — EAI up-front equity
 C_TANK    = "#F26A21"
 C_MILESTONE = "#5BA3E0"
 C_STOCK   = "#FF9F60"
@@ -107,6 +114,7 @@ b_costs     = np.array([k(v) for v in sslc_costs])
 b_stake     = np.array([k(v) for v in stake_credit])
 b_debts     = np.array([k(v) for v in debts_paid])
 b_wc        = np.array([k(v) for v in wc_bridge])
+b_eai       = np.array([k(v) for v in eai_equity])
 b_tank      = np.array([k(v) for v in tank_earnout])
 b_milestone = np.array([k(v) for v in milestone_base])
 b_stock     = np.array([k(v) for v in stock_base])
@@ -118,9 +126,10 @@ for arr, color, label in [
     (b_stake,     C_STAKE,     "Exos stake credit (non-cash)"),
     (b_debts,     C_DEBTS,     "SSLC debts at face ~$500K TBV"),
     (b_wc,        C_WC,        "WC bridge ($500K)"),
+    (b_eai,       C_EAI,       "Exos EAI equity 0.5% at 409A (~$850K)"),
     (b_tank,      C_TANK,      "Tank earn-out (5%/yr × 5yr, capped $300K/yr)"),
     (b_milestone, C_MILESTONE, "Milestone earn-outs base (M1-M3, $650K)"),
-    (b_stock,     C_STOCK,     "Stock earn-out base (0.75% FD @ $250M)"),
+    (b_stock,     C_STOCK,     "Stock earn-out base (0.25% FD @ $250M = $625K)"),
 ]:
     ax.bar(x, arr, W, bottom=bottom, color=color, linewidth=0, zorder=3)
     if arr.any():
@@ -131,13 +140,14 @@ for arr, color, label in [
 # Stock earn-out range whisker at FY29
 bar_top_before_stock_fy29 = k(sum([
     cash_at_close[2], sslc_costs[2], stake_credit[2],
-    debts_paid[2], wc_bridge[2], tank_earnout[2], milestone_base[2]
+    debts_paid[2], wc_bridge[2], eai_equity[2], tank_earnout[2], milestone_base[2]
 ]))
 stock_ba_k = k(stock_base[2])
 ax.errorbar(x[2], bar_top_before_stock_fy29 + stock_ba_k,
             yerr=[[stock_ba_k - k(stock_low[2])], [k(stock_high[2]) - stock_ba_k]],
             fmt='none', ecolor='#FFD700', elinewidth=1.5, capsize=6, capthick=1.5, zorder=5)
-ax.annotate(f"Stock: L ${k(stock_low[2]):.0f}K / H ${k(stock_high[2]):.0f}K",
+stock_hi_k = k(stock_high[2])
+ax.annotate(f"Stock earn-out: L $0K / H ${stock_hi_k:.0f}K",
             xy=(x[2] + W/2 + 0.05, bar_top_before_stock_fy29 + stock_ba_k + 60),
             fontsize=7.5, color='#FFD700', va='bottom', ha='left')
 
@@ -145,7 +155,7 @@ ax.annotate(f"Stock: L ${k(stock_low[2]):.0f}K / H ${k(stock_high[2]):.0f}K",
 for i, tot in enumerate(base_annual):
     if tot > 0:
         bar_top = k(sum([cash_at_close[i], sslc_costs[i], stake_credit[i],
-                         debts_paid[i], wc_bridge[i],
+                         debts_paid[i], wc_bridge[i], eai_equity[i],
                          tank_earnout[i], milestone_base[i], stock_base[i]]))
         ax.text(x[i], bar_top + 30, f"${tot/1e6:.2f}M",
                 ha='center', va='bottom', fontsize=8.5, color=TEXT, fontweight='bold', zorder=6)
@@ -186,8 +196,8 @@ ax.text(x[4] + W*0.55 + 0.08, (y5_y_aa + fy31_bar_top)/2,
         ha='left', va='center', fontsize=7, color=C_Y5_AA,
         bbox=dict(boxstyle='round,pad=0.25', facecolor='#111111', edgecolor=C_Y5_AA, alpha=0.9))
 
-ax.axhline(k(1_875_000), color='#FF9F60', linewidth=0.8, linestyle=':', alpha=0.6, zorder=2)
-ax.text(4.6, k(1_875_000) + 20, "at-listing base $1.875M", fontsize=6.5, color='#FF9F60', va='bottom')
+ax.axhline(k(625_000), color='#FF9F60', linewidth=0.8, linestyle=':', alpha=0.6, zorder=2)
+ax.text(4.6, k(625_000) + 20, "earn-out base $625K", fontsize=6.5, color='#FF9F60', va='bottom')
 
 # ── Axes ──────────────────────────────────────────────────────────────────────
 ax.set_xticks(x)
@@ -222,9 +232,10 @@ legend_patches = [
     mpatches.Patch(color=C_STAKE,     label="Stake credit non-cash ($790K)"),
     mpatches.Patch(color=C_DEBTS,     label="SSLC debts at face ~$500K TBV"),
     mpatches.Patch(color=C_WC,        label="WC bridge ($500K)"),
-    mpatches.Patch(color=C_TANK,      label="Tank earn-out ×5yr ($1.25M base / $1.5M high)"),
-    mpatches.Patch(color=C_MILESTONE, label="Milestone earn-outs (M1-M5; $650K base / $1.1M high)"),
-    mpatches.Patch(color=C_STOCK,     label="Stock earn-out 0.75% FD @ $250M ($1.875M base)"),
+    mpatches.Patch(color=C_EAI,       label="Exos EAI equity 0.5% at 409A (~$850K)"),
+    mpatches.Patch(color=C_TANK,      label="Tank earn-out ×5yr ($1.25Mbase/$1.5M high)"),
+    mpatches.Patch(color=C_MILESTONE, label="Milestone earn-outs (M1-M5; $650Kbase/$1.1M high)"),
+    mpatches.Patch(color=C_STOCK,     label="Stock earn-out 0.25% FD @ $250M ($625K base)"),
     plt.Line2D([0],[0], color=LINE_CUM, linewidth=2, marker='o', markersize=4, label=f"Cumulative BASE → ${total_base/1e6:.2f}M  |  HIGH ~${total_high/1e6:.1f}M  |  LOW ${total_low/1e6:.2f}M"),
     mlines.Line2D([0],[0], color=C_Y5_V12, linewidth=2, label="v12 Y5 hold (≠ realized; 0.525% post-dilution)"),
     mlines.Line2D([0],[0], color=C_Y5_AA,  linewidth=2, label="AA Y5 hold (⚠ below listing @ $176M EV)"),
@@ -238,9 +249,9 @@ fig.savefig(OUT, dpi=150, bbox_inches='tight', facecolor=BG)
 plt.close()
 
 print(f"Saved: {OUT}")
-print(f"CLOSE FIXED: ${CLOSE_FIXED/1e6:.3f}M (no WC)  |  CLOSE BASE: ${CLOSE_BASE/1e6:.3f}M (with WC)")
-print(f"5-yr BASE:  ${total_base/1e6:.3f}M  (close $4.36M + tank $1.0M + milestones $650K + stock $1.875M)")
-print(f"5-yr LOW:   ${total_low/1e6:.3f}M  (close $3.86M no WC + no earn-outs + stock min $1.0M)")
-print(f"5-yr HIGH:  ${total_high/1e6:.3f}M  (close $4.36M + tank $1.25M + milestones $1.35M + stock $3.0M) ≈$10M")
+print(f"CLOSE FIXED: ${CLOSE_FIXED/1e6:.3f}M (incl EAI, no WC)  |  CLOSE BASE: ${CLOSE_BASE/1e6:.3f}M (with WC+EAI)")
+print(f"5-yr BASE:  ${total_base/1e6:.3f}M  (close $5.21M incl EAI + tank $1.25M + milestones $650K + stock earn-out $625K)")
+print(f"5-yr LOW:   ${total_low/1e6:.3f}M  (close $5.21M + tank $750K + milestone $200K + stock earn-out $0)")
+print(f"5-yr HIGH:  ${total_high/1e6:.3f}M  (close $5.21M + tank $1.5M + milestones $1.1M + stock earn-out $1.5M) [< $10M target — not rebalanced]")
 print(f"Y5 v12 hold: L ${y5_v12_low/1e6:.2f}M / B ${y5_v12_base/1e6:.2f}M / H ${y5_v12_high/1e6:.2f}M (0.35/0.525/0.70% post-dilution)")
 print(f"Y5 AA hold:  L ${y5_aa_low/1e6:.3f}M / B ${y5_aa_base/1e6:.3f}M / H ${y5_aa_high/1e6:.3f}M (BELOW listing value)")
