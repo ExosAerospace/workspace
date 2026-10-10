@@ -55,9 +55,27 @@ def escalate_and_file(payload, agent_class):
             headers={"Content-Type": "application/json",
                      "X-Exo-Token": _decisions_token()})
         with _url.urlopen(req, timeout=20) as r:
-            return r.status in (200, 201)
+            ok = r.status in (200, 201)
     except Exception:
         return False
+    if ok and not tagged.get("docKeys"):
+        _attach_referenced_docs(tagged.get("dedupeKey"))
+    return ok
+
+
+def _attach_referenced_docs(dedupe_key):
+    """Born-with-docs (Jon 10/10, D-7282043): pin the drafts/capture/data-room documents the card's
+    text references, via scripts/decision_docs_guard_exo3.py. Soft: never raises."""
+    if not dedupe_key:
+        return
+    try:
+        import importlib.util as _ilu
+        _p = os.path.join(_WS, "scripts", "decision_docs_guard_exo3.py")
+        _sp = _ilu.spec_from_file_location("decision_docs_guard_exo3", _p)
+        _m = _ilu.module_from_spec(_sp); _sp.loader.exec_module(_m)
+        _m.ensure_docs(dedupe_key=dedupe_key)
+    except Exception:
+        pass
 
 
 def delegation_on(agent_class):

@@ -3,6 +3,20 @@
  "_scoring": "FAIL if launchd LastExitStatus!=0 (crash) OR a delivery_exhausted event in window OR stale beyond fail_grace. WARN if stale beyond warn_grace OR spooled/warn events in window. Else OK. FAIL escalates one deduped alert to the system channel.",
  "window_hours": 26,
  "agents": {
+  "com.exos.decision-docs-guard-exo3": {
+   "cadence_s": 300,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/decision_docs_guard_exo3.py --selftest",
+   "eval_type": "output",
+   "governance_checks": [
+    "--selftest PASS (replays D-7282043: drafts/ ref in context, no docs pinned -> docx + same-stem pdf companion attached; .md never attached; missing refs reported; pinned/docKeys none/human-linked cards untouched; idempotent; dd_reviewer assignee never auto-exposed)",
+    "_meta.json written read->modify->tmp->os.replace with re-read immediately before write; prior records preserved",
+    "re-ingest uses the SAME dedupeKey and all existing fields; refuses if the server did not update the same decision id in place",
+    "one #exomac-system note per decision per missing-file set (never Jon's DM)"
+   ]
+  },
   "com.exos.clockout-watcher": {
    "cadence_s": 3600,
    "warn_grace": 2.5,

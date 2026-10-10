@@ -473,7 +473,16 @@ def _ingest_decision(payload):
     if _gov:
         try: payload = _gov.escalate(payload, AGENT_CLASS)
         except Exception: pass
-    mc_post("/api/decisions/ingest", payload)
+    if mc_post("/api/decisions/ingest", payload) and not payload.get("docKeys") and payload.get("dedupeKey"):
+        # Born-with-docs (Jon 10/10): pin the drafts the card references (decision_docs_guard_exo3).
+        try:
+            import importlib.util
+            _gsp = importlib.util.spec_from_file_location("decision_docs_guard_exo3",
+                os.path.join(os.path.dirname(os.path.abspath(__file__)), "decision_docs_guard_exo3.py"))
+            _g = importlib.util.module_from_spec(_gsp); _gsp.loader.exec_module(_g)
+            _g.ensure_docs(dedupe_key=payload["dedupeKey"])
+        except Exception as e:
+            print(f"  ! decision docs guard: {e}")
 
 def parse_deadline(text):
     """Extract a submission deadline from opportunity text (mirrors the inbox-capture fix in

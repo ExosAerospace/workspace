@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-04T12:49:13.103453-05:00",
- "total": 242,
+ "total": 243,
  "standing": 113,
  "ephemeral": 18,
  "service": 6,
@@ -5585,6 +5585,31 @@
    "lifecycle": "self-removing (prompt has an end condition)",
    "registered": "2026-10-10",
    "envelope_source": "register_cron.py derivation from the live cron"
+  },
+  {
+   "label": "com.exos.decision-docs-guard-exo3",
+   "program": "decision-docs-guard-exo3",
+   "script": "decision_docs_guard_exo3.py run",
+   "kind": "recurring",
+   "schedule": "every 300s (+ called inline by governance/route.py escalate_and_file and opportunity_processor._ingest_decision right after ingest)",
+   "purpose": "Decision cards carry the documents Jon needs to review (Jon 10/10 core principle; D-7282043 referenced a drafts/ strategy memo in text with no document pinned). For every OPEN decision (open/pending/delegated) with no docKeys and no current decision-linked uploads, extracts referenced document paths (drafts/, capture/, data-room/, absolute/~ workspace paths, quoted paths, bare names in drafts/; .docx/.pdf/.xlsx/.pptx + same-stem .pdf review companion), attaches them (task-linked: mc-attach.py --doc-key; else decision-linked uploads) and re-ingests the card with the same dedupeKey + docKeys (+docTask). Refreshes its own pins when the referenced file set changes.",
+   "stack_layer": "GOVERN",
+   "autonomy_tier": "Execute-within-bounds (internal, reversible: adds documents to an existing card; never changes card content/status/answer)",
+   "human_owner": "John Quinn",
+   "permission_envelope": "READ: mission-control/data/decisions.json (read-only), mission-control/uploads/_meta.json, mission-control/users.json (roles only), referenced files inside the workspace (drafts/, capture/, data-room/, …). WRITE: mission-control/uploads/<new files> + _meta.json append/supersede of ITS OWN decision-linked records (read->modify->tmp->os.replace, re-read before write); task attachments via scripts/mc-attach.py (stale-version gate applies); POST /api/decisions/ingest update-in-place with the same dedupeKey + all existing fields + docKeys/docTask; logs/decision-docs-guard-state.json, logs/decision-docs-guard-exo3.log, fleet_log events; one-line notes to #exomac-system via deliver.py. NEVER: .md attachments, files outside the workspace or mission-control/uploads sources, cards already pinned by a human/agent (docKeys) or with human decision-linked uploads, docKeys ['none'] cards, cards assigned to dd_reviewer/montana_partner (external doc exposure is Jon's call), decisions.json writes, server.js, external sends, Jon DMs.",
+   "memory_boundary": "workspace files referenced by open Decisions + MC uploads/_meta + logs/decision-docs-guard-state.json",
+   "escalation": "Referenced file missing -> ONE note line per decision (per missing set) to #exomac-system; external-assignee cards skipped and logged for Jon's call; ingest not updating in place -> error logged + fleet_log level=error (agent_eval surfaces non-zero exit)",
+   "eval_suite": "/usr/bin/python3 scripts/decision_docs_guard_exo3.py --selftest (D-7282043 failure replay, pdf companion, .md skip, missing report, task vs decision mode, pinned/none/human-linked/answered skips, safe _meta write preserving records, idempotency, refresh-on-change, dd_reviewer exposure block, path containment) + agent_eval liveness",
+   "eval_type": "output",
+   "telemetry": "logs/decision-docs-guard-exo3.log; logs/fleet-events.jsonl (agent decision-docs-guard-exo3: decision_docs_attached / decision_docs_error); logs/runs/YYYY-MM-DD.jsonl (run_logged)",
+   "decision_trace": "logs/decision-docs-guard-state.json decisions[<id>] = {sig (path,key,sha256), docKeys, mode, task, files, at}",
+   "reusability_scope": "any Decision producer (Exo sessions, crons, launchd agents) that mentions documents in card text",
+   "risk_tier": "MED",
+   "envelope_source": "hand review of scripts/decision_docs_guard_exo3.py, 2026-10-10",
+   "registered": "2026-10-10",
+   "change_log": [
+    "2026-10-10 created (Jon 10/10: decision cards must carry the docs; D-7282043 recurrence class). Source hooks added in governance/route.py + opportunity_processor.py so new cards are born with docs."
+   ]
   }
  ],
  "eval_wave_1": {
