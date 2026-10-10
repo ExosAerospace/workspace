@@ -57,7 +57,7 @@ ws = [
     ("W3 Offer & pricing", "Price and terms for A–E; support, spares, training; data/IP rights; exclusivity.",
      "Exos cost basis (internal only), comparable deals, counsel", "Term sheet templates per structure"),
     ("W4 Regulatory & export", "FAA license path when a vehicle changes hands; ITAR Cat IV / MTCR category for BLK3; CFIUS for foreign capital in buyers.",
-     "eCFR (14 CFR 450, 22 CFR 121), DDTC guidance, counsel, Neil's export review", "Go/no-go rules per buyer type and country"),
+     "eCFR (14 CFR 450, 22 CFR 121), DDTC guidance, counsel, export review by the Empowered Official (John Quinn) with ITAR reviewer Denise Shirey", "Go/no-go rules per buyer type and country"),
     ("W5 Capacity & supply", "How many BLK3s can Exos build per year? Lead time, BOM (<5,000 components), Consortium suppliers, MRP.",
      "MC MRP/BOM, Suppliers & POs module", "Build-slot schedule + price floor"),
     ("W6 Channels & signals", "Who influences the buyer: lead investors, gov PMs, primes. What signals intent (missed milestones, layoffs, test-flight RFIs)?",
@@ -74,10 +74,10 @@ spec = [
     ["Purpose / MTP", "Find funded-but-unflown launch companies and prepare BLK3 \"Vehicle + Market\" outreach; serves MTP \"Make Every Space Vehicle Reusable\""],
     ["Stack layer", "SENSE + INTERPRET (DECIDE stays with Jon)"],
     ["Autonomy tier", "Recommend-only: writes CRM/MC records and drafts; no external send"],
-    ["Human owner", "John Quinn (proposed; Neil Milburn for export gate)"],
+    ["Human owner", "John Quinn (proposed; also Empowered Official for the export gate, with ITAR reviewer Denise Shirey)"],
     ["Permission envelope", "Read web + gov databases; write CRM contacts/opps (tag vehicle-sales-target) and MC task notes; drafts only to Jon's inbox; NO external email"],
     ["Memory boundary", "Workspace + CRM (Supabase) + MC; no CUI, no export-controlled technical data in drafts"],
-    ["Escalation", "Decision card per outreach (\"Contact <company> about Structure X?\"); export flag → Neil"],
+    ["Escalation", "Decision card per outreach (\"Contact <company> about Structure X?\"); export flag → Empowered Official (John Quinn) / Denise Shirey"],
     ["Eval suite (output, not liveness)", "100% of claims in a target record carry a source URL; ≤10% of surfaced targets rejected by Jon as wrong-fit (rolling 30 days); no duplicate company records; weekly run completes"],
     ["Telemetry", "fleet_log correlation IDs → logs/fleet-events.jsonl; decision traces → logs/decision-traces.jsonl; log logs/vehiclesales-exo3.log"],
     ["Cadence", "Weekly full sweep (Mon) + daily signal scan (news / SAM.gov / award changes)"],
@@ -88,7 +88,7 @@ P("Guardrails baked into the agent prompt: BLK3 not yet flown (early 2027); no f
   "Exos is not a propulsion provider; foreign targets default to wet lease and are flagged for export review.")
 
 H("5. 30 / 60 / 90 days")
-B("Days 1–30: W1 market map complete and loaded into CRM; W4 export/FAA rules drafted with counsel and Neil; agent runs in shadow mode (reports only).")
+B("Days 1–30: W1 market map complete and loaded into CRM; W4 export/FAA rules drafted with counsel and the export reviewer (Denise Shirey); agent runs in shadow mode (reports only).")
 B("Days 31–60: W2 value cases for the top 10; W3 term-sheet templates for A–C; first 5 outreach Decisions to Jon.")
 B("Days 61–90: first discovery calls; W5 build-slot schedule tied to BLK3's early-2027 flights; go/no-go on Structure D/E with the roll-up path.")
 P("Success metrics: 10 qualified conversations, 3 term-sheet discussions, 1 signed LOI contingent on BLK3 flight by end of Q1 2027.")

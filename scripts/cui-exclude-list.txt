@@ -74,7 +74,7 @@ Exos_RDRE_Capability_Statement*
 # Jon 2026-10-02: Exos's own trajectory/6DOF/Monte Carlo dispersion "math work" (BLK3/M101 sizing, Lazarus
 # drift mods, fin-resize DATCOM, Part 450 dispersion frameworks) is RELEASED: internal Exos engineering data,
 # NOT GFE/contract-marked CUI, no GCC High requirement -> back on the DR mirror. Still ITAR-sensitive: no
-# foreign-person access/sharing without Neil's export review.
+# foreign-person access/sharing without export review by the Empowered Official (John Quinn) / Denise Shirey.
 # Only government-supplied, government-marked items stay excluded:
 #   NASA RDRE GFE (Teasley DUA + AAS paper) -> being deleted per D-7281874;
 #   Sandia TAOS Manual v11.1 (marked OUO / Export Controlled Information).

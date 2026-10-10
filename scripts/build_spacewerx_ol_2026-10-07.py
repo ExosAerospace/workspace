@@ -181,7 +181,7 @@ for t in [
     "[____] Princeton CryoTech: include as subcontractor (letter + quote) or drop.",
     "[____] Name Intuitive Machines / Nebula as a commercial reference: yes or no.",
     "[____] SPRS score / CMMC Level 2 (Self) assessment on file (topic requirement).",
-    "[____] Neil: export (ITAR/EAR) review of the final volume; confirm numeric test targets in Sec. 5.",
+    "[____] Export (ITAR/EAR) review of the final volume: Empowered Official (John Quinn) with ITAR reviewer Denise Shirey; confirm numeric test targets in Sec. 5.",
     "[____] John: DSIP certifications and submit. John is in Japan from 8 Oct; set who files and when.",
 ]:
     d.bullet(t)
@@ -439,7 +439,7 @@ s.h1("Compliance and registration")
 for t in [
     "DSIP account, SAM.gov registration (CAGE 7EMY6 / UEI CK24BPZGF854), SBA SBC Control ID: confirm current.",
     "CMMC Level 2 (Self) required by the topic: confirm the SPRS score is posted.",
-    "ITAR-designated topic: Neil's export review of the final volume before upload.",
+    "ITAR-designated topic: export review of the final volume by the Empowered Official (John Quinn) with ITAR reviewer Denise Shirey before upload.",
     "Foreign-affiliation disclosure: include Exos Italia Srl (hibernating).",
     "Instructions: read DAF_SBIR_26BX_D2P2_R6_v2.pdf in DSIP for the volume list, page limit, and whether a Customer "
     "Memorandum is required; re-order the technical volume to it verbatim.",
@@ -452,7 +452,7 @@ s.table([
     ["Date", "Action", "Owner"],
     ["By 8 Oct", "Go/no-go on filing; pick PI; authorize filer; list USSF engagements", "John"],
     ["9–12 Oct", "Feasibility study draft; R6 instructions reconciled; Scorpius letter and quote requested", "Exo / Neil"],
-    ["13–16 Oct", "Cost volume (single source of truth); work split ≥50% Exos; export review", "Exo / Kyle / Neil"],
+    ["13–16 Oct", "Cost volume (single source of truth); work split ≥50% Exos; export review", "Exo / Kyle / John (EO) + Denise Shirey"],
     ["17–19 Oct", "Package compiled; independent read-through; certifications", "Exo / John (remote)"],
     ["20 Oct", "File with one day of buffer before the 21 Oct 12:00 ET close", "Authorized filer"],
 ], [1.1, 4.3, 1.3], size=9)

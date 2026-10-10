@@ -17,7 +17,7 @@
     ],
     "C2_sends": [
       "Auto-send NONE by default. No external send without John's explicit 'send it direct'.",
-      "Everything else = review copy to the APPROPRIATE PARTY's inbox first (route by domain owner: payloads->Lizi/Phil, export->Neil, etc.; not always John).",
+      "Everything else = review copy to the APPROPRIATE PARTY's inbox first (route by domain owner: payloads->Lizi/Phil, export->Empowered Official John Quinn (reviewer Denise Shirey), etc.; not always John).",
       "Gov submissions route to John. EDGAR: no direct send. DocuSign only from jquinn@exosaero.com; never 'fully executed' before it is.",
       "Never post a live secret/token in Discord."
     ],

@@ -56,7 +56,9 @@ OPT_IN_TAGS = {'auto-assign', 'rd-team', 'role:rd-team'}
 
 # task text -> functional domain (first match wins; order = specificity)
 DOMAIN_KEYWORDS = [
-    ('regulatory_faa_export', r'\b(part 450|part 420|faa|launch licens|licensing|range safety|itar|ear|export control|coa|waiver|ast\b)\b'),
+    # Export control (ITAR/EAR) is NOT Neil's: Empowered Official = John Quinn, ITAR reviewer = Denise Shirey (Jon 2026-10-10)
+    ('export_control', r'\b(itar|ear|export control|export review|ddtc|bis|deemed export|usml|eccn|commodity jurisdiction)\b'),
+    ('regulatory_faa_export', r'\b(part 450|part 420|faa|launch licens|licensing|range safety|coa|waiver|ast\b)\b'),
     ('propulsion', r'\b(propuls|rdre|engine|combustion|thrust|injector|nozzle|hot ?fire|igniter)\b'),
     ('structures_tanks', r'\b(structure|composite|ips|tank|airframe|layup|pressure vessel|cryo tank)\b'),
     ('avionics_gnc', r'\b(avionics|gnc|guidance|sensor|flight computer|telemetry|imu|gps)\b'),
@@ -91,6 +93,8 @@ def classify(text):
 
 def pick_member(domain, matrix):
     """Return (email, name, rating, flag) best-matched available member for a domain."""
+    if domain == 'export_control':
+        return ('jquinn@exosaero.com', 'John Quinn', 5, 'empowered-official')
     members = matrix['members']
     # Phil owns BLK3 flight-hardware domains by assignment (ratings pending)
     hw_domains = {'propulsion', 'structures_tanks', 'avionics_gnc', 'flight_software', 'test_integration_launchops'}

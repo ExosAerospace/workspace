@@ -41,7 +41,9 @@ DOMAIN = [
     (r"software|mission control|website|web app|dashboard|\bbug\b|database|server|\bit\b|login", "exo@exosaero.com"),
     (r"sales|customer|investor|outreach|marketing|payload sale|\blead\b|crm|business develop", "lquinn@exosaero.com"),
     (r"japan|hospo|space cotan|kumazawa", "toshihisa@exosaero.com"),
-    (r"export|itar|\bear\b|licens|compliance|cmmc|cui", "nmilburn@exosaero.com"),
+    # export control -> Empowered Official John Quinn (reviewer Denise Shirey); NOT Neil (Jon 2026-10-10)
+    (r"export|itar|\bear\b|ddtc|deemed export", "jquinn@exosaero.com"),
+    (r"licens|compliance|cmmc|cui", "nmilburn@exosaero.com"),
     (r"contract|legal|agreement|\bnda\b|mnda|counsel|terms sheet|term sheet", "jquinn@exosaero.com"),
     (r"facilit|crane|generator|building|site\b|maintenance", "peaton@exosaero.com"),
 ]

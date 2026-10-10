@@ -256,6 +256,8 @@ Return STRICT JSON only, no prose, with this exact shape:
   "blockers": "the one thing needed to unblock, or empty"
 }
 
+Export control (ITAR/EAR, foreign-person screening, deemed export) is owned by the Empowered Official, John Quinn, with ITAR reviewer Denise Shirey. Never assign export review to Neil Milburn (COO; FAA/range, not export).
+
 Routing rules:
 - SEND = an external email is ready to go (owner just approves).
 - TASK = internal work needed first; deliverable.type may be "none".
