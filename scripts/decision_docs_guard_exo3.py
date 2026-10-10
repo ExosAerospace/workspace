@@ -66,6 +66,42 @@ class Paths:
 P = Paths()
 
 
+def md_to_docx(md_path):
+    """Render a markdown draft as a Word review copy next to it (<stem>.docx). Re-renders when the
+    .md is newer. Returns the .docx path, or None if python-docx is unavailable/fails."""
+    out = os.path.splitext(md_path)[0] + ".docx"
+    try:
+        if os.path.isfile(out) and os.path.getmtime(out) >= os.path.getmtime(md_path):
+            return out
+        import re as _re
+        from docx import Document
+        doc = Document()
+        def runs(par, text):
+            for i, part in enumerate(_re.split(r"\*\*(.+?)\*\*", text)):
+                if part:
+                    par.add_run(part).bold = bool(i % 2)
+        for line in open(md_path, encoding="utf-8", errors="replace").read().splitlines():
+            t = line.rstrip()
+            h = _re.match(r"^(#{1,4})\s+(.*)", t)
+            if h:
+                doc.add_heading(h.group(2).strip(), level=min(len(h.group(1)), 4)); continue
+            b = _re.match(r"^\s*[-*+]\s+(.*)", t)
+            if b:
+                runs(doc.add_paragraph(style="List Bullet"), b.group(1)); continue
+            if _re.match(r"^\s*(-{3,}|\*{3,})\s*$", t):
+                continue
+            if t.startswith(">"):
+                t = t.lstrip("> ")
+            runs(doc.add_paragraph(), t)
+        fd, tmp = tempfile.mkstemp(dir=os.path.dirname(out), suffix=".docx"); os.close(fd)
+        doc.save(tmp); os.replace(tmp, out)
+        return out
+    except Exception as e:
+        try: log(f"md_to_docx failed for {md_path}: {e}")
+        except Exception: pass
+        return None
+
+
 def iso():
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
@@ -197,7 +233,11 @@ def collect_docs(decision, ws):
         if not (real == wsr or real.startswith(wsr + os.sep)) or os.sep + "mission-control" + os.sep + "uploads" + os.sep in real:
             outside.append(ref); continue
         if ext == ".md":
-            md.append(ref); continue
+            # Jon reviews Word, never .md: render a same-stem .docx review copy and attach that.
+            conv = md_to_docx(path) if os.path.isfile(path) else None
+            if not conv:
+                md.append(ref); continue
+            path, ext = conv, ".docx"
         if ext not in DOC_EXTS:
             continue
         if not os.path.isfile(path):
@@ -553,7 +593,9 @@ def selftest():
     check("replay D-7282043: memo docx extracted", any(x["path"] == memo for x in pl["docs"]))
     check("same-stem pdf added as __pdf companion", any(k.endswith("__pdf") for k in keys))
     check("bare filename in drafts/ resolved", any(x["path"].endswith("Bare_Name.xlsx") for x in pl["docs"]))
-    check(".md never attached, listed", pl["md"] == ["drafts/note.md"] and not any(x["path"].endswith(".md") for x in pl["docs"]))
+    check(".md never attached raw; Word review copy attached instead",
+          not any(x["path"].endswith(".md") for x in pl["docs"]) and
+          (any(x["path"].endswith("note.docx") for x in pl["docs"]) or pl["md"] == ["drafts/note.md"]))
     check("missing file reported", pl["missing"] == ["drafts/Gone_2026-01-01.pdf"])
     check("task mode via numeric relatedItem", pl["mode"] == "task" and pl["task"] == "1782")
     # 2) skips
