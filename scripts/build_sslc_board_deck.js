@@ -216,54 +216,86 @@ addFooterLogo(s4);
 s4.addNotes('All three scenarios (Low/Base/High) have identical at-close values: ① $4.36M, ② $5.36M with stock. The $4.36M breaks down as: $2.51M cash + $60K transaction costs + $790K stake credit (non-cash) + ~$500K SSLC debts at face + $500K WC bridge. The $1.0M EAI units are issued at financing close, not at board acceptance, and count toward the Rule 504 $10M rolling cap.');
 
 // ============================================================
-// SLIDE 5 — EARN-OUTS & MILESTONES
+// SLIDE 5 — EARN-OUT TARGETS (REBUILT 2026-10-10)
 // ============================================================
 const s5 = pres.addSlide();
 darkBg(s5);
-s5.addText('How Value Grows: Earn-Outs & Milestones', {
-  x: 0.5, y: 0.3, w: 9.0, h: 0.5,
-  fontSize: 22, bold: true, color: WHT, fontFace: 'Cambria', isTextBox: true
+s5.addText('How Value Grows: Earn-Out Targets FY27–FY31', {
+  x: 0.35, y: 0.14, w: 9.3, h: 0.46,
+  fontSize: 20, bold: true, color: WHT, fontFace: 'Cambria', isTextBox: true
 });
-s5.addShape(pres.ShapeType.rect, { x: 0.5, y: 0.82, w: 1.5, h: 0.04, fill: { color: ORG }, line: { type: 'none' } });
+s5.addShape(pres.ShapeType.rect, { x: 0.35, y: 0.62, w: 1.5, h: 0.04, fill: { color: ORG }, line: { type: 'none' } });
 
-// Table header
-const colX = [0.35, 4.0, 5.75, 7.35];
-const colW = [3.55, 1.6, 1.55, 2.3];
-const hdrs = ['Earn-Out', 'Low', 'Base', 'High'];
-hdrs.forEach((h, i) => {
-  s5.addShape(pres.ShapeType.rect, { x: colX[i], y: 1.0, w: colW[i], h: 0.38, fill: { color: '2A1000' }, line: { color: ORG, pt: 1 } });
-  s5.addText(h, { x: colX[i] + 0.05, y: 1.03, w: colW[i] - 0.1, h: 0.3, fontSize: 12, bold: true, color: ORG, align: i === 0 ? 'left' : 'center', isTextBox: true });
+// 6-column layout: Earn-out | Target | Low | Base | High | Pays
+const t5cX = [0.30, 2.55, 4.65, 5.85, 7.05, 8.25];
+const t5cW = [2.20, 2.05, 1.15, 1.15, 1.15, 1.10];
+const t5Hdr = ['Earn-Out', 'Target SSLC Must Hit', 'Low', 'Base', 'High', 'Pays'];
+const HDR_H = 0.40;
+const HDR_Y = 0.70;
+t5Hdr.forEach((h, i) => {
+  s5.addShape(pres.ShapeType.rect, { x: t5cX[i], y: HDR_Y, w: t5cW[i], h: HDR_H, fill: { color: '2A1000' }, line: { color: ORG, pt: 1 } });
+  s5.addText(h, { x: t5cX[i] + 0.05, y: HDR_Y + 0.04, w: t5cW[i] - 0.08, h: HDR_H - 0.06,
+    fontSize: 10, bold: true, color: ORG, align: i < 2 ? 'left' : 'center', valign: 'middle', isTextBox: true });
 });
 
-const rows = [
-  { label: 'Tank earn-out (5 yrs, IM revenue)', low: '$750K', base: '$1,250K', high: '$1,500K' },
-  { label: 'M1: FY2026-27 revenue ≥ $5.1M', low: '$200K', base: '$200K', high: '$200K' },
-  { label: 'M2: Nebula/OTV production contract signed', low: '—', base: '$200K', high: '$200K' },
-  { label: 'M3: SSLC annual revenue ≥ $10M', low: '—', base: '$250K', high: '$250K' },
-  { label: 'M4: SSLC annual revenue ≥ $20M', low: '—', base: '—', high: '$250K' },
-  { label: 'M5: BLK3 tank qualification complete', low: '—', base: '—', high: '$200K' },
-  { label: 'Stock earn-out at listing (additional equity)', low: '$0\n(0.0%)', base: '$625K\n(0.25%)', high: '$1,500K\n(0.50%)' },
+const t5Rows = [
+  {
+    label: '5% of IM tank revenue/yr\ncap $300K/yr, FY27–FY31',
+    target: 'Revenue SSLC achieves\neach year FY27–FY31',
+    low: '$3.0M/yr\n→$150K/yr\n→$750K total', base: '$5.0M/yr\n→$250K/yr\n→$1.25M total',
+    high: '$6.0M+/yr\n→$300K/yr (cap)\n→$1.5M total', pays: 'Annual\nFY27–FY31',
+    rowH: 0.60, bg: '1C1C1C', isTotal: false, isTank: true
+  },
+  { label: 'M1  SSLC FY27 rev ≥$5.1M  →$200K', target: 'Annual rev ≥$5.1M in FY27',
+    low: '✓', base: '✓', high: '✓', pays: 'FY28 Q1',
+    rowH: 0.40, bg: '1A2035', isTotal: false, isTank: false },
+  { label: 'M2  Nebula/OTV production contract  →$200K', target: 'OTV production contract signed',
+    low: '—', base: '✓', high: '✓', pays: 'At signing',
+    rowH: 0.40, bg: '1C1C1C', isTotal: false, isTank: false },
+  { label: 'M3  SSLC annual rev ≥$10M  →$250K', target: 'Annual rev ≥$10M',
+    low: '—', base: '✓', high: '✓', pays: 'Est. FY29',
+    rowH: 0.40, bg: '1A2035', isTotal: false, isTank: false },
+  { label: 'M4  SSLC annual rev ≥$20M  →$250K', target: 'Annual rev ≥$20M',
+    low: '—', base: '—', high: '✓', pays: 'Est. FY31',
+    rowH: 0.40, bg: '1C1C1C', isTotal: false, isTank: false },
+  { label: 'M5  BLK3 tank qualification  →$200K', target: 'Exos BLK3 tank cert complete',
+    low: '—', base: '—', high: '✓', pays: 'Est. FY27–28',
+    rowH: 0.40, bg: '1A2035', isTotal: false, isTank: false },
+  { label: 'Exos stock earn-out at RTO listing\n(adds to ~0.59% EAI up-front)',
+    target: 'Issued at RTO listing',
+    low: '$0\n(0.0%)', base: '$625K\n(0.25%)', high: '$1,500K\n(0.50%)', pays: 'Post-RTO\n~FY29',
+    rowH: 0.50, bg: '1C1C1C', isTotal: false, isTank: false },
+  { label: 'TOTAL EARN-OUTS  (③ minus ②)', target: '',
+    low: '$950K', base: '$2,525K', high: '$4,100K', pays: '5-yr total',
+    rowH: 0.42, bg: '0A2800', isTotal: true, isTank: false },
 ];
 
-rows.forEach((row, ri) => {
-  const y = 1.43 + ri * 0.46;
-  const bg = ri % 2 === 0 ? '1C1C1C' : '222222';
-  colX.forEach((cx, ci) => {
-    const txt = ci === 0 ? row.label : (ci === 1 ? row.low : ci === 2 ? row.base : row.high);
-    const clr = txt === '—' ? GRY : ci > 0 ? (txt.includes('$0') ? GRY : WHT) : LGR;
-    s5.addShape(pres.ShapeType.rect, { x: cx, y, w: colW[ci], h: 0.43, fill: { color: bg }, line: { color: '2A2A2A', pt: 1 } });
-    s5.addText(txt, { x: cx + 0.07, y: y + 0.03, w: colW[ci] - 0.1, h: 0.37, fontSize: ci === 0 ? 11 : 12, color: clr, align: ci === 0 ? 'left' : 'center', valign: 'middle', isTextBox: true });
+let t5Y = HDR_Y + HDR_H;
+t5Rows.forEach((row) => {
+  const rowY = t5Y;
+  const cols = [row.label, row.target, row.low, row.base, row.high, row.pays];
+  cols.forEach((txt, ci) => {
+    const isDash = txt === '—';
+    const isCheck = txt === '✓';
+    let clr;
+    if (row.isTotal)      clr = ci >= 2 ? '2ECC71' : LGR;
+    else if (isDash)      clr = '555555';
+    else if (isCheck)     clr = '2ECC71';
+    else if (ci >= 2 && row.isTank) clr = ORG;
+    else if (ci >= 2)     clr = WHT;
+    else                  clr = LGR;
+    const sz = row.isTank && ci >= 2 ? 9 : ci >= 2 ? 11 : 9;
+    s5.addShape(pres.ShapeType.rect, { x: t5cX[ci], y: rowY, w: t5cW[ci], h: row.rowH,
+      fill: { color: row.bg }, line: { color: '2A2A2A', pt: 1 } });
+    s5.addText(txt, { x: t5cX[ci] + 0.06, y: rowY + 0.02, w: t5cW[ci] - 0.1, h: row.rowH - 0.04,
+      fontSize: sz, bold: row.isTotal, color: clr,
+      align: ci < 2 ? 'left' : 'center', valign: 'middle', isTextBox: true });
   });
+  t5Y += row.rowH;
 });
 
-// Quote
-s5.addShape(pres.ShapeType.rect, { x: 0.35, y: 4.67, w: 9.3, h: 0.72, fill: { color: '150B00' }, line: { color: ORG, pt: 1 } });
-s5.addText('"The up-front price reflects what the numbers support today; the earn-outs are how that value grows as goals are met."  — John M. Quinn', {
-  x: 0.5, y: 4.73, w: 9.0, h: 0.6,
-  fontSize: 12, color: LGR, italic: true, align: 'center', valign: 'middle', isTextBox: true
-});
 addFooterLogo(s5);
-s5.addNotes('Tank earn-out: 5 years, 3%/5%/7% of IM revenue (Low/Base/High), $300K/yr cap. M1 pays FY28 Q1 if verified. M2 pays at contract execution any year FY27-30. M3 pays first year threshold hit (est. FY29 at base/high). M4 pays first year threshold hit (est. FY31 at high). M5 pays at Exos BLK3 tank certification (est. FY27-28). Stock earn-out: 0.0%/0.25%/0.50% additional FD equity at RTO, with the same lockup as Exos principals. Each milestone is independently verifiable; none pays unless the trigger is met.');
+s5.addNotes('Tank earn-out: single 5% rate applied to the revenue SSLC achieves each year FY27–FY31, capped at $300K/yr. Scenario = the annual IM tank revenue level: Low $3.0M/yr → $150K/yr → $750K total; Base $5.0M/yr → $250K/yr → $1.25M; High $6.0M+/yr → $300K/yr (cap) → $1.5M. M1 (L/B/H): FY27 rev ≥$5.1M → $200K, pays FY28 Q1. M2 (B/H): OTV contract → $200K. M3 (B/H): rev ≥$10M → $250K. M4 (H): rev ≥$20M → $250K. M5 (H): BLK3 qual → $200K. Stock (0/0.25/0.50%): $0/$625K/$1,500K at RTO listing. Total earn-outs: Low $950K / Base $2,525K / High $4,100K. Each equals ③ minus ②.');
 
 // ============================================================
 // SLIDE 6 — TOTAL VALUE
