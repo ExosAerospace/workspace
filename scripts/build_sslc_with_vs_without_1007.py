@@ -204,8 +204,8 @@ ws.row_dimensions[R].height = 22
 R += 1
 
 ws.merge_cells(f"A{R}:F{R}")
-ws[f"A{R}"].value = ("Exos offer provides: Cash at close $2.51M | Debts paid at face | "
-                     "WC bridge ($300–700K) | Exos channel + IM ramp capex | "
+ws[f"A{R}"].value = ("Exos offer provides: Cash at close $2.51M | WC bridge ($300–700K) | "
+                     "Exos channel + IM ramp capex | "
                      "v12 tank-unit/ASP ramp model. Figures: v12 Annual P&L, recalculated 2026-10-07.")
 ws[f"A{R}"].font = Font(italic=True, size=9, color=GREEN_DARK)
 ws[f"A{R}"].alignment = Alignment(horizontal="left", wrap_text=True)
@@ -348,7 +348,6 @@ narrative_blocks = [
     ]),
     ("With Exos: What Capital Unlocks", GREEN_DARK, [
         "Cash at close:  $2.51M",
-        "SSLC debts paid at face (est. ~$500K TBV)",
         "Prepaid-work delivery funded (cost $500K)",
         "WC bridge removes Q2–Q3 stall risk",
         "Exos procurement channel:  immediate BLK3 tank POs",

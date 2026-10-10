@@ -84,7 +84,7 @@ data_assump = [
     (11, "  SSLC closing costs ($)",                        60000,                          "Seller's costs; included in total"),
     (12, "  Exos existing-stake credit ($)",                790000,                         "18% equity at 2021 basis (~$4.39M total × 18%)"),
     (13, "  Escrowed holdback (§7) — 5% for 12 months ($)", "=B9*0.05",                    "§7; released at 12-month anniversary"),
-    (14, "SSLC debts assumed at face ($)",                  500000,                         "MANAGEMENT ASSUMPTION — UNVERIFIED. QB session expired 10/7. Microcosm loan + Wertz notes + AP."),
+    (14, "SSLC debts assumed at face ($)",                  0,                              "REMOVED 10/10 per John: Exos NOT assuming SSLC debts at close. Debt payoff is SSLC's responsibility."),
     (15, "Exos loan to SSLC — waived as license consideration ($)", 38000,                 "John decision 10/2; not re-proposed"),
     (16, "Working capital bridge needed (mid-point) ($)",    500000,                         "SSLC needs $0.3–0.7M to finish paid-for work. Mid=$500K."),
     (17, "Series A raise — first close ($)",                10000000,                        "D1 of record, 2026-08-13"),
@@ -274,7 +274,7 @@ ws.row_dimensions[97].height = 52
 # ── BENEFITS TO SSLC INVESTORS (John 10/7) ────────────────────────────────────
 sec_hdr(ws, 105, "BENEFITS TO SSLC INVESTORS (John 10/7)", bg=DARK_BLUE, col_end="C")
 benefits = [
-    (106, "1. Debt relief at face",                          "~$500K TBV",      "Microcosm/Wertz notes + AP paid; personal path for Jim"),
+    (106, "1. Debt relief at face",                          "$0 — excluded",   "Removed 10/10: Exos not assuming SSLC debts. SSLC's own liability."),
     (107, "2. No further capital calls",                     "Structural",       "Investors stop funding a cash-negative entity"),
     (108, "3. Cash at close",                                "$2,510,000",       "Section 3 deal price cash component"),
     (109, "4. Earn-out upside — IM tank revenue (5 yrs, FY27–FY31)", "Up to $1.5M", "5%/yr x $5M IM firm; $300K cap; 5-year term"),
@@ -372,7 +372,7 @@ ds["A1"].fill = PatternFill("solid", fgColor=DARK_BLUE)
 ds["A1"].alignment = Alignment(horizontal="center", vertical="center")
 ds.row_dimensions[1].height = 22
 
-ds["A2"] = "Option B: invoke §3 exclusivity at $3.36M base + earn-out (IM tank revenue and/or Exos stock post-listing). SSLC debts paid at face. DRAFT — negotiation-stage terms."
+ds["A2"] = "Option B: invoke §3 exclusivity at $3.36M base + earn-out (IM tank revenue and/or Exos stock post-listing). DRAFT — negotiation-stage terms."
 ds["A2"].font = Font(italic=True, size=9, color="444444")
 ds.merge_cells("A2:E2")
 ds.row_dimensions[2].height = 30
@@ -448,7 +448,7 @@ eo_data = [
          "=MIN(0.05*Assumptions!B25,Assumptions!B26)*Assumptions!B27",
          "=Assumptions!B30*Assumptions!B33",
          "=B26+C26",
-         "High: 5% × $6M+/yr target (cap $300K) × 5yr = $1.5M + 0.5% earn-out of $300M listing + all milestones → ~$9.46M"),
+         "High: 5% × $6M+/yr target (cap $300K) × 5yr = $1.5M + 0.5% earn-out of $300M listing + all milestones → ~$8.96M"),
     (27, "Exos dilution (stock earn-out, base)",
          "n/a",
          "=Assumptions!B29",
@@ -1005,7 +1005,7 @@ fund_rows = [
     (11, "Exos equity — $1.0M fixed / ~0.59% EAI units at 409A (Rule 504)", 1000000,0,0,0,0,"$1,000K fixed; ~0.589% of $169.7M Eqvista 409A; committed at SSLC board acceptance; issued at financing close (Rule 504)"),
     (12, "TOTAL FUNDING DELIVERED",
          "=SUM(B6:B11)","=SUM(C6:C11)","=SUM(D6:D11)","=SUM(E6:E11)","=SUM(F6:F11)",
-         "All at close in FY27; includes $1.0M EAI equity at 409A (Rule 504); total ②=$5,360K"),
+         "All at close in FY27; includes $1.0M EAI equity at 409A (Rule 504); total ②=$4,860K"),
 ]
 for r, lbl, fy27, fy28, fy29, fy30, fy31, notes in fund_rows:
     tcomp.cell(r, 1).value = lbl
@@ -1095,13 +1095,13 @@ tcomp["A25"].fill = PatternFill("solid", fgColor=PURPLE)
 
 tot_rows = [
     # BASE: funding (incl. $1M EAI) + tank base + milestone base + stock earn-out base
-    (26, "BASE: funding+$1M EAI ($5.36M) + tank base (5yr) + milestones 1-3 + stock earn-out base ≈ $7.885M",
+    (26, "BASE: funding+$1M EAI ($4.86M) + tank base (5yr) + milestones 1-3 + stock earn-out base ≈ $7.385M",
          "=B12+B14+B17+B20","=C12+C14+C17+C20","=D12+D14+D17+D20","=E12+E14+E17+E20","=F12+F14+F17+F20"),
     # LOW: funding (incl. $1M EAI) + tank low + milestone low (M1) + stock earn-out low = $0
-    (27, "LOW:  funding+$1M EAI ($5.36M) + tank low (5yr) + milestone M1 only + 0% earn-out ≈ $6.31M",
+    (27, "LOW:  funding+$1M EAI ($4.86M) + tank low (5yr) + milestone M1 only + 0% earn-out ≈ $5.81M",
          "=B12+B15+B18+B21","=C12+C15+C18+C21","=D12+D15+D18+D21","=E12+E15+E18+E21","=F12+F15+F18+F21"),
-    # HIGH: funding (incl. $1M EAI) + tank high + milestone high (all 5) + stock earn-out high ≈ $9.46M (HIGH < $10M — not rebalanced per 10/9 instruction)
-    (28, "HIGH: funding+$1M EAI ($5.36M) + tank high + all milestones + 0.5% earn-out ≈ $9.46M [HIGH < $10M target — not rebalanced per 10/9 instruction]",
+    # HIGH: funding (incl. $1M EAI) + tank high + milestone high (all 5) + stock earn-out high ≈ $8.96M (HIGH < $10M — not rebalanced)
+    (28, "HIGH: funding+$1M EAI ($4.86M) + tank high + all milestones + 0.5% earn-out ≈ $8.96M [HIGH < $10M target — not rebalanced per 10/10 instruction]",
          "=B12+B16+B19+B22","=C12+C16+C19+C22","=D12+D16+D19+D22","=E12+E16+E19+E22","=F12+F16+F19+F22"),
     (29, "AA SENSITIVITY BASE (same earn-out structure)",
          "=B12+B14+B17+B20","=C12+C14+C17+C20","=D12+D14+D17+D20","=E12+E14+E17+E20","=F12+F14+F17+F20"),

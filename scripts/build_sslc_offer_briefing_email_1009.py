@@ -2,7 +2,7 @@
 """Build SSLC_Offer_Briefing_Email_DRAFT_2026-10-09.docx
 John Quinn → Jim Wertz and the SSLC Board. DRAFT — not sent.
 Subject: Exos offer for SSLC — summary
-10/9 update numbers: ① $4,360K | ② $5,360K | ③ $6.3M–$9.5M | ④ $12M–$19M (2031 projection)
+10/10 update (remove SSLC debts at face): ① $3,860K | ② $4,860K | ③ $5.8M–$9.0M | ④ $11.5M–$18.9M (2031 projection)
 """
 import os, shutil, subprocess
 from docx import Document
@@ -85,9 +85,9 @@ P("Jim and members of the Board,", size=10.5, sa=4)
 P("Attached is Exos's offer to acquire SSLC's assets under Section 3 of our May 2025 Asset "
   "Acquisition Agreement. In short:", size=10.5, sa=4)
 
-bullet("At close: $4.36M in cash, transaction costs, credit for Exos's existing stake, "
-       "payment of SSLC's debts at face, and a working-capital bridge — plus $1.0M of Exos "
-       "stock (EAI units at the current 409A value), for $5.36M at financing close. "
+bullet("At close: $3.86M in cash, transaction costs, credit for Exos's existing stake, "
+       "and a working-capital bridge — plus $1.0M of Exos "
+       "stock (EAI units at the current 409A value), for $4.86M at financing close. "
        "The EAI units are restricted at issuance (Rule 504 Reg D) and are structured to provide "
        "part of the public float, becoming freely tradeable at the RTO listing.")
 
@@ -96,7 +96,7 @@ bullet("Over five years: earn-outs on IM tank revenue, five milestones (M1: $5.1
        "reduction in tank build cost via dome and build-process automation), and additional Exos "
        "stock, bringing total value to $6.3M–$9.5M.")
 
-bullet("Upside: if holders keep their Exos stock through 2031, the projected total is $12M–$19M. "
+bullet("Upside: if holders keep their Exos stock through 2031, the projected total is ~$11.5M–$18.9M. "
        "This is a projection, not a guarantee.")
 
 P("", sa=4)  # spacer
