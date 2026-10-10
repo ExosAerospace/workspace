@@ -25,3 +25,4 @@
 
 ## INTERNAL — not for external docs
 - **RTO:** Exos also plans to raise **$215 million through an RTO (reverse takeover)**. Per Jon (2026-10-10) this is **NOT in the pitch** and must stay **out of every external / investor-facing document** (decks, one-pagers, business plan, data room). Record here only.
+- **Why the raise is stated as "$10M Series A" (Jon 2026-10-10):** The **$10M is the Reg D 504(d) annual limit** — that is the ceiling on what this Series A instrument can raise in a 12-month window, which is why the external number is $10M. **Additional capital beyond that is expected via other vehicles**, not the Series A: **Title III (DoD Office of Strategic Capital)**, a **PIPE**, the **$215M RTO (reverse takeover)**, or a **merger / acquisition / JV**. None of those vehicles belong in the Up/Link pitch or external docs — they are the internal capital-stack plan behind the $10M headline.
