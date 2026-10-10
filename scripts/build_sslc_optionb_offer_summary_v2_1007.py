@@ -354,7 +354,7 @@ note("Rule 504: $1.0M toward $10M rolling 12-month cap; U.S.-only (Japan round i
 # ────────────────────────────────────────────────────────────────────────────
 note("Full model: EXOS_SSLC_OptionB_Acquisition_Model_2026-10-07.xlsx  ·  "
      "With-vs-Without: sheet 'With vs Without Exos Capital'  ·  "
-     "RTO stock projection (mgmt assumption, not a guarantee): see model 'Total Compensation' / 'Returns and Dilution'  ·  "
+     "Eqvista fairness opinion: engaged 8/14/2026; agreement still unsigned (held ~1 month). Projections are forward-looking (SEC Rule 10b-5 applies); RTO stock projection (mgmt assumption, not a guarantee): see model 'Total Compensation' / 'Returns and Dilution'  ·  "
      "Exclusivity rescue options: SSLC_Exclusivity_Rescue_Options_and_Draft_Message_2026-10-07_DRAFT_v2.docx")
 
 P("DRAFT — INTERNAL — NEGOTIATING TERMS — John Quinn, CEO, Exos Aerospace — 2026-10-09",
