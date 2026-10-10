@@ -167,7 +167,105 @@ addFooterLogo(s3);
 s3.addNotes('These are SSLC\'s own numbers, presented factually and respectfully. The $198K cash figure is from the email draft. The $713K last quarter is from the offer summary. The $5.1M milestone (M1) requires nearly double that quarterly pace starting immediately — this is the context for why the Exos offer provides meaningful value through financing close and earn-out structure.');
 
 // ============================================================
-// SLIDE 4 — WHAT SSLC HOLDERS RECEIVE AT CLOSE
+// SLIDE 4 — SSLC CAPITAL & DEBT: WHAT'S ON THE BOOKS
+// Source: drafts/SSLC_QB_Equity_Debt_Microcosm_Facility_2026-10-10.xlsx
+// Added 2026-10-10 per John Quinn
+// ============================================================
+const s3b = pres.addSlide();
+darkBg(s3b);
+
+// Orange top bar
+s3b.addShape(pres.ShapeType.rect, { x: 0, y: 0, w: 10, h: 0.055, fill: { color: ORG }, line: { type: 'none' } });
+
+// Slide title
+s3b.addText("SSLC Capital & Debt: What's on the Books", {
+  x: 0.25, y: 0.07, w: 9.5, h: 0.5,
+  fontSize: 20, bold: true, color: WHT, fontFace: 'Cambria', isTextBox: true
+});
+
+// Panel backgrounds
+s3b.addShape(pres.ShapeType.rect, { x: 0.12, y: 0.65, w: 4.55, h: 3.28, fill: { color: '222222' }, line: { type: 'none' } });
+s3b.addShape(pres.ShapeType.rect, { x: 4.82, y: 0.65, w: 5.05, h: 3.28, fill: { color: '222222' }, line: { type: 'none' } });
+
+// Panel header bars
+s3b.addShape(pres.ShapeType.rect, { x: 0.12, y: 0.65, w: 4.55, h: 0.27, fill: { color: '1A1A1A' }, line: { type: 'none' } });
+s3b.addShape(pres.ShapeType.rect, { x: 4.82, y: 0.65, w: 5.05, h: 0.27, fill: { color: '1A1A1A' }, line: { type: 'none' } });
+// Orange left-edge accents
+s3b.addShape(pres.ShapeType.rect, { x: 0.12, y: 0.65, w: 0.04, h: 0.27, fill: { color: ORG }, line: { type: 'none' } });
+s3b.addShape(pres.ShapeType.rect, { x: 4.82, y: 0.65, w: 0.04, h: 0.27, fill: { color: ORG }, line: { type: 'none' } });
+
+// Panel header text
+s3b.addText('WHAT INVESTORS PAID IN', { x: 0.22, y: 0.67, w: 4.3, h: 0.2, fontSize: 8.5, bold: true, color: ORG, fontFace: 'Calibri', isTextBox: true });
+s3b.addText('WHAT SSLC OWES  (10/2/2026)', { x: 4.92, y: 0.67, w: 4.8, h: 0.2, fontSize: 8.5, bold: true, color: ORG, fontFace: 'Calibri', isTextBox: true });
+
+// LEFT PANEL — equity rows (y start = 0.92, row height = 0.245)
+const LX = 0.24, RX = 4.94, RH = 0.245;
+
+// Helper: add a label+value row
+function addRow(slide, x, y, lbl, val, lblCol, valCol, boldVal, lbw, rvw) {
+  slide.addText(lbl, { x, y, w: lbw||2.75, h: RH-0.02, fontSize: 8, color: lblCol||LGR, fontFace: 'Calibri', isTextBox: true });
+  if (val) slide.addText(val, { x: x+(lbw||2.75)+0.02, y, w: rvw||1.5, h: RH-0.02, fontSize: 9, bold: boldVal!==false, color: valCol||WHT, fontFace: 'Calibri', align: 'right', isTextBox: true });
+}
+function addDiv(slide, x, y, w) {
+  slide.addShape(pres.ShapeType.rect, { x, y: y+0.08, w: w||4.1, h: 0.015, fill: { color: '888888' }, line: { type: 'none' } });
+}
+
+const DY = 0.92;
+addRow(s3b, LX, DY+0*RH, 'Common stock (Acct 3010)',    '$1,010,423',  LGR, LGR, false);
+addRow(s3b, LX, DY+1*RH, 'APIC (Acct 3020)',            '$4,042',      LGR, LGR, false);
+addDiv(s3b, LX, DY+2*RH, 4.1);
+addRow(s3b, LX, DY+3*RH, 'Total paid-in capital',       '$1,014,465',  LGR, WHT, true);
+addRow(s3b, LX, DY+4*RH, 'Exos: 18.06% → $789,572',    '~78% of above', LGR, ORG, true);
+addDiv(s3b, LX, DY+5*RH, 4.1);
+addRow(s3b, LX, DY+6*RH, 'Accum. deficit (thru FY26)',  '−$2,571,013', LGR, 'FF6666', true);
+addRow(s3b, LX, DY+7*RH, "Total equity (10/2/2026)",    '−$1,403,075', LGR, 'FF6666', true);
+
+// RIGHT PANEL — debt rows
+const DBW = 3.2;
+addRow(s3b, RX, DY+0*RH, 'Loans & notes (total)',         '$1,027,783', LGR, WHT, true, DBW, 1.7);
+addDiv(s3b, RX, DY+1*RH, 4.7);
+addRow(s3b, RX, DY+2*RH, 'Due to Microcosm (Acct 2385)', '$451,429',   LGR, 'FF6666', true, DBW, 1.7);
+addRow(s3b, RX, DY+3*RH, 'Notes Payable – Bookstore',    '$320,582',   LGR, 'FF6666', true, DBW, 1.7);
+addRow(s3b, RX, DY+4*RH, 'SBA EIDL (Acct 2712)',         '$132,072',   LGR, 'FF6666', true, DBW, 1.7);
+addRow(s3b, RX, DY+5*RH, 'Wertz loan (Acct 2714)',        '$92,500',    LGR, 'FF6666', true, DBW, 1.7);
+addRow(s3b, RX, DY+6*RH, 'Exos loan (11%, Acct 2720)',   '$31,200',    LGR, ORG,     true, DBW, 1.7);
+addDiv(s3b, RX, DY+7*RH, 4.7);
+addRow(s3b, RX, DY+7*RH, 'Total liabilities (10/2)',     '$1,275,622', LGR, 'FF6666', true, DBW, 1.7);
+
+// Bottom band — Unbooked offset
+const BY = 3.985, BH = 0.82;
+s3b.addShape(pres.ShapeType.rect, { x: 0.12, y: BY, w: 9.76, h: BH, fill: { color: '1E1400' }, line: { type: 'none' } });
+s3b.addShape(pres.ShapeType.rect, { x: 0.12, y: BY, w: 0.055, h: BH, fill: { color: ORG }, line: { type: 'none' } });
+s3b.addText('UNBOOKED OFFSET  (illustrative — no written cost-sharing agreement on file)', {
+  x: 0.24, y: BY+0.04, w: 9.5, h: 0.19, fontSize: 8, bold: true, color: ORG, fontFace: 'Calibri', isTextBox: true
+});
+s3b.addText(
+  'SSLC has paid ~100% of shared Torrance facility costs: ~$354K in FY26 (rent $294K + utilities $31K + other), ~$967K est. Jan 2024–Oct 2026.  ' +
+  'At a 50% Microcosm share (illustrative) → ~$483K offsets $451K due to Microcosm = SSLC net creditor ~$32K.  ' +
+  '"$864K \'billed-ahead\' balance disputed; under review (full QuickBooks access requested)."',
+  { x: 0.24, y: BY+0.27, w: 9.5, h: 0.5, fontSize: 7.5, color: LGR, fontFace: 'Calibri', isTextBox: true }
+);
+
+// Footnote
+s3b.addText('per SSLC QuickBooks 8/21 and 10/2/2026; Microcosm offset illustrative', {
+  x: 0.25, y: BY+BH+0.025, w: 9.0, h: 0.17, fontSize: 7, italic: true, color: '888888', fontFace: 'Calibri', isTextBox: true
+});
+
+addFooterLogo(s3b);
+s3b.addNotes(
+  'Sources:\n' +
+  '  Equity: QB Balance Sheet 8/21/2026 (data-room/SSLC/2026-7_BS_8-21-26.pdf). Total paid-in $1,014,465; Exos paid $789,572 per AAA Oct 2023.\n' +
+  '  Accum. deficit −$2,571,012.99 per QB BS 8/21/2026. Total equity −$1,403,075 per Board Package 10/6/2026.\n' +
+  '  Debt: Board Package 10/6/2026 + QB BS 8/21. Total loans & notes $1,027,783 confirmed.\n' +
+  '  Facility costs: QB P&L FY26 CONFIRMED $353,978; FY27 Jul–Aug21 $32,860 (partial). 2-yr ~$967K uses FY26 monthly rate; FY25 estimated.\n' +
+  '  Microcosm offset: 50% share is MANAGEMENT ASSUMPTION — no written cost-sharing agreement found. Must verify allocation.\n' +
+  '  $864K billed-ahead balance: QB FY27 Q1 actual; nature disputed; full QB access requested.\n' +
+  '  CAUTION: Do not represent offset as a verified legal claim without a written agreement.\n' +
+  '  Source: drafts/SSLC_QB_Equity_Debt_Microcosm_Facility_2026-10-10.xlsx'
+);
+
+// ============================================================
+// SLIDE 5 (formerly 4) — WHAT SSLC HOLDERS RECEIVE AT CLOSE
 // ============================================================
 const s4 = pres.addSlide();
 darkBg(s4);
