@@ -618,6 +618,28 @@
     "quiet_errors": 0,
     "turnaround_s": 0.4
    }
+  },
+  {
+   "id": "IMP-037",
+   "agent": "com.exos.decision-docs-guard-exo3",
+   "govlog": null,
+   "cron": null,
+   "change": "9352648",
+   "hypothesis": "Open Decision cards that reference drafts/capture/data-room documents in their text always carry those documents (pinned docKeys or decision-linked uploads); recurrence of docs-in-text-but-none-attached (D-7282043 class) drops to 0. Baseline 10/10: 5 open cards (D-7282043 hand-fixed, D-7281961, D-7282027, D-7282035, D-7282039) referenced existing docs with nothing pinned.",
+   "metrics": [
+    "reliability",
+    "turnaround"
+   ],
+   "error_signature": "references document but card has no documents",
+   "at": "2026-10-10T21:04:47.828444+00:00",
+   "status": "measuring",
+   "baseline": {
+    "runs": 1,
+    "reliability": 1.0,
+    "quiet_errors": 0,
+    "turnaround_s": 0.1,
+    "sig_errors": 0
+   }
   }
  ]
 }
