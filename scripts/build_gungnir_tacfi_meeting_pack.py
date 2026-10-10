@@ -65,7 +65,7 @@ f += [P('Why It Matters to the Air Force', h1)] + L([
 f += [P('Platform Synergies the Program Leverages', h1)] + L([
      '<b>Integrated Pressurized Structures (IPS):</b> moon-proven TRL 9 Type V composite cryogenic tanks (Scorpius, Exos-affiliated) — flew as fuel and LOX tanks on Intuitive Machines <i>Odysseus</i> and <i>Athena</i>; baseline tank set for IM\'s <i>Nebula</i> orbital transfer vehicle.',
      '<b>Zero-loss cryogenic propellant transfer</b> with Princeton Cryogenics: tank-to-tank transfer planned for flight demonstration on the reusable BLK3 suborbital platform (2027) — the path to in-space refueling, depots, and reusable OTVs (Space Force servicing, mobility and logistics).',
-     '<b>Reusable launch with fewer than 3,000 parts</b>, minimal infrastructure (pad + power/comms), fast turnaround.'])
+     '<b>Reusable launch with fewer than 5,000 parts</b>, minimal infrastructure (pad + power/comms), fast turnaround.'])
 f += [P('Path to Transition — NASA Joins the Pull', h1),
      P('NASA Marshall is advancing RDRE toward flight demonstration and Exos is in active technical and business discussions with the program (meetings 30 Sep and 6 Oct 2026). '
        'Exos\'s Phase II supports a <b>sole-source SBIR Phase III</b> by any agency. With Air Force and NASA both pulling, Gungnir positions a follow-on '
