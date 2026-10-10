@@ -91,8 +91,10 @@ bullet("At close: $4.36M in cash, transaction costs, credit for Exos's existing 
        "The EAI units are restricted at issuance (Rule 504 Reg D) and are structured to provide "
        "part of the public float, becoming freely tradeable at the RTO listing.")
 
-bullet("Over five years: earn-outs on IM tank revenue, five milestones (the first at $5.1M of "
-       "FY2026-27 revenue), and additional Exos stock, bringing total value to $6.3M–$9.5M.")
+bullet("Over five years: earn-outs on IM tank revenue, five milestones (M1: $5.1M FY27 revenue; "
+       "M2: Nebula OTV flight tank set delivered and accepted by Intuitive Machines; M5: 50% "
+       "reduction in tank build cost via dome and build-process automation), and additional Exos "
+       "stock, bringing total value to $6.3M–$9.5M.")
 
 bullet("Upside: if holders keep their Exos stock through 2031, the projected total is $12M–$19M. "
        "This is a projection, not a guarantee.")
@@ -112,7 +114,8 @@ P("SSLC employees. Jim, to your question: Exos shall offer employment to SSLC em
   "SSLC employees, to be mutually agreed in the Definitive Agreement.",
   size=10.5, sa=6)
 
-P("We ask the Board to confirm §3 exclusivity so we can proceed to close.", size=10.5, sa=8)
+P("We ask the Board to confirm §3 exclusivity so we can proceed to close. Confirming exclusivity "
+  "starts the 90-day window; our target for financing close is February 15th.", size=10.5, sa=8)
 
 # ── Signature ─────────────────────────────────────────────────────────────────
 P("John M. Quinn", bold=True, size=10.5, sa=1)

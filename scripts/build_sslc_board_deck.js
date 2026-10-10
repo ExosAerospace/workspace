@@ -3,7 +3,7 @@ const pptxgen = require('pptxgenjs');
 const path = require('path');
 const { applyTheme } = require('/Users/exomac/.claude/skills/synced/e8583422-24a3-4d46-9183-3cf04d4ad99e_76085f6a-8320-4035-ad98-42f52f43a083/pptx/scripts/apply_theme.js');
 
-const OUT = path.resolve(__dirname, '../drafts/Exos_SSLC_Board_Offer_Overview_2026-10-10.pptx');
+const OUT = path.resolve(__dirname, '../drafts/Exos_SSLC_Board_Offer_Overview_2026-10-10_r2.pptx');
 const ASSETS = path.resolve(__dirname, '../drafts');
 
 // Brand constants
@@ -100,12 +100,16 @@ s2.addText('The Decision', {
   fontSize: 13, bold: true, color: ORG, fontFace: 'Calibri', isTextBox: true
 });
 s2.addText('The Board is asked to confirm §3 exclusivity under the May 2025 Asset Acquisition Agreement.', {
-  x: 0.5, y: 1.05, w: 9.0, h: 1.8,
+  x: 0.5, y: 0.95, w: 9.0, h: 1.8,
   fontSize: 34, bold: true, color: WHT, fontFace: 'Cambria',
   align: 'left', valign: 'top', isTextBox: true
 });
+s2.addText('That\'s why Exos has stayed committed to funding this acquisition: fair value for SSLC holders, stability for SSLC\'s team, and real growth for investors. Together we\'re stronger than apart.', {
+  x: 0.5, y: 2.88, w: 9.0, h: 0.30,
+  fontSize: 12, color: LGR, italic: true, align: 'left', valign: 'middle', isTextBox: true
+});
 // Details box
-s2.addShape(pres.ShapeType.rect, { x: 0.5, y: 3.1, w: 9.0, h: 1.8, fill: { color: '1E1E1E' }, line: { color: '333333', pt: 1 } });
+s2.addShape(pres.ShapeType.rect, { x: 0.5, y: 3.22, w: 9.0, h: 1.55, fill: { color: '1E1E1E' }, line: { color: '333333', pt: 1 } });
 s2.addText([
   { text: 'Exclusivity period: ', options: { bold: true, color: ORG } },
   { text: '90 days from board confirmation; extension not unreasonably withheld (§3)\n', options: { color: LGR } },
@@ -114,7 +118,7 @@ s2.addText([
   { text: 'Agreement basis: ', options: { bold: true, color: ORG } },
   { text: 'May 2025 Asset Acquisition Agreement — §3 exclusivity trigger', options: { color: LGR } },
 ], {
-  x: 0.7, y: 3.2, w: 8.6, h: 1.6,
+  x: 0.7, y: 3.28, w: 8.6, h: 1.42,
   fontSize: 14, isTextBox: true, valign: 'top'
 });
 addFooterLogo(s2);
@@ -155,7 +159,7 @@ stats.forEach((s, i) => {
 });
 
 s3.addShape(pres.ShapeType.rect, { x: 0.5, y: 3.65, w: 9.0, h: 1.15, fill: { color: '1A1200' }, line: { color: ORG, pt: 1 } });
-s3.addText('A $5.1M fiscal year requires approximately $1.46M per quarter — nearly double last quarter\'s pace of $713K — starting now. Exos\'s offer removes that funding risk and gives SSLC holders direct upside.', {
+s3.addText('A $5.1M fiscal year requires approximately $1.46M per quarter — nearly double last quarter\'s pace of $713K — starting Oct 1st. Exos\'s offer removes the funding risk, solves the physical-space and single-winder constraints (with capital in the new year), and gives SSLC holders direct upside.', {
   x: 0.7, y: 3.75, w: 8.6, h: 0.95,
   fontSize: 13, color: LGR, italic: true, align: 'left', valign: 'middle', isTextBox: true
 });
@@ -192,7 +196,7 @@ wfItems.forEach((item) => {
 });
 // Subtotal ①
 s4.addShape(pres.ShapeType.rect, { x: 0.8, y: yPos + 0.04, w: 6.6, h: 0.52, fill: { color: '2A1800' }, line: { color: ORG, pt: 1.5 } });
-s4.addText('① Cash & debt relief at close', { x: 0.95, y: yPos + 0.1, w: 4.2, h: 0.4, fontSize: 15, bold: true, color: ORG, valign: 'middle', isTextBox: true });
+s4.addText('① Cash & debt relief at close — target by Feb 15th', { x: 0.95, y: yPos + 0.1, w: 4.2, h: 0.4, fontSize: 13, bold: true, color: ORG, valign: 'middle', isTextBox: true });
 s4.addText('$4.36M', { x: 5.9, y: yPos + 0.1, w: 1.3, h: 0.4, fontSize: 18, bold: true, color: ORG, align: 'right', valign: 'middle', isTextBox: true });
 yPos += 0.62;
 
@@ -204,7 +208,7 @@ yPos += 0.52;
 
 // Total ②
 s4.addShape(pres.ShapeType.rect, { x: 0.8, y: yPos, w: 6.6, h: 0.58, fill: { color: '0A2800' }, line: { color: '2ECC71', pt: 2 } });
-s4.addText('② Total at financing close', { x: 0.95, y: yPos + 0.09, w: 4.2, h: 0.4, fontSize: 16, bold: true, color: GRN, valign: 'middle', isTextBox: true });
+s4.addText('② Total at financing close (SSLC asset acquisition)', { x: 0.95, y: yPos + 0.09, w: 4.8, h: 0.4, fontSize: 13, bold: true, color: GRN, valign: 'middle', isTextBox: true });
 s4.addText('$5.36M', { x: 5.8, y: yPos + 0.09, w: 1.4, h: 0.4, fontSize: 20, bold: true, color: GRN, align: 'right', valign: 'middle', isTextBox: true });
 
 // Right-side note
@@ -220,7 +224,7 @@ s4.addNotes('All three scenarios (Low/Base/High) have identical at-close values:
 // ============================================================
 const s5 = pres.addSlide();
 darkBg(s5);
-s5.addText('How Value Grows: Earn-Out Targets FY27–FY31', {
+s5.addText('How Value Grows: Earn-Outs & Milestones', {
   x: 0.35, y: 0.14, w: 9.3, h: 0.46,
   fontSize: 20, bold: true, color: WHT, fontFace: 'Cambria', isTextBox: true
 });
@@ -249,8 +253,8 @@ const t5Rows = [
   { label: 'M1  SSLC FY27 rev ≥$5.1M  →$200K', target: 'Annual rev ≥$5.1M in FY27',
     low: '✓', base: '✓', high: '✓', pays: 'FY28 Q1',
     rowH: 0.40, bg: '1A2035', isTotal: false, isTank: false },
-  { label: 'M2  Nebula/OTV production contract  →$200K', target: 'OTV production contract signed',
-    low: '—', base: '✓', high: '✓', pays: 'At signing',
+  { label: 'M2  Nebula OTV flight tank set delivered & accepted by IM  →$200K', target: 'Tank set delivered and accepted by Intuitive Machines',
+    low: '—', base: '✓', high: '✓', pays: 'At acceptance',
     rowH: 0.40, bg: '1C1C1C', isTotal: false, isTank: false },
   { label: 'M3  SSLC annual rev ≥$10M  →$250K', target: 'Annual rev ≥$10M',
     low: '—', base: '✓', high: '✓', pays: 'Est. FY29',
@@ -258,9 +262,9 @@ const t5Rows = [
   { label: 'M4  SSLC annual rev ≥$20M  →$250K', target: 'Annual rev ≥$20M',
     low: '—', base: '—', high: '✓', pays: 'Est. FY31',
     rowH: 0.40, bg: '1C1C1C', isTotal: false, isTank: false },
-  { label: 'M5  BLK3 tank qualification  →$200K', target: 'Exos BLK3 tank cert complete',
+  { label: 'M5  50% reduction in tank build cost\n(dome & build-process automation proven)  →$200K (High)', target: '50% cost reduction proven\n(dome & process automation)',
     low: '—', base: '—', high: '✓', pays: 'Est. FY27–28',
-    rowH: 0.40, bg: '1A2035', isTotal: false, isTank: false },
+    rowH: 0.50, bg: '1A2035', isTotal: false, isTank: false },
   { label: 'Exos stock earn-out at RTO listing\n(adds to ~0.59% EAI up-front)',
     target: 'Issued at RTO listing',
     low: '$0\n(0.0%)', base: '$625K\n(0.25%)', high: '$1,500K\n(0.50%)', pays: 'Post-RTO\n~FY29',
@@ -295,7 +299,7 @@ t5Rows.forEach((row) => {
 });
 
 addFooterLogo(s5);
-s5.addNotes('Tank earn-out: single 5% rate applied to the revenue SSLC achieves each year FY27–FY31, capped at $300K/yr. Scenario = the annual IM tank revenue level: Low $3.0M/yr → $150K/yr → $750K total; Base $5.0M/yr → $250K/yr → $1.25M; High $6.0M+/yr → $300K/yr (cap) → $1.5M. M1 (L/B/H): FY27 rev ≥$5.1M → $200K, pays FY28 Q1. M2 (B/H): OTV contract → $200K. M3 (B/H): rev ≥$10M → $250K. M4 (H): rev ≥$20M → $250K. M5 (H): BLK3 qual → $200K. Stock (0/0.25/0.50%): $0/$625K/$1,500K at RTO listing. Total earn-outs: Low $950K / Base $2,525K / High $4,100K. Each equals ③ minus ②.');
+s5.addNotes('Tank earn-out: single 5% rate applied to the revenue SSLC achieves each year FY27–FY31, capped at $300K/yr. Low $3.0M/yr → $150K/yr → $750K total; Base $5.0M/yr → $250K/yr → $1.25M; High $6.0M+/yr → $300K/yr (cap) → $1.5M. M1 (all scenarios): FY27 rev ≥$5.1M → $200K, pays FY28 Q1. M2 (Base/High): Nebula OTV flight tank set delivered and accepted by Intuitive Machines → $200K, pays at acceptance. M3 (Base/High): rev ≥$10M → $250K. M4 (High): rev ≥$20M → $250K. M5 (High): 50% reduction in tank build cost via dome automation and build-process automation proven → $200K. Stock earn-out: 0.0%/0.25%/0.50% additional EAI units issued at RTO listing, with the same post-listing lockup as Exos principals. $0/$625K/$1,500K at 409A listing value. Total earn-outs: Low $950K / Base $2,525K / High $4,100K (each = ③ minus ②).');
 
 // ============================================================
 // SLIDE 6 — TOTAL VALUE
@@ -412,7 +416,7 @@ s8.addText('Exos shall offer employment to SSLC employees — including manageme
 
 s8.addShape(pres.ShapeType.rect, { x: 5.1, y: 1.1, w: 4.5, h: 3.0, fill: { color: '1C1C1C' }, line: { color: '333333', pt: 1 } });
 s8.addText('Key-Employee Option Pool', { x: 5.25, y: 1.18, w: 4.2, h: 0.4, fontSize: 16, bold: true, color: ORG, isTextBox: true });
-s8.addText('Exos will establish an option pool for key SSLC employees. The size and structure will be mutually agreed in the Definitive Agreement.\n\nDesigned to retain the talent that drives SSLC\'s mission continuity and milestones — including the programs that underpin the earn-out triggers.', {
+s8.addText('Exos has an option pool for key employees. The allocation, key-employee retention and new-hire structure will be mutually agreed post-acquisition.', {
   x: 5.25, y: 1.62, w: 4.2, h: 2.35,
   fontSize: 13, color: LGR, isTextBox: true, valign: 'top'
 });
@@ -420,47 +424,84 @@ addFooterLogo(s8);
 s8.addNotes('This language is verbatim from the offer email (Exos_SSLC_Offer_Briefing_Email_DRAFT_2026-10-09.docx) and the Key Terms section of the offer summary PDF. The exact terms — option pool size, vesting schedule — will be negotiated in the Definitive Agreement. IM program continuity: Exos-SSLC continues the Intuitive Machines contract with no delivery interruption.');
 
 // ============================================================
-// SLIDE 9 — NEXT STEPS
+// SLIDE 9 — EXOS FUNDING COMMITMENTS
 // ============================================================
 const s9 = pres.addSlide();
 darkBg(s9);
-s9.addImage({ path: HERO_BG, x: 0, y: 0, w: 10, h: 5.625, transparency: 45 });
-s9.addText('Path to Close', {
+s9.addText('Exos Funding Commitments', {
   x: 0.5, y: 0.3, w: 9.0, h: 0.52,
   fontSize: 22, bold: true, color: WHT, fontFace: 'Cambria', isTextBox: true
 });
 s9.addShape(pres.ShapeType.rect, { x: 0.5, y: 0.84, w: 1.5, h: 0.04, fill: { color: ORG }, line: { type: 'none' } });
 
+const commitments = [
+  { item: '$2.51M cash',                             timing: 'at financing close (target Feb 15th)' },
+  { item: 'SSLC transaction costs',                  timing: 'at financing close (target Feb 15th)' },
+  { item: 'SSLC debts paid at face (~$500K, to verify)', timing: 'at financing close (target Feb 15th)' },
+  { item: 'Working-capital bridge $500K',            timing: 'at financing close (target Feb 15th)' },
+  { item: '$1.0M Exos stock (EAI units, Rule 504)',  timing: 'at financing close (target Feb 15th)' },
+  { item: 'Capital in the new year — physical space and a second winder', timing: '(amount TBD; committed at financing close)' },
+  { item: 'Employment offers + option pool',         timing: 'at financing close (target Feb 15th)' },
+  { item: 'Earn-outs on milestones and tank revenue', timing: 'FY27–FY31 as triggered' },
+];
+
+const cmtY0 = 1.0;
+const cmtH  = 0.42;
+commitments.forEach((c, i) => {
+  const y = cmtY0 + i * cmtH;
+  const bg = i % 2 === 0 ? '1C1C1C' : '212121';
+  s9.addShape(pres.ShapeType.rect, { x: 0.45, y, w: 9.1, h: cmtH - 0.02, fill: { color: bg }, line: { color: '2A2A2A', pt: 1 } });
+  s9.addText(c.item, { x: 0.6, y: y + 0.04, w: 5.8, h: cmtH - 0.1, fontSize: 12, bold: true, color: WHT, valign: 'middle', isTextBox: true });
+  s9.addText(c.timing, { x: 6.55, y: y + 0.04, w: 2.85, h: cmtH - 0.1, fontSize: 10, color: GRY, align: 'right', valign: 'middle', isTextBox: true });
+});
+
+// Close call-to-action
+const ctaY = cmtY0 + commitments.length * cmtH + 0.1;
+s9.addShape(pres.ShapeType.rect, { x: 0.4, y: ctaY, w: 9.2, h: 0.65, fill: { color: '2A1000' }, line: { color: ORG, pt: 2 } });
+s9.addText('One decision today: confirm §3 exclusivity  →  90 days  →  financing close target Feb 15th', {
+  x: 0.55, y: ctaY + 0.07, w: 9.0, h: 0.5,
+  fontSize: 15, bold: true, color: ORG, align: 'center', valign: 'middle', isTextBox: true
+});
+addFooterLogo(s9);
+s9.addNotes('This slide summarizes every dollar and commitment Exos is making to close this transaction. Funding is committed at financing close — we are not representing that financing is already secured, but we are committed to delivering it. The Feb 15th target drives our 90-day exclusivity window. Capital for physical space and a second winder is committed at financing close; the amount will be agreed in the Definitive Agreement. The one action today is confirming §3 exclusivity, which starts the clock.');
+
+// ============================================================
+// SLIDE 10 — NEXT STEPS
+// ============================================================
+const s10 = pres.addSlide();
+darkBg(s10);
+s10.addImage({ path: HERO_BG, x: 0, y: 0, w: 10, h: 5.625, transparency: 45 });
+s10.addText('Path to Close', {
+  x: 0.5, y: 0.3, w: 9.0, h: 0.52,
+  fontSize: 22, bold: true, color: WHT, fontFace: 'Cambria', isTextBox: true
+});
+s10.addShape(pres.ShapeType.rect, { x: 0.5, y: 0.84, w: 1.5, h: 0.04, fill: { color: ORG }, line: { type: 'none' } });
+
 const steps = [
   { num: '1', title: 'Board Confirms Exclusivity', sub: 'Today — action requested at this meeting' },
   { num: '2', title: '90-Day Exclusivity Window', sub: 'Negotiation and diligence period begins' },
   { num: '3', title: 'Definitive Agreement', sub: 'Key terms, employee pool, earn-out detail finalized' },
-  { num: '4', title: 'Financing Close', sub: 'Cash at close + EAI units issued; ① + stock = ②' },
+  { num: '4', title: 'Financing Close — target Feb 15th', sub: 'Cash at close + EAI units issued; ① + stock = ②' },
   { num: '5', title: 'Targeted RTO', sub: '~6 months post-financing; units tradeable at listing (not assured)' },
 ];
 
 steps.forEach((step, i) => {
   const y = 1.0 + i * 0.76;
-  // Connector line (except last)
   if (i < steps.length - 1) {
-    s9.addShape(pres.ShapeType.line, { x: 1.12, y: y + 0.56, w: 0, h: 0.22, line: { color: ORG, pt: 1.5 } });
+    s10.addShape(pres.ShapeType.line, { x: 1.12, y: y + 0.56, w: 0, h: 0.22, line: { color: ORG, pt: 1.5 } });
   }
-  // Circle
-  s9.addShape(pres.ShapeType.ellipse, { x: 0.6, y, w: 0.56, h: 0.56, fill: { color: i === 0 ? ORG : '2A2A2A' }, line: { color: ORG, pt: 1.5 } });
-  s9.addText(step.num, { x: 0.6, y: y + 0.07, w: 0.56, h: 0.42, fontSize: 15, bold: true, color: i === 0 ? BLK : ORG, align: 'center', isTextBox: true });
-  // Title
-  s9.addText(step.title, { x: 1.35, y: y + 0.02, w: 7.5, h: 0.3, fontSize: 14, bold: true, color: WHT, isTextBox: true });
-  // Sub
-  s9.addText(step.sub, { x: 1.35, y: y + 0.31, w: 7.5, h: 0.26, fontSize: 11, color: GRY, isTextBox: true });
+  s10.addShape(pres.ShapeType.ellipse, { x: 0.6, y, w: 0.56, h: 0.56, fill: { color: i === 0 ? ORG : '2A2A2A' }, line: { color: ORG, pt: 1.5 } });
+  s10.addText(step.num, { x: 0.6, y: y + 0.07, w: 0.56, h: 0.42, fontSize: 15, bold: true, color: i === 0 ? BLK : ORG, align: 'center', isTextBox: true });
+  s10.addText(step.title, { x: 1.35, y: y + 0.02, w: 7.5, h: 0.3, fontSize: 14, bold: true, color: WHT, isTextBox: true });
+  s10.addText(step.sub, { x: 1.35, y: y + 0.31, w: 7.5, h: 0.26, fontSize: 11, color: GRY, isTextBox: true });
 });
 
-// Ask
-s9.addShape(pres.ShapeType.rect, { x: 0.4, y: 4.82, w: 9.2, h: 0.44, fill: { color: '2A1000' }, line: { color: ORG, pt: 1.5 } });
-s9.addText('The Board is asked to confirm §3 exclusivity. Questions and open items welcome.', {
+s10.addShape(pres.ShapeType.rect, { x: 0.4, y: 4.82, w: 9.2, h: 0.44, fill: { color: '2A1000' }, line: { color: ORG, pt: 1.5 } });
+s10.addText('The Board is asked to confirm §3 exclusivity. Questions and open items welcome.', {
   x: 0.55, y: 4.86, w: 9.0, h: 0.36,
   fontSize: 13, bold: true, color: ORG, align: 'center', valign: 'middle', isTextBox: true
 });
-s9.addNotes('The one action needed today is board confirmation of §3 exclusivity in the May 2025 Asset Acquisition Agreement. Once confirmed, the 90-day exclusivity period begins and both teams can proceed to diligence and the definitive agreement. The financing close triggers ② ($5.36M). The RTO is targeted ~6 months post-financing close but is not assured. All earn-out and milestone payments are independent and verifiable.');
+s10.addNotes('The one action needed today is board confirmation of §3 exclusivity in the May 2025 Asset Acquisition Agreement. Once confirmed, the 90-day exclusivity period begins and both teams can proceed to diligence and the definitive agreement. Financing close target: Feb 15th. The financing close triggers ② ($5.36M). The RTO is targeted ~6 months post-financing close but is not assured. All earn-out and milestone payments are independent and verifiable.');
 
 // ============================================================
 // WRITE FILE
