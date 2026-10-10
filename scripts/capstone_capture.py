@@ -78,7 +78,11 @@ def fmt_eta(dt):
 
 
 def parse_ts(s):
-    return datetime.fromisoformat(s.replace("Z", "+00:00"))
+    # py3.9 fromisoformat only takes 3 or 6 fractional digits; Supabase/PostgREST
+    # trims trailing zeros (e.g. ".91331"), so pad/truncate the fraction to 6.
+    s = s.replace("Z", "+00:00")
+    s = re.sub(r"\.(\d+)", lambda m: "." + (m.group(1) + "000000")[:6], s, count=1)
+    return datetime.fromisoformat(s)
 
 
 def log(m):
@@ -113,7 +117,7 @@ def reply(tid, msg):
 
 def fmt_due(d):
     try:
-        return datetime.fromisoformat(d.replace("Z", "+00:00")).strftime("%a %-m/%-d")
+        return parse_ts(d).strftime("%a %-m/%-d")
     except Exception:
         return ""
 
