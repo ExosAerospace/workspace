@@ -7,7 +7,7 @@ import json, sys
 from docx import Document
 from docx.shared import Pt
 
-OUT = "drafts/Exos_BLK3_VehicleSales_exo3_Program_2026-10-10.docx"
+OUT = "drafts/Exos_BLK3_VehicleSales_exo3_Program_v2_2026-10-10.docx"
 targets = json.load(open(sys.argv[1])) if len(sys.argv) > 1 else []
 
 d = Document()
@@ -24,8 +24,8 @@ def table(head, rows):
         for i, v in enumerate(r): c[i].text = str(v)
     return t
 
-d.add_heading("BLK3 Vehicle Sales-exo3: Research Program & Agent Design", 0)
-P("Exos Aerospace Systems & Technologies, Inc. · Internal · Draft for CEO review · 2026-10-10 · Prepared by Exo for John Quinn, Cofounder & CEO")
+d.add_heading("BLK3 Vehicle Sales-exo3: Research Program & Agent Design (v2)", 0)
+P("Exos Aerospace Systems & Technologies, Inc. · Internal · Draft for CEO review · 2026-10-10 · Prepared by Exo for John Quinn, Cofounder & CEO · v2 adds the recovery-system scope, a 14-day launch plan, daily outreach cadence, 50 targets with due diligence and contacts, per-company pitch decks, and the MTP / Ainigma story tie-in (Jon, 10/10)")
 
 H("1. The thesis")
 P("Many launch startups have raised private capital and government awards to build a rocket but have not delivered a flying vehicle. "
@@ -37,7 +37,13 @@ P("What we can honestly say today: BLK3 is FAA-licensed (14 CFR §431, renewed M
   "$1M per flight ($7,500/kg × 135 kg). BLK3 has fewer than 5,000 components (BLK3 BOM, 8/21/2026). Every sale is gated on BLK3's "
   "own flights: we sell delivery after demonstrated flight, never a flown record we don't have.")
 
-H("2. Offer structures to test")
+H("2. Two scopes, one relationship")
+P("Scope 1, VEHICLE: sell, white-label, lease or license BLK3 plus access to Exos's payload market, for companies that raised money for a rocket and haven't flown. "
+  "Scope 2, RECOVERY: Exos's recovery system for every orbital launch company building a vehicle today. There is no reason to lose a vehicle on your first three or four "
+  "tests before you have proven you can reach orbit. Recovering test articles preserves hardware, data and schedule, and it is the low-friction entry into a relationship "
+  "that can grow into BLK3 test flights and vehicle purchases. Recovery is pitched at capability level (drogue/ballute plus guided parafoil with GPS tracking, developed for "
+  "Exos's reusable SARGE/BLK3 vehicles); integration on another company's vehicle starts with a paid integration study. Confirm with Jon which recovery elements are flight-proven before any external claim.")
+H("3. Offer structures to test")
 table(["Structure", "What the buyer gets", "Why it works", "Main risk"], [
     ["A. Vehicle sale (US buyers)", "A BLK3 built to order, training, spares", "Fastest path to their own flights", "Buyer becomes a competitor; FAA license is theirs to obtain"],
     ["B. White-label / co-brand", "BLK3 flown in their livery under Exos's license and ops", "Milestone for their investors without a license gap", "Brand/IP terms; flight ops capacity"],
@@ -48,7 +54,7 @@ table(["Structure", "What the buyer gets", "Why it works", "Main risk"], [
 P("Foreign buyers: default to Structure C (wet lease, Exos keeps custody and flight ops), as in the NCE program, because a complete rocket "
   "system export faces ITAR/MTCR presumption-of-denial. Every foreign lead goes through export review before any technical exchange.")
 
-H("3. Research program (workstreams)")
+H("4. Research program (workstreams)")
 ws = [
     ("W1 Market map", "Who raised money for a launch vehicle and hasn't flown? Funding, gov awards, slip history, people.",
      "Company releases, SEC Form D, SBIR.gov/USAspending, SAM.gov, SpaceNews/Payload/TechCrunch (2023+)", "Scored target list (fit 1–5) in CRM, tag vehicle-sales-target"),
@@ -67,7 +73,7 @@ ws = [
 ]
 table(["Workstream", "Key questions", "Sources", "Output"], ws)
 
-H("4. The agent: VehicleSales-exo3")
+H("5. The agent: VehicleSales-exo3")
 P("A SENSE + INTERPRET agent. It finds and scores targets and prepares the outreach; it never sends, prices or commits. "
   "Every outreach, price or term goes to Jon as a Decision card.")
 spec = [
@@ -80,28 +86,42 @@ spec = [
     ["Escalation", "Decision card per outreach (\"Contact <company> about Structure X?\"); export flag → Empowered Official (John Quinn) / Denise Shirey"],
     ["Eval suite (output, not liveness)", "100% of claims in a target record carry a source URL; ≤10% of surfaced targets rejected by Jon as wrong-fit (rolling 30 days); no duplicate company records; weekly run completes"],
     ["Telemetry", "fleet_log correlation IDs → logs/fleet-events.jsonl; decision traces → logs/decision-traces.jsonl; log logs/vehiclesales-exo3.log"],
-    ["Cadence", "Weekly full sweep (Mon) + daily signal scan (news / SAM.gov / award changes)"],
+    ["Cadence", "Daily: prepare the next company's touch (dossier refresh + email draft + pitch deck) as a Decision card for Jon, one company per day until the full list is covered; daily signal scan (news / SAM.gov / award changes) re-ranks the queue; weekly re-check of funds availability"],
     ["Rollback", "Disable launchd job; CRM records tagged so they can be bulk-removed"],
 ]
 table(["Property", "Specification"], spec)
 P("Guardrails baked into the agent prompt: BLK3 not yet flown (early 2027); no free flights; no claims without a source; no ROFR; "
   "Exos is not a propulsion provider; foreign targets default to wet lease and are flagged for export review.")
 
-H("5. 30 / 60 / 90 days")
-B("Days 1–30: W1 market map complete and loaded into CRM; W4 export/FAA rules drafted with counsel and the export reviewer (Denise Shirey); agent runs in shadow mode (reports only).")
-B("Days 31–60: W2 value cases for the top 10; W3 term-sheet templates for A–C; first 5 outreach Decisions to Jon.")
-B("Days 61–90: first discovery calls; W5 build-slot schedule tied to BLK3's early-2027 flights; go/no-go on Structure D/E with the roll-up path.")
-P("Success metrics: 10 qualified conversations, 3 term-sheet discussions, 1 signed LOI contingent on BLK3 flight by end of Q1 2027.")
+H("6. 14-day launch plan (credible targets by day 14 at the latest)")
+table(["Days", "Deliverable"], [
+    ["1–3 (Oct 10–13)", "50 targets: 35 deepened + ~20 recovery-scope orbital developers; full due diligence, funds-availability check and decision-maker contacts for each; loaded to CRM as high priority"],
+    ["3–5", "Per-company PowerPoint pitch generator live; first 5 decks built and reviewed; MTP and Ainigma-story slides locked"],
+    ["5–7", "Export screen on every foreign target (Empowered Official John Quinn with ITAR reviewer Denise Shirey); jurisdiction-ruling (CJ) request scoped for BLK3; FAA license-path note"],
+    ["7–10", "Offer one-pagers for Scope 1 (sale / white-label / wet lease) and Scope 2 (recovery integration study); pricing ranges for Jon's approval"],
+    ["10–14", "Daily outreach starts: one company per day, priority A first, each as a ready-to-send Decision card (email + deck + dossier)"],
+])
+P("Outreach cadence: one company touched per day until all 50 are covered (about 10 weeks), then nurture follow-ups. Each touch is drafted by the agent and sent only after Jon approves the Decision card.")
+P("Success metrics (first 90 days of outreach): 50/50 touched; 15 discovery calls; 5 recovery integration studies or LOIs; 1 vehicle LOI contingent on BLK3's early-2027 flights.")
+
+H("7. MTP and Ainigma story")
+B("MTP \"Make Every Space Vehicle Reusable\": the recovery scope is the MTP in its simplest form, applied to other people's rockets. Every pitch deck carries an MTP slide.")
+B("Ainigma / RTO story: the program shows a repeatable commercial engine beyond Exos's own flights (recovery systems, vehicle sales, white-label flights) across a sourced pipeline of 50 funded launch developers. It also surfaces distressed developers as roll-up candidates for the stock-currency acquisition path. Counts and stages from this pipeline feed the RTO narrative only once they are real (Decision-approved touches, calls, LOIs).")
+
+H("8. Priority in CRM and Mission Control")
+P("Jon's direction: these contacts carry the highest value per contact with nurturing. Every target is loaded to the CRM with tag vehicle-sales-target, scope tag (vehicle / recovery / both), priority A/B/C from fit and funds availability, and is_high_priority = true for A and B. Mission Control's MC task #3684 tracks the program; the outreach queue is ordered A → B → C, and within a tier by funds availability (strong first), so money is there to buy.")
 
 if targets:
-    H("6. First target list (from today's research)")
-    table(["Company", "Country", "Status", "Funding", "Why BLK3 helps", "Fit", "Source"],
-          [[t.get(k, "") for k in ("company", "country", "status", "funding", "why", "fit", "source")] for t in targets])
+    H("9. Target list")
+    cols = ("company", "country", "scope", "vehicle_and_status", "funds_availability", "decision_maker", "priority")
+    table(["Company", "Country", "Scope", "Vehicle / status", "Funds", "Decision maker", "Pri"],
+          [[str(t.get(k, ""))[:180] for k in cols] for t in targets])
 
-H("7. Decisions for Jon")
+H("10. Decisions for Jon")
 B("Approve the research program and the five offer structures to test (or strike some).")
 B("Approve VehicleSales-exo3 to run in shadow mode (research + drafts only) with you as owner.")
 B("Foreign targets: in scope via wet lease only, or US-only for now?")
 B("Who owns the conversations once a target is qualified: you, or a named BD lead?")
+B("Confirm which recovery-system elements are flight-proven (for the recovery pitch claims).")
 
 d.save(OUT); print(OUT)
