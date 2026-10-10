@@ -26,7 +26,7 @@ SCAN_GLOBS = [
     "data-room/**/*.docx",
     "drafts/Exos_Strategic_Capital_Deck_2026-08-13.pptx",
 ]
-EXCLUDE_DIRS = ("_ARCHIVE_Superseded", "Leonid_TACFI_Match")  # Leonid REJECTED 8/2 — not a live counterparty
+EXCLUDE_DIRS = ("_ARCHIVE_Superseded", "Leonid_TACFI_Match", "_RELATED_NotRoomFiles")  # NotRoomFiles: kept out of the room per DATA_ROOM_MANIFEST  # Leonid REJECTED 8/2 — not a live counterparty
 
 # ── Rules. severity: BLOCK = cannot ship red; WARN = fix but not fatal. ──
 # Each: (label, regex, severity, allow-rx [context that CLEARS it], require-rx [ctx that must ALSO be present to fire])
@@ -40,11 +40,18 @@ BANNED = [
     ("2-day / 48-hr turnaround as demonstrated (only PROPOSED under KARMEN)", rx(r"(2[-\s]?day|two[-\s]?day|48[-\s]?hour).{0,30}(turn[-\s]?around|turn)"), "BLOCK", rx(r"propos|karmen|target|design|goal|not\s+demonstrat"), None),
     ("'flying commercially' / 'currently flying' (BLK3 not yet flown)", rx(r"flying\s+commercial|currently\s+flying|now\s+flying|already\s+flying"), "BLOCK", None, None),
     ("absolute 'world's first' / 'only operational|reusable'", rx(r"world'?s\s+first|only\s+operational|only\s+reusable|first\s+commercial\s+reusable"), "WARN", rx(r"one\s+of\s+(only\s+)?three|none\s+we'?re\s+aware"), None),
-    ("raise range $40–50M (superseded by $10M first close → $25M)", rx(r"\$?\s*40\s*[-–]\s*50\s*M"), "BLOCK", None, None),
-    ("$40M/$50M in a RAISE context (raise of record is $10M→$25M)", rx(r"\$?\s*[45]0\s*M(?:illion)?\b"), "BLOCK", rx(r"note|pilot\s+fund|consortium|test\s+vehicle|\bIP\b|authority|competitor|per\s+flight"), RAISE_CTX),
+    ("raise range $40–50M (superseded; raise of record = a $10M Series A, Jon 2026-10-10)", rx(r"\$?\s*40\s*[-–]\s*50\s*M"), "BLOCK", None, None),
+    # ── Jon 2026-10-10 CURRENT STRATEGY (see FIGURES_OF_RECORD.md) ──
+    ("tranched / 'up to $25M' / '$25M Series A' / 'first close' (raise of record = a $10M Series A, Jon 10/10)", rx(r"tranch|up\s+to\s+\$?\s*25\s*M|\$?\s*25\s*M(?:illion)?\s+series\s+a|first\s+close|\$10M\s*(?:→|->)\s*\$25M"), "BLOCK", None, None),
+    ("ROFR / 'right of first refusal' / 2021-basis option wording (say 'complete our acquisition of Scorpius', Jon 10/10)", rx(r"\bROFR\b|right\s+of\s+first\s+refusal|frozen\s+2021|2021\s+(?:valuation\s+)?basis"), "BLOCK", None, None),
+    ("IM 'Nebula' named as the OTV tank customer (cite 'first tank sale for an orbital transfer vehicle', unnamed, Jon 10/10)", rx(r"\bnebula\b"), "BLOCK", None, None),
+    ("RTO / reverse takeover in an investor-facing doc (internal only, Jon 10/10)", rx(r"reverse[\s-]+takeover|\bRTO\b|\$\s*215\s*M"), "BLOCK", None, None),
+    ("BLK4 tied to the raise / use of funds (BLK4 = future, gated orbital path only, Jon 10/10)", rx(r"\bBLK[\s-]?4\b"), "WARN", rx(r"future|gated|not\s+funded"), RAISE_CTX),
+    ("$40M/$50M in a RAISE context (raise of record is a $10M Series A)", rx(r"\$?\s*[45]0\s*M(?:illion)?\b"), "BLOCK", rx(r"note|pilot\s+fund|consortium|test\s+vehicle|\bIP\b|authority|competitor|per\s+flight"), RAISE_CTX),
     ("valuation drift (only $169.7M shows; $252M/$137.8M live behind recon tab)", rx(r"\$?\s*252\s*M|\$?\s*137\.8\s*M"), "WARN", rx(r"reconcil|dcf|behind\s+the\s+tab"), None),
     ("dead/removed entities in a live doc (Jaguar / Aaron Schwartzbart / Leonid)", rx(r"\bjaguar\b|aaron\s+schwartzbart|\bleonid\b"), "WARN", None, None),
 ]
+SERIESA_ONLY = {b[0] for b in BANNED if "Jon 10/10" in b[0]}
 # Governance gates (C1–C4) — presence signals somewhere in the active set.
 GOV_GATES = {
     "C3_fairness_opinion (Eqvista engaged)": rx(r"eqvista|fairness\s+opinion"),
@@ -105,6 +112,8 @@ def main():
         # quote superseded figures); they're still scanned for staleness + gates above/below.
         if rp not in SKIP_CLAIMS and "MANIFEST" not in os.path.basename(rp).upper():
             for label, pat, sev, allow, require in BANNED:
+                if label in SERIESA_ONLY and not rp.startswith("data-room/Exos_SeriesA/"):
+                    continue  # 10/10 pitch rules apply to the Series A investor set, not corporate records/contracts
                 for m in pat.finditer(text):
                     s, e = max(0, m.start()-55), min(len(text), m.end()+55)
                     ctx = re.sub(r"\s+", " ", text[s:e]).strip()

@@ -3,13 +3,13 @@
 
 ## The Four Core Assets
 
-**1. Scorpius Type-5 cryogenic tank IP + the 18% stake & ROFR (2021 basis).**
-TRL-9 linerless composite cryogenic tank technology, flight-demonstrated as fuel and LOX tanks on Intuitive Machines' IM-1 (Odysseus, 2024) and IM-2 (Athena, 2025). Exos holds 18% + a right of first refusal on the remainder struck at the 2021 basis (~$3.4M exercise) — the valuation-arbitrage crown jewel of the raise. (Fairness opinion: Eqvista engaged.)
+**1. Scorpius Type-5 composite cryogenic tank IP — 18% owned, acquisition being completed.**
+TRL-9 linerless composite cryogenic tank technology, flight-demonstrated as fuel and LOX tanks on Intuitive Machines' IM-1 (Odysseus, 2024) and IM-2 (Athena, 2025), and it has made its first tank sale for an orbital transfer vehicle. It answers the core problem of reusable structures — far fewer parts, surviving cryogenic pressure cycles and launch loads, without composite microcracking in the cold. Exos owns 18% of Scorpius today; the $10 million Series A completes our acquisition of Scorpius and brings this technology fully in-house. (Fairness opinion: Eqvista engaged.)
 
 **2. FAA-licensed reusable suborbital launch platform.**
 BLK3 PSRLV (FAA-licensed, hover-demonstrated; SARGE flew four missions) — Exos is **one of only three FAA-licensed reusable rocket launch providers in the United States**. Reusable, recoverable, minimal-infrastructure (pad + power/comms + mobile command). First commercial flight targeted early 2027.
 
-**3. RDRE / advanced-propulsion pipeline.**
+**3. Next-generation propulsion — RDRE flight-test integration + structured trade study.**
 Active U.S. Air Force SBIR **Phase II (FA9300-25-C-6022)** on a government-furnished Rotating Detonation Rocket Engine, establishing a **sole-source Phase III** path with no dollar ceiling. Exos is the reusable flight-vehicle integrator; it does **not** own or independently develop the RDRE, and the fabrication path is a program **trade-study down-select** (honest framing — no overstatement).
 
 **4. The AI-deployed operating platform (Mission Control + governed agent fleet). ← the 4th core asset.**
@@ -22,7 +22,7 @@ Exos is run as an AI-native firm: a small human core directs a governed fleet of
 ## Honesty / MDB-alignment guardrails (apply everywhere this appears)
 - Asset **#4 is a strategic and operational asset and moat, management-characterized** — NOT a separately-appraised balance-sheet line item. Do not assign it a standalone dollar value or add it to the cap table.
 - The AI operating model was **instantiated in 2026 and is in active build-out**; present as **execution capability and a compounding asset, not a claim of full autonomy**.
-- AI is the **operating advantage / core asset, NOT the product** — it layers with (does not replace) the physical thesis: physical-AI re-industrialization + reusable platform + Scorpius ROFR.
+- AI is the **operating advantage / core asset, NOT the product** — it layers with (does not replace) the physical thesis: physical-AI re-industrialization + reusable platform + the Scorpius acquisition.
 - Single valuation of record unchanged: **$169.7M equity.** No figure in any doc may contradict FIGURES_OF_RECORD.md.
 
 ## Alignment directive (the MDB discipline)
