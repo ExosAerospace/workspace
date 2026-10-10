@@ -5542,6 +5542,49 @@
    "change_log": [
     "2026-10-08 created (Jon directive 10/8 'launch a fix and I'll just approve the fix'); fleet_status_heartbeat DM now appends fix status per failing job; completion-watchdog detection factored into scan_events() for reuse"
    ]
+  },
+  {
+   "label": "com.exos.lizi-piee-keepalive",
+   "script": "lizi-piee-keepalive.py",
+   "kind": "recurring",
+   "schedule": "daily 09:00",
+   "purpose": "Lizi PIEE 30-day keep-alive: reminder T-2 and due day, URGENT daily emails when overdue; recreates task 30 days after completion.",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "internal only: emails lquinn@exosaero.com; creates MC tasks tagged piee-keepalive-lizi. No external recipients.",
+   "memory_boundary": "none (stateless)",
+   "escalation": "recipient acts on the reminder",
+   "eval_type": "output",
+   "eval_suite": "one-shot liveness (exit 0, self-unload) + OUTPUT: agent_eval check_duplicate_sends; recipients verified internal at registration",
+   "telemetry": "/Users/exomac/.openclaw/workspace/logs/lizi-piee-keepalive.log",
+   "reusability_scope": "single-purpose",
+   "risk_tier": "LOW",
+   "lifecycle": "standing",
+   "registered": "2026-10-09",
+   "envelope_source": "manual registration (Exo, 10/8)"
+  },
+  {
+   "label": "cron:series-a-follow-ups-apply-on-approval-d-7282041",
+   "cron_id": "4146b6b9-bb6f-473c-a954-06c0e7c6cef0",
+   "kind": "openclaw-cron",
+   "script": "openclaw cron 4146b6b9-bb6f-473c-a954-06c0e7c6cef0 (agentTurn)",
+   "schedule": "cron '0 9,17 * * *' America/Chicago",
+   "purpose": "Twice-daily check of D-7282041; on Jon's human Apply, finishes the 10/10 Series A doc follow-ups (trade-study figure, slide 10, TXSE wording, archive+Peony swap, retire 10/6 commission-only set), then self-removes.",
+   "stack_layer": "DECIDE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "toolsAllow 60 tools; delivery announce → discord:channel:1501636814849577050; writes Mission Control data (decisions/tasks/attachments); exec/shell available",
+   "memory_boundary": "session target isolated; agent main",
+   "escalation": "agent_eval cron hygiene → Jon on FAIL; Decisions board for any Jon call",
+   "eval_suite": "agent_eval cron hygiene (lastRunStatus ok + not stale vs its own cadence; consecutiveErrors → FAIL); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
+   "eval_type": "output",
+   "telemetry": "openclaw cron runs --id 4146b6b9-bb6f-473c-a954-06c0e7c6cef0",
+   "reusability_scope": "single-purpose",
+   "risk_tier": "MEDIUM",
+   "lifecycle": "self-removing (prompt has an end condition)",
+   "registered": "2026-10-10",
+   "envelope_source": "register_cron.py derivation from the live cron"
   }
  ],
  "eval_wave_1": {
