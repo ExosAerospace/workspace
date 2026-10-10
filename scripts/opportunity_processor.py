@@ -113,11 +113,13 @@ def parse_value(v):
     """Best-effort dollar value from a free-text value field."""
     if not v: return 0
     s = str(v).lower().replace(",", "")
-    m = re.search(r"\$?\s*([\d.]+)\s*([mbk])", s)
+    # number must contain a digit — a bare "." (e.g. "approx. m...") crashed float()
+    num = r"(\d+(?:\.\d+)?|\.\d+)"
+    m = re.search(r"\$?\s*" + num + r"\s*([mbk])", s)
     if m:
         n = float(m.group(1)); unit = m.group(2)
         return int(n * {"k":1e3,"m":1e6,"b":1e9}[unit])
-    m = re.search(r"\$\s*([\d.]+)", s)
+    m = re.search(r"\$\s*" + num, s)
     return int(float(m.group(1))) if m else 0
 
 STAGE_HEAT = {
@@ -608,7 +610,15 @@ def main():
                     help="Only process opps whose id starts with this prefix (e.g. PAY). "
                          "Dedicated lane so smaller-value items get priced instead of "
                          "losing the global top-N wave to high-value BD/fundraise opps.")
+    ap.add_argument("--selftest", action="store_true",
+                    help="Replay parse_value edge cases (incl. 10/10 '.' crash) and exit")
     args = ap.parse_args()
+    if args.selftest:
+        cases = {"$1.5M": 1500000, "$250k": 250000, "approx. m": 0, "TBD. Multi-mission": 0,
+                 "$. k": 0, "$.5m": 500000, "$12,000": 12000, "$.": 0, None: 0, "~$2B": 2000000000}
+        bad = {k: (parse_value(k), v) for k, v in cases.items() if parse_value(k) != v}
+        print("selftest", "FAIL" if bad else "OK", bad or "")
+        sys.exit(1 if bad else 0)
     live = args.live
 
     opps = load_json(OPP_JSON, {}).get("opportunities", [])
