@@ -21,7 +21,7 @@
 **Jon decisions — LOCKED 2026-08-13 (D1–D4); see FIGURES_OF_RECORD.md:**
 - **Raise size of record** — **a $10 million Series A** *(Jon 2026-10-10; supersedes the 8/13 "$10M first close, tranched to $25M" and the prior $40–50M figure)*
 - **Use of funds** — complete the Scorpius acquisition; finish and fly BLK3; next-gen propulsion trade study. **BLK4 is not funded by the raise** (future gated orbital path only)
-- **Listing path** — private growth Series A now; TXSE-primary as the dated, conditioned destination
+- **Listing path** — private growth Series A now; public-markets path in progress; TXSE listing as the backup route (Jon 2026-10-10)
 
 These are set. The room follows FIGURES_OF_RECORD.md; anything contradicting it is superseded.
 
@@ -47,7 +47,7 @@ These are set. The room follows FIGURES_OF_RECORD.md; anything contradicting it 
 - `Exos_SeriesA_PitchDeck_FULL_2026-08-16_CORRECTED.pptx` — superseded 2026-09-17 by the 9/6 Strategic deck
 - `Exos_SeriesA_StrategicTeaser_2026-08-21.pptx` — teaser variant; superseded 2026-09-17
 
-**Not room files (keep out — investor-specific / different purpose):** `Exos_Haas_Custom_Deck_2026-07.pptx`, Montana partnership decks, and `Exos_SSLC_Board_TechLicense_Request_2026-08-21.pptx` (SSLC board tech-license request — different audience/purpose; moved to `_RELATED_NotRoomFiles/`).
+**Not room files (keep out — investor-specific / different purpose):** `Exos_Haas_Custom_Deck_2026-07.pptx`, Montana partnership decks, and `Exos_SSLC_Board_TechLicense_Request_2026-08-21.pptx`, and `Exos_Scorpius_AssetPurchase_TermSheet_forCounsel_2026-08-28.docx` (legal wording for counsel, not investor-facing; moved out of the room 2026-10-10) (SSLC board tech-license request — different audience/purpose; moved to `_RELATED_NotRoomFiles/`).
 
 **Related package (separate room):** `../Navy_Commission/` — Commission on the Future of the Navy site-visit materials (deck + deck-aligned model + projections) on the **conservative Cash Flow case (2027–2032)**. Kept separate on purpose; do not co-mingle with the Series A canonical set. See `../Navy_Commission/DATA_ROOM_MANIFEST.md`.
 
@@ -82,3 +82,4 @@ Do not share the room until every box is true:
 - **Listing path:** private growth Series A now; **TXSE-primary as the dated, conditioned destination** (~18–24 mo, conditioned on capital raised + revenue scale ~$20–50M); prior Euronext route discontinued; purge all "TBD."
 - **Scorpius fairness opinion:** **Eqvista ENGAGED (in progress)** to opine on the acquisition terms. Eqvista's multi-year familiarity is an asset (not a conflict); independence = flat/non-contingent fee + no stake (confirm). Jon fully informs the appraiser; **disinterested directors approve with Jon abstaining from that vote** (not recusal from knowledge). Related-party disclosure memo drafted (`drafts/Scorpius_RelatedParty_Disclosure_Memo_DRAFT_2026-08-13.md`) — securities counsel review before use.
 - **Single source of truth:** `FIGURES_OF_RECORD.md` (this folder) — every file must match it.
+- **2026-10-10 archive + swap (D-7282041, Jon):** superseded originals of the deck (2026-09-06 CURRENT), model v12, 5.1, and 5.2 moved to `_ARCHIVE_Superseded/2026-10-10_strategy-rev/`, along with the `_BROKEN_pre-smartart-fix` folder. The `rev-2026-10-10` files are now the room copies. The Scorpius counsel term sheet moved to `_RELATED_NotRoomFiles/`. Peony room copies get swapped to match.
