@@ -1202,7 +1202,7 @@ function renderStats() {
   const progress = tasks.filter(t => t.state === 'In Progress').length;
   const done = tasks.filter(t => t.state === 'Done').length;
   const now = new Date();
-  const overdue = tasks.filter(t => t.due_date && new Date(t.due_date) < now && t.state !== 'Done').length;
+  const overdue = tasks.filter(t => t.due_date && new Date(t.due_date) < now && t.state !== 'Done' && t.state !== 'Cancelled' && !isSubtask(t)).length;  // match the Overdue filter: no cancelled (185 inflated it, Jon 10/10), no subtasks
 
   const ac = (f) => currentFilter === f ? ' active' : '';
   document.getElementById('statsBar').innerHTML = `
