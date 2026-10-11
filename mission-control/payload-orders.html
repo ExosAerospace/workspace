@@ -128,9 +128,9 @@ function draw(){
    <div style="margin-top:8px"><label>Upload LSA (.docx, commercial terms only, export-screened on upload)</label><input type="file" id="lsaFile" accept=".docx"></div>
    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="sec" onclick="upLsa()">Upload</button>
    <button onclick="sendLsa()" ${(!o.screened||!o.lsa_file||(env&&env!=='expired')||o.executed)?'disabled':''}>Send for e-signature (customer, then John)</button></div>
-   <details style="margin-top:10px"><summary class="small muted">LSA handled outside MC (emailed Word copy)</summary>
+   <details style="margin-top:10px"><summary class="small muted">LSA handled outside MC (exception only — ExoSign is the default)</summary>
    <div class="grid" style="margin-top:6px"><div><label>Sent on</label><input type="date" id="o_sent" value="${esc(o.lsa_sent_outside_at||'')}"></div><div><label>Fully executed on</label><input type="date" id="o_signed" value="${esc(o.lsa_signed_at||'')}"></div></div>
-   <div style="margin-top:6px"><label>Where the signed copy is filed</label><input id="o_copy" value="${esc(o.lsa_signed_copy||'')}"></div><button class="sec" style="margin-top:6px" onclick="lsaOutside()">Record</button></details>
+   <div style="margin-top:6px"><label>Where the signed copy is filed</label><input id="o_copy" value="${esc(o.lsa_signed_copy||'')}"></div><div style="margin-top:6px"><label>Why not ExoSign? (required)</label><input id="o_reason" value="${esc(o.lsa_outside_reason||'')}"></div><button class="sec" style="margin-top:6px" onclick="lsaOutside()">Record</button></details>
    <div class="msg" id="m4"></div></div>`;
   // milestones
   h+=`<div class="sec-h">4 · Payments · ${money(o.contract_value_effective)} contract</div><div class="box">`+(o.milestones_view||[]).map(m=>`<div class="ms"><b>${m.key} ${m.pct}%</b>
@@ -153,7 +153,7 @@ function saveExport(){const v=id=>($(id)||{}).value;act('/api/payload-orders/exp
 function upLsa(){const fl=$('lsaFile').files[0];if(!fl){msg('m4','Pick the .docx first');return;}msg('m4','Uploading + export-screening…',true);
   const rd=new FileReader();rd.onload=()=>act('/api/payload-orders/lsa-upload',{filename:fl.name,data_b64:String(rd.result).split(',')[1]},'m4');rd.readAsDataURL(fl);}
 function sendLsa(){if(!confirm('Send the LSA to '+(cur.contact_email||'the customer')+' for signature? John countersigns after them.'))return;act('/api/payload-orders/send-lsa',{},'m4');}
-function lsaOutside(){act('/api/payload-orders/lsa-outside',{sent_at:$('o_sent').value||undefined,signed_at:$('o_signed').value||undefined,signed_copy:$('o_copy').value},'m4');}
+function lsaOutside(){act('/api/payload-orders/lsa-outside',{sent_at:$('o_sent').value||undefined,signed_at:$('o_signed').value||undefined,signed_copy:$('o_copy').value,reason:$('o_reason').value},'m4');}
 function msInv(k){const n=prompt(k+' invoice number (from QuickBooks):');if(n===null)return;act('/api/payload-orders/milestone',{key:k,action:'invoiced',invoice_no:n},'m5');}
 function msPaid(k,amt){const a=prompt(k+' amount received ($):',amt);if(!a)return;const dt=prompt('Date received (YYYY-MM-DD):',new Date().toISOString().slice(0,10));if(!dt)return;act('/api/payload-orders/milestone',{key:k,action:'paid',amount:Number(a),date:dt},'m5');}
 function closeOrder(){const r=prompt(cur.closed?'Reason for reopening:':'Reason for closing:');if(r===null)return;act('/api/payload-orders/close',{reopen:cur.closed,reason:r},'m5');}

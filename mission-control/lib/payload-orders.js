@@ -368,13 +368,17 @@ async function handle(req, res, ctx) {
     return send(res, 200, { ok: true, order: view(o, ctx.loadEnvelopes()) });
   }
 
-  // LSA handled outside MC (e.g. emailed Word copy) — record it so status stays true
+  // LSA handled outside MC (e.g. emailed Word copy) — record it so status stays true.
+  // ExoSign (send-lsa) is the default path; outside is an exception, so a reason is required (Jon 2026-10-11).
   if (fp === '/api/payload-orders/lsa-outside') {
-    if (body.sent_at) { o.lsa_sent_outside_at = String(body.sent_at).slice(0, 10); log(o, s, 'LSA sent outside MC', o.lsa_sent_outside_at); }
+    const why = String(body.reason || '').trim();
+    if ((body.sent_at || body.signed_at) && !why) return send(res, 400, { error: 'ExoSign is the default. Say why this LSA was handled outside MC (e.g. ExoSign was down).' });
+    if (why) o.lsa_outside_reason = why.slice(0, 300);
+    if (body.sent_at) { o.lsa_sent_outside_at = String(body.sent_at).slice(0, 10); log(o, s, 'LSA sent outside MC', o.lsa_sent_outside_at + ' · reason: ' + why); }
     if (body.signed_at) {
       if (!String(body.signed_copy || '').trim()) return send(res, 400, { error: 'Say where the fully signed copy is filed.' });
       o.lsa_signed_at = String(body.signed_at).slice(0, 10); o.lsa_signed_copy = String(body.signed_copy).slice(0, 400);
-      log(o, s, 'LSA executed outside MC', o.lsa_signed_at + ' · ' + o.lsa_signed_copy);
+      log(o, s, 'LSA executed outside MC', o.lsa_signed_at + ' · ' + o.lsa_signed_copy + ' · reason: ' + why);
     }
     save(d); audit('lsa-outside', '');
     return send(res, 200, { ok: true, order: view(o, ctx.loadEnvelopes()) });
