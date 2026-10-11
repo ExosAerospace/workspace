@@ -42,7 +42,8 @@ TOKEN = os.path.join(WS, "mission-control/data/.decisions-token")
 PAYLOAD_CUSTOMER = os.path.join(WS, "scripts/payload_customer.py")
 JON = "jquinn@exosaero.com"
 PCT = {"M1": 50, "M2": 40, "M3": 10}
-MS_LABEL = {"M1": "slot reservation (50%)", "M2": "L-120 milestone (40%)", "M3": "post-flight data delivery (10%)"}
+MS_LABEL = {"M1": "slot reservation (50%)", "M2": "L-120 milestone (40%)", "M3": "post-flight data delivery (10%)",
+            "INK": "$1 documentation invoice for an in-kind payment"}
 OPT_SEND, OPT_HOLD, OPT_CANCEL = "Approve & send", "Hold", "Cancel invoice"
 # Internal program names that must never appear on a customer invoice (Jon 2026-10-01: "we do not want
 # pathfinder on any invoice"). Checked at prepare AND re-checked against QB's live line text before send.
@@ -288,14 +289,25 @@ def prepare(a):
         if live:
             raise SystemExit(f"{a.order} {ms} already has QB invoice {live[0]['doc_number']} ({live[0]['status']})")
         cv = float(order["contract_value"])
-        amount = round(cv * PCT[ms] / 100, 2)
+        ik = order.get("in_kind")
+        if ik and ms != "INK":
+            raise SystemExit(f"{a.order} is paid in kind — only the $1 INK documentation invoice applies")
+        if ms == "INK" and not ik:
+            raise SystemExit(f"{a.order} is not an in-kind order")
+        amount = 1.00 if ms == "INK" else round(cv * PCT[ms] / 100, 2)
         customer, email = order["customer"], order.get("contact_email")
         if not order.get("mission"):
             raise SystemExit(f"{a.order} has no mission number (M5, M6, ...) — set it on the payload order first")
         mlabel = next((m for m in jload(os.path.join(WS, "mission-control/data/missions.json"), {}).get("missions", []) if m["id"] == order["mission"]), {})
         flight_txt = flight_text(order["mission"], mlabel)
-        desc = (f"{order.get('payload_name') or customer + ' payload'} — {flight_txt} payload integration & flight. "
-                f"Milestone {ms}: {MS_LABEL[ms]} of ${cv:,.0f} contract (payload order {order['id']}).")
+        if ms == "INK":
+            iv = float(ik.get("value") or cv)
+            desc = (f"{order.get('payload_name') or customer + ' payload'} — {flight_txt} payload integration & flight. "
+                    f"Paid in kind: {ik.get('description')} (value ${iv:,.0f}, matching the standard price). "
+                    f"$1.00 documentation invoice (payload order {order['id']}).")
+        else:
+            desc = (f"{order.get('payload_name') or customer + ' payload'} — {flight_txt} payload integration & flight. "
+                    f"Milestone {ms}: {MS_LABEL[ms]} of ${cv:,.0f} contract (payload order {order['id']}).")
         item = a.item or "Payload Sale"
     else:
         if not (a.customer and a.amount and a.desc):
@@ -463,7 +475,7 @@ def watch(a):
                 def mut(m, amt=amt):
                     m.update(paid_at=today, amount_received=amt, recorded_by="Exo (QB payment sync)", qb_status="paid")
                 o = _order_log(r["order"], f"{r['milestone']} paid", f"${amt:,.2f} · QB #{r['doc_number']} balance 0", mut, r["milestone"])
-                if o and r["milestone"] == "M1" and os.path.exists(PAYLOAD_CUSTOMER):
+                if o and r["milestone"] in ("M1", "INK") and os.path.exists(PAYLOAD_CUSTOMER):
                     args = ["/usr/bin/python3", PAYLOAD_CUSTOMER, "add", "--company", o["customer"],
                             "--payload-name", o.get("payload_name") or o["customer"] + " payload", "--mission", o.get("flight") or "BLK3",
                             "--flight-no", o.get("mission") or "", "--contract-id", o["id"], "--amount-paid", str(amt), "--paid-date", today,

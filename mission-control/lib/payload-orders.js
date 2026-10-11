@@ -61,6 +61,11 @@ const MILESTONES = [
   { key: 'M2', pct: 40, trigger: 'L-120 days before flight' },
   { key: 'M3', pct: 10, trigger: 'Post-flight data delivered to customer' },
 ];
+// IN-KIND PAYMENT (Jon 2026-10-11): a customer may pay with goods/services instead of cash. The in-kind value is
+// defined to match the standard price (rate card + integration fee, e.g. $7,500 + $500 = $8,000), and a single $1
+// documentation invoice (milestone INK) replaces M1/M2/M3, so every payload keeps the same QB invoice trail.
+// The order completes when the $1 is paid AND a person records the in-kind consideration received.
+const INK = { key: 'INK', pct: null, trigger: '$1 documentation invoice for an in-kind payment (at LSA execution)' };
 const EXPORT_STATUSES = ['unscreened', 'not_controlled', 'ear', 'itar'];
 const CONTROLLED = s => s === 'ear' || s === 'itar';
 
@@ -144,11 +149,12 @@ function view(o, envelopes) {
   const env = o.envelope_id ? (envelopes || []).find(e => e.id === o.envelope_id) : null;
   const envStatus = env ? env.status : null;
   const executed = !!(o.lsa_signed_at || envStatus === 'completed');
-  const ms = MILESTONES.map(m => {
+  const ik = o.in_kind || null;
+  const ms = ik ? [{ ...INK, amount: 1, ...((o.milestones || {}).INK || {}) }] : MILESTONES.map(m => {
     const r = (o.milestones || {})[m.key] || {};
     return { ...m, amount: cv != null ? Math.round(cv * m.pct / 100) : null, ...r };
   });
-  if (o.flight_date) ms[1].due = addDays(o.flight_date, -120);
+  if (o.flight_date && !ik) ms[1].due = addDays(o.flight_date, -120);
   const x = o.export || { status: 'unscreened' };
   const cslOk = (o.csl || []).length > 0 && (o.csl || []).every(c => c.clear || c.cleared_by);
   const exportOk = x.status === 'not_controlled' || (CONTROLLED(x.status) && x.sharepoint_path && x.handler_email && x.procedure_ack);
@@ -160,6 +166,10 @@ function view(o, envelopes) {
   else if (!executed && !o.lsa_file && !o.lsa_sent_outside_at) { stage = 3; next = 'Upload the LSA (Word) for this customer'; }
   else if (!executed && !envStatus && !o.lsa_sent_outside_at) { stage = 3; next = 'Send the LSA for e-signature'; }
   else if (!executed) { stage = 4; next = 'Waiting on customer signature, then John countersigns'; }
+  else if (ik && !ms[0].invoiced_at) { stage = 5; next = 'Issue the $1 in-kind documentation invoice'; }
+  else if (ik && !ms[0].paid_at) { stage = 6; next = 'Collect the $1 documentation payment'; }
+  else if (ik && !ik.received_at) { stage = 8; next = `Record the in-kind payment received (${ik.description || 'goods'}, value $${Number(ik.value || cv || 0).toLocaleString()})`; }
+  else if (ik) { stage = 9; next = 'In-kind payment received + $1 documented — close the order'; }
   else if (!ms[0].invoiced_at) { stage = 5; next = 'Issue the M1 invoice (50%)'; }
   else if (!ms[0].paid_at) { stage = 6; next = 'Collect M1 payment'; }
   else if (!ms[1].paid_at) { stage = 7; next = ms[1].invoiced_at ? 'Collect M2 payment (40%)' : 'Invoice M2 (40%) at L-120' + (ms[1].due ? ' — ' + ms[1].due : ''); }
@@ -175,7 +185,7 @@ function view(o, envelopes) {
       : 'Submit the waiver package to the FAA for payload approval');
   }
   const waiverOverdue = executed && !o.closed && !o.waiver_wet_signed_at && waiverDue && waiverDue <= today;
-  const overdue = waiverOverdue || (o.next_due && o.next_due < today) || (stage === 7 && !ms[1].invoiced_at && ms[1].due && ms[1].due <= today);
+  const overdue = waiverOverdue || (o.next_due && o.next_due < today) || (!ik && stage === 7 && !ms[1].invoiced_at && ms[1].due && ms[1].due <= today);
   const received = ms.reduce((a, m) => a + (Number(m.amount_received) || 0), 0);
   return {
     ...o, flight: o.mission ? missionLabel(o.mission) : o.flight, contract_value_effective: cv, milestones_view: ms, stage, next_action: next, overdue: !!overdue,
@@ -387,7 +397,8 @@ async function handle(req, res, ctx) {
   // milestone: invoiced / paid
   if (fp === '/api/payload-orders/milestone') {
     const key = String(body.key || ''); const act = String(body.action || '');
-    if (!MILESTONES.some(m => m.key === key) || !['invoiced', 'paid', 'undo'].includes(act)) return send(res, 400, { error: 'Bad milestone/action' });
+    const okKey = o.in_kind ? key === 'INK' : MILESTONES.some(m => m.key === key);
+    if (!okKey || !['invoiced', 'paid', 'undo'].includes(act)) return send(res, 400, { error: o.in_kind ? 'In-kind order: only the $1 INK documentation milestone applies.' : 'Bad milestone/action' });
     const v = view(o, ctx.loadEnvelopes());
     if (!v.screened) return send(res, 409, { error: 'Export + CSL screen must be complete before any invoice or payment is recorded.' });
     if (!v.executed && act !== 'undo') return send(res, 409, { error: 'The LSA is not executed yet.' });
@@ -405,10 +416,10 @@ async function handle(req, res, ctx) {
       if (!m.invoiced_at) m.invoiced_at = String(body.date || now()).slice(0, 10);
       m.paid_at = String(body.date || now()).slice(0, 10); m.amount_received = amt; m.recorded_by = who(s);
       log(o, s, key + ' paid', '$' + amt.toLocaleString() + ' · ' + m.paid_at);
-      if (key === 'M1') {   // first money in → payload-customer registry (green badge + metrics)
+      if (key === 'M1' || key === 'INK') {   // first money in → payload-customer registry (green badge + metrics)
         const args = [PAYLOAD_CUSTOMER, 'add', '--company', o.customer, '--payload-name', o.payload_name || o.customer + ' payload',
           '--mission', (o.mission ? missionLabel(o.mission) : o.flight) || 'BLK3', '--flight-no', o.mission || '', '--contract-id', o.id, '--amount-paid', String(amt), '--paid-date', m.paid_at,
-          '--notes', 'M1 deposit via MC payload order ' + o.id];
+          '--notes', (key === 'INK' ? `In-kind payment (${(o.in_kind || {}).description || 'goods'}, value $${Number((o.in_kind || {}).value || 0).toLocaleString()}); $1 documentation invoice` : 'M1 deposit') + ' via MC payload order ' + o.id];
         if (o.mass_kg) args.push('--mass-kg', String(o.mass_kg));
         if (o.flight_date) args.push('--flight-date', o.flight_date);
         if (v.contract_value_effective) args.push('--contract-value', String(v.contract_value_effective));
@@ -417,6 +428,28 @@ async function handle(req, res, ctx) {
       }
     }
     save(d); audit('milestone', key + ' ' + act);
+    return send(res, 200, { ok: true, order: view(o, ctx.loadEnvelopes()) });
+  }
+
+  // in-kind payment: set terms (description + value), or record the consideration received
+  if (fp === '/api/payload-orders/in-kind') {
+    if (body.action === 'set') {
+      const desc = String(body.description || '').trim();
+      const val = Number(body.value || contractValue(o) || 0);
+      if (!desc || !(val > 0)) return send(res, 400, { error: 'Describe the in-kind payment and its value.' });
+      if (Object.keys(o.milestones || {}).some(k => k !== 'INK' && (o.milestones[k] || {}).invoiced_at)) return send(res, 409, { error: 'Cash milestones already invoiced — undo them first.' });
+      o.in_kind = { ...(o.in_kind || {}), description: desc.slice(0, 200), value: val, set_by: who(s), set_at: now() };
+      log(o, s, 'in-kind payment set', `${o.in_kind.description} · value $${val.toLocaleString()} · $1 documentation invoice replaces M1/M2/M3`);
+    } else if (body.action === 'received') {
+      if (!o.in_kind) return send(res, 409, { error: 'Not an in-kind order.' });
+      const dt = String(body.date || now()).slice(0, 10);
+      o.in_kind.received_at = dt; o.in_kind.received_by = who(s); o.in_kind.received_note = String(body.note || '').slice(0, 200);
+      log(o, s, 'in-kind payment received', `${o.in_kind.description} · ${dt}${o.in_kind.received_note ? ' · ' + o.in_kind.received_note : ''}`);
+    } else if (body.action === 'clear') {
+      if (!isAdmin) return send(res, 403, { error: 'Only an admin can remove the in-kind terms.' });
+      log(o, s, 'in-kind payment removed', String(body.reason || '').slice(0, 200)); delete o.in_kind;
+    } else return send(res, 400, { error: 'Bad action' });
+    save(d); audit('in-kind', body.action);
     return send(res, 200, { ok: true, order: view(o, ctx.loadEnvelopes()) });
   }
 
