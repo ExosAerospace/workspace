@@ -20,6 +20,9 @@
 // waiver of claims (14 CFR 440.17) physically at Exos by L-90 (90 days before the scheduled launch), so Exos can
 // submit all waivers to the FAA for payload approval. Tracked as a required gate parallel to the money stages:
 // shown in next_action from execution onward, overdue after L-90, and the order cannot close without it.
+// HYBRID STEP (Jon 2026-10-11): Exo can't see paper, so a HUMAN confirms the wet-signed original is physically on
+// file. Exo files a Decision (dedupeKey payload-waiver:<id>) once the order is executed or within L-150; the human
+// click (server.js -> onDecision) records waiver_wet_signed_at + waiver_confirmed_by. 'Not yet' re-prompts in 14 days.
 // Store: data/payload-orders.json (MC is the system of record for this; no generator touches it).
 const fs = require('fs');
 const path = require('path');
@@ -185,7 +188,7 @@ function view(o, envelopes) {
 // ── field rules ──
 const EDITABLE = ['customer', 'contact_name', 'contact_email', 'payload_name', 'mission', 'flight', 'flight_date', 'mass_kg',
   'contract_value', 'owner', 'task_ids', 'opp_id', 'questionnaire_received', 'next_due', 'notes',
-  'waiver_wet_signed_at', 'waiver_faa_submitted_at'];
+  'waiver_wet_signed_at', 'waiver_faa_submitted_at', 'waiver_confirmed_by', 'waiver_original_location'];
 function clean(fields, o) {
   const out = {};
   for (const k of EDITABLE) if (k in fields) out[k] = fields[k];
@@ -427,4 +430,61 @@ async function handle(req, res, ctx) {
   return send(res, 404, { error: 'Not found' });
 }
 
-module.exports = { handle, view, load, trainedHandlers, validSharePoint, contractValue };
+// ── FAA cross-waiver hybrid step: Exo prompts, a human confirms the wet-signed original is on file ──
+const DECISIONS_TOKEN = path.join(MC_DIR, 'data', '.decisions-token');
+function fileDecision(body) {
+  if (process.env.PAYLOAD_NO_DECISIONS) return Promise.resolve({ id: 'D-TEST' });   // tests only
+  return new Promise((ok, bad) => {
+    const http = require('http');
+    const data = JSON.stringify(body);
+    const rq = http.request({ host: '127.0.0.1', port: 8080, path: '/api/decisions/ingest', method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Exo-Token': fs.readFileSync(DECISIONS_TOKEN, 'utf8').trim(), 'Content-Length': Buffer.byteLength(data) } }, rs => {
+      let b = ''; rs.on('data', c => b += c); rs.on('end', () => { try { ok(JSON.parse(b)); } catch (e) { bad(e); } });
+    });
+    rq.on('error', bad); rq.end(data);
+  });
+}
+// Called on a timer by server.js. Files at most one open waiver card per order.
+async function waiverPrompts(envelopes) {
+  const d = load(); const today = new Date().toISOString().slice(0, 10); let filed = 0;
+  for (const o of d.orders) {
+    const v = view(o, envelopes || []);
+    if (o.closed || o.waiver_wet_signed_at || !o.flight_date) continue;
+    if (!(v.executed || today >= addDays(o.flight_date, -150))) continue;
+    if (o.waiver_decision_id && !(o.waiver_reprompt_after && today >= o.waiver_reprompt_after)) continue;
+    const r = await fileDecision({
+      title: `FAA cross-waiver on file? ${o.customer} (${v.flight || o.mission || ''})`,
+      question: `Is ${o.customer}'s WET-SIGNED cross-waiver of claims physically on file at Exos?`,
+      context: `Order ${o.id}. FAA reciprocal waiver of claims (14 CFR 440.17) must be wet-signed and at Exos by ${v.waiver_due} (L-90 for the ${o.flight_date} flight) so Exos can submit all waivers to the FAA for payload approval. Exo can't verify paper. Confirm only if you have seen the original. Put where it is filed in the note (and the signature date as YYYY-MM-DD if it differs from today). 'Not yet' re-asks in 14 days.`,
+      proposedAction: 'Exo records the waiver as on file (date + who confirmed) on the payload order',
+      type: 'yesno', options: ['Yes — original on file', 'Not yet'], priority: v.waiver_overdue ? 'high' : 'med',
+      approver: 'lquinn@exosaero.com', relatedItem: o.id, source: 'Payload order-to-cash (exo3)', dedupeKey: `payload-waiver:${o.id}`,
+    });
+    o.waiver_decision_id = r && r.id; o.waiver_reprompt_after = null;
+    log(o, { name: 'Exo' }, 'waiver_prompt', `Decision ${o.waiver_decision_id} filed: confirm wet-signed waiver on file`); filed++;
+  }
+  if (filed) save(d);
+  return filed;
+}
+// Called by server.js right after a human answers a payload-waiver decision.
+function onDecision(dec) {
+  if (!dec || !/^payload-waiver:/.test(dec.dedupeKey || '')) return;
+  const by = String(dec.answeredBy || ''), email = String(dec.answeredByEmail || '');
+  if (!by && !email) return;   // token/proposed answers never count
+  const d = load(); const o = d.orders.find(x => x.id === dec.dedupeKey.slice('payload-waiver:'.length)); if (!o) return;
+  const ans = String(dec.answer || '').toLowerCase(), note = String(dec.note || '');
+  const today = new Date().toISOString().slice(0, 10);
+  if (ans.startsWith('yes')) {
+    const m = note.match(/\b(20\d\d-\d\d-\d\d)\b/);
+    o.waiver_wet_signed_at = (m && m[1] <= today) ? m[1] : today;
+    o.waiver_confirmed_by = `${by || email} (${dec.id})`;
+    if (note) o.waiver_original_location = note.slice(0, 200);
+    log(o, { name: by, email }, 'waiver_confirmed', `Wet-signed original on file, confirmed by ${by || email} via ${dec.id}${note ? ': ' + note.slice(0, 120) : ''}`);
+  } else {
+    o.waiver_reprompt_after = addDays(today, 14);
+    log(o, { name: by, email }, 'waiver_not_yet', `${by || email}: not yet on file (${dec.id}); re-ask ${o.waiver_reprompt_after}`);
+  }
+  save(d);
+}
+
+module.exports = { handle, view, load, trainedHandlers, validSharePoint, contractValue, waiverPrompts, onDecision };

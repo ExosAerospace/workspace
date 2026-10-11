@@ -906,6 +906,9 @@ async function drainOutbox() {
   finally { _draining = false; }
 }
 setInterval(drainOutbox, 45000).unref();
+// Payload FAA cross-waiver hybrid step (Jon 2026-10-11): file the 'is the wet-signed original on file?' Decision per order.
+const payloadWaiverTick = () => require('./lib/payload-orders').waiverPrompts(loadEnvelopes()).catch(e => glog('payload-orders', 'waiver_prompt_failed', 'error', e.message, {}));
+setTimeout(payloadWaiverTick, 90000).unref(); setInterval(payloadWaiverTick, 6 * 3600 * 1000).unref();
 setTimeout(drainOutbox, 8000).unref();
 
 // GET that pages past PostgREST's hard 1000-row response cap. Pass a query WITHOUT limit/offset;
@@ -5802,6 +5805,8 @@ const server = http.createServer((req, res) => {
           const k = String(d.dedupeKey || '');
           if (k.startsWith('po-approve:')) {
             require('./lib/supply-chain').onDecision(d).catch(e => glog('supply-chain', 'po_decision_failed', 'error', `${d.id}: ${e.message}`, { decision: d.id }));
+          } else if (k.startsWith('payload-waiver:')) {
+            try { require('./lib/payload-orders').onDecision(d); } catch (e) { glog('payload-orders', 'waiver_decision_failed', 'error', `${d.id}: ${e.message}`, { decision: d.id }); }
           } else if (k.startsWith('qb-invoice:')) {
             try { require('child_process').execFile('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'qb_invoice.py'), 'watch'], { timeout: 120000 }, () => {}); } catch (e) {}
           }
