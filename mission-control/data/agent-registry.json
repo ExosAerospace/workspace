@@ -5610,6 +5610,28 @@
    "change_log": [
     "2026-10-10 created (Jon 10/10: decision cards must carry the docs; D-7282043 recurrence class). Source hooks added in governance/route.py + opportunity_processor.py so new cards are born with docs."
    ]
+  },
+  {
+   "label": "cron:payload-manual-rev5-apply-cm-on-approval-d-7282050",
+   "cron_id": "09211461-4397-459a-b91e-1ec6cf6ad238",
+   "kind": "openclaw-cron",
+   "script": "openclaw cron 09211461-4397-459a-b91e-1ec6cf6ad238 (agentTurn)",
+   "schedule": "cron '0 9,17 * * *' America/Chicago",
+   "purpose": "Payload manual Rev5 — apply CM on approval (D-7282050) — Procedure CM watcher for D-7282050 (Payload Process Manual Rev5). Read mission-control/data/decisions.json for D-7282050. If status is open or answer is null, or there is no answeredByEmail (only a human click counts), d",
+   "stack_layer": "DECIDE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "toolsAllow 60 tools; delivery announce → discord:channel:1501636814849577050; writes Mission Control data (decisions/tasks/attachments); exec/shell available",
+   "memory_boundary": "session target isolated; agent main",
+   "escalation": "agent_eval cron hygiene → Jon on FAIL; Decisions board for any Jon call",
+   "eval_suite": "agent_eval cron hygiene (lastRunStatus ok + not stale vs its own cadence; consecutiveErrors → FAIL); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
+   "eval_type": "output",
+   "telemetry": "openclaw cron runs --id 09211461-4397-459a-b91e-1ec6cf6ad238",
+   "reusability_scope": "single-purpose",
+   "risk_tier": "MEDIUM",
+   "lifecycle": "self-removing (prompt has an end condition)",
+   "registered": "2026-10-11",
+   "envelope_source": "register_cron.py derivation from the live cron"
   }
  ],
  "eval_wave_1": {
