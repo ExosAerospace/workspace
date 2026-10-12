@@ -135,8 +135,20 @@ def send_alert(new_notices):
            f"Subject: [SAM WATCH] {len(new_notices)} new Flight Opportunities / suborbital notice(s)\n\n{body}\n")
     import shutil
     _oc = shutil.which("openclaw") or "/Users/exomac/.local/share/mise/shims/openclaw"
-    r = subprocess.run([_oc, "message", "send", "--channel", "discord", "--target", "1501636814849577050", "-m", f"**[SAM WATCH] {len(new_notices)} new Flight Opportunities / suborbital notice(s)**\n\n" + body], capture_output=True, timeout=60)
-    return r.returncode == 0
+    cmd = [_oc, "message", "send", "--channel", "discord", "--target", "1501636814849577050", "-m", f"**[SAM WATCH] {len(new_notices)} new Flight Opportunities / suborbital notice(s)**\n\n" + body]
+    # A hung gateway send must not crash the sweep (2026-10-12 TimeoutExpired): retry once, then
+    # report failure so main() leaves the notices unseen and the next run re-alerts them.
+    for attempt in (1, 2):
+        try:
+            r = subprocess.run(cmd, capture_output=True, timeout=120)
+            if r.returncode == 0:
+                return True
+            print(f"  alert send attempt {attempt} failed rc={r.returncode}: {(r.stderr or b'').decode(errors='replace')[:200]}")
+        except subprocess.TimeoutExpired:
+            print(f"  alert send attempt {attempt} timed out after 120s")
+        except OSError as e:
+            print(f"  alert send attempt {attempt} error: {e}")
+    return False
 
 def main():
     key = get_key()
@@ -156,23 +168,62 @@ def main():
             print(f"  query failed '{label}': {e}")
     new_ids = [nid for nid in found if nid not in seen]
     new_notices = [found[nid] for nid in new_ids]
-    for nid in found: seen.add(nid)
-    state['seen_ids'] = sorted(seen)
-    state['last_run'] = datetime.now().isoformat()
-    with open(STATE, 'w') as f: json.dump(state, f, indent=2)
     print(f"Swept {len(QUERIES)} queries, {len(found)} total matches, {len(new_ids)} new.")
+    ok = True
     if first_run:
         print(f"First run — baselined {len(found)} notices, no alert sent.")
-        return 0
-    if new_notices:
+    elif new_notices:
         ok = send_alert(new_notices)
         print(f"ALERT emailed: {ok} ({len(new_notices)} new notice(s))")
         for n in new_notices:
             print(f"  NEW: {n.get('title','')[:80]}")
+        if not ok:
+            print("  alert not delivered — leaving these notices unseen so the next run re-alerts.")
     else:
         print("No new notices.")
+    # Only mark notices seen once they are baselined or actually delivered.
+    for nid in found:
+        if ok or nid not in new_ids:
+            seen.add(nid)
+    state['seen_ids'] = sorted(seen)
+    state['last_run'] = datetime.now().isoformat()
+    with open(STATE, 'w') as f: json.dump(state, f, indent=2)
+    if first_run:
+        return 0
     print("Done.")
     return 0
 
+def selftest():
+    """Replay the 2026-10-12 failure: the openclaw send hangs -> no crash, notice stays unseen."""
+    import tempfile
+    global STATE
+    tmp = tempfile.mkdtemp()
+    STATE = os.path.join(tmp, 'state.json')
+    with open(STATE, 'w') as f: json.dump({'seen_ids': ['old']}, f)
+    g = globals()
+    real_run, real_q, real_key = subprocess.run, g['sam_query'], g['get_key']
+    calls = []
+    def hang(cmd, **kw):
+        calls.append(cmd); raise subprocess.TimeoutExpired(cmd, kw.get('timeout'))
+    try:
+        g['get_key'] = lambda: 'k'
+        g['sam_query'] = lambda key, extra: [{'noticeId': 'old', 'title': 'Old'},
+                                             {'noticeId': 'new1', 'title': 'BlackSwift S0 UAS Flight Systems',
+                                              'fullParentPathName': 'NASA'}]
+        subprocess.run = hang
+        assert main() == 0, "main must not crash on send timeout"
+        assert len(calls) == 2, f"expected 2 send attempts, got {len(calls)}"
+        seen = set(load_json(STATE, {})['seen_ids'])
+        assert 'new1' not in seen and 'old' in seen, f"undelivered notice must stay unseen: {seen}"
+        subprocess.run = lambda cmd, **kw: subprocess.CompletedProcess(cmd, 0, b'', b'')
+        assert main() == 0
+        assert 'new1' in set(load_json(STATE, {})['seen_ids']), "delivered notice must be marked seen"
+    finally:
+        subprocess.run, g['sam_query'], g['get_key'] = real_run, real_q, real_key
+    print("SELFTEST PASS")
+    return 0
+
 if __name__ == '__main__':
+    if '--selftest' in sys.argv:
+        sys.exit(selftest())
     sys.exit(main())
