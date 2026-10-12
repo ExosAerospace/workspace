@@ -1,7 +1,7 @@
 {
  "generated": "2026-10-04T12:49:13.103453-05:00",
- "total": 243,
- "standing": 113,
+ "total": 244,
+ "standing": 114,
  "ephemeral": 18,
  "service": 6,
  "agents": [
@@ -5632,6 +5632,27 @@
    "lifecycle": "self-removing (prompt has an end condition)",
    "registered": "2026-10-11",
    "envelope_source": "register_cron.py derivation from the live cron"
+  },
+  {
+   "label": "com.exos.lizi-daily-4pm",
+   "script": "lizi-daily-4pm.py",
+   "kind": "recurring",
+   "schedule": "weekdays 16:00",
+   "purpose": "Lizi 4 PM daily update: emails her a ready-to-paste update for open weekly-target tasks (blk3-hvrr-weekly) + today's notes on referenced tasks.",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "internal only: emails lquinn@exosaero.com; read-only MC queries. No external recipients.",
+   "memory_boundary": "none (stateless)",
+   "escalation": "recipient acts on the reminder",
+   "eval_type": "output",
+   "eval_suite": "liveness (exit 0) + OUTPUT: agent_eval check_duplicate_sends; recipient verified internal at registration",
+   "telemetry": "/Users/exomac/.openclaw/workspace/logs/lizi-daily-4pm.log",
+   "reusability_scope": "single-purpose",
+   "risk_tier": "LOW",
+   "lifecycle": "standing",
+   "registered": "2026-10-12",
+   "envelope_source": "manual registration (Exo, 10/12)"
   }
  ],
  "eval_wave_1": {
