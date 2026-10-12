@@ -458,6 +458,8 @@ def pay_candidates():
         poc = field(pb, "POC") or field(sec, "POC")
         contact, greet = contact_from(email, [poc, pb], o.get("title") or "")
         st = (field(pb, "Status") + " " + field(sec, "Status"))
+        if re.search(r"\b(LOST|DEAD|CLOSED|DROPPED)\b", st):
+            continue  # Lizi-dropped lead (UT/Ursa slipped into the 10/9 pack despite 10/8 LOST)
         out.append({"source": "pay-opportunity", "ref": o["id"], "org": clean_org(o.get("title")),
                     "title": o.get("title"), "segment": field(pb, "Segment") or field(sec, "Segment"),
                     "email": email.lower() if email else "", "contact": contact, "greeting": greet,
