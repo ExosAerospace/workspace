@@ -72,10 +72,18 @@ for t in [
     "Rufer (91,000) brings it to 601,553 (68.94%). Recommend NOT relying on the proxy alone: get Conger and Rufer to sign.",
     "Why the 18% matters here: on SSLC's 6/3/2026 ledger (Exos 132,972; 847,944 total) Exos + proxy = 48.7%, under a majority. "
     "The 08-2024 register is the basis for 18.06%; Resolution 3 makes the Corporation reconcile the ledger to it.",
-    "Open items before use: (a) confirm SSLC's Articles do not prohibit action by written consent (Cal. Corp. Code §603(a)); "
-    "(b) get the current bylaws to set the Article number; (c) confirm no proxy revocation (John: none received as of 10/12/2026); "
-    "(d) Exos $60K (10/10/2024): if it is part of the $790K equity behind 18.06%, it cannot also be a $31.2K loan still due. "
-    "Pick one before signing.",
+    "Checked against SSLC Bylaws (adopted June 2000; data-room/SSLC/governance/SSLC_1a_Bylaws.pdf): Art. II §10 expressly "
+    "permits shareholder action by written consent of a majority of outstanding shares and recognizes proxyholders; Art. IX §1 "
+    "lets holders of a majority of outstanding shares adopt or amend bylaws. The new Article is numbered X (existing Articles I-IX).",
+    "Open items before use: (a) SSLC Articles of Incorporation are not in the data room. Order a certified copy from the CA "
+    "Secretary of State to confirm they do not restrict written consent (§603(a)) or fix the board size; "
+    "(b) Bylaws Art. II §12 requires a proxy to be 'filed with the secretary': deliver the Microcosm proxy to the Secretary with "
+    "(or before) the consents; (c) confirm the current Secretary (the 2000 certificate is signed by Alice V. Wertz) and deliver "
+    "consents to the Secretary AND every director by trackable means; (d) record date for this consent = the day the first "
+    "consent is signed (Bylaws Art. II §11(b)). Sign Exos's consent last, on the day all are delivered.",
+    "Exos $60K resolved (Exos QuickBooks, 10/12/2026): the $790K 'Scorpius Stock' = $450K (Nov 2021) + $60K (12/21/2023) + "
+    "$250K (Mar-Apr 2024) + $30K loan converted (7/24/2024). The 10/10/2024 $60K is a SEPARATE loan (SSLC repaid $28.8K; "
+    "$31.2K still due). The 18.06% and the loan are both valid.",
     "Sequence: collect signatures, deliver all signed consents to the Secretary at the same time (consents can be revoked until "
     "the majority is filed, §603(c)), then send the Notice (Exhibit B) promptly to non-consenting holders (§603(b)(2)). Expect "
     "Microcosm to revoke the proxy once it is used; actions taken before revocation remain valid (Proxy §4).",
@@ -117,13 +125,13 @@ for t in [
     P(t, indent=0.25, sa=4)
 
 H("Resolution 1: Bylaw Amendment")
-P("RESOLVED, that pursuant to Section 211 of the California Corporations Code, the Bylaws of the Corporation are "
-  "amended to add a new Article [__] titled \"Financial Integrity and Related-Party Transactions\" in the form attached as "
+P("RESOLVED, that pursuant to Article IX, Section 1 of the Bylaws and Section 211 of the California Corporations Code, the Bylaws of the Corporation are "
+  "amended to add a new Article X titled \"Financial Integrity and Related-Party Transactions\" in the form attached as "
   "Exhibit A, effective on the Effective Date.")
 
 H("Resolution 2: Independent Reconciliation")
 P("RESOLVED, that the officers of the Corporation are directed to carry out the Independent Reconciliation required "
-  "by Section [__].4 of Exhibit A, and to deliver its report to every director and to any shareholder who requests it.")
+  "by Section 10.4 of Exhibit A, and to deliver its report to every director and to any shareholder who requests it.")
 
 H("Resolution 3: Share Register")
 P("RESOLVED, that the Secretary of the Corporation is directed to reconcile the share register to the certificates "
@@ -177,9 +185,9 @@ doc.add_page_break()
 # ── Exhibit A: bylaw ─────────────────────────────────────────────────────────
 P("DRAFT — NOT EXECUTED", bold=True, size=9, color=RED, align=C)
 P("EXHIBIT A", bold=True, size=12, align=C, sa=2)
-P("ARTICLE [__]: FINANCIAL INTEGRITY AND RELATED-PARTY TRANSACTIONS", bold=True, size=12, align=C, sa=10)
+P("ARTICLE X: FINANCIAL INTEGRITY AND RELATED-PARTY TRANSACTIONS", bold=True, size=12, align=C, sa=10)
 BYLAW = [
-    ("[__].1 Definitions.",
+    ("10.1 Definitions.",
      "\"Related Party\" means (a) any director or officer of the Corporation; (b) any holder of 10% or more of the "
      "Corporation's outstanding shares; (c) any spouse, child, parent or sibling of a person in (a) or (b); and (d) any "
      "entity in which a person in (a) through (c) holds a material financial interest or serves as a director or officer, "
@@ -187,18 +195,18 @@ BYLAW = [
      "any payment, loan, advance, guarantee, lease, cost allocation, reclassification, interest accrual, set-off, netting, "
      "forgiveness or other transfer of value between the Corporation and a Related Party. \"Disinterested Director\" "
      "means a director who is not, and has no material financial interest in, a party to the transaction."),
-    ("[__].2 Approval Required.",
+    ("10.2 Approval Required.",
      "No Related-Party Transaction shall be entered into, paid, recorded or modified unless (a) the material facts, "
      "including written invoices or agreements supporting the amount, are disclosed to all directors, and (b) it is "
      "approved by a majority of the Disinterested Directors (who may not be fewer than two) in a manner meeting Section "
      "310(a)(2) of the California Corporations Code, or by the shareholders under Section 310(a)(1) with the shares "
      "owned by the interested Related Party not being entitled to vote. Ordinary payroll to an employee who is a Related "
      "Party at rates previously so approved does not require further approval."),
-    ("[__].3 Freeze Pending Reconciliation.",
+    ("10.3 Freeze Pending Reconciliation.",
      "Until the Independent Reconciliation report has been delivered and its adjustments recorded, the Corporation "
      "shall not (a) repay, net, offset, increase or accrue interest on any amount recorded as owed to a Related Party, "
      "or (b) make any distribution to shareholders."),
-    ("[__].4 Independent Reconciliation.",
+    ("10.4 Independent Reconciliation.",
      "Within 15 days after this Article takes effect, the Disinterested Directors shall engage an independent certified "
      "public accounting firm that has not, within the prior three years, been engaged by any Related Party or worked at "
      "the direction of any Related Party (the \"Reviewer\"). The Reviewer shall, within 45 days after engagement, "
@@ -209,14 +217,14 @@ BYLAW = [
      "and shared services between the Corporation and any Related Party from January 1, 2024; (d) all amounts paid "
      "to any Related Party from July 1, 2024; and (e) the share register against issued certificates and paid-in "
      "capital by holder. The Corporation shall record the Reviewer's adjustments within 10 days after receiving the report."),
-    ("[__].5 Director Access.",
+    ("10.5 Director Access.",
      "Every director shall receive, within three business days after written request, read-only access to the "
-     "Corporation's accounting system and supporting records, consistent with Section 1602 of the California "
-     "Corporations Code. No officer, employee or contractor of the Corporation shall restrict or delay that access."),
-    ("[__].6 Share Register.",
+     "Corporation's accounting system and supporting records, consistent with Article V, Section 10 and Article VII, "
+     "Section 4 of these Bylaws and Section 1602 of the California Corporations Code. No officer, employee or contractor of the Corporation shall restrict or delay that access."),
+    ("10.6 Share Register.",
      "The Secretary shall maintain the share register reconciled to the certificates issued and shall furnish it to "
      "any shareholder on written request within 10 days."),
-    ("[__].7 Amendment.",
+    ("10.7 Amendment.",
      "This Article may be amended or repealed only by approval of the outstanding shares (Section 152 of the California "
      "Corporations Code), and the Board shall have no power to amend or repeal it."),
 ]
