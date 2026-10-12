@@ -3,7 +3,7 @@
 **FORWARD-READY (2026-10-12 reformat — zero-edit). Everything between the COPY lines is the complete email: paste into a new message, nothing to add or move.**
 
 SEND TO: egbert.edelbroek@spacebornunited.com
-SUBJECT: ARTIS and the first commercial flight of BLK3
+SUBJECT: ARTIS on BLK3, early 2027
 
 ––––– COPY FROM HERE –––––
 Hello Dr. Edelbroek,
@@ -25,7 +25,7 @@ Lizi
 
 **To:** Dr. Egbert Edelbroek, Founder & CEO — SpaceBorn United B.V. (egbert.edelbroek@spacebornunited.com — master list; MX live, Google).
 **Checks:** CSL 🟢 (org + person, 2026-10-01). DD = CAUTION (early-stage maturity only, no integrity flag; standard 50% deposit terms cover it). Netherlands, EU/NATO ally. Not in sent registry; no prior Decision card found (2026-10-12 recheck).
-**Claim discipline:** No $/kg pricing; BLK3 timing = "early 2027" only (not stated explicitly here, no timing claim needed); SARGE-2018 commercial heritage cited; "one of only three FAA-licensed reusable rockets in the US" per standing rule. No "flew with us" overclaim — ARTIS no BLK3 manifest exists yet (Lizi 10/12) — interest only, BLK3 has not flown commercially yet.
+**Claim discipline:** No $/kg pricing; BLK3 timing = "early 2027" only (not stated explicitly here, no timing claim needed); SARGE-2018 commercial heritage cited; NO "one of only three" (banned in Lizi outreach). No "flew with us" overclaim — ARTIS no BLK3 manifest exists yet (Lizi 10/12) — interest only, BLK3 has not flown commercially yet.
 **Lead context:** SpaceBorn United — space reproductive biology research (ARTIS experiment), 2024 BLK3 interest (no manifest exists yet). Rebooking tier (Phil 9/30 master list).
 
 *CORRECTION 2026-10-12 PM (Exo, Lizi review #3715): rewritten from Lizi (she sends); removed 'one of only three', 'minutes of continuous microgravity', manifest wording, John signature/booking link.*
