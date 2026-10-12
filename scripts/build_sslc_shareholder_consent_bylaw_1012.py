@@ -75,12 +75,19 @@ for t in [
     "Checked against SSLC Bylaws (adopted June 2000; data-room/SSLC/governance/SSLC_1a_Bylaws.pdf): Art. II §10 expressly "
     "permits shareholder action by written consent of a majority of outstanding shares and recognizes proxyholders; Art. IX §1 "
     "lets holders of a majority of outstanding shares adopt or amend bylaws. The new Article is numbered X (existing Articles I-IX).",
-    "Open items before use: (a) SSLC Articles of Incorporation are not in the data room. Order a certified copy from the CA "
-    "Secretary of State to confirm they do not restrict written consent (§603(a)) or fix the board size; "
-    "(b) Bylaws Art. II §12 requires a proxy to be 'filed with the secretary': deliver the Microcosm proxy to the Secretary with "
-    "(or before) the consents; (c) confirm the current Secretary (the 2000 certificate is signed by Alice V. Wertz) and deliver "
-    "consents to the Secretary AND every director by trackable means; (d) record date for this consent = the day the first "
-    "consent is signed (Bylaws Art. II §11(b)). Sign Exos's consent last, on the day all are delivered.",
+    "Checked against SSLC Articles of Incorporation (filed 1/19/1999, Entity No. 2131102) and the Certificate of Amendment "
+    "(filed 3/22/1999): one class of shares, 6,000,000 authorized; no restriction on shareholder written consent; no board "
+    "size stated (so Bylaws Art. III §2 governs: 5-9 directors). Statements of Information filed 1/27/2025 and 1/18/2026: "
+    "5 directors, 0 vacancies (John Quinn, Markus Rufer, Robert Conger, Alice Wertz, James Wertz); Rufer CEO; Alice Wertz "
+    "Secretary and CFO.",
+    "Board route first: on related-party matters Jim and Alice Wertz are interested directors, so Quinn + Rufer + Conger are "
+    "3 of 5 (a quorum and a majority). Any two directors can call a special board meeting (Bylaws Art. III §8), and the board "
+    "can remove or replace officers, including the CFO/Secretary, with or without cause (Art. V §4). Use this consent if "
+    "Rufer or Conger will not vote at the board level.",
+    "Before use: (a) Bylaws Art. II §12 requires a proxy to be 'filed with the secretary': deliver the Microcosm proxy to "
+    "the Secretary (Alice Wertz) with or before the consents; (b) deliver consents to the Secretary AND every director by "
+    "trackable means; (c) record date for this consent = the day the first consent is signed (Bylaws Art. II §11(b)). "
+    "Sign Exos's consent last, on the day all are delivered.",
     "Exos $60K resolved (Exos QuickBooks, 10/12/2026): the $790K 'Scorpius Stock' = $450K (Nov 2021) + $60K (12/21/2023) + "
     "$250K (Mar-Apr 2024) + $30K loan converted (7/24/2024). The 10/10/2024 $60K is a SEPARATE loan (SSLC repaid $28.8K; "
     "$31.2K still due). The 18.06% and the loan are both valid.",
@@ -88,7 +95,8 @@ for t in [
     "the majority is filed, §603(c)), then send the Notice (Exhibit B) promptly to non-consenting holders (§603(b)(2)). Expect "
     "Microcosm to revoke the proxy once it is used; actions taken before revocation remain valid (Proxy §4).",
     "Not legal advice. Sources: Cal. Corp. Code §603 (written consent), §705 (proxies), §211 (shareholder bylaw amendment), "
-    "§310 (interested-director transactions), §1602 (director inspection); california.public.law.",
+    "§310 (interested-director transactions), §1602 (director inspection); california.public.law. SSLC Articles, "
+    "amendment and Statements of Information: data-room/SSLC/governance/.",
 ]:
     P("•  " + t, size=10, sa=4)
 doc.add_page_break()
