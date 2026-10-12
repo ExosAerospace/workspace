@@ -24,12 +24,12 @@ BLUE, ORANGE, GREY, INK = "#2B6CB0", "#F26A21", "#8A8A8A", "#1F2328"
 
 # (label, value, source/basis)
 INPUTS = [
-    ("Starting cash (Oct 2, 2026)", 198000, "SSLC QuickBooks pull 10/2/2026"),
+    ("Starting cash (Oct 11, 2026)", 590344, "SSLC QuickBooks Balance Sheet as of 10/11/2026 (John export)"),
     ("Year-end target cash (Jim Wertz)", 850000, "Jim Wertz statement"),
-    ("Weeks Oct 2 → Dec 31", 13, "Calendar"),
+    ("Weeks Oct 11 → Dec 31", 12, "Calendar (~11.6 weeks)"),
     ("Weeks per tank (Markus Rufer)", 3, "Markus Rufer statement"),
     ("Price per tank ($)", 250000, "Markus Rufer statement"),
-    ("Prepaid backlog already collected ($)", 984000, "SSLC QB 10/2: $864K billed ahead + $120K deposits. DISPUTED by John: tank start/billing not captured correctly"),
+    ("Prepaid backlog already collected ($)", 1062177, "SSLC QB 10/11: $942,177 billed ahead (AR Unbilled) + $120K deposits. DISPUTED by John: tank start/billing not captured correctly"),
     ("Direct build cost (% of tank price)", 0.52, "Management assumption (actuals-anchored model COGS)"),
     ("Annual fixed overhead ($)", 1340000, "Derived: FY26 rev $1.925M × 48% GM + $416K op loss; mgmt assumption"),
 ]
@@ -60,7 +60,7 @@ def build_xlsx():
         c.font = Font(bold=True)
         c.alignment = Alignment(wrap_text=True)
     ws.append([0, "", 0, "=Inputs!B3", "=Inputs!B3", "=Inputs!B3", "=Inputs!B4"])
-    for wk in range(1, 14):
+    for wk in range(1, 13):
         r = wk + 2
         ws.append([
             wk,
@@ -84,10 +84,10 @@ def build_xlsx():
     s["A1"] = "Year-end (Dec 31) result"
     s["A1"].font = Font(bold=True, size=13)
     rows = [
-        ("Tanks delivered by Dec 31 at 1 per 3 weeks", "=COUNTIF('Weekly Cash'!B3:B15,\"Yes\")"),
-        ("Tank revenue by Dec 31", "=SUM('Weekly Cash'!C3:C15)"),
-        ("Best case year-end cash (all tanks = new cash)", "='Weekly Cash'!D15"),
-        ("Per SSLC books, if billed-ahead is accurate (DISPUTED)", "='Weekly Cash'!E15"),
+        ("Tanks delivered by Dec 31 at 1 per 3 weeks", "=COUNTIF('Weekly Cash'!B3:B14,\"Yes\")"),
+        ("Tank revenue by Dec 31", "=SUM('Weekly Cash'!C3:C14)"),
+        ("Best case year-end cash (all tanks = new cash)", "='Weekly Cash'!D14"),
+        ("Per SSLC books, if billed-ahead is accurate (DISPUTED)", "='Weekly Cash'!E14"),
         ("Wertz claim", "=Inputs!B4"),
         ("Shortfall vs claim: best case", "=Inputs!B4-B5"),
         ("Shortfall vs claim: per SSLC books (disputed)", "=Inputs!B4-B6"),
@@ -98,9 +98,10 @@ def build_xlsx():
     s["B3"].number_format = '0'
     s.column_dimensions["A"].width = 52
     s.column_dimensions["B"].width = 16
-    s["A11"] = ("Reading: even if every tank is new cash, SSLC can't reach $850K by year-end from operations. "
-                "The prepaid backlog means the next ~4 tanks were already paid for. Reaching $850K requires new "
-                "customer deposits or financing, and each of those adds a delivery or repayment obligation.")
+    s["A11"] = ("Reading: SSLC held $590K on 10/11 (up from $198K on 10/2), mostly from collecting receivables and billing "
+                "ahead: the billed-ahead balance is $942K and still rising. Even if every tank from here is new cash, year-end "
+                "lands near the claim only in the best case. If the billed-ahead work is owed as booked, finishing it drains "
+                "cash below zero. Either way the cash reflects customer prepayment, not earnings.")
     s["A11"].alignment = Alignment(wrap_text=True)
     s.row_dimensions[11].height = 60
     s["A12"] = "Management assumptions are marked on Inputs. Projection, not a statement of SSLC's actual results."
@@ -109,10 +110,10 @@ def build_xlsx():
     ch = LineChart()
     ch.title = "SSLC cash path to Dec 31 vs the $850K claim"
     ch.y_axis.title = "Cash ($)"
-    ch.x_axis.title = "Week from Oct 2"
-    data = Reference(ws, min_col=4, max_col=7, min_row=1, max_row=15)
+    ch.x_axis.title = "Week from Oct 11"
+    data = Reference(ws, min_col=4, max_col=7, min_row=1, max_row=14)
     ch.add_data(data, titles_from_data=True)
-    ch.set_categories(Reference(ws, min_col=1, min_row=2, max_row=15))
+    ch.set_categories(Reference(ws, min_col=1, min_row=2, max_row=14))
     ch.height, ch.width = 9, 18
     ws.add_chart(ch, "I2")
 
@@ -123,8 +124,8 @@ def build_xlsx():
 
 def series():
     v = {k: val for k, val, _ in INPUTS}
-    start, target = v["Starting cash (Oct 2, 2026)"], v["Year-end target cash (Jim Wertz)"]
-    weeks, per, price = v["Weeks Oct 2 → Dec 31"], v["Weeks per tank (Markus Rufer)"], v["Price per tank ($)"]
+    start, target = v["Starting cash (Oct 11, 2026)"], v["Year-end target cash (Jim Wertz)"]
+    weeks, per, price = v["Weeks Oct 11 → Dec 31"], v["Weeks per tank (Markus Rufer)"], v["Price per tank ($)"]
     prepaid, cogs, ovh = v["Prepaid backlog already collected ($)"], v["Direct build cost (% of tank price)"], v["Annual fixed overhead ($)"]
     burn = price * cogs / per + ovh / 52
     best, real, claim = [start], [start], [start]
@@ -149,25 +150,25 @@ def build_png():
     ax.plot(x, k(real), color=ORANGE, lw=2, marker="o", ms=4)
     ax.axhline(0, color="#CCCCCC", lw=1)
     lab = dict(fontsize=9, va="center", color=INK)
-    ax.text(13.2, target / 1000, f"Claim: ${target/1000:,.0f}K", **lab)
-    ax.text(13.2, best[-1] / 1000, f"Best case: ${best[-1]/1000:,.0f}K\n(every tank = new cash)", **lab)
-    ax.text(13.2, real[-1] / 1000, f"Per SSLC books: -${-real[-1]/1000:,.0f}K\n(if $864K billed-ahead is right; disputed)", **lab)
+    ax.text(12.2, target / 1000, f"Claim: ${target/1000:,.0f}K", **lab)
+    ax.text(12.2, best[-1] / 1000, f"Best case: ${best[-1]/1000:,.0f}K\n(every tank = new cash)", **lab)
+    ax.text(12.2, real[-1] / 1000, (f"Per SSLC books: ${real[-1]/1000:,.0f}K" if real[-1]>=0 else f"Per SSLC books: -${-real[-1]/1000:,.0f}K")+"\n(if $942K billed-ahead is right; disputed)", **lab)
     for wk in (3, 6, 9, 12):
         ax.axvline(wk, color="#EEEEEE", lw=1, zorder=0)
-    ax.set_xlim(0, 17.5)
-    ax.set_xticks(range(0, 14))
-    ax.set_xlabel("Week from Oct 2, 2026 (tank every 3 weeks at $250K: weeks 3, 6, 9, 12)", color=INK)
+    ax.set_xlim(0, 16.5)
+    ax.set_xticks(range(0, 13))
+    ax.set_xlabel("Week from Oct 11, 2026 (tank every 3 weeks at $250K: weeks 3, 6, 9, 12)", color=INK)
     ax.set_ylabel("SSLC cash ($K)", color=INK)
-    ax.set_title("SSLC can't reach $850K cash by Dec 31 from operations", loc="left",
+    ax.set_title("SSLC's \\$590K cash is mostly prepayment; \\$850K by Dec 31 needs more billing ahead", loc="left",
                  fontsize=13, fontweight="bold", color=INK)
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
     ax.grid(axis="y", color="#EEEEEE")
     fig.text(0.01, 0.01,
-             "Inputs: $198K cash 10/2 (SSLC QB); $984K prepaid backlog per SSLC books (disputed); 52% build cost and $1.34M/yr overhead "
-             "are management assumptions. Projection, not SSLC's reported results.",
+             "Inputs: $590K cash 10/11 (SSLC QB); $1.06M prepaid backlog per SSLC books (disputed); 52% build cost and $1.34M/yr overhead "
+             "are mgmt assumptions.\nProjection, not SSLC's reported results.",
              fontsize=7.5, color="#666666")
-    fig.tight_layout(rect=(0, 0.04, 1, 1))
+    fig.tight_layout(rect=(0, 0.06, 1, 1))
     tmp = PNG + ".tmp.png"
     fig.savefig(tmp, format="png")
     os.replace(tmp, PNG)
