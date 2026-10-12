@@ -2610,7 +2610,7 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** Krishna Mohan Rupavatharam (Director, MSU Spectrum Lab, krishna.rupavatharam@montana.edu); Tamara Moe (Research Program & Grants Manager, MSU Spectrum Lab, tamara.moe@montana.edu)
 - **Why BLK3 fits:** Spectrum Lab could put a suborbital demo of an RF-photonic or spectral sensor, or of radiation- and vibration-qualified photonics, into a grant proposal. Pitch it as a university research flight. S2's last public news is Aug 2020 (DARPA award), so its current activity level is unverified. It shares an address (2310 University Way, Bozeman) with Bridger's building complex.
 - **Funding:** NASA SBIR/STTR, NASA Flight Opportunities (TechFlights), DoD SBIR, customer IR&D
-- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Status:** READY (Exo 10/12: Lizi-voice draft given; Lizi sends; same university as Montana Space Grant thread)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
 
 #### 10. Lumibird Photonics USA — Quantel (Bozeman)
@@ -2618,7 +2618,7 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** No public named lead — route via org / warm intro
 - **Why BLK3 fits:** There are two angles. (1) As a customer: flight-qualifying rugged laser heads or rangefinder or LiDAR parts. (2) As a partner: its environmental and optical test lab could complement Exos flight tests for shared customers. Lumibird is a French-listed group, so apply the foreign-parent screen for any controlled work. No Bozeman site lead is public, so start through the main line.
 - **Funding:** NASA SBIR/STTR, NASA Flight Opportunities (TechFlights), DoD SBIR, customer IR&D
-- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Status:** PARKED (Exo 10/12, Lizi review: no named contact, no verified space work at Bozeman site; warm intro only)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
 
 #### 11. CACI — Belgrade MT site (ex-Ascent Vision Technologies)
@@ -2626,5 +2626,5 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** No public named lead — route via org / warm intro
 - **Why BLK3 fits:** Fits the Exos test-side, missile-defense-adjacent positioning: flight-qualifying EO/IR payloads for high-altitude or space tracking. There is no named public local site lead. The route in is CACI corporate BD or the C-UAS business line, or a warm intro through the Montana High Tech Business Alliance. Lee Dingman was AVT President in 2020, but his current role is unverified and he is not included.
 - **Funding:** NASA SBIR/STTR, NASA Flight Opportunities (TechFlights), DoD SBIR, customer IR&D
-- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Status:** PARKED (Exo 10/12, Lizi review: defense prime site, no named contact, weak fit; warm intro via John only)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
