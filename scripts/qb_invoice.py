@@ -272,6 +272,22 @@ def attach_pdf_to_decision(rec):
 
 
 # ── prepare ──────────────────────────────────────────────────────────────────
+def crm_phone(email):
+    """Phone from ANY CRM contact record with this email. The CRM holds several auto-captured
+    records per person and only one may carry the phone (10/12: Kordel's number sat on 1 of 7
+    'kordel@scentience.ai' records while invoice #0071 was blocked for 'missing phone')."""
+    try:
+        import urllib.parse
+        sec = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))
+        k = sec["supabase_service_role_key"]
+        u = ("https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/contacts?select=phone,updated_at"
+             f"&email=ilike.{urllib.parse.quote(email or '')}&phone=not.is.null&order=updated_at.desc.nullslast&limit=1")
+        r = json.loads(urllib.request.urlopen(urllib.request.Request(u, headers={"apikey": k, "Authorization": "Bearer " + k}), timeout=20).read())
+        return (r[0].get("phone") or "").strip() or None if r else None
+    except Exception:
+        return None
+
+
 def prepare(a):
     st = jload(STATE, {"invoices": []})
     order = None
@@ -316,7 +332,7 @@ def prepare(a):
         item = a.item or "Contract Services"
     if not email:
         raise SystemExit("no customer billing email — QB can't send without one")
-    phone = getattr(a, "phone", None) or (order or {}).get("contact_phone")
+    phone = getattr(a, "phone", None) or (order or {}).get("contact_phone") or crm_phone(email)
     address = getattr(a, "address", None) or (order or {}).get("billing_address")
 
     if banned_terms(desc):
