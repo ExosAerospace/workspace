@@ -2594,7 +2594,7 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** Ben Little (Chief Executive Officer, email not public); Dr. Peter Roos (Chief Innovation Officer (founder), email not public); Ryan Sullivan (Chief Technology Officer, email not public)
 - **Why BLK3 fits:** No space or orbital heritage was found on its public pages. Its lidar's optical amplifier came from MIT Lincoln Laboratory work. The only Exos angle is a future satellite or high-altitude methane-sensing push, where suborbital testing of the lidar or parts could help. Treat as a speculative relationship target and approach through the CTO or Chief Innovation Officer.
 - **Funding:** NASA SBIR/STTR, NASA Flight Opportunities (TechFlights), DoD SBIR, customer IR&D
-- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Status:** LOST (Exo 10/12, Lizi review: aircraft methane-detection lidar for oil & gas, no space angle)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
 
 #### 8. Resonon (Bozeman)
@@ -2602,7 +2602,7 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** Rand Swanson (CEO & Co-Founder, email not public)
 - **Why BLK3 fits:** A good match for the Exos value case. Suborbital flights with recovered hardware could flight-qualify or test new space and high-altitude hyperspectral heads before CubeSat or satellite missions. It could also serve as a demo sensor on a BLK3 flight. The company is small (about 11 staff), so pitch it as a low-cost test or co-marketing opportunity.
 - **Funding:** NASA SBIR/STTR, NASA Flight Opportunities (TechFlights), DoD SBIR, customer IR&D
-- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Status:** RESEARCHING (Exo 10/12: real fit, built NASA ARCSTONE hyperspectral instrument launched 6/23/2025 on Transporter-14; no public email, go via Edgar/John Montana intro, no cold send)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
 
 #### 9. Spectrum Lab — Montana State University (Bozeman)
