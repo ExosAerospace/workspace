@@ -46,6 +46,9 @@ COPY_RULES = [
                                                                "by " if m.group(0).lower().startswith("by ") else "") + "early 2027"),
     (r",? and with fewer than 3,000 parts, turnaround is measured in weeks, not quarters", ", and the vehicle is built for reflight"),
     (r",? turnaround is measured in weeks,? not quarters", ""),
+    # 10/8–10/12 payload drafts kept re-introducing unsourced turnaround claims
+    (r"\s*Integration lead times are measured in weeks\.", ""),
+    (r"\s+within days\b", ""),
 ]
 
 
