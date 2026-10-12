@@ -40,6 +40,8 @@ DUE={
   ("UCLA: Prof. Chee Wei Wong","cheewei.wong@ucla.edu","sent 10/7",
    "Hi Professor Wong,\nJust following up on my note about a BLK3 rocket flight as a next step after your balloon test. Happy to set up a short call whenever works for you.\nBest Regards,\nLizi")],
  "2026-10-22":[
+  ("Rhea Space Activity: Shawn Usman (Founder & CEO)","shawn.usman@rheaspaceactivity.com (best-guess address; check it didn't bounce) + LinkedIn","emailed 10/9 + LinkedIn request 10/7",
+   "Dr. Usman,\nFollowing up on my note about flying AutoNav hardware on BLK3 in early 2027. Since the flight is recovered, your team gets the hardware and data back to work with directly. Would a short call in the next couple of weeks work?\nBest Regards,\nLizi"),
   ("Montana Space Grant: Angela Des Jardins","angela.desjardins@montana.edu, cc amy.brown11@montana.edu","sent 10/8 (#3287)",
    "Hi Angela,\nJust following up on my note about BLK3 as a next step for BOREALIS student payloads. Would a short call work in the next couple of weeks?\nBest Regards,\nLizi"),
   ("Carthage: Kevin Crosby","reply on your 10/8 thread","sent 10/8",

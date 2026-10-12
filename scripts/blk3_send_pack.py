@@ -519,7 +519,7 @@ def compose(item):
     subject = f"Payload space for {org} on BLK3, early 2027"
     body = f"""{greet}
 
-I hope you are doing well. My name is Lizi Quinn, and I work with the team at Exos Aerospace. We are currently booking payloads for the next flight of BLK3, our reusable suborbital rocket, in early 2027. Given {poss} work in {interest}, it felt like a natural fit to reach out.
+My name is Lizi Quinn, and I work with the team at Exos Aerospace. We are currently booking payloads for the next flight of BLK3, our reusable suborbital rocket, in early 2027. Given {poss} work in {interest}, it felt like a natural fit to reach out.
 
 Exos has flown commercial payloads since 2018 on our SARGE rocket, and BLK3 is its successor and our latest FAA-licensed vehicle. A few things that may be helpful as you think it over:
 
