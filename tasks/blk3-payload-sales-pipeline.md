@@ -2610,7 +2610,7 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** Krishna Mohan Rupavatharam (Director, MSU Spectrum Lab, krishna.rupavatharam@montana.edu); Tamara Moe (Research Program & Grants Manager, MSU Spectrum Lab, tamara.moe@montana.edu)
 - **Why BLK3 fits:** Spectrum Lab could put a suborbital demo of an RF-photonic or spectral sensor, or of radiation- and vibration-qualified photonics, into a grant proposal. Pitch it as a university research flight. S2's last public news is Aug 2020 (DARPA award), so its current activity level is unverified. It shares an address (2310 University Way, Bozeman) with Bridger's building complex.
 - **Funding:** NASA SBIR/STTR, NASA Flight Opportunities (TechFlights), DoD SBIR, customer IR&D
-- **Status:** READY (Exo 10/12: Lizi-voice draft given; Lizi sends; same university as Montana Space Grant thread)
+- **Status:** IN DISCUSSION (Lizi emailed Krishna 10/12; he replied same day: traveling, forwarding to team; follow-up 10/22)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
 
 #### 10. Lumibird Photonics USA — Quantel (Bozeman)
