@@ -288,6 +288,33 @@ def crm_phone(email):
         return None
 
 
+def crm_address(email):
+    """Billing address from the CRM for this email, same idea as crm_phone(). contacts has no address column, so
+    payload_questionnaire.py writes a structured 'Billing address: street; city, ST zip [source]' notes line on
+    every record for the email; fall back to the linked company's address column."""
+    try:
+        import urllib.parse
+        k = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
+        h = {"apikey": k, "Authorization": "Bearer " + k}
+        base = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
+        rows = json.loads(urllib.request.urlopen(urllib.request.Request(
+            base + f"contacts?select=notes,company_id,updated_at&email=ilike.{urllib.parse.quote(email or '')}"
+                   "&order=updated_at.desc.nullslast&limit=20", headers=h), timeout=20).read())
+        for r in rows:
+            m = re.search(r"^Billing address:\s*(.+?)\s*(?:\[[^\]]*\])?\s*$", r.get("notes") or "", re.I | re.M)
+            if m:
+                return m.group(1).strip()
+        for cid in {r["company_id"] for r in rows if r.get("company_id")}:
+            co = json.loads(urllib.request.urlopen(urllib.request.Request(
+                base + f"companies?select=address&id=eq.{cid}", headers=h), timeout=20).read())
+            a = ((co or [{}])[0].get("address") or "").strip()
+            if re.search(r"\d", a):
+                return a
+    except Exception:
+        return None
+    return None
+
+
 def prepare(a):
     st = jload(STATE, {"invoices": []})
     order = None
@@ -333,7 +360,7 @@ def prepare(a):
     if not email:
         raise SystemExit("no customer billing email — QB can't send without one")
     phone = getattr(a, "phone", None) or (order or {}).get("contact_phone") or crm_phone(email)
-    address = getattr(a, "address", None) or (order or {}).get("billing_address")
+    address = getattr(a, "address", None) or (order or {}).get("billing_address") or crm_address(email)
 
     if banned_terms(desc):
         raise SystemExit(f"invoice text contains internal term(s) {banned_terms(desc)} — not allowed on a customer invoice")

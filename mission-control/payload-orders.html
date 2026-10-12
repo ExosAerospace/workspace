@@ -99,6 +99,7 @@ function draw(){
   if(!isNew)h+=`<div class="next">➡️ <b>Next:</b> ${esc(o.next_action)}</div>`;
   h+=`<div class="sec-h">1 · Deal</div><div class="grid">${f('customer','Customer (company)')}${f('payload_name','Payload name (non-technical, 80 chars)')}
    ${f('contact_name','Customer signer name')}${f('contact_email','Customer signer email','email')}
+   ${f('contact_phone','Customer phone (from questionnaire)','tel')}${f('billing_address','Billing address (street; city, ST zip)')}
    <div><label>Mission (flight number)</label><select id="f_mission"><option value="">— pick mission —</option>${(D.missions||[]).map(m=>`<option value="${esc(m.id)}" ${o.mission===m.id?'selected':''}>${esc(m.label)}</option>`).join('')}</select>${!o.mission&&o.flight?`<div class="muted small">Was: ${esc(o.flight)}</div>`:''}</div>${f('flight_date','Flight date','date')}
    ${f('mass_kg','Mass (kg)','number')}${f('contract_value','Contract value from the LSA (blank = rate card)','number')}
    ${f('owner','Deal owner','text','Lizi Quinn')}${f('task_ids','MC task #s','text','2957')}</div>
@@ -146,7 +147,7 @@ function draw(){
 function msg(id,t,ok){const e=$(id);if(e){e.className='msg '+(ok?'ok':'err');e.textContent=t;}}
 async function act(p,b,m){try{const r=await api(p,{id:cur.id,...b});cur=r.order;const i=D.orders.findIndex(o=>o.id===cur.id);if(i>=0)D.orders[i]=cur;else D.orders.push(cur);render();draw();msg(m,'Saved',true);}catch(e){msg(m,e.message);}}
 function saveDeal(){const g=k=>{const e=$('f_'+k);return e?(e.type==='checkbox'?e.checked:e.value):undefined};const fields={};
-  ['customer','payload_name','contact_name','contact_email','mission','flight_date','mass_kg','contract_value','owner','task_ids','questionnaire_received','notes','waiver_wet_signed_at','waiver_faa_submitted_at'].forEach(k=>{const v=g(k);if(v!==undefined)fields[k]=v;});
+  ['customer','payload_name','contact_name','contact_email','contact_phone','billing_address','mission','flight_date','mass_kg','contract_value','owner','task_ids','questionnaire_received','notes','waiver_wet_signed_at','waiver_faa_submitted_at'].forEach(k=>{const v=g(k);if(v!==undefined)fields[k]=v;});
   act('/api/payload-orders/save',{id:cur.id||undefined,fields},'m1');}
 function runCsl(){msg('m2','Screening…',true);act('/api/payload-orders/csl',{},'m2');}
 function clearCsl(i){const r=prompt('Reason this is a false match (name collision, no nexus):');if(r)act('/api/payload-orders/csl',{clear_index:i,reason:r},'m2');}

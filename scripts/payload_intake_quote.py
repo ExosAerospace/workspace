@@ -18,6 +18,7 @@ from email.utils import getaddresses, parsedate_to_datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from quote_contract_pipeline import quote, build_package, post_decision  # reuse the pipeline
+import payload_questionnaire as pq  # website questionnaire → phone + billing address into CRM/payload orders (10/12)
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
@@ -123,6 +124,7 @@ def main():
     if not pw:
         print("ERROR: protonmail_bridge_smtp_password missing"); sys.exit(1)
     seen = set(load(STATE, {}).get("seen", []))
+    pq_seen = set(load(pq.STATE, {}).get("seen", []))
     m = imaplib.IMAP4(IMAP_HOST, IMAP_PORT); m.login(EMAIL_USER, pw); m.select("INBOX")
     since = (datetime.date.today() - datetime.timedelta(days=2)).strftime("%d-%b-%Y")
     _st, data = m.search(None, "SINCE", since)
@@ -138,6 +140,13 @@ def main():
             continue
         subject = str(email.header.make_header(email.header.decode_header(msg.get("Subject", ""))))
         body = body_text(msg)
+        recips = recipients(msg)
+        # Website quote-form submissions (Formspree, or a human forward of one) carry the REQUIRED phone +
+        # billing address — fill them onto the CRM contact (upsert by email) and any matching payload order.
+        try:
+            pq.process_message(msg, APPLY, pq_seen)
+        except Exception as e:
+            print(f"  · questionnaire carry-over failed: {e}")
         recips = recipients(msg)
         if not is_inquiry(subject, body, recips):
             continue
@@ -159,6 +168,7 @@ def main():
     if APPLY:
         os.makedirs(os.path.dirname(STATE), exist_ok=True)
         json.dump({"seen": list(seen)[-2000:], "updated": datetime.datetime.now().isoformat()}, open(STATE, "w"))
+        tmp = pq.STATE + ".tmp"; json.dump({"seen": sorted(pq_seen)[-2000:]}, open(tmp, "w")); os.replace(tmp, pq.STATE)
     print(f"\n{'processed' if APPLY else 'would process'}: {len(processed)} inquiry(ies)")
     if APPLY and processed:
         lines = "\n".join(f"• {p['company']} — {p['kg']}kg → {p['tier']} {p['price_line']}"

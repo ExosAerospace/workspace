@@ -196,7 +196,7 @@ function view(o, envelopes) {
 }
 
 // ── field rules ──
-const EDITABLE = ['customer', 'contact_name', 'contact_email', 'payload_name', 'mission', 'flight', 'flight_date', 'mass_kg',
+const EDITABLE = ['customer', 'contact_name', 'contact_email', 'contact_phone', 'billing_address', 'payload_name', 'mission', 'flight', 'flight_date', 'mass_kg',
   'contract_value', 'owner', 'task_ids', 'opp_id', 'questionnaire_received', 'next_due', 'notes',
   'waiver_wet_signed_at', 'waiver_faa_submitted_at', 'waiver_confirmed_by', 'waiver_original_location'];
 function clean(fields, o) {
@@ -206,6 +206,9 @@ function clean(fields, o) {
   if ('contract_value' in out) out.contract_value = (out.contract_value === '' || out.contract_value == null) ? null : Number(out.contract_value);
   if ('questionnaire_received' in out) out.questionnaire_received = !!out.questionnaire_received;
   if ('payload_name' in out) out.payload_name = String(out.payload_name || '').slice(0, 80);
+  // phone + billing address come from the website questionnaire (scripts/payload_questionnaire.py); qb_invoice.py
+  // needs both on every invoice (#3418). Address format: 'street; city, ST zip'.
+  for (const k of ['contact_phone', 'billing_address']) if (k in out) out[k] = String(out[k] || '').trim().slice(0, 200) || null;
   if ('mission' in out) { out.mission = String(out.mission || '').trim().toUpperCase(); if (out.mission && !missions().some(m => m.id === out.mission)) return { error: 'Unknown mission ' + out.mission + ' (add it to data/missions.json first).' }; if (out.mission) out.flight = missionLabel(out.mission); }
   if (o && CONTROLLED((o.export || {}).status) && 'notes' in out && String(out.notes || '').trim() && out.notes !== o.notes) {
     return { error: 'Notes are disabled on a controlled (ITAR/EAR) payload. Keep technical detail in the SharePoint location only.' };

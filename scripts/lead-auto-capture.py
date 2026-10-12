@@ -15,7 +15,7 @@ Runs every 20 min via launchd com.exos.lead-auto-capture.
 import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
 import supabase_util as _sbu; _sbu.install()
 # --- end shim ---
-import imaplib, email, json, os, re, sys, time, urllib.request
+import imaplib, email, json, os, re, sys, time, urllib.request, urllib.parse
 from email.header import decode_header
 from email.utils import getaddresses, parsedate_to_datetime
 from datetime import datetime, timedelta, timezone, date
@@ -60,6 +60,15 @@ def screate(rec):
         B + "contacts", data=json.dumps(rec).encode(),
         headers={"apikey": k, "Authorization": "Bearer " + k, "Content-Type": "application/json",
                  "Prefer": "return=representation"}, method="POST"), timeout=30).read())[0]["id"]
+
+
+def _in_crm(addr):
+    """Authoritative per-address check right before a create (covers contacts added since the page scan)."""
+    try:
+        rows = sget("contacts?select=email&email=ilike." + urllib.parse.quote(addr) + "&limit=5")
+        return any((r.get("email") or "").strip().lower() == addr for r in rows)
+    except Exception:
+        return False
 
 
 def load_json(p, d):
@@ -130,7 +139,15 @@ def main():
     if not pw:
         print("no IMAP password; abort"); return
     state = set(load_json(STATE, []))
-    existing = set((c.get("email") or "").lower() for c in sget("contacts?select=email&limit=5000"))
+    # Page through ALL contacts: Supabase caps a response at 1000 rows, so a single limit=5000 read saw only
+    # 1000 of ~7.5K and re-captured existing people (10/12: 3 duplicate 'kordel@scentience.ai' records).
+    existing, off = set(), 0
+    while True:
+        page = sget(f"contacts?select=email&email=not.is.null&order=id&limit=1000&offset={off}")
+        existing |= set((c.get("email") or "").strip().lower() for c in page)
+        if len(page) < 1000:
+            break
+        off += 1000
     print(f"existing CRM contacts: {len(existing)}")
 
     m = imaplib.IMAP4(IMAP_HOST, IMAP_PORT); m.login(EMAIL_USER, pw)
@@ -189,8 +206,9 @@ def main():
             log(f"FAILED-DD flagged (not a lead): {addr} [{fd.get('firm')}]")
             print(f"  ⚠ FAILED-DD: {addr} [{fd.get('firm')}] -- flagged do-not-engage")
             continue
-        if addr in existing:
-            continue  # already a CRM contact — not a new lead
+        if addr in existing or _in_crm(addr):
+            existing.add(addr)
+            continue  # already a CRM contact — not a new lead (upsert-by-email: never a second record)
         try:
             dt = parsedate_to_datetime(msg.get("Date")).date().isoformat()
         except Exception:
