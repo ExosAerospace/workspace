@@ -1056,7 +1056,25 @@ def main():
         else:
             # @Exobot forward, DMARC-verified: pass the full body so the agent has the
             # forwarded content the directive refers to.
-            instruction = body.strip()[:7000]
+            # Never cut silently (10/11: a 7,000-char cap chopped Jon's Copernic email at "Paylo…" and
+            # forced rework). Save the FULL body to disk always; pass up to 60K chars inline and, if
+            # longer, say so explicitly with the path to the complete text.
+            full = body.strip()
+            try:
+                _bd = os.path.join(WS, "media", "inbound", "email-command", "bodies")
+                os.makedirs(_bd, exist_ok=True)
+                _bp = os.path.join(_bd, re.sub(r'[^A-Za-z0-9._-]', '_', str(mid))[:120] + ".txt")
+                with open(_bp + ".tmp", "w", encoding="utf-8") as _f:
+                    _f.write(full)
+                os.replace(_bp + ".tmp", _bp)
+            except Exception as _e:
+                _bp = None; log(f"[body-save] failed mid={mid}: {_e}")
+            BODY_INLINE_MAX = 60000
+            if len(full) > BODY_INLINE_MAX:
+                instruction = (full[:BODY_INLINE_MAX] + f"\n\n[BODY CONTINUES — {len(full) - BODY_INLINE_MAX:,} more characters. "
+                               f"Read the complete email at {os.path.relpath(_bp, WS) if _bp else '(save failed)'} before acting.]")
+            else:
+                instruction = full + (f"\n\n[Full email text also saved at {os.path.relpath(_bp, WS)}]" if _bp else "")
         # Save any real attachments on this command email so the agent can read/re-attach them
         # (previously only [CERT] did this → general commands lost their attachments, e.g. the
         # 4 BLK4-RDRE proposal docs the agent then couldn't find). Give the agent the saved paths.
