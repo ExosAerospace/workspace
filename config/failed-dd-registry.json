@@ -800,14 +800,12 @@
     },
     {
       "firm": "<jquinnexo@proton.me>",
-      "domains": [
-        "proton.me>"
-      ],
+      "domains": [],
       "emails": [],
       "people": [],
-      "verdict": "do-not-engage",
+      "verdict": "false-positive",
       "category": "sanctions/debarment",
-      "reason": "SAM.gov exclusion/debarment on record (139966 match) \u2014 do not engage.",
+      "reason": "SAM.gov exclusion/debarment on record (139966 match) \u2014 do not engage. | CORRECTED 2026-10-12 (Exo): false positive \u2014 the 'firm' was John Quinn's own Proton alias mis-parsed by the 9/4 SAM name-match; not a debarred party. Neutralized so it can never feed a block.",
       "date": "2026-09-04",
       "source": "manual"
     },

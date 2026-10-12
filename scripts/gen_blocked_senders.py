@@ -143,9 +143,20 @@ def main():
     except Exception:
         excl = set()
 
+    # HARD never-block: our own domain, Jon's Proton domains, and shared free-mail providers.
+    # Blocking any of these (domain OR an address under them) could cut off Jon's own email —
+    # 10/12: a 9/4 SAM false positive had Jon's own <jquinnexo@proton.me> in the registry.
+    NEVER = {"exosaero.com", "pm.me", "proton.me", "protonmail.com", "protonmail.ch", "gmail.com",
+             "googlemail.com", "outlook.com", "hotmail.com", "live.com", "yahoo.com", "icloud.com",
+             "me.com", "aol.com", "sbcglobal.net", "comcast.net", "att.net"}
+
+    def never_block(e):
+        dom = e.split("@")[-1]
+        return dom in NEVER and ("@" not in e or dom in ("exosaero.com", "pm.me", "proton.me", "protonmail.com"))
+
     def is_held(e):
         # Protected = never blocked org-wide (customers, partners, gov/.mil/.edu, John's overrides).
-        return e in REVIEW_HOLD or e in excl or is_protected_gov_edu(e)
+        return never_block(e) or e in REVIEW_HOLD or e in excl or is_protected_gov_edu(e)
 
     active = sorted(e for e in merged if not is_held(e))
     held = sorted(e for e in merged if is_held(e))
