@@ -24,6 +24,7 @@ Safety:
 
 Run:  python3 scripts/gen_blocked_senders.py
 """
+import re
 import json
 import os
 import sys
@@ -89,7 +90,13 @@ def norm(entry: str) -> str:
         e = e[1:]
     if not e or any(c.isspace() for c in e):
         return ""
-    return e.lower()
+    e = e.lower().strip(".;,>< \"'")
+    # drop parse artifacts like "01dd3563.bbded" / "proton.me>" — must look like a real address/domain
+    if not re.match(r"^([a-z0-9._%+-]+@)?[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,24}$", e):
+        return ""
+    if e in ("01dd3563.bbded", "navy.mi"):    # known parse artifacts / typos (10/12)
+        return ""
+    return e
 
 
 def load_seed(path):
@@ -131,8 +138,14 @@ def main():
     reg, n_ent = load_registry(REGISTRY)
     merged = seed | reg
 
+    try:
+        excl = set(norm(d) for d in json.load(open(os.path.join(ROOT, "config", "dd-block-exclusions.json"))).get("exclude_domains", []))
+    except Exception:
+        excl = set()
+
     def is_held(e):
-        return e in REVIEW_HOLD or is_protected_gov_edu(e)
+        # Protected = never blocked org-wide (customers, partners, gov/.mil/.edu, John's overrides).
+        return e in REVIEW_HOLD or e in excl or is_protected_gov_edu(e)
 
     active = sorted(e for e in merged if not is_held(e))
     held = sorted(e for e in merged if is_held(e))
@@ -149,7 +162,7 @@ def main():
     lines.extend(active)
     if held:
         lines.append("#")
-        lines.append("# ---- PENDING REVIEW (look like real firms; confirm before org-wide block) ----")
+        lines.append("# ---- PROTECTED — never blocked org-wide (customers/partners, gov/.mil/.edu, John overrides) ----")
         lines.append("# Uncomment a line (or remove it from REVIEW_HOLD in the generator) to activate.")
         for h in held:
             lines.append(f"# {h}")
@@ -157,7 +170,12 @@ def main():
     with open(OUT, "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines) + "\n")
 
+    try:
+        prev = set(json.load(open(MANIFEST)).get("held", []))
+    except Exception:
+        prev = set()
     manifest = {
+        "new_held": sorted(set(held) - prev),
         "generated": stamp,
         "active_count": len(active),
         "held_count": len(held),

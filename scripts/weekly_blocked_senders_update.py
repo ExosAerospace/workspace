@@ -72,11 +72,15 @@ def main():
     held_domains = manifest.get("held", [])
     stamp  = manifest.get("generated", datetime.now().strftime("%Y-%m-%d"))
 
+    new_held = manifest.get("new_held", [])
+    # Protected domains (customers/partners/gov/edu) are NEVER blocked and are not re-listed every
+    # week (Jon 10/12: "how do I address not blocking many of these that are our customers?").
+    # Only NEW protected entries are shown, once, so Jon can say "actually block it" if needed.
     summary = (
         f"**Blocked-Senders List Updated** — {stamp}\n"
         f"• **{active}** domains/addresses active (blocking company-wide)\n"
-        f"• **{held}** held for your review before org-wide block"
-        + (f": {', '.join(f'`{d}`' for d in held_domains)}" if held_domains else "")
+        f"• {held} customer/partner/gov/edu domains protected (never blocked)"
+        + (f"; new this week: {', '.join(f'`{d}`' for d in new_held)} (protected by default; tell Exo to block one if it's really bad)" if new_held else "")
         + f"\n\nFile ready: `email-blocklist/Blocked_Senders_Current.txt`\n"
         f"• **peaton's Outlook updater:** point it at that file — works as-is.\n"
         f"• **Company-wide (GCC High tenant):** run `Deploy-Exos-Blocked-Senders-Tenant.ps1` "

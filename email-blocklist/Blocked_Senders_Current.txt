@@ -1,16 +1,18 @@
 # Exos DD — Canonical Blocked-Senders List
-# Generated: 2026-09-28 11:49 by scripts/gen_blocked_senders.py
-# Sources: failed-dd-registry.json (87 do-not-engage entities) + peaton seed
-# Active entries: 152   |   Held for review: 36
+# Generated: 2026-10-12 09:07 by scripts/gen_blocked_senders.py
+# Sources: failed-dd-registry.json (97 do-not-engage entities) + peaton seed
+# Active entries: 161   |   Held for review: 41
 # Format: one entry/line; domain.com | user@domain.com | @domain.com | *@domain.com
 # Lines starting with '#' are ignored by both the Outlook updater and the tenant rule.
 #
 21computech.com
 a.mike@whitehatteamusa.com
+a.slobodrian@getnortheastconstruction.com
 aaltrindad.com
 acquirorevenueadvisors.com
 actium.capital
 adamevellc.com
+aerospacedefensereview.com
 aerovinc.com
 agriffin@fastfundsconnect.com
 ali-healthcare.pro
@@ -26,10 +28,10 @@ arron.chambers@novusglobal-usa.com
 asglobal.com
 async-nu.com
 bestech-inc.com
-blinkmfg.com
 bo4.de
 boostlaunchcore.org
 brandon@growth.trafficlimb.cloud
+businesscapitalnowloan.com
 capitalgrouphq.com
 capjora.cloud
 catherine@boostlaunchcore.org
@@ -51,54 +53,57 @@ emilycarlson.w@outlook.com
 emilydavis@vortexcapitalstat.com
 emmatanner@larchterrace.co
 eurobunker-arena.com
-exelisinc.com
 exminvest.com
 fastfundsconnect.com
+getnortheastconstruction.com
 go-on-group.com
+goldcrestventures.org
 goziply.com
 henribrenneman@gmail.com
-higginbotham.net
+highmarkfundinggroup.com
+hillllonny@goldcrestventures.org
 info@zaidwoodcapital.com
 innoventcapital.com
-insideapple.apple.com
 interflightglobal.com
 investfortuna.com
 isstspi.com
 itb-inc.com
 itssar@seniordev.co.uk
 ivyassetmngmt.com
+j_clark@businesscapitalnowloan.com
 jacob@ovalv.io
 jenny@nextqfiloc.com
 jessica.davis@applymanufacturefund.help
 joe@ovalv.com
 johnbresset@aerovinc.com
+jordan.best@aerospacedefensereview.com
 joshu@simplewealthfund.com
 jumpfinance.co
 junoventure.com
 katherine.carter@jumpfinance.co
 kaykayllc.com
 keyes.org
+keystonebridgeloans.com
 kingsleyrowcapital.com
 kisinc.net
 larchterrace.co
+limor.fried@storeroomboard.co
 logalty.com
 logalty@logalty.com
 lynampartnersbrief.com
 machado.luis1@acquirorevenueadvisors.com
 mcapital-group.com
 melissa.vasquez@aaltrindad.com
-midlandtxedc.com
+mgonzales@highmarkfundinggroup.com
 mikalventures.com
 mike.turner@kingsleyrowcapital.com
 mnqbbs.com
-navy.mi
 nextqfiloc.com
 noreply@goziply.com
 noteinvestmentcorporatiin.com
 notifica@uscontractoradministration.com
 novusglobal-usa.com
 onrampsupport.com
-orbital.inc
 ovalv.com
 ovalv.io
 palmdrive.vc
@@ -107,6 +112,8 @@ priveapartners.com
 r.b@zaidwoodmanagement.com
 rami.b.zeneldin@zaidwoodadvisors.com
 ravee.space
+redwoodloangroup.com
+resonance.holdings
 riccicapitalpartners.com
 ricciglobalpartners.com
 robertsamuels.com
@@ -126,10 +133,12 @@ seedford-partners.com
 sekhsaria.com
 seniordev.co.uk
 simplewealthfund.com
+sking@redwoodloangroup.com
 slightedgeangellink.co
 smcinvest.com
 starbridgevc.com
 stefan.bz
+storeroomboard.co
 summitcap.online
 support@diyarbakirsoz.com
 support@eurobunker-arena.com
@@ -158,34 +167,39 @@ zaidwoodadvisors.com
 zaidwoodcapital.com
 zaidwoodmanagement.com
 #
-# ---- PENDING REVIEW (look like real firms; confirm before org-wide block) ----
+# ---- PROTECTED — never blocked org-wide (customers/partners, gov/.mil/.edu, John overrides) ----
 # Uncomment a line (or remove it from REVIEW_HOLD in the generator) to activate.
-# 01dd3563.bbded
 # aero.org
 # anduril.com
 # au.edu.pk
 # bancroft4vets.com
 # bcm.edu
 # beacongroup.aero
+# blinkmfg.com
 # brown.edu
 # cantor.com
 # capitolsupply.com
 # colorado.edu
 # columbia.edu
 # emerson.com
+# exelisinc.com
 # firstcitizens.com
 # ge.com
+# higginbotham.net
+# insideapple.apple.com
 # kingston.ac.uk
 # mail.au.edu.pk
 # mail.mil
 # mda.mil
+# midlandtxedc.com
+# my.erau.edu
 # namtek.com
-# navy.mil.
-# navy.mil;
+# navy.mil
 # netsuite.com
 # nsoc.health.mil
+# orbital.inc
 # planet.com
-# proton.me>
+# proton.me
 # smdc-cs.army.mil
 # smdc.army.mil
 # space.texas.gov
