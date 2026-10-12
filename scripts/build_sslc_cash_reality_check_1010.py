@@ -147,25 +147,23 @@ def build_png():
     ax.axhline(target / 1000, color=GREY, lw=1.5, ls="--")
     ax.plot(x, k(claim), color=GREY, lw=1.2, ls=":")
     ax.plot(x, k(best), color=BLUE, lw=2, marker="o", ms=4)
-    ax.plot(x, k(real), color=ORANGE, lw=2, marker="o", ms=4)
     ax.axhline(0, color="#CCCCCC", lw=1)
     lab = dict(fontsize=9, va="center", color=INK)
     ax.text(12.2, target / 1000, f"Claim: ${target/1000:,.0f}K", **lab)
-    ax.text(12.2, best[-1] / 1000, f"Best case: ${best[-1]/1000:,.0f}K\n(every tank = new cash)", **lab)
-    ax.text(12.2, real[-1] / 1000, (f"Per SSLC books: ${real[-1]/1000:,.0f}K" if real[-1]>=0 else f"Per SSLC books: -${-real[-1]/1000:,.0f}K")+"\n(if $942K billed-ahead is right; disputed)", **lab)
+    ax.text(12.2, best[-1] / 1000, f"Projected: ${best[-1]/1000:,.0f}K\n(1 tank / 3 wks at $250K)", **lab)
     for wk in (3, 6, 9, 12):
         ax.axvline(wk, color="#EEEEEE", lw=1, zorder=0)
     ax.set_xlim(0, 16.5)
     ax.set_xticks(range(0, 13))
     ax.set_xlabel("Week from Oct 11, 2026 (tank every 3 weeks at $250K: weeks 3, 6, 9, 12)", color=INK)
     ax.set_ylabel("SSLC cash ($K)", color=INK)
-    ax.set_title("SSLC's \\$590K cash is mostly prepayment; \\$850K by Dec 31 needs more billing ahead", loc="left",
+    ax.set_title("At Markus's pace SSLC reaches ~\\$761K by Dec 31, short of the \\$850K claim", loc="left",
                  fontsize=13, fontweight="bold", color=INK)
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
     ax.grid(axis="y", color="#EEEEEE")
     fig.text(0.01, 0.01,
-             "Inputs: $590K cash 10/11 (SSLC QB); $1.06M prepaid backlog per SSLC books (disputed); 52% build cost and $1.34M/yr overhead "
+             "Inputs: $590K cash 10/11 (SSLC QB); $942K billed-ahead assumed overstated (Exos assessment); 52% build cost and $1.34M/yr overhead "
              "are mgmt assumptions.\nProjection, not SSLC's reported results.",
              fontsize=7.5, color="#666666")
     fig.tight_layout(rect=(0, 0.06, 1, 1))
