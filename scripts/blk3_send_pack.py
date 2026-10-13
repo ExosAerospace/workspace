@@ -306,6 +306,8 @@ def clean_org(s):
     org = re.split(r"\s+/\s+(?:Dr\.|Prof)", org)[0].strip()
     org = re.sub(r"\s*\((?:[^)]*\b(?:CEO|Dr\.|Prof|Founder|Lexington|KY|NM|MT|Bozeman|Butte|Missoula)\b[^)]*|"
                  r"[A-Z][a-z]+ [A-Z][a-zA-Z]+)\)\s*$", "", org).strip()
+    # "College (Lame Deer, MT — tribal college)" splits on " — " and leaves an unclosed "(" (CDKC #3742)
+    org = re.sub(r"\s*\([^)]*$", "", org).strip()
     return org
 
 
