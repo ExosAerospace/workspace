@@ -240,6 +240,19 @@ def send(it, draft):
          f"It was delivered here to you, and was NOT sent to the outside party by the system.\n\n"
          f"{('Attached: '+os.path.basename(att)+'  (verify it matches before you send)') if att else ('NOTE: draft could not be delivered as Word (conversion issue). Source: '+os.path.basename(draft)+' — reply and I will resend as .docx.') if draft else inline_block if inline_block else 'NOTE: I could not confidently locate a draft file for this — decision context only. Point me at the file if needed.'}\n\n"
          f"Context: {it.get('context','')[:800]}\n\n(auto-delivered by decision-send-watcher to YOUR inbox only, never external.)")
+    # Lizi's banned wording (10/12): a draft she sends must not carry these. Flag loudly instead of
+    # handing her a "ready" email that needs a rewrite (#3715/#3738 shipped with them).
+    if to != "jquinn@exosaero.com":
+        try:
+            raw = open(draft, errors="ignore").read() if draft and os.path.exists(draft) and draft.lower().endswith((".md", ".txt")) else ""
+        except Exception:
+            raw = ""
+        raw += "\n" + _inline_drafts(it)
+        hits = sorted({h.lower() for h in re.findall(r"(?i)one of only three|minutes of (?:continuous )?microgravity|on our BLK3 manifest|open the manifest|hope you are doing well|hope this finds you|\bJohn Quinn\s*\n\s*Cofounder", raw)})
+        if hits:
+            ctx = ("⚠ NOT READY TO SEND: this draft still contains wording you send under your name that we don't use: "
+                   + "; ".join(hits) + ". Ask Exo for a corrected version in #lizi-channel-2 before sending.\n\n" + ctx)
+            m.replace_header("Subject", "[Needs fix before sending] " + title)
     m.set_content(ctx)
     if att:
         ct,_=mimetypes.guess_type(att); ct=ct or "application/octet-stream"; mt,st=ct.split("/",1)
