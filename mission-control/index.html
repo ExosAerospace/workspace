@@ -2404,11 +2404,13 @@ async function loadDocuments(taskId) {
       const extra = g.slice(1).map(x => `<button onclick="window.open('/uploads/${encodeURIComponent(x.stored_name)}','_blank')" title="${escHtml(x.filename)}">${/_print/i.test(x.stored_name) ? 'PRINT ' : ''}${escHtml((x.extension||'').replace('.','').toUpperCase())}</button>`).join('');
       return row(g[0], 'current').replace('<div class="doc-actions">', `<div class="doc-actions">${extra}`);
     }); };
-    const docRows = groupRows(docs.filter(d => d.doc_role !== 'reference'));
+    const docRows = groupRows(docs.filter(d => !d.doc_role));
+    const wpRows = groupRows(docs.filter(d => d.doc_role === 'workpaper'));
     const refRows = groupRows(docs.filter(d => d.doc_role === 'reference'));
     updateDocBadge(docRows.length);
     el.innerHTML = `<div class="docs-sec-h">✅ MOST CURRENT DOCUMENTS (${docRows.length}) <small>· latest iteration of each document; other formats are the buttons on its row</small></div>`
       + (docRows.length ? docRows.join('') : '<div class="docs-empty">No current documents. Older versions are below.</div>')
+      + (wpRows.length ? `<details class="docs-reference"><summary>🧮 SUPPORTING ANALYSIS &amp; WORKPAPERS (${wpRows.length}) <small>· models and analyses behind the documents above</small></summary>${wpRows.join('')}</details>` : '')
       + (refRows.length ? `<details class="docs-reference"><summary>📁 REFERENCE &amp; EXECUTED RECORDS (${refRows.length}) <small>· source documents received, signed/executed agreements, charter docs</small></summary>${refRows.join('')}</details>` : '')
       + (old.length ? `<details class="docs-superseded"><summary>⛔ SUPERSEDED — older iterations, do not use (${old.length}) <small>· nothing is deleted; Restore puts one back</small></summary>${old.map(d => row(d, 'superseded')).join('')}</details>` : '');
   } catch(e) {

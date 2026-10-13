@@ -5727,7 +5727,8 @@
    "change_log": [
     "2026-10-13 71db321 families",
     "2026-10-13 97f0782 real filenames",
-    "2026-10-13 exo3 remediation: selftest + registry"
+    "2026-10-13 exo3 remediation: selftest + registry",
+    "2026-10-13 retire-whole-document fix (older iterations resurfaced after newest superseded) + workpaper section; selftest 11"
    ]
   }
  ],

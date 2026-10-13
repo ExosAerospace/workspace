@@ -26,6 +26,9 @@ ok(out.find(m => m.id === 't1').current !== false && out.find(m => m.id === 't2'
 // 3. a hand-restored doc is never auto-superseded; a hand-superseded one stays superseded
 out = f.applyFamilies([D('r1', '1_Memo_2026-10-01.docx', { restored_at: 'x' }), D('r2', '2_Memo_2026-10-05.docx'), D('s1', '3_Plan_2026-10-09.docx', { current: false })]);
 ok(out.find(m => m.id === 'r1').current !== false && out.find(m => m.id === 's1').current === false, 'manual Restore / Superseded win');
+// 3b. newest iteration superseded by hand -> older iterations must not resurface (10/13 #2414 Option B bug)
+out = f.applyFamilies([D('o1', '1_Offer_Summary_2026-10-07.pdf'), D('o2', '2_Offer_Summary_2026-10-12_r4.pdf', { current: false, superseded_note: 'restated' })]);
+ok(out.every(m => m.current === false), 'retiring the newest iteration retires the older ones');
 // 4. executed / charter docs -> reference section; Exo "_SIGN" drafts are NOT reference
 out = f.applyFamilies([D('x1', '1_SSLC signed Asset Acquisition 2025 FULLY EXECUTED.pdf'), D('x2', '2_SSLC_Bylaws.pdf'), D('x3', '3_SSLC_Board_Resolutions_2026-10-02_SIGN.pdf')]);
 ok(out.find(m => m.id === 'x1').doc_role === 'reference' && out.find(m => m.id === 'x2').doc_role === 'reference' && !out.find(m => m.id === 'x3').doc_role, 'reference detection');
@@ -37,5 +40,7 @@ if (fs.existsSync(META)) {
   const live = f.applyFamilies(JSON.parse(fs.readFileSync(META, 'utf8')).filter(m => String(m.task_id) === '2414')).filter(m => m.current !== false);
   const fams = live.map(m => m.family); ok(fams.length === new Set(fams).size, '#2414 live: one current file per document per format');
   ok(live.some(m => /RESTATED_2026-10-13_r1\.docx$/.test(m.stored_name)), '#2414 live: the 10/13 restated term sheet is current');
+  const working = new Set(live.filter(m => !m.doc_role).map(m => m.doc_group));
+  ok(working.size <= 8 && !working.has('exos-sslc-optionb-offer-summary'), `#2414 live: working set is the real deliverables only (${working.size}); Option B summary superseded by the restated term sheet`);
 }
 console.log(`doc-families selftest: ${n}/${n} pass`);

@@ -66,6 +66,19 @@ function applyFamilies(list) {
   const byFam = {};
   for (const m of live()) { const f = familyOf(m); m.family = f; (byFam[f] = byFam[f] || []).push(m); }
   Object.values(byFam).forEach(g => supersede(g, 'newer iteration'));
+  // If the NEWEST iteration of a family was superseded by hand, the whole document is retired: older copies must
+  // not resurface as current (bug found 2026-10-13 on #2414 Option B summary).
+  const allFam = {};
+  for (const m of out) { const k = familyOf(m); (allFam[k] = allFam[k] || []).push(m); }
+  for (const g of Object.values(allFam)) {
+    g.sort(newerFirst);
+    const top = g[0];
+    if (top.current !== false || top.auto_superseded || top.restored_at) continue;
+    for (const m of g.slice(1)) if (m.current !== false && !m.restored_at) {
+      m.current = false; m.auto_superseded = 'document retired'; m.superseded_by_name = top.superseded_note || ('retired with ' + realName(top));
+      m.superseded_at = m.superseded_at || top.superseded_at;
+    }
+  }
   // one DOCUMENT = all formats (pptx / pdf / docx / print copy) of the same family -> shown as one row
   for (const m of out) m.doc_group = familyOf(m).replace(/\.[a-z0-9]+$/, '').replace(/-print$/, '');
   // REFERENCE records (source docs received, executed/charter documents) sit in their own section, not in the
