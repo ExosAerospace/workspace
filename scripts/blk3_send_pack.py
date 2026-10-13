@@ -536,8 +536,7 @@ Exos has flown commercial payloads since 2018 on our SARGE rocket, and BLK3 is i
 If it would be helpful, I'm happy to send over our Payload User's Guide, or you can grab a time for a short scoping call here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled. You're also welcome to tell us what you'd like to fly at https://www.exosaero.com/flight-campaign, and our Payload FAQ page (https://www.exosaero.com/payload-faqs) covers common questions.
 
 Best Regards,
-Lizi Quinn
-Exos Aerospace
+Lizi
 """
     return subject, body
 
