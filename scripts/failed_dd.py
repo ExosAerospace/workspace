@@ -73,7 +73,19 @@ def add(firm, domains=None, emails=None, people=None, reason="", category="cold-
     if not existing:
         ents.append(entry)
     save(reg)
+    _rebuild_blocklist()
     return entry
+
+
+def _rebuild_blocklist():
+    """Every failed-DD add goes straight onto Blocked_Senders_Current.txt (Phil 10/13) instead of
+    waiting for the Monday rebuild. Non-fatal: the weekly launchd job is the backstop."""
+    import subprocess
+    gen = os.path.join(os.path.dirname(os.path.abspath(__file__)), "gen_blocked_senders.py")
+    try:
+        subprocess.run([sys.executable, gen], capture_output=True, timeout=60)
+    except Exception as e:
+        print(f"[warn] blocklist rebuild failed: {e}", file=sys.stderr)
 
 
 def _cli():

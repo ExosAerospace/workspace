@@ -32,15 +32,22 @@ def load(p):
 
 def failed_domains():
     fails = set()
-    for f in ["mission-control/data/dd-registry.json","config/failed-dd-registry.json",
-              "mission-control/data/supplier-dd-registry.json"]:
+    for f in ["mission-control/data/dd-registry.json","mission-control/data/supplier-dd-registry.json"]:
         d = load(f)
         items = d.items() if isinstance(d, dict) else [((x.get("domain") or x.get("email")), x) for x in d]
         for k, v in items:
             st = (v.get("status") if isinstance(v, dict) else "") or ""
             if str(st).lower() in ("fail","failed","blocked","do-not-engage","blackball") and isinstance(k, str) and "." in k:
                 fails.add(k.lower())
-    return fails
+    # config/failed-dd-registry.json is {"entities":[{firm, domains[], verdict}]} — the generic loop above
+    # silently skipped it, so ~45 do-not-engage domains never reached the company list (10/13, Phil).
+    for e in load("config/failed-dd-registry.json").get("entities", []):
+        if e.get("verdict") == "do-not-engage":
+            fails.update(str(x).lower() for x in (e.get("domains") or []))
+    # Same safety as the canonical list: never block a bare gov/edu/mil domain or a REVIEW_HOLD firm.
+    sys.path.insert(0, os.path.join(WS, "scripts"))
+    from gen_blocked_senders import norm, is_protected_gov_edu, REVIEW_HOLD
+    return {n for n in map(norm, fails) if n and "@" not in n and not is_protected_gov_edu(n) and n not in REVIEW_HOLD}
 
 def employees():
     d = load("mission-control/users.json")

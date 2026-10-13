@@ -80,6 +80,15 @@ def main():
     json.dump(store, open(F, "w"), indent=2)
     print(f"DD dossier {action}: {a.firm} [{a.verdict}] -> {F}")
 
+    # A FAIL is a block: register it in the failed-DD registry, which rebuilds the blocked-senders
+    # list immediately (Phil 10/13: every failed-DD entity, automatically, every time).
+    if a.verdict == "fail" and (a.domain or a.email):
+        sys.path.insert(0, os.path.join(WS, "scripts"))
+        import failed_dd
+        failed_dd.add(a.firm, [a.domain] if a.domain else [], [a.email] if a.email else [],
+                      [a.person] if a.person else [], reason=a.summary, source="log_dd")
+        print(f"failed-DD registry + blocked-senders list updated: {a.firm}")
+
 
 if __name__ == "__main__":
     main()
