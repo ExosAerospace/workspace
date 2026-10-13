@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Dated follow-up digest for Lizi (10/15, 10/20, 10/21, 10/22 at 09:00 CT). Emails only items due today whose
-CRM contact hasn't been touched since the send. Self-unloads after 10/22."""
+"""Dated follow-up digest for Lizi (10/14-10/26 dates at 09:00 CT). Emails only items due today whose
+CRM contact hasn't been touched since the send. Self-unloads after 10/26."""
 import os, json, subprocess, urllib.request
 from datetime import date
 from email.message import EmailMessage
@@ -28,6 +28,8 @@ DUE={
   ("University of Montana: Dr. Paul Lukacs (Interim VP Research)","paul.lukacs@umontana.edu (reply on thread)","he replied 10/9: coordinating with aligned faculty, will come back with questions",
    "Hi Paul,\nThank you again for passing BLK3 along to your faculty. I wanted to check in and see if anyone has questions. I'm happy to set up a short call with interested researchers, or send over our Payload User Guide so they can see what fits.\nBest Regards,\nLizi")],
  "2026-10-20":[
+  ("LinkedIn check: pending connection requests","LinkedIn (no email)","requests sent 10/6-10/8; Olivia Borgue accepted 10/13",
+   "(No email.) Check whether these accepted: Kyle Acierno (Exobiosphere CEO) https://www.linkedin.com/in/kyleacierno ; Shawn Usman (Rhea) https://www.linkedin.com/in/shawn-usman-8b4169169 ; Adam Escobar (Space Lab Tech) https://www.linkedin.com/in/adam-escobar-6a2a08171 ; Marshall Smith (Starlab) https://www.linkedin.com/in/marshall-smith4 . For anyone who accepted, tell Exo in #lizi-channel-2 and it drafts the message. Still nothing from Marshall? Exo can line up Bradley Henderson (Starlab CCO) instead."),
   ("NCAR: Eric Apel","reply on his 10/6 thread","warm reply 10/6",
    "Hi Eric,\nFollowing up on our exchange from earlier this month. I'd love to set up a short call to talk through what an atmospheric chemistry payload on BLK3 could look like. What times work for you in the next week or two?\nBest Regards,\nLizi")],
  "2026-10-21":[
@@ -54,7 +56,7 @@ DUE={
    "Hi Professor Pourpoint,\nI know this is a busy time of the semester, so I'll keep it short. If a recovered BLK3 flight in early 2027 isn't a fit for your group right now, could you point me to anyone at Zucrow whose work might be? I'd really appreciate it.\nBest Regards,\nLizi"),
   ("Aurora Engineering: Alex Barrie","abarrie@auroraengineering.com","only if you sent the 10/8 intro",
    "Hi Alex,\nJust following up on my note about testing Aurora's autonomy work on BLK3 in early 2027. Would a quick call be worthwhile?\nBest Regards,\nLizi"),
-  ("Higher Orbits: Michelle Lucas","michelle@higherorbits.org (reply on thread) / LinkedIn linkedin.com/in/michellellucas","sent 10/8 (#1236); Go For Launch! Albuquerque is Nov 7-8",
+  ("Higher Orbits: Michelle Lucas","michelle@higherorbits.org (reply on thread)","emailed 10/8 (#1236), no LinkedIn request; Go For Launch! Albuquerque is Nov 7-8",
    "Hi Michelle,\nJust following up on my note about a recovered BLK3 flight as another ride for Go For Launch! student experiments. Would a quick call work before your Albuquerque event in November?\nBest Regards,\nLizi"),
   ("ND Space Grant: Dr. Caitlin Milera","caitlin.milera@und.edu","sent 10/8 (#2038): funding a UND student flight via Space Grant / ND NASA EPSCoR",
    "Hi Dr. Milera,\nJust following up on my note about funding a UND student flight-test payload on BLK3 through Space Grant or ND NASA EPSCoR. Would a quick call work in the next couple of weeks?\nBest Regards,\nLizi"),
@@ -79,7 +81,10 @@ DUE={
   ("Rhodium Scientific: Olivia Gamez Holzhaus","LEO.Life@RhodiumScientific.com (reply on thread)","sent 10/8 (#3019/#3619)",
    "Hi Olivia,\nJust following up on my note about a recovered BLK3 pre-flight for Rhodium's biotech payloads. Would a quick call make sense?\nBest Regards,\nLizi"),
   ("Salish Kootenai College: Matt Seeley (cc Lee Slater)","matt_seeley@skc.edu (reply on thread)","sent 10/8",
-   "Hi Dean Seeley,\nJust following up on my note about a BLK3 flight for SKC students or faculty in early 2027. Would a quick call be useful?\nBest Regards,\nLizi")]}
+   "Hi Dean Seeley,\nJust following up on my note about a BLK3 flight for SKC students or faculty in early 2027. Would a quick call be useful?\nBest Regards,\nLizi")],
+ "2026-10-26":[
+  ("UTD AIAA / Comet Rocketry: Mi Vo + Olivia Johnson (task #2753)","mi.vo@utdallas.edu + Olivia (reply on your 10/12 check-in thread, cc Phil + Don Proeschel)","10/12 you asked for early experiment ideas + shop-tour dates/headcount; design coordination + slot payment due mid-Dec",
+   "Hi Mi and Olivia,\nJust checking in on the BLK3 experiment. Even a rough idea is a great starting point, and Phil and I are happy to hop on a short call to help shape it. If you have a couple of dates and a headcount for the Greenville shop tour, send them over and we'll get it on the calendar. Mid-December will come up fast, so it would be great to get a concept going soon.\nBest Regards,\nLizi")]}
 today=date.today().isoformat()
 items=DUE.get(today,[])
 if items:
@@ -89,7 +94,7 @@ if items:
     m.set_content("Hi Lizi,\n\nThese are due for a follow-up today if they haven't replied. Each has the contact and a ready-to-send nudge (reply on your original thread so they see the history):\n\n"+"\n".join(lines)+
       "\n\nSkip anyone who already replied, and tell me in #lizi-channel-2 so I log it.\n\n- Exo")
     subprocess.run(["/opt/homebrew/bin/msmtp","-a","protonmail","lquinn@exosaero.com"],input=m.as_bytes(),check=True,timeout=60)
-if today>="2026-10-22":
+if today>="2026-10-26":
     p=os.path.expanduser(f"~/Library/LaunchAgents/{LABEL}.plist")
     try: os.remove(p)
     except Exception: pass
