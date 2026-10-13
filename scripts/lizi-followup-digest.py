@@ -82,6 +82,11 @@ DUE={
    "Hi Olivia,\nJust following up on my note about a recovered BLK3 pre-flight for Rhodium's biotech payloads. Would a quick call make sense?\nBest Regards,\nLizi"),
   ("Salish Kootenai College: Matt Seeley (cc Lee Slater)","matt_seeley@skc.edu (reply on thread)","sent 10/8",
    "Hi Dean Seeley,\nJust following up on my note about a BLK3 flight for SKC students or faculty in early 2027. Would a quick call be useful?\nBest Regards,\nLizi")],
+ "2026-10-27":[
+  ("SpaceBorn United: Dr. Egbert Edelbroek","egbert.edelbroek@spacebornunited.com (reply on your 10/13 thread)","you emailed 10/13 about ARTIS on BLK3, early 2027 (#3739)",
+   "Hello Dr. Edelbroek,\nJust following up on my note about ARTIS and BLK3. If it would help, I'm happy to send over our Payload User Guide or set up a short call with our team.\nBest Regards,\nLizi"),
+  ("Dcubed: Dr. Thomas Sinn","thomas.sinn@dcubed-space.com (reply on your 10/13 thread)","you emailed 10/13 about D3PP/Araqys on BLK3, early 2027 (#3738)",
+   "Hello Dr. Sinn,\nJust following up on my note about flying D3PP or Araqys hardware on BLK3. If it would help, I'm happy to send over our Payload User Guide or set up a short call with our team.\nBest Regards,\nLizi")],
  "2026-10-26":[
   ("UTD AIAA / Comet Rocketry: Mi Vo + Olivia Johnson (task #2753)","mi.vo@utdallas.edu + Olivia (reply on your 10/12 check-in thread, cc Phil + Don Proeschel)","10/12 you asked for early experiment ideas + shop-tour dates/headcount; design coordination + slot payment due mid-Dec",
    "Hi Mi and Olivia,\nJust checking in on the BLK3 experiment. Even a rough idea is a great starting point, and Phil and I are happy to hop on a short call to help shape it. If you have a couple of dates and a headcount for the Greenville shop tour, send them over and we'll get it on the calendar. Mid-December will come up fast, so it would be great to get a concept going soon.\nBest Regards,\nLizi")]}
@@ -94,7 +99,7 @@ if items:
     m.set_content("Hi Lizi,\n\nThese are due for a follow-up today if they haven't replied. Each has the contact and a ready-to-send nudge (reply on your original thread so they see the history):\n\n"+"\n".join(lines)+
       "\n\nSkip anyone who already replied, and tell me in #lizi-channel-2 so I log it.\n\n- Exo")
     subprocess.run(["/opt/homebrew/bin/msmtp","-a","protonmail","lquinn@exosaero.com"],input=m.as_bytes(),check=True,timeout=60)
-if today>="2026-10-26":
+if today>="2026-10-27":
     p=os.path.expanduser(f"~/Library/LaunchAgents/{LABEL}.plist")
     try: os.remove(p)
     except Exception: pass
