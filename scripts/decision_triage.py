@@ -106,16 +106,22 @@ TRUE_CONSEQ = re.compile(
     r"\brdre\b|\brde\b|type-?5|scorpius|rofr|\bcui\b|wire\s?transfer", re.I)
 
 
+def _f(d, k):
+    # Decision fields aren't always strings (e.g. relatedItem is sometimes an int task id) — coerce.
+    v = d.get(k)
+    return "" if v is None else str(v)
+
+
 def recipient_text(d):
-    q = (d.get("question") or "") + " " + (d.get("proposedAction") or "")[:200]
+    q = _f(d, "question") + " " + _f(d, "proposedAction")[:200]
     m = re.search(r"@[\w.-]+\.\w+", q)          # any email address in the ask
-    to = re.search(r"send this email to ([^?\n]+)", d.get("question") or "", re.I)
+    to = re.search(r"send this email to ([^?\n]+)", _f(d, "question"), re.I)
     return (m.group(0) if m else "") + " " + (to.group(1) if to else "")
 
 
 def is_routine(d):
-    title = d.get("title") or ""
-    q = title + " " + (d.get("question") or "") + " " + (d.get("proposedAction") or "")
+    title = _f(d, "title")
+    q = title + " " + _f(d, "question") + " " + _f(d, "proposedAction")
     # Speculative warm-intro "maybe" asks are ALWAYS parked (even if they name a gov agency).
     if SPECULATIVE.search(q):
         return True
@@ -130,7 +136,7 @@ def is_routine(d):
     if CONSEQ_KEEP.search(q):
         return False
     # never batch anything with a gov/.mil recipient/agency or a hard investor/contract/legal signal
-    if CONSEQ_RECIPIENT.search(title + " " + recipient_text(d)) or CONSEQ_HARD.search(q + " " + (d.get("relatedItem") or "")):
+    if CONSEQ_RECIPIENT.search(title + " " + recipient_text(d)) or CONSEQ_HARD.search(q + " " + _f(d, "relatedItem")):
         return False
     return d.get("source") in OUTREACH_ENGINES or bool(ROUTINE_TITLE.search(title))
 
@@ -290,5 +296,13 @@ def main():
             pass
 
 
+def selftest():
+    # replays 2026-10-13 crash: relatedItem as int -> TypeError in is_routine
+    assert is_routine({"title": "Follow up", "question": "x", "relatedItem": 3704}) in (True, False)
+    assert is_routine({"title": None, "question": None, "proposedAction": 5, "relatedItem": 0}) in (True, False)
+    assert is_routine({"title": "Send MNDA", "question": "q", "relatedItem": 12}) is False
+    print("selftest ok")
+
+
 if __name__ == "__main__":
-    main()
+    selftest() if "--selftest" in sys.argv else main()
