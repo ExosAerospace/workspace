@@ -26,8 +26,9 @@ for t in ["Exchange a Word heads-of-terms with the headline economics; lock mate
  "Non-competes only from directors and Markus (parties receiving value), about 5 years; carve-outs for the Microcosm and LOXair licenses (LOXair to be re-papered with Exos). Handle side agreements carefully, with counsel, so shareholders see them.",
  "Post-closing tax: if Exos steps up asset basis and it creates SSLC tax, Exos covers it (true-up). Add purchase-price-adjustment language (about two sentences each).",
  "$60K transaction costs are part of the purchase price; each side pays its own lawyers (Exos cannot pay SSLC's counsel). Consider paying it at term-sheet signing to fund retainers. Ed Powell (prior SSLC counsel) as a cost-effective option.",
- "Employees: no 4–6 year contracts; an assurance of continued employment offers is enough. At-will with for-cause terms in the definitive agreement. Markus treated separately.",
- "Two divisions (California center of excellence led by Markus; Texas production/automation) under one entity, not separate legal entities, which keeps earn-out measurement simple. Facility decisions post-closing; the buyer makes final calls with Markus's input.",
+ "Employees: no 4–6 year contracts; an assurance of continued employment offers is enough. At-will with for-cause terms in the definitive agreement.",
+ "Post-closing operations (organization, facilities) are the buyer's decision; SSLC does not set terms for how Exos runs the business after closing.",
+
  "Prioritize agreeing the term sheet over the accounting cleanup. Compare SSLC's counteroffer (payments tied to Exos funding events, no performance requirements) against Exos's (cash + earn-outs + stock)."]: B(t)
 H("Other points")
 B("Jim's counteroffer: larger payments, timed after Exos's financing events (he cited May and August); to be written up and sent with comments from Danny, Bob and Markus.")
