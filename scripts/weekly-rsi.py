@@ -252,6 +252,13 @@ def main():
     except Exception as _e:
         L.append(f"\n## 13. Machine utilization\n- (utilization module error: {_e})")
 
+    # §14 ETA calibration (Jon 10/2: ack ETAs ran far too conservative). Exception-only.
+    try:
+        import eta_log
+        L.extend(eta_log.report_section(7))
+    except Exception as _e:
+        L.append(f"\n## 14. ETA calibration\n- (eta module error: {_e})")
+
     # §15 Reply-first / Exo-first task loop (Jon 2026-10-03): recursive audit of task creation.
     try:
         import rsi_task_creation
