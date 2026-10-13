@@ -533,7 +533,7 @@ Exos has flown commercial payloads since 2018 on our SARGE rocket, and BLK3 is i
 
 {angle}
 
-If it would be helpful, we would be happy to share our Payload User's Guide or set up a short call whenever it makes sense. You are also welcome to tell us a little about your experiment through our payload questionnaire at https://www.exosaero.com/payload-questionnaire, or reach us anytime at info@exosaero.com or (430) 966-4005.
+If it would be helpful, we would be happy to share our Payload User's Guide or set up a short call whenever it makes sense. You are also welcome to tell us what you'd like to fly at https://www.exosaero.com/flight-campaign, and our Payload FAQ page (https://www.exosaero.com/payload-faqs) covers common questions. You can reach us anytime at info@exosaero.com or (430) 966-4005.
 
 Best Regards,
 Lizi Quinn
