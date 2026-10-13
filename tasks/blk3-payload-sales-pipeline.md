@@ -2035,7 +2035,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - Provides a faster screening step for pharma partner drug candidates (5-7 min microgravity vs. waiting for ISS slot)
   - BLK3 is a US-licensed platform — attractive for Exobiosphere's Asian pharma partners (Boryung/Korean; Space Data/Japan) who want a US-flight-qualified data package
 - **Note:** Very early-stage company (founded 2024, seed stage). Lower immediate revenue potential than other pipeline prospects, but right profile for the growing pharma-in-space pipeline. Monitor for Series A and OHTS commissioning timeline before heavy investment in outreach.
-- **Status:** IN DISCUSSION (Olivia Borgue accepted Lizi's LinkedIn request 10/13; message sent same day. Kyle Acierno pending.)
+- **Status:** IN DISCUSSION (Olivia Borgue accepted Lizi's LinkedIn request 10/13; LinkedIn message drafted 10/13. Kyle Acierno pending.)
 
 ---
 
