@@ -467,6 +467,13 @@ def process_outbound_to_team(msg, subject, body):
     if str(msg.get('X-Exo-No-Task', '')).strip() == '1':
         print("  Skipped: Exo helper email (X-Exo-No-Task) — not a task")
         return
+    # Proton's Sent-folder copy drops custom X- headers, so the check above never fires there
+    # (Lizi 10/13: "Your 4 PM daily update" became #3733). Exo's helper mail always goes out
+    # with the display name "Exo"; human sends from this mailbox use a person's name.
+    _from_name = decode_mime_header(str(msg.get('From', ''))).split('<')[0].strip().strip('"').strip().lower()
+    if _from_name == 'exo':
+        print("  Skipped: Exo helper email (From: Exo) — not a task")
+        return
 
     # (a) Exo's OWN automated status replies (subject "…, Exo update") are outbound from Exo to the
     # requester, not new delegations. They were looping back through this intake and spawning
