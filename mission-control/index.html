@@ -2357,8 +2357,11 @@ async function loadDocuments(taskId) {
     const olderCount = {};
     old.forEach(d => { if (d.family) olderCount[d.family] = (olderCount[d.family] || 0) + 1; });
 
+    // Real file name (stored_name minus its upload timestamp); doc.filename is sometimes a display title.
+    const realName = d => String(d.stored_name || d.filename || '').replace(/^\d{10,}_/, '') || d.filename;
     const row = (doc, state) => {
       const iconCls = docIconClass(doc.extension);
+      const desc = (doc.title || (doc.filename !== realName(doc) ? doc.filename : '')) || '';
       const g = groups[keyOf(doc)] || [];
       let tags = '';
       if (state === 'superseded') {
@@ -2378,12 +2381,13 @@ async function loadDocuments(taskId) {
       return `<div class="doc-item${state === 'superseded' ? ' is-superseded' : ''}">
         <div class="doc-icon ${iconCls}">${docIconLabel(doc.extension)}</div>
         <div class="doc-info">
-          <div class="doc-name" title="${escHtml(doc.filename)}">${escHtml(doc.filename)}${tags}</div>
+          <div class="doc-name" title="${escHtml(realName(doc))}">${escHtml(realName(doc))}${tags}</div>
+          ${desc ? `<div class="doc-meta" style="font-style:italic">${escHtml(desc)}</div>` : ''}
           <div class="doc-meta">${formatFileSize(doc.size)} &middot; ${fmtDocTime(doc.uploaded_at)}${ver} &middot; ${escHtml(doc.uploaded_by || '?')}${repl}</div>
         </div>
         <div class="doc-actions">
           <button onclick="window.open('${['.docx','.doc'].includes((doc.extension||'').toLowerCase()) ? '/viewpdf/' : '/uploads/'}${encodeURIComponent(doc.stored_name)}','_blank')">Open</button>
-          <a href="/uploads/${encodeURIComponent(doc.stored_name)}" download="${escHtml(doc.filename)}" style="text-decoration:none">
+          <a href="/uploads/${encodeURIComponent(doc.stored_name)}" download="${escHtml(realName(doc))}" style="text-decoration:none">
             <button type="button">Download</button>
           </a>
           ${toggle}

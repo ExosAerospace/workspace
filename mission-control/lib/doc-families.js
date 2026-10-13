@@ -56,7 +56,7 @@ function applyFamilies(list) {
     for (const m of g.slice(1)) {
       if (m.restored_at || m.current === false) continue;
       m.current = false; m.auto_superseded = why;
-      m.superseded_by_name = top.filename; m.superseded_at = m.superseded_at || top.uploaded_at;
+      m.superseded_by_name = realName(top); m.superseded_at = m.superseded_at || top.uploaded_at;
     }
   };
   const live = () => out.filter(m => m.current !== false);
