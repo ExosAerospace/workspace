@@ -532,8 +532,10 @@
   .doc-tag.superseded { background: rgba(148,163,184,.2); color: #94a3b8; }
   .doc-item.is-superseded { opacity: .6; }
   .doc-item.is-superseded .doc-name { text-decoration: line-through; }
-  .docs-superseded { margin-top: 10px; }
-  .docs-superseded summary { cursor: pointer; font-size: 12px; color: var(--text2); padding: 6px 0; }
+  .docs-superseded { margin-top: 14px; border-top: 2px dashed rgba(239,68,68,.45); padding-top: 6px; }
+  .docs-superseded summary { cursor: pointer; font-size: 13px; font-weight: 700; color: #f87171; padding: 6px 0; }
+  .docs-sec-h { font-size: 13px; font-weight: 700; color: #4ade80; margin: 2px 0 6px; letter-spacing: .02em; }
+  .docs-sec-h small, .docs-superseded summary small { font-weight: 400; color: var(--text2); }
 
   /* ── TOAST ── */
   #toast {
@@ -2350,6 +2352,8 @@ async function loadDocuments(taskId) {
     const groups = {};
     docs.forEach(d => { (groups[keyOf(d)] = groups[keyOf(d)] || []).push(d); });
     const hasHistory = new Set(old.map(keyOf));
+    const olderCount = {};
+    old.forEach(d => { if (d.family) olderCount[d.family] = (olderCount[d.family] || 0) + 1; });
 
     const row = (doc, state) => {
       const iconCls = docIconClass(doc.extension);
@@ -2363,7 +2367,9 @@ async function loadDocuments(taskId) {
         if (new Date(doc.uploaded_at).getTime() > lastSeen) tags += '<span class="doc-tag new">NEW</span>';
       }
       const ver = (parseInt(doc.version, 10) || 1) > 1 ? ` &middot; v${doc.version}` : '';
-      const repl = state === 'superseded' && doc.superseded_at ? ` &middot; replaced ${fmtDocTime(doc.superseded_at)}` : '';
+      const repl = state === 'superseded'
+        ? (doc.superseded_by_name ? ` &middot; replaced by <b>${escHtml(doc.superseded_by_name)}</b>` : (doc.superseded_at ? ` &middot; replaced ${fmtDocTime(doc.superseded_at)}` : ''))
+        : (olderCount[doc.family] ? ` &middot; ${olderCount[doc.family]} older iteration${olderCount[doc.family] > 1 ? 's' : ''} below` : '');
       const toggle = state === 'superseded'
         ? `<button onclick="setDocCurrent('${doc.id}', true)" title="Make this a current document again">Restore</button>`
         : `<button onclick="setDocCurrent('${doc.id}', false)" title="Move to Superseded versions (nothing is deleted)">Superseded</button>`;
@@ -2383,8 +2389,9 @@ async function loadDocuments(taskId) {
         </div>
       </div>`;
     };
-    el.innerHTML = (docs.length ? docs.map(d => row(d, 'current')).join('') : '<div class="docs-empty">No current documents. Older versions are below.</div>')
-      + (old.length ? `<details class="docs-superseded"><summary>Superseded versions (${old.length})</summary>${old.map(d => row(d, 'superseded')).join('')}</details>` : '');
+    el.innerHTML = `<div class="docs-sec-h">✅ MOST CURRENT DOCUMENTS (${docs.length}) <small>· the latest iteration of each document, one per file format</small></div>`
+      + (docs.length ? docs.map(d => row(d, 'current')).join('') : '<div class="docs-empty">No current documents. Older versions are below.</div>')
+      + (old.length ? `<details class="docs-superseded"><summary>⛔ SUPERSEDED — older iterations, do not use (${old.length}) <small>· nothing is deleted; Restore puts one back</small></summary>${old.map(d => row(d, 'superseded')).join('')}</details>` : '');
   } catch(e) {
     el.innerHTML = `<div class="docs-empty">Failed to load documents: ${escHtml(e.message)}</div>`;
   }

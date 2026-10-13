@@ -5244,6 +5244,9 @@ const server = http.createServer((req, res) => {
     if (taskId) meta = meta.filter(m => String(m.task_id) === String(taskId));
     else if (projectId) meta = meta.filter(m => String(m.project_id) === String(projectId));
     else if (decisionId) meta = meta.filter(m => String(m.decision_id) === String(decisionId));
+    // Older iterations filed under a different doc_key / filename are superseded by document family
+    // (lib/doc-families.js; computed per request, nothing rewritten). Task + project lists only.
+    if (taskId || projectId) meta = require('./lib/doc-families').applyFamilies(meta);
     // Default: only the current version of each document; archived prior versions are
     // hidden unless ?history=1. Legacy records (no `current` field) count as current.
     if (!history) meta = meta.filter(m => m.current !== false);
