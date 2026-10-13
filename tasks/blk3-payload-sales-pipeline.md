@@ -2035,7 +2035,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - Provides a faster screening step for pharma partner drug candidates (5-7 min microgravity vs. waiting for ISS slot)
   - BLK3 is a US-licensed platform — attractive for Exobiosphere's Asian pharma partners (Boryung/Korean; Space Data/Japan) who want a US-flight-qualified data package
 - **Note:** Very early-stage company (founded 2024, seed stage). Lower immediate revenue potential than other pipeline prospects, but right profile for the growing pharma-in-space pipeline. Monitor for Series A and OHTS commissioning timeline before heavy investment in outreach.
-- **Status:** OUTREACH SENT (Exo 10/8: Lizi LinkedIn 10/6)
+- **Status:** IN DISCUSSION (Olivia Borgue accepted Lizi's LinkedIn request 10/13; message sent same day. Kyle Acierno pending.)
 
 ---
 
@@ -2586,7 +2586,7 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **POC:** Jim Bertin (Math Instructor; rocket team advisor; MSGC Campus Representative, jbertin@cdkc.edu)
 - **Why BLK3 fits:** Education fit. A student payload step-up from high-power rocketry to suborbital, if funded (MSGC/NASA). Low revenue priority.
 - **Funding:** Montana Space Grant / NASA MUREP, EPSCoR, sponsor co-funding (no free flights)
-- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet)
+- **Status:** RESEARCHING (POC verified 2026-09-30; no draft yet) → OUTREACH SENT (Lizi via send pack 2026-10-13, D-7282077, to jbertin@cdkc.edu)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
 
 #### 7. Bridger Photonics (Bozeman)
