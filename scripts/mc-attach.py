@@ -90,7 +90,7 @@ def main():
 
     fname = os.path.basename(a.file)
     ext = os.path.splitext(fname)[1].lower()
-    doc_key = a.doc_key or slug(fname)
+    doc_key = a.doc_key or family(fname).replace(".", "-")
     # Standing rule: task attachments are Word, never raw .md/.txt — convert before storing.
     src = a.file
     if ext in (".md", ".txt"):
