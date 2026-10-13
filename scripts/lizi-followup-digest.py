@@ -8,7 +8,7 @@ LABEL="com.exos.lizi-followup-digest"
 DUE={
  "2026-10-14":[
   ("VSFB Mission Development Zone whitepaper (task #3699/#3701)","John submits (D-7282079)","due Fri 10/16 4:00 PM PT",
-   "(No email.) Just confirm you forwarded the DoD SAFE email (from Jeffrey Grelck) to John. John uploads the final whitepaper himself; nothing else for you."),
+   "(No email.) Nothing for you unless John can't upload from Japan. He has the SAFE email and uploads the final whitepaper himself. If he asks you to step in, tell Exo and it will hand you the final PDF + confirmation email."),
   ("John Cothran: watch invoice #0075 (phone number needed)","cothranprp@gmail.com (reply on your earlier thread)","his invoice is ready except his phone number",
    "Hi John,\nJust following up on your watch order. I have everything I need for your invoice except a phone number. Could you send that over when you get a chance? Thank you!\nBest Regards,\nLizi"),
   ("PIEE / SPRS: confirm our 110/110 score is posted + affirmed (task #2813)","https://piee.eb.mil","you registered 10/8; John approval requested (D-7282021). SpaceWERX needs the score posted by 10/21",
