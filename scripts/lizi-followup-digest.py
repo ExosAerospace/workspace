@@ -30,11 +30,6 @@ DUE={
  "2026-10-20":[
   ("LinkedIn check: pending connection requests","LinkedIn (no email)","requests sent 10/6-10/8; Olivia Borgue accepted 10/13",
    "(No email.) Check whether these accepted: Kyle Acierno (Exobiosphere CEO) https://www.linkedin.com/in/kyleacierno ; Shawn Usman (Rhea) https://www.linkedin.com/in/shawn-usman-8b4169169 ; Adam Escobar (Space Lab Tech) https://www.linkedin.com/in/adam-escobar-6a2a08171 ; Marshall Smith (Starlab) https://www.linkedin.com/in/marshall-smith4 . For anyone who accepted, tell Exo in #lizi-channel-2 and it drafts the message. Still nothing from Marshall? Exo can line up Bradley Henderson (Starlab CCO) instead."),
-  ("NCAR: Eric Apel","reply on his 10/6 thread","warm reply 10/6",
-   "Hi Eric,\nFollowing up on our exchange from earlier this month. I'd love to set up a short call to talk through what an atmospheric chemistry payload on BLK3 could look like. What times work for you in the next week or two?\nBest Regards,\nLizi")],
- "2026-10-21":[
-  ("Axiom: Chyree Batton","Chyree@axiomspace.com (reply on thread)","sent 10/7",
-   "Hi Chyree,\nJust following up on my note about a recovered BLK3 test flight for your battery and vacuum qualification work. Happy to set up a short technical call whenever works for your team.\nBest Regards,\nLizi"),
   ("JHU/APL: Josh Wolk","joshua.wolk@jhuapl.edu (reply on thread)","follow-up sent 10/7",
    "Hi Josh,\nJust circling back on my note from earlier this month. If you can share a bit about the payloads you're working on, I'd love to set up a short call with our engineering team. We can put an NDA in place first if needed.\nBest Regards,\nLizi"),
   ("Magma Space: Alessandro Stabile","outreach@magma-space.com","sent 10/7 (#2307)",

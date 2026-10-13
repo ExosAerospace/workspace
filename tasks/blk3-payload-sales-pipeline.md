@@ -1389,7 +1389,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   3. **Rapid atmospheric campaign cadence** — Atmospheric research requires profiling during specific meteorological windows. BLK3's 2-3 day refly cadence allows multiple vertical profiles during a single atmospheric campaign — something no expendable sounding rocket can offer.
   4. **SACSS coordination synergy:** Jon is already cultivating NOAA contacts (Kopacz/Breeze/Frost) and CU Co-PI Darin Toohey for the SACSS atmospheric sampling payload. Toohey is at CU Boulder — the same university as NCAR. An NCAR introduction via Toohey is a natural warm path.
 - **Funding:** NSF core funding for NCAR operations; campaign-specific grants from NSF, NOAA, and NASA. Flight hardware budgets are real and established; sounding rocket campaigns are a regular budget item.
-- **Status:** OUTREACH SENT (Exo 10/8: Apel replied 10/6; f/u 10/20)
+- **Status:** IN DISCUSSION (Eric Apel replied 10/13: colleague very interested, asked for PUG + Zoom)
 - **Next action:** Coordinate with SACSS/NOAA Capture Agent (cron 049e8c95). Darin Toohey (CU, Co-PI on SACSS) is the natural bridge to NCAR ACOM — same campus, overlapping scientific community. Ask Toohey for intro to Apel before cold outreach.
 
 ---
