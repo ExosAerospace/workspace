@@ -35,7 +35,9 @@ DUE={
   ("Magma Space: Alessandro Stabile","outreach@magma-space.com","sent 10/7 (#2307)",
    "Hi Alessandro,\nFollowing up on my note about flying your maglev reaction wheel on BLK3 in early 2027. Would a quick call be helpful to see if it's a fit?\nBest Regards,\nLizi"),
   ("UCLA: Prof. Chee Wei Wong","cheewei.wong@ucla.edu","sent 10/7",
-   "Hi Professor Wong,\nJust following up on my note about a BLK3 rocket flight as a next step after your balloon test. Happy to set up a short call whenever works for you.\nBest Regards,\nLizi")],
+   "Hi Professor Wong,\nJust following up on my note about a BLK3 rocket flight as a next step after your balloon test. Happy to set up a short call whenever works for you.\nBest Regards,\nLizi"),
+  ("NCAR ACOM: Dr. Eric Apel + colleague (task #2200)","apel@ucar.edu (reply on your 10/13 thread)","10/13 you sent the Payload User Guide + booking link for a Zoom. Skip if they already booked",
+   "Hi Eric,\nI just wanted to check whether you and your colleague had a chance to look over the Payload User Guide. I'd love to find a time for that Zoom. Here's my booking link again, or just send a couple of times that work for you both and I'll get it set up. I'm happy to bring someone from our technical team along too.\nBest Regards,\nLizi")],
  "2026-10-22":[
   ("MSU Spectrum Lab: Dr. Krishna Rupavatharam (Director)","krishna.rupavatharam@montana.edu (reply on thread)","you emailed 10/12; he replied same day: traveling, forwarding to his team to explore options",
    "Hi Krishna,\nThank you again for passing BLK3 along to your team. I wanted to check in and see if anyone has questions or ideas they'd like to explore. I'm happy to set up a short call or send over our Payload User Guide so they can see what fits.\nBest Regards,\nLizi"),
