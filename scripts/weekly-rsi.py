@@ -266,6 +266,14 @@ def main():
     except Exception as _e:
         L.append(f"\n## 16. Improvement ledger\n- (module error: {_e})")
 
+    # §17 exo3 CODE compliance audit (Jon 2026-10-13): every changed code file needs owner + passing selftest +
+    # telemetry (+ ledger on fixes). Exception-only Decision. See scripts/exo3_code_audit.py.
+    try:
+        import exo3_code_audit
+        L.extend(exo3_code_audit.report_section(7))
+    except Exception as _e:
+        L.append(f"\n## 17. exo3 code compliance audit\n- (module error: {_e})")
+
     report = "\n".join(L)
 
     os.makedirs(REPORTS, exist_ok=True)

@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-04T12:49:13.103453-05:00",
- "total": 268,
+ "total": 269,
  "standing": 114,
  "ephemeral": 18,
  "service": 6,
@@ -2600,7 +2600,10 @@
    "reusability_scope": "TBD",
    "risk_tier": "HIGH",
    "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
-   "eval_type": "output"
+   "eval_type": "output",
+   "change_log": [
+    "2026-10-13 §17 exo3 code compliance audit added (scripts/exo3_code_audit.py)"
+   ]
   },
   {
    "label": "com.exos.weekly-team-performance",
@@ -5729,6 +5732,29 @@
     "2026-10-13 97f0782 real filenames",
     "2026-10-13 exo3 remediation: selftest + registry",
     "2026-10-13 retire-whole-document fix (older iterations resurfaced after newest superseded) + workpaper section; selftest 11"
+   ]
+  },
+  {
+   "label": "exo3-code-audit",
+   "program": "exo3-code-audit",
+   "script": "scripts/exo3_code_audit.py (called by com.exos.weekly-rsi §17, Sundays 20:00; also runnable on demand)",
+   "kind": "process (weekly, inside com.exos.weekly-rsi)",
+   "schedule": "weekly Sun 20:00 via weekly-rsi",
+   "purpose": "Weekly exo3 CODE compliance audit (Jon 2026-10-13). For every code file changed in 7 days (scripts/*.py, mission-control/lib/*.js, server.js): OWNER (registry entry names it), EVAL (runnable selftest that PASSES when run), TRACE (fleet telemetry unless registry waives), LEDGER (fix commits have an improvement-ledger entry). Unscheduled one-off deliverable builders are counted, not gated. Exception-only: one Decision per ISO week when gaps exist.",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Advise (reports + files one Decision; changes nothing)",
+   "human_owner": "John Quinn",
+   "risk_tier": "LOW",
+   "permission_envelope": "READ git log, agent-registry.json, improvement-ledger.json, changed source files, ~/Library/LaunchAgents/com.exos.*, openclaw cron list; RUN registered selftests (read-only by contract); POST /api/decisions/ingest (dedupe exo3-code-audit-<ISO week>); fleet_log append. NEVER edits code, registry or data.",
+   "memory_boundary": "workspace repo (read-only)",
+   "escalation": "gaps -> one Decision 'exo3 code audit <week>' (priority high if any selftest fails); module error -> line in weekly RSI §17",
+   "eval_suite": "/usr/bin/python3 scripts/exo3_code_audit.py --selftest (9 checks incl. replay of the 10/13 miss: unregistered payload-orders.js change caught; failing selftest reported; liveness-only eval/no telemetry/unledgered fix reported; one-off builder counted but a scheduled builder gated; telemetry waiver; node selftests recognized)",
+   "eval_type": "output",
+   "telemetry": "logs/fleet-events.jsonl agent=exo3-code-audit action=weekly_audit (files, gaps, evals_failed); weekly RSI report §17",
+   "reusability_scope": "whole repo",
+   "envelope_source": "authored 2026-10-13 (Jon: 'Do you do a weekly exo3 code compliance audit of any type?')",
+   "change_log": [
+    "2026-10-13 created"
    ]
   }
  ],
