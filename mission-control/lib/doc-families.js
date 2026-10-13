@@ -66,6 +66,12 @@ function applyFamilies(list) {
   const byFam = {};
   for (const m of live()) { const f = familyOf(m); m.family = f; (byFam[f] = byFam[f] || []).push(m); }
   Object.values(byFam).forEach(g => supersede(g, 'newer iteration'));
+  // one DOCUMENT = all formats (pptx / pdf / docx / print copy) of the same family -> shown as one row
+  for (const m of out) m.doc_group = familyOf(m).replace(/\.[a-z0-9]+$/, '').replace(/-print$/, '');
+  // REFERENCE records (source docs received, executed/charter documents) sit in their own section, not in the
+  // working set: explicit doc_role:'reference', or the name says executed / articles / bylaws / statement of info.
+  const REF = /(fully[\s_-]*executed|[\s_-]executed|articles[\s_-]*(of|amendment)|bylaws|statement[\s_-]*of[\s_-]*information)/i;
+  for (const m of out) if (!m.doc_role && REF.test(realName(m) + ' ' + (m.filename || ''))) m.doc_role = 'reference';
   return out;
 }
 

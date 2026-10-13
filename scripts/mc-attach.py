@@ -40,6 +40,25 @@ def slug(s):
     return s or "document"
 
 
+_TOK = re.compile(r'(^|[\s_.\-])((r|rev|v)\s?\d+(\.\d+)*|rev|final|draft|updated|latest|copy|clean)(?=$|[\s_.\-])')
+
+def family(name):
+    """Document family = filename stem with dates / r# / rev# / v# / FINAL / DRAFT / '(1)' stripped, plus the
+    extension. SAME rule as mission-control/lib/doc-families.js. Every iteration of a document on a task maps to
+    one family, whatever doc_key or name Exo used (Jon 10/13: 'Exo names all the files ... fix it')."""
+    b = re.sub(r'^\d{10,}_', '', os.path.basename(name or ""))
+    stem, ext = os.path.splitext(b)
+    s = stem.lower()
+    s = re.sub(r'---[0-9a-f-]{20,}$', '', s)
+    s = re.sub(r'\(?\d{4}-\d{2}-\d{2}\)?', ' ', s)
+    s = re.sub(r'\(\d+\)', ' ', s)
+    prev = None
+    while prev != s:
+        prev = s
+        s = _TOK.sub(' ', s)
+    s = re.sub(r'[^a-z0-9]+', '-', s).strip('-')
+    return (s or 'document') + ext.lower()
+
 def doc_date(name):
     """Last ISO date embedded in a filename (e.g. _2026-10-05), or None."""
     d = re.findall(r'(\d{4}-\d{2}-\d{2})', os.path.basename(name or ""))
@@ -87,10 +106,32 @@ def main():
                   f"If this was meant to be a spreadsheet, attach a real .xlsx instead.")
         except Exception as e:
             print("md->docx failed, storing original:", str(e)[:70]); src = a.file
-    title = a.title or fname
+    title = a.title or ""
     if title.lower().endswith((".md", ".txt")):
         title = os.path.splitext(title)[0] + ".docx"
     meta = load_meta()
+    on_task = [m for m in meta if str(m.get("task_id")) == str(a.task)]
+    # 1) identical content already current anywhere on the task -> no new copy (stops 26x re-uploads)
+    src_hash0 = hashlib.sha256(open(src, "rb").read()).hexdigest()
+    for m in on_task:
+        if m.get("current") is False:
+            continue
+        try:
+            if hashlib.sha256(open(os.path.join(UPLOADS, m["stored_name"]), "rb").read()).hexdigest() == src_hash0:
+                print(f"unchanged: identical file is already current on task {a.task} as '{m.get('filename')}' (doc_key {m.get('doc_key')})")
+                return
+        except Exception:
+            pass
+    # 2) same document family already on the task -> chain to ITS doc_key, never invent a new key/name
+    fam = family(fname)
+    fam_hits = [m for m in on_task if m.get("current") is not False and m.get("doc_key")
+                and family(m.get("stored_name") or m.get("filename")) == fam]
+    if fam_hits:
+        keep = max(fam_hits, key=lambda m: m.get("uploaded_at") or "")["doc_key"]
+        if keep != doc_key:
+            print(f"NOTE: '{fname}' is an iteration of an existing document on task {a.task}; "
+                  f"chaining to doc_key '{keep}' (ignored '{doc_key}').")
+            doc_key = keep
     # Stale-version guard (Jon 10/7 "how do we not send an outdated one?"): an older copy must
     # never supersede a newer one. On #2488 a re-attach of the 09-22 HyCAT file demoted the 10-05
     # revision, so the board's "current" — the copy that gets sent — was the outdated one.
@@ -121,7 +162,8 @@ def main():
     # supersede the current version of this doc on this task
     prev_ver = 0
     for m in meta:
-        if str(m.get("task_id")) == str(a.task) and m.get("doc_key") == doc_key and m.get("current") is not False:
+        if str(m.get("task_id")) == str(a.task) and m.get("current") is not False and (
+                m.get("doc_key") == doc_key or family(m.get("stored_name") or m.get("filename")) == fam):
             m["current"] = False
             m["superseded_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
             prev_ver = max(prev_ver, int(m.get("version", 1)))
@@ -129,7 +171,8 @@ def main():
 
     rec = {
         "id": hashlib.sha1(f"{stored}{ts}".encode()).hexdigest()[:16],
-        "filename": title,
+        "filename": fname,
+        **({"title": title} if title and title != fname else {}),
         "stored_name": stored,
         "size": size,
         "extension": ext,

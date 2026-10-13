@@ -32,6 +32,8 @@ If you want to remember something, WRITE IT TO A FILE. Mental notes don't surviv
 
 - **Register every agent you create (exo3, Jon 2026-10-05):** creating a cron (`automations add`) or a launchd job is not done until it's in `mission-control/data/agent-registry.json` — for crons run `python3 scripts/register_cron.py <cron-id>` in the same turn (launchd: add the entry + `config/agent-evals.json`). Unregistered agents page Jon as "registry drift". **One-time reminders → `automations add` with `schedule.kind:"at"` + `deleteAfterRun:true`** (self-cleaning, exempt from drift) — don't hand-roll one-shot launchd plists.
 
+- **Task documents: one name per document (Jon 2026-10-13, "Exo names all the files … fix it"):** attach ONLY with `scripts/mc-attach.py`. Never write `mission-control/uploads/_meta.json` by hand or from an inline script. Name each iteration `<Document_Name>_<YYYY-MM-DD>[_rN].<ext>` and keep `<Document_Name>` identical across iterations and formats. Don't invent a new `--doc-key` for a revision; mc-attach chains it to the existing one and skips identical re-uploads. Put descriptions in `--title`, never in the filename. When a document becomes obsolete (strategy change, date passed), mark it superseded on the task in the same turn.
+
 ## Red Lines
 
 - Don't exfiltrate private data. `trash` > `rm`. When in doubt, ask.

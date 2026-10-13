@@ -534,6 +534,8 @@
   .doc-item.is-superseded .doc-name { text-decoration: line-through; }
   .docs-superseded { margin-top: 14px; border-top: 2px dashed rgba(239,68,68,.45); padding-top: 6px; }
   .docs-superseded summary { cursor: pointer; font-size: 13px; font-weight: 700; color: #f87171; padding: 6px 0; }
+  .docs-reference { margin-top: 12px; border-top: 1px solid rgba(148,163,184,.3); padding-top: 6px; }
+  .docs-reference summary { cursor: pointer; font-size: 13px; font-weight: 700; color: #93c5fd; padding: 6px 0; }
   .docs-sec-h { font-size: 13px; font-weight: 700; color: #4ade80; margin: 2px 0 6px; letter-spacing: .02em; }
   .docs-sec-h small, .docs-superseded summary small { font-weight: 400; color: var(--text2); }
 
@@ -2389,8 +2391,21 @@ async function loadDocuments(taskId) {
         </div>
       </div>`;
     };
-    el.innerHTML = `<div class="docs-sec-h">✅ MOST CURRENT DOCUMENTS (${docs.length}) <small>· the latest iteration of each document, one per file format</small></div>`
-      + (docs.length ? docs.map(d => row(d, 'current')).join('') : '<div class="docs-empty">No current documents. Older versions are below.</div>')
+    // one row per DOCUMENT: its other formats (PDF / Word / print copy) become buttons on that row
+    const FMT_RANK = { '.pptx': 1, '.docx': 2, '.xlsx': 3, '.pdf': 4 };
+    const groupRows = list => { const byDoc = {};
+    list.forEach(d => { const g = d.doc_group || keyOf(d); (byDoc[g] = byDoc[g] || []).push(d); });
+    return Object.values(byDoc).map(g => {
+      g.sort((a, b) => (/_print/i.test(a.stored_name) - /_print/i.test(b.stored_name)) || ((FMT_RANK[(a.extension||'').toLowerCase()] || 9) - (FMT_RANK[(b.extension||'').toLowerCase()] || 9)));
+      const extra = g.slice(1).map(x => `<button onclick="window.open('/uploads/${encodeURIComponent(x.stored_name)}','_blank')" title="${escHtml(x.filename)}">${/_print/i.test(x.stored_name) ? 'PRINT ' : ''}${escHtml((x.extension||'').replace('.','').toUpperCase())}</button>`).join('');
+      return row(g[0], 'current').replace('<div class="doc-actions">', `<div class="doc-actions">${extra}`);
+    }); };
+    const docRows = groupRows(docs.filter(d => d.doc_role !== 'reference'));
+    const refRows = groupRows(docs.filter(d => d.doc_role === 'reference'));
+    updateDocBadge(docRows.length);
+    el.innerHTML = `<div class="docs-sec-h">✅ MOST CURRENT DOCUMENTS (${docRows.length}) <small>· latest iteration of each document; other formats are the buttons on its row</small></div>`
+      + (docRows.length ? docRows.join('') : '<div class="docs-empty">No current documents. Older versions are below.</div>')
+      + (refRows.length ? `<details class="docs-reference"><summary>📁 REFERENCE &amp; EXECUTED RECORDS (${refRows.length}) <small>· source documents received, signed/executed agreements, charter docs</small></summary>${refRows.join('')}</details>` : '')
       + (old.length ? `<details class="docs-superseded"><summary>⛔ SUPERSEDED — older iterations, do not use (${old.length}) <small>· nothing is deleted; Restore puts one back</small></summary>${old.map(d => row(d, 'superseded')).join('')}</details>` : '');
   } catch(e) {
     el.innerHTML = `<div class="docs-empty">Failed to load documents: ${escHtml(e.message)}</div>`;
