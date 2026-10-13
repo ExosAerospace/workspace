@@ -7,18 +7,16 @@ from email.message import EmailMessage
 LABEL="com.exos.lizi-followup-digest"
 DUE={
  "2026-10-14":[
+  ("VSFB Mission Development Zone whitepaper (task #3699/#3701)","John submits (D-7282079)","due Fri 10/16 4:00 PM PT",
+   "(No email.) Just confirm you forwarded the DoD SAFE email (from Jeffrey Grelck) to John. John uploads the final whitepaper himself; nothing else for you."),
   ("John Cothran: watch invoice #0075 (phone number needed)","cothranprp@gmail.com (reply on your earlier thread)","his invoice is ready except his phone number",
    "Hi John,\nJust following up on your watch order. I have everything I need for your invoice except a phone number. Could you send that over when you get a chance? Thank you!\nBest Regards,\nLizi"),
   ("PIEE / SPRS: confirm our 110/110 score is posted + affirmed (task #2813)","https://piee.eb.mil","you registered 10/8; John approval requested (D-7282021). SpaceWERX needs the score posted by 10/21",
    "(No email.) 1) Log into PIEE. If the SPRS tile shows, you're approved. If not, ping John or Neil to approve your role. 2) In SPRS, confirm the 110/110 CMMC L2 (Self) entry John posted 8/31 is there AND shows as affirmed. 3) If it isn't affirmed, ping John to click Affirm. Ask Exo in #lizi-channel-2 to walk through it."),
-  ("VSFB Mission Development Zone whitepaper (task #3699/#3701)","DoD SAFE link received 10/13 (in your email from Jeffrey Grelck, USSF)","due Fri 10/16 4:00 PM PT; target upload Thu 10/15",
-   "(No email.) Check in #lizi-channel-2 that John has signed off the final whitepaper (v7 or later). The SAFE link is single-use, so upload only the final version."),
   ("Watch follow-up to the 531-investor list (task #3408)","the same investor list (via David or your send list), after the website post from the 10/14 weekly is live","first email went ~10/1; 3 reserved so far",
    "Hi [Name],\nQuick follow-up on the BLK3 Edition space-flown watch: only 6 of the 10 set aside for Exos investors are left (check current count before sending) at $675, with delivery after the early 2027 flight. Each one comes with a certificate of flight. You can read more in this week's investor update [link to website post]. If you'd like one, just reply and I'll get you set up!\nBest Regards,\nLizi"),
   ("David Mitchell: Nov 7 investor notice","reply on your Teams-link email to David","you sent him the Teams link 10/8; notice must go out by ~10/23 (15-day bylaw) / 10/28 (Texas 10-day min)",
    "Hi David,\nJust checking that the Nov 7 investor meeting notice went out with the Teams link and the record date. Anything you need from me?\nBest Regards,\nLizi"),
-  ("VSFB Mission Development Zone whitepaper (task #3699/#3701)","DoD SAFE link from Jeffrey Grelck (USSF), single-use","due Fri 10/16 4:00 PM PT",
-   "(No email.) Upload day: once John's sign-off is in, upload the final PDF through the SAFE link + request code in your email, then send the short receipt-confirmation email (Exo drafts it)."),
   ("University of Montana: Dr. Paul Lukacs (Interim VP Research)","paul.lukacs@umontana.edu (reply on thread)","he replied 10/9: coordinating with aligned faculty, will come back with questions",
    "Hi Paul,\nThank you again for passing BLK3 along to your faculty. I wanted to check in and see if anyone has questions. I'm happy to set up a short call with interested researchers, or send over our Payload User Guide so they can see what fits.\nBest Regards,\nLizi")],
  "2026-10-20":[
