@@ -19,7 +19,7 @@ def tohex(h, l, s):
 def fill_map(hexs):          # panels/boxes: dark -> light, keep hue
     h, l, s = hls(hexs)
     if l < 0.5:
-        return tohex(h, 1 - l * 0.6 if s < 0.15 else 0.9 - l * 0.2, min(s, 0.6))
+        return tohex(h, 0.97 if s < 0.15 else 0.95, min(s, 0.5))
     return hexs
 
 def text_map(hexs):          # text: light -> dark, keep hue
