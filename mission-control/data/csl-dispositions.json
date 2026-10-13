@@ -22,5 +22,19 @@
     "note": "Name collision, no nexus. Our CRM party 'AE Industrial' is AE Industrial Partners (Boca Raton, FL, USA), a U.S. aerospace/defense/space private-equity firm. The CSL match is AW Industrial Ltd on the BIS Unverified List (CN); the 0.923 score reflects the AE/AW fuzzy match. Different entity, different country, no nexus. Cleared.",
     "by": "Exo, on John Quinn's review",
     "date": "2026-09-10"
+  },
+  "conor lee": {
+    "status": "cleared",
+    "note": "Descartes VC RPS Dynamic Screening YELLOW FLAG (alert CSRPS26, 2026-10-13) vs VC ref LEIE67912 'SCHIEVING, Amanda Lee' \u2014 HHS OIG List of Excluded Individuals/Entities (healthcare-program exclusion, authority 1128(b)(4), licensed nurse/nurse's aide, DOB 1975-02-08). Name collision only: the sole shared token is 'Lee' (entered as the Company field on Steven Norsworthy's original searches of 9/3 and 9/14). Different given name and surname; LEIE is not an export-control/sanctions list. No CSL/OFAC/BIS/State hit. Cleared as false positive.",
+    "by": "Exo, on John Quinn's instruction (email 2026-10-13)",
+    "date": "2026-10-13",
+    "source": "Descartes VC dynamic screening"
+  },
+  "conor nelson": {
+    "status": "cleared",
+    "note": "Descartes VC RPS Dynamic Screening YELLOW FLAG (alert CSRPS26, 2026-10-13) vs VC ref LEIE67912 'SCHIEVING, Amanda Lee' \u2014 HHS OIG List of Excluded Individuals/Entities (healthcare-program exclusion, authority 1128(b)(4), licensed nurse/nurse's aide, DOB 1975-02-08). Name collision only: the sole shared token is 'Lee' (entered as the Company field on Steven Norsworthy's original searches of 9/3 and 9/14). Different given name and surname; LEIE is not an export-control/sanctions list. No CSL/OFAC/BIS/State hit. Cleared as false positive.",
+    "by": "Exo, on John Quinn's instruction (email 2026-10-13)",
+    "date": "2026-10-13",
+    "source": "Descartes VC dynamic screening"
   }
 }
