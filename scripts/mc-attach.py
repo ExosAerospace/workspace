@@ -65,6 +65,17 @@ def doc_date(name):
     return d[-1] if d else None
 
 
+def _fleet(action, detail):
+    """exo3 telemetry: one fleet_log event per attach decision (never fails the attach)."""
+    if os.environ.get("MC_ATTACH_SELFTEST"):
+        return
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from fleet_log import event
+        event("mc-attach-exo3", "govern", action, detail=detail, owner="John Quinn")
+    except Exception:
+        pass
+
 def load_meta():
     try:
         with open(META) as f:
@@ -119,6 +130,7 @@ def main():
         try:
             if hashlib.sha256(open(os.path.join(UPLOADS, m["stored_name"]), "rb").read()).hexdigest() == src_hash0:
                 print(f"unchanged: identical file is already current on task {a.task} as '{m.get('filename')}' (doc_key {m.get('doc_key')})")
+                _fleet("skip_identical", {"task": str(a.task), "file": fname, "existing": m.get("stored_name")})
                 return
         except Exception:
             pass
@@ -131,6 +143,7 @@ def main():
         if keep != doc_key:
             print(f"NOTE: '{fname}' is an iteration of an existing document on task {a.task}; "
                   f"chaining to doc_key '{keep}' (ignored '{doc_key}').")
+            _fleet("chain_family", {"task": str(a.task), "file": fname, "ignored_key": doc_key, "doc_key": keep})
             doc_key = keep
     # Stale-version guard (Jon 10/7 "how do we not send an outdated one?"): an older copy must
     # never supersede a newer one. On #2488 a re-attach of the 09-22 HyCAT file demoted the 10-05
@@ -191,11 +204,56 @@ def main():
         json.dump(meta, f, indent=2)
     os.replace(tmp, META)  # atomic: never leave a truncated _meta.json
 
+    _fleet("attach", {"task": str(a.task), "file": fname, "doc_key": doc_key, "version": version})
     action = "attached (v1)" if version == 1 else f"revised (v{version}, prior archived)"
     print(f"{action}: '{rec['filename']}' -> task {a.task}")
     print(f"  url: /uploads/{stored}")
     print(f"  doc_key: {doc_key}")
 
 
+def selftest():
+    """exo3 eval — replays the task #2414 failures (Jon 2026-10-13): one deck under 5 doc_keys, the same file
+    uploaded 26x, display titles stored as filenames (downloads as '(Word) (2)')."""
+    import tempfile
+    global UPLOADS, META
+    saved = (UPLOADS, META, sys.argv[:])
+    os.environ["MC_ATTACH_SELFTEST"] = "1"
+    d = tempfile.mkdtemp(); UPLOADS = os.path.join(d, "up"); META = os.path.join(UPLOADS, "_meta.json")
+    os.makedirs(UPLOADS)
+    def mk(name, body):
+        p = os.path.join(d, name); open(p, "w").write(body); return p
+    def run(*args):
+        sys.argv = ["mc-attach"] + list(args)
+        try: main()
+        except SystemExit as e: return e.code
+        return 0
+    ok = 0
+    def check(cond, label):
+        nonlocal ok
+        if not cond: raise AssertionError("FAIL: " + label)
+        ok += 1
+    import io, contextlib
+    with contextlib.redirect_stdout(io.StringIO()):
+        run("--task", "T", "--file", mk("Deck_2026-10-12_r4.pptx", "A"), "--doc-key", "SSLC-B8-pptx", "--title", "Board deck r4")
+        run("--task", "T", "--file", mk("Deck_2026-10-12_r5.pptx", "B"), "--doc-key", "SSLC-B9-pptx")
+        run("--task", "T", "--file", os.path.join(d, "Deck_2026-10-12_r5.pptx"), "--doc-key", "anything")
+        run("--task", "T", "--file", mk("Deck_2026-10-12_r5.pdf", "C"))
+        rc = run("--task", "T", "--file", mk("Deck_2026-10-10_r2.pptx", "Z"))
+    m = json.load(open(META))
+    pptx = [x for x in m if x["filename"].endswith(".pptx")]
+    check(len({x["doc_key"] for x in pptx}) == 1, "iteration with a new --doc-key chains to the existing key")
+    check(sum(1 for x in pptx if x["current"]) == 1 and [x for x in pptx if x["current"]][0]["filename"] == "Deck_2026-10-12_r5.pptx", "only r5 is current")
+    check(len(m) == 3, "identical re-upload is skipped (no 26x copies)")
+    check(all(x["filename"].startswith("Deck_") for x in m) and m[0].get("title") == "Board deck r4", "real filename kept, title separate")
+    check(family("Exos_X_2026-10-12_r5_FINAL.pptx") == family("1791922360631_Exos_X_2026-10-10_r2.pptx") == "exos-x.pptx", "family strips dates/rN/FINAL/upload prefix")
+    check(family("BLK3_M101_Sizing.docx") == "blk3-m101-sizing.docx", "BLK3/M101 never mangled")
+    check(rc == 3, "older-dated file is refused (stale guard)")
+    UPLOADS, META, sys.argv = saved
+    print(f"mc-attach selftest: {ok}/{ok} pass")
+
+
 if __name__ == "__main__":
-    main()
+    if "--selftest" in sys.argv:
+        selftest()
+    else:
+        main()

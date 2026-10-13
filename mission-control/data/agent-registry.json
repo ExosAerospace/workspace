@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-04T12:49:13.103453-05:00",
- "total": 244,
+ "total": 268,
  "standing": 114,
  "ephemeral": 18,
  "service": 6,
@@ -5653,6 +5653,82 @@
    "lifecycle": "standing",
    "registered": "2026-10-12",
    "envelope_source": "manual registration (Exo, 10/12)"
+  },
+  {
+   "human_owner": "John Quinn",
+   "risk_tier": "MEDIUM",
+   "envelope_source": "authored 2026-10-13 (exo3 compliance remediation, Jon: 'Were these fixes exo3 process compliant?')",
+   "label": "payload-orders-exo3",
+   "program": "payload-orders-exo3",
+   "script": "mission-control/lib/payload-orders.js (in-process in MC server; waiver prompt timer in server.js every 6h)",
+   "kind": "process (in-process MC module + timer)",
+   "schedule": "waiverPrompts every 6h (+90s after MC start); onDecision event-driven on payload-waiver:* answers",
+   "purpose": "Payload order-to-cash governed steps: (1) FAA cross-waiver HYBRID step - Exo files a Decision 'wet-signed original on file?' per order (executed or <= L-150); only a human click records waiver_wet_signed_at + waiver_confirmed_by; 'Not yet' re-asks in 14d. (2) ExoSign is the default LSA path; recording an outside-MC LSA requires date + filed location + reason. (3) In-kind payment path: value = standard price; single $1 INK documentation invoice replaces M1-M3; a named person records goods received.",
+   "stack_layer": "DECIDE (human gate) + ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds: files Decision cards and records human answers; never marks a waiver on file itself",
+   "permission_envelope": "READ/WRITE mission-control/data/payload-orders.json (read->tmp->rename); POST /api/decisions/ingest (payload-waiver:<id> cards only); logs/fleet-events.jsonl append. NEVER: external sends, QB writes (invoices go through qb_invoice.py + Approve&send), recording a waiver from a token/agent answer.",
+   "memory_boundary": "payload-orders.json, envelopes.json (read), decisions via ingest API",
+   "escalation": "waiver not on file by L-90 -> card priority high + order overdue; decision ingest failure -> glog error (payload-orders waiver_prompt_failed)",
+   "eval_suite": "node mission-control/tests/payload_orders_selftest.js (13 checks: prompt only when executed/<=L-150, no duplicate cards, token answer ignored, Not-yet 14d re-ask, human Yes records date+who, outside LSA refused without reason, in-kind INK-only + stage flow, cash orders unchanged)",
+   "eval_type": "output",
+   "telemetry": "logs/fleet-events.jsonl agent=payload-orders-exo3 (waiver_prompt, waiver_confirmed, waiver_not_yet, in_kind_set/received, lsa_outside); per-order history[]",
+   "reusability_scope": "every payload order (cash or in-kind), all missions",
+   "change_log": [
+    "2026-10-08 70c850a waiver gate",
+    "2026-10-11 77e9da9 hybrid confirm step",
+    "2026-10-11 77f29a7 ExoSign default/outside reason",
+    "2026-10-11 1c666f3 in-kind path",
+    "2026-10-13 exo3 remediation: selftest + fleet telemetry + registry"
+   ]
+  },
+  {
+   "human_owner": "John Quinn",
+   "risk_tier": "MEDIUM",
+   "envelope_source": "authored 2026-10-13 (exo3 compliance remediation, Jon: 'Were these fixes exo3 process compliant?')",
+   "label": "mc-attach-exo3",
+   "program": "mc-attach-exo3",
+   "script": "scripts/mc-attach.py (tool called by every Exo session/agent that attaches task documents)",
+   "kind": "tool",
+   "schedule": "on demand",
+   "purpose": "Single path for attaching documents to MC tasks with version control. Chains every iteration of a document to its existing doc_key by document family (no invented keys/names), skips identical re-uploads task-wide, keeps the real dated filename (description in title), refuses older-dated files (stale guard).",
+   "stack_layer": "GOVERN (document CM)",
+   "autonomy_tier": "Execute-within-bounds (append + supersede own task's records; nothing deleted)",
+   "permission_envelope": "WRITE mission-control/uploads/<new file> + _meta.json (read->tmp->os.replace); READ source file. NEVER deletes, never edits other tasks' records.",
+   "memory_boundary": "mission-control/uploads/_meta.json for the target task",
+   "escalation": "stale (older-dated) attach -> REFUSED exit 3 with message; operator uses --allow-older only for deliberate rollback",
+   "eval_suite": "/usr/bin/python3 scripts/mc-attach.py --selftest (7 checks replaying task #2414 10/13: drifting --doc-key chains, only newest current, identical re-upload skipped, real filename kept + title separate, family strips dates/rN/FINAL, BLK3/M101 safe, stale guard)",
+   "eval_type": "output",
+   "telemetry": "logs/fleet-events.jsonl agent=mc-attach-exo3 (attach, chain_family, skip_identical)",
+   "reusability_scope": "all MC tasks",
+   "change_log": [
+    "2026-10-13 2099168/3e7cb34 family chaining + dedupe + real filenames",
+    "2026-10-13 exo3 remediation: selftest + telemetry + registry; AGENTS.md rule is backed by this code guard"
+   ]
+  },
+  {
+   "human_owner": "John Quinn",
+   "risk_tier": "LOW",
+   "envelope_source": "authored 2026-10-13 (exo3 compliance remediation, Jon: 'Were these fixes exo3 process compliant?')",
+   "label": "doc-families-exo3",
+   "program": "doc-families-exo3",
+   "script": "mission-control/lib/doc-families.js (applied in GET /api/uploads for task/project lists)",
+   "kind": "process (read-time view)",
+   "schedule": "per request",
+   "purpose": "Task Documents tab: MOST CURRENT (one row per document, formats as buttons) / REFERENCE & EXECUTED / SUPERSEDED. Groups legacy iterations filed under drifting keys/names by document family; newest iteration per format is current. Computed per request; manual Superseded/Restore always win.",
+   "stack_layer": "GOVERN (document CM view)",
+   "autonomy_tier": "Advise (read-only view; no writes)",
+   "permission_envelope": "READ uploads/_meta.json only; no writes.",
+   "memory_boundary": "request-scoped",
+   "escalation": "n/a (read-only); misclassification fixed by the Superseded/Restore buttons",
+   "eval_suite": "node mission-control/tests/doc_families_selftest.js (9 checks: #2414 drifting-key deck replay, real-filename replaced-by, formats = one row, title-named records, manual overrides win, reference detection excludes _SIGN drafts, BLK3 safe, live #2414 one-current-per-format, restated term sheet current)",
+   "eval_type": "output",
+   "telemetry": "none needed (stateless read view); superseded rows carry auto_superseded reason in the API response",
+   "reusability_scope": "every task/project document list",
+   "change_log": [
+    "2026-10-13 71db321 families",
+    "2026-10-13 97f0782 real filenames",
+    "2026-10-13 exo3 remediation: selftest + registry"
+   ]
   }
  ],
  "eval_wave_1": {

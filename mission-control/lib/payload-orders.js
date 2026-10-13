@@ -84,6 +84,15 @@ const who = s => (s && (s.name || s.email)) || 'MC user';
 function log(o, s, action, detail) {
   (o.history = o.history || []).push({ at: now(), by: who(s), email: s && s.email, action, detail: detail || '' });
 }
+// exo3 telemetry (same schema as scripts/fleet_log.py) for the governed steps: waiver confirm, in-kind, outside LSA.
+const FLEET_LOG = path.join(MC_DIR, '..', 'logs', 'fleet-events.jsonl');
+function fleet(action, detail, kind = 'govern') {
+  if (process.env.PAYLOAD_NO_DECISIONS) return;   // selftest
+  try {
+    fs.appendFileSync(FLEET_LOG, JSON.stringify({ ts: new Date().toISOString(), corr: Math.random().toString(16).slice(2, 18),
+      agent: 'payload-orders-exo3', kind, action, owner: 'John Quinn', outcome: null, level: 'info', detail: detail || {} }) + '\n');
+  } catch {}
+}
 
 // ── trained handlers: signed both CUI docs in Required Reading (current version) ──
 function trainedHandlers() {
@@ -393,7 +402,7 @@ async function handle(req, res, ctx) {
       o.lsa_signed_at = String(body.signed_at).slice(0, 10); o.lsa_signed_copy = String(body.signed_copy).slice(0, 400);
       log(o, s, 'LSA executed outside MC', o.lsa_signed_at + ' · ' + o.lsa_signed_copy + ' · reason: ' + why);
     }
-    save(d); audit('lsa-outside', '');
+    save(d); audit('lsa-outside', ''); fleet('lsa_outside', { order: o.id, by: me, reason: why });
     return send(res, 200, { ok: true, order: view(o, ctx.loadEnvelopes()) });
   }
 
@@ -452,7 +461,7 @@ async function handle(req, res, ctx) {
       if (!isAdmin) return send(res, 403, { error: 'Only an admin can remove the in-kind terms.' });
       log(o, s, 'in-kind payment removed', String(body.reason || '').slice(0, 200)); delete o.in_kind;
     } else return send(res, 400, { error: 'Bad action' });
-    save(d); audit('in-kind', body.action);
+    save(d); audit('in-kind', body.action); fleet('in_kind_' + body.action, { order: o.id, by: me, value: (o.in_kind || {}).value });
     return send(res, 200, { ok: true, order: view(o, ctx.loadEnvelopes()) });
   }
 
@@ -502,6 +511,7 @@ async function waiverPrompts(envelopes) {
     });
     o.waiver_decision_id = r && r.id; o.waiver_reprompt_after = null;
     log(o, { name: 'Exo' }, 'waiver_prompt', `Decision ${o.waiver_decision_id} filed: confirm wet-signed waiver on file`); filed++;
+    fleet('waiver_prompt', { order: o.id, decision: o.waiver_decision_id, due: v.waiver_due }, 'decide');
   }
   if (filed) save(d);
   return filed;
@@ -519,9 +529,11 @@ function onDecision(dec) {
     o.waiver_wet_signed_at = (m && m[1] <= today) ? m[1] : today;
     o.waiver_confirmed_by = `${by || email} (${dec.id})`;
     if (note) o.waiver_original_location = note.slice(0, 200);
+    fleet('waiver_confirmed', { order: o.id, decision: dec.id, by: by || email });
     log(o, { name: by, email }, 'waiver_confirmed', `Wet-signed original on file, confirmed by ${by || email} via ${dec.id}${note ? ': ' + note.slice(0, 120) : ''}`);
   } else {
     o.waiver_reprompt_after = addDays(today, 14);
+    fleet('waiver_not_yet', { order: o.id, decision: dec.id, by: by || email, reprompt: o.waiver_reprompt_after });
     log(o, { name: by, email }, 'waiver_not_yet', `${by || email}: not yet on file (${dec.id}); re-ask ${o.waiver_reprompt_after}`);
   }
   save(d);
