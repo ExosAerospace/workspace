@@ -1,38 +1,33 @@
-<!-- READY-ACTION
-key: payload-bd-astrileux-iss-euv-prequal-v1
-task_title: SEND: Astrileux / Dr. Supriya Jaiswal — EUV photomask microgravity pre-qual before ISS slot (ISS NL Orbital Edge Accelerator 2026)
-to: sjaiswal@astrileux.com
-subject: Suborbital microgravity test before your ISS flight — Exos BLK3, Q1 2027
-category: BD
-priority: 88
-body:
-Hello Supriya,
+# Draft BG — Astrileux / Dr. Supriya Jaiswal
 
-Congratulations on being selected for the ISS National Lab Orbital Edge Accelerator — it's a meaningful validation of what you're building with EUV photomask manufacturing in microgravity.
+**FORWARD-READY (2026-10-09 reformat — zero-edit). Everything between the COPY lines is the complete email: paste into a new message, nothing to add or move.**
 
-I am Jon Quinn, Cofounder and CEO of Exos Aerospace. We are one of only three FAA-licensed reusable rocket launch providers in the U.S. We operate BLK3, a recoverable suborbital platform with a 135 kg payload bay and a Q1 2027 commercial flight from Spaceport America.
+SEND TO: supriya@astrileux.com
+SUBJECT: Suborbital microgravity test before your ISS flight, Exos BLK3, early 2027
 
-Before you commit your process hardware to an ISS slot, a BLK3 suborbital flight gives you real microgravity data — true µg, no parabolic interruption — with hardware returned intact within days. For a manufacturing process as sensitive as EUV photomask production, one suborbital run to characterize crystal growth behavior, contamination risk, or fluid dynamics under real microgravity conditions is orders of magnitude cheaper than discovering a process gap on orbit. The economics: $7,500/kg, 50% at booking, integration lead times measured in weeks. A small-scale process experiment or hardware unit is well within your Orbital Edge funding allocation.
+––––– COPY FROM HERE –––––
+Hi Supriya,
 
-Our Q1 2027 flight puts you in front of your ISS timeline with data in hand. We have flown research payloads from Mayo Clinic, Purdue University, and UCF/NASA programs on earlier vehicles — recoverable suborbital is how you derisk the ISS commitment.
+Congratulations on being selected for the ISS National Lab's Orbital Edge Accelerator! My name is Lizi Quinn, and I work with the team at Exos Aerospace. Exos has flown commercial payloads since 2018 on our SARGE rocket, and BLK3 is its successor and our latest FAA-licensed vehicle, with commercial flights starting in early 2027. Before your process hardware heads to the ISS, a BLK3 flight could be a lower-cost check: real launch loads and vibration, about two and a half minutes of microgravity, and your hardware returned to you after the flight for inspection.
 
-Would 20 minutes make sense to discuss what a process validation run could look like alongside your ISS path?
+If it would be helpful, I'm happy to send over our Payload User's Guide, or you can grab a time for a short scoping call here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled. You're also welcome to tell us what you'd like to fly at https://www.exosaero.com/flight-campaign.
 
-Best regards,
-John Quinn
-Cofounder and CEO
-Exos Aerospace
-jquinn@exosaero.com | 972-740-8355
-END-READY-ACTION -->
+Best Regards,
+Lizi
+––––– COPY TO HERE –––––
 
-## Lead context
-- **Company:** Astrileux
-- **Program:** EUV (Extreme Ultraviolet) photomask manufacturing in microgravity — precision templates for next-gen AI chip fabrication
-- **Bucket:** C — funded ISS research company actively building a microgravity manufacturing pathway
-- **Signal:** Selected for ISS National Lab Orbital Edge Accelerator 2026 (announced Aug 12, 2026) — Disrupt Track. Receives $500K–$750K in private capital + ISS LEO access. One of only 8 companies selected. ISS NL is their on-ramp to orbit, but suborbital is the cheaper, faster pre-qualification step.
-- **BLK3 angle:** EUV photomask manufacturing requires precise microgravity conditions (crystal growth, contamination control, fluid dynamics). A BLK3 suborbital run lets them validate process parameters and hardware before committing to a far more expensive ISS slot. Suborbital ≠ ISS substitute — it's the pre-qualification that makes their ISS experiment succeed.
-- **Timing urgency:** JUST funded Aug 12 (6 days ago). Contact window is hot — they are actively planning their spaceflight project right now.
-- **AI chip narrative:** EUV photomasks are the critical bottleneck in AI chip production (ASML dependency). If Astrileux can manufacture these in space, it's a massive market. This is an investor-grade narrative that also makes BLK3 newsworthy.
-- **Priority:** 88 (higher than CesiumAstro/Turion — Bucket C with ISS funding = clear buyer, not just a de-risk pitch)
-- **Contact (VERIFIED 2026-08-19):** Dr. Supriya Jaiswal, CEO & Founder (EUVL Supplier Showcase 2021 bio confirmed). Email: sjaiswal@astrileux.com (pattern-inferred; she has been the sole founder/CEO since founding). Prior ISS payload in 2019 — she already knows ISS operations intimately. Oxford Physics / UVA PhD. SPIE Senior Member.
-- **Status:** READY — dispatch enabled (contact verified, no ITAR flag for initial outreach)
+---
+*Internal notes (not part of the email, do not forward below this line):*
+*Drafted 2026-08-18 (priority 88 — ISS NL Orbital Edge Accelerator selection Aug 12 2026, EUV photomask manufacturing, HOT window). Reformatted 2026-10-09 to zero-edit forward format (booking link added, $/kg pricing removed per compliance, Jon→John corrected, SARGE heritage line added per compliance, "Q1 2027"→"early 2027", Mayo Clinic/unverified heritage removed, lead-time claim removed).*
+*Status: DRAFT, awaiting Jon yes/no. Not sent.*
+
+**To:** Dr. Supriya Jaiswal, CEO & Founder — Astrileux (sjaiswal@astrileux.com — pattern-inferred @astrileux.com domain; RocketReach confirms @astrileux.com; sole founder/CEO at single-person org, Keble Oxford bio confirms identity; verified 2026-08-19).
+**Checks:** US company (Berkeley, CA). No ITAR flag (commercial payload services pitch, no tech transfer). CSL screen: 🟢 no match (Astrileux, Supriya Jaiswal) 2026-10-09.
+**Claim discipline:** No $/kg pricing; BLK3 timing = "early 2027" only; SARGE-2018 commercial heritage cited. No unverified past-customer claims.
+**Lead context:** Astrileux — EUV photomask manufacturing in microgravity; selected ISS NL Orbital Edge Accelerator Aug 12 2026 ($500K–$750K + ISS access). BLK3 angle: suborbital pre-qualification run to validate process parameters before committing to far more expensive ISS slot.
+
+---
+**CORRECTION 2026-10-14 (per Lizi's instruction on D-7282028, 2026-10-12): rewritten as Lizi, not John — her own booking link, "one of only three FAA-licensed reusable rockets" line removed (same as the last one, duplicate sentence cut), no fabricated science (crystal growth/fluid dynamics/ISS timeline guesses removed — this is Lizi's own written text, verbatim). Card reopened for Send/Edit/Hold.**
+
+
+*CORRECTION 2026-10-14 (Exo, Lizi): send-from-decisions failed; Lizi sends manually. Email changed sjaiswal@ (unverified) -> supriya@astrileux.com (SBIR.gov award records, PI + business contact). Orbital Edge 2026 selection verified: ISS National Lab press release 2026-08-12 (Disrupt Track). Standard Lizi close added.*
