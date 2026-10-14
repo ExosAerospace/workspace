@@ -11,8 +11,9 @@ it can't resolve confidently is logged, not attached. Idempotent (skips tasks al
 
 Run:  python3 scripts/task-attachment-reconciler.py           # dry-run (show what it would attach)
       python3 scripts/task-attachment-reconciler.py --apply
+      python3 scripts/task-attachment-reconciler.py --selftest  # replay network-failure handling
 """
-import os, re, sys, json, subprocess, urllib.request
+import os, re, sys, json, time, socket, subprocess, urllib.request, urllib.error
 
 WS = os.path.expanduser("~/.openclaw/workspace")
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1/"
@@ -28,12 +29,29 @@ SKIP_DIRS = {".git", "node_modules", ".chunks", "uploads", "media", "process-lib
 ATTACHABLE = re.compile(r"attach(ed|ment)\b", re.I)
 
 
+NET_ERRORS = (urllib.error.URLError, socket.timeout, TimeoutError, ConnectionError)
+RETRY_DELAYS = (5, 15, 45)
+
+
+def fetch_json(req, opener=urllib.request.urlopen, sleep=time.sleep):
+    """GET with retry/backoff on transient network errors (DNS blips, connect timeouts)."""
+    for i, delay in enumerate(RETRY_DELAYS + (None,)):
+        try:
+            return json.load(opener(req, timeout=30))
+        except urllib.error.HTTPError:
+            raise  # a real HTTP error (auth/schema) is not transient
+        except NET_ERRORS:
+            if delay is None:
+                raise
+            sleep(delay)
+
+
 def sb_tasks():
     out, off = [], 0
     while True:
         r = urllib.request.Request(f"{SB}tasks?select=id,title,description,state&order=id&limit=1000&offset={off}",
                                    headers={"apikey": K, "Authorization": "Bearer " + K})
-        pg = json.load(urllib.request.urlopen(r, timeout=30))
+        pg = fetch_json(r)
         out += pg
         if len(pg) < 1000:
             return out
@@ -76,8 +94,44 @@ def resolve(fname, idx):
     return None  # genuinely ambiguous -> skip, do not guess
 
 
+def selftest():
+    calls = []
+    def flaky(req, timeout):
+        calls.append(1)
+        if len(calls) < 3:
+            raise urllib.error.URLError(socket.timeout("timed out"))
+        import io
+        return io.BytesIO(b"[]")
+    assert fetch_json("x", opener=flaky, sleep=lambda s: None) == [] and len(calls) == 3
+    def dead(req, timeout):
+        raise urllib.error.URLError("nodename nor servname provided")
+    try:
+        fetch_json("x", opener=dead, sleep=lambda s: None)
+        raise AssertionError("expected URLError after retries")
+    except urllib.error.URLError:
+        pass
+    def http401(req, timeout):
+        raise urllib.error.HTTPError("x", 401, "Unauthorized", {}, None)
+    try:
+        fetch_json("x", opener=http401, sleep=lambda s: None)
+        raise AssertionError("expected HTTPError to propagate")
+    except urllib.error.HTTPError:
+        pass
+    print("selftest OK")
+
+
 def main():
-    tasks = sb_tasks()
+    if "--selftest" in sys.argv:
+        return selftest()
+    try:
+        tasks = sb_tasks()
+    except urllib.error.HTTPError:
+        raise
+    except NET_ERRORS as e:
+        # Supabase unreachable after retries: nothing was changed and the job is idempotent,
+        # so skip this cycle cleanly; the next StartInterval run (30 min) picks it up.
+        print(f"SKIP: Supabase unreachable after {len(RETRY_DELAYS)} retries ({e}); will retry next run")
+        return
     linked = linked_task_ids()
     idx = build_file_index()
     attached, unresolved = [], []
