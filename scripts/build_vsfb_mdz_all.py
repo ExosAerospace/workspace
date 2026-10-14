@@ -2,12 +2,12 @@
 """Two-pass build: PDF -> page map of section headings -> rebuild PDF + DOCX with compliance-matrix page refs."""
 import subprocess, json, re, os
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-PDF = "drafts/VSFB_MDZ/Exos_VSFB_MDZ_Whitepaper_DRAFT_2026-10-11_v7.pdf"; PM = "drafts/VSFB_MDZ/_pagemap_v7.json"
+PDF = "drafts/VSFB_MDZ/Exos_VSFB_MDZ_Whitepaper_2026-10-14.pdf"; PM = "drafts/VSFB_MDZ/_pagemap.json"
 def build():
     subprocess.run(["python3", "scripts/build_vsfb_mdz_pdf.py"], check=True)
 def pagemap():
     n = int(re.search(r"Pages:\s+(\d+)", subprocess.run(["pdfinfo", PDF], capture_output=True, text=True).stdout).group(1))
-    keys = ["1.1","1.2","1.3","1.4","1.5","1.6","2.1","2.2","3.1","3.2","4.1","5.1","5.2","5.3","6.1","6.2","6.3","6.4","6.5","7.1","7.2","8.1"]
+    keys = ["1.1","1.2","1.3","1.4","1.5","1.6","2.1","2.2","3.1","3.2","4.1","5.1","5.2","5.3","6.1","6.2","6.3","6.4","6.5","7.1","7.2","8.1","8.2"]
     pm = {}
     for pg in range(1, n+1):
         t = subprocess.run(["pdftotext","-f",str(pg),"-l",str(pg),"-layout",PDF,"-"],capture_output=True,text=True).stdout

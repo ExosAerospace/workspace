@@ -13,7 +13,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak, 
 from exos_letterhead import stationery, MARGINS
 import vsfb_mdz_content as K
 
-OUT = "drafts/VSFB_MDZ/Exos_VSFB_MDZ_Whitepaper_DRAFT_%s%s.pdf" % (K.DATE, K.VER)
+OUT = "drafts/VSFB_MDZ/Exos_VSFB_MDZ_Whitepaper_%s%s.pdf" % (K.DATE, K.VER)
 NAVY = HexColor("#0A3D7C"); DARK = HexColor("#1A1A1A"); GREY = HexColor("#555555")
 RED = HexColor("#9A1B1B"); YEL = HexColor("#FFF4CC"); GOLD = HexColor("#C9A227"); LINE = HexColor("#9AA5B1")
 ss = getSampleStyleSheet()
@@ -70,7 +70,7 @@ def page(c, d):
     c.drawRightString(letter[0]-0.75*inch, letter[1]-0.45*inch, K.MARK + "  ·  VSFBMDZCall")
     c.restoreState()
 
-doc = SimpleDocTemplate(OUT, pagesize=letter, title="Exos VSFB MDZ Whitepaper — DRAFT",
+doc = SimpleDocTemplate(OUT, pagesize=letter, title="Exos Aerospace — VSFBMDZCall Whitepaper",
                         author="Exos Aerospace Systems & Technologies, Inc.", **MARGINS)
 doc.build(E, onFirstPage=page, onLaterPages=page)
 print("wrote", OUT)

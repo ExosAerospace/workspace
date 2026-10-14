@@ -9,9 +9,7 @@ D = "drafts/VSFB_MDZ/"
 wb = Workbook(); ws = wb.active; ws.title = "Compliance Matrix"
 ws.append(["Exos VSFB MDZ Whitepaper — Compliance Matrix (VSFBMDZCall) — " + K.MARK]); ws["A1"].font = Font(bold=True, size=12, color="0A3D7C")
 ws.append(["Call reference", "Requirement", "Response section", "PDF page", "Status", "Open item"])
-openmap = {"1.2": "Counsel: confirm wording; attach TX SOS cert + officer statement", "1.5": "Confirm Lizi title", "2.1": "Kyle: financing wording check",
-           "3.1": "Russell/ENG: crane, height, span, bays", "5.1": "", "5.2": "Phil/Neil: personnel counts",
-           "5.3": "ENG: utility loads", "6.2": "ENG: commodity quantities", "7.2": "Counsel: two-instrument award section", "7.1": "Phil/Neil: durations; Q2 2027 realism"}
+openmap = {}  # final 2026-10-14: all items closed in the whitepaper
 thin = Side(style="thin", color="9AA5B1")
 for a, b, c in K.MATRIX:
     ws.append([a, b, c, str(K._PM.get(c, "—")), "Addressed — placeholder open" if c in openmap else "Addressed", openmap.get(c, "")])

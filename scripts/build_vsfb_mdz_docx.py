@@ -12,7 +12,7 @@ from docx.oxml import OxmlElement
 import vsfb_mdz_content as K
 
 LH = "assets/EXOS_Letterhead_Greenville_TX_PRIMARY.docx"
-OUT = "drafts/VSFB_MDZ/Exos_VSFB_MDZ_Whitepaper_DRAFT_%s%s.docx" % (K.DATE, K.VER)
+OUT = "drafts/VSFB_MDZ/Exos_VSFB_MDZ_Whitepaper_%s%s.docx" % (K.DATE, K.VER)
 NAVY = RGBColor(0x0A, 0x3D, 0x7C); DARK = RGBColor(0x1A, 0x1A, 0x1A)
 GREY = RGBColor(0x55, 0x55, 0x55); RED = RGBColor(0x9A, 0x1B, 0x1B)
 
@@ -91,6 +91,6 @@ for blk in K.C:
     elif k == "decision": decision(blk[1])
     elif k == "pb": doc.add_page_break()
 
-doc.core_properties.title = "Exos VSFB MDZ Whitepaper — DRAFT"
+doc.core_properties.title = "Exos Aerospace — VSFBMDZCall Whitepaper"
 doc.core_properties.author = "Exos Aerospace Systems & Technologies, Inc."
 doc.save(OUT); print("wrote", OUT)

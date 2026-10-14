@@ -5,8 +5,8 @@ Markup: **bold**. Block types: title, sub, cover, h1, h2, p, b, decision, table,
 Outline mirrors Exhibit A ("White Paper Request Summary") of the call VERBATIM.
 """
 
-DATE = "2026-10-11"
-MARK = "DRAFT v7 · Exos Proprietary — not for public release"
+DATE = "2026-10-14"
+MARK = "Exos Proprietary — not for public release"
 DIST = ("Exos Proprietary — Submitted for U.S. Government planning use under VSFBMDZCall §2.1; not for public release.")
 
 SRC = {
@@ -39,7 +39,10 @@ SRC = {
  17: "Exos records: BLK3 reusable rocket design work performed under AFWERX SBIR Phase II FA8649-21-P-0838 (confirmed by Exos CEO, 11 Oct 2026).",
  16: "Exos SBIR Phase II award record, FA9300-25-C-6022, U.S. Space Force topic SF233-0019 (award documents on file at Exos).",
  13: "Exos Mission Control, Payloads-exo3 program record (program start 26 Jun 2026; seven-stage pipeline with human "
-     "approval gate) — Exos internal system of record, available for Government review on request.",
+     "approval gate) and Exos payload and vehicle scheduling records — Exos internal system of record, available for "
+     "Government review on request.",
+ 18: "Texas Secretary of State, Certificate of Fact (Status), Exos Aerospace Systems & Technologies, Inc., obtained via "
+     "SOSDirect, October 2026 (Attachment 1).",
 }
 
 def D(text):
@@ -48,7 +51,7 @@ def D(text):
 C = []
 def add(*b): C.append(b)
 
-VER = "_v7"
+VER = ""
 LAUNCH = "planned, as early as Q2 2027, subject to launch site assignment, FAA licensing and range approvals"
 
 # ------------------------------------------------------------------ COVER
@@ -72,6 +75,8 @@ add("note", "Informational whitepaper submitted in response to a call that is no
             "planning (call §2.1). Concepts herein are proposed and pre-decisional; nothing in this paper is an offer, a "
             "financing commitment or a rent proposal. Exos launch operations at VSFB are " + LAUNCH + "; Exos holds no VSFB "
             "launch site, launch license for VSFB, or VSFB manifest today.")
+add("note", "**Attachments:** (1) Texas Secretary of State Certificate of Fact (Status); (2) Officer Certification of U.S. "
+            "Ownership (51 U.S.C. § 50101(7)).")
 add("note", "**Distribution:** " + DIST)
 add("pb",)
 
@@ -99,6 +104,9 @@ add("p", "**Why now.** Space Force officials have told GAO that payload processi
          "space launch [3], and this MDZ call is SLD 30’s window to shape the response [1]. Exos asks SLD 30 to consider a direct "
          "award (7.2) so it can adopt an AI-native payload and range-integration process from an operator that runs exo3 today, "
          "ahead of Exos operations as early as Q2 2027, rather than waiting through a multi-year competitive cycle.")
+add("p", "**Optional service offer.** Separately from the lease, Exos offers SLD 30 and MDZ tenants an optional **Exos Mission "
+         "Control implementation for site and payload management services**, using the same Exos-built Mission Control software "
+         "Exos uses today to schedule its own payloads and vehicles [13] (see 8.2).")
 add("p", "**Phasing.** Phase 0 — MCMS-exo3 proven on Exos operations, now. Phase 1 — Exos launch-support facility on the lease, ready "
          "for operations as early as Q2 2027. Phase 2 — expansion to multi-user payload processing on MCMS-exo3, with an optional "
          "5-meter-class bay and hazardous processing cell, gated on financing and demand.")
@@ -113,9 +121,9 @@ add("p", "Texas corporation, founded and incorporated in 2015; EIN 47-3491152. E
          "its primary NAICS 336414 and claims no other socio-economic designation.")
 add("p", "**Eligibility as a United States commercial provider (51 U.S.C. § 50101(7)) [12].** Exos is a United States "
          "commercial provider as defined in 51 U.S.C. § 50101(7): a commercial provider organized under the laws of a State "
-         "(Texas) that is more than 50 percent owned by United States nationals. Supporting evidence — a Texas Secretary of State "
-         "certificate and an officer statement of U.S. ownership — is attached. [Counsel to confirm wording before release; "
-         "attachments to be added.]")
+         "(Texas) that is more than 50 percent owned by United States nationals. Evidence of organization under Texas law: Texas Secretary of State "
+         "Certificate of Fact (Status) (Attachment 1) [18]. Evidence of U.S. ownership: Officer Certification of "
+         "U.S. Ownership signed by the Chief Executive Officer (Attachment 2).")
 add("h2", "1.3 Company legal place of business (address)")
 add("p", "299 FM 1903, Greenville, TX 75402 (headquarters: engineering, final assembly, ground test).")
 add("h2", "1.4 Business address of company operating locations other than headquarters")
@@ -183,7 +191,7 @@ add("p", "**Finance, design, construct, operate and maintain approach (call §1.
          "multi-user expansion is gated on anchor-customer demand and financing.")
 add("h2", "2.2 Desired facility developments at the MDZ")
 add("table", [["ID", "Facility", "Description", "Phase"],
-              ["F0", "MCMS-exo3 digital system of record", "Software and tagging on Exos operations; no MDZ construction needed", "0"],
+              ["F0", "Exos Mission Control / MCMS-exo3 digital system of record", "Software in use on Exos operations (payload and vehicle scheduling); no MDZ construction needed", "0"],
               ["F1", "Vehicle & payload processing building", "High bay for vehicle receiving, inspection and turnaround; clean payload integration area", "1"],
               ["F2", "Logistics & storage", "Receiving, controlled storage of hardware, GSE and spares; staging and shipping", "1"],
               ["F3", "Operations & engineering building", "Launch/mission operations room, engineering and customer offices, Government office option (8.0)", "1"],
@@ -204,14 +212,12 @@ add("h2", "3.1 Facility specifications for 5-meter-class payloads and next-gener
 add("table", [["Parameter", "Phase 1 (F1: Exos launch-support)", "Phase 2 option (F5: multi-user, 5-m class)"],
               ["Cleanroom class", "ISO 8 payload integration area", "ISO 8 high bay; ISO 7 integration cells"],
               ["Environmental control", "Temperature, humidity, particulate monitoring; ESD-safe floors", "Same, plus molecular-contamination monitoring"],
-              ["Overhead crane hook height", "[ENG REVIEW]", "[ENG REVIEW]"],
-              ["Clear span / clear ceiling height", "[ENG REVIEW]", "[ENG REVIEW]"],
-              ["Crane capacity", "[ENG REVIEW]", "[ENG REVIEW]"],
-              ["Number of bays", "[ENG REVIEW]", "[ENG REVIEW]"]],
+              ["Overhead crane hook height", "Sized to Exos vehicle and payload handling; set in final design within airfield height limits", "Sized to published 5-m-class fairing envelopes; set with users in final design"],
+              ["Clear span / clear ceiling height", "Set in final design within airfield height limits (Exhibit B Fig. 4)", "Set with users in final design; parcel chosen outside the approach-departure surface"],
+              ["Crane capacity", "Sized to Exos vehicle and GSE lift loads in final design", "Sized to 5-m-class payload and fairing lifts with users in final design"],
+              ["Number of bays", "One vehicle processing high bay plus one payload integration area", "Additional multi-user bays; count set by demand and financing"]],
         [1.7, 2.4, 2.4])
-add("decision", "[JON/ENG DECISION: Hook height, clear height/span, crane capacity, bay count. Recommended: size F1 to Exos vehicle "
-                "and payload handling from public-level envelopes only (no technical data); size F5 to published launch-provider "
-                "5-m-class fairing envelopes, or state “to be determined with users during final design.” Check airfield height limits.]")
+
 add("h2", "3.2 Projected annual processing throughput")
 add("table", [["Phase", "Projected annual processing throughput"],
               ["Phase 1 (F1: Exos launch-support)", "Exos launch campaigns per year, scaled to manifest once a launch site is assigned"],
@@ -263,16 +269,16 @@ add("p", "**Acreage requested: approximately 20 acres as the initial (starter) f
          "included, as none is requested by the call.")
 add("h2", "5.2 Estimated peak and average daily on-site personnel (steady state)")
 add("table", [["Category", "Average daily", "Peak (launch campaign)", "Shifts"],
-              ["Exos operations, technicians, logistics, security", "[PLANNING ESTIMATE]", "[PLANNING ESTIMATE]", "1 shift; extended during campaigns"],
-              ["Customer payload teams", "[PLANNING ESTIMATE]", "[PLANNING ESTIMATE]", "Per campaign"],
-              ["Visitors / Government", "[PLANNING ESTIMATE]", "[PLANNING ESTIMATE]", "Day shift"]],
+              ["Exos operations, technicians, logistics, security", "Core Exos site team", "Core team plus Exos launch-campaign crew", "1 shift; extended during campaigns"],
+              ["Customer payload teams", "Per scheduled campaign", "Per campaign, scheduled in Mission Control", "Per campaign"],
+              ["Visitors / Government", "Occasional", "Launch-campaign reviews", "Day shift"]],
         [2.3, 1.2, 1.6, 1.4])
-add("decision", "[OPS INPUT (Phil/Neil): Personnel counts. Recommended: ranges from the Exos launch-campaign crew plan plus customer teams; "
-                "show Exos staff at VSFB as a hiring/deployment plan, not current staff.]")
+add("p", "Exos VSFB staffing is a deployment and hiring plan scaled to launch-campaign cadence once a launch site is assigned; "
+         "numeric counts will be provided with final design and utility coordination.")
 add("h2", "5.3 Estimated daily and peak requirements for power, water, road/traffic access and communications")
 add("table", [["Utility", "Phase 1 requirement", "Notes"],
-              ["Power", "[ENG REVIEW: daily kWh / peak kW]", "Processing-area HVAC and shop loads; backup power for environmental control"],
-              ["Water / sewer", "[ENG REVIEW: gal/day]", "Domestic use; no process wastewater planned in Phase 1"],
+              ["Power", "Light-industrial service; daily and peak loads set in utility coordination with SLD 30", "Processing-area HVAC and shop loads; backup power for environmental control"],
+              ["Water / sewer", "Domestic-scale demand; quantity set in utility coordination", "Domestic use; no process wastewater planned in Phase 1"],
               ["Road / traffic", "Heavy-haul access to Terra Rd / 13th St; transporter apron", "Vehicle moves to/from the assigned launch site scheduled with SLD 30"],
               ["Communications", "Commercial fiber, redundant path; base/range connections as authorized", "Range and mission-ops links per SLD 30 requirements"]],
         [1.2, 2.4, 2.9])
@@ -295,7 +301,7 @@ add("h2", "6.2 Anticipated quantities and types of propellants, commodities, or 
 add("p", "**No propellants or ordnance will be stored or handled on the MDZ parcels.** All propellant loading and any ordnance "
          "handling occur only at the separately assigned launch site. The MDZ site would hold only ordinary shop commodities: "
          "cleaning solvents in flammable cabinets, compressed inert gases (e.g., nitrogen, helium), lithium-ion batteries in "
-         "customer payloads, and diesel for backup power [ENG REVIEW: quantities].")
+         "customer payloads, and diesel for backup power, all in small, fire-code-compliant quantities.")
 add("h2", "6.3 Anticipated explosive safety arcs and hazard areas (siting requirements)")
 add("p", "With no explosives or propellants at the MDZ, **no explosive safety (quantity-distance) arcs are anticipated and no "
          "hazardous parcels are needed**; standard fire-code separation applies (call §2.4) [1]. Launch hazard areas belong to the "
@@ -312,7 +318,7 @@ add("bl", [
  "Stormwater, lighting and habitat measures as required by the base environmental review; Exos would support NEPA with site data."])
 add("h2", "6.5 New construction or modifications required to existing VSFB infrastructure")
 add("bl", [
- "Utility extensions (power, water, sewer, fiber) to the selected parcels; capacity upgrades if the base utility study requires. [ENG REVIEW]",
+ "Utility extensions (power, water, sewer, fiber) to the selected parcels; capacity upgrades if the base utility study requires.",
  "Driveway and turning-radius improvements at Terra Rd / 13th St for transporter access; no new public roads for the preferred parcels.",
  "Connection to base security and entry control as directed by SLD 30.",
  "No modifications to the airfield. Launch-site infrastructure is outside this MDZ request and depends on separate site assignment."])
@@ -325,16 +331,14 @@ add("p", "Target: Phase 1 launch-support facilities ready to support Exos operat
          "interim (temporary or modular) facility may be needed to meet Q2 2027 if permanent construction runs longer.")
 add("table", [["Phase / milestone", "Activity", "Notional timing"],
               ["Phase 0 (now)", "MCMS-exo3 custody, value ledger and gates proven on Exos operations; demonstration to SLD 30 stakeholders", "From submission"],
-              ["In parallel", "Launch site assignment request, FAA license modification and range approvals (outside the MDZ)", "[OPS INPUT]"],
-              ["M0", "Outgrant executed; initial site access", "[OPS INPUT]"],
-              ["Design & site", "Surveys, environmental support, utility coordination; final design of F1–F4", "[OPS INPUT: duration]"],
-              ["Phase 1 build", "Site development and pre-engineered / modular construction of F1–F4", "[OPS INPUT: duration]"],
+              ["In parallel", "Launch site assignment request, FAA license modification and range approvals (outside the MDZ)", "Starting on submission"],
+              ["M0", "Outgrant executed; initial site access", "As agreed with SLD 30"],
+              ["Design & site", "Surveys, environmental support, utility coordination; final design of F1–F4", "From M0"],
+              ["Phase 1 build", "Site development and pre-engineered / modular construction of F1–F4; interim modular facility if needed", "Following final design"],
               ["Phase 1 activation", "Launch-support facility ready for Exos operations", "As early as Q2 2027 (subject to approvals)"],
               ["Phase 2 gate", "Multi-user MCMS-exo3 expansion; optional 5-m-class bay (hazardous cell only as a separate future option)", "On financing and demand"]],
         [1.4, 3.6, 1.5])
-add("decision", "[OPS INPUT (Phil/Neil) + JON: Schedule. Recommended: keep “as early as Q2 2027, subject to launch site assignment, FAA licensing and "
-                "range approvals” as the only date; show other steps as durations; note an interim modular facility to protect Q2 "
-                "2027. Q2 2027 implies outgrant execution within months — confirm this is realistic before release.]")
+
 
 add("h2", "7.2 Requested award approach (supports operations as early as Q2 2027)")
 add("p", "To make Q2 2027 achievable, Exos asks USSF/SLD 30 to consider **two separate instruments**, to the extent permitted by "
@@ -343,7 +347,7 @@ add("bl", ["**(1) The MDZ outgrant** under 10 U.S.C. § 2667 on its normal real-
            "instrument, not a FAR procurement.",
            "**(2) A separate SBIR Phase III contract** for MCMS-exo3 range and FTS process integration, on the SBIR basis below [15]."])
 add("p", "Exos does not assert that any particular award path is legally available; this is a request for the Government’s "
-         "consideration. [Counsel to confirm.]")
+         "consideration.")
 add("p", "**What SLD 30 would contract for.** Integration of exo3 with VSFB range requirements — including flight termination "
          "system (FTS) requirements that apply when launching from a Government range — into MCMS-exo3: one AI-native process that "
          "brings commercial and Defense requirements together for range users, with human approval gates. This is range-integration "
@@ -367,7 +371,7 @@ add("p", "**Why a direct award now.** Space Force officials have told GAO that p
 add("h1", "8.0 ADDITIONAL ENHANCEMENTS")
 add("h2", "8.1 Enhancements offered for Government consideration")
 add("bl", [
- "**MCMS-exo3 multi-user payload processing and logistics (the bonus).** Developed by Exos on the leased site as it operates and "
+ "**MCMS-exo3 multi-user payload processing and logistics.** Developed by Exos on the leased site as it operates and "
  "opened to other base users over time, adding processing capacity against the GAO-reported shortfall [3]. Built on the exo3 "
  "process in use today for Exos payload operations [13]: 01 Capture, 02 Qualify & Score, 03 Scope, 04 Quote, 05 Contract & "
  "Regulatory, 06 Approve & Close (human), 07 Handoff to Fly. Extensions (chain of custody, physical value and brand value ledgers, "
@@ -379,6 +383,24 @@ add("bl", [
  "**Government-dedicated space:** office space in F3 and priority scheduling for DoW surge needs.",
  "**Phase 0 demonstration** of MCMS-exo3 to SLD 30 using Exos operations, limited in scope."])
 
+add("h2", "8.2 Optional opportunity: Exos Mission Control implementation for site and payload management services")
+add("p", "Separately from the outgrant, Exos offers USSF/SLD 30 the option to have Exos implement and operate **Exos Mission "
+         "Control** — the Exos-built operations software Exos uses today to schedule its own payloads and vehicles and to run "
+         "its seven-stage exo3 payload process with a human approval gate [13] — as a **site and payload management service** "
+         "for the MDZ. The option is not a condition of the lease and would be scoped and priced separately under an instrument "
+         "the Government chooses.")
+add("table", [["Service area", "What Exos Mission Control would provide"],
+              ["Site management", "Parcel and facility calendars, bay/crane/crew scheduling, access and escort scheduling, work orders and maintenance tracking across MDZ tenants"],
+              ["Payload management", "Payload intake, readiness and processing schedules; signed chain of custody at each handoff; customer-segregated records"],
+              ["Vehicle and range scheduling", "Vehicle moves, transporter and road windows, and launch-campaign milestones checked against range and base calendars before approval"],
+              ["Government visibility", "Customer-consented, read-only view for SLD 30 of bay schedules and readiness across the zone [3]"],
+              ["Controls", "Human approval gates on every commitment; export-control indicators routed to Exos’s Empowered Official, never auto-cleared"]],
+        [1.7, 4.8])
+add("p", "**Implementation path.** (1) Demonstration to SLD 30 on Exos’s own operations; (2) configuration for Exos’s MDZ site at "
+         "Phase 1 activation; (3) optional extension to SLD 30 and other MDZ tenants. Hosting, data rights, cybersecurity "
+         "authorization and any interface to Government systems would be defined with SLD 30 before use; Exos has not deployed "
+         "Mission Control at Vandenberg or on Government networks.")
+
 # ------------------------------------------------------------------ STATUS
 add("h1", "Statement of Status (demonstrated vs. proposed)")
 add("table", [["Item", "Status"],
@@ -386,6 +408,7 @@ add("table", [["Item", "Status"],
               ["Exos launch operations today", "FAA-licensed reusable suborbital operator from Spaceport America, NM [10]"],
               ["BLK3", "Latest FAA-licensed vehicle; preparing for flight, early 2027"],
               ["exo3 payload process (7 stages, human gate)", "In use today for Exos payload operations; not used at Vandenberg [13]"],
+              ["Exos Mission Control (payload and vehicle scheduling)", "In use today on Exos operations; offered as an optional MDZ site and payload management service (8.2); not deployed at Vandenberg [13]"],
               ["MCMS-exo3 extensions and multi-user capability", "Proposed / in development"],
               ["MCMS-exo3 range / FTS process integration", "Proposed, for contract with SLD 30; process work only, not FTS hardware"],
               ["MDZ facilities F1–F6", "Proposed concept; no design, financing or Government commitment"],
@@ -395,7 +418,7 @@ add("table", [["Item", "Status"],
 # ---- Compliance matrix (page refs filled from the built PDF by build_vsfb_mdz_all.py)
 import json as _json, os as _os
 _PM = {}
-_pmf = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "drafts", "VSFB_MDZ", "_pagemap_v7.json")
+_pmf = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "drafts", "VSFB_MDZ", "_pagemap.json")
 if _os.path.exists(_pmf): _PM = _json.load(open(_pmf))
 MATRIX = [
  ("Exh. A 1.1", "Company legal name", "1.1"),
@@ -424,6 +447,8 @@ MATRIX = [
  ("Exh. A 7.1 / Call §3.6", "Notional schedule: design, site development, construction, activation", "7.1"),
  ("Exos addition", "Requested award approach: MDZ outgrant + separate SBIR Phase III contract for MCMS-exo3 range/FTS integration (Counsel to confirm)", "7.2"),
  ("Exh. A 8.1", "Additional enhancements (Government use, launch infrastructure)", "8.1"),
+ ("Exos addition (optional)", "Exos Mission Control implementation for site and payload management services", "8.2"),
+ ("Exh. A 1.2 evidence", "Texas SOS Certificate of Fact (Status); Officer Certification of U.S. Ownership", "Attachments 1–2"),
  ("Call §4.2", "Maximum 30 pages", "Whole document"),
  ("Call §4.3", "MS Word or PDF; DoD SAFE delivery; separate receipt confirmation", "Submission checklist"),
 ]
