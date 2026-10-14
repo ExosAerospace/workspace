@@ -96,7 +96,7 @@ STEPS_RESEARCH = """YOUR STEPS
 1. Drag this card to In Progress. That moves the lead to RESEARCHING on the tracker.
 2. Check the contact. Is the person above still in that role? Check the organization's website and LinkedIn. If they have left, find who replaced them. Record name, title, and the link you used.
 3. Check the program and the money. Find one current (2025-2026) public source showing the program is active, and one way they could pay for a flight: NASA Flight Opportunities, SBIR/STTR, an NIH/NSF grant, a DoD test program, or company R&D/venture money. Link both.
-4. Check the draft. Compare it with the Payload User's Guide (in the EduSourced project files). No prices. Flag any claim we can't back up with a source (words like "only", "first", "fastest"). BLK3 facts to use: 135 kg payload bay, about 100-110 km altitude, a few minutes of microgravity, hardware recovered and returned to the customer, Flight 2 about March 2027.
+4. Check the draft. Compare it with the Payload User's Guide (in the EduSourced project files). No prices. Flag any claim we can't back up with a source (words like "only", "first", "fastest"). BLK3 facts to use: 135 kg payload bay, about 100-110 km altitude, designed for about 2.5 minutes of microgravity, hardware recovered and returned to the customer, first flight in early 2027 (never name a month).
 5. Post ONE note on this card with: (a) contact confirmed yes/no + link, (b) program and funding sources, (c) fit score 1-5 and why, (d) every error you found in the AI research or draft, (e) your corrected draft.
 6. Drag the card to Done. That counts it as READY. Sunidhi spot-checks it within 24 hours. If she moves it back to In Progress, fix what her note says.
 
