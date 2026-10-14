@@ -74,8 +74,6 @@ DUE={
  "2026-10-27":[
   ("Chief Dull Knife College: Jim Bertin","jbertin@cdkc.edu (reply on your 10/13 thread)","you emailed 10/13 (#3742); he's also the Montana Space Grant campus rep",
    "Hello Jim,\nJust following up on my note about a BLK3 payload for your students in early 2027. If it would help, I'm happy to send our Payload User's Guide or find a time for a quick call.\nBest Regards,\nLizi"),
-  ("SpaceBorn United: Dr. Egbert Edelbroek","egbert.edelbroek@spacebornunited.com (reply on your 10/13 thread)","you emailed 10/13 about ARTIS on BLK3, early 2027 (#3739)",
-   "Hello Dr. Edelbroek,\nJust following up on my note about ARTIS and BLK3. If it would help, I'm happy to send over our Payload User Guide or set up a short call with our team.\nBest Regards,\nLizi"),
   ("Dcubed: Dr. Thomas Sinn","thomas.sinn@dcubed-space.com (reply on your 10/13 thread)","you emailed 10/13 about D3PP/Araqys on BLK3, early 2027 (#3738)",
    "Hello Dr. Sinn,\nJust following up on my note about flying D3PP or Araqys hardware on BLK3. If it would help, I'm happy to send over our Payload User Guide or set up a short call with our team.\nBest Regards,\nLizi"),
   ("Scentience: Kordel France resume for the Lead GN&C role (task #2957)","kordel@scentience.ai (reply on your 10/13 'payment received' thread)","10/13 you thanked him for the $4,000 deposit and asked for his resume. Skip if he already sent it (forward it to Exo so it goes to John)",
