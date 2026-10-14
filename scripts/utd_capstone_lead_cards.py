@@ -33,7 +33,8 @@ STUDENTS = {
 # (student, pipeline heading prefix, draft label or None, due, extra note)
 # First two per researcher are due Thu 10/1 (the meeting); the rest Thu 10/8.
 WK1, WK2 = "2026-10-01T16:59:00+00:00", "2026-10-08T16:59:00+00:00"
-WK3 = "2026-10-15T16:59:00+00:00"   # batch 3 (Jon 10/6): the 25 unassigned queue leads, deduped
+WK3 = "2026-10-15T16:59:00+00:00"
+WK4 = "2026-10-22T16:59:00+00:00"   # batch 4 (Lizi 10/14)   # batch 3 (Jon 10/6): the 25 unassigned queue leads, deduped
 ASSIGN = [
     ("Laura", "LASP (Laboratory for Atmospheric", "AH", WK1, ""),
     ("Laura", "Texas A&M — Aerospace Engineering", "file:Texas A&M", WK1,
@@ -79,6 +80,13 @@ ASSIGN = [
     ("Sunidhi", "United Therapeutics", None, WK3, ""),
     ("Sunidhi", "Rhea Space Activity", None, WK3, ""),
     ("Sunidhi", "Exobiosphere — POC CONFIRMED", None, WK3, ""),
+    # batch 4 (Lizi GO 10/14): Karan + Sunidhi finished all cards; 3 new each, due Thu 10/22
+    ("Karan", "MIT Lincoln Laboratory", "AQ", WK4, "Gov FFRDC: Jon sends. " + 'OLD AI DRAFT: it is signed as John and may name a launch month or use banned claims. Rewrite it in Lizi\'s voice (she sends): "early 2027", "designed for about 2.5 minutes of microgravity", no only/first/fastest.'),
+    ("Karan", "DEVCOM Aviation & Missile Center", "AO", WK4, "Army lab: Jon sends. " + 'OLD AI DRAFT: it is signed as John and may name a launch month or use banned claims. Rewrite it in Lizi\'s voice (she sends): "early 2027", "designed for about 2.5 minutes of microgravity", no only/first/fastest.'),
+    ("Karan", "The Aerospace Corporation", "BG", WK4, "DoD FFRDC: Jon sends. " + 'OLD AI DRAFT: it is signed as John and may name a launch month or use banned claims. Rewrite it in Lizi\'s voice (she sends): "early 2027", "designed for about 2.5 minutes of microgravity", no only/first/fastest.'),
+    ("Sunidhi", "Redwire Space", "N", WK4, 'OLD AI DRAFT: it is signed as John and may name a launch month or use banned claims. Rewrite it in Lizi\'s voice (she sends): "early 2027", "designed for about 2.5 minutes of microgravity", no only/first/fastest.'),
+    ("Sunidhi", "Benchmark Space Systems", "AU", WK4, 'OLD AI DRAFT: it is signed as John and may name a launch month or use banned claims. Rewrite it in Lizi\'s voice (she sends): "early 2027", "designed for about 2.5 minutes of microgravity", no only/first/fastest.'),
+    ("Sunidhi", "Voyager Technologies (NYSE: VOYG)", "BC", WK4, "Kept separate from Starlab (#3153) per the 10/7 dedupe. " + 'OLD AI DRAFT: it is signed as John and may name a launch month or use banned claims. Rewrite it in Lizi\'s voice (she sends): "early 2027", "designed for about 2.5 minutes of microgravity", no only/first/fastest.'),
 ]
 # Sunidhi: leads the AI already marked READY that no person has checked.
 QC = [
