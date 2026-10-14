@@ -225,7 +225,25 @@ def write_cover_email(rec, contact_name=None):
     return fn
 
 
+def _invoice_cards(decs, qb_id):
+    """Every Approve & send card ever filed for one QB invoice (base dedupeKey plus any :suffix re-files)."""
+    k = f"qb-invoice:{qb_id}"
+    return [d for d in decs if (d.get("dedupeKey") or "") == k or (d.get("dedupeKey") or "").startswith(k + ":")]
+
+
+def _is_action(ans):
+    return (ans or "").strip().lower().startswith(("approve", "hold", "cancel"))
+
+
 def file_decision(rec, dedupe_suffix="", preface=""):
+    # One open card per invoice (#3774: a second hand-filed card for #0075 made Jon answer twice). If one is
+    # already open, or Jon already answered one with Approve/Hold/Cancel, reuse it instead of filing another.
+    decs = jload(DECISIONS, [])
+    decs = decs if isinstance(decs, list) else decs.get("decisions", [])
+    for d in sorted(_invoice_cards(decs, rec["qb_id"]), key=lambda d: d.get("created") or "", reverse=True):
+        if d.get("status") in (None, "open", "pending") or (d.get("status") == "answered" and _is_action(d.get("answer"))):
+            log(f"not filing a new card for QB invoice {rec['doc_number']}: {d.get('id')} already covers it")
+            return d.get("id")
     tok = open(TOKEN).read().strip()
     rel_pdf = os.path.relpath(rec["pdf"], WS)
     ctx = ((preface + "\n\n" if preface else "") +
@@ -463,6 +481,16 @@ def watch(a):
     for r in st["invoices"]:
         if r["status"] == "pending":
             d = byid.get(r.get("decision_id")) or {}
+            if not _is_action(d.get("answer")):
+                # #3774: the record can point at a card answered with an instruction while Jon approved a sibling
+                # card for the same invoice. Act on the latest Approve/Hold/Cancel card instead (it still sends only once).
+                acted = sorted((x for x in _invoice_cards(decs, r["qb_id"]) if x.get("status") == "answered" and _is_action(x.get("answer"))),
+                               key=lambda x: x.get("answeredAt") or "")
+                if acted:
+                    d = acted[-1]
+                    if r.get("decision_id") != d.get("id"):
+                        r.setdefault("history", []).append({"at": now(), "event": f"decision {r.get('decision_id')} -> {d.get('id')} (answered {d.get('answer')})"})
+                        r["decision_id"] = d.get("id"); changed = True
             ans = (d.get("answer") or "").strip()
             if d.get("status") in (None, "open", "pending") or not ans:
                 continue
