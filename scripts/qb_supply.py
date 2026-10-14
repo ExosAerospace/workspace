@@ -85,6 +85,12 @@ def next_po_number():
 
 
 def push_po(d):
+    # Live books only: QB pre-fills the next PO # by incrementing the LAST one entered, so a TEST-/non-numeric
+    # number from us becomes the default for staff's next real POs (TEST-MC-001/002 on 10/1 -> Steve's
+    # SolidCam/McMaster POs auto-numbered TEST-MC-003/004). Always use the real numeric sequence.
+    dn = str(d.get("doc_number") or "").strip()
+    if dn and not dn.isdigit():
+        raise RuntimeError(f"push-po refuses non-numeric PO number {dn!r} (would hijack QB's PO numbering)")
     body = {
         "VendorRef": {"value": str(d["vendor_qb_id"])},
         "TxnDate": d.get("txn_date"), "DocNumber": d.get("doc_number") or next_po_number(),
@@ -118,7 +124,8 @@ def close_po(d):
 
 
 def delete_po(d):
-    """Test cleanup only: refuses anything whose DocNumber doesn't start with TEST-."""
+    """Disabled 10/14: real staff POs ended up numbered TEST-MC-*, so a TEST- prefix no longer proves a PO is ours."""
+    raise RuntimeError("delete-po disabled: delete POs in QuickBooks by hand")
     cur = q.query(f"SELECT Id, SyncToken, DocNumber FROM PurchaseOrder WHERE Id = '{int(d['qb_id'])}'").get("PurchaseOrder") or []
     if not cur or not str(cur[0].get("DocNumber", "")).startswith("TEST-"):
         raise RuntimeError("delete-po only removes TEST- POs")
