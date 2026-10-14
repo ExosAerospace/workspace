@@ -2,7 +2,7 @@
 *Drafted 2026-10-02 01:30 cadence. Past-customer master list (Phil 9/30). Target Type A: nonprofit that brokers research payloads to space on behalf of the medical research community; already flew with Exos; standing mission is recurring, economical flight access.*
 <br>*Status: DRAFT, awaiting Jon yes/no. Not sent.*
 
-**To:** UNKNOWN: lharvey@c-ast.org BOUNCED 10/14. Ask John for Larry's direct email (co-author), or send to admin@c-ast.org asking to forward.
+**To:** lharvey@c-ast.org (CRM; not bounced. 10/14 bounce was Astrileux)
 **Checks:** CSL 🟢 (2026-10-02). DD = unscreened (no CRM DD-engine record; CAST is a Florida 501(c)3 founded 2005/2006, GuideStar-listed, co-founded with the late NASA engineer Guy Etheridge; long public track record facilitating space-medicine research, including a "Regional Space Medicine Consortium" event with Mayo Clinic's Center for Regenerative Medicine). Not in sent registry, no open Decision.
 **Why now:** CAST's entire mission is connecting the medical research community to suborbital and orbital platforms, and its own site states it is "aggressively pursuing regularly-scheduled, economical access to space." That is Exos's pitch almost verbatim, and they showed early interest in flying with us before.
 
