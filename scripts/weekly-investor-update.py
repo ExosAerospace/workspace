@@ -180,6 +180,15 @@ def build_draft(today):
             "• To reserve one, reply to this email or contact Lizi Quinn (lquinn@exosaero.com).",
             "  [Lizi: confirm how many remain (ledger shows 3 reserved), attach EXOS_Watch_Graphic, and post the",
             "  same text on the website investor page before this goes out.]"],
+        # Lizi 10/14: next week's update carries the annual-meeting calendar hold.
+        "2026-10-21": [
+            "", "Save the date: Exos Aerospace Annual Meeting",
+            "• Saturday, November 7, 2026, 10:00 AM to 12:00 noon (Central), on Microsoft Teams.",
+            "• This is a calendar hold. The formal notice and agenda will follow.",
+            "• Directors: John Quinn and David Mitchell.",
+            "• Join: https://gov.teams.microsoft.us/meet/992403746052?p=AMv58nXyIoZZfxCthF",
+            "  Meeting ID: 992 403 746 052 · Passcode: gc6U5jP2",
+            "  [Lizi: confirm the time zone (assumed Central) before sending.]"],
     }
     feat = FEATURED.get(today.isoformat(), [])
     if feat:
@@ -198,7 +207,6 @@ def build_draft(today):
     L += feat
 
     L += ["", "Standing status (confirm/update as needed before sending):",
-          "• Series A: raise open (BLK3 flights, BLK4).",
           "• BLK3: first two flights targeted early 2027; NASA Flight Opportunities on-ramp anticipated mid-2027.",
           "• Pipeline: active payload and partnership discussions in progress.",
           "",
