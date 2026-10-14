@@ -162,6 +162,8 @@ tr.funding-due-row td:last-child { border-right: 1.5px solid #39ff14; }
   </div>
 </header>
 
+<div id="rollingPanel" style="margin:12px 20px 0;border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:none"></div>
+
 <div class="stats-bar" id="statsBar">
   <div class="stat-card"><div class="stat-num" style="color:var(--cyan)" id="statOpps">-</div><div class="stat-label">Opportunities</div></div>
   <div class="stat-card"><div class="stat-num" style="color:var(--green)" id="statFund">-</div><div class="stat-label">Fundraising Leads</div></div>
@@ -263,6 +265,27 @@ let crmData = [];
 let currentTab = 'opps';
 let sortState = {};  // { tab: { field, dir } }
 
+// Rolling open opportunities, highest max potential contract value first (Jon 2026-10-14).
+// Ranked daily by scripts/rolling_opps_exo3.py; the top one always carries the one focus task (priority 120, <=5 days).
+async function renderRolling() {
+  const el = document.getElementById('rollingPanel');
+  try {
+    const r = await fetch('data/rolling-opportunities.json?_=' + Date.now());
+    if (!r.ok) return;
+    const d = await r.json();
+    const fmt = v => v >= 1e9 ? '$' + (v / 1e9).toFixed(1) + 'B' : v >= 1e6 ? '$' + (v / 1e6).toFixed(1) + 'M' : v >= 1e3 ? '$' + Math.round(v / 1e3) + 'K' : (v ? '$' + v : '—');
+    const f = d.focus || {};
+    const rows = (d.items || []).slice(0, 10).map((o, i) => `<tr style="${o.id === f.opp ? 'background:rgba(74,222,128,.10)' : ''}">
+      <td style="padding:3px 8px;color:var(--text2)">${i + 1}</td><td style="padding:3px 8px;font-weight:700">${fmt(o.max_value)}</td>
+      <td style="padding:3px 8px">${esc(o.id)}</td><td style="padding:3px 8px">${esc((o.title || '').slice(0, 90))}</td>
+      <td style="padding:3px 8px;color:var(--text2)">${esc(String(o.status || '').slice(0, 18))}</td>
+      <td style="padding:3px 8px">${o.id === f.opp ? `🎯 <a href="/?task=${f.id}" target="_blank">focus task #${f.id}</a>` : ''}</td></tr>`).join('');
+    el.innerHTML = `<div style="font-weight:700;margin-bottom:6px">🔁 ROLLING OPEN OPPORTUNITIES — by max potential contract value <span style="font-weight:400;color:var(--text2);font-size:12px">· ${d.count} open · top one carries the weekly focus task (priority 120, due ≤5 days) · target: 1 submittal closed / week · ranked ${esc(d.generated || '')}</span></div>
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px">${rows}</table>`;
+    el.style.display = '';
+  } catch (e) { /* panel is best-effort */ }
+}
+
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -291,6 +314,7 @@ async function loadData() {
     document.getElementById('lastUpdated').textContent = ts1 ? 'Data: ' + ts1 : 'Loaded';
 
     renderStats();
+    renderRolling();
     renderAll();
     populateFilters();
     focusFromUrl();

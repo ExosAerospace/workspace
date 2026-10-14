@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-04T12:49:13.103453-05:00",
- "total": 269,
+ "total": 270,
  "standing": 114,
  "ephemeral": 18,
  "service": 6,
@@ -5755,6 +5755,29 @@
    "envelope_source": "authored 2026-10-13 (Jon: 'Do you do a weekly exo3 code compliance audit of any type?')",
    "change_log": [
     "2026-10-13 created"
+   ]
+  },
+  {
+   "label": "com.exos.rolling-opps-exo3",
+   "program": "rolling-opps-exo3",
+   "script": "scripts/rolling_opps_exo3.py --auto",
+   "kind": "recurring",
+   "schedule": "launchd StartCalendarInterval daily 07:15 CT (rank + focus task); Fri 16:05 CT also weekly submittal check",
+   "purpose": "Rolling open opportunities (Jon 2026-10-14): rank every open opportunity whose due text is rolling/open BAA/no hard close/on-ramp by MAX POTENTIAL CONTRACT VALUE (largest $ in the value text, or max_value_override) -> mission-control/data/rolling-opportunities.json (Opportunities page panel, highest first). Keep exactly ONE open focus task on the top un-submitted opp: adopt an existing open task for it if one exists (no duplicates), else create one; priority 120 + pin:100, due <= 5 days, named owner (payload/partner -> Lizi Quinn, gov/DoD -> John Quinn). Never re-points a live focus task mid-week; next highest gets it when the focus is Done/Cancelled or its opp leaves the list. Weekly (Fri): verifies >= 1 rolling submittal closed in 7 days (focus task Done or opp moved to SUBMITTED); exception-only line to #exomac-system if not.",
+   "stack_layer": "DECIDE (prioritization) + ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds (internal, reversible: one task create/patch per run; never sends externally, never changes opportunities.json)",
+   "human_owner": "John Quinn",
+   "risk_tier": "MEDIUM",
+   "permission_envelope": "READ mission-control/data/opportunities.json, Supabase tasks (rolling-focus tagged + title match for the top opp); WRITE mission-control/data/rolling-opportunities.json, logs/rolling-opps-state.json (tmp->os.replace), Supabase tasks: POST one focus task OR PATCH one existing task (tags/priority/due/owner-if-blank only); deliver.py one #exomac-system line per week only when the weekly target is missed; fleet_log. NEVER: external sends, opportunity edits, more than one open focus task, Jon DMs.",
+   "memory_boundary": "opportunities.json + rolling-focus tasks + logs/rolling-opps-state.json (21-day status history)",
+   "escalation": "no rolling submittal closed in 7 days -> one line to #exomac-system naming the focus task/owner/due; focus task overdue -> Mission Score critical tier (priority >= 100 + overdue -> 101-130 red); run error -> run_logged non-zero exit -> agent_eval FAIL alert",
+   "eval_suite": "/usr/bin/python3 scripts/rolling_opps_exo3.py --selftest (12 checks: rolling+open filter excludes closed/submitted/dated; '$500 basic' not read as $500B; $986M parsed; focus task priority 120 + pin:100 + due<=5d; owner gov->John payload->Lizi; create when none; live focus not re-pointed; submitted opp -> next highest; SUBMITTED move counts weekly; nothing closed -> exception; short-title match; adopt-existing patch keeps owner/tags, pulls due in)",
+   "eval_type": "output",
+   "telemetry": "logs/fleet-events.jsonl agent=rolling-opps-exo3 (focus_task_created, focus_task_adopted, weekly_check); logs/rolling-opps-exo3.out via run_logged",
+   "reusability_scope": "any opportunity list with free-text value + due fields",
+   "envelope_source": "authored 2026-10-14 at creation (exo3-from-the-start, per 10/13 rule)",
+   "change_log": [
+    "2026-10-14 created (Jon: rank rolling opps by max value, focus task 120/<=5d, 1 submittal/week)"
    ]
   }
  ],
