@@ -46,6 +46,7 @@ async function renderLsa(docxAbs) {
 const ITAR_SCREEN = path.join(WS, 'scripts', 'itar_ear_screen.py');
 const CSL_SCREEN = path.join(WS, 'scripts', 'csl_screen.py');
 const PAYLOAD_CUSTOMER = path.join(WS, 'scripts', 'payload_customer.py');
+const WAIVER_SEND = path.join(WS, 'scripts', 'waiver_send.py');
 const PY = '/usr/bin/python3';
 
 const MISSIONS_FILE = path.join(MC_DIR, 'data', 'missions.json');
@@ -387,6 +388,20 @@ async function handle(req, res, ctx) {
     o.envelope_id = r.id; o.lsa_sent_at = now();
     log(o, s, 'LSA sent for e-signature', email + ' → John countersigns (envelope ' + r.id + ')');
     save(d); audit('send-lsa', r.id);
+    // Lizi 2026-10-14: the wet-sign FAA cross-waiver goes out WITH the LSA (customer prints, signs, mails the
+    // original; needed at Exos by L-90). Non-blocking: a waiver failure never undoes the LSA send.
+    execFile(PY, [WAIVER_SEND, '--order', o.id, '--customer', o.customer || '', '--payload', o.payload_name || '',
+                  '--email', email, '--name', name], { timeout: 180000 }, (e, out) => {
+      try {
+        const dd = load(); const oo = (dd.orders || []).find(x => x.id === o.id);
+        if (!oo) return;
+        if (e) { log(oo, s, 'Cross-waiver NOT sent', String(e.message).slice(0, 160)); }
+        else { const j = JSON.parse(String(out).trim().split('\n').pop());
+               oo.waiver_sent_at = j.sent ? now() : null; oo.waiver_pdf = j.pdf;
+               log(oo, s, j.sent ? 'Cross-waiver sent with LSA' : 'Cross-waiver generated, email NOT sent', email + ' (print, wet-sign, mail original by L-90)'); }
+        save(dd);
+      } catch (x) { console.error('[payload-orders] waiver send', x.message); }
+    });
     return send(res, 200, { ok: true, order: view(o, ctx.loadEnvelopes()) });
   }
 
