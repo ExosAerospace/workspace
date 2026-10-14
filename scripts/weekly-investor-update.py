@@ -183,12 +183,12 @@ def build_draft(today):
         # Lizi 10/14: next week's update carries the annual-meeting calendar hold.
         "2026-10-21": [
             "", "Save the date: Exos Aerospace Annual Meeting",
-            "• Saturday, November 7, 2026, 10:00 AM to 12:00 noon (Central), on Microsoft Teams.",
+            "• Saturday, November 7, 2026, 10:00 AM to 12:00 noon Central, on Microsoft Teams.",
             "• This is a calendar hold. The formal notice and agenda will follow.",
             "• Directors: John Quinn and David Mitchell.",
             "• Join: https://gov.teams.microsoft.us/meet/992403746052?p=AMv58nXyIoZZfxCthF",
             "  Meeting ID: 992 403 746 052 · Passcode: gc6U5jP2",
-            "  [Lizi: confirm the time zone (assumed Central) before sending.]"],
+            ],
     }
     feat = FEATURED.get(today.isoformat(), [])
     if feat:
