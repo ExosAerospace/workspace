@@ -286,12 +286,23 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "Just a quick follow-up on the GNC role. If you're still interested, I'd love to get your resume over to John. No rush, just didn't want it to slip through the cracks!\n"
                  'Best Regards,\n'
                  'Lizi')],
- '2026-10-29': [('SpaceTango: Twyman Clements (CEO, task #1001)',
+ '2026-10-29': [('Georgia Tech Space Week follow-ups (16 people, emailed 10/15)',
+                 'reply on each original 10/15 thread: Chunhui Xu, Thomas Orlando, Chris Carr, Binu Tharakan, Hailey Nichols (Locus Lock), Mary Babb Isarov (Qcells), Chad Pozarycki (Deleon, task '
+                 '#3793), Mike Riccio (NASA Ames), David Williams (OSU/Starlab), Brad Henderson (Starlab), Luis Zea (Starlab), Eric Lasker (Varda), Bill Dynan, Phillip Stancil, Jordan McKaig, Vic '
+                 'Paulson',
+                 'two weeks since your 10/15 follow-ups. Skip anyone who replied. Not included: Theo Williams and Henry Schwartz (already in conversation) and Carl Kirkconnell (on hold until SSLC '
+                 'settles)',
+                 'Hi [Name],\n'
+                 "Just bumping this up in case it got buried after Space Week. I'd still love to find a time to talk about whether a BLK3 flight could fit your work. Happy to send our Payload User's "
+                 "Guide if that's easier as a first step.\n"
+                 'Best Regards,\n'
+                 'Lizi'),
+                ('SpaceTango: Twyman Clements (CEO, task #1001)',
                  'tclements@spacetango.com (reply on your "BLK3 + Space Tango" thread)',
                  'first note 9/14, nudge 10/15; no reply yet. Skip if he (or Danielle Rosales) replied. If still silent after this, try LinkedIn or ask John for a warm intro',
                  'Hi Twyman,\n'
-                 "One last nudge on BLK3. If a call isn't convenient right now, I'm happy to just send over our Payload User Guide so you can share it with any PIs who might want a "
-                 'quick, recoverable flight before an ISS mission. Who would be the best person on your team to talk with?\n'
+                 "One last nudge on BLK3. If a call isn't convenient right now, I'm happy to just send over our Payload User Guide so you can share it with any PIs who might want a quick, "
+                 'recoverable flight before an ISS mission. Who would be the best person on your team to talk with?\n'
                  'Best Regards,\n'
                  'Lizi')]}
 today=date.today().isoformat()
