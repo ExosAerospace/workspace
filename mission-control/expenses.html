@@ -75,14 +75,15 @@
     <label style="margin-top:18px">Expense lines <span class="muted" id="rateNote"></span></label>
     <table class="lt"><thead><tr>
       <th style="width:120px">Date</th><th style="width:150px">Category</th><th>Description</th>
-      <th style="width:150px">Location (city, ST)</th><th style="width:110px" id="amtHdr">Amount / Miles</th>
+      <th style="width:150px">Location (city, ST)</th><th style="width:72px">Currency</th><th style="width:110px" id="amtHdr">Amount / Miles</th>
       <th style="width:96px" class="amtcell">Line $</th><th style="width:28px"></th>
     </tr></thead><tbody id="lines"></tbody></table>
     <button class="btn ghost sm" style="margin-top:10px" onclick="addLine()">+ Add line</button>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:10px">
       <div><label style="margin:0">Receipt(s) — optional</label><input type="file" id="receipt" accept=".pdf,.jpg,.jpeg,.png,.xlsx,.csv" style="max-width:320px"></div>
-      <div style="text-align:right"><div class="muted" style="font-size:.76rem">Report total</div><div class="total" id="total">$0.00</div></div>
+      <div><label style="margin:0">Reimburse me in</label><select id="payCcy" onchange="recalc()" style="max-width:180px"><option value="USD">US dollars (USD)</option><option value="JPY">Japanese yen (JPY)</option></select></div>
+      <div style="text-align:right"><div class="muted" style="font-size:.76rem">Report total</div><div class="total" id="total">$0.00</div><div class="muted" id="totalJpy" style="font-size:.78rem"></div></div>
     </div>
 
     <div class="screen" id="screen"></div>
@@ -98,6 +99,8 @@
 </div>
 
 <script>
+var JPY=null, JPYDATE='';  // Fed H.10 JPY per USD (preview only; the server converts each line at its own date's rate)
+async function loadFx(){try{const r=await fetch('/api/expense/fx');if(r.ok){const d=await r.json();JPY=d.rate;JPYDATE=d.date;recalc();}}catch(e){}}
 var RATE=0.70, CATS=['Mileage','Lodging','Meals','Airfare','Ground transport','Rental car','Fuel','Supplies','Conference/Registration','Other'];
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function fileToB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);});}
@@ -115,6 +118,7 @@ function addLine(pref){
     +'<td><select class="f-cat" onchange="onCat(this)">'+catOptions(pref.category)+'</select></td>'
     +'<td><input class="f-desc" placeholder="what was it for" value="'+esc(pref.description||'')+'"></td>'
     +'<td><input class="f-loc" placeholder="Fort Worth TX" value="'+esc(pref.location||'')+'"></td>'
+    +'<td><select class="f-ccy" onchange="recalc()"><option value="USD">USD $</option><option value="JPY"'+(pref.currency==='JPY'?' selected':'')+'>JPY ¥</option></select></td>'
     +'<td><input class="f-val" type="number" step="0.01" min="0" placeholder="0.00" oninput="recalc()" value="'+esc(pref.val||'')+'"></td>'
     +'<td class="amtcell f-line">$0.00</td>'
     +'<td><button class="x" title="remove" onclick="this.closest(\'tr\').remove();recalc()">×</button></td>';
@@ -129,19 +133,24 @@ function onCat(sel){
 }
 function lineAmount(tr){
   const cat=tr.querySelector('.f-cat').value, v=parseFloat(tr.querySelector('.f-val').value)||0;
-  return cat==='Mileage' ? Math.round(v*RATE*100)/100 : Math.round(v*100)/100;
+  const ccy=tr.querySelector('.f-ccy').value;
+  if(cat==='Mileage') return Math.round(v*RATE*100)/100;
+  if(ccy==='JPY') return JPY ? Math.round(v/JPY*100)/100 : 0;
+  return Math.round(v*100)/100;
 }
 function recalc(){
   let t=0;
   document.querySelectorAll('#lines tr').forEach(tr=>{const a=lineAmount(tr);t+=a;tr.querySelector('.f-line').textContent='$'+a.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});});
   document.getElementById('total').textContent='$'+t.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const anyJpy=[...document.querySelectorAll('#lines .f-ccy')].some(x=>x.value==='JPY')||document.getElementById('payCcy').value==='JPY';
+  document.getElementById('totalJpy').textContent = anyJpy ? (JPY ? '≈ ¥'+Math.round(t*JPY).toLocaleString('en-US')+' · Fed H.10 ¥'+JPY+'/$ ('+JPYDATE+'); each yen line is converted at its own date\'s rate' : 'yen rate loading…') : '';
 }
 function collect(){
   const items=[];
   document.querySelectorAll('#lines tr').forEach(tr=>{
     const cat=tr.querySelector('.f-cat').value, v=parseFloat(tr.querySelector('.f-val').value)||0;
     const it={date:tr.querySelector('.f-date').value,category:cat,description:tr.querySelector('.f-desc').value,location:tr.querySelector('.f-loc').value};
-    if(cat==='Mileage'){it.miles=v;}else{it.amount=v;}
+    if(cat==='Mileage'){it.miles=v;}else{it.amount=v;it.currency=tr.querySelector('.f-ccy').value;}
     if((cat==='Mileage'&&v>0)||(cat!=='Mileage'&&v>0)||it.description) items.push(it);
   });
   return items;
@@ -157,7 +166,8 @@ async function submitExpense(){
     const rf=document.getElementById('receipt').files[0];
     if(rf){receiptFilename=rf.name;receiptBase64=await fileToB64(rf);}
     const r=await fetch('/api/expense/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      purpose:document.getElementById('purpose').value,period:document.getElementById('period').value,line_items:items,receiptFilename,receiptBase64})});
+      purpose:document.getElementById('purpose').value,period:document.getElementById('period').value,line_items:items,receiptFilename,receiptBase64,
+      pay_currency:document.getElementById('payCcy').value})});
     const d=await r.json();
     if(!r.ok||!d.ok) throw new Error(d.error||('HTTP '+r.status));
     // Show the pre-screen result to the submitter too (transparency).
@@ -192,7 +202,7 @@ async function loadMine(){
     h+='</tbody></table>';el.innerHTML=h;
   }catch(e){el.innerHTML='<p class="muted">Could not load: '+esc(e.message)+'</p>';}
 }
-loadNorms().then(()=>{addLine();recalc();});
+loadNorms().then(()=>{addLine();recalc();loadFx();});
 loadMine();
 </script>
 </body>

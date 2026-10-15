@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-04T12:49:13.103453-05:00",
- "total": 270,
+ "total": 271,
  "standing": 114,
  "ephemeral": 18,
  "service": 6,
@@ -810,15 +810,16 @@
    "permission_envelope": "Supabase read+WRITE; file I/O: MC data JSON; own logs/state",
    "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
    "escalation": "Decisions board / Jon inbox",
-   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 300s → WARN)",
+   "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 → else FAIL/escalate; staleness > 2.5x cadence 300s → WARN) + OUTPUT: /usr/bin/python3 scripts/expense-workflow.py --selftest (JPY reimbursement instruction on the payment task)",
    "telemetry": "logs/expense-workflow.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
    "reusability_scope": "TBD",
    "risk_tier": "MED",
    "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
    "change_log": [
-    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860"
+    "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval — D-7281860",
+    "2026-10-15 JPY reimbursement instruction on payment task (EXOS-FIN-004); selftest added"
    ],
-   "eval_type": "liveness"
+   "eval_type": "output"
   },
   {
    "label": "com.exos.faa-rfi-followup",
@@ -5778,6 +5779,29 @@
    "envelope_source": "authored 2026-10-14 at creation (exo3-from-the-start, per 10/13 rule)",
    "change_log": [
     "2026-10-14 created (Jon: rank rolling opps by max value, focus task 120/<=5d, 1 submittal/week)"
+   ]
+  },
+  {
+   "label": "expense-fx-exo3",
+   "program": "expense-fx-exo3",
+   "script": "scripts/fx_rate.py (called by MC /api/expense/create + /api/expense/fx; in-process)",
+   "kind": "tool",
+   "schedule": "on demand (each expense submit / form load)",
+   "purpose": "Foreign-currency expenses (Jon 2026-10-15: option to pay in yen). Converts JPY expense lines to USD at the Federal Reserve H.10 rate (FRED DEXJPUS) for the expense date or the latest prior published business day; keeps original yen, rate, rate date and source on each line; computes the JPY reimbursement amount when the submitter chooses 'Reimburse me in JPY'. Cached in mission-control/data/fx-rates.json (at most one fetch per 6h).",
+   "stack_layer": "ORCHESTRATE (finance data)",
+   "autonomy_tier": "Execute-within-bounds (computes amounts; payment stays human via expense-workflow tasks)",
+   "human_owner": "John Quinn",
+   "risk_tier": "MEDIUM",
+   "permission_envelope": "HTTPS GET fred.stlouisfed.org (public CSV); WRITE mission-control/data/fx-rates.json (tmp->os.replace). NEVER moves money or edits ledgers itself.",
+   "memory_boundary": "fx-rates.json cache",
+   "escalation": "rate unavailable -> submit refused with 'try again' (no silent USD fallback); mileage never FX-converted",
+   "eval_suite": "/usr/bin/python3 scripts/fx_rate.py --selftest (8 checks: weekend expense uses prior business day H.10 rate; source cited; cache reuse; no refetch within 6h; ¥15,834 -> $100.00 @158.34; mileage never converted; USD unchanged; unsupported currency refused)",
+   "eval_type": "output",
+   "telemetry": "rate + source + date persisted on every converted ledger line (mission-control/data/expense-reports.json) and on the approval task text",
+   "reusability_scope": "add a currency = one SERIES entry (FRED H.10 series id)",
+   "envelope_source": "authored 2026-10-15 at creation",
+   "change_log": [
+    "2026-10-15 created"
    ]
   }
  ],

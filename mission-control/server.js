@@ -2394,9 +2394,19 @@ const server = http.createServer((req, res) => {
     let body = ''; req.on('data', c => { body += c; if (body.length > MAX_UPLOAD_SIZE) req.destroy(); });
     req.on('end', async () => {
       try {
-        const { purpose, period, line_items, receiptFilename, receiptBase64 } = JSON.parse(body);
+        const { purpose, period, line_items, receiptFilename, receiptBase64, pay_currency } = JSON.parse(body);
         const email = (session.email || '').toLowerCase(), name = session.name || email;
-        const items = Array.isArray(line_items) ? line_items : [];
+        let items = Array.isArray(line_items) ? line_items : [];
+        // Foreign-currency lines (JPY, Jon 2026-10-15) -> USD at the Fed H.10 rate for the expense date (scripts/fx_rate.py).
+        // Original amount, rate, rate date and source stay on each line; everything downstream (screen, total) is USD.
+        const payCcy = String(pay_currency || 'USD').toUpperCase() === 'JPY' ? 'JPY' : 'USD';
+        let fxNote = '';
+        if (items.some(it => String(it.currency || 'USD').toUpperCase() !== 'USD') || payCcy !== 'USD') {
+          try {
+            items = JSON.parse((await execFileP('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'fx_rate.py'), 'convert'],
+              { input: JSON.stringify({ line_items: items }), timeout: 30000 })).stdout).line_items;
+          } catch (e) { res.writeHead(502, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Could not get the yen exchange rate right now; try again in a minute.' })); return; }
+        }
         if (!items.length) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Add at least one expense line.' })); return; }
         const id = 'EXP-' + Date.now().toString(36).toUpperCase();
         // Exobot pre-screen: area-normal cost check + mileage computed at the IRS rate.
@@ -2417,6 +2427,16 @@ const server = http.createServer((req, res) => {
           return { ...it, category: cat, amount: amt };
         });
         const total = screen.total != null ? screen.total : lines.reduce((a, l) => a + l.amount, 0);
+        // Reimbursement currency: JPY = yen lines at their original yen + USD lines at today's H.10 rate.
+        let payJpy = null, payRate = null;
+        if (payCcy === 'JPY') {
+          try {
+            const r = JSON.parse((await execFileP('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'fx_rate.py'), 'rate', 'JPY'], { timeout: 30000 })).stdout);
+            payRate = r;
+            payJpy = Math.round(lines.reduce((a, l) => a + (l.currency === 'JPY' ? Number(l.amount_original) || 0 : (Number(l.amount) || 0) * r.rate), 0));
+            fxNote = `\nREIMBURSE IN JPY: ¥${payJpy.toLocaleString('en-US')} (yen lines at original yen; USD lines at ¥${r.rate}/$ H.10 ${r.date}). Pay per PROC International Contractor Payments (JPY rail).`;
+          } catch (e) { fxNote = '\nREIMBURSE IN JPY requested — Finance to convert at the payment-date H.10 rate.'; }
+        }
         // Optional receipt attachment (not required).
         let fileUrl = null, stored = null;
         if (receiptBase64) {
@@ -2431,7 +2451,8 @@ const server = http.createServer((req, res) => {
         const amtStr = Number(total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const flagged = (screen.flag_count || 0) > 0;
         const lineTxt = lines.map(l => {
-          const extra = String(l.category).toLowerCase() === 'mileage' ? ` [${Number(l.miles) || 0} mi × $${rate.toFixed(2)}]` : '';
+          const extra = String(l.category).toLowerCase() === 'mileage' ? ` [${Number(l.miles) || 0} mi × $${rate.toFixed(2)}]`
+            : (l.currency === 'JPY' ? ` [¥${Number(l.amount_original).toLocaleString('en-US')} @ ¥${l.fx_rate}/$ H.10 ${l.fx_date}]` : '');
           return `  • ${l.date || '—'} · ${l.category} · $${Number(l.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${extra}${l.location ? ' · ' + l.location : ''}${l.description ? ' — ' + l.description : ''}`;
         }).join('\n');
         const screenTxt = flagged
@@ -2442,7 +2463,7 @@ const server = http.createServer((req, res) => {
           owner: mgrName || 'John Quinn', assigned_email: mgrEmail || 'jquinn@exosaero.com', assigned_to: mgrName || null,
           state: 'To Do', priority: flagged ? 82 : 75, category: 'Expense', source: 'expense-workflow',
           tags: flagged ? ['expense-approval', 'expense-flagged'] : ['expense-approval'],
-          description: `Expense report from ${name} (${email}).\nAmount: $${amtStr} · Purpose: ${purpose || '—'} · Period: ${period || '—'}\nMileage: ${screen.mileage_total_miles || 0} mi = $${Number(screen.mileage_total_usd || 0).toFixed(2)} @ $${rate.toFixed(2)}/mi\n\nLine items:\n${lineTxt}${screenTxt}\n\nAPPROVE by marking this task Done — payment then auto-routes to Finance. Ref ${id}.`
+          description: `Expense report from ${name} (${email}).\nAmount: $${amtStr} · Purpose: ${purpose || '—'} · Period: ${period || '—'}\nMileage: ${screen.mileage_total_miles || 0} mi = $${Number(screen.mileage_total_usd || 0).toFixed(2)} @ $${rate.toFixed(2)}/mi${fxNote}\n\nLine items:\n${lineTxt}${screenTxt}\n\nAPPROVE by marking this task Done — payment then auto-routes to Finance. Ref ${id}.`
         };
         const created = await supabaseRequest('POST', 'tasks', task).then(r => Array.isArray(r.data) ? r.data[0] : r.data).catch(() => null);
         if (created && created.id && fileUrl) {
@@ -2458,6 +2479,7 @@ const server = http.createServer((req, res) => {
         let led = []; try { led = JSON.parse(fs.readFileSync(LEDGER, 'utf8')); } catch (e) {}
         led.unshift({ id, submitter_email: email, submitter_name: name, manager_email: mgrEmail, manager_name: mgrName,
           amount: total, purpose: purpose || null, period: period || null, line_items: lines, file: fileUrl,
+          pay_currency: payCcy, pay_amount_jpy: payJpy, pay_fx: payRate,
           screen: { flags: screen.flags || [], flag_count: screen.flag_count || 0, mileage_total_miles: screen.mileage_total_miles || 0, mileage_total_usd: screen.mileage_total_usd || 0, mileage_rate: rate },
           submitted_at: new Date().toISOString(), state: 'submitted', approval_task_id: created && created.id || null, payment_task_id: null });
         fs.writeFileSync(LEDGER, JSON.stringify(led, null, 2));
@@ -2465,6 +2487,15 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ ok: true, id, total, manager: mgrName, approval_task_id: created && created.id, flags: screen.flags || [], flag_count: screen.flag_count || 0, summary: screen.summary }));
       } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e).slice(0, 200) })); }
     });
+    return;
+  }
+  // ── EXPENSE FX: Fed H.10 rate for the form's live yen preview (scripts/fx_rate.py; cached) ──
+  if (req.url.split('?')[0] === '/api/expense/fx' && req.method === 'GET') {
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    const u = new URL(req.url, 'http://x'); const d = (u.searchParams.get('date') || '').replace(/[^0-9-]/g, '').slice(0, 10);
+    execFileP('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'fx_rate.py'), 'rate', 'JPY'].concat(d ? [d] : []), { timeout: 30000 })
+      .then(r => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(r.stdout); })
+      .catch(() => { res.writeHead(502, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'rate unavailable' })); });
     return;
   }
   // ── EXPENSE REPORTS: my submissions (status) ──
