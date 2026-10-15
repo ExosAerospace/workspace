@@ -5,9 +5,9 @@ Markup: **bold**. Block types: title, sub, cover, h1, h2, p, b, decision, table,
 Outline mirrors Exhibit A ("White Paper Request Summary") of the call VERBATIM.
 """
 
-DATE = "2026-10-14"
+DATE = "2026-10-15"
 MARK = "Exos Proprietary — not for public release"
-DIST = ("Exos Proprietary — Submitted for U.S. Government planning use under VSFBMDZCall §2.1; not for public release.")
+DIST = ("Exos Proprietary — Submitted for U.S. Government planning use under VSFBMDZCall \u00a72.1; not for public release.")
 
 SRC = {
  1: "SAM.gov, “Vandenberg Space Force Base (VSFB) Call for Whitepapers for Mission Development Zone (MDZ) Outgrant,” "
@@ -43,6 +43,13 @@ SRC = {
      "Government review on request.",
  18: "Texas Secretary of State, Certificate of Fact (Status), Exos Aerospace Systems & Technologies, Inc., obtained via "
      "SOSDirect, October 2026 (Attachment 1).",
+ 19: "NOAA National Centers for Environmental Information, “Engineering Weather Data — KVBG (Vandenberg AFB / VSFB),” "
+     "ICAO_KVBG_EWD_SI.pdf, 1988–2017 climatology — "
+     "ncei.noaa.gov/pub/access/cebrequests/engineeringwx/ICAO_KVBG_EWD_SI.pdf (accessed Oct 2026). "
+     "Prevailing surface wind directions at KVBG are west-northwest to west, consistent with onshore flow from the Pacific.",
+ 20: "Yakimenko, O.A., Dobrokhodov, S.N., and Kaminer, I.I., “On Estimation of Terminal Accuracy for Several Steerable "
+     "Parafoil Systems,” AIAA Paper 2006-6793, AIAA Guidance, Navigation, and Control Conference, 2006 (older published data; "
+     "accuracy varies by system and conditions; cited as a general reference for guided-parafoil CEP class).",
 }
 
 def D(text):
@@ -51,65 +58,78 @@ def D(text):
 C = []
 def add(*b): C.append(b)
 
-VER = ""
-LAUNCH = "planned, as early as Q2 2027, subject to launch site assignment, FAA licensing and range approvals"
+VER = "_r2"
+LAUNCH = ("after BLK3 flight heritage (first flight planned early 2027 at Spaceport America) and subject to launch-site assignment, FAA licensing and range approvals")
 
 # ------------------------------------------------------------------ COVER
 add("title", "Whitepaper Response")
 add("sub", "Vandenberg Space Force Base (VSFB) Call for Whitepapers for Mission Development Zone (MDZ) Outgrant")
-add("sub", "Solicitation / Notice: VSFBMDZCall  ·  SLD 30/XPR  ·  Responses due 16 October 2026")
-add("title2", "Exos MDZ Launch-Support Facility (land lease / outgrant)")
-add("sub", "Ground facilities supporting planned Exos commercial launch operations at VSFB, with the MCMS-exo3 multi-user payload "
-           "processing and logistics capability as added value for the spaceport")
+add("sub", "Solicitation / Notice: VSFBMDZCall  \u00b7  SLD 30/XPR  \u00b7  Responses due 16 October 2026")
+add("title2", "Exos Reusable-Vehicle Recovery & Turnaround Zone")
+add("sub", "Option / reservation on MDZ parcels to establish a shared reusable-vehicle landing and turnaround zone "
+           "on the Western Range, with MCMS-exo3 as the zone's coordination and scheduling system")
 add("spacer",)
 add("cover", "**Submitted by:** Exos Aerospace Systems & Technologies, Inc.")
 add("cover", "299 FM 1903, Greenville, TX 75402")
-add("cover", "CAGE 7EMY6  ·  UEI CK24BPZGF854  ·  SAM.gov Active (All Awards) through 7 Oct 2027")
-add("cover", "NAICS 336414 (primary) · 541715 · 541330  ·  Small Business")
+add("cover", "CAGE 7EMY6  \u00b7  UEI CK24BPZGF854  \u00b7  SAM.gov Active (All Awards) through 7 Oct 2027")
+add("cover", "NAICS 336414 (primary) \u00b7 541715 \u00b7 541330  \u00b7  Small Business")
 add("cover", "**Point of contact:** John Quinn, Cofounder & Chief Executive Officer")
-add("cover", "jquinn@exosaero.com  ·  +1 (972) 740-8355  ·  www.exosaero.com")
+add("cover", "jquinn@exosaero.com  \u00b7  +1 (972) 740-8355  \u00b7  www.exosaero.com")
 add("cover", "Submitted to: Ainsley Allen, SLD 30 — 232909MissionDevelopmentZoneMDZFacilityConstruct@groups.af.mil")
 add("spacer",)
 add("note", "Informational whitepaper submitted in response to a call that is not governed by the FAR and is not an RFI, RFP or "
-            "RFQ (call §2.1). Exos acknowledges that the USSF may use the information in this submission for MDZ scoping and "
-            "planning (call §2.1). Concepts herein are proposed and pre-decisional; nothing in this paper is an offer, a "
-            "financing commitment or a rent proposal. Exos launch operations at VSFB are " + LAUNCH + "; Exos holds no VSFB "
+            "RFQ (call \u00a72.1). Exos acknowledges that the USSF may use the information in this submission for MDZ scoping and "
+            "planning (call \u00a72.1). Concepts herein are proposed and pre-decisional; nothing in this paper is an offer, a "
+            "financing commitment or a rent proposal. Exos launch operations at VSFB are planned " + LAUNCH + "; Exos holds no VSFB "
             "launch site, launch license for VSFB, or VSFB manifest today.")
 add("note", "**Attachments:** (1) Texas Secretary of State Certificate of Fact (Status); (2) Officer Certification of U.S. "
-            "Ownership (51 U.S.C. § 50101(7)).")
+            "Ownership (51 U.S.C. \u00a7 50101(7)).")
 add("note", "**Distribution:** " + DIST)
 add("pb",)
 
 # ------------------------------------------------------------------ EXEC SUMMARY
 add("h1", "Executive Summary")
-add("p", "Exos Aerospace requests consideration for an **MDZ land lease (outgrant under 10 U.S.C. § 2667) for the ground facilities "
-         "that support Exos commercial launch operations at VSFB** [1][12]: vehicle and payload receiving, integration and "
-         "processing, storage, spaceport logistics, and launch/mission operations and administrative/engineering offices. These match "
-         "the uses the call lists for the MDZ — payload processing, spaceport logistics, commodity storage, launch and mission control, "
-         "spacecraft integration and administrative/engineering spaces — and the call’s stated purpose of infrastructure for the "
-         "“preparation, operation, and support of launch programs” [1].")
-add("p", "Exos launch operations at VSFB are **" + LAUNCH + "**. The launch site itself has not been sited. As the call states, "
-         "the MDZ is not a space launch complex [1]; Exos presents the MDZ as the support and processing base for a launch site to be "
-         "assigned separately through SLD 30 and the FAA. Exos is an FAA-licensed reusable suborbital launch operator that flies "
-         "today from Spaceport America, New Mexico [10]; it has not launched from Vandenberg. Its latest FAA-licensed vehicle, BLK3, "
-         "is preparing for flight in early 2027.")
-add("p", "**Added value for the spaceport.** As Exos operates on the leased site, it would develop **MCMS-exo3** (Mission Cargo "
-         "Management System — exo3) into a multi-user, AI-managed payload processing and logistics capability and open it to other "
-         "base users over time. MCMS-exo3 builds on the exo3 payload process in use today for Exos payload operations [13]; its "
-         "extensions are proposed. It speaks directly to a documented need: Space Force officials told GAO that payload processing "
-         "capacity is the greatest challenge facing DoD space launch, with an expected annual shortfall of up to two processing bays "
-         "from FY2026 through FY2030, and that the Space Force lacks insight into commercial processing schedules [3]. SLD 30 "
-         "supported 51 launches in 2024 and 77 total space launches, missile tests and aeronautical operations in 2025 [2].")
-add("p", "**Why now.** Space Force officials have told GAO that payload processing capacity is the greatest challenge facing DoD "
-         "space launch [3], and this MDZ call is SLD 30’s window to shape the response [1]. Exos asks SLD 30 to consider a direct "
-         "award (7.2) so it can adopt an AI-native payload and range-integration process from an operator that runs exo3 today, "
-         "ahead of Exos operations as early as Q2 2027, rather than waiting through a multi-year competitive cycle.")
-add("p", "**Optional service offer.** Separately from the lease, Exos offers SLD 30 and MDZ tenants an optional **Exos Mission "
-         "Control implementation for site and payload management services**, using the same Exos-built Mission Control software "
-         "Exos uses today to schedule its own payloads and vehicles [13] (see 8.2).")
-add("p", "**Phasing.** Phase 0 — MCMS-exo3 proven on Exos operations, now. Phase 1 — Exos launch-support facility on the lease, ready "
-         "for operations as early as Q2 2027. Phase 2 — expansion to multi-user payload processing on MCMS-exo3, with an optional "
-         "5-meter-class bay and hazardous processing cell, gated on financing and demand.")
+add("p", "Exos Aerospace's mission is **“Make Every Space Vehicle Reusable.”** Exos scopes this response to that mission. "
+         "Exos asks SLD 30 to consider an **option / reservation (outgrant under 10 U.S.C. \u00a7 2667) on Hazardous 30-acre "
+         "Plots 10 and 11** (Exhibit B) to establish the **Exos Reusable-Vehicle Recovery & Turnaround Zone** — a shared landing "
+         "and recovery pad that any reusable vehicle or capsule on the Western Range can use, with operator consent. "
+         "Exos is not requesting a launch complex; the MDZ is not a space launch complex [1]. The land request leads "
+         "because this is a real-property call; the facilities ask is a modest, expeditionary footprint, not permanent construction.")
+add("p", "**Why these parcels.** Plots 10 and 11 are along Beach Road, closest to the coast and outside the airfield "
+         "approach-departure clearance surface and APZ 2 (Exhibit B Fig. 4) [1]. They provide the open landing field "
+         "this concept requires. Alternates: Plot 1 (same hazardous strip), or Hazardous 50-acre Parcel 1 (flood-plain "
+         "justification: an open landing field with no permanent structures is the only use proposed, making flooding "
+         "a manageable risk rather than a disqualifier).")
+add("p", "**Landing concept.** The reusable vehicle deploys its guided parafoil over the ocean, upwind of the coast. "
+         "Vandenberg's prevailing surface winds are west-northwest to west (NOAA NCEI engineering weather data, KVBG, "
+         "1988–2017 [19]), so the nominal glide path brings the vehicle across the coast and onto the recovery zone "
+         "only when the canopy is nominal and the vehicle is safed (propellant vented, ordnance inert). Published "
+         "guided-parafoil accuracy is approximately 100 m CEP (older published data, AIAA 2006-6793 [20]), which "
+         "sets the size of the cleared dispersion area. Off-nominal descents land in the ocean with a flotation system "
+         "and a standby recovery boat; no offshore catch structure is proposed.")
+add("p", "**Live winds from Mission Control.** Before launch and before reentry/canopy deploy, Exos plans to fire "
+         "rocket-launched radiosondes along the actual corridor to measure winds aloft in real time. These feed "
+         "Mission Control's release-point computation and the go/no-go decision. This is based on an Exos-developed "
+         "rocket-launched radiosonde concept (Exos heritage, circa 2016); the capability at Vandenberg is planned, "
+         "not yet demonstrated. Over time the wind data shrinks the dispersion zone, and the radiosonde service "
+         "can be offered to other Western Range users.")
+add("p", "**Mission Control as the differentiator.** The zone's coordination system is MCMS-exo3 (Mission Control / "
+         "exo3): scheduling across vehicles, crews, range and road calendars; signed chain of custody; range and FTS "
+         "requirements in one process with human approval gates; the wind go/no-go; and a reusability ledger — "
+         "turnaround status, inspection records, and reflight-readiness for every vehicle using the zone, with operator "
+         "consent. Mission Control and the exo3 payload process are in use today on Exos operations [13]; their "
+         "extensions to Vandenberg are proposed. **Phase 0 offer:** Exos will run a read-only Mission Control pilot "
+         "for SLD 30 now, using Exos's Spaceport America operations as the live data source — no real property needed.")
+add("p", "**Facilities.** Expeditionary and modular: a landing pad (~150 m\u00b2), containerized processing, a mobile "
+         "Mission Control node, wind sensors, and perimeter — nothing permanent until a launch site is assigned. "
+         "Section 3 (optional \u00a73 of the call): Exos is not proposing third-party payload processing bays; MCMS-exo3 "
+         "can schedule bays that others build.")
+add("p", "**Future vision (funded-future / vision, not demonstrated).** Near term: BLK3 reusable suborbital, "
+         "followed by BLK4 — a reusable replacement for Black Brant-class sounding rockets. Orbital: BLK4 Heavy "
+         "(three BLK4 cores in parallel) is Exos's planned path to orbital launch, capital-dependent. Vandenberg is "
+         "where that orbital future would fly, with reusable-stage recovery by propulsive landing on an offshore "
+         "barge and/or return to this recovery zone. BLK3 has not flown; its first flight is planned early 2027 at "
+         "Spaceport America.")
 
 # ------------------------------------------------------------------ 1.0
 add("h1", "1.0 CORPORATE ADMINISTRATION")
@@ -119,8 +139,8 @@ add("h2", "1.2 Company legal form of ownership")
 add("p", "Texas corporation, founded and incorporated in 2015; EIN 47-3491152. Exos is organized under the laws of the State of "
          "Texas and is registered and active in SAM.gov (All Awards) through 7 October 2027 [11]. Exos is a Small Business under "
          "its primary NAICS 336414 and claims no other socio-economic designation.")
-add("p", "**Eligibility as a United States commercial provider (51 U.S.C. § 50101(7)) [12].** Exos is a United States "
-         "commercial provider as defined in 51 U.S.C. § 50101(7): a commercial provider organized under the laws of a State "
+add("p", "**Eligibility as a United States commercial provider (51 U.S.C. \u00a7 50101(7)) [12].** Exos is a United States "
+         "commercial provider as defined in 51 U.S.C. \u00a7 50101(7): a commercial provider organized under the laws of a State "
          "(Texas) that is more than 50 percent owned by United States nationals. Evidence of organization under Texas law: Texas Secretary of State "
          "Certificate of Fact (Status) (Attachment 1) [18]. Evidence of U.S. ownership: Officer Certification of "
          "U.S. Ownership signed by the Chief Executive Officer (Attachment 2).")
@@ -130,8 +150,8 @@ add("h2", "1.4 Business address of company operating locations other than headqu
 add("bl", ["**Spaceport America, New Mexico** — current launch and recovery operations site for Exos reusable suborbital flights [10]. "
            "Exos operations are not limited to Spaceport America; Exos evaluates additional launch and operating sites as its "
            "manifest grows.",
-           "**Vandenberg SFB:** none today. The MDZ lease would add a West Coast launch-support location for Exos operations "
-           + LAUNCH + ". Expansion of Exos’s presence at Vandenberg beyond the initial footprint is under consideration (see 5.1)."])
+           "**Vandenberg SFB:** none today. The MDZ outgrant option / reservation would establish the Exos Reusable-Vehicle Recovery & Turnaround Zone for planned Exos "
+           "operations " + LAUNCH + ". Exos holds no VSFB launch site, launch license for VSFB, or VSFB manifest today."])
 add("h2", "1.5 Primary & alternate points of contact")
 add("table", [["Role", "Name / title", "Phone", "E-mail"],
               ["Primary", "John Quinn, Cofounder & Chief Executive Officer", "+1 (972) 740-8355", "jquinn@exosaero.com"],
@@ -159,262 +179,298 @@ add("p", "**Leadership.** John Quinn, Cofounder & CEO (11 years building Exos; 1
          "Russel Blink, Cofounder & CTO (propulsion and vehicle engineering); Neil Milburn, Cofounder & COO (Armadillo Aerospace "
          "veteran; FAA liaison and program execution); David Mitchell, Cofounder & President (financing and investor relations); "
          "Kyle Ballard, CFO (financial reporting, controls and diligence).")
+
 # ------------------------------------------------------------------ 2.0
 add("h1", "2.0 PROPOSED OPERATIONS & FACILITIES")
 add("h2", "2.1 Concept of operations")
-add("p", "**Primary use: Exos launch-support base.** The leased MDZ site would be the ground support and processing base for Exos "
-         "commercial launch operations at VSFB, " + LAUNCH + ". The launch pad itself is outside the MDZ and would be assigned "
-         "separately; the MDZ site hosts everything that does not need to be at the pad. Exos’s reusable vertical-takeoff, "
-         "vertical-landing approach needs little fixed infrastructure at the pad beyond power and communications, which keeps "
-         "the support footprint compact.")
-add("table", [["Function (call §1.3 wording)", "Exos activity on the MDZ site"],
-              ["Spacecraft integration / payload processing", "Receive customer payloads; inspection, checkout and integration into Exos payload accommodations"],
-              ["Preparation and support of launch programs (§3.1)", "Receive and prepare the reusable vehicle between flights; inspection, turnaround and storage"],
-              ["Spaceport logistics / commodity storage", "Receiving, controlled storage and staging of vehicle hardware, GSE and spares; transport to the assigned launch site"],
-              ["Launch and mission control", "Mission operations room for Exos launch campaigns (coordinated with Western Range)"],
-              ["Administrative / engineering spaces", "Exos operations, engineering and customer offices"]],
+add("p", "**Primary use: Exos Reusable-Vehicle Recovery & Turnaround Zone.** The leased MDZ parcels would serve as a shared "
+         "landing and recovery zone for reusable vehicles and capsules on the Western Range — open to any operator with "
+         "SLD 30 approval and operator consent. The zone supports Exos's mission: Make Every Space Vehicle Reusable. "
+         "The launch pad itself is outside the MDZ and would be assigned separately; the MDZ site supports recovery, "
+         "turnaround, and operations.")
+add("p", "**Recovery landing concept.** The reusable vehicle deploys its guided parafoil over the Pacific Ocean, upwind "
+         "of the coast. Vandenberg's prevailing surface winds are west-northwest to west (NOAA NCEI KVBG, 1988–2017 [19]). "
+         "The vehicle crosses the coastline only when the canopy is nominal and the vehicle is safed (propellant vented, "
+         "pyrotechnics inert). It glides overland to a ~150 m\u00b2 aim point inside the cleared dispersion area on the "
+         "recovery zone. Published guided-parafoil accuracy is approximately 100 m CEP (older published data, AIAA "
+         "2006-6793 [20]), which drives the size of the dispersion buffer. An off-nominal descent lands in the ocean; "
+         "the vehicle carries a flotation system and a standby recovery boat is stationed offshore. No offshore catch "
+         "structure is proposed.")
+add("p", "**Wind go/no-go and live radiosonde measurements.** Exos plans to fire rocket-launched radiosondes along the "
+         "actual flight corridor before launch and before the reentry/canopy-deploy decision to measure winds aloft in "
+         "real time. The radiosonde data feeds Mission Control's release-point computation and the go/no-go decision "
+         "for canopy deployment. This is based on an Exos-developed rocket-launched radiosonde concept (Exos heritage, "
+         "circa 2016); the capability at Vandenberg is planned, not yet demonstrated. Radiosonde solid motors are "
+         "ordnance: they fly from the assigned launch site or a hazardous parcel with an explosives site plan and range "
+         "approval — not from the inert recovery zone. Over time, accumulated wind data shrinks the required dispersion "
+         "zone; the radiosonde service can be offered to other Western Range users.")
+add("p", "**MCMS-exo3 as the zone's coordination system.** Mission Control schedules operations across vehicles, "
+         "crews, range and road calendars; carries signed chain of custody at every handoff; integrates range and FTS "
+         "requirements in one process with human approval gates; hosts the wind go/no-go workflow; and maintains a "
+         "reusability ledger — turnaround status, inspection records, and reflight-readiness for every vehicle using "
+         "the zone, with operator consent. Mission Control and the exo3 payload process are in use today on Exos "
+         "operations [13]. Their extensions to Vandenberg and to a multi-vehicle zone are proposed.")
+add("p", "**Finance, design, construct, operate and maintain approach (call \u00a71.2).** Exos would hold the outgrant and "
+         "operate and maintain the zone. Initial facilities are expeditionary and modular — no permanent construction "
+         "until a launch site is assigned. Design and construction of any permanent facility would go through a "
+         "design-build contractor; facility capital would come from Exos operating capital and/or a developer or "
+         "financing partner under a build-to-suit or ground-lease structure, gated on launch-site assignment.")
+add("table", [["Function (call \u00a71.3 wording)", "Exos activity at the Recovery & Turnaround Zone"],
+              ["Spacecraft integration / payload processing", "Receive and inspect recovered vehicles and payloads post-landing; turnaround and reflight preparation"],
+              ["Preparation and support of launch programs (\u00a73.1)", "Mission operations for recovery campaigns; coordination with Western Range for landing windows"],
+              ["Spaceport logistics / commodity storage", "GSE staging and storage; transporter access for vehicle moves to/from the assigned launch site"],
+              ["Launch and mission control", "Mission Control node for recovery, scheduling and go/no-go decisions (coordinated with SLD 30)"],
+              ["Administrative / engineering spaces", "Exos operations and engineering support; no large administrative footprint planned initially"]],
         [2.4, 4.1])
-add("p", "**Campaign flow.** Vehicle, GSE and payloads arrive by road (or through Vandenberg Airfield for payloads), are received "
-         "and processed at the MDZ site, then move to the assigned launch site for the launch campaign. After landing, the reusable "
-         "vehicle returns to the MDZ site for inspection and turnaround; payloads are handed back to their owners.")
-add("p", "**Added value (brief; see 4.0, 7.2 and 8.0).** As it operates, Exos would develop the site’s processing and logistics into "
-         "MCMS-exo3, a multi-user, AI-managed payload processing and logistics capability opened to other base users over time. "
-         "Exos flies today under its FAA launch license (14 CFR Part 431, transitioning to Part 450) at Spaceport America [10]. "
-         "Launching from a Government range adds range requirements such as flight termination system (FTS) requirements. "
-         "Integrating exo3 with those range and FTS requirements is work Exos would perform under contract to SLD 30, creating "
-         "an AI-native process that brings commercial and Defense requirements together in one easy-to-use process for range users. "
-         "This is range-integration and process work only.")
-add("p", "**Finance, design, construct, operate and maintain approach (call §1.2).** Exos would hold the outgrant and operate and "
-         "maintain the facilities, with design and construction through a design-build contractor. Phase 1 launch-support "
-         "facilities are scaled to Exos operations and phased with launch-site assignment; facility capital would come from Exos "
-         "operating capital and/or a developer or financing partner under a build-to-suit or ground-lease structure. Phase 2 "
-         "multi-user expansion is gated on anchor-customer demand and financing.")
 add("h2", "2.2 Desired facility developments at the MDZ")
 add("table", [["ID", "Facility", "Description", "Phase"],
-              ["F0", "Exos Mission Control / MCMS-exo3 digital system of record", "Software in use on Exos operations (payload and vehicle scheduling); no MDZ construction needed", "0"],
-              ["F1", "Vehicle & payload processing building", "High bay for vehicle receiving, inspection and turnaround; clean payload integration area", "1"],
-              ["F2", "Logistics & storage", "Receiving, controlled storage of hardware, GSE and spares; staging and shipping", "1"],
-              ["F3", "Operations & engineering building", "Launch/mission operations room, engineering and customer offices, Government office option (8.0)", "1"],
-              ["F4", "Site works", "Heavy-haul access and transporter apron, parking, perimeter fence, access control, utility yard", "1"],
-              ["F5", "Multi-user payload processing (MCMS-exo3)", "Additional cleanroom bays open to other base users; optional 5-m-class high bay", "2"],
-              ["F6", "Hazardous processing cell (future option)", "Not part of this request; would need a separate hazardous parcel and explosives site plan", "2+"]],
+              ["F0", "MCMS-exo3 — Mission Control digital system of record", "Software in use on Exos operations (payload and vehicle scheduling); no MDZ construction needed; Phase 0 read-only pilot offered to SLD 30 now", "0"],
+              ["F1", "Recovery pad and dispersion area", "~150 m\u00b2 hardened aim point; cleared dispersion buffer; perimeter markings; no permanent structures within the dispersion area", "1 (expeditionary)"],
+              ["F2", "Containerized vehicle processing", "Modular/containerized receiving, inspection and basic turnaround for recovered vehicles; scalable to demand", "1 (expeditionary)"],
+              ["F3", "Mobile Mission Control node", "Containerized mission operations capability for recovery campaigns and go/no-go decisions", "1 (expeditionary)"],
+              ["F4", "Site works", "Wind sensors; transporter apron and access from Beach Rd; perimeter fence; access control; utility connections", "1 (expeditionary)"]],
         [0.4, 1.7, 3.5, 0.6])
-add("p", "**Compatibility of the property (call §3.1).** The MDZ is a dedicated support zone on North VSFB within 5 miles of "
-         "Vandenberg Airfield, with existing roads serving the numbered parcels [1]. Constraints that shape siting are building "
-         "heights in the aircraft arrival corridor, the flood plain on Hazardous 50-acre Parcels 1–3, and lettered parcels without "
-         "road access [1]. Exos prefers road-served parcels outside the approach-departure clearance surface (Exhibit B Fig. 4).")
+add("p", "**Expeditionary first.** All Phase 1 facilities are modular and containerized. Permanent construction is gated "
+         "on launch-site assignment. The recovery zone's open character — no permanent structures within the dispersion "
+         "area — is a feature, not a limitation. It keeps the zone available for any reusable vehicle.")
+add("p", "**Compatibility of the property (call \u00a73.1).** Hazardous 30-acre Plots 10 and 11 are along Beach Road, "
+         "near the coast, outside the airfield approach-departure clearance surface and APZ 2 (Exhibit B Fig. 4) [1]. "
+         "They are road-served and clear of the flood plain. The alternate, Hazardous 50-acre Parcel 1, is in the "
+         "flood plain; Exos's justification: the proposed use is an open landing field with no permanent structures, "
+         "making flooding a manageable operational risk rather than a siting conflict.")
 
 # ------------------------------------------------------------------ 3.0
 add("h1", "3.0 TARGETED PAYLOAD PROCESSING CAPABILITIES (Optional)")
-add("p", "Phase 1 payload processing serves Exos launch customers. Phase 2 (MCMS-exo3 multi-user expansion) is where the call’s "
-         "5-meter-class question applies. Values are **planning requirements** to be validated with users during final design.")
+add("p", "Exos answers this optional section narrowly: **Exos is not proposing to build third-party payload processing "
+         "bays at the MDZ.** The Recovery & Turnaround Zone is designed for reusable-vehicle recovery, not fairing or "
+         "5-meter-class payload processing. MCMS-exo3 can schedule bay time in processing facilities that others build "
+         "or already operate at VSFB, providing scheduling and chain-of-custody services without Exos constructing "
+         "the bays.")
 add("h2", "3.1 Facility specifications for 5-meter-class payloads and next-generation fairings")
-add("table", [["Parameter", "Phase 1 (F1: Exos launch-support)", "Phase 2 option (F5: multi-user, 5-m class)"],
-              ["Cleanroom class", "ISO 8 payload integration area", "ISO 8 high bay; ISO 7 integration cells"],
-              ["Environmental control", "Temperature, humidity, particulate monitoring; ESD-safe floors", "Same, plus molecular-contamination monitoring"],
-              ["Overhead crane hook height", "Sized to Exos vehicle and payload handling; set in final design within airfield height limits", "Sized to published 5-m-class fairing envelopes; set with users in final design"],
-              ["Clear span / clear ceiling height", "Set in final design within airfield height limits (Exhibit B Fig. 4)", "Set with users in final design; parcel chosen outside the approach-departure surface"],
-              ["Crane capacity", "Sized to Exos vehicle and GSE lift loads in final design", "Sized to 5-m-class payload and fairing lifts with users in final design"],
-              ["Number of bays", "One vehicle processing high bay plus one payload integration area", "Additional multi-user bays; count set by demand and financing"]],
-        [1.7, 2.4, 2.4])
-
+add("p", "Not applicable to this recovery-zone request. Exos Phase 1 facilities provide basic post-recovery inspection "
+         "and turnaround capability for Exos vehicles and payloads (reusable vehicle scale). Multi-user processing "
+         "bays are not part of this MDZ request.")
 add("h2", "3.2 Projected annual processing throughput")
-add("table", [["Phase", "Projected annual processing throughput"],
-              ["Phase 1 (F1: Exos launch-support)", "Exos launch campaigns per year, scaled to manifest once a launch site is assigned"],
-              ["Phase 2 (F5: multi-user, MCMS-exo3)", "Multi-user processing campaigns per year as a range set by the final bay count, "
-               "sized against the GAO-reported shortfall of up to two processing bays per year through FY2030 [3]"]],
-        [2.3, 4.2])
+add("p", "Recovery and turnaround throughput will be scaled to Exos manifest cadence once a launch site is assigned. "
+         "Numeric projections will be provided with final design and utility coordination. As a shared zone, throughput "
+         "can grow to include recovery events for other reusable vehicles on the Western Range, with SLD 30 and "
+         "operator coordination.")
 
 # ------------------------------------------------------------------ 4.0
 add("h1", "4.0 BENEFIT TO THE SPACEPORT ECOSYSTEM")
 add("h2", "4.1 Benefit to VSFB, the commercial space industry and USSF national security objectives")
 add("bl", [
- "**More launch providers, more assured access.** A reusable suborbital operator, " + LAUNCH + ", adds launch diversity at the "
- "Western Range with a compact, low-infrastructure support footprint that leaves pads and processing capacity for others.",
- "**Bonus: MCMS-exo3 multi-user payload processing and logistics.** As it operates, Exos would develop MCMS-exo3 on the leased "
- "site and open it to other base users over time — adding processing capacity where Space Force officials told GAO the "
- "shortfall is greatest (up to two bays per year through FY2030) [3], complementing SSC processing-capacity awards that "
- "target 2028–2029 [4][5]. MCMS-exo3 extensions are proposed.",
- "**One process for commercial and Defense range requirements.** Under contract to SLD 30, MCMS-exo3 would integrate range "
- "requirements, including flight termination system (FTS) requirements, with payload processing and logistics, giving every "
- "range user one AI-native process with human approval gates (range-integration and process work only).",
- "**Visibility the Government lacks.** GAO found the Space Force cannot see commercial payload processing schedules [3]. With "
- "customer consent, MCMS-exo3 could share bay schedules and readiness with SLD 30.",
- "**Accountability for high-value hardware.** A signed, append-only chain of custody (RFID/barcode scan and sensor logging at "
- "every handoff), a physical value ledger (declared/insured value re-attested at each transfer, linked to waivers of claims) and "
- "a brand and media value ledger, with AI anomaly detection, schedule-conflict prediction and compliance checks behind human "
- "approval gates. Export-control indicators go to Exos’s Empowered Official and are never auto-cleared.",
- "**Supports “launch on demand.”** The Spaceport of the Future program aims to remove operational bottlenecks and enable launch "
- "on demand [6]; scheduling across bays, cranes, crews and range calendars targets those bottlenecks.",
- "**Industrial base.** A U.S. small business operator broadens the Western Range supplier base and creates local technical jobs."])
+ "**Shared reusable-vehicle infrastructure on the Western Range.** A dedicated recovery zone available to any "
+ "reusable vehicle or capsule — not just Exos — advances the Western Range's position for the next generation of "
+ "reusable launch. Any operator that can land a vehicle within the dispersion envelope can use the zone, with SLD 30 "
+ "approval and operator consent.",
+ "**Mission Control coordination across operators.** MCMS-exo3 gives SLD 30 a single scheduling and chain-of-custody "
+ "system for the zone: who is landing, when, in what configuration, with what hazard profile. Range and FTS "
+ "requirements are integrated into one process with human approval gates. This is the kind of operational visibility "
+ "GAO found the Space Force currently lacks [3].",
+ "**Wind data service for the Western Range.** Rocket-launched radiosondes along the recovery corridor generate "
+ "winds-aloft data before each event. Over time this data can be offered to other range users — launch operators, "
+ "range safety — as a weather service. Capability is planned, based on Exos heritage circa 2016.",
+ "**Reusability ledger.** A per-vehicle record of turnaround, inspection, anomaly, and reflight-readiness — with "
+ "chain of custody and operator consent — is the accountability infrastructure reusable launch needs on a "
+ "Government range.",
+ "**Industrial base and MTP alignment.** A U.S. small-business operator advancing reusable launch diversifies the "
+ "Western Range supplier base; the zone's shared nature multiplies that value.",
+ "**Phase 0 pilot now.** Exos offers SLD 30 a read-only Mission Control view of Exos's Spaceport America "
+ "operations today — no real property required — so SLD 30 can evaluate the system before any lease is executed."])
 
 # ------------------------------------------------------------------ 5.0
 add("h1", "5.0 PARCEL SELECTION, UTILITY, & PERSONNEL REQUIREMENTS")
 add("h2", "5.1 Acreage required and preferred conceptual footprints (MDZ Parcel Map, Exhibit B)")
-add("p", "Siting logic: (1) a compact, road-served launch-support footprint for Phase 1; (2) contiguous expansion room for the Phase 2 "
-         "multi-user build-out; (3) outside the approach-departure clearance surface and APZ 2 (Exhibit B Fig. 4) so a high bay is "
-         "feasible; (4) avoid flood-plain Hazardous 50-acre Parcels 1–3 and lettered parcels without road access [1]; (5) no hazardous "
-         "parcel is requested, because no propellant or ordnance is handled at the MDZ (see 6.2).")
-add("table", [["Priority", "Area (Exhibit B)", "Parcel number(s)", "Use"],
-              ["Preferred", "Non-Hazardous 5-acre plots, southern strip along Terra Rd / 13th St", "40, 41 (contiguous)", "Phase 1: F1–F4 launch support"],
-              ["Expansion", "Adjacent Non-Hazardous 5-acre plots", "42, 43", "Phase 2: F5 multi-user"],
-              ["Alternate", "Non-Hazardous 5-acre plots, southern strip", "26, 27, 28, 44", "Phase 1/2 alternate"],
-              ["Hazardous", "None requested", "—", "No propellant/ordnance at the MDZ"]],
-        [1.1, 2.6, 1.5, 1.3])
-add("p", "**Acreage requested: approximately 20 acres as the initial (starter) footprint — Non-Hazardous 5-acre Plots 40–43.** "
-         "Plots 40–41 host the Phase 1 launch-support facility and Plots 42–43 provide room to expand. The reference for Exos’s "
-         "flight-operations footprint is Spaceport America, New Mexico, where Exos flies today under its FAA launch license "
-         "(14 CFR Part 431, transitioning to Part 450) [10]. Expansion of Exos’s Vandenberg presence beyond this starter footprint is "
-         "under consideration and would be raised with SLD 30 separately. No hazardous parcel is requested. No rent proposal is "
-         "included, as none is requested by the call.")
+add("p", "Siting logic for the Recovery & Turnaround Zone: (1) open field for landing and dispersion — no tall structures "
+         "inside the dispersion area; (2) close to the coast to minimize overland flight distance after canopy deploy; "
+         "(3) road access (Beach Rd) for vehicle transport and GSE; (4) outside the airfield approach-departure clearance "
+         "surface and APZ 2 (Exhibit B Fig. 4) [1]; (5) hazardous parcel designation is appropriate — the vehicle lands "
+         "safed and inert, but the reentry/landing hazard area requires hazardous-area coordination with SLD 30 range safety.")
+add("table", [["Priority", "Area (Exhibit B)", "Parcel(s)", "Use / justification"],
+              ["Preferred", "Hazardous 30-acre, Beach Rd / westernmost", "Plots 10 & 11 (contiguous)", "Primary recovery zone: coastal, road-served, outside airfield approach surfaces and APZ 2"],
+              ["Alternate A", "Hazardous 30-acre, same strip", "Plot 1", "Same strip; alternate if Plots 10–11 unavailable"],
+              ["Alternate B", "Hazardous 50-acre Parcel 1 (flood plain)", "Hazardous 50-acre Parcel 1", "Open landing field; no permanent structures — flood plain is a manageable operational risk for this use; justification provided per Exhibit B note"]],
+        [1.1, 2.4, 1.7, 1.3])
+add("p", "**Reservation / option requested, not immediate build obligation.** Exos requests an option or reservation on "
+         "the preferred parcels (Plots 10 and 11) while Exos pursues launch-site assignment and FAA licensing. "
+         "The ask is: hold these parcels for the Exos Reusable-Vehicle Recovery & Turnaround Zone. Exos will exercise "
+         "the outgrant " + LAUNCH + ". No rent proposal is included, as none is "
+         "requested by the call.")
+add("p", "**Zone name and shared access.** The zone is named the **Exos Reusable-Vehicle Recovery & Turnaround Zone** "
+         "and is offered as shared infrastructure for any reusable vehicle or capsule on the Western Range, with SLD 30 "
+         "approval and operator consent. This is consistent with the call's intent to create infrastructure that serves "
+         "the broader spaceport ecosystem.")
 add("h2", "5.2 Estimated peak and average daily on-site personnel (steady state)")
-add("table", [["Category", "Average daily", "Peak (launch campaign)", "Shifts"],
-              ["Exos operations, technicians, logistics, security", "Core Exos site team", "Core team plus Exos launch-campaign crew", "1 shift; extended during campaigns"],
-              ["Customer payload teams", "Per scheduled campaign", "Per campaign, scheduled in Mission Control", "Per campaign"],
-              ["Visitors / Government", "Occasional", "Launch-campaign reviews", "Day shift"]],
+add("table", [["Category", "Average daily", "Peak (recovery campaign)", "Shifts"],
+              ["Exos operations, technicians, logistics, security", "Minimal standing crew; zone is not continuously staffed between campaigns", "Exos recovery crew deployed for landing window", "Campaign-driven; extended during recovery windows"],
+              ["Other operators / payload teams", "Per scheduled recovery event", "Per event, coordinated in Mission Control", "Per event"],
+              ["Visitors / Government", "Occasional", "Recovery-campaign reviews and range safety coordination", "Day shift"]],
         [2.3, 1.2, 1.6, 1.4])
-add("p", "Exos VSFB staffing is a deployment and hiring plan scaled to launch-campaign cadence once a launch site is assigned; "
-         "numeric counts will be provided with final design and utility coordination.")
+add("p", "Exos VSFB staffing scales to recovery-campaign cadence once a launch site is assigned; numeric counts will "
+         "be provided with final design and utility coordination.")
 add("h2", "5.3 Estimated daily and peak requirements for power, water, road/traffic access and communications")
 add("table", [["Utility", "Phase 1 requirement", "Notes"],
-              ["Power", "Light-industrial service; daily and peak loads set in utility coordination with SLD 30", "Processing-area HVAC and shop loads; backup power for environmental control"],
-              ["Water / sewer", "Domestic-scale demand; quantity set in utility coordination", "Domestic use; no process wastewater planned in Phase 1"],
-              ["Road / traffic", "Heavy-haul access to Terra Rd / 13th St; transporter apron", "Vehicle moves to/from the assigned launch site scheduled with SLD 30"],
-              ["Communications", "Commercial fiber, redundant path; base/range connections as authorized", "Range and mission-ops links per SLD 30 requirements"]],
+              ["Power", "Light service to support mobile Mission Control node, wind sensors, perimeter lighting and vehicle checkout; load set in utility coordination", "Backup power for Mission Control and environmental sensors"],
+              ["Water / sewer", "Minimal domestic demand; set in utility coordination", "No process wastewater; domestic use for small crew during campaigns"],
+              ["Road / traffic", "Heavy-haul access from Beach Rd; transporter apron for vehicle moves", "Vehicle moves to/from the assigned launch site scheduled with SLD 30"],
+              ["Communications", "Commercial fiber or satellite link; range/mission-ops connections as authorized by SLD 30", "Range links and Mission Control data connections per SLD 30 requirements"]],
         [1.2, 2.4, 2.9])
 
 # ------------------------------------------------------------------ 6.0
 add("h1", "6.0 IMPACTS AND SAFETY CONSIDERATIONS")
 add("h2", "6.1 Operational CONOPS (material logistics and security boundaries)")
 add("bl", [
- "**Inbound:** vehicle hardware, GSE and payloads arrive by road through base entry control (payloads may also arrive through "
- "Vandenberg Airfield [1]) and are escorted to F2 receiving. Shipments are pre-registered so gate, escort and receiving crews "
- "are scheduled ahead.",
- "**On site:** F2 receiving → F1 processing/integration → transporter apron (F4). Each move is a scanned, signed custody event.",
- "**To and from the launch site:** the vehicle and integrated payloads move to the separately assigned launch site under SLD 30 "
- "transport procedures; the reusable vehicle returns after landing for turnaround.",
- "**Security boundaries:** fenced perimeter with one controlled entry; nested zones — administrative/visitor (F3 front office), "
- "controlled processing (F1/F2, badge access, escorts), and customer-segregated payload areas. Export-controlled hardware and "
- "data are handled under ITAR/EAR procedures with decisions by Exos’s Empowered Official. Exos holds no facility security "
- "clearance; classified processing would be offered only under Government sponsorship and accreditation."])
+ "**Inbound (recovery operations):** no vehicle hardware arrives at the zone by road before a recovery event. "
+ "The vehicle descends onto the zone under its guided parafoil. GSE, personnel and the mobile Mission Control "
+ "node are pre-staged on the parcels before the landing window.",
+ "**On site:** post-landing, the vehicle is inspected, safed (confirmed), and secured. A scanned, signed custody "
+ "event records receipt by Exos. The vehicle is then moved by transporter to the assigned launch site or a "
+ "processing facility for turnaround.",
+ "**To and from the launch site:** vehicle moves to and from the separately assigned launch site under SLD 30 "
+ "transport procedures.",
+ "**Security boundaries:** perimeter fence with one controlled entry; the zone is secured during recovery windows "
+ "and between events. Export-controlled hardware and data handled under ITAR/EAR procedures with decisions by "
+ "Exos's Empowered Official. No classified processing."])
 add("h2", "6.2 Anticipated quantities and types of propellants, commodities, or hazardous chemicals")
-add("p", "**No propellants or ordnance will be stored or handled on the MDZ parcels.** All propellant loading and any ordnance "
-         "handling occur only at the separately assigned launch site. The MDZ site would hold only ordinary shop commodities: "
-         "cleaning solvents in flammable cabinets, compressed inert gases (e.g., nitrogen, helium), lithium-ion batteries in "
-         "customer payloads, and diesel for backup power, all in small, fire-code-compliant quantities.")
+add("p", "**No propellants or ordnance are stored or handled on the recovery zone parcels.** The vehicle lands "
+         "safed and inert: propellant tanks vented, pyrotechnics expended or inerted before canopy deployment. "
+         "The zone would hold only ordinary field commodities: compressed inert gases (nitrogen, helium) for "
+         "post-recovery procedures, lithium-ion batteries in payloads, and diesel for backup power — all in "
+         "small, fire-code-compliant quantities. Radiosonde solid motors are ordnance and are handled only at "
+         "the assigned launch site or a separately designated hazardous parcel with an explosives site plan and "
+         "range approval; they are never handled at the recovery zone.")
 add("h2", "6.3 Anticipated explosive safety arcs and hazard areas (siting requirements)")
-add("p", "With no explosives or propellants at the MDZ, **no explosive safety (quantity-distance) arcs are anticipated and no "
-         "hazardous parcels are needed**; standard fire-code separation applies (call §2.4) [1]. Launch hazard areas belong to the "
-         "separately assigned launch site. A Phase 2 hazardous payload-processing cell (F6) remains only a future option; it would "
-         "require its own hazardous parcel and a separate explosives site plan under DoD explosives safety standards "
-         "(DESR 6055.09 / DAFMAN 91-201) before any use.")
+add("p", "**Reentry/landing hazard area.** The recovery zone has a reentry and landing hazard area (the dispersion "
+         "footprint for the guided-parafoil descent) that will be coordinated with SLD 30 range safety and FAA "
+         "under Part 450 (or equivalent). This is not a quantity-distance (QD) arc — it is a flight-safety "
+         "exclusion area for the landing window, cleared and then released. The vehicle lands safed and inert; "
+         "there is no explosive safety arc from ordnance or propellant at the recovery zone itself.")
+add("p", "**Off-nominal contingency.** An off-nominal descent (failed canopy) lands in the ocean; the vehicle "
+         "carries a flotation system and a standby recovery boat is pre-positioned. Range safety procedures for "
+         "the off-nominal case will be coordinated with SLD 30 and documented in the flight safety analysis under "
+         "FAA Part 450.")
+add("p", "**No QD arcs or hazardous-material siting** are anticipated at the recovery zone. The hazardous parcel "
+         "designation is appropriate for range-safety coordination of the landing hazard area. A future explosion-hazard "
+         "use at these parcels is not part of this request and would require a separate explosives site plan under "
+         "DoD explosives safety standards (DESR 6055.09 / DAFMAN 91-201).")
 add("h2", "6.4 Mitigation alternatives for impacts on neighboring operations and transportation routes")
 add("bl", [
- "Schedule vehicle and oversize moves in windows coordinated with SLD 30 and neighbors; MCMS-exo3 flags conflicts with range and "
- "road calendars before a move is approved.",
- "Keep building heights within airfield limits by choosing parcels outside the approach-departure surface (5.1).",
- "Avoid the flood plain and road-less parcels so no new road corridors are needed [1].",
- "No engine testing or launch activity at the MDZ; backup generator exercised on a set schedule.",
- "Stormwater, lighting and habitat measures as required by the base environmental review; Exos would support NEPA with site data."])
+ "Landing windows are discrete, pre-coordinated events; Mission Control flags conflicts with range and road "
+ "calendars before a window is approved.",
+ "The dispersion area is cleared of personnel during the landing window and released immediately after landing "
+ "and vehicle safeing confirmation.",
+ "Off-nominal ocean landing contingency keeps risk away from the base during any vehicle anomaly.",
+ "No engine testing or launch activity at the recovery zone; backup generator exercised on a set schedule.",
+ "Stormwater, lighting and habitat measures as required by the base environmental review; Exos would support "
+ "NEPA with site data."])
 add("h2", "6.5 New construction or modifications required to existing VSFB infrastructure")
 add("bl", [
- "Utility extensions (power, water, sewer, fiber) to the selected parcels; capacity upgrades if the base utility study requires.",
- "Driveway and turning-radius improvements at Terra Rd / 13th St for transporter access; no new public roads for the preferred parcels.",
+ "Utility extensions (power, fiber, minimal water/sewer) to the selected parcels; light-service loads only.",
+ "Transporter apron and turning-radius improvements at Beach Rd for vehicle moves; no new public roads.",
  "Connection to base security and entry control as directed by SLD 30.",
- "No modifications to the airfield. Launch-site infrastructure is outside this MDZ request and depends on separate site assignment."])
+ "No modifications to the airfield. Launch-site infrastructure is outside this MDZ request and depends on "
+ "separate launch-site assignment."])
 
 # ------------------------------------------------------------------ 7.0
 add("h1", "7.0 CONCEPTUAL PROJECT TIMELINE")
 add("h2", "7.1 Notional schedule from initial site access to operational capability")
-add("p", "Target: Phase 1 launch-support facilities ready to support Exos operations **as early as Q2 2027, subject to launch site "
-         "assignment, FAA licensing and range approvals**. Durations are notional and measured from outgrant execution (M0); an "
-         "interim (temporary or modular) facility may be needed to meet Q2 2027 if permanent construction runs longer.")
+add("p", "**Exos requests a reservation / option on the preferred parcels now.** Build-out of Phase 1 expeditionary "
+         "facilities is planned " + LAUNCH + ". Durations are notional and "
+         "measured from outgrant execution (M0). No hard operations date is proposed at this stage.")
 add("table", [["Phase / milestone", "Activity", "Notional timing"],
-              ["Phase 0 (now)", "MCMS-exo3 custody, value ledger and gates proven on Exos operations; demonstration to SLD 30 stakeholders", "From submission"],
-              ["In parallel", "Launch site assignment request, FAA license modification and range approvals (outside the MDZ)", "Starting on submission"],
-              ["M0", "Outgrant executed; initial site access", "As agreed with SLD 30"],
-              ["Design & site", "Surveys, environmental support, utility coordination; final design of F1–F4", "From M0"],
-              ["Phase 1 build", "Site development and pre-engineered / modular construction of F1–F4; interim modular facility if needed", "Following final design"],
-              ["Phase 1 activation", "Launch-support facility ready for Exos operations", "As early as Q2 2027 (subject to approvals)"],
-              ["Phase 2 gate", "Multi-user MCMS-exo3 expansion; optional 5-m-class bay (hazardous cell only as a separate future option)", "On financing and demand"]],
+              ["Phase 0 (now)", "Read-only Mission Control pilot for SLD 30 using Exos Spaceport America operations; no real property needed", "From submission, on SLD 30 interest"],
+              ["In parallel", "BLK3 first flight at Spaceport America; accumulate flight heritage; launch-site assignment request; FAA license modification and range approvals for VSFB (outside the MDZ)", "Starting on submission"],
+              ["Reservation", "Option / reservation on Plots 10 & 11 (or alternate) executed by SLD 30", "As agreed with SLD 30"],
+              ["M0", "Outgrant executed; initial site access", "After BLK3 flight heritage and launch-site assignment"],
+              ["Site / expeditionary", "Site preparation; wind sensors; pad marking; containerized processing and Mission Control node deployed", "From M0; rapid standup — modular equipment"],
+              ["Phase 1 activation", "Recovery zone operational for Exos recovery campaigns", "Subject to approvals; no hard date proposed"],
+              ["Phase 2 gate", "Permanent facilities and/or expansion to serve additional operators; gated on demand, financing, and SLD 30 concurrence", "After Phase 1 track record"]],
         [1.4, 3.6, 1.5])
 
-
-add("h2", "7.2 Requested award approach (supports operations as early as Q2 2027)")
-add("p", "To make Q2 2027 achievable, Exos asks USSF/SLD 30 to consider **two separate instruments**, to the extent permitted by "
-         "applicable authority:")
-add("bl", ["**(1) The MDZ outgrant** under 10 U.S.C. § 2667 on its normal real-property path [12]. An outgrant is a real-property "
-           "instrument, not a FAR procurement.",
-           "**(2) A separate SBIR Phase III contract** for MCMS-exo3 range and FTS process integration, on the SBIR basis below [15]."])
-add("p", "Exos does not assert that any particular award path is legally available; this is a request for the Government’s "
-         "consideration.")
-add("p", "**What SLD 30 would contract for.** Integration of exo3 with VSFB range requirements — including flight termination "
-         "system (FTS) requirements that apply when launching from a Government range — into MCMS-exo3: one AI-native process that "
-         "brings commercial and Defense requirements together for range users, with human approval gates. This is range-integration "
-         "and process work only; it is not FTS hardware.")
-add("p", "**SBIR basis.** Under the SBIR statute, a third phase covers work that “derives from, extends, or completes efforts made "
-         "under prior funding agreements under the SBIR program,” and agencies may make Phase III awards to the firms that performed "
-         "the prior work [15]. The exo3 / Mission Control payload process was built to support Exos’s reusable-rocket program [13].")
-add("bl", ["**Primary basis — FA8649-21-P-0838**, AFWERX SBIR Phase II, “Prototype for a Mobile Low-Cost Ultra-Lightweight "
-           "Hypersonic Reusable Launch Vehicle,” $750,000, March 2021 [8]. The BLK3 reusable rocket design work was performed under "
-           "this award [17].",
-           "**Supporting — FA9300-25-C-6022**, SBIR Phase II, Space Force topic SF233-0019: design, fabrication and hover test of the "
-           "Exos HVRR (hover vehicle reusable rocket); USASpending description “Suborbital Hover Vehicle–Reusable Rocket,” "
-           "$1,897,824, September 2025 [8][16]."])
-add("p", "**Why a direct award now.** Space Force officials have told GAO that payload processing is the greatest challenge facing "
-         "DoD space launch, with shortfalls expected through FY2030 [3], and this MDZ call is the window to address it at VSFB [1]. "
-         "A direct award would let SLD 30 adopt an AI-native process from an operator that already runs exo3 today [13], and have it "
-         "integrated with range requirements ahead of Exos operations as early as Q2 2027, rather than waiting through a "
-         "multi-year competitive cycle.")
+add("h2", "7.2 Requested award approach")
+add("p", "The primary instrument Exos requests is the **MDZ outgrant (option / reservation)** under 10 U.S.C. \u00a7 2667 "
+         "on its normal real-property path [12].")
+add("p", "For Mission Control range-integration work, Exos asks SLD 30 to refer Exos to the appropriate Space Force / "
+         "SSC contracting path; Exos does not specify the instrument.")
 
 # ------------------------------------------------------------------ 8.0
 add("h1", "8.0 ADDITIONAL ENHANCEMENTS")
 add("h2", "8.1 Enhancements offered for Government consideration")
 add("bl", [
- "**MCMS-exo3 multi-user payload processing and logistics.** Developed by Exos on the leased site as it operates and "
- "opened to other base users over time, adding processing capacity against the GAO-reported shortfall [3]. Built on the exo3 "
- "process in use today for Exos payload operations [13]: 01 Capture, 02 Qualify & Score, 03 Scope, 04 Quote, 05 Contract & "
- "Regulatory, 06 Approve & Close (human), 07 Handoff to Fly. Extensions (chain of custody, physical value and brand value ledgers, "
- "facility scheduling, AI layer with human gates) are proposed. The exo3 process has not been used at Vandenberg.",
- "**MCMS-exo3 range and FTS process integration under contract to SLD 30** (see 7.2): one AI-native process for "
- "commercial and Defense range requirements; range-integration and process work only.",
- "**Shared processing visibility for SLD 30:** customer-consented read access to MCMS-exo3 bay schedules and readiness [3].",
- "**MCMS-exo3 for other MDZ tenants:** one logistics picture across the zone.",
- "**Government-dedicated space:** office space in F3 and priority scheduling for DoW surge needs.",
- "**Phase 0 demonstration** of MCMS-exo3 to SLD 30 using Exos operations, limited in scope."])
+ "**MCMS-exo3 zone coordination system.** Scheduling across vehicles, crews, range and road calendars; signed "
+ "chain of custody; range and FTS requirements in one process with human approval gates; wind go/no-go workflow; "
+ "reusability ledger for every vehicle using the zone, with operator consent. Built on Mission Control and the "
+ "exo3 process in use today [13]. Extensions are proposed.",
+ "**Phase 0 read-only Mission Control pilot for SLD 30.** Exos will configure a read-only view of Exos's "
+ "Spaceport America operations for SLD 30 stakeholders — no real property required — to demonstrate the "
+ "system before any lease is executed.",
+ "**Winds-aloft data service (planned).** Rocket-launched radiosonde data from recovery corridor flights, "
+ "offered to other range users over time. Capability is planned, based on Exos heritage circa 2016.",
+ "**Shared zone access.** Any reusable vehicle or capsule on the Western Range can use the recovery zone, "
+ "with SLD 30 approval and operator consent — multiplying the value of the infrastructure.",
+ "**Government-dedicated coordination view.** Customer-consented, read-only SLD 30 access to zone scheduling "
+ "and vehicle readiness status in Mission Control [3]."])
 
-add("h2", "8.2 Optional opportunity: Exos Mission Control implementation for site and payload management services")
+add("h2", "8.2 Optional opportunity: Exos Mission Control implementation for zone and payload management services")
 add("p", "Separately from the outgrant, Exos offers USSF/SLD 30 the option to have Exos implement and operate **Exos Mission "
          "Control** — the Exos-built operations software Exos uses today to schedule its own payloads and vehicles and to run "
-         "its seven-stage exo3 payload process with a human approval gate [13] — as a **site and payload management service** "
+         "its seven-stage exo3 payload process with a human approval gate [13] — as a **zone and payload management service** "
          "for the MDZ. The option is not a condition of the lease and would be scoped and priced separately under an instrument "
          "the Government chooses.")
 add("table", [["Service area", "What Exos Mission Control would provide"],
-              ["Site management", "Parcel and facility calendars, bay/crane/crew scheduling, access and escort scheduling, work orders and maintenance tracking across MDZ tenants"],
-              ["Payload management", "Payload intake, readiness and processing schedules; signed chain of custody at each handoff; customer-segregated records"],
-              ["Vehicle and range scheduling", "Vehicle moves, transporter and road windows, and launch-campaign milestones checked against range and base calendars before approval"],
-              ["Government visibility", "Customer-consented, read-only view for SLD 30 of bay schedules and readiness across the zone [3]"],
-              ["Controls", "Human approval gates on every commitment; export-control indicators routed to Exos’s Empowered Official, never auto-cleared"]],
+              ["Zone management", "Parcel and facility calendars; landing-window scheduling across operators; access and escort scheduling; work orders and maintenance tracking"],
+              ["Vehicle and payload management", "Recovery records, turnaround status, inspection logs, and reflight-readiness per vehicle; signed chain of custody at each handoff"],
+              ["Range and road scheduling", "Vehicle moves, transporter windows, and recovery milestones checked against range and base calendars before approval"],
+              ["Wind go/no-go workflow", "Pre-recovery radiosonde data and Mission Control release-point computation; go/no-go decision record with human approval gate (planned capability)"],
+              ["Government visibility", "Customer-consented, read-only view for SLD 30 of zone schedules and vehicle readiness [3]"],
+              ["Controls", "Human approval gates on every commitment; export-control indicators routed to Exos's Empowered Official, never auto-cleared"]],
         [1.7, 4.8])
-add("p", "**Implementation path.** (1) Demonstration to SLD 30 on Exos’s own operations; (2) configuration for Exos’s MDZ site at "
-         "Phase 1 activation; (3) optional extension to SLD 30 and other MDZ tenants. Hosting, data rights, cybersecurity "
-         "authorization and any interface to Government systems would be defined with SLD 30 before use; Exos has not deployed "
-         "Mission Control at Vandenberg or on Government networks.")
+add("p", "**Implementation path.** (1) Phase 0 demonstration to SLD 30 on Exos's own operations, now; (2) "
+         "configuration for the Exos recovery zone at Phase 1 activation; (3) optional extension to SLD 30 and "
+         "other MDZ tenants. Mission Control and the exo3 process are in use today on Exos operations; they have "
+         "not been deployed at Vandenberg or on Government networks. Hosting, data rights, cybersecurity authorization "
+         "and any Government-network interface would be defined with SLD 30 before use.")
+
+# ------------------------------------------------------------------ 9.0
+add("h1", "9.0 FUTURE VISION (Funded-Future / Vision — Not Demonstrated)")
+add("p", "This section describes Exos's planned trajectory — capital-dependent and not yet demonstrated. "
+         "Nothing in this section represents a current Exos capability or a commitment.")
+add("h2", "9.1 Near-term: reusable sounding-rocket replacement (BLK4)")
+add("p", "BLK3 is Exos's current vehicle — FAA-licensed, preparing for first flight in early 2027 at Spaceport "
+         "America. Following BLK3, Exos is developing BLK4 as a reusable suborbital vehicle in the Black Brant "
+         "class — a reusable replacement for expendable sounding rockets used for science, defense research, and "
+         "atmospheric measurements. BLK4 at Vandenberg would use the Recovery & Turnaround Zone to support a "
+         "rapid-turnaround, reusable sounding-rocket cadence on the Western Range. BLK4 is a planned program; "
+         "it has not flown.")
+add("h2", "9.2 Orbital future: BLK4 Heavy (capital-dependent vision)")
+add("p", "Exos's planned path to orbital launch is BLK4 Heavy — three BLK4 cores in parallel — a configuration "
+         "that is capital-dependent and not yet funded or under development. Vandenberg SFB is where Exos envisions "
+         "that orbital future flying: a polar or sun-synchronous orbit capability on the Western Range. "
+         "Recovery of reusable stages would be by propulsive landing on an offshore barge and/or return to "
+         "the Recovery & Turnaround Zone. The recovery zone requested in this whitepaper is designed to support "
+         "this long-term vision as well as the near-term guided-parafoil recovery concept.")
+add("p", "Exos does not have an orbital vehicle. Exos has not flown BLK3. BLK4 Heavy is a funded-future concept. "
+         "These items are presented to give SLD 30 context for why Vandenberg — and this specific coastal recovery "
+         "zone — is the right long-term site for Exos's reusable launch program.")
 
 # ------------------------------------------------------------------ STATUS
-add("h1", "Statement of Status (demonstrated vs. proposed)")
+add("h1", "Statement of Status (demonstrated vs. proposed / planned)")
 add("table", [["Item", "Status"],
-              ["Exos launch operations at VSFB", "Planned, as early as Q2 2027, subject to launch site assignment, FAA licensing and range approvals; no VSFB launch site, license or manifest today"],
+              ["Exos launch operations at VSFB", "Planned — " + LAUNCH + "; no VSFB launch site, license or manifest today"],
               ["Exos launch operations today", "FAA-licensed reusable suborbital operator from Spaceport America, NM [10]"],
-              ["BLK3", "Latest FAA-licensed vehicle; preparing for flight, early 2027"],
-              ["exo3 payload process (7 stages, human gate)", "In use today for Exos payload operations; not used at Vandenberg [13]"],
-              ["Exos Mission Control (payload and vehicle scheduling)", "In use today on Exos operations; offered as an optional MDZ site and payload management service (8.2); not deployed at Vandenberg [13]"],
-              ["MCMS-exo3 extensions and multi-user capability", "Proposed / in development"],
+              ["BLK3", "Latest FAA-licensed vehicle; preparing for first flight, early 2027 at Spaceport America; has not flown"],
+              ["exo3 payload process (7 stages, human gate)", "In use today for Exos payload operations; not deployed at Vandenberg [13]"],
+              ["Exos Mission Control (payload and vehicle scheduling)", "In use today on Exos operations; offered as optional zone and payload management service (8.2); not deployed at Vandenberg [13]"],
+              ["MCMS-exo3 extensions and zone coordination features", "Proposed / in development"],
               ["MCMS-exo3 range / FTS process integration", "Proposed, for contract with SLD 30; process work only, not FTS hardware"],
-              ["MDZ facilities F1–F6", "Proposed concept; no design, financing or Government commitment"],
-              ["BLK4 / BLK4 Heavy orbital configuration", "Funded-future capability; not part of this MDZ request"],
+              ["Recovery zone facilities F1–F4", "Proposed expeditionary concept; no design, financing or Government commitment"],
+              ["Rocket-launched radiosonde wind measurement at VSFB", "Planned; based on Exos-developed concept circa 2016; not demonstrated at Vandenberg"],
+              ["BLK4 reusable suborbital (Black Brant-class replacement)", "Planned program; not yet in development; has not flown"],
+              ["BLK4 Heavy orbital configuration (three BLK4 cores)", "Funded-future vision; capital-dependent; not under development; no orbital vehicle exists"],
               ["Certifications", "Small Business. NIST SP 800-171 implemented; CMMC 2.0 self-assessment complete (via Atomus). AS9100 in implementation; no facility clearance"]],
         [2.6, 3.9])
+
 # ---- Compliance matrix (page refs filled from the built PDF by build_vsfb_mdz_all.py)
 import json as _json, os as _os
 _PM = {}
@@ -423,34 +479,35 @@ if _os.path.exists(_pmf): _PM = _json.load(open(_pmf))
 MATRIX = [
  ("Exh. A 1.1", "Company legal name", "1.1"),
  ("Exh. A 1.2", "Legal form of ownership + evidence of U.S. organization", "1.2"),
- ("Call §1.2 / 51 U.S.C. § 50101(7)", "Respondent is a United States commercial provider", "1.2"),
+ ("Call \u00a71.2 / 51 U.S.C. \u00a7 50101(7)", "Respondent is a United States commercial provider", "1.2"),
  ("Exh. A 1.3", "Legal place of business", "1.3"),
  ("Exh. A 1.4", "Other operating locations", "1.4"),
  ("Exh. A 1.5", "Primary & alternate POCs", "1.5"),
  ("Exh. A 1.6", "Company history / relevant past performance", "1.6"),
- ("Exh. A 2.1 / Call §3.1", "Concept of operations; property compatibility", "2.1"),
- ("Call §1.3 / §1.4", "Use matches MDZ intended uses; MDZ not a launch complex", "2.1"),
- ("Call §1.2", "Approach to finance, design, construct, operate, maintain", "2.1"),
- ("Exh. A 2.2 / Call §3.1", "List and description of desired facility developments", "2.2"),
- ("Exh. A 3.1 / Call §3.2", "5-m-class facility specs: cleanroom class, hook height, clear span/ceiling", "3.1"),
- ("Exh. A 3.2 / Call §3.2", "Projected annual processing throughput", "3.2"),
- ("Exh. A 4.1 / Call §3.3", "Benefit to VSFB spaceport ecosystem, industry, USSF", "4.1"),
- ("Exh. A 5.1 / Call §3.4", "Acreage; preferred parcels by area and parcel number", "5.1"),
- ("Exh. B note", "Justification required if Hazardous 50-acre Parcels 1-3 requested (not requested)", "5.1"),
- ("Exh. A 5.2 / Call §3.4", "Peak and average daily personnel", "5.2"),
- ("Exh. A 5.3 / Call §3.4", "Power, water, road/traffic, communications", "5.3"),
- ("Exh. A 6.1 / Call §3.5", "Operational CONOPS, logistics, security boundaries", "6.1"),
- ("Exh. A 6.2 / Call §3.5", "Propellants, commodities, hazardous chemicals", "6.2"),
- ("Exh. A 6.3 / Call §2.4, §3.5", "Explosive safety arcs, QD, hazard areas", "6.3"),
- ("Exh. A 6.4 / Call §3.5", "Mitigation of impacts on neighbors and routes", "6.4"),
- ("Exh. A 6.5 / Call §3.5", "New construction / modifications to VSFB infrastructure", "6.5"),
- ("Exh. A 7.1 / Call §3.6", "Notional schedule: design, site development, construction, activation", "7.1"),
- ("Exos addition", "Requested award approach: MDZ outgrant + separate SBIR Phase III contract for MCMS-exo3 range/FTS integration (Counsel to confirm)", "7.2"),
- ("Exh. A 8.1", "Additional enhancements (Government use, launch infrastructure)", "8.1"),
- ("Exos addition (optional)", "Exos Mission Control implementation for site and payload management services", "8.2"),
+ ("Exh. A 2.1 / Call \u00a73.1", "Concept of operations; property compatibility", "2.1"),
+ ("Call \u00a71.3 / \u00a71.4", "Use matches MDZ intended uses; MDZ not a launch complex", "2.1"),
+ ("Call \u00a71.2", "Approach to finance, design, construct, operate, maintain", "2.1"),
+ ("Exh. A 2.2 / Call \u00a73.1", "List and description of desired facility developments (expeditionary/modular)", "2.2"),
+ ("Exh. A 3.1 / Call \u00a73.2", "5-m-class specs: Exos not proposing third-party processing bays; answered narrowly", "3.0"),
+ ("Exh. A 3.2 / Call \u00a73.2", "Projected annual throughput (recovery-event cadence; no third-party bays)", "3.2"),
+ ("Exh. A 4.1 / Call \u00a73.3", "Benefit to VSFB spaceport ecosystem, industry, USSF", "4.1"),
+ ("Exh. A 5.1 / Call \u00a73.4", "Parcels: Plots 10 & 11 (Hazardous 30-acre, Beach Rd); alternates: Plot 1, Hazardous 50-acre Parcel 1", "5.1"),
+ ("Exh. B note", "Justification for Hazardous 50-acre Parcel 1 (alt): open landing field, no permanent structures", "5.1"),
+ ("Exh. A 5.2 / Call \u00a73.4", "Peak and average daily personnel", "5.2"),
+ ("Exh. A 5.3 / Call \u00a73.4", "Power, water, road/traffic, communications", "5.3"),
+ ("Exh. A 6.1 / Call \u00a73.5", "Operational CONOPS, logistics, security boundaries", "6.1"),
+ ("Exh. A 6.2 / Call \u00a73.5", "Hazardous materials: none at recovery zone; vehicle lands safed/inert", "6.2"),
+ ("Exh. A 6.3 / Call \u00a72.4, \u00a73.5", "Hazard area: reentry/landing dispersion footprint; no QD arcs; coordinated with SLD 30 and FAA Part 450", "6.3"),
+ ("Exh. A 6.4 / Call \u00a73.5", "Mitigation of impacts on neighbors and routes", "6.4"),
+ ("Exh. A 6.5 / Call \u00a73.5", "New construction / modifications to VSFB infrastructure (light-service utilities only)", "6.5"),
+ ("Exh. A 7.1 / Call \u00a73.6", "Schedule: reservation now; build-out after BLK3 flight heritage and launch-site assignment; no hard date", "7.1"),
+ ("Exos addition", "Award approach: MDZ outgrant option/reservation; referral to SSC contracting path for MC range-integration work", "7.2"),
+ ("Exh. A 8.1", "Enhancements: Phase 0 MC pilot; winds-aloft service; shared zone access; reusability ledger", "8.1"),
+ ("Exos addition (optional)", "Exos Mission Control for zone and payload management services", "8.2"),
+ ("Exos addition", "Future vision: BLK4 sounding-rocket replacement; BLK4 Heavy orbital (funded-future/vision, not demonstrated)", "9.0"),
  ("Exh. A 1.2 evidence", "Texas SOS Certificate of Fact (Status); Officer Certification of U.S. Ownership", "Attachments 1–2"),
- ("Call §4.2", "Maximum 30 pages", "Whole document"),
- ("Call §4.3", "MS Word or PDF; DoD SAFE delivery; separate receipt confirmation", "Submission checklist"),
+ ("Call \u00a74.2", "Maximum 30 pages", "Whole document"),
+ ("Call \u00a74.3", "MS Word or PDF; DoD SAFE delivery; separate receipt confirmation", "Submission checklist"),
 ]
 add("h1", "Appendix A — Compliance Matrix")
 add("p", "Maps every request in the call (Section 3 and Exhibit A) to this response. Page references are to the PDF version.")
