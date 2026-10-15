@@ -173,13 +173,6 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'November?\n'
                  'Best Regards,\n'
                  'Lizi'),
-                ('ND Space Grant: Dr. Caitlin Milera',
-                 'caitlin.milera@und.edu',
-                 'sent 10/8 (#2038): funding a UND student flight via Space Grant / ND NASA EPSCoR',
-                 'Hi Dr. Milera,\n'
-                 'Just following up on my note about funding a UND student flight-test payload on BLK3 through Space Grant or ND NASA EPSCoR. Would a quick call work in the next couple of weeks?\n'
-                 'Best Regards,\n'
-                 'Lizi'),
                 ('UND: Jake Carstens',
                  'jacob.carstens@und.edu (reply on thread)',
                  'nudge sent 10/8 asking for an intro to Dr. David Delene',
