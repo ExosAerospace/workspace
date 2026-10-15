@@ -107,7 +107,13 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'Just following up on my note about a BLK3 rocket flight as a next step after your balloon test. Happy to set up a short call whenever works for you.\n'
                  'Best Regards,\n'
                  'Lizi')],
- '2026-10-22': [('MSU Spectrum Lab: Dr. Krishna Rupavatharam (Director)',
+ '2026-10-22': [('FAA RFI 9736 comment: due Mon 10/26 (task #3410, Decision D-7282129)',
+                 "John (he's back from Japan)",
+                 "if John hasn't answered D-7282129 yet, mention it to him today. The deadline is Monday and Exo is ready to file the moment he says go. If it's already filed, ignore this",
+                 "John, quick one: the FAA spaceport/corridor RFI comment is due Monday 10/26. Exo has the final version ready to file. Did you already file it, or should Exo submit it now? It's in "
+                 'your Decisions.\n'
+                 'Lizi'),
+                ('MSU Spectrum Lab: Dr. Krishna Rupavatharam (Director)',
                  'krishna.rupavatharam@montana.edu (reply on thread)',
                  'you emailed 10/12; he replied same day: traveling, forwarding to his team to explore options',
                  'Hi Krishna,\n'
