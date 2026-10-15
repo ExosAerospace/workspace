@@ -6396,6 +6396,12 @@ const server = http.createServer((req, res) => {
       const noStore = (ext === '.html' || ext === '.js');
       if (ext === '.html' && !NO_WIDGET.includes(base)) {
         let html = fs.readFileSync(filePath, 'utf-8');
+        if (html.indexOf('/mc-theme.js') === -1) {
+          // Opt-in "Joint Ops Center" look (Jon 2026-10-15): load early in <head> so there is no flash of the old theme.
+          const th = '<script src="/mc-theme.js"></script>';
+          const hi = html.indexOf('</head>');
+          html = hi !== -1 ? html.slice(0, hi) + th + '\n' + html.slice(hi) : th + html;
+        }
         if (html.indexOf('/exobot-widget.js') === -1) {
           const tag = '<script src="/exobot-widget.js" defer></script>';
           // Inject before the LAST </body> — some pages contain a literal </body> inside a JS

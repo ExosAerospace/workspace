@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-04T12:49:13.103453-05:00",
- "total": 272,
+ "total": 273,
  "standing": 114,
  "ephemeral": 18,
  "service": 6,
@@ -5825,6 +5825,29 @@
    "lifecycle": "self-removing (prompt has an end condition)",
    "registered": "2026-10-15",
    "envelope_source": "register_cron.py derivation from the live cron"
+  },
+  {
+   "label": "mc-theme-joc-exo3",
+   "program": "mc-theme-joc-exo3",
+   "script": "mission-control/mc-theme.js + mission-control/theme-joc.css (injected into every MC page by server.js)",
+   "kind": "tool (UI theme)",
+   "schedule": "per page load",
+   "purpose": "Opt-in 'Joint Ops Center' look for Mission Control (Jon 2026-10-15, option C; used for the VSFB MDZ whitepaper visuals). Default look unchanged; per-browser toggle (?theme=joc / ?theme=default / bottom-left button). CSS-variable overrides only - no layout or data changes.",
+   "stack_layer": "PRESENT (UI)",
+   "autonomy_tier": "Advise (read-only presentation)",
+   "human_owner": "John Quinn",
+   "risk_tier": "LOW",
+   "permission_envelope": "browser localStorage key mcTheme only; no network calls beyond loading /theme-joc.css; no data access.",
+   "memory_boundary": "browser localStorage",
+   "escalation": "if a page renders badly in the theme, the toggle turns it off per browser; remove the server.js injection to disable fleet-wide",
+   "eval_suite": "node mission-control/tests/mc_theme_selftest.js (4 checks: default unchanged + toggle shown; ?theme=joc loads and remembers; remembered choice applies; ?theme=default turns off)",
+   "eval_type": "output",
+   "telemetry": "none needed (presentation only, no actions)",
+   "reusability_scope": "all MC pages sharing the --navy/--card/--text variable set",
+   "envelope_source": "authored 2026-10-15 at creation",
+   "change_log": [
+    "2026-10-15 created"
+   ]
   }
  ],
  "eval_wave_1": {
