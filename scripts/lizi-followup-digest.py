@@ -286,10 +286,9 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "Just a quick follow-up on the GNC role. If you're still interested, I'd love to get your resume over to John. No rush, just didn't want it to slip through the cracks!\n"
                  'Best Regards,\n'
                  'Lizi')],
- '2026-10-29': [('Georgia Tech Space Week follow-ups (16 people, emailed 10/15)',
+ '2026-10-29': [('Georgia Tech Space Week follow-ups (13 people, emailed 10/15)',
                  'reply on each original 10/15 thread: Chunhui Xu, Thomas Orlando, Chris Carr, Binu Tharakan, Hailey Nichols (Locus Lock), Mary Babb Isarov (Qcells), Chad Pozarycki (Deleon, task '
-                 '#3793), Mike Riccio (NASA Ames), David Williams (OSU/Starlab), Brad Henderson (Starlab), Luis Zea (Starlab), Eric Lasker (Varda), Bill Dynan, Phillip Stancil, Jordan McKaig, Vic '
-                 'Paulson',
+                 '#3793), Mike Riccio (NASA Ames), David Williams (OSU/Starlab), Bill Dynan, Phillip Stancil, Jordan McKaig, Vic Paulson',
                  'two weeks since your 10/15 follow-ups. Skip anyone who replied. Not included: Theo Williams and Henry Schwartz (already in conversation) and Carl Kirkconnell (on hold until SSLC '
                  'settles)',
                  'Hi [Name],\n'
