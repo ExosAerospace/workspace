@@ -2,7 +2,7 @@
 """Exos Mission Control — OPERATIONS screens for the VSFB MDZ whitepaper (Jon 2026-10-15 18:22: "align with rocket
 launch, payload operations, logistics ERP/MRP/inventory and financial systems integration evidenced ... read like
 rocket mission tracking"). C layout + D colors. UNCLASSIFIED / external-safe: no ITAR technical data, customers
-anonymized, no dollar figures for contracts/POs, BLK3 shown per figures of record (FAA-licensed, hover-demonstrated,
+anonymized, no dollar figures for contracts/POs, BLK3 shown per figures of record (Exos Part 431 license transitioning to Part 450 (John 10/15: NOT "licensed"); hover test PLANNED,
 not yet flown commercially; first commercial flight targeted early 2027). Every count is read LIVE at render time from
 MC data: missions.json, payload-orders.json (+ envelopes.json), erp-foundation/mc.db (asset, mrp_run, purchase_order,
 purchase_request, part, bom_line), bom-index*.json, inventory.json, qb-invoices.json."""
@@ -76,9 +76,9 @@ def kpi(v, k):
 
 S = {}
 # FIG 1 — Mission operations board
-gates = [("FAA launch license (BLK3)", True, f"issued {faa_date}" if faa_date else ""),
-         ("Hover demonstration (BLK3)", True, "demonstrated"),
+gates = [("FAA launch license: Part 431 (current)", True, f"renewed {faa_date}" if faa_date else "renewed"),
          ("FAA 14 CFR Part 450 transition", None, "in progress"),
+         ("Hover test campaign (BLK3 S0)", False, "planned"),
          (f"Payload cross-waivers on file (M6)", None if waivers_on < len(m6) else True, f"{waivers_on} of {len(m6)} · due L-90"),
          ("Payload FAA submission package (M6)", False, "after all waivers on file"),
          ("Vehicle MRP build plan (S0)", None, f"{mrp['parts_planned']} parts planned · nightly run")]
@@ -88,7 +88,7 @@ mrows = [("SARGE 1–4", "SARGE", "—", "FLOWN", "4 suborbital missions (herita
          ("M6", "BLK3", "S0", "BOOKED", f"shared payload bay · {len(m6)} payload orders", "pend")]
 mr = "".join(f"<tr><td class=a style='font-weight:800'>{a}</td><td>{b}</td><td>{c}</td><td class={k}>{s}</td><td class=d>{n}</td></tr>" for a, b, c, s, n, k in mrows)
 S["Fig1_Mission_Ops_Board"] = (page("MISSION OPERATIONS BOARD", f"""
-<div class=grid style='grid-template-columns:repeat(5,1fr)'>{kpi('BLK3 S0','VEHICLE · GREENVILLE, TX')}{kpi('LICENSED','FAA LAUNCH LICENSE')}{kpi('EARLY 2027','FIRST COMMERCIAL FLIGHT TARGET')}{kpi(len(missions),'BLK3 MISSIONS BOOKED')}{kpi('4','SARGE MISSIONS FLOWN (HERITAGE)')}</div>
+<div class=grid style='grid-template-columns:repeat(5,1fr)'>{kpi('BLK3 S0','VEHICLE · GREENVILLE, TX')}{kpi('PART 431→450','FAA LICENSE · TRANSITIONING')}{kpi('EARLY 2027','FIRST COMMERCIAL FLIGHT TARGET')}{kpi(len(missions),'BLK3 MISSIONS BOOKED')}{kpi('4','SARGE MISSIONS FLOWN (HERITAGE)')}</div>
 <div class=grid style='grid-template-columns:1.1fr 1fr;padding-top:0'>
  <div class=p><h3>▸ MISSION MANIFEST TRACK</h3><table><tr><th>MISSION</th><th>VEHICLE</th><th>SERIAL</th><th>STATUS</th><th>NOTES</th></tr>{mr}</table></div>
  <div class=p><h3>▸ FLIGHT READINESS GATES</h3><table>{gr}</table></div>

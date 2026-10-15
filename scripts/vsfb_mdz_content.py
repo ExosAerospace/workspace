@@ -59,7 +59,7 @@ def D(text):
 C = []
 def add(*b): C.append(b)
 
-VER = "_r8"
+VER = "_r9"
 LAUNCH = ("targeted for Q2 2028, after BLK3 flight heritage (first flight planned early 2027 at Spaceport America) and subject to launch-site assignment, FAA licensing and range approvals")
 
 # ------------------------------------------------------------------ COVER
@@ -159,9 +159,9 @@ add("table", [["Role", "Name / title", "Phone", "E-mail"],
 add("h2", "1.6 Company history and relevant past performance")
 add("p", "Exos was founded in 2015 to build reusable suborbital launch vehicles. Its team carries over 25 years of experience in the "
          "rocket and space industry, with deep Armadillo Aerospace and Exos heritage: hundreds of rocket engines and dozens of flying "
-         "vehicles built. Exos is an FAA-licensed reusable suborbital launch operator providing flight-test services for space, "
+         "vehicles built. Exos is a reusable suborbital launch operator, holding an FAA Part 431 launch license that is transitioning to Part 450, providing flight-test services for space, "
          "defense, research and commercial payloads [10], with payload recovery for post-flight inspection, analysis "
-         "and iteration [14]. Its latest FAA-licensed vehicle, BLK3, is preparing for flight in early 2027.")
+         "and iteration [14]. Its next vehicle, BLK3, is preparing for first flight in early 2027, under the Part 450 transition.")
 add("p", "**Relevance to the MDZ.** Exos runs the full launch-support lifecycle as an operator — vehicle and payload receiving, "
          "integration, launch operations, recovery and reflight — with a small ground footprint. Exos manages the payload side of "
          "that lifecycle today on exo3, an AI-managed payload process in Exos Mission Control with a seven-stage pipeline and a human "
@@ -428,7 +428,7 @@ add("h1", "9.0 FUTURE VISION (Funded-Future / Vision — Not Demonstrated)")
 add("p", "This section describes Exos's planned trajectory — capital-dependent and not yet demonstrated. "
          "Nothing in this section represents a current Exos capability or a commitment.")
 add("h2", "9.1 Near-term: reusable sounding-rocket replacement (BLK4)")
-add("p", "BLK3 is Exos's current vehicle — FAA-licensed, preparing for first flight in early 2027 at Spaceport "
+add("p", "BLK3 is Exos's next vehicle, preparing for first flight in early 2027 at Spaceport "
          "America. Following BLK3, Exos is developing BLK4 as a reusable suborbital vehicle in the Black Brant "
          "class — a reusable replacement for expendable sounding rockets used for science, defense research, and "
          "atmospheric measurements. BLK4 at Vandenberg would use the Recovery & Turnaround Zone to support a "
@@ -449,8 +449,8 @@ add("p", "Exos does not have an orbital vehicle. Exos has not flown BLK3. BLK4 H
 add("h1", "Statement of Status (demonstrated vs. proposed / planned)")
 add("table", [["Item", "Status"],
               ["Exos launch operations at VSFB", "Planned — " + LAUNCH + "; no VSFB launch site, license or manifest today"],
-              ["Exos launch operations today", "FAA-licensed reusable suborbital operator from Spaceport America, NM [10]"],
-              ["BLK3", "Latest FAA-licensed vehicle; preparing for first flight, early 2027 at Spaceport America; has not flown"],
+              ["Exos launch operations today", "Reusable suborbital operator from Spaceport America, NM; FAA Part 431 launch license, transitioning to Part 450 [10]"],
+              ["BLK3", "Next vehicle; preparing for first flight, early 2027 at Spaceport America, under the Part 450 transition; has not flown"],
               ["exo3 payload process (7 stages, human gate)", "In use today for Exos payload operations; not deployed at Vandenberg [13]"],
               ["Exos Mission Control (payload and vehicle scheduling)", "In use today on Exos operations; offered as optional zone and payload management service (8.2); not deployed at Vandenberg [13]"],
               ["MCMS-exo3 extensions and zone coordination features", "Proposed / in development"],
