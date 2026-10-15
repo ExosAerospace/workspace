@@ -248,6 +248,14 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "Thanks for connecting! It was great meeting you at Georgia Tech Space Week. I'd love to find a time to talk about whether a BLK3 suborbital flight could fit your work. Happy to "
                  "send over our Payload User's Guide as a first step.\n"
                  'Best Regards,\n'
+                 'Lizi'),
+                ('Nature Smart (#2779): Stoke LinkedIn check: Devon Papandrew (VP BD) + John Taylor (Stoke media contact)',
+                 'LinkedIn',
+                 "if either accepted, ping Exo for the intro message, then loop Mike Mena back in. If neither, consider a quick 'any update on the founding group?' to Mike",
+                 'Hi [Name],\n'
+                 "Thanks for connecting! I'm with Exos Aerospace. We're part of a small founding group of clean-propellant launch companies (with Scorpius) called the Nature Smart Movement, and "
+                 "Stoke's reusable LOX/hydrogen story is a natural fit. Would you be the right person to talk with about it, or could you point me to who is?\n"
+                 'Best Regards,\n'
                  'Lizi')],
  '2026-10-26': [('UTD AIAA / Comet Rocketry: Mi Vo + Olivia Johnson (task #2753)',
                  'mi.vo@utdallas.edu + Olivia (reply on your 10/12 check-in thread, cc Phil + Don Proeschel)',
