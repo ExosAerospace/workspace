@@ -58,7 +58,7 @@ def D(text):
 C = []
 def add(*b): C.append(b)
 
-VER = "_r4"
+VER = "_r5"
 LAUNCH = ("targeted for Q2 2028, after BLK3 flight heritage (first flight planned early 2027 at Spaceport America) and subject to launch-site assignment, FAA licensing and range approvals")
 
 # ------------------------------------------------------------------ COVER
@@ -265,7 +265,7 @@ add("bl", [
 # ------------------------------------------------------------------ 5.0
 add("h1", "5.0 PARCEL SELECTION, UTILITY, & PERSONNEL REQUIREMENTS")
 add("h2", "5.1 Acreage required and preferred conceptual footprints (MDZ Parcel Map, Exhibit B)")
-add("img", "drafts/VSFB_MDZ/Exos_MDZ_Parcel_Selection_Map_r4.png", "Figure 1. Exos parcel selection on the MDZ Parcel Map (Exhibit B, Fig. 2): preferred Hazardous 30-acre Plots 10 and 11 (green); alternates Plot 1 and Hazardous 50-acre Parcel 1 (amber). Annotation by Exos.")
+add("img", "drafts/VSFB_MDZ/Exos_MDZ_Parcel_Selection_Map_r4.png", "Parcel map. Exos parcel selection on the MDZ Parcel Map (Exhibit B, Fig. 2): preferred Hazardous 30-acre Plots 10 and 11 (green); alternates Plot 1 and Hazardous 50-acre Parcel 1 (amber). Annotation by Exos.")
 add("p", "Siting logic for the Recovery & Turnaround Zone: (1) open field for landing and dispersion — no tall structures "
          "inside the dispersion area; (2) close to the coast to minimize overland flight distance after canopy deploy; "
          "(3) road access (Beach Rd) for vehicle transport and GSE; (4) outside the airfield approach-departure clearance "
@@ -415,6 +415,11 @@ add("p", "**Implementation path.** (1) Phase 0 demonstration to SLD 30 on Exos's
          "other MDZ tenants. Mission Control and the exo3 process are in use today on Exos operations; they have "
          "not been deployed at Vandenberg or on Government networks. Hosting, data rights, cybersecurity authorization "
          "and any Government-network interface would be defined with SLD 30 before use.")
+add("p", "**Exos Mission Control today.** Figures 1–4 show Exos Mission Control as it runs on Exos operations today (screens captured 15 Oct 2026; counts are live at capture time). They illustrate the service offered above; none of it is deployed at Vandenberg.")
+add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_1_Command_Dashboard.png")
+add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_2_Capture_Pipeline.png")
+add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_3_Self_Improving_Governance.png")
+add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_4_Human_In_The_Loop.png")
 
 # ------------------------------------------------------------------ 9.0
 add("h1", "9.0 FUTURE VISION (Funded-Future / Vision — Not Demonstrated)")
