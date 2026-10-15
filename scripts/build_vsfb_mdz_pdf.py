@@ -48,6 +48,12 @@ for blk in K.C:
     elif k == "bl":
         for b in blk[1]: E.append(Paragraph(md(b), st["bl"], bulletText="•"))
     elif k == "pb": E.append(PageBreak())
+    elif k == "img":
+        from reportlab.platypus import Image as RLImage
+        from PIL import Image as _PI
+        _w,_h=_PI.open(blk[1]).size; _W=6.5*inch
+        E.append(RLImage(blk[1], width=_W, height=_W*_h/_w)); E.append(Spacer(1, 0.08*inch))
+        if len(blk)>2: E.append(Paragraph(md(blk[2]), st["note"]))
     elif k == "table":
         rows, w = blk[1], blk[2]; scale = 6.5 / sum(w)
         data = [[Paragraph(md(c), st["cellh"] if i == 0 else st["cell"]) for c in r] for i, r in enumerate(rows)]

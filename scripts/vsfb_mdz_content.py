@@ -58,8 +58,8 @@ def D(text):
 C = []
 def add(*b): C.append(b)
 
-VER = "_r3"
-LAUNCH = ("after BLK3 flight heritage (first flight planned early 2027 at Spaceport America) and subject to launch-site assignment, FAA licensing and range approvals")
+VER = "_r4"
+LAUNCH = ("targeted for Q2 2028, after BLK3 flight heritage (first flight planned early 2027 at Spaceport America) and subject to launch-site assignment, FAA licensing and range approvals")
 
 # ------------------------------------------------------------------ COVER
 add("title", "Whitepaper Response")
@@ -121,9 +121,7 @@ add("p", "**Mission Control as the differentiator.** The zone's coordination sys
          "extensions to Vandenberg are proposed. **Phase 0 offer:** Exos will run a read-only Mission Control pilot "
          "for SLD 30 now, using Exos's Spaceport America operations as the live data source — no real property needed.")
 add("p", "**Facilities.** Expeditionary and modular: a landing pad (~150 m\u00b2), containerized processing, a mobile "
-         "Mission Control node, wind sensors, and perimeter — nothing permanent until a launch site is assigned. "
-         "Section 3 (optional \u00a73 of the call): Exos is not proposing third-party payload processing bays; MCMS-exo3 "
-         "can schedule bays that others build.")
+         "Mission Control node, wind sensors, and perimeter — nothing permanent until a launch site is assigned.")
 add("p", "**Future vision (funded-future / vision, not demonstrated).** Near term: BLK3 reusable suborbital, "
          "followed by BLK4 — a reusable replacement for Black Brant-class sounding rockets. Orbital: BLK4 Heavy "
          "(three BLK4 cores in parallel) is Exos's planned path to orbital launch, capital-dependent. Vandenberg is "
@@ -241,23 +239,6 @@ add("p", "**Compatibility of the property (call \u00a73.1).** Hazardous 30-acre 
          "flood plain; Exos's justification: the proposed use is an open landing field with no permanent structures, "
          "making flooding a manageable operational risk rather than a siting conflict.")
 
-# ------------------------------------------------------------------ 3.0
-add("h1", "3.0 TARGETED PAYLOAD PROCESSING CAPABILITIES (Optional)")
-add("p", "Exos answers this optional section narrowly: **Exos is not proposing to build third-party payload processing "
-         "bays at the MDZ.** The Recovery & Turnaround Zone is designed for reusable-vehicle recovery, not fairing or "
-         "5-meter-class payload processing. MCMS-exo3 can schedule bay time in processing facilities that others build "
-         "or already operate at VSFB, providing scheduling and chain-of-custody services without Exos constructing "
-         "the bays.")
-add("h2", "3.1 Facility specifications for 5-meter-class payloads and next-generation fairings")
-add("p", "Not applicable to this recovery-zone request. Exos Phase 1 facilities provide basic post-recovery inspection "
-         "and turnaround capability for Exos vehicles and payloads (reusable vehicle scale). Multi-user processing "
-         "bays are not part of this MDZ request.")
-add("h2", "3.2 Projected annual processing throughput")
-add("p", "Recovery and turnaround throughput will be scaled to Exos manifest cadence once a launch site is assigned. "
-         "Numeric projections will be provided with final design and utility coordination. As a shared zone, throughput "
-         "can grow to include recovery events for other reusable vehicles on the Western Range, with SLD 30 and "
-         "operator coordination.")
-
 # ------------------------------------------------------------------ 4.0
 add("h1", "4.0 BENEFIT TO THE SPACEPORT ECOSYSTEM")
 add("h2", "4.1 Benefit to VSFB, the commercial space industry and USSF national security objectives")
@@ -284,6 +265,7 @@ add("bl", [
 # ------------------------------------------------------------------ 5.0
 add("h1", "5.0 PARCEL SELECTION, UTILITY, & PERSONNEL REQUIREMENTS")
 add("h2", "5.1 Acreage required and preferred conceptual footprints (MDZ Parcel Map, Exhibit B)")
+add("img", "drafts/VSFB_MDZ/Exos_MDZ_Parcel_Selection_Map_r4.png", "Figure 1. Exos parcel selection on the MDZ Parcel Map (Exhibit B, Fig. 2): preferred Hazardous 30-acre Plots 10 and 11 (green); alternates Plot 1 and Hazardous 50-acre Parcel 1 (amber). Annotation by Exos.")
 add("p", "Siting logic for the Recovery & Turnaround Zone: (1) open field for landing and dispersion — no tall structures "
          "inside the dispersion area; (2) close to the coast to minimize overland flight distance after canopy deploy; "
          "(3) road access (Beach Rd) for vehicle transport and GSE; (4) outside the airfield approach-departure clearance "
@@ -386,7 +368,7 @@ add("table", [["Phase / milestone", "Activity", "Notional timing"],
               ["Reservation", "Option / reservation on Plots 10 & 11 (or alternate) executed by SLD 30", "As agreed with SLD 30"],
               ["M0", "Outgrant executed; initial site access", "After BLK3 flight heritage and launch-site assignment"],
               ["Site / expeditionary", "Site preparation; wind sensors; pad marking; containerized processing and Mission Control node deployed", "From M0; rapid standup — modular equipment"],
-              ["Phase 1 activation", "Recovery zone operational for Exos recovery campaigns", "Subject to approvals; no hard date proposed"],
+              ["Phase 1 activation", "Recovery zone operational for Exos recovery campaigns", "Target Q2 2028, subject to approvals"],
               ["Phase 2 gate", "Mission Control integration and management extended to additional operators and to facilities built by SLD 30 or others; no Exos-funded permanent construction; gated on demand and SLD 30 concurrence", "After Phase 1 track record"]],
         [1.4, 3.6, 1.5])
 
@@ -490,8 +472,6 @@ MATRIX = [
  ("Call \u00a71.3 / \u00a71.4", "Use matches MDZ intended uses; MDZ not a launch complex", "2.1"),
  ("Call \u00a71.2", "Approach to finance, design, construct, operate, maintain", "2.1"),
  ("Exh. A 2.2 / Call \u00a73.1", "List and description of desired facility developments (expeditionary/modular)", "2.2"),
- ("Exh. A 3.1 / Call \u00a73.2", "5-m-class specs: Exos not proposing third-party processing bays; answered narrowly", "3.0"),
- ("Exh. A 3.2 / Call \u00a73.2", "Projected annual throughput (recovery-event cadence; no third-party bays)", "3.2"),
  ("Exh. A 4.1 / Call \u00a73.3", "Benefit to VSFB spaceport ecosystem, industry, USSF", "4.1"),
  ("Exh. A 5.1 / Call \u00a73.4", "Parcels: Plots 10 & 11 (Hazardous 30-acre, Beach Rd); alternates: Plot 1, Hazardous 50-acre Parcel 1", "5.1"),
  ("Exh. B note", "Justification for Hazardous 50-acre Parcel 1 (alt): open landing field, no permanent structures", "5.1"),
@@ -502,7 +482,7 @@ MATRIX = [
  ("Exh. A 6.3 / Call \u00a72.4, \u00a73.5", "Hazard area: reentry/landing dispersion footprint; no QD arcs; coordinated with SLD 30 and FAA Part 450", "6.3"),
  ("Exh. A 6.4 / Call \u00a73.5", "Mitigation of impacts on neighbors and routes", "6.4"),
  ("Exh. A 6.5 / Call \u00a73.5", "New construction / modifications to VSFB infrastructure (light-service utilities only)", "6.5"),
- ("Exh. A 7.1 / Call \u00a73.6", "Schedule: reservation now; build-out after BLK3 flight heritage and launch-site assignment; no hard date", "7.1"),
+ ("Exh. A 7.1 / Call \u00a73.6", "Schedule: reservation now; build-out after BLK3 flight heritage and launch-site assignment; target Q2 2028", "7.1"),
  ("Exos addition", "Award approach: MDZ outgrant option/reservation; referral to SSC contracting path for MC range-integration work", "7.2"),
  ("Exh. A 8.1", "Enhancements: Phase 0 MC pilot; winds-aloft service; shared zone access; reusability ledger", "8.1"),
  ("Exos addition (optional)", "Exos Mission Control for zone and payload management services", "8.2"),

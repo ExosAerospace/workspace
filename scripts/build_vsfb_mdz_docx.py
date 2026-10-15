@@ -90,6 +90,10 @@ for blk in K.C:
     elif k == "table": table(blk[1], blk[2])
     elif k == "decision": decision(blk[1])
     elif k == "pb": doc.add_page_break()
+    elif k == "img":
+        from docx.shared import Inches as _In
+        doc.add_picture(blk[1], width=_In(6.5))
+        if len(blk)>2: para(blk[2], 8.5, GREY, after=6, italic=True)
 
 doc.core_properties.title = "Exos Aerospace — VSFBMDZCall Whitepaper"
 doc.core_properties.author = "Exos Aerospace Systems & Technologies, Inc."
