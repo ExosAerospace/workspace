@@ -49,7 +49,11 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'reply on your Teams-link email to David',
                  'you sent him the Teams link 10/8; notice must go out by ~10/23 (15-day bylaw) / 10/28 (Texas 10-day min)',
                  'Hi David,\nJust checking that the Nov 7 investor meeting notice went out with the Teams link and the record date. Anything you need from me?\nBest Regards,\nLizi')],
- '2026-10-19': [('Montana Tech: Dr. Bryce Hill',
+ '2026-10-19': [('ECA cert (task #2044, Request ID 57449): notarize + mail the form',
+                 'WidePoint-ECA, 11250 Waples Mill Rd, South Tower Ste 210, Fairfax VA 22030 (tracked FedEx/UPS/USPS)',
+                 'WidePoint must RECEIVE it by Thu 10/29 or the request is void. Skip if already mailed',
+                 "(No email.) Packet: signed+notarized form, payment receipt, copies of driver's license + passport, John's wet-signed affiliation letter. Text Exo the tracking number."),
+                ('Montana Tech: Dr. Bryce Hill',
                  'bhill@mtech.edu (reply on thread)',
                  'he replied 10/9: sharing BLK3 with the IEEE club and Robotics club',
                  'Hi Dr. Hill,\n'
@@ -107,7 +111,11 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'Just following up on my note about a BLK3 rocket flight as a next step after your balloon test. Happy to set up a short call whenever works for you.\n'
                  'Best Regards,\n'
                  'Lizi')],
- '2026-10-22': [('FAA RFI 9736 comment: due Mon 10/26 (task #3410, Decision D-7282129)',
+ '2026-10-22': [('ECA cert (task #2044, Request ID 57449): notarize + mail the form',
+                 'WidePoint-ECA, 11250 Waples Mill Rd, South Tower Ste 210, Fairfax VA 22030 (tracked FedEx/UPS/USPS)',
+                 'LAST SAFE DAY to ship (must arrive by Thu 10/29). Skip if already mailed',
+                 "(No email.) Packet: signed+notarized form, payment receipt, copies of driver's license + passport, John's wet-signed affiliation letter. Text Exo the tracking number."),
+                ('FAA RFI 9736 comment: due Mon 10/26 (task #3410, Decision D-7282129)',
                  "John (he's back from Japan)",
                  "if John hasn't answered D-7282129 yet, mention it to him today. The deadline is Monday and Exo is ready to file the moment he says go. If it's already filed, ignore this",
                  "John, quick one: the FAA spaceport/corridor RFI comment is due Monday 10/26. Exo has the final version ready to file. Did you already file it, or should Exo submit it now? It's in "
