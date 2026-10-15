@@ -58,7 +58,7 @@ def D(text):
 C = []
 def add(*b): C.append(b)
 
-VER = "_r5"
+VER = "_r6"
 LAUNCH = ("targeted for Q2 2028, after BLK3 flight heritage (first flight planned early 2027 at Spaceport America) and subject to launch-site assignment, FAA licensing and range approvals")
 
 # ------------------------------------------------------------------ COVER
@@ -415,7 +415,7 @@ add("p", "**Implementation path.** (1) Phase 0 demonstration to SLD 30 on Exos's
          "other MDZ tenants. Mission Control and the exo3 process are in use today on Exos operations; they have "
          "not been deployed at Vandenberg or on Government networks. Hosting, data rights, cybersecurity authorization "
          "and any Government-network interface would be defined with SLD 30 before use.")
-add("p", "**Exos Mission Control today.** Figures 1–4 show Exos Mission Control as it runs on Exos operations today (screens captured 15 Oct 2026; counts are live at capture time). They illustrate the service offered above; none of it is deployed at Vandenberg.")
+add("p", "**Exos Mission Control today.** Figures 1–4 show Exos Mission Control as it runs on Exos operations today (screens captured 15 Oct 2026, 16:55 CDT; counts are live at capture time). They illustrate the service offered above; none of it is deployed at Vandenberg.")
 add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_1_Command_Dashboard.png")
 add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_2_Capture_Pipeline.png")
 add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_3_Self_Improving_Governance.png")
