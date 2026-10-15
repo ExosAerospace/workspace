@@ -14,22 +14,22 @@ STAMP = NOW.strftime("%d %b %Y %H:%M CDT").upper()
 st = dict(M["opps_by_status"])
 
 CSS = """
-*{box-sizing:border-box} body{margin:0;width:1920px;height:HPX;position:relative;overflow:hidden;background:#000;color:#c9f7cf;font-family:'Menlo','SF Mono',monospace;
- background-image:linear-gradient(rgba(57,255,106,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(57,255,106,.045) 1px,transparent 1px);background-size:40px 40px}
-body:after{content:'';position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px)}
-.p{background:#060c06;border:1px solid #2bd24a;box-shadow:0 0 6px rgba(57,255,106,.4);padding:16px 18px}
-header{display:flex;justify-content:space-between;align-items:center;padding:16px 28px;border-bottom:2px solid #2bd24a}
-.brand{font-size:30px;letter-spacing:.3em;color:#39ff6a;text-shadow:0 0 8px rgba(57,255,106,.6)} .brand small{display:block;font-size:12px;letter-spacing:.3em;color:#4f8a57;margin-top:4px}
-.y{color:#ffd84a} .d{color:#4f8a57} .g{color:#39ff6a} .r{color:#ff5a5a}
-h3{margin:0 0 12px;font-size:14px;letter-spacing:.28em;color:#ffd84a}
-.kv{font-size:40px;font-weight:700;color:#39ff6a;text-shadow:0 0 6px rgba(57,255,106,.5)} .kl{font-size:12px;letter-spacing:.22em;color:#4f8a57;margin-top:6px}
+*{box-sizing:border-box} body{margin:0;width:1920px;height:HPX;position:relative;overflow:hidden;background:#16181b;color:#eceff1;font-family:'Menlo','SF Mono',monospace;
+ background-image:linear-gradient(rgba(255,179,71,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,179,71,.035) 1px,transparent 1px);background-size:40px 40px}
+body:after{content:'';position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.06) 0 1px,transparent 1px 3px)}
+.p{background:#202327;border:1px solid #3a3f45;box-shadow:none;padding:16px 18px}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 28px;border-bottom:2px solid #3a3f45}
+.brand{font-size:30px;letter-spacing:.3em;color:#ffb347;text-shadow:none} .brand small{display:block;font-size:12px;letter-spacing:.3em;color:#8b939b;margin-top:4px}
+.y{color:#5fd3a2} .d{color:#8b939b} .g{color:#ffb347} .r{color:#ff5a5a}
+h3{margin:0 0 12px;font-size:14px;letter-spacing:.28em;color:#5fd3a2}
+.kv{font-size:40px;font-weight:700;color:#ffb347;text-shadow:none} .kl{font-size:12px;letter-spacing:.22em;color:#8b939b;margin-top:6px}
 .grid{display:grid;gap:18px;padding:20px 28px}
-table{width:100%;border-collapse:collapse;font-size:16px} td{padding:10px 8px;border-bottom:1px solid rgba(43,210,74,.2)}
+table{width:100%;border-collapse:collapse;font-size:16px} td{padding:10px 8px;border-bottom:1px solid rgba(139,147,155,.22)}
 .pill{font-size:11px;letter-spacing:.15em;padding:3px 8px;border:1px solid}
-.foot{position:absolute;bottom:0;left:0;right:0;padding:10px 28px;border-top:2px solid #2bd24a;font-size:13px;color:#4f8a57;display:flex;justify-content:space-between;background:#000}
+.foot{position:absolute;bottom:0;left:0;right:0;padding:10px 28px;border-top:2px solid #3a3f45;font-size:13px;color:#8b939b;display:flex;justify-content:space-between;background:#16181b}
 .flow{display:flex;align-items:stretch;gap:0}
-.stage{flex:1;text-align:center} .arrow{width:46px;display:flex;align-items:center;justify-content:center;color:#ffd84a;font-size:30px}
-.br{display:flex;align-items:center;gap:12px;margin:10px 0;font-size:14px} .bl{width:230px;color:#4f8a57} .bt{flex:1;height:12px;border:1px solid rgba(43,210,74,.4)} .bf{display:block;height:100%;background:#39ff6a;box-shadow:0 0 6px rgba(57,255,106,.5)} .bp{width:70px;text-align:right;color:#39ff6a}
+.stage{flex:1;text-align:center} .arrow{width:46px;display:flex;align-items:center;justify-content:center;color:#5fd3a2;font-size:30px}
+.br{display:flex;align-items:center;gap:12px;margin:10px 0;font-size:14px} .bl{width:230px;color:#8b939b} .bt{flex:1;height:12px;border:1px solid rgba(139,147,155,.35)} .bf{display:block;height:100%;background:#ffb347;box-shadow:none} .bp{width:70px;text-align:right;color:#ffb347}
 """
 
 
@@ -57,7 +57,7 @@ rows = [("100", "OSP-4 On-Ramp submission (rolling focus)", "CEO", "HIGH"),
         ("88", "FAA Part 450 license transition package", "Regulatory", "HIGH"),
         ("80", "University microgravity payload: integration plan", "Payload", "MED"),
         ("75", "AFRL BAA white paper: reusable flight-test platform", "BD", "MED")]
-tr = "".join(f"<tr><td class=g style='font-size:20px;font-weight:800;width:70px'>{s}</td><td>{n}</td><td class=d>{o}</td><td><span class=pill style='color:{'#ffd84a' if p=='HIGH' else '#4f8a57'}'>{p}</span></td></tr>" for s, n, o, p in rows)
+tr = "".join(f"<tr><td class=g style='font-size:20px;font-weight:800;width:70px'>{s}</td><td>{n}</td><td class=d>{o}</td><td><span class=pill style='color:{'#5fd3a2' if p=='HIGH' else '#8b939b'}'>{p}</span></td></tr>" for s, n, o, p in rows)
 S["1_Command_Dashboard"] = page("COMMAND DASHBOARD", f"""
 <div class=grid style='grid-template-columns:repeat(6,1fr)'>{kpi(M['tasks_open'],'OPEN WORK ITEMS')}{kpi(M['tasks_done_7d'],'CLOSED · LAST 7 DAYS')}{kpi(M['decisions_open'],'DECISIONS AWAITING HUMAN')}{kpi(M['opps'],'OPPORTUNITIES CAPTURED')}{kpi(M['agents'],'REGISTERED AI AGENTS')}{kpi(f"{M['fleet_events_7d']:,}",'AGENT EVENTS · 7 DAYS')}</div>
 <div class=grid style='grid-template-columns:2fr 1fr;padding-top:0'>
@@ -105,7 +105,7 @@ dec = [("FAA payload approval: confirm wet-signed cross-waiver on file", "Payloa
        ("Approve weekly exo3 code-audit remediation plan", "CEO", "APPROVE"),
        ("Approve & send customer invoice (QuickBooks)", "CEO", "APPROVE & SEND"),
        ("Rolling-opportunity focus: confirm submittal strategy", "CEO", "DECIDE")]
-dr = "".join(f"<tr><td>{a}</td><td class=d>{b}</td><td><span class=pill style='color:#ffd84a'>{c}</span></td></tr>" for a, b, c in dec)
+dr = "".join(f"<tr><td>{a}</td><td class=d>{b}</td><td><span class=pill style='color:#5fd3a2'>{c}</span></td></tr>" for a, b, c in dec)
 S["4_Human_In_The_Loop"] = page("HUMAN-IN-THE-LOOP DECISIONS", f"""
 <div class=grid style='grid-template-columns:repeat(4,1fr)'>{kpi(f"{M['decisions_total']:,}",'DECISIONS ON RECORD')}{kpi(M['decisions_answered_30d'],'DECIDED · LAST 30 DAYS')}{kpi(M['decisions_open'],'AWAITING A HUMAN NOW')}{kpi('EVERY','OUTBOUND COMMITMENT<br>GATED BY A HUMAN CLICK')}</div>
 <div class=grid style='grid-template-columns:2fr 1fr;padding-top:0'>

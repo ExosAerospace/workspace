@@ -2,28 +2,28 @@
    ?theme=joc (persists) · ?theme=default (off) · the ◐ toggle bottom-left. Overrides the shared page variables only;
    no layout changes, so every page keeps working when the theme is off. */
 :root, :root body {
-  --navy:#000000 !important; --navy2:#050a05 !important; --navy3:#081208 !important;
-  --card:#060c06 !important; --line:rgba(43,210,74,.28) !important; --border:rgba(43,210,74,.28) !important;
-  --text:#c9f7cf !important; --text2:#5f9a67 !important; --muted:#5f9a67 !important;
-  --blue:#2bd24a !important; --blue2:#39ff6a !important; --accent:#39ff6a !important; --progress-accent:#39ff6a !important;
-  --orange:#ffd84a !important; --orange2:#ffd84a !important; --yellow:#ffd84a !important;
-  --green:#39ff6a !important; --done-accent:#39ff6a !important; --red:#ff5a5a !important; --blocked-accent:#ff5a5a !important;
+  --navy:#16181b !important; --navy2:#1b1e21 !important; --navy3:#202327 !important;
+  --card:#202327 !important; --line:rgba(139,147,155,.28) !important; --border:rgba(139,147,155,.28) !important;
+  --text:#eceff1 !important; --text2:#8b939b !important; --muted:#8b939b !important;
+  --blue:#3a3f45 !important; --blue2:#ffb347 !important; --accent:#ffb347 !important; --progress-accent:#ffb347 !important;
+  --orange:#5fd3a2 !important; --orange2:#5fd3a2 !important; --yellow:#5fd3a2 !important;
+  --green:#ffb347 !important; --done-accent:#ffb347 !important; --red:#ff5a5a !important; --blocked-accent:#ff5a5a !important;
 }
 html body {
-  font-family:'Menlo','SF Mono','Consolas',monospace !important; background-color:#000 !important;
-  background-image:linear-gradient(rgba(57,255,106,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(57,255,106,.04) 1px,transparent 1px) !important;
+  font-family:'Menlo','SF Mono','Consolas',monospace !important; background-color:#16181b !important;
+  background-image:linear-gradient(rgba(255,179,71,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,179,71,.035) 1px,transparent 1px) !important;
   background-size:40px 40px !important;
 }
 html body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:2147483000;
-  background:repeating-linear-gradient(0deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px); }
-html body header { background:#000 !important; border-bottom:2px solid #2bd24a !important; }
-html body h1, html body h2 { color:#39ff6a !important; letter-spacing:.12em; text-shadow:0 0 6px rgba(57,255,106,.45); }
-html body h3 { color:#ffd84a !important; letter-spacing:.18em; }
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.06) 0 1px,transparent 1px 3px); }
+html body header { background:#16181b !important; border-bottom:2px solid #3a3f45 !important; }
+html body h1, html body h2 { color:#ffb347 !important; letter-spacing:.12em; text-shadow:none; }
+html body h3 { color:#5fd3a2 !important; letter-spacing:.18em; }
 html body .card, html body .stat-card, html body .panel, html body .box, html body .doc-item, html body .task-card, html body .hero {
-  background:#060c06 !important; border:1px solid rgba(43,210,74,.55) !important; border-radius:2px !important; box-shadow:0 0 5px rgba(57,255,106,.25) !important; }
-html body a { color:#39ff6a; }
+  background:#202327 !important; border:1px solid #3a3f45 !important; border-radius:2px !important; box-shadow:none !important; }
+html body a { color:#ffb347; }
 html body button:not(.x), html body .btn { border-radius:2px !important; }
-html body input, html body select, html body textarea { background:#020602 !important; color:#c9f7cf !important; border-color:rgba(43,210,74,.45) !important; }
+html body input, html body select, html body textarea { background:#1b1e21 !important; color:#eceff1 !important; border-color:#3a3f45 !important; }
 #mc-theme-toggle { position:fixed; left:12px; bottom:12px; z-index:2147483001; font:11px Menlo,monospace; letter-spacing:.15em;
-  background:#000; color:#39ff6a; border:1px solid #2bd24a; padding:5px 9px; cursor:pointer; opacity:.75; }
+  background:#16181b; color:#ffb347; border:1px solid #3a3f45; padding:5px 9px; cursor:pointer; opacity:.75; }
 #mc-theme-toggle:hover { opacity:1; }
