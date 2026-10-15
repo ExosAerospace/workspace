@@ -59,7 +59,7 @@ def D(text):
 C = []
 def add(*b): C.append(b)
 
-VER = "_r7"
+VER = "_r8"
 LAUNCH = ("targeted for Q2 2028, after BLK3 flight heritage (first flight planned early 2027 at Spaceport America) and subject to launch-site assignment, FAA licensing and range approvals")
 
 # ------------------------------------------------------------------ COVER
@@ -417,11 +417,11 @@ add("p", "**Implementation path.** (1) Phase 0 demonstration to SLD 30 on Exos's
          "not been deployed at Vandenberg or on Government networks. Hosting, data rights, cybersecurity authorization "
          "and any Government-network interface would be defined with SLD 30 before use.")
 add("p", "**Origin: a range-coordination concept.** Exos developed Mission Control's range-coordination concept alongside its Montana Spaceport & Test Range work (program operating agreement, May 2026; development-stage, not a licensed site) to coordinate many users, vehicles and test events on one range under human approval gates. The same need applies to multi-user test ranges such as the Montana \u201csuper range\u201d for advanced weapons and technology testing that the President announced on 14 Oct 2026 [21], as well as to the Western Range. Exos has no role in that range today.")
-add("p", "**Exos Mission Control today.** Figures 1–4 show Exos Mission Control as it runs on Exos operations today (screens captured 15 Oct 2026, 16:55 CDT; counts are live at capture time). They illustrate the service offered above; none of it is deployed at Vandenberg.")
-add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_1_Command_Dashboard.png")
-add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_2_Capture_Pipeline.png")
-add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_3_Self_Improving_Governance.png")
-add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_4_Human_In_The_Loop.png")
+add("p", "**Exos Mission Control today.** Figures 1–4 show Exos Mission Control tracking Exos rocket missions today: mission and flight-readiness gates, payload operations, logistics (ERP/MRP), and financial integration (screens captured 15 Oct 2026, 18:24 CDT; counts are live at capture time; customers anonymized). They illustrate the service offered above; none of it is deployed at Vandenberg.")
+add("img", "drafts/mc_theme_concepts/whitepaper_ops/Exos_MissionControl_Fig1_Mission_Ops_Board.png")
+add("img", "drafts/mc_theme_concepts/whitepaper_ops/Exos_MissionControl_Fig2_Payload_Operations.png")
+add("img", "drafts/mc_theme_concepts/whitepaper_ops/Exos_MissionControl_Fig3_Logistics_ERP_MRP_Inventory.png")
+add("img", "drafts/mc_theme_concepts/whitepaper_ops/Exos_MissionControl_Fig4_Financial_Systems_Integration.png")
 
 # ------------------------------------------------------------------ 9.0
 add("h1", "9.0 FUTURE VISION (Funded-Future / Vision — Not Demonstrated)")
