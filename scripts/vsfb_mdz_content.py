@@ -50,6 +50,7 @@ SRC = {
  20: "Yakimenko, O.A., Dobrokhodov, S.N., and Kaminer, I.I., “On Estimation of Terminal Accuracy for Several Steerable "
      "Parafoil Systems,” AIAA Paper 2006-6793, AIAA Guidance, Navigation, and Control Conference, 2006 (older published data; "
      "accuracy varies by system and conditions; cited as a general reference for guided-parafoil CEP class).",
+    21: "Fox News, \u201cTrump announces Montana \u2018super range\u2019 at midterm rally for Pentagon to test advanced war technology,\u201d 15 Oct 2026 \u2014 foxnews.com/politics/trump-announces-montana-super-range-midterm-rally-pentagon-test-advanced-war-technology.",
 }
 
 def D(text):
@@ -58,7 +59,7 @@ def D(text):
 C = []
 def add(*b): C.append(b)
 
-VER = "_r6"
+VER = "_r7"
 LAUNCH = ("targeted for Q2 2028, after BLK3 flight heritage (first flight planned early 2027 at Spaceport America) and subject to launch-site assignment, FAA licensing and range approvals")
 
 # ------------------------------------------------------------------ COVER
@@ -415,6 +416,7 @@ add("p", "**Implementation path.** (1) Phase 0 demonstration to SLD 30 on Exos's
          "other MDZ tenants. Mission Control and the exo3 process are in use today on Exos operations; they have "
          "not been deployed at Vandenberg or on Government networks. Hosting, data rights, cybersecurity authorization "
          "and any Government-network interface would be defined with SLD 30 before use.")
+add("p", "**Origin: a range-coordination concept.** Exos developed Mission Control's range-coordination concept alongside its Montana Spaceport & Test Range work (program operating agreement, May 2026; development-stage, not a licensed site) to coordinate many users, vehicles and test events on one range under human approval gates. The same need applies to multi-user test ranges such as the Montana \u201csuper range\u201d for advanced weapons and technology testing that the President announced on 14 Oct 2026 [21], as well as to the Western Range. Exos has no role in that range today.")
 add("p", "**Exos Mission Control today.** Figures 1–4 show Exos Mission Control as it runs on Exos operations today (screens captured 15 Oct 2026, 16:55 CDT; counts are live at capture time). They illustrate the service offered above; none of it is deployed at Vandenberg.")
 add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_1_Command_Dashboard.png")
 add("img", "drafts/mc_theme_concepts/whitepaper/Exos_MissionControl_2_Capture_Pipeline.png")
