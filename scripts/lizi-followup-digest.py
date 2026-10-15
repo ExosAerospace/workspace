@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Dated follow-up digest for Lizi (10/14-10/26 dates at 09:00 CT). Emails only items due today whose
-CRM contact hasn't been touched since the send. Self-unloads after 10/26."""
+"""Dated follow-up digest for Lizi (10/14-10/29 dates at 09:00 CT). Emails only items due today whose
+CRM contact hasn't been touched since the send. Self-unloads after 10/29."""
 import os, json, subprocess, urllib.request
 from datetime import date
 from email.message import EmailMessage
@@ -285,6 +285,14 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'Hi Kordel,\n'
                  "Just a quick follow-up on the GNC role. If you're still interested, I'd love to get your resume over to John. No rush, just didn't want it to slip through the cracks!\n"
                  'Best Regards,\n'
+                 'Lizi')],
+ '2026-10-29': [('SpaceTango: Twyman Clements (CEO, task #1001)',
+                 'tclements@spacetango.com (reply on your "BLK3 + Space Tango" thread)',
+                 'first note 9/14, nudge 10/15; no reply yet. Skip if he (or Danielle Rosales) replied. If still silent after this, try LinkedIn or ask John for a warm intro',
+                 'Hi Twyman,\n'
+                 "One last nudge on BLK3. If a call isn't convenient right now, I'm happy to just send over our Payload User Guide so you can share it with any PIs who might want a "
+                 'quick, recoverable flight before an ISS mission. Who would be the best person on your team to talk with?\n'
+                 'Best Regards,\n'
                  'Lizi')]}
 today=date.today().isoformat()
 items=DUE.get(today,[])
@@ -295,7 +303,7 @@ if items:
     m.set_content("Hi Lizi,\n\nThese are due for a follow-up today if they haven't replied. Each has the contact and a ready-to-send nudge (reply on your original thread so they see the history):\n\n"+"\n".join(lines)+
       "\n\nSkip anyone who already replied, and tell me in #lizi-channel-2 so I log it.\n\n- Exo")
     subprocess.run(["/opt/homebrew/bin/msmtp","-a","protonmail","lquinn@exosaero.com"],input=m.as_bytes(),check=True,timeout=60)
-if today>="2026-10-27":
+if today>="2026-10-29":
     p=os.path.expanduser(f"~/Library/LaunchAgents/{LABEL}.plist")
     try: os.remove(p)
     except Exception: pass
