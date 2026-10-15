@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-04T12:49:13.103453-05:00",
- "total": 271,
+ "total": 272,
  "standing": 114,
  "ephemeral": 18,
  "service": 6,
@@ -5803,6 +5803,28 @@
    "change_log": [
     "2026-10-15 created"
    ]
+  },
+  {
+   "label": "cron:exos-fin-004-apply-cm-on-approval-d-7282118",
+   "cron_id": "02872e26-6e26-4967-aae3-e5720183c699",
+   "kind": "openclaw-cron",
+   "script": "openclaw cron 02872e26-6e26-4967-aae3-e5720183c699 (agentTurn)",
+   "schedule": "cron '0 9,17 * * *' America/Chicago",
+   "purpose": "EXOS-FIN-004 — apply CM on approval (D-7282118) — Procedure CM watcher for D-7282118 (EXOS-FIN-004-0 International Contractor Payments). Read mission-control/data/decisions.json for D-7282118. If status is open, answer is null, or answeredByEmail is missing (only a huma",
+   "stack_layer": "DECIDE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "toolsAllow 60 tools; delivery announce → discord:channel:1501636814849577050; writes Mission Control data (decisions/tasks/attachments); exec/shell available",
+   "memory_boundary": "session target isolated; agent main",
+   "escalation": "agent_eval cron hygiene → Jon on FAIL; Decisions board for any Jon call",
+   "eval_suite": "agent_eval cron hygiene (lastRunStatus ok + not stale vs its own cadence; consecutiveErrors → FAIL); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
+   "eval_type": "output",
+   "telemetry": "openclaw cron runs --id 02872e26-6e26-4967-aae3-e5720183c699",
+   "reusability_scope": "single-purpose",
+   "risk_tier": "MEDIUM",
+   "lifecycle": "self-removing (prompt has an end condition)",
+   "registered": "2026-10-15",
+   "envelope_source": "register_cron.py derivation from the live cron"
   }
  ],
  "eval_wave_1": {

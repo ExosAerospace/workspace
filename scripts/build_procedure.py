@@ -234,7 +234,10 @@ def register(spec, rel_docx):
             d["meta"]["areas"].append(entry["area"])
         d["register"] = [r for r in d["register"] if r.get("doc_no") != entry["doc_no"]]
         d["register"].append(entry)
-    d = json.load(open(REG)); add(d); json.dump(d, open(REG, "w"), ensure_ascii=False, indent=1)
+    d = json.load(open(REG)); add(d)
+    # keep the register's own format (indent 2 + trailing newline) and write atomically, so a new procedure is a
+    # small diff instead of a whole-file reformat (seen 2026-10-15 adding EXOS-FIN-004)
+    _tmp = REG + ".tmp"; open(_tmp, "w").write(json.dumps(d, ensure_ascii=False, indent=2) + "\n"); os.replace(_tmp, REG)
     html = open(REG_HTML, encoding="utf-8").read()
     sm = '<script id="data" type="application/json">'
     i = html.index(sm) + len(sm); j = html.index("</script>", i)

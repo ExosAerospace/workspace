@@ -1,0 +1,46 @@
+{
+  "title": "International Contractor Payments & Contractor Expense Reimbursement (incl. JPY)",
+  "doc_no": "EXOS-FIN-004-0",
+  "area": "Finance & Accounting",
+  "area_id": "12-finance-accounting",
+  "owner": "Kyle Ballard (CFO / Finance) / Exo",
+  "rev": "0",
+  "status": "Draft",
+  "intl_release": "No",
+  "reference_docs": "IRS Form W-8BEN (https://www.irs.gov/forms-pubs/about-form-w-8-ben) and W-8BEN-E (https://www.irs.gov/forms-pubs/about-form-w-8-ben-e); IRS withholding on US-source income paid to nonresident aliens (https://www.irs.gov/individuals/international-taxpayers/federal-income-tax-withholding-and-reporting-on-other-kinds-of-us-source-income-paid-to-nonresident-aliens); IRS Pub 515; OFAC Sanctions List Search (https://ofac.treasury.gov/sanctions-list-search-tool); Wise JPY transfer guide (https://wise.com/help/articles/2932156/guide-to-jpy-transfers); Wise-QuickBooks connection (https://wise.com/help/articles/2978059/connect-your-wise-account-with-quickbooks); QuickBooks Online Multicurrency (https://quickbooks.intuit.com/learn-support/en-us/help-article/multicurrency/learn-multicurrency-quickbooks-online/L5krkKQi8_US_en_US); Federal Reserve H.10 (https://www.federalreserve.gov/releases/h10/current); Mission Control Expenses (yen option, scripts/fx_rate.py); EXOS-ADM-002 Expense Report; EXOS-FIN-001 Monthly GAAP Close; CSL denied-party screening (Mission Control); research memo drafts/International_JPY_Payments_Research_2026-10-15.md.",
+  "remarks": "Created 2026-10-15 at Jon's direction (international contractor payments + expenses, best way to pay in yen, does BambooHR support it). BambooHR Payroll is US-only and cannot pay Japan or JPY; the BambooHR-branded option is the Contractor Management add-on powered by Remote (backup rail). Primary rail = Wise Business (domestic JPY to Japanese bank). OPEN before first use: (1) open the Wise Business account; (2) CPA decides whether to enable QBO Multicurrency (cannot be turned off; Intuit says it does not work with QBO Bill Pay) - until then record the USD actually debited with a JPY memo.",
+  "objective": "define one controlled way to pay international (non-US) independent contractors, in their local currency including Japanese yen (JPY), and to reimburse the business expenses those contractors incur, so that every payment is screened, documented for tax, approved by someone other than the preparer, and recorded at the amount actually paid.",
+  "overview": "Applies to independent contractors resident outside the United States (individuals or entities), with Japan/JPY as the first case. US employees traveling abroad use the Mission Control Expenses form (yen option) under EXOS-ADM-002, not this procedure. Primary payment rail: Wise Business, paying JPY to the contractor's domestic Japanese bank account (bank and branch code), typically arriving about 1 working day after conversion. Backup rail: BambooHR Contractor Management (powered by Remote), which also handles contractor agreements and local-currency payout. International bank wire (SWIFT) only if neither is available. Contractors invoice monthly in their currency; reimbursable expenses go on the same invoice with receipts and are paid in the same transfer. Work performed entirely outside the US needs no US withholding, no Form 1099 and no Form 1042-S when a valid W-8 is on file; any days worked IN the US are US-source income and require review (30% withholding unless a treaty exemption is documented, and Form 1042-S).",
+  "tasks": [
+    {"name": "Task 1 - Onboard the international contractor (once, before any payment)", "steps": [
+      "Signed independent contractor agreement on file (scope, rate and currency, IP assignment, confidentiality, invoicing terms) and attached to the contractor's Mission Control task.",
+      "Collect IRS Form W-8BEN (individual) or W-8BEN-E (entity); confirm name, country, foreign tax ID and treaty claim are complete and signed. Diary the expiry (valid through the end of the third calendar year after signing).",
+      "Run the denied-party screen in Mission Control (Consolidated Screening List + OFAC SDN) on the contractor, any entity and the bank-account holder name; save the dated result to the task. Any match = stop and escalate to the CEO.",
+      "If the contractor will receive technical data or hardware details, route to the Empowered Official (John Quinn) and export reviewer (Denise Shirey) for an ITAR/EAR determination before sharing anything.",
+      "Collect payout details: bank name, bank code, branch name and code, account type (futsu/toza), account number, and account holder name exactly as the bank holds it (katakana for Japanese accounts). Add the recipient in Wise and create the vendor (foreign) in QuickBooks Online."
+    ]},
+    {"name": "Task 2 - Invoice, expenses and approval (each month)", "steps": [
+      "Contractor submits one invoice per month in the agreed currency (JPY for Japan), listing services and, separately, reimbursable expenses with an itemized receipt for each.",
+      "Contractor states on the invoice the number of days, if any, the work was performed inside the United States. If any US days: flag to Finance for US-source withholding review (30% unless the W-8 treaty claim covers it; Form 1042-S required) before payment.",
+      "Finance checks the invoice against the agreement (rate, scope, currency) and the receipts against EXOS-ADM-002 norms; expenses that are not in the agreement or lack receipts are not reimbursed.",
+      "The contractor's Exos manager approves in Mission Control (approval task). The preparer of the payment may not be the approver, and nobody approves their own work or relative's invoice."
+    ]},
+    {"name": "Task 3 - Pay in local currency (JPY)", "steps": [
+      "Finance prepares the Wise transfer in JPY to the contractor's domestic Japanese bank account for the approved invoice total (services + expenses), with the invoice number as the reference.",
+      "A second authorized person (CEO or designee, not the preparer) releases the transfer.",
+      "Save the Wise transfer receipt (JPY sent, USD debited, rate applied, fee) to the Mission Control payment task and mark the task Done.",
+      "If Wise is unavailable, use the backup rail (BambooHR Contractor Management / Remote) or, last resort, an international wire with the same approvals, recording all bank and intermediary fees."
+    ]},
+    {"name": "Task 4 - Expense reimbursement currency rule", "steps": [
+      "Contractor expenses are reimbursed in the contractor's currency at face value of the receipts (no conversion by the contractor).",
+      "For Exos's books, the USD cost is the USD actually debited for the transfer (Wise applied rate). If a USD value is needed before payment, use the Federal Reserve H.10 rate for the expense date (same source the Mission Control Expenses yen option uses).",
+      "Exos employees who incur yen expenses submit them in Mission Control Expenses with currency JPY and may choose 'Reimburse me in JPY'; the Finance payment task then shows the yen amount and is paid on the Task 3 rail."
+    ]},
+    {"name": "Task 5 - Record and year-end", "steps": [
+      "Record each payment in QuickBooks Online against the foreign vendor at the USD actually debited, with the JPY amount, rate and Wise reference in the memo (until the CPA approves QBO Multicurrency; if enabled, record in JPY and let QBO post FX gain/loss).",
+      "Keep the agreement, W-8, screening result, invoices, receipts and Wise receipts together on the contractor's task for at least 7 years.",
+      "Year-end: no Form 1099 for foreign contractors with a valid W-8 and no US-performed work; Finance files Form 1042-S/1042 for any US-source payments identified in Task 2.",
+      "Review this procedure when a new country/currency is added (Mission Control Expenses supports a new currency by adding its H.10 series)."
+    ]}
+  ]
+}
