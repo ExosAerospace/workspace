@@ -226,7 +226,15 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                 ('Rhodium Scientific: Olivia Gamez Holzhaus',
                  'LEO.Life@RhodiumScientific.com (reply on thread)',
                  'sent 10/8 (#3019/#3619)',
-                 "Hi Olivia,\nJust following up on my note about a recovered BLK3 pre-flight for Rhodium's biotech payloads. Would a quick call make sense?\nBest Regards,\nLizi")],
+                 "Hi Olivia,\nJust following up on my note about a recovered BLK3 pre-flight for Rhodium's biotech payloads. Would a quick call make sense?\nBest Regards,\nLizi"),
+                ('GT Space Week LinkedIn requests: Brad Henderson + Luis Zea (Starlab), Eric Lasker (Varda advisor)',
+                 'LinkedIn (no public emails)',
+                 'connection requests sent 10/15. For anyone who accepted, send a short message (ask Exo to adapt your GT email). Anyone still pending, just leave it',
+                 'Hi [Name],\n'
+                 "Thanks for connecting! It was great meeting you at Georgia Tech Space Week. I'd love to find a time to talk about whether a BLK3 suborbital flight could fit your work. Happy to "
+                 "send over our Payload User's Guide as a first step.\n"
+                 'Best Regards,\n'
+                 'Lizi')],
  '2026-10-26': [('UTD AIAA / Comet Rocketry: Mi Vo + Olivia Johnson (task #2753)',
                  'mi.vo@utdallas.edu + Olivia (reply on your 10/12 check-in thread, cc Phil + Don Proeschel)',
                  '10/12 you asked for early experiment ideas + shop-tour dates/headcount; design coordination + slot payment due mid-Dec',
