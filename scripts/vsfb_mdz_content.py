@@ -58,7 +58,7 @@ def D(text):
 C = []
 def add(*b): C.append(b)
 
-VER = "_r2"
+VER = "_r3"
 LAUNCH = ("after BLK3 flight heritage (first flight planned early 2027 at Spaceport America) and subject to launch-site assignment, FAA licensing and range approvals")
 
 # ------------------------------------------------------------------ COVER
@@ -211,10 +211,12 @@ add("p", "**MCMS-exo3 as the zone's coordination system.** Mission Control sched
          "the zone, with operator consent. Mission Control and the exo3 payload process are in use today on Exos "
          "operations [13]. Their extensions to Vandenberg and to a multi-vehicle zone are proposed.")
 add("p", "**Finance, design, construct, operate and maintain approach (call \u00a71.2).** Exos would hold the outgrant and "
-         "operate and maintain the zone. Initial facilities are expeditionary and modular — no permanent construction "
-         "until a launch site is assigned. Design and construction of any permanent facility would go through a "
-         "design-build contractor; facility capital would come from Exos operating capital and/or a developer or "
-         "financing partner under a build-to-suit or ground-lease structure, gated on launch-site assignment.")
+         "operate and maintain the zone with a deliberately light footprint: the landing pad and dispersion area, wind "
+         "sensors, a mobile Mission Control node and transportable turnaround shelters. Exos does not propose to build "
+         "or finance cleanrooms, payload-processing bays or other capital-intensive facilities; that is not where Exos "
+         "adds value. Exos's contribution is Mission Control facilities integration and management: scheduling, custody, "
+         "range and safety coordination, and the reusability ledger across whatever facilities SLD 30 and other "
+         "tenants build or already operate.")
 add("table", [["Function (call \u00a71.3 wording)", "Exos activity at the Recovery & Turnaround Zone"],
               ["Spacecraft integration / payload processing", "Receive and inspect recovered vehicles and payloads post-landing; turnaround and reflight preparation"],
               ["Preparation and support of launch programs (\u00a73.1)", "Mission operations for recovery campaigns; coordination with Western Range for landing windows"],
@@ -226,7 +228,7 @@ add("h2", "2.2 Desired facility developments at the MDZ")
 add("table", [["ID", "Facility", "Description", "Phase"],
               ["F0", "MCMS-exo3 — Mission Control digital system of record", "Software in use on Exos operations (payload and vehicle scheduling); no MDZ construction needed; Phase 0 read-only pilot offered to SLD 30 now", "0"],
               ["F1", "Recovery pad and dispersion area", "~150 m\u00b2 hardened aim point; cleared dispersion buffer; perimeter markings; no permanent structures within the dispersion area", "1 (expeditionary)"],
-              ["F2", "Containerized vehicle processing", "Modular/containerized receiving, inspection and basic turnaround for recovered vehicles; scalable to demand", "1 (expeditionary)"],
+              ["F2", "Transportable turnaround shelter", "Rented/containerized shelter for post-landing inspection and turnaround; no permanent structure", "1 (expeditionary)"],
               ["F3", "Mobile Mission Control node", "Containerized mission operations capability for recovery campaigns and go/no-go decisions", "1 (expeditionary)"],
               ["F4", "Site works", "Wind sensors; transporter apron and access from Beach Rd; perimeter fence; access control; utility connections", "1 (expeditionary)"]],
         [0.4, 1.7, 3.5, 0.6])
@@ -385,7 +387,7 @@ add("table", [["Phase / milestone", "Activity", "Notional timing"],
               ["M0", "Outgrant executed; initial site access", "After BLK3 flight heritage and launch-site assignment"],
               ["Site / expeditionary", "Site preparation; wind sensors; pad marking; containerized processing and Mission Control node deployed", "From M0; rapid standup — modular equipment"],
               ["Phase 1 activation", "Recovery zone operational for Exos recovery campaigns", "Subject to approvals; no hard date proposed"],
-              ["Phase 2 gate", "Permanent facilities and/or expansion to serve additional operators; gated on demand, financing, and SLD 30 concurrence", "After Phase 1 track record"]],
+              ["Phase 2 gate", "Mission Control integration and management extended to additional operators and to facilities built by SLD 30 or others; no Exos-funded permanent construction; gated on demand and SLD 30 concurrence", "After Phase 1 track record"]],
         [1.4, 3.6, 1.5])
 
 add("h2", "7.2 Requested award approach")
