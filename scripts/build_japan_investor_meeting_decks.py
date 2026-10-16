@@ -74,7 +74,7 @@ def build(key):
     stat(s,0.6,1.85,2.9,"1 of 3","U.S. FAA-licensed reusable rocket launch providers — with SpaceX and Blue Origin")
     stat(s,3.7,1.85,2.9,"2018","commercial payloads flown on SARGE, our first reusable vehicle")
     stat(s,6.8,1.85,2.9,"25+ yrs","reusable-vehicle heritage (Armadillo Aerospace lineage)")
-    stat(s,9.9,1.85,2.85,"$1.49M","2025 revenue · EBITDA $254K (17%) — profitable, unaudited")
+    stat(s,9.9,1.85,2.85,"$1.49M","2025 revenue · net income $188K — profitable (filed 2025 tax return; unaudited)")
     card(s,0.6,3.95,6.0,2.75,"What we do",["• Reusable suborbital launch and flight test for payloads, universities and launch companies",
         "• Recovery systems that bring vehicles and hardware back to fly again",
         "• Operating under a Part 431 FAA license, transitioning to Part 450"])
@@ -91,7 +91,7 @@ def build(key):
         "• First commercial flight of BLK3: early 2027"],accent=True)
     card(s,4.75,1.85,4.0,4.85,"Type-5 cryo tanks (Scorpius)",["Linerless composite tanks — lighter than metal.",
         "• Flew as fuel and LOX tanks on Intuitive Machines' Odysseus (2024) and Athena (2025) lunar landers",
-        "• Baseline tank design for Intuitive Machines' Nebula orbital transfer vehicle"])
+        "• First tank sale for an orbital transfer vehicle"])
     card(s,8.9,1.85,3.85,4.85,"Recovery know-how",["Our core skill: getting expensive hardware back.",
         "• Drogue and parafoil recovery flown on SARGE since 2018",
         "• Directly useful to Japan's new launch companies, which lose test hardware on every flight"])
