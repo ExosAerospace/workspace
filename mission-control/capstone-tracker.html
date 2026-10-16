@@ -317,6 +317,7 @@ function renderFunnelQueue(d){
       <div class="kpi"><div class="lbl">RESEARCHING</div><div class="big">${esc(f.RESEARCHING||0)}</div><div class="cap">Finding POC + funding</div></div>
       <div class="kpi"><div class="lbl">AI-DRAFTED — needs check</div><div class="big">${esc(f.AI_READY||0)}</div><div class="cap">AI thinks it's ready; no person has checked it</div></div>
       <div class="kpi"><div class="lbl">READY — to send</div><div class="big">${esc(f.READY||0)}</div><div class="cap">Checked by a student (card in Done) → Lizi sends</div></div>
+      <div class="kpi"><div class="lbl">Student cards Done</div><div class="big">${esc(f.STUDENT_DONE||0)}</div><div class="cap">All lead cards you've finished. ${esc(f.STUDENT_DONE_SENT||0)} already emailed by Exos (counted as sent, not READY)</div></div>
     </div>` : '';
 
   const legend = ex.length ? `<div style="margin-top:12px">${ex.map(s=>`

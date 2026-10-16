@@ -152,13 +152,18 @@ SB_REST = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
 CARD_STAGE = {"In Progress": "RESEARCHING", "Done": "READY"}
 
 
+_cards_cache = None
+
+
 def fetch_lead_cards():
+    global _cards_cache
     try:
         key = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
         req = urllib.request.Request(
             SB_REST + "/tasks?select=id,state,owner,tags&tags=cs.%7Butd-lead%7D",
             headers={"apikey": key, "Authorization": "Bearer " + key})
-        return json.load(urllib.request.urlopen(req, timeout=20))
+        _cards_cache = json.load(urllib.request.urlopen(req, timeout=20))
+        return _cards_cache
     except Exception as e:
         glog("lead-cards", status="error", detail=str(e)[:120])
         return []
@@ -173,6 +178,7 @@ def apply_lead_cards(records, cards):
             if r["name"].startswith(key):
                 r["owner"] = c.get("owner")
                 r["card"] = c.get("id")
+                r["card_state"] = c.get("state")
                 card_stage = CARD_STAGE.get(c.get("state"))
                 if card_stage and STAGES.index(card_stage) > STAGES.index(norm_stage(r["status"])):
                     r["status"] = card_stage + " (student card #%s)" % c.get("id")
@@ -257,6 +263,13 @@ def write_student_queue(records):
         # unchecked draft counted as "ready to send" (Lizi 2026-09-30).
         "READY": verified_ready,
         "AI_READY": counts.get("READY", 0) - verified_ready,
+        # Roel 10/15: tracker said 11 READY while the board had 35 cards in Done. READY only
+        # counts Done cards NOT yet emailed; Done cards that went out move on to OUTREACH SENT.
+        # Show the student total too, so the two numbers reconcile.
+        "STUDENT_DONE": sum(1 for c in (_cards_cache or []) if c.get("state") == "Done"),
+        "STUDENT_DONE_SENT": sum(1 for r in records if r.get("card_state") == "Done"
+                                 and STAGES.index(norm_stage(r["status"])) > STAGES.index("READY")
+                                 and norm_stage(r["status"]) not in DEAD),
         "updated": datetime.date.today().isoformat(),
     }
     d["funnel_explainer"] = [
