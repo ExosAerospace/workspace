@@ -11,7 +11,7 @@ GOVERNANCE: only run team-wide AFTER the staff notice is out. Test safely with:
     python3 team_email_task_tracker.py --only jquinn@exosaero.com --dry-run
 Full team (all @exosaero active users): python3 team_email_task_tracker.py   (writes; gated by --go)
 """
-import json, os, sys, re, urllib.request, urllib.parse, urllib.error
+import json, os, sys, re, time, urllib.request, urllib.parse, urllib.error
 from datetime import datetime, timedelta, timezone
 
 WS = os.path.expanduser("~/.openclaw/workspace")
@@ -48,8 +48,22 @@ def gtoken():
     return tok, graph
 
 
-def gget(url, tok):
-    return json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"Authorization": "Bearer " + tok}), timeout=45).read())
+def _fetch(url, tok):
+    return urllib.request.urlopen(urllib.request.Request(url, headers={"Authorization": "Bearer " + tok}), timeout=45).read()
+
+
+def gget(url, tok, fetch=None, tries=3):
+    # Graph occasionally returns a truncated/garbled body (JSONDecodeError) or drops the
+    # connection; retry those. HTTPError (4xx/5xx) propagates to the per-mailbox handler.
+    fetch = fetch or _fetch
+    for i in range(tries):
+        try:
+            return json.loads(fetch(url, tok))
+        except urllib.error.HTTPError:
+            raise
+        except (ValueError, urllib.error.URLError, TimeoutError, ConnectionError, OSError):
+            if i == tries - 1: raise
+            time.sleep(2 * (i + 1))
 
 
 def folder_msgs(graph, tok, mbx, folder, select, since_field):
@@ -72,7 +86,27 @@ def names(addr):
     return [t for t in re.split(r"[._+\-]", addr.split("@")[0].lower()) if len(t) >= 3]
 
 
+def selftest():
+    # replays 2026-10-16 failure: truncated Graph JSON page → JSONDecodeError killed the whole run
+    calls = []
+    def flaky(url, tok):
+        calls.append(1)
+        return b'{"value": [{"a": 1} {"b"' if len(calls) == 1 else b'{"value": [{"a": 1}]}'
+    real_sleep = time.sleep; time.sleep = lambda s: None
+    try:
+        assert gget("u", "t", fetch=flaky) == {"value": [{"a": 1}]} and len(calls) == 2
+        try:
+            gget("u", "t", fetch=lambda u, t: b'{"bad"'); assert False, "should raise"
+        except ValueError:
+            pass
+    finally:
+        time.sleep = real_sleep
+    print("selftest OK")
+
+
 def main():
+    if "--selftest" in sys.argv:
+        return selftest()
     dry = "--dry-run" in sys.argv
     only = sys.argv[sys.argv.index("--only") + 1].lower() if "--only" in sys.argv else None
     go = "--go" in sys.argv
@@ -114,6 +148,8 @@ def main():
             inbox = folder_msgs(graph, tok, mbx, "inbox", "from,receivedDateTime", "receivedDateTime")
         except urllib.error.HTTPError as e:
             print(f"  {mbx}: Graph {e.code} — skipping"); continue
+        except (ValueError, urllib.error.URLError, OSError) as e:
+            print(f"  {mbx}: Graph read failed after retries ({type(e).__name__}: {str(e)[:120]}) — skipping"); continue
         inbound = {}
         for m in inbox:
             a = ((m.get("from", {}) or {}).get("emailAddress", {}) or {}).get("address", "").lower()
