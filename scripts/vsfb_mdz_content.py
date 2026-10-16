@@ -59,7 +59,7 @@ def D(text):
 C = []
 def add(*b): C.append(b)
 
-VER = "_r9"
+VER = "_r10"
 LAUNCH = ("targeted for Q2 2028, after BLK3 flight heritage (first flight planned early 2027 at Spaceport America) and subject to launch-site assignment, FAA licensing and range approvals")
 
 # ------------------------------------------------------------------ COVER
