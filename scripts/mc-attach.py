@@ -16,6 +16,7 @@ the previous current version archived and bumps the version number; the new file
 becomes current.
 """
 import argparse, json, os, re, shutil, sys, time, hashlib
+WS_ROOT = "/Users/exomac/.openclaw/workspace"
 
 MC = "/Users/exomac/.openclaw/workspace/mission-control"
 UPLOADS = os.path.join(MC, "uploads")
@@ -82,6 +83,29 @@ def load_meta():
             return json.load(f)
     except Exception:
         return []
+
+
+def _argon_hook(task, src):
+    """argon-reviewer-exo3 (Jon 2026-10-15 "Go"): investor/partner docs get an independent Gemini 4 Argon pre-send
+    review in the background; findings land as a note on the task. Scope + sensitive-content block + spend cap live
+    in argon_review.py. Never blocks or fails the attach."""
+    if os.environ.get("MC_ATTACH_SELFTEST") or os.environ.get("MC_ATTACH_NO_ARGON"):
+        return False
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from argon_review import should_review
+        if not should_review(src):
+            return False
+        import subprocess
+        os.makedirs(os.path.join(WS_ROOT, "logs", "argon-reviews"), exist_ok=True)
+        out = open(os.path.join(WS_ROOT, "logs", "argon-reviews", "hook.log"), "a")
+        subprocess.Popen([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "argon_review.py"),
+                          "--file", os.path.abspath(src), "--task", str(task), "--auto"],
+                         stdout=out, stderr=out, start_new_session=True)
+        print("  argon: pre-send review queued (findings will post as a task note)")
+        return True
+    except Exception:
+        return False
 
 
 def main():
@@ -209,6 +233,7 @@ def main():
     print(f"{action}: '{rec['filename']}' -> task {a.task}")
     print(f"  url: /uploads/{stored}")
     print(f"  doc_key: {doc_key}")
+    _argon_hook(a.task, src)
 
 
 def selftest():
@@ -248,6 +273,9 @@ def selftest():
     check(family("Exos_X_2026-10-12_r5_FINAL.pptx") == family("1791922360631_Exos_X_2026-10-10_r2.pptx") == "exos-x.pptx", "family strips dates/rN/FINAL/upload prefix")
     check(family("BLK3_M101_Sizing.docx") == "blk3-m101-sizing.docx", "BLK3/M101 never mangled")
     check(rc == 3, "older-dated file is refused (stale guard)")
+    check(_argon_hook("T", "Exos_Investor_Update_2026-10-14.docx") is False, "argon hook never fires inside selftest")
+    from argon_review import should_review as _sr
+    check(_sr("Exos_Japan_Round_SBI_Investment_2026-10-16.pptx") and not _sr("Exos_VSFB_Whitepaper_2026-10-15.docx"), "argon hook scope: investor deck yes, gov whitepaper no")
     UPLOADS, META, sys.argv = saved
     print(f"mc-attach selftest: {ok}/{ok} pass")
 

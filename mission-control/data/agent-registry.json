@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-04T12:49:13.103453-05:00",
- "total": 273,
+ "total": 274,
  "standing": 114,
  "ephemeral": 18,
  "service": 6,
@@ -5706,7 +5706,8 @@
    "reusability_scope": "all MC tasks",
    "change_log": [
     "2026-10-13 2099168/3e7cb34 family chaining + dedupe + real filenames",
-    "2026-10-13 exo3 remediation: selftest + telemetry + registry; AGENTS.md rule is backed by this code guard"
+    "2026-10-13 exo3 remediation: selftest + telemetry + registry; AGENTS.md rule is backed by this code guard",
+    "2026-10-15 background hook to argon-reviewer-exo3 for in-scope investor/partner docs (never blocks attach; MC_ATTACH_NO_ARGON=1 disables); selftest 9 checks"
    ]
   },
   {
@@ -5847,6 +5848,29 @@
    "envelope_source": "authored 2026-10-15 at creation",
    "change_log": [
     "2026-10-15 created"
+   ]
+  },
+  {
+   "human_owner": "John Quinn",
+   "risk_tier": "MEDIUM",
+   "envelope_source": "authored 2026-10-15 (Jon: 'Go' on Gemini 4 Argon pre-send reviewer)",
+   "label": "argon-reviewer-exo3",
+   "program": "argon-reviewer-exo3",
+   "script": "scripts/argon_review.py (manual CLI + background hook from scripts/mc-attach.py)",
+   "kind": "tool",
+   "schedule": "on demand + on mc-attach of in-scope docs",
+   "purpose": "Independent second-model (Gemini 4 Argon) pre-send review of investor and partner communications (investor updates, Japan-round/partner decks, one-pagers, follow-ups) against config/argon-claim-rules.md. Catches overclaims, fact conflicts and cross-document inconsistencies before Jon sees them.",
+   "stack_layer": "GOVERN (pre-send QA)",
+   "autonomy_tier": "Advise-only (returns findings; never edits, attaches or sends)",
+   "permission_envelope": "READ the reviewed file; SEND extracted text to Google Gemini API (commercial) ONLY after deterministic guards pass; WRITE logs/argon-reviews/*, state/argon-spend.json, one MC task_note activity. Jon's scope 10/15: NEVER sensitive government programs or rocket technical content.",
+   "memory_boundary": "stateless per review; monthly spend ledger state/argon-spend.json",
+   "escalation": "sensitive-content hit -> BLOCKED exit 4 (nothing leaves the machine; manual mode posts the block on the task); monthly cap reached (config/argon-review.json, $25) -> REFUSED exit 5 + warn telemetry; out-of-scope filename in --auto -> silent skip",
+   "eval_suite": "/usr/bin/python3 scripts/argon_review.py --selftest (17 checks replaying the 10/15 pilot: AstroX/SBI/investor-update in scope, VSFB/SBIR/NASA/counsel-briefing/PDF out, ITAR/CUI/Dist-D/contract-number/thrust-psi blocked before any API call, normal investor language passes, cap allow/refuse/monthly reset, Dec-1 price step, rules file present) + mc-attach --selftest (hook never fires in selftest; hook scope)",
+   "eval_type": "output",
+   "telemetry": "logs/fleet-events.jsonl agent=argon-reviewer-exo3 (review issues/clean + usd, blocked_sensitive, refused_cap)",
+   "reusability_scope": "investor + partner communications only",
+   "change_log": [
+    "2026-10-15 created; pilot found 6 real issues in shipped AstroX/SBI/650 decks + 10/14 investor update"
    ]
   }
  ],
