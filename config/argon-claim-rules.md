@@ -4,7 +4,7 @@ Owner: John Quinn. Edit this file to change what the reviewer checks against. On
 Sources: USER.md claim caveats and the Exo memory feedback files named in brackets.
 
 - Exos holds an FAA Part 431 launch license and is transitioning to Part 450. Never describe BLK3 as "licensed", "FAA-licensed", or give BLK3 its own license date. [feedback_part431_not_licensed_phrasing]
-- BLK3 has NOT flown. It is preparing for first flight in early 2027. The hover test campaign is planned, not done. No "proven", "flight-proven" or "demonstrated" language about BLK3 itself; flight heritage belongs to SARGE/earlier vehicles. [feedback_blk3_flight_timing_early_2027]
+- BLK3 has completed its hover test campaign (John 10/15 19:40) but has NOT flown to space. It is preparing for first flight in early 2027. No "flight-proven" or "demonstrated in flight" language about BLK3 itself; flight heritage belongs to SARGE/earlier vehicles. [feedback_blk3_flight_timing_early_2027]
 - There is no BLK3 manifest yet. Never say a customer or payload "is on" a BLK3 flight or manifest; use "planned for" / "reserved". [feedback_no_blk3_manifest_yet]
 - The "one of only three" line is allowed only in the precise form: FAA-licensed vertical-takeoff reusable rockets with demonstrated recovery/reflight (SpaceX, Blue Origin, Exos). No "only/first/fastest" claims otherwise.
 - BLK3 has under 5,000 components. [feedback_blk3_parts_claim_under_5000]
