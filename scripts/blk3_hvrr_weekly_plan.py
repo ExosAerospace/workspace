@@ -22,8 +22,8 @@ KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_
 H = {"apikey": KEY, "Authorization": "Bearer " + KEY, "Content-Type": "application/json"}
 SUP = os.path.join(WS, "logs", "assignment-notify-suppress.json")
 
-WEEK_START = datetime.date(2026, 10, 12)
-WEEK_END = datetime.date(2026, 10, 16)
+WEEK_START = datetime.date(2026, 10, 19)
+WEEK_END = datetime.date(2026, 10, 23)
 WK = f"{WEEK_START:%Y-%m-%d}"
 SOURCE = f"exo-blk3-hvrr-weekly-{WK}"
 OUT = os.path.join(WS, "drafts", f"BLK3_HVRR_Weekly_Plan_and_Meeting_Agenda_{WK}.docx")
@@ -31,106 +31,107 @@ OUT = os.path.join(WS, "drafts", f"BLK3_HVRR_Weekly_Plan_and_Meeting_Agenda_{WK}
 # Proposed targets. Each = (target, done-when evidence, MC task refs). Owners confirm or adjust in the meeting.
 TARGETS = [
     ("Phil Eaton", "peaton@exosaero.com", "BLK3 program lead (#1712)", [
-        ("BLK3 integrated master schedule: every open BLK3 Flight task gets a real owner and a due date "
-         "back-planned from the flight date. This was due wk 9/28 and is still open — deliver by Wed 10/14.",
-         "Schedule attached to #1712 by Wed 10/14 EOD", "#1712"),
-        ("Recovery section: list the remaining fab steps with % complete, and close at least one step this week. "
-         "No activity since 9/7 — post a note with current status.",
-         "Step list + photo on #78", "#78"),
-        ("Fin tooling: pull the original fin spec package (John located it this weekend), send it to the machinist, "
-         "and confirm the tooling job is scheduled. Geometry is locked: full-size fins. (#76 action from 10/6 meeting.)",
-         "Machinist job confirmed; note on #76", "#76"),
-        ("BLK3 restricted drawings (overdue since 8/22): release to #1872.",
-         "Drawings attached on #1872", "#1872"),
-        ("$10M building policy inquiry: complete the reassignment to Victor on #1374 (Jon's instruction from 9/30).",
-         "#1374 reassigned to Victor", "#1374"),
+        ("BLK3 integrated master schedule: OVERDUE 3 weeks. Every open BLK3 Flight task needs a real owner "
+         "and a date back-planned from early-2027 first flight. Deliver the schedule to #1712 by Wed 10/22.",
+         "Schedule file attached to #1712 by Wed 10/22 EOD", "#1712"),
+        ("Recovery section: post current % complete with photos and close at least one fab step. "
+         "No activity since 9/7 — this is the 4th straight week.",
+         "Photo + step update on #78", "#78"),
+        ("Fin tooling: confirm the machinist job is scheduled (full-size fins, geometry locked). "
+         "Send the fin spec package if not yet sent. Note confirmation on #76.",
+         "Machinist job scheduled; note on #76", "#76"),
+        ("BLK3 restricted drawings (#1872 Cancelled — explain): post a note on #1872 explaining the "
+         "cancellation and identify where the drawings requirement lives now (or reopen it).",
+         "Note on #1872 explaining cancellation", "#1872"),
+        ("$10M building policy: reassign #1374 to Victor per Jon's 9/30 instruction. Close it out.",
+         "#1374 reassigned to Victor, state updated", "#1374"),
     ]),
     ("Neil Milburn", "nmilburn@exosaero.com", "HVRR / Hermes PM, BLK3 licensing", [
-        ("HVRR flight-ready WBS: break the remaining Hermes SOW work into owned, dated tasks — specifically: "
-         "CFD + GNC updates, aerodynamic nose cone, shock-absorbing landing legs, 14 CFR 101 waiver draft, "
-         "insurance, CMTF free-flight campaign. Add each as a subtask under #3073 with owner and date.",
-         "Subtasks under #3073, each with an owner and date", "#3073"),
-        ("BLK3 Part 450 package: advance the next WBS section (post its status and any new draft on #2802).",
-         "Status note + advance on #2802", "#2802, #2693"),
-        ("PIEE login: complete the 30-day re-login on #3250 to keep the account active.",
-         "#3250 Done", "#3250"),
+        ("HVRR flight-ready WBS: add owned, dated subtasks under #3073 for CFD + GNC updates, aerodynamic nose cone, "
+         "shock-absorbing landing legs, 14 CFR 101 waiver draft, and CMTF free-flight campaign. Each must have an owner and date.",
+         "Subtasks under #3073 with owner and date for all 5 items", "#3073"),
+        ("BLK3 Part 450 package: advance at least one WBS section — post its status and any new draft on #2802.",
+         "Status note + section advance on #2802", "#2802"),
     ]),
-    ("Steve Norsworthy", "snorsworthy@exosaero.com", "Computer section build, inventory", [
-        ("Computer section: confirm the 3 long-lead items (SDI505 IMU, Athena IV CPU, Cambium 900 MHz radio) — "
-         "are they on order? If not, issue purchase requests this week.",
-         "Long-lead confirmation + any PRs on #3024", "#3024"),
-        ("Computer-section build capture: photograph and log each component installed this week on #3024.",
+    ("Steve Norsworthy", "snorsworthy@exosaero.com", "Computer section build, long-leads", [
+        ("Long-lead items: confirm SDI505 IMU, Athena IV CPU, and Cambium 900 MHz radio are on order. "
+         "If not, issue purchase requests this week. Post confirmation on #3024.",
+         "Long-lead confirmation + any PRs posted on #3024", "#3024"),
+        ("Computer-section build: photograph and log each component installed this week on #3024.",
          "Photos per component on #3024", "#3024"),
     ]),
     ("Mike Talley", "mtalley@exosaero.com", "Fabrication / GSE", [
-        ("Bulkheads: post current % complete with photos. No update since 9/7.", "Photo + state on #86", "#86"),
-        ("GHe tank envelope: once Jon resolves the HP He tank path (#3056), put the large GHe tank envelope "
-         "in the design model and sketch the support concept. Monitor #3056 this week.",
-         "Model screenshot on #90/#92 (or note on blocker if #3056 still open)", "#90, #92, #3056"),
-        ("Launch stool: inspect it and the scale system, write the repair/modify list. No update since 9/7.",
-         "List on #102/#103", "#102, #103"),
+        ("Bulkheads: post current % complete with photos. OVERDUE 4 weeks — no update since 9/7.",
+         "Photo + state on #86", "#86"),
+        ("GHe tank envelope: if #3056 He tank decision arrives this week, put the large GHe tank envelope "
+         "in the design model and sketch the support concept. Post note on blocker if #3056 still open.",
+         "Model screenshot on #90/#92 or blocker note", "#90, #92, #3056"),
+        ("Launch stool: inspect it and the scale system, write the repair/modify list. OVERDUE 4 weeks.",
+         "Repair/modify list on #102/#103", "#102, #103"),
     ]),
     ("Victor Castilleja", "vcastilleja@exosaero.com", "Shop / build capture, HVRR certs", [
-        ("Clean the HVRR tanks (#2409). No movement since 9/29.", "#2409 Done with photo", "#2409"),
-        ("Mount the GPS antenna (#82). No movement since 9/7.", "#82 Done with photo", "#82"),
-        ("BLK3 cost-fill: send vendor RFQs for the 10 highest-value open lines on #3076.",
+        ("Clean the HVRR tanks (#2409). OVERDUE 3 weeks — no movement since 9/29.",
+         "#2409 Done with photo", "#2409"),
+        ("Mount the GPS antenna (#82). OVERDUE 4 weeks — no movement since 9/7.",
+         "#82 Done with photo", "#82"),
+        ("BLK3 cost-fill: send vendor RFQs for the 10 highest-value open lines on #3076. No movement since 9/24.",
          "RFQ list on #3076", "#3076"),
-        ("HVRR parts cert log (#2408, now assigned to you): scan and log certs for at least 2 more subassemblies "
-         "(Steve logged 3 PDFs; 7 subassemblies total).",
+        ("HVRR parts cert log (#2408): scan and log certs for at least 2 more subassemblies.",
          "Updated workbook on #2408", "#2408"),
     ]),
-    ("Russ Blink", "rblink@exosaero.com", "Avionics / FSW / telemetry", [
-        ("Telemetry component selection: OVERDUE since 10/2. Post the selection (or a written gap note) on #94.",
-         "Selection or gap note on #94", "#94"),
-        ("Harness design: interconnect diagram and harness list for the computer section — post draft on #85.",
+    ("Russ Blink", "rblink@exosaero.com", "Avionics / FSW / telemetry — ESCALATED", [
+        ("Telemetry component selection → #94: OVERDUE since 10/2 (4 weeks). Post the selection or a written "
+         "gap note by EOD Tuesday. If blocked, state the blocker in writing.",
+         "Selection or written gap note on #94 by Tue 10/21", "#94"),
+        ("Harness design: interconnect diagram and harness list for the computer section — post draft on #85. "
+         "OVERDUE 4 weeks.",
          "Draft on #85", "#85"),
         ("Recovery servo serial control: post status and remaining FSW steps on #80.",
-         "Note on #80", "#80"),
+         "Status note on #80", "#80"),
         ("Ground telemetry support quote: send the request and note it on #96.",
          "Request sent, noted on #96", "#96"),
     ]),
-    # John is in Japan ~10/12 — targets are light/async
-    ("John Quinn", "jquinn@exosaero.com", "CEO: owns the plan (Japan trip ~10/12)", [
-        ("HP He tank path (#3056): make the call — re-test track A/B/C or procure new tank. "
-         "Pressurization section and GHe envelope (Mike) are gated on this. Async OK.",
+    ("John Quinn", "jquinn@exosaero.com", "CEO: owns the plan", [
+        ("HP He tank path (#3056): make the final call — Track A (boss seal), B (conformal coating), "
+         "or C (new tank). Pressurization section and GHe envelope (Mike #90/#92) are gated on this.",
          "Decision recorded on #3056", "#3056"),
+        ("Russ Blink escalation: 4 weeks zero avionics activity. Direct intervention required.",
+         "Outcome noted on #3666 or #94", "#3666, #94"),
         ("Run the Friday scorecard: committed vs done by person.", "Scorecard on this plan task", "this task"),
     ]),
     ("Lizi Quinn", "lquinn@exosaero.com", "Payload manifest → build inputs", [
-        ("Update the payload snapshot on #1300 with any new commitments or changes since 9/30 "
-         "(UCI status, UTD/Comet confirmation). Engineering needs current numbers for integration design.",
-         "Updated snapshot on #1300", "#1300, #2360"),
+        ("Confirm UTD/Comet status following check-in email sent 10/12. Update #1300 with any changes.",
+         "Updated note on #1300 with UTD/Comet confirmation", "#1300"),
     ]),
 ]
 
 AGENDA = [
     ("1. Mission and rules (John), 5 min",
-     ["Until further notice, the team's focus is BLK3 to flight and the HVRR flight-ready build.",
-      "Method: plan the work, work the plan. Weekly targets are committed Tuesday, updated daily, and scored Friday.",
-      "Note: John is traveling to Japan ~10/12; async participation this week."]),
-    ("2. Wk 9/28–10/9 scorecard (2 weeks), 10 min",
-     ["Phil: 1/6 done; master schedule and drawings still open.",
-      "Neil: 2/4 done (kick-off + CUI); WBS and Part 450 carry forward.",
-      "Steve: 2/4 done (inventory closeout + cost-fill); computer-section carry forward.",
-      "Mike: 0/3 done; GSE/fab work blocked or untouched.",
-      "Victor: 0/4 done; GPS antenna, HVRR tanks, cost-fill RFQs all open.",
-      "Russ: 0/4 done; all avionics targets untouched — escalation required.",
-      "John: 1/3 done (He tank partial); master schedule approval and scorecard carry forward.",
-      "Lizi: 1/1 done (payload snapshot)."]),
+     ["Until further notice, the team's focus is BLK3 to flight (next vehicle, preparing for first flight "
+      "early 2027 under the Part 431→450 transition) and the HVRR flight-ready build.",
+      "Method: plan the work, work the plan. Weekly targets are committed Tuesday, updated daily, and scored Friday."]),
+    ("2. Wk 10/12–10/16 scorecard, 10 min",
+     ["Phil: 0/5 done; master schedule (3 wks overdue), fin tooling, recovery section all open. #1872 cancelled without explanation.",
+      "Neil: 1/3 done (PIEE login); HVRR WBS and Part 450 carry forward.",
+      "Steve: 0/2 done; long-lead confirmation and build photos not posted.",
+      "Mike: 0/3 done; bulkheads/launch stool independent misses; GHe gated on #3056.",
+      "Victor: 0/4 done; GPS antenna and HVRR tank cleaning 3–4 weeks overdue.",
+      "Russ: 0/4 done — 4 consecutive weeks zero activity. ESCALATE today.",
+      "John: 1/3 done (scorecard); He tank decision still open.",
+      "Lizi: 1/1 done (payload snapshot 10/12). ✓"]),
     ("3. Critical path walk, 10 min",
-     ["BLK3 (Phil): recovery section, fin tooling (geometry locked—full-size), pressurization (GHe; gated on #3056), "
-      "computer/avionics section (Steve/Victor), telemetry/FSW (Russ), master schedule (still open).",
-      "HVRR / Hermes FA9300-26-C-6011 (Neil): kicked off; CLIN0001 invoiced. "
-      "WBS subtasks needed for CFD/GNC, nose cone, landing legs, Part 101 waiver, CMTF campaign."]),
+     ["BLK3 (Phil): master schedule (blind without it), recovery section, fin tooling, pressurization (gated #3056), "
+      "computer section (Steve long-leads), avionics (Russ — 4 weeks dark).",
+      "HVRR / Hermes FA9300-26-C-6011 (Neil): WBS subtasks for CFD/GNC, nose cone, landing legs, Part 101 waiver, CMTF."]),
     ("4. Targets by employee for this week, 20 min",
      ["Each owner confirms or adjusts their targets (next pages). Targets are locked in Mission Control after the meeting."]),
     ("5. Blockers and decisions, 10 min",
-     ["HP He tank final call (#3056): re-test track A/B/C or new tank — gates pressurization section.",
-      "Russ Blink: zero activity on avionics for 2 weeks; escalate today.",
-      "Phil master schedule: critical-path visibility is zero without it.",
-      "BLK3 restricted drawings (#1872): overdue since 8/22."]),
+     ["HP He tank final call (#3056): SSLC Parylene evaluation ongoing — gates pressurization section.",
+      "Russ Blink: 4 weeks zero avionics deliverables; John direct intervention required.",
+      "Phil master schedule: critical-path tracking is blind without it — 3rd ask.",
+      "#1872 cancellation: what happened to the restricted drawings requirement?"]),
     ("6. Cadence and close, 5 min",
-     ["Daily: update your task by 4 pm (note, photo, or state). Exo flags only the slips.",
+     ["Daily: update your task by 4 pm (note, photo, or state change). Exo flags only the slips.",
       "Friday 3 pm: scorecard of committed vs done. A miss gets a cause and a recovery date.",
       "Friday: Exo drafts next week's targets from the board; owners confirm them Tuesday."]),
 ]
