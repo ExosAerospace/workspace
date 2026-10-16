@@ -396,6 +396,25 @@ def contact_from(addr, texts, fallback=""):
     return "", "Hello,"
 
 
+def open_student_keys():
+    """Org keys of UTD lead cards still being researched (not Done/Cancelled). Students raised 10/15 that
+    Exos emailed their open leads before research was finished (Ursa Major, Rhea, UT, UMontana, Sierra,
+    Hermeus, Castelion went out via pay_candidates). Those orgs are off-limits until the card is Done."""
+    tasks = sb_get("tasks?select=id,title,tags,description,state&tags=cs.%7Butd-lead%7D"
+                   "&state=not.in.(Done,Cancelled)&limit=500") or []
+    keys = set()
+    for t in tasks:
+        desc = t.get("description") or ""
+        lead_tag = next((g[5:] for g in (t.get("tags") or []) if str(g).startswith("lead:")), "")
+        lead_line = (re.search(r"^LEAD:\s*(.+)", desc, re.M) or [None, ""])[1]
+        for src in (lead_line, lead_tag, t.get("title") or ""):
+            if src:
+                keys.add(name_key(clean_org(src)))
+                keys.add(name_key(src))
+    keys.discard("")
+    return keys
+
+
 def utd_candidates():
     tasks = sb_get("tasks?select=id,title,owner,tags,description,completed_at,state"
                    "&tags=cs.%7Butd-lead%7D&state=eq.Done&order=completed_at.asc&limit=500")
@@ -556,6 +575,15 @@ def build(dry):
     pay = pay_candidates()
     utd_keys = {name_key(c["org"]) for c in utd} | {name_key(c["lead_key"]) for c in utd if c["lead_key"]}
     pay = [p for p in pay if name_key(p["org"]) not in utd_keys]
+    try:
+        open_keys = open_student_keys()
+    except Exception as e:   # fail closed: if we can't see the student board, offer no pipeline items
+        log(f"build: open student-card fetch failed ({e}); skipping all pipeline items")
+        open_keys, pay = set(), []
+    held_open = [p for p in pay if name_key(p["org"]) in open_keys or name_key(clean_org(p["org"])) in open_keys]
+    pay = [p for p in pay if p not in held_open]
+    for p in held_open:
+        log(f"build: skip {p['org']}: open UTD student lead card (research not finished)")
     items, routed, held, skipped = [], [], [], []
     seen = set()
     for c in utd + pay:
