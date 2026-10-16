@@ -32,8 +32,7 @@ SRC = {
  11: "SAM.gov Entity Registration, Exos Aerospace Systems & Technologies, Inc., UEI CK24BPZGF854 / CAGE 7EMY6, "
      "status Active (All Awards), expiration 7 Oct 2027 (verified 11 Oct 2026).",
  12: "51 U.S.C. § 50101(7) (definition of “United States commercial provider”); 10 U.S.C. § 2667 (leases of non-excess property).",
- 14: "Exos Aerospace, “Reusable Suborbital Flight Test Services” (EXOS at a Glance: FAA-licensed reusable suborbital launch operator; payload recovery for post-flight inspection), "
-     "exosaero.com, accessed 12 Oct 2026.",
+ 14: "Exos Aerospace, \u201cReusable Suborbital Flight Test Services,\u201d exosaero.com, accessed 12 Oct 2026.",
  15: "15 U.S.C. § 638(e)(4)(C) (SBIR “third phase” = work that “derives from, extends, or completes efforts made under prior funding "
      "agreements under the SBIR program”) and 15 U.S.C. § 638(r) (Phase III awards) — law.cornell.edu/uscode/text/15/638 (accessed 11 Oct 2026).",
  17: "Exos records: BLK3 reusable rocket design work performed under AFWERX SBIR Phase II FA8649-21-P-0838 (confirmed by Exos CEO, 11 Oct 2026).",
@@ -59,7 +58,7 @@ def D(text):
 C = []
 def add(*b): C.append(b)
 
-VER = "_r11"
+VER = "_r12"
 LAUNCH = ("targeted for Q2 2028, after BLK3 flight heritage (first flight planned early 2027 at Spaceport America) and subject to launch-site assignment, FAA licensing and range approvals")
 
 # ------------------------------------------------------------------ COVER
