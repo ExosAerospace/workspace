@@ -49,6 +49,9 @@ COPY_RULES = [
     # 10/8–10/12 payload drafts kept re-introducing unsourced turnaround claims
     (r"\s*Integration lead times are measured in weeks\.", ""),
     (r"\s+within days\b", ""),
+    # John 10/15: BLK3 is not plainly "licensed" (Part 431 license, transitioning to Part 450)
+    (r"BLK3, its enhanced successor and our latest FAA-licensed vehicle,", "its enhanced successor, BLK3,"),
+    (r"\b(?:our )?(?:latest )?FAA-licensed vehicle,? BLK3\b", "our next vehicle, BLK3"),
 ]
 
 
