@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-17T04:16:54",
-  "total": 280,
+  "generated": "2026-10-17T04:56:23",
+  "total": 281,
   "standing": 115,
   "ephemeral": 18,
   "service": 6,
@@ -4738,7 +4738,8 @@
       "change_log": [
         "2026-10-01 created (Jon approved QB write for invoicing; sends via Decision approval)",
         "2026-10-03 prepare(): qty x unit-price lines, offering metadata, returns rec; cover email due-on-receipt + online pay for offering invoices; watch(): offering ledger Invoiced/Cancelled/Paid hooks (EXOS-FIN-003-0)",
-        "2026-10-16 fac51cf watch(): auto_prepare_due drafts M2 (40%, L-120) 7 days early for executed orders \u2192 unsent QB invoice + Approve & send Decision (nothing reaches customer without Jon). 2026-10-17 exo3 remediation: --selftest + fleet_log. Rollback: remove auto_prepare_due(a) from watch()."
+        "2026-10-16 fac51cf watch(): auto_prepare_due drafts M2 (40%, L-120) 7 days early for executed orders \u2192 unsent QB invoice + Approve & send Decision (nothing reaches customer without Jon). 2026-10-17 exo3 remediation: --selftest + fleet_log. Rollback: remove auto_prepare_due(a) from watch().",
+        "2026-10-17 plist also runs scripts/qb_je_approval.py watch (qb-je-approval-exo3) each tick. Rollback: drop the '; python3 ... qb_je_approval.py watch' suffix (backup /tmp/qbiw.plist.bak)."
       ],
       "eval_type": "liveness"
     },
@@ -6022,6 +6023,29 @@
       "reusability_scope": "any deck/video/image deliverable",
       "change_log": [
         "2026-10-17 created after unguarded Oct 5 IDJ Veo iterations spent ~$39 in one day"
+      ]
+    },
+    {
+      "human_owner": "John Quinn",
+      "risk_tier": "MEDIUM",
+      "envelope_source": "authored 2026-10-17 (Jon: 'record the information in QB for Kyle to just approve')",
+      "label": "qb-je-approval-exo3",
+      "program": "qb-je-approval-exo3",
+      "script": "scripts/qb_je_approval.py (stage CLI; watch chained in com.exos.qb-invoice-watch, 300s)",
+      "kind": "tool",
+      "schedule": "stage on demand; watch every 5 min via com.exos.qb-invoice-watch",
+      "purpose": "Exo prepares balanced QuickBooks journal entries; a human approver (Kyle/Jon) approves them on one Decision card; Exo posts them only after a human Approve & post.",
+      "stack_layer": "ORCHESTRATE (finance GL)",
+      "autonomy_tier": "Execute-on-human-approval",
+      "permission_envelope": "external API: quickbooks (WRITE: JournalEntry create only, exactly the staged lines; READ: none required); writes mission-control/data/qb-je-batches.json, logs/qb-je-approval.log; files Decisions via /api/decisions/ingest",
+      "memory_boundary": "staged batches in qb-je-batches.json",
+      "escalation": "unbalanced/missing-account batch -> REFUSED at stage (exit 2); agent or non-approver answer -> skipped, never posts; post error -> batch.error + warn telemetry",
+      "eval_suite": "/usr/bin/python3 scripts/qb_je_approval.py --selftest (12 checks: balance, account ids, dr/cr exclusivity, QB payload sides, open waits, agent answer never posts, non-approver never posts, Kyle approve posts, hold, reject, instruction=hold)",
+      "eval_type": "output",
+      "telemetry": "logs/fleet-events.jsonl agent=qb-je-approval-exo3 (staged, posted, rejected, post_failed, stage_refused); logs/qb-je-approval.log",
+      "reusability_scope": "any GL adjustment Exo prepares for the bookkeeper",
+      "change_log": [
+        "2026-10-17 created; first batch po7-round7-2026-10-17 (Larsen/Heeren conversions + Powers split) -> D-7282139 for Kyle"
       ]
     }
   ],

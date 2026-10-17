@@ -1,0 +1,17 @@
+{"id": "po7-round7-2026-10-17", "title": "Round 7 (PO7) note conversions + Powers payoff split",
+ "approver_email": "kballard@exosaero.com", "task": 3853,
+ "why": "John 10/17: record the Round 7 (PO7) note activity in QB for Kyle to approve. QuickBooks PO7 balance is $538,250. PO7 principal booked in QB was $565,000 across 15 notes; three have since left the register. These entries bring the account to $465,000, the principal of the 12 notes still outstanding. Your YE 2025 Adj pattern is followed: par $0.00025/share to Capital Stock Par Value, the rest to Paid In Capital. Sources: David's PO7 register (cap-table/source/PO 7 convertible notes update.xlsx) and the QB PO7 general ledger.",
+ "entries": [
+  {"date": "2026-03-02", "doc": "PO7-CONV-LARSEN", "memo": "PO7 note 506-D07-0631 (Albert Larsen IRA, Entrust) converted in full to 5,000 PO10 shares @ $10 (504-D10-1142)",
+   "lines": [{"acct_id": "333", "acct": "Convertible Note - PO 7", "dr": 50000.00},
+             {"acct_id": "203", "acct": "Capital Stock Par Value", "cr": 1.25, "desc": "5,000 sh x $0.00025 par"},
+             {"acct_id": "209", "acct": "Paid In Capital", "cr": 49998.75}]},
+  {"date": "2026-03-12", "doc": "PO7-CONV-HEEREN", "memo": "PO7 note 506-D07-0624 (Heeren Family Trust) converted in full to 2,500 PO10 shares @ $10 (504-D10-1150)",
+   "lines": [{"acct_id": "333", "acct": "Convertible Note - PO 7", "dr": 25000.00},
+             {"acct_id": "203", "acct": "Capital Stock Par Value", "cr": 0.63, "desc": "2,500 sh x $0.00025 par"},
+             {"acct_id": "209", "acct": "Paid In Capital", "cr": 24999.37}]},
+  {"date": "2026-09-17", "doc": "PO7-PAYOFF-POWERS", "memo": "Split 9/17 $26,750 Powers payoff (506-D07-0632): $25,000 principal + $1,750 final-year 7% interest. The full $26,750 was coded to the note.",
+   "lines": [{"acct_id": "249", "acct": "Administrative:Interest Expense", "dr": 1750.00},
+             {"acct_id": "333", "acct": "Convertible Note - PO 7", "cr": 1750.00}]}
+ ],
+ "notes": "AFTER POSTING: PO7 = $465,000 = the 12 remaining notes. Maturity (5 yr from funding):\n- Already matured Sept 2026, no payment in QB yet: Crow 9/20 $25K, Scales 9/21 $50K, Cellucci 9/23 $100K, Kruse 9/24 $150K, Robinson 9/27 $25K = $350K\n- Oct 2026: Robinson 10/6 $25K, Baker 10/11 $5K, Walker 10/14 $25K, Johnson/Salt & Light 10/25 $10K\n- Nov 2026: MacDonald 11/17 $10K, Johnson 11/29 $15K, Crow 11/30 $25K\nPayoffs book as they are paid (Dr PO7 / Cr SVB, final-year interest to Interest Expense).\n\nFLAGS, NOT IN THESE ENTRIES:\n(1) The register also lists Kao Li $50K (506-D07-0633) and Jacob Buchholdt $3K (506-D07-0635); neither appears in the QB PO7 account. Where were they booked?\n(2) Alford $200K (PO9) is unchanged; her cash-vs-shares election is still open.\n(3) PO7-PAYOFF-POWERS assumes the 3/9 $1,750 bill was 2025 interest and the 9/17 payment carried 2026 interest. If 9/17 was principal only, answer Reject or send the change."}
