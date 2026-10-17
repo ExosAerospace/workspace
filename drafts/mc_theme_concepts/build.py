@@ -98,7 +98,8 @@ table{{width:100%;border-collapse:collapse;font-size:15px}} td{{padding:9px 8px;
 </body></html>"""
 
 
-for key, t in THEMES.items():
+if __name__ == "__main__":
+  for key, t in THEMES.items():
     hp = os.path.join(OUT, f"MC_Theme_{key}.html"); open(hp, "w").write(html(t))
     png = os.path.join(OUT, f"MC_Theme_{key}.png")
     subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--window-size=1600,1000", f"--screenshot={png}", "file://" + hp],

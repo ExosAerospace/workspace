@@ -1,0 +1,49 @@
+<!doctype html><html><head><meta charset=utf-8><style>
+*{box-sizing:border-box}
+body{margin:0;width:1600px;height:1000px;overflow:hidden;background:#060000;color:#ff3b30;font-family:'Menlo','SF Mono',monospace;letter-spacing:.06em;text-shadow:0 0 4px rgba(255,59,48,.5)}
+.box{position:relative;background:rgba(255,59,48,.03);border:1px solid #7a1a15;padding:14px 16px}
+.box:before,.box:after{content:'';position:absolute;width:14px;height:14px;border:2px solid #ff3b30;box-shadow:0 0 4px rgba(255,59,48,.5)}
+.box:before{top:-2px;left:-2px;border-right:0;border-bottom:0} .box:after{bottom:-2px;right:-2px;border-left:0;border-top:0}
+header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid #7a1a15}
+.brand{font-size:24px;letter-spacing:.3em;color:#ff8a80} .brand small{display:block;font-size:11px;letter-spacing:.3em;color:#7a1a15;text-shadow:none}
+.tag{font-size:12px;letter-spacing:.22em}
+.tape{position:relative;height:38px;margin:0 24px;border-bottom:1px solid #7a1a15;overflow:hidden}
+.tks{display:flex;justify-content:space-between;padding:4px 120px 0;font-size:12px;color:#7a1a15} .tk{border-left:1px solid #ff3b30;padding-left:4px;height:16px}
+.caret{position:absolute;left:50%;transform:translateX(-50%);bottom:0;font-size:13px;color:#ff8a80;border:1px solid #ff3b30;padding:0 6px;background:#000}
+.wrap{padding:14px 24px;display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;grid-column:1/3}
+.kv{font-size:30px;color:#ff8a80;font-variant-numeric:tabular-nums} .kl{font-size:11px;letter-spacing:.22em;color:#7a1a15;text-shadow:none;margin-top:3px}
+h3{margin:0 0 10px;font-size:13px;letter-spacing:.28em;font-weight:400;color:#ff8a80}
+table{width:100%;border-collapse:collapse;font-size:15px} td{padding:8px;border-bottom:1px dashed #7a1a15}
+.sc{color:#ff8a80;width:60px;font-size:18px} .dim{color:#7a1a15;text-shadow:none}
+.tgt{outline:1px solid #ffb3ab;outline-offset:4px;color:#ffb3ab}
+.pill{font-size:11px;letter-spacing:.18em;padding:2px 7px;border:1px solid} .pCRIT{color:#ffffff;border-color:#ffffff} .pHIGH{color:#ffb3ab;border-color:#ffb3ab} .pMED{color:#7a1a15;border-color:#7a1a15}
+.side{display:flex;flex-direction:column;gap:16px} .dec{font-size:14px;line-height:1.7}
+.row3{grid-column:1/3;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.br{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px} .bl{width:170px;color:#7a1a15;text-shadow:none}
+.bt{flex:1;display:flex;gap:3px} .bt i{flex:1;height:10px;border:1px solid #7a1a15} .bt i.on{background:#ff3b30;border-color:#ff3b30;box-shadow:0 0 4px rgba(255,59,48,.5)} .bp{width:36px;text-align:right}
+.ladder{height:210px;display:flex;flex-direction:column;justify-content:space-around;padding:0 10px}
+.rung{display:flex;align-items:center;gap:8px;font-size:12px} .rung b{flex:1;height:0;border-top:2px solid #ff3b30} .rung:nth-child(n+3) b{border-top-style:dashed}
+.reticle{position:relative;height:230px} .ring{position:absolute;left:50%;top:50%;width:200px;height:200px;margin:-100px;border:1px solid #ff3b30;border-radius:50%}
+.r2{width:110px;height:110px;margin:-55px;border-style:dashed} .pip{position:absolute;left:50%;top:50%;transform:translate(-50%,-55%);font-size:28px;color:#ff8a80}
+.rlab{position:absolute;bottom:0;width:100%;text-align:center;font-size:11px;letter-spacing:.22em}
+.bez{display:flex;justify-content:space-between;margin:-6px -6px 8px;font-size:10px;letter-spacing:.15em} .bez span{border:1px solid #7a1a15;padding:1px 6px;color:#ff8a80}
+.ticker{position:absolute;bottom:0;left:0;right:0;padding:9px 24px;border-top:1px solid #7a1a15;color:#ffb3ab;font-size:14px;white-space:nowrap;overflow:hidden}
+.label{position:absolute;top:56px;right:24px;font-size:11px;color:#7a1a15;text-shadow:none;letter-spacing:.12em}
+</style></head><body>
+<header><div class=brand>EXOS MISSION CONTROL<small>OPERATIONS COMMAND · INTERNAL</small></div>
+<div class=tag>4 · NIGHT OPS</div><div class=tag>CDT 21:58 · UTC 02:58 · JST 11:58</div></header>
+<div class=label>low-light red symbology (keeps night vision), dimmest of the four, for 24/7 wall display</div>
+
+<div class=wrap>
+<div class=kpis><div class='kpi box'><div class=kv>7</div><div class=kl>OPEN DECISIONS</div></div><div class='kpi box'><div class=kv>3</div><div class=kl>OVERDUE</div></div><div class='kpi box'><div class=kv>543</div><div class=kl>ROLLING OPPS</div></div><div class='kpi box'><div class=kv>$1.02B</div><div class=kl>PIPELINE</div></div><div class='kpi box'><div class=kv>268 / 0 FAIL</div><div class=kl>FLEET AGENTS</div></div></div>
+<div class=box><h3>▸ PRIORITY TARGETS · MISSION SCORE</h3><table><tr><td class=sc>130</td><td><span class=tgt>Japan Seed Round: full package</span></td><td class=dim>J. Quinn</td><td><span class='pill pCRIT'>CRIT</span></td></tr><tr><td class=sc>130</td><td>GTL methane tank: Direct-to-Phase-II path</td><td class=dim>J. Quinn</td><td><span class='pill pCRIT'>CRIT</span></td></tr><tr><td class=sc>127</td><td>OSC loan: $15M ask + capital stack</td><td class=dim>J. Quinn</td><td><span class='pill pCRIT'>CRIT</span></td></tr><tr><td class=sc>100</td><td>OSP-4 On-Ramp submission (rolling focus)</td><td class=dim>J. Quinn</td><td><span class='pill pHIGH'>HIGH</span></td></tr><tr><td class=sc>88</td><td>BLK3 S0 hover campaign: test readiness</td><td class=dim>P. Eaton</td><td><span class='pill pHIGH'>HIGH</span></td></tr><tr><td class=sc>75</td><td>EXOS-FIN-004 intl payments: Wise setup</td><td class=dim>K. Ballard</td><td><span class='pill pMED'>MED</span></td></tr></table></div>
+<div class=side><div class=box><div class=ladder><div class=rung><span>10</span><b></b><b></b><span>10</span></div><div class=rung><span>5</span><b></b><b></b><span>5</span></div><div class=rung><span>-5</span><b></b><b></b><span>-5</span></div><div class=rung><span>-10</span><b></b><b></b><span>-10</span></div></div></div><div class='box dec'><h3>▸ DECISIONS AWAITING CEO</h3>D-7282118 · EXOS-FIN-004 intl payments<br>D-7282081 · exo3 code audit remediation<br>D-7282050 · Payload manual Rev5<br>D-7282042 · Minutes correction to Neil</div></div>
+<div class=row3>
+ <div class=box><h3>▸ AGENT FLEET HEALTH</h3><div class=br><span class=bl>Capture agents</span><span class=bt><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class=''></i></span><span class=bp>096</span></div><div class=br><span class=bl>Decision guards</span><span class=bt><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i></span><span class=bp>100</span></div><div class=br><span class=bl>Finance / QB</span><span class=bt><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class=''></i></span><span class=bp>092</span></div><div class=br><span class=bl>Payload order-to-cash</span><span class=bt><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class=''></i><i class=''></i></span><span class=bp>088</span></div><div class=br><span class=bl>exo3 code coverage</span><span class=bt><i class='on'></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i></span><span class=bp>011</span></div></div>
+ <div class=box><h3>▸ PIPELINE BY STAGE</h3><div class=br><span class=bl>New · 623</span><span class=bt><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i></span><span class=bp>100</span></div><div class=br><span class=bl>Draft · 38</span><span class=bt><i class='on'></i><i class='on'></i><i class='on'></i><i class='on'></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i></span><span class=bp>040</span></div><div class=br><span class=bl>Active · 15</span><span class=bt><i class='on'></i><i class='on'></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i></span><span class=bp>022</span></div><div class=br><span class=bl>Submitted · 6</span><span class=bt><i class='on'></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i></span><span class=bp>012</span></div><div class=br><span class=bl>Awarded · 1</span><span class=bt><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i><i class=''></i></span><span class=bp>004</span></div></div>
+ <div class='box dec'><h3>▸ T-MINUS · NEXT 7 DAYS</h3>10/19 · OSP-4 on-ramp focus due<br>10/21 · Investor update + annual-meeting save-the-date<br>10/22 · BOREALIS/MSGC follow-up<br>10/23 · Innovation Dojo JPY 1M grant (5 pm JST)<br>10/26 · FAA-2026-9736 RFI comment deadline</div>
+</div>
+</div>
+<div class=ticker>⚠ MASTER CAUTION  ◆  D-7282118 awaiting CEO: EXOS-FIN-004 approval  ◆  Rolling focus: OSP-4 due 10/19  ◆  M6 waivers: 1 of 2 wet-signed on file  ◆  exo3 code audit: 70 gaps (D-7282081)  ◆  SSLC board package r5 issued</div>
+</body></html>
