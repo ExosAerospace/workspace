@@ -137,6 +137,27 @@ html body .btn-danger{nx}, html body .btn.danger{nx} {{ color:#fff !important;
     repeating-linear-gradient(-45deg,{v['warn']} 0 7px,#111 7px 14px) border-box !important;
   text-shadow:0 2px 0 #000 !important; box-shadow:0 6px 0 #000, 0 0 10px {v['bad']}55 !important; }}
 html body .btn.ghost{nx}, html body .btn.secondary{nx}, html body .opp-btn-ghost{nx} {{ background:{key.format(lamp='#333')} !important; color:{v['phos']} !important; }}
+/* header links (Search / Decisions / Fleet / Sign Out) = full-size cockpit keys, not bare text (Jon 10/16 22:27 "wimpy") */
+html body .header-right > a, html body a.nav-link {{ display:inline-flex !important; align-items:center; gap:6px; margin:3px 4px !important;
+  padding:8px 14px 8px 26px !important; font:700 .95rem 'DIN Condensed','Impact','Arial Narrow',sans-serif !important; text-transform:uppercase;
+  letter-spacing:.16em; text-decoration:none !important; color:{v['phos2']} !important; border-radius:0 !important;
+  background:{key.format(lamp=v['acc_dim'])} !important;
+  border:2px solid #000 !important; border-top-color:{v['steel_hi']} !important;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), inset 0 -4px 0 rgba(0,0,0,.6), 0 6px 0 #000 !important; text-shadow:0 2px 0 #000; }}
+html body .header-right > a:hover, html body a.nav-link:hover {{ background:{key.format(lamp=v['acc'])} !important; color:#fff !important; }}
+html body .header-right > a:active, html body a.nav-link:active {{ transform:translateY(5px); box-shadow:inset 0 3px 6px rgba(0,0,0,.8), 0 1px 0 #000 !important; }}
+html body .header-right > a#decisionsLink {{ color:#111 !important; text-shadow:0 1px 0 rgba(255,255,255,.35);
+  background:radial-gradient(circle at 12px 50%,#fff 0 3px,{v['acc']} 4px,transparent 6px),linear-gradient({v['acc']} 0%,{v['acc']} 45%,{v['acc_dim']} 100%) !important;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.45), inset 0 -4px 0 rgba(0,0,0,.45), 0 6px 0 #000, 0 0 14px {v['acc']}66 !important; }}
+html body .header-right > a[onclick*="logout"] {{ color:#fff !important; border:4px solid transparent !important;
+  background:radial-gradient(circle at 10px 50%,{v['bad']} 0 3px,#000 4px,transparent 5px) padding-box,linear-gradient(#5a1010,#2a0606) padding-box,
+    repeating-linear-gradient(-45deg,{v['warn']} 0 7px,#111 7px 14px) border-box !important; }}
+/* "Updated 10:25 PM" = recessed LCD readout */
+html body .refresh-badge, html body .status-pill {{ font:700 .9rem 'Menlo','SF Mono',monospace !important; letter-spacing:.08em; text-transform:uppercase;
+  color:{v['ok']} !important; background:#030503 !important; border:3px solid {v['steel_lo']} !important; border-top-color:#000 !important;
+  border-bottom-color:{v['steel_hi']} !important; border-radius:0 !important; padding:7px 12px !important;
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.95), 0 0 0 1px #000 !important; text-shadow:0 0 6px {v['ok']}; }}
 html body input, html body select, html body textarea {{ background:{v['screen']} !important; color:{v['phos2']} !important;
   border:3px solid {v['steel_lo']} !important; border-top-color:#000 !important; border-bottom-color:{v['steel_hi']} !important; border-radius:0 !important;
   font-family:'Menlo','SF Mono',monospace !important; box-shadow:inset 0 3px 6px rgba(0,0,0,.9) !important; }}
