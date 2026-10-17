@@ -4,6 +4,7 @@
 //   or the "DISPLAY MODE" button bottom-left (Jon 10/16: employees pick the look they prefer). Choice is remembered per browser.
 (function () {
   var KEY = 'mcTheme';
+  var V = '20261016-2232';  // bump on every theme CSS change: server sends .css without no-store, so browsers keep stale copies (Jon 10/16 still saw the old font)
   var THEMES = { mech: { css: '/theme-mech.css', label: 'MECH COCKPIT' }, joc: { css: '/theme-joc.css', label: 'OPS CENTER' } };
   var MENU = [['default', 'Standard', 'Classic Mission Control look'],
               ['mech', 'Mech Cockpit', 'Armored cockpit over Earth orbit'],
@@ -18,7 +19,7 @@
   if (ALIAS[cur]) cur = ALIAS[cur];
   if (!THEMES[cur]) cur = 'default';
   if (cur !== 'default') {
-    var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = THEMES[cur].css; l.id = 'mc-theme-css';
+    var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = THEMES[cur].css + '?v=' + V; l.id = 'mc-theme-css';
     (document.head || document.documentElement).appendChild(l);
   }
   function pick(id) { try { localStorage.setItem(KEY, id); } catch (e) {} location.reload(); }
