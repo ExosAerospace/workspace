@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Generate one Veo image-to-video clip SYNCHRONOUSLY (polls until done).
-Usage: gen_vid_veo.py <outfile.mp4> <first_frame.jpg> <prompt> [seconds=8] [model=veo-3.1-fast-generate-preview]"""
+Usage: EXO_TASK=<n> gen_vid_veo.py <outfile.mp4> <first_frame.jpg> <prompt> [seconds=8] [model=veo-3.1-fast-generate-preview]
+Spend-guarded by scripts/google_media_guard.py (google-media-exo3)."""
 import base64, json, os, sys, time, urllib.error, urllib.request
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import google_media_guard as guard
 
 KEY = json.load(open('/Users/exomac/.openclaw/secrets.json'))['google_image_api_key']
 BASE = "https://generativelanguage.googleapis.com/v1beta"
@@ -21,6 +24,7 @@ def call(url, body=None, tries=8):
 
 
 def gen(out, image, prompt, seconds=8, model="veo-3.1-fast-generate-preview"):
+    usd = guard.check("video", model, seconds, out)  # needs EXO_TASK; refuses over monthly cap
     img = base64.b64encode(open(image, 'rb').read()).decode()
     op = call(f"{BASE}/models/{model}:predictLongRunning", {
         "instances": [{"prompt": prompt, "image": {"bytesBase64Encoded": img, "mimeType": "image/jpeg"}}],
@@ -33,7 +37,9 @@ def gen(out, image, prompt, seconds=8, model="veo-3.1-fast-generate-preview"):
         if op.get("done"):
             break
     if "error" in op or not op.get("done"):
+        guard.charge("video", model, usd, seconds, out, ok=False)
         print(json.dumps(op)[:1500]); return False
+    guard.charge("video", model, usd, seconds, out)
     resp = op["response"].get("generateVideoResponse", op["response"])
     uri = resp["generatedSamples"][0]["video"]["uri"]
     req = urllib.request.Request(uri, headers={"x-goog-api-key": KEY})

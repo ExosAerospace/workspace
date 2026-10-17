@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-04T12:49:13.103453-05:00",
-  "total": 279,
+  "generated": "2026-10-17T04:16:54",
+  "total": 280,
   "standing": 115,
   "ephemeral": 18,
   "service": 6,
@@ -6000,6 +6000,29 @@
         "2026-10-17 registered + selftest (exo3 remediation)"
       ],
       "eval_type": "output"
+    },
+    {
+      "human_owner": "John Quinn",
+      "risk_tier": "MEDIUM",
+      "envelope_source": "authored 2026-10-17 (Jon: 'is the Gemini API capability wired in per exo3 standards' after $39 Oct 5 Veo spike)",
+      "label": "google-media-exo3",
+      "program": "google-media-exo3",
+      "script": "scripts/google_media_guard.py (guard) wrapping scripts/gen_vid_veo.py (Veo video) + scripts/gen_img.py (Gemini image)",
+      "kind": "tool",
+      "schedule": "on demand (deliverable builds)",
+      "purpose": "Paid Google media generation (Veo image-to-video, Gemini 3 Pro image) for decks/videos, with per-call MC task attribution, a local monthly spend cap and a spend ledger.",
+      "stack_layer": "EXECUTE (content generation) + GOVERN (spend guard)",
+      "autonomy_tier": "Execute within cap; output is a draft file only (never sends/attaches)",
+      "permission_envelope": "SEND prompt + optional first-frame image to Google Gemini API (commercial, key google_image_api_key); WRITE the requested output file, state/google-media-spend.json, fleet telemetry. Never rocket technical data or gov program content in prompts.",
+      "memory_boundary": "stateless per call; monthly ledger state/google-media-spend.json",
+      "escalation": "no EXO_TASK -> REFUSED exit 1 (nothing sent); would exceed config/google-media-spend.json cap ($50/mo) -> REFUSED exit 1 + warn telemetry; outer stop = AI Studio project cap ($100/mo)",
+      "eval_suite": "/usr/bin/python3 scripts/google_media_guard.py --selftest (12 checks: pricing, unknown-model priced high, no-task refuse, cap pre-flight refuse, monthly reset, ledger sum, config present, both generators call guard before any API request)",
+      "eval_type": "output",
+      "telemetry": "logs/fleet-events.jsonl agent=google-media-exo3 (generated/generate_failed + usd + month_usd, refused_no_task, refused_cap)",
+      "reusability_scope": "any deck/video/image deliverable",
+      "change_log": [
+        "2026-10-17 created after unguarded Oct 5 IDJ Veo iterations spent ~$39 in one day"
+      ]
     }
   ],
   "eval_wave_1": {
