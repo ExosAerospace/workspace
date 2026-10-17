@@ -88,7 +88,7 @@ def css(v):
   --orange:{v['warn']} !important; --orange2:{v['warn']} !important; --yellow:{v['warn']} !important; --purple:{v['acc']} !important;
   --green:{v['ok']} !important; --done-accent:{v['ok']} !important; --red:{v['bad']} !important; --blocked-accent:{v['bad']} !important;
 }}
-html body {{ font-family:'DIN Condensed','Avenir Next Condensed','Arial Narrow',sans-serif !important; letter-spacing:.04em;
+html body {{ font-family:'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif !important; letter-spacing:.04em;
 {v.get('body_bg') or DEFAULT_BG.format(lo=v['steel_lo'])}
   background-attachment:fixed !important; }}
 /* header = cockpit canopy frame: thick plate, hazard band, bolts */
@@ -98,7 +98,7 @@ html body header, html body .topbar {{ position:relative;
 html body header::after {{ content:''; position:absolute; left:0; right:0; bottom:-14px; height:8px; pointer-events:none;
   background:repeating-linear-gradient(-45deg,{v['warn']} 0 10px,#0b0b0b 10px 20px); box-shadow:0 2px 0 #000; }}
 html body h1, html body h2 {{ color:{v['acc']} !important; text-transform:uppercase; letter-spacing:.18em; font-weight:700;
-  text-shadow:0 2px 0 #000, 0 0 8px {v['acc']}55; }}
+  text-shadow:0 1px 0 #000; }}
 /* h3 = stamped ID plate */
 html body h3, html body h4 {{ display:inline-block; color:{v['steel_lo']} !important; background:{v['acc']}; padding:3px 12px 2px !important;
   text-transform:uppercase; letter-spacing:.22em; font-weight:700; clip-path:polygon(0 0,calc(100% - 10px) 0,100% 100%,0 100%);
@@ -111,18 +111,18 @@ html body .card, html body .stat-card, html body .panel, html body .box, html bo
   border:8px solid transparent !important; border-radius:0 !important;
   clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);
   box-shadow:inset 0 0 0 1px #000, inset 0 0 24px rgba(0,0,0,.9), 0 6px 0 #000 !important; color:{v['phos2']}; }}
-html body .card *, html body .stat-card * {{ text-shadow:0 0 5px {v['phos']}66; }}
+html body .card *, html body .stat-card * {{ text-shadow:none; }}
 html body .task-card {{ background:linear-gradient({v['screen']},{v['screen']}) !important; border:2px solid {v['steel_hi']} !important;
   border-left:6px solid {v['acc']} !important; border-radius:0 !important; box-shadow:inset 0 0 12px rgba(0,0,0,.8) !important; }}
 /* buttons = chunky cockpit keys: thick bevel, 6px travel, status lamp at left */
 {sel_btn} {{
-  font-family:'DIN Condensed','Impact','Arial Narrow',sans-serif !important; font-weight:700 !important; text-transform:uppercase;
-  letter-spacing:.16em !important; color:{v['phos2']} !important; padding-left:26px !important;
+  font-family:'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif !important; font-weight:700 !important; text-transform:uppercase;
+  letter-spacing:.08em !important; color:{v['phos2']} !important; padding-left:26px !important;
   background:{key.format(lamp=v['acc_dim'])} !important;
   border:2px solid #000 !important; border-top-color:{v['steel_hi']} !important; border-radius:0 !important;
   clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
   box-shadow:inset 0 2px 0 rgba(255,255,255,.18), inset 0 -4px 0 rgba(0,0,0,.6), 0 6px 0 #000 !important;
-  text-shadow:0 2px 0 #000 !important; transition:transform .06s, box-shadow .06s; }}
+  text-shadow:0 1px 0 rgba(0,0,0,.9) !important; -webkit-font-smoothing:antialiased; transition:transform .06s, box-shadow .06s; }}
 html body button:not(#mc-theme-toggle):not(.x):hover, html body .btn:hover, html body .filter-btn:hover {{
   background:{key.format(lamp=v['acc'])} !important; color:#fff !important; }}
 html body button:not(#mc-theme-toggle):not(.x):active, html body .btn:active, html body .filter-btn:active {{
@@ -135,16 +135,16 @@ html body .btn-danger{nx}, html body .btn.danger{nx} {{ color:#fff !important;
   border:4px solid transparent !important;
   background:radial-gradient(circle at 10px 50%,{v['bad']} 0 3px,#000 4px,transparent 5px) padding-box,linear-gradient(#5a1010,#2a0606) padding-box,
     repeating-linear-gradient(-45deg,{v['warn']} 0 7px,#111 7px 14px) border-box !important;
-  text-shadow:0 2px 0 #000 !important; box-shadow:0 6px 0 #000, 0 0 10px {v['bad']}55 !important; }}
+  text-shadow:0 1px 0 rgba(0,0,0,.9) !important; -webkit-font-smoothing:antialiased; box-shadow:0 6px 0 #000, 0 0 10px {v['bad']}55 !important; }}
 html body .btn.ghost{nx}, html body .btn.secondary{nx}, html body .opp-btn-ghost{nx} {{ background:{key.format(lamp='#333')} !important; color:{v['phos']} !important; }}
 /* header links (Search / Decisions / Fleet / Sign Out) = full-size cockpit keys, not bare text (Jon 10/16 22:27 "wimpy") */
 html body .header-right > a, html body a.nav-link {{ display:inline-flex !important; align-items:center; gap:6px; margin:3px 4px !important;
-  padding:8px 14px 8px 26px !important; font:700 .95rem 'DIN Condensed','Impact','Arial Narrow',sans-serif !important; text-transform:uppercase;
-  letter-spacing:.16em; text-decoration:none !important; color:{v['phos2']} !important; border-radius:0 !important;
+  padding:8px 14px 8px 26px !important; font:700 .95rem 'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif !important; text-transform:uppercase;
+  letter-spacing:.08em; text-decoration:none !important; color:{v['phos2']} !important; border-radius:0 !important;
   background:{key.format(lamp=v['acc_dim'])} !important;
   border:2px solid #000 !important; border-top-color:{v['steel_hi']} !important;
   clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), inset 0 -4px 0 rgba(0,0,0,.6), 0 6px 0 #000 !important; text-shadow:0 2px 0 #000; }}
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), inset 0 -4px 0 rgba(0,0,0,.6), 0 6px 0 #000 !important; text-shadow:0 1px 0 rgba(0,0,0,.9); -webkit-font-smoothing:antialiased; }}
 html body .header-right > a:hover, html body a.nav-link:hover {{ background:{key.format(lamp=v['acc'])} !important; color:#fff !important; }}
 html body .header-right > a:active, html body a.nav-link:active {{ transform:translateY(5px); box-shadow:inset 0 3px 6px rgba(0,0,0,.8), 0 1px 0 #000 !important; }}
 html body .header-right > a#decisionsLink {{ color:#111 !important; text-shadow:0 1px 0 rgba(255,255,255,.35);
@@ -164,7 +164,7 @@ html body input, html body select, html body textarea {{ background:{v['screen']
 html body input:focus, html body select:focus, html body textarea:focus {{ outline:2px solid {v['acc']} !important; }}
 html body table th {{ color:{v['acc']} !important; letter-spacing:.18em; text-transform:uppercase; border-bottom:3px solid {v['steel_hi']} !important; }}
 html body table td {{ border-color:{v['steel']} !important; font-family:'Menlo','SF Mono',monospace; font-size:.92em; }}
-#mc-theme-toggle {{ position:fixed; left:12px; bottom:12px; z-index:2147483001; font:700 12px 'DIN Condensed','Arial Narrow',sans-serif; letter-spacing:.18em;
+#mc-theme-toggle {{ position:fixed; left:12px; bottom:12px; z-index:2147483001; font:700 12px 'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif; letter-spacing:.18em;
   background:linear-gradient({v['steel_hi']},{v['plate']}); color:{v['acc']}; border:2px solid #000; padding:7px 12px; cursor:pointer; box-shadow:0 4px 0 #000; }}
 """
 
