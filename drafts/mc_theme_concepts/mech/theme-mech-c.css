@@ -1,0 +1,69 @@
+/* Mission Control MECH cockpit theme C · CLAN ASSAULT (Jon 2026-10-16 "more mech warrior"). Opt-in; vars + surfaces only. */
+:root, :root body {
+  --navy:#0b0b0d !important; --navy2:#151619 !important; --navy3:#1e1f22 !important;
+  --card:#151619 !important; --line:#3c3e43 !important; --border:#3c3e43 !important;
+  --text:#ffffff !important; --text2:#ff5a4a !important; --muted:#7a1010 !important;
+  --blue:#1e1f22 !important; --blue2:#ff2a2a !important; --accent:#ff2a2a !important; --progress-accent:#ff2a2a !important;
+  --orange:#ffcc33 !important; --orange2:#ffcc33 !important; --yellow:#ffcc33 !important; --purple:#ff2a2a !important;
+  --green:#7fe0a0 !important; --done-accent:#7fe0a0 !important; --red:#ff2a2a !important; --blocked-accent:#ff2a2a !important;
+}
+html body { font-family:'DIN Condensed','Avenir Next Condensed','Arial Narrow',sans-serif !important; letter-spacing:.04em;
+  background-color:#0b0b0d !important;
+  background-image:radial-gradient(ellipse at 50% 40%,transparent 40%,rgba(0,0,0,.75) 100%),
+    repeating-linear-gradient(115deg,rgba(255,255,255,.018) 0 2px,transparent 2px 6px),
+    linear-gradient(90deg,rgba(0,0,0,.35) 1px,transparent 1px) !important;
+  background-size:auto,auto,120px 100% !important; background-attachment:fixed !important; }
+/* header = cockpit canopy frame: thick plate, hazard band, bolts */
+html body header, html body .topbar { position:relative;
+  background:radial-gradient(circle at 11px 11px,#3c3e43 0 2px,#1e1f22 3px,#000 4px,transparent 4.6px),radial-gradient(circle at calc(100% - 11px) 11px,#3c3e43 0 2px,#1e1f22 3px,#000 4px,transparent 4.6px),radial-gradient(circle at 11px calc(100% - 11px),#3c3e43 0 2px,#1e1f22 3px,#000 4px,transparent 4.6px),radial-gradient(circle at calc(100% - 11px) calc(100% - 11px),#3c3e43 0 2px,#1e1f22 3px,#000 4px,transparent 4.6px),repeating-linear-gradient(115deg,rgba(255,255,255,.025) 0 2px,transparent 2px 5px),linear-gradient(#1e1f22,#151619) !important; border-bottom:6px solid #0b0b0d !important;
+  box-shadow:inset 0 2px 0 #3c3e43, inset 0 -2px 0 #000, 0 4px 10px rgba(0,0,0,.8) !important; }
+html body header::after { content:''; position:absolute; left:0; right:0; bottom:-14px; height:8px; pointer-events:none;
+  background:repeating-linear-gradient(-45deg,#ffcc33 0 10px,#0b0b0b 10px 20px); box-shadow:0 2px 0 #000; }
+html body h1, html body h2 { color:#ff2a2a !important; text-transform:uppercase; letter-spacing:.18em; font-weight:700;
+  text-shadow:0 2px 0 #000, 0 0 8px #ff2a2a55; }
+/* h3 = stamped ID plate */
+html body h3, html body h4 { display:inline-block; color:#0b0b0d !important; background:#ff2a2a; padding:3px 12px 2px !important;
+  text-transform:uppercase; letter-spacing:.22em; font-weight:700; clip-path:polygon(0 0,calc(100% - 10px) 0,100% 100%,0 100%);
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.35); text-shadow:none; }
+html body a { color:#ff2a2a; }
+/* panels = armor plate frame (bevel, big chamfer, 4 bolts) around a recessed CRT screen */
+html body .card, html body .stat-card, html body .panel, html body .box, html body .doc-item, html body .hero, html body .modal, html body .modal-content {
+  background:radial-gradient(circle at 11px 11px,#3c3e43 0 2px,#1e1f22 3px,#000 4px,transparent 4.6px),radial-gradient(circle at calc(100% - 11px) 11px,#3c3e43 0 2px,#1e1f22 3px,#000 4px,transparent 4.6px),radial-gradient(circle at 11px calc(100% - 11px),#3c3e43 0 2px,#1e1f22 3px,#000 4px,transparent 4.6px),radial-gradient(circle at calc(100% - 11px) calc(100% - 11px),#3c3e43 0 2px,#1e1f22 3px,#000 4px,transparent 4.6px),radial-gradient(ellipse at 50% 0%,#ff5a4a10,transparent 70%),linear-gradient(#0a0606,#0a0606) padding-box,
+    linear-gradient(135deg,#3c3e43,#1e1f22 40%,#0b0b0d) border-box !important;
+  border:8px solid transparent !important; border-radius:0 !important;
+  clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);
+  box-shadow:inset 0 0 0 1px #000, inset 0 0 24px rgba(0,0,0,.9), 0 6px 0 #000 !important; color:#ffffff; }
+html body .card *, html body .stat-card * { text-shadow:0 0 5px #ff5a4a66; }
+html body .task-card { background:linear-gradient(#0a0606,#0a0606) !important; border:2px solid #3c3e43 !important;
+  border-left:6px solid #ff2a2a !important; border-radius:0 !important; box-shadow:inset 0 0 12px rgba(0,0,0,.8) !important; }
+/* buttons = chunky cockpit keys: thick bevel, 6px travel, status lamp at left */
+html body button:not(#mc-theme-toggle):not(.x), html body .btn, html body .filter-btn, html body .move-btn, html body input[type=submit], html body input[type=button] {
+  font-family:'DIN Condensed','Impact','Arial Narrow',sans-serif !important; font-weight:700 !important; text-transform:uppercase;
+  letter-spacing:.16em !important; color:#ffffff !important; padding-left:26px !important;
+  background:radial-gradient(circle at 12px 50%,#7a1010 0 3px,rgba(0,0,0,.6) 4px,transparent 5px),linear-gradient(#3c3e43 0%,#1e1f22 45%,#151619 55%,#1e1f22 100%) !important;
+  border:2px solid #000 !important; border-top-color:#3c3e43 !important; border-radius:0 !important;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), inset 0 -4px 0 rgba(0,0,0,.6), 0 6px 0 #000 !important;
+  text-shadow:0 2px 0 #000 !important; transition:transform .06s, box-shadow .06s; }
+html body button:not(#mc-theme-toggle):not(.x):hover, html body .btn:hover, html body .filter-btn:hover {
+  background:radial-gradient(circle at 12px 50%,#ff2a2a 0 3px,rgba(0,0,0,.6) 4px,transparent 5px),linear-gradient(#3c3e43 0%,#1e1f22 45%,#151619 55%,#1e1f22 100%) !important; color:#fff !important; }
+html body button:not(#mc-theme-toggle):not(.x):active, html body .btn:active, html body .filter-btn:active {
+  transform:translateY(5px); box-shadow:inset 0 3px 6px rgba(0,0,0,.8), 0 1px 0 #000 !important; }
+html body .btn-primary:not(#mc-theme-toggle):not(.x), html body .btn.primary:not(#mc-theme-toggle):not(.x), html body .btn.green:not(#mc-theme-toggle):not(.x), html body .filter-btn.active:not(#mc-theme-toggle):not(.x), html body .opp-btn-save:not(#mc-theme-toggle):not(.x) {
+  color:#111 !important; text-shadow:0 1px 0 rgba(255,255,255,.35) !important;
+  background:radial-gradient(circle at 12px 50%,#fff 0 3px,#ff2a2a 4px,transparent 6px),linear-gradient(#ff2a2a 0%,#ff2a2a 45%,#7a1010 100%) !important;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.45), inset 0 -4px 0 rgba(0,0,0,.45), 0 6px 0 #000, 0 0 14px #ff2a2a66 !important; }
+html body .btn-danger:not(#mc-theme-toggle):not(.x), html body .btn.danger:not(#mc-theme-toggle):not(.x) { color:#fff !important;
+  border:4px solid transparent !important;
+  background:radial-gradient(circle at 10px 50%,#ff2a2a 0 3px,#000 4px,transparent 5px) padding-box,linear-gradient(#5a1010,#2a0606) padding-box,
+    repeating-linear-gradient(-45deg,#ffcc33 0 7px,#111 7px 14px) border-box !important;
+  text-shadow:0 2px 0 #000 !important; box-shadow:0 6px 0 #000, 0 0 10px #ff2a2a55 !important; }
+html body .btn.ghost:not(#mc-theme-toggle):not(.x), html body .btn.secondary:not(#mc-theme-toggle):not(.x), html body .opp-btn-ghost:not(#mc-theme-toggle):not(.x) { background:radial-gradient(circle at 12px 50%,#333 0 3px,rgba(0,0,0,.6) 4px,transparent 5px),linear-gradient(#3c3e43 0%,#1e1f22 45%,#151619 55%,#1e1f22 100%) !important; color:#ff5a4a !important; }
+html body input, html body select, html body textarea { background:#0a0606 !important; color:#ffffff !important;
+  border:3px solid #0b0b0d !important; border-top-color:#000 !important; border-bottom-color:#3c3e43 !important; border-radius:0 !important;
+  font-family:'Menlo','SF Mono',monospace !important; box-shadow:inset 0 3px 6px rgba(0,0,0,.9) !important; }
+html body input:focus, html body select:focus, html body textarea:focus { outline:2px solid #ff2a2a !important; }
+html body table th { color:#ff2a2a !important; letter-spacing:.18em; text-transform:uppercase; border-bottom:3px solid #3c3e43 !important; }
+html body table td { border-color:#1e1f22 !important; font-family:'Menlo','SF Mono',monospace; font-size:.92em; }
+#mc-theme-toggle { position:fixed; left:12px; bottom:12px; z-index:2147483001; font:700 12px 'DIN Condensed','Arial Narrow',sans-serif; letter-spacing:.18em;
+  background:linear-gradient(#3c3e43,#151619); color:#ff2a2a; border:2px solid #000; padding:7px 12px; cursor:pointer; box-shadow:0 4px 0 #000; }
