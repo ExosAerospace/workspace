@@ -6,8 +6,9 @@ copernic_v5_reconstruct.py). Exos revisions are real Word tracked changes (autho
 "Exos Aerospace") with margin comments. New Appendix H = vehicle order terms.
 
 Inputs: Jon's 10/11 email (positions of record), Brennan Plaetzer's 10/14 reply
-($5.0M path selected; one-replacement point; term from successful Pathfinder;
-escrow for final 15%; maintenance budget).
+($5.0M path selected; replacement first-flight point; term from successful Pathfinder;
+escrow for final 15%; maintenance budget). r2 (John 10/17): Exos guarantees the
+Pathfinder Flight on any new vehicle, so protection runs until a Successful Pathfinder.
 
 Run with a python that has PyMuPDF + python-docx>=1.2 (e.g. /tmp/pdfenv/bin/python).
 """
@@ -26,7 +27,7 @@ from docx.text.run import Run
 sys.path.insert(0, "/Users/exomac/.openclaw/workspace/scripts")
 from copernic_v5_reconstruct import paragraphs  # noqa: E402
 
-OUT = "/Users/exomac/.openclaw/workspace/drafts/Copernic_Wet_Lease_Exos_Counter_Redline_2026-10-17.docx"
+OUT = "/Users/exomac/.openclaw/workspace/drafts/Copernic_Wet_Lease_Exos_Counter_Redline_2026-10-17_r2.docx"
 AUTHOR, INITIALS = "Exos Aerospace", "EXOS"
 DATE = "2026-10-17T10:00:00Z"
 _id = [9000]
@@ -283,8 +284,8 @@ EDITS = {
     ],
     "(f) The limitations and exclusive-remedy": [
         ("rep", "do not limit Owner/Operator's express Pathfinder repair or replacement obligations under G-1a, including the reasonable direct cost of that repair or replacement if Owner/Operator fails to perform, or payment or return of Payload Revenue belonging to Client under B-4, G-1b(i) or G-1c.",
-         "do not limit: (i) repayment of unearned vehicle funding under Appendix H-5; (ii) Owner/Operator's Pathfinder repair-or-replace obligation under G-1a (repair to the contracted specification or one replacement per ordered vehicle), including the reasonable direct cost of that repair or replacement if Owner/Operator fails to perform, with exposure no greater than the price of the ordered vehicle, no consequential damages or lost Payload Revenue, and excluding loss caused by Client payloads or Client-furnished items; or (iii) remittance of Payload Revenue belonging to Client and received by Owner/Operator under B-4, G-1b(i) or G-1c.",
-         C("Carve-outs from the general cap as set out in Exos's Oct 11 email: unearned funding and a bounded Pathfinder obligation. Remittance of Client's own Payload Revenue stays outside the cap as Copernic proposed.")),
+         "do not limit: (i) repayment of unearned vehicle funding under Appendix H-5; (ii) Owner/Operator's Pathfinder repair-or-replace obligation under G-1a (repair to the contracted specification or replacement, on each new vehicle until a Successful Pathfinder Flight), including the reasonable direct cost of that repair or replacement if Owner/Operator fails to perform, with damages for that failure no greater than the price of the ordered vehicle, no consequential damages or lost Payload Revenue, and excluding loss caused by Client payloads or Client-furnished items; or (iii) remittance of Payload Revenue belonging to Client and received by Owner/Operator under B-4, G-1b(i) or G-1c.",
+         C("Carve-outs from the general cap as set out in Exos's Oct 11 email: unearned funding and the Pathfinder guarantee, with damages bounded. Remittance of Client's own Payload Revenue stays outside the cap as Copernic proposed.")),
     ],
     "IN WITNESS WHEREOF": [
         ("rep", "Appendices A through G", "Appendices A through H"),
@@ -365,15 +366,16 @@ EDITS = {
 }
 
 G1A_NEW = [
-    ("(a) One replacement per ordered vehicle. Exos's Pathfinder obligation for each ordered vehicle ends when Exos has provided one repaired or replacement vehicle. The replacement vehicle's first flight is not a further Pathfinder Flight and is not protected by this G-1a. The protection period for each ordered vehicle therefore runs from lift-off of its Pathfinder Flight until the earlier of (i) a Successful Pathfinder Flight or (ii) lift-off of the replacement vehicle's first flight.",
-     "Brennan asked (Oct 14) that Exos state this explicitly if its obligation ends after one replacement. It does. The $1.0M buys a second vehicle built and waiting, so a Pathfinder loss costs Copernic nothing and the program continues within about 90 days. It does not make Exos the insurer of every later first flight. A loss on or after the replacement's first flight is post-Pathfinder risk under G-1a(c), which Copernic can insure."),
-    ("(b) Limits. Exos's exposure under this G-1a for each ordered vehicle is no greater than the price of that ordered vehicle. It excludes consequential damages and lost Payload Revenue, and it excludes loss or damage caused by a Client payload or a Client-furnished item.", None),
+    ("(a) Pathfinder guarantee on every new vehicle. Exos guarantees the Pathfinder Flight of every new vehicle supplied under this Agreement, including each standby, repaired or replacement vehicle supplied under this G-1a and each replacement ordered under Appendix H-1(c). The first flight of a replacement vehicle is itself a Pathfinder Flight. If that vehicle is lost or suffers Material Damage during it, Exos again repairs or replaces it without additional vehicle funding from Client, and Client's rights transfer to the next vehicle. The protection period for each ordered vehicle runs from lift-off of its first Pathfinder Flight until a Successful Pathfinder Flight by that vehicle or a vehicle that replaces it.",
+     "Brennan asked (Oct 14) whether the protection continues through the replacement's first flight. It does: Exos guarantees the Pathfinder Flight on any new vehicle, so the protection ends only when a vehicle completes a Successful Pathfinder Flight. Copernic's first-flight risk is therefore zero, which is the basis for its financing and insurance analysis."),
+    ("(b) Limits. Exos performs the guarantee by repairing or replacing the vehicle. If Exos fails to perform, Exos's liability for damages under this G-1a for each ordered vehicle is no greater than the price of that ordered vehicle. Exos is not liable under this G-1a for consequential damages or lost Payload Revenue, or for loss or damage caused by a Client payload or a Client-furnished item. If two consecutive Pathfinder Flights for the same ordered vehicle end in loss or Material Damage, Exos may, instead of supplying a further vehicle, end that vehicle order on written notice and refund in full all payments received for it, including any amount held in escrow, within 30 days and with no deductions.",
+     "The guarantee is performed in kind, by repair or replacement. If Exos ever ends an order after two consecutive Pathfinder losses, Copernic recovers every dollar it paid for that vehicle, so it never carries first-flight risk either way."),
     ("(c) Risk after the protection period. After the protection period ends, the risk of loss of or damage to the vehicle sits with Client. Client may insure that risk or self-retain it. Vehicle hull/loss insurance is optional, and not electing it is not a breach. Exos has no repair or replacement obligation after the protection period unless Client funds it: routine repairs through the approved maintenance and parts budget (Appendix H-6), and casualty repair or replacement as Client elects under Appendix H-1(c). If Client has not elected in writing to fund the repair or replacement of a lost vehicle within 90 days after the loss, Client's exclusive capacity rights in that vehicle and the Annual Operating Fee for that vehicle end on that date; amounts accrued before that date remain payable.",
      "Post-Pathfinder risk sits with Copernic (aligned Oct 14). The 90-day election point stops a lost vehicle from carrying exclusive rights and fees indefinitely."),
 ]
 
 E1_CELL_OPS = {
-    (8, 1): [("app", " (one replacement per ordered vehicle)")],
+    (8, 1): [("app", " (every new vehicle, until a Successful Pathfinder Flight)")],
     (8, 2): [("rep", "Post-Pathfinder vehicle hull/loss coverage optional",
               "Vehicle loss risk after the G-1a protection period (insure or self-retain)")],
 }
@@ -385,7 +387,7 @@ APPX_H = [
     ("s", "H-1. Selected path and vehicle price."),
     ("p", "(a) Client selects the Protected Pathfinder path offered in Owner/Operator's letter of October 1, 2026: $5.0M per ordered vehicle. Client confirms this selection by signing this Agreement. The $4.0M one-vehicle path in that letter is not elected, and its terms do not apply.", None),
     ("p", "(b) The price covers manufacture, integration and acceptance testing (Appendix C) of the ordered vehicle, its Pathfinder Flight, and Owner/Operator's Pathfinder protection under G-1a, for which Owner/Operator keeps a second vehicle built and on standby. The price is the same at any launch location. Operations other than at Spaceport America require a separate written agreement under A-5, with site scope (mobilization, ground support equipment, transport and logistics) billed as Reimbursable Costs.", None),
-    ("p", "(c) Replacement after the protection period. If a Copernic-funded Vehicle is lost after its G-1a protection period ends, Client may order a flight-ready replacement for $4.0M, payable on the milestone percentages in H-2, with a build time of up to 12 months from receipt of the replacement deposit. G-1c applies to Client's committed payloads during that build. For contracting, insurance and budgeting purposes, the replacement cost of a flight-ready vehicle is $4.0M.", None),
+    ("p", "(c) Replacement after the protection period. If a Copernic-funded Vehicle is lost after its G-1a protection period ends, Client may order a flight-ready replacement for $4.0M, payable on the milestone percentages in H-2, with a build time of up to 12 months from receipt of the replacement deposit. G-1c applies to Client's committed payloads during that build. The replacement is a new vehicle, and G-1a applies to its Pathfinder Flight. For contracting, insurance and budgeting purposes, the replacement cost of a flight-ready vehicle is $4.0M.", None),
     ("s", "H-2. Payment milestones (per ordered vehicle)."),
     ("t", [["Milestone", "Share", "Amount ($5.0M vehicle)", "Due"],
            ["Deposit", "50%", "$2,500,000", "On order"],
@@ -410,14 +412,15 @@ APPX_H = [
     ("s", "H-8. First-year maintenance and parts budget (per vehicle, planning)."),
     ("t", [["Item", "Basis", "Budget"],
            ["Flight battery set (2 × 6S 22,000 mAh)", "Annual replacement", "$540"],
-           ["High-temperature seal / o-ring set", "Annual replacement", "[$______]"],
-           ["Valve assembly", "On condition; one per year budgeted", "[$______]"],
-           ["Pyrotechnic / ordnance items (separation, recovery deployment)", "Shelf-life replacement", "[$______]"],
+           ["Seal and o-ring set (Viton, PTFE and silicone o-rings; AN flare-fitting seals)", "Annual replacement", "$290"],
+           ["Main propellant valve core housing", "On condition; one per year budgeted", "$1,085"],
+           ["Burst (rupture) discs, pressure section (2)", "Replaced after any actuation; set budgeted annually", "$1,644"],
+           ["Igniter and recovery-cutter consumables (spark igniter; 4 cutter glow plugs)", "Annual replacement", "$90"],
+           ["Main pressure regulator (dome-loaded)", "On condition; one per year budgeted", "$889"],
            ["Pressure-vessel recertification", "Per recertification interval", "[$______]"],
-           ["Pressure regulators", "On condition", "[$______]"],
-           ["Total", "", "$540 + [$______]"]]),
-    ("p", "Planning figures at current vendor pricing, billed at actual cost under H-6(b). Labor, storage, readiness, FAA currency and program management are inside the base fee (B-6). Propellant and pressurant consumed at flight are in the per-flight cost and Reimbursable Costs (B-3, B-5). Insurance is not included. Owner/Operator re-issues this budget before the Pathfinder Flight.",
-     "Updated maintenance budget requested Oct 14."),
+           ["Total", "", "$4,538 + [$______]"]]),
+    ("p", "Planning figures at BLK3 bill-of-materials and recent purchase pricing, billed at actual cost under H-6(b). Labor, storage, readiness, FAA currency and program management are inside the base fee (B-6). Propellant and pressurant consumed at flight are in the per-flight cost and Reimbursable Costs (B-3, B-5). Insurance is not included. Owner/Operator re-issues this budget before the Pathfinder Flight.",
+     "Updated maintenance budget requested Oct 14. Line items are the wear and consumable parts on the BLK3 bill of materials, at current unit prices."),
     ("s", "H-9. Payload deadlines."),
     ("p", "Payload sales closed and payloads delivered for integration testing by L-90 (90 days before the scheduled launch); final launch manifest by L-60; signed FAA cross-waivers by L-90. A payload that misses these dates rolls to the next available flight. That is not a breach by either party.", None),
     ("s", "H-10. Precedence."),
@@ -432,11 +435,11 @@ COVER = [
     ("p", "Copernic's October 8 revisions are accepted and appear as clean text, except where Exos has revised them. Exos revisions are tracked (author: Exos Aerospace), and margin comments explain each one. New Appendix H holds the vehicle order terms. Appendix C is unchanged."),
     ("h", "Points from Brennan's October 14 email"),
     ("p", "1. Selected path. The $5.0M Protected Pathfinder path is written in as the selected path (B-2, H-1). Copernic confirms the selection by signing."),
-    ("p", "2. Replacement vehicle's first flight. Exos's obligation ends after one replacement per ordered vehicle, as you asked us to state explicitly (G-1a(a)). The standby vehicle is built and waiting, so a Pathfinder loss costs Copernic nothing and the program continues within a target of 90 days. The replacement's first flight is not a further Pathfinder Flight; a loss on or after that flight is post-Pathfinder risk, which Copernic may insure (G-1a(c))."),
+    ("p", "2. Replacement vehicle's first flight. Exos guarantees the Pathfinder Flight on any new vehicle. A replacement's first flight is itself a Pathfinder Flight, and the protection continues until a vehicle completes a Successful Pathfinder Flight (G-1a(a)). The standby vehicle is built and waiting, so a Pathfinder loss costs Copernic nothing and the program continues within a target of 90 days. Exos performs by repair or replacement; if it ever ends an order after two consecutive Pathfinder losses, Copernic receives a full refund of everything paid for that vehicle (G-1a(b))."),
     ("p", "3. Commercial term. The five-year term begins on successful Pathfinder. Exclusivity runs through the later of five years or 20 commercial launches, provided Copernic is not in uncured default (H-7). Build, testing, FAA approval and range scheduling do not consume the term."),
     ("p", "4. Final 15%. Paid into escrow at the Flight Readiness Review and released at Pathfinder lift-off (H-2)."),
     ("p", "5. Maintenance budget. The first-year maintenance and parts budget is at H-8."),
-    ("p", "6. Insurance broker. Exos is introducing Copernic to its broker separately, for post-Pathfinder hull coverage terms."),
+    ("p", "6. Insurance broker. Exos is introducing Copernic to its launch-insurance broker, Arthur J. Gallagher, by separate email, for post-Pathfinder hull coverage terms."),
     ("h", "Other Exos revisions"),
     ("p", "Cause-only termination by Exos, with the causes listed (8.6). Post-Pathfinder risk allocation (Wet Lease definition, 9.1(d), A-4, B-6, E-1, G-1a(c)). Bounded carve-outs from the liability cap (11.1(f), E-3). Substitute Flight pricing (G-1c). Immediate suspension kept for the securities and export/CFIUS guardrails only (G-4). Term references conformed to the Commercial Term (1.2, 8.1, D-1)."),
     ("h", "Next steps"),
@@ -526,7 +529,7 @@ def main():
             B.new_para(item[1], sans(10), comment=item[2])
 
     B.doc.core_properties.author = "Exos Aerospace"
-    B.doc.core_properties.title = "Copernic Wet Lease — Exos Counter-Redline (draft 2026-10-17)"
+    B.doc.core_properties.title = "Copernic Wet Lease — Exos Counter-Redline (draft 2026-10-17 r2)"
     # turn on revision view
     settings = B.doc.settings.element
     tr = OxmlElement("w:trackRevisions")
