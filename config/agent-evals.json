@@ -1,1614 +1,1639 @@
 {
-  "_doc": "ExO3 GOVERN/ASSURE Pillar-1 eval thresholds (Eval Wave 1, 2026-09-20). Read by scripts/agent_eval.py.",
-  "_scoring": "FAIL if launchd LastExitStatus!=0 (crash) OR a delivery_exhausted event in window OR stale beyond fail_grace. WARN if stale beyond warn_grace OR spooled/warn events in window. Else OK. FAIL escalates one deduped alert to the system channel.",
-  "window_hours": 26,
-  "agents": {
-    "com.exos.decision-docs-guard-exo3": {
-      "cadence_s": 300,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn",
-      "selftest": "/usr/bin/python3 scripts/decision_docs_guard_exo3.py --selftest",
-      "eval_type": "output",
-      "governance_checks": [
-        "--selftest PASS (replays D-7282043: drafts/ ref in context, no docs pinned -> docx + same-stem pdf companion attached; .md never attached; missing refs reported; pinned/docKeys none/human-linked cards untouched; idempotent; dd_reviewer assignee never auto-exposed)",
-        "_meta.json written read->modify->tmp->os.replace with re-read immediately before write; prior records preserved",
-        "re-ingest uses the SAME dedupeKey and all existing fields; refuses if the server did not update the same decision id in place",
-        "one #exomac-system note per decision per missing-file set (never Jon's DM)"
-      ]
-    },
-    "com.exos.clockout-watcher": {
-      "cadence_s": 3600,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.mc-email-command": {
-      "cadence_s": 600,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "John Quinn",
-      "selftest": "python3 scripts/mc-email-command.py --selftest",
-      "governance_checks": [
-        "deliverable_task_link orphan events (level warn) -> WARN",
-        "selftest (d): '@Exobot invoice' routing + invoice_command_exo3 --selftest must PASS"
-      ]
-    },
-    "com.exos.delivery-sweeper": {
-      "cadence_s": 300,
-      "warn_grace": 4,
-      "fail_grace": 12,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.decision-send-watcher": {
-      "cadence_s": 180,
-      "warn_grace": 5,
-      "fail_grace": 15,
-      "owner": "John Quinn"
-    },
-    "com.exos.payload-intake": {
-      "cadence_s": 600,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "Lizi Quinn / John Quinn"
-    },
-    "com.exos.send-confirmation-tracker": {
-      "cadence_s": 43200,
-      "warn_grace": 1.6,
-      "fail_grace": 3,
-      "owner": "John Quinn"
-    },
-    "com.exos.weekly-investor-update": {
-      "cadence_s": 604800,
-      "warn_grace": 1.2,
-      "fail_grace": 1.6,
-      "owner": "John Quinn"
-    },
-    "com.exos.sent-loop-closer": {
-      "cadence_s": 900,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "John Quinn"
-    },
-    "com.exos.capture-action-dispatch": {
-      "cadence_s": 1200,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "John Quinn"
-    },
-    "com.exos.priority-inbox-watcher": {
-      "cadence_s": 600,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "John Quinn"
-    },
-    "com.exos.forwarded-mail-watch": {
-      "cadence_s": 300,
-      "warn_grace": 4,
-      "fail_grace": 12,
-      "owner": "John Quinn"
-    },
-    "com.exos.quote-close-stamp": {
-      "cadence_s": 300,
-      "warn_grace": 4,
-      "fail_grace": 12,
-      "owner": "John Quinn"
-    },
-    "com.exos.assignment-notifier": {
-      "cadence_s": 300,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.auto-promote-members": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.bamboo-newhire-watcher": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.blocked-senders-update": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.capability-gap-scan": {
-      "cadence_s": 21600,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.capital-bridge-funds": {
-      "cadence_s": 1800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.capital-bridge-nudge": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.capstone-access-monitor": {
-      "cadence_s": 600,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.capstone-email-capture": {
-      "cadence_s": 1800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.channel-session-rotate": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.claude-auth-keepalive": {
-      "cadence_s": 9000,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.completion-watchdog": {
-      "cadence_s": 1200,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.cracks-digest": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.crm-dashboard-refresh": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.crm-dd-engine": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.cron-watchdog": {
-      "cadence_s": 1800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.csl-screen": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Neil Milburn / John Quinn"
-    },
-    "com.exos.daily-burndown": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.dashboard-data-refresh": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.dataroom-bd-refresh": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.dataroom-integrity": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.dd-blocklist-monthly": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.deadline-capture": {
-      "cadence_s": 3600,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.deadline-watch": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.decision-note-router": {
-      "cadence_s": 300,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.decision-triage": {
-      "cadence_s": 1800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.derisk-orbital": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.doc-manager": {
-      "cadence_s": 900,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.due-date-scheduler": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.email-people-crm": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.email-tracker": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.entity-dedupe": {
-      "cadence_s": 21600,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.erp-backup": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.expense-analytics": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.expense-workflow": {
-      "cadence_s": 300,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.failover-validate": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.file-maintenance": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.fleet-status": {
-      "cadence_s": 900,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.followup-nudge-digest": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.japan-trip-dedupe": {
-      "cadence_s": 1800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.lead-auto-capture": {
-      "cadence_s": 1200,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.legacy-triage": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.mc-asset-backup": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.mc-briefing": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.mc-doc-reconcile": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.mc-email-tracker": {
-      "cadence_s": 1200,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.mc-md-export": {
-      "cadence_s": 1800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Neil Milburn / John Quinn"
-    },
-    "com.exos.mc-meeting-prep": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.mission-score": {
-      "cadence_s": 7200,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.mnda-registry": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.nightly-security": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Neil Milburn / John Quinn"
-    },
-    "com.exos.opfinance-alerts": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.opfinance-pulse": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.opp-deep-triage": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.opportunities-source": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.opportunity-engine": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.outreach-autoclose": {
-      "cadence_s": 1200,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.outreach-reply-tracker": {
-      "cadence_s": 1320,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.overnight-resolver": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.payload-commission-trigger": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.payload-sales-engine": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.piee-login-reminder": {
-      "cadence_s": 2592000,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Neil Milburn / John Quinn"
-    },
-    "com.exos.program-state": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.pursuit-dedup": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.qb-deposit-sync": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn",
-      "selftest": "python3 scripts/qb_deposit_sync.py --selftest"
-    },
-    "com.exos.ready-action-verify": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.recurring-tasks": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.release-lizi-followups": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Lizi Quinn"
-    },
-    "com.exos.research-competitive": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.research-grant-scanner": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.research-investor": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.research-policy": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.research-rocket-report": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.research-tech-ip": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.role-autoassign": {
-      "cadence_s": 600,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.sam-amendment-watch": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.sam-flightopps-watch": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.sam-osp4-watch": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.sent-followup-tracker": {
-      "cadence_s": 10800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.series-a-worklist": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn",
-      "paused": "Series A worklist paused until the Ainigma RTO resolves (Jon); don't re-enable"
-    },
-    "com.exos.subject-dedup-scan": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.supabase-backup": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.survey-ingest": {
-      "cadence_s": 21600,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.task-attach-reconciler": {
-      "cadence_s": 1800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.task-auto-reassign": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.task-dedupe": {
-      "cadence_s": 21600,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.task-ledger-snapshot": {
-      "cadence_s": 300,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.task-note-command": {
-      "cadence_s": 300,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.task-question-answer": {
-      "cadence_s": 300,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.team-email-task-tracker": {
-      "cadence_s": 10800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.title3-osc-watch": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.transcript-ingest": {
-      "cadence_s": 900,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.util-metrics": {
-      "cadence_s": 600,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.warm-followup": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.weekly-employee-report": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.weekly-meeting-prep": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.weekly-rsi": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.weekly-team-performance": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.auto-resume": {
-      "cadence_s": 900,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "John Quinn"
-    },
-    "com.exos.decision-override-rollup": {
-      "cadence_s": 604800,
-      "warn_grace": 1.5,
-      "fail_grace": 3,
-      "owner": "John Quinn"
-    },
-    "com.exos.inventory-capture": {
-      "cadence_s": 180,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "John Quinn"
-    },
-    "com.exos.lves-survey-report": {
-      "cadence_s": 1800,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "John Quinn"
-    },
-    "com.exos.orphaned-attachment-watch": {
-      "cadence_s": 86400,
-      "warn_grace": 1.5,
-      "fail_grace": 3,
-      "owner": "John Quinn"
-    },
-    "com.exos.receiving-capture": {
-      "cadence_s": 90,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "John Quinn"
-    },
-    "com.exos.mc-guard-weekly": {
-      "cadence_s": 604800,
-      "warn_grace": 1.5,
-      "fail_grace": 3,
-      "owner": "John Quinn"
-    },
-    "com.exos.supabase-diskio-maintenance": {
-      "cadence_s": 604800,
-      "warn_grace": 1.5,
-      "fail_grace": 3,
-      "owner": "John Quinn"
-    },
-    "com.exos.vaultwarden-backup": {
-      "cadence_s": 86400,
-      "warn_grace": 1.5,
-      "fail_grace": 3,
-      "owner": "John Quinn"
-    },
-    "com.exos.erau-ernst-followup": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "John Quinn",
-      "one_shot": true
-    },
-    "com.exos.faa-rfi-followup": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "John Quinn",
-      "one_shot": true
-    },
-    "com.exos.hotel-choice-nudge": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "John Quinn",
-      "one_shot": true
-    },
-    "com.exos.kyle-forms-reminder-lizi": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "Lizi Quinn",
-      "one_shot": true
-    },
-    "com.exos.lizi-erau-trip": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "Lizi Quinn",
-      "one_shot": true
-    },
-    "com.exos.lizi-oehme-linkedin": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "Lizi Quinn",
-      "one_shot": true
-    },
-    "com.exos.lizi-planet-linkedin": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "Lizi Quinn",
-      "one_shot": true
-    },
-    "com.exos.lizi-spec-pitchday": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "Lizi Quinn",
-      "one_shot": true
-    },
-    "com.exos.lizi-stoke-linkedin": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "Lizi Quinn",
-      "one_shot": true
-    },
-    "com.exos.lizi-vellinger-linkedin": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "Lizi Quinn",
-      "one_shot": true
-    },
-    "com.exos.meeting-agenda-neil": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "Neil Milburn / John Quinn",
-      "one_shot": true
-    },
-    "com.exos.meeting-agenda-nudge": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "John Quinn",
-      "one_shot": true
-    },
-    "com.exos.ny-trip-cancel-reminder": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "John Quinn",
-      "one_shot": true
-    },
-    "com.exos.spaceweek-prep-reminder": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "John Quinn",
-      "one_shot": true
-    },
-    "com.exos.step-grant-reminder": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "John Quinn",
-      "one_shot": true
-    },
-    "com.exos.step-grant-sept2": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "John Quinn",
-      "one_shot": true
-    },
-    "com.exos.und-student-concepts": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "John Quinn",
-      "one_shot": true
-    },
-    "com.exos.uplink-pitch-lock": {
-      "cadence_s": 86400,
-      "warn_grace": 999,
-      "fail_grace": 999,
-      "owner": "John Quinn",
-      "one_shot": true
-    },
-    "com.exos.missioncontrol": {
-      "cadence_s": 86400,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.mc-tunnel": {
-      "cadence_s": 86400,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.lan-tunnel": {
-      "cadence_s": 86400,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.warm-ollama": {
-      "cadence_s": 86400,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.run-failures-report": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.mc-recycle-purge": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "cron:acqbot-awards-sync-follow-up": {
-      "kind": "openclaw-cron",
-      "cron_id": "f1464af0-74b1-4706-aa5f-c3512fff4700",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true,
-      "one_shot": true
-    },
-    "cron:agent-meta-evaluator-nightly": {
-      "kind": "openclaw-cron",
-      "cron_id": "1202feb8-8079-42df-a7d3-c33ca838f18e",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:agent-self-improvement-implementer-weekly": {
-      "kind": "openclaw-cron",
-      "cron_id": "ed638bd8-d478-487b-a238-9f2f789a8466",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:apac-deal-flow-weekly-scan": {
-      "kind": "openclaw-cron",
-      "cron_id": "28a46633-1a11-439a-887b-dfb24224b12a",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:blk3-payload-sales-engine": {
-      "kind": "openclaw-cron",
-      "cron_id": "804832dd-39ea-485b-bd81-26c00dd91afa",
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:crm-dashboard-refresh": {
-      "kind": "openclaw-cron",
-      "cron_id": "a56299c6-d0be-41dc-a881-ec5c9c8ceb53",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:daily-10-pm-briefing-email": {
-      "kind": "openclaw-cron",
-      "cron_id": "155b1806-c829-443e-a1ee-3e7b70e285a3",
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:daily-email-opportunity-scanner": {
-      "kind": "openclaw-cron",
-      "cron_id": "8bc72d87-7962-4ef8-b77a-eb404c6c388c",
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:daily-task-backlog-grind-dedup-stale-close-batch-to-jon": {
-      "kind": "openclaw-cron",
-      "cron_id": "51e09612-a217-43e0-a7a9-a3243c59a5a0",
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:decisions-matrix-daily-update-r-017": {
-      "kind": "openclaw-cron",
-      "cron_id": "77ee570f-6957-456f-a687-7d28bedeabc3",
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:descartes-vc-renewal-decision-cut-over-to-in-house-csl": {
-      "kind": "openclaw-cron",
-      "cron_id": "cc150b55-8c35-424b-9efe-233293dd8bbc",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true,
-      "one_shot": true
-    },
-    "cron:discord-mission-control-sync": {
-      "kind": "openclaw-cron",
-      "cron_id": "c5b07fbf-43f0-4dea-8c68-b2aa105d9536",
-      "cadence_s": 259200,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:diu-hycat-open-solicitation-watch-bd-032": {
-      "kind": "openclaw-cron",
-      "cron_id": "ad2b3471-e26c-4265-b9e9-b6a7bb817d72",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:diu-hycat-outreach-send-reminder": {
-      "kind": "openclaw-cron",
-      "cron_id": "6028e2b9-8adc-4a67-9fa0-8fca5a2d3183",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false,
-      "one_shot": true
-    },
-    "cron:dpa-title-iii-reauthorization-watch": {
-      "kind": "openclaw-cron",
-      "cron_id": "60d808ad-3e3c-445f-b491-ce4da29459aa",
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:exomac-system-wake": {
-      "kind": "openclaw-cron",
-      "cron_id": "3a9112dc-c7f9-416e-a48c-f04415689af4",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false,
-      "one_shot": true
-    },
-    "cron:exos-aerospace-bd-daily-intel": {
-      "kind": "openclaw-cron",
-      "cron_id": "d7ed7449-2191-4574-8c8f-7b2d5900831e",
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:exos-aerospace-daily-opportunity-scan": {
-      "kind": "openclaw-cron",
-      "cron_id": "f8e2535b-207a-4d59-aefc-38560d1639a5",
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:exos-capital-bridge-agent-1m": {
-      "kind": "openclaw-cron",
-      "cron_id": "fa596321-b5c0-4915-8208-2782874df039",
-      "cadence_s": 259200,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:exos-capture-agent-nasa-rdre-phase-iii": {
-      "kind": "openclaw-cron",
-      "cron_id": "8aef3ee2-678f-4058-a8fb-dda07d636c23",
-      "cadence_s": 259200,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:exos-capture-agent-nih-microgravity": {
-      "kind": "openclaw-cron",
-      "cron_id": "018a38fe-d87b-4824-abb0-fa4700109c11",
-      "cadence_s": 259200,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:exos-capture-agent-noaa-erb-ac4-sacss": {
-      "kind": "openclaw-cron",
-      "cron_id": "049e8c95-7082-470a-9f0f-c66f8845da1c",
-      "cadence_s": 259200,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:exos-investor-update-weekly-feed-david": {
-      "kind": "openclaw-cron",
-      "cron_id": "14b9917b-eaf4-43eb-b326-787f59886bc1",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:exos-mission-control-weekly-review": {
-      "kind": "openclaw-cron",
-      "cron_id": "f4ccb9d6-53ef-48cb-bda3-2750cfd83ff8",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:exos-national-charter-enterprise-agent-blk3-build": {
-      "kind": "openclaw-cron",
-      "cron_id": "4dbd0e49-7505-420f-a879-823a83cd2727",
-      "cadence_s": 259200,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:exos-sales-agent-payload-bd-full-time": {
-      "kind": "openclaw-cron",
-      "cron_id": "f38b6aa2-075a-4d47-a6ce-046e8644388c",
-      "cadence_s": 259200,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:exos-status-update": {
-      "kind": "openclaw-cron",
-      "cron_id": "2952a034-56d4-45ed-9ad9-ce608fcea26f",
-      "cadence_s": 259200,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:file-maintenance-lessons-learned": {
-      "kind": "openclaw-cron",
-      "cron_id": "c38f1316-8ba4-48af-a16c-9c5b6703b64d",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:heliotech-speaker-slot-teasley-follow-up": {
-      "kind": "openclaw-cron",
-      "cron_id": "2323192f-1924-4632-8205-6bcd1823aa9c",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false,
-      "one_shot": true
-    },
-    "cron:industry-signal-posts": {
-      "kind": "openclaw-cron",
-      "cron_id": "e6d339d7-b932-4f2f-bf82-5259bd12073d",
-      "cadence_s": 345600,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "Lizi Quinn",
-      "enabled": true
-    },
-    "cron:japan-itz-bi-weekly-working-session-toshi-hospo-to-oct": {
-      "kind": "openclaw-cron",
-      "cron_id": "d244fa73-2c4d-44fc-af40-c0a5ab1cb4c8",
-      "cadence_s": 1209600,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:karmen-watch-dow-sbir-26-bz-release-5-topics-opens-aug-26": {
-      "kind": "openclaw-cron",
-      "cron_id": "764159d5-738c-4196-8dea-691ec10eb6ce",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false,
-      "one_shot": true
-    },
-    "cron:lquinn-weekly-crm-follow-up-report": {
-      "kind": "openclaw-cron",
-      "cron_id": "3c5f756b-d536-4417-bbb2-317ad5297b47",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "Lizi Quinn",
-      "enabled": false
-    },
-    "cron:m-star-fy27-pre-position": {
-      "kind": "openclaw-cron",
-      "cron_id": "eb9006cf-5605-4f06-852d-53f763cf1c57",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true,
-      "one_shot": true
-    },
-    "cron:mission-control-email-tracker": {
-      "kind": "openclaw-cron",
-      "cron_id": "8e68de1a-9269-4250-9f0b-fb75945b7ace",
-      "cadence_s": 1800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:monthly-investor-report": {
-      "kind": "openclaw-cron",
-      "cron_id": "9e1b0cf7-ee80-41cc-970d-2d0d3ac89af0",
-      "cadence_s": 2419200,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:nasa-sbir-cryo-phase-i-appendix-watch": {
-      "kind": "openclaw-cron",
-      "cron_id": "bfe8d388-f5e6-4c23-839b-6febf2e67dfe",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:openclaw-update-to-2026-7-1-2-jon-scheduled-11pm": {
-      "kind": "openclaw-cron",
-      "cron_id": "65eec208-10e6-4ec5-a9aa-b99d47ef660d",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false,
-      "one_shot": true
-    },
-    "cron:overnight-resolver": {
-      "kind": "openclaw-cron",
-      "cron_id": "f2ec7aca-8136-43c1-98b4-d2a94340d1ad",
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:overnight-resolver-opus-cost-review": {
-      "kind": "openclaw-cron",
-      "cron_id": "970ab1bc-8ca4-4fb8-aa97-ab4066b00c5d",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false,
-      "one_shot": true
-    },
-    "cron:overnight-resolver-opus-escalation": {
-      "kind": "openclaw-cron",
-      "cron_id": "1f60acb4-e0e0-4ae0-a877-9749eb380d6e",
-      "cadence_s": 172800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:payload-sales-3-a-day": {
-      "kind": "openclaw-cron",
-      "cron_id": "148cdb94-2328-417a-a418-0da6c51ad0b0",
-      "cadence_s": 259200,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:research-team-competitive-intelligence": {
-      "kind": "openclaw-cron",
-      "cron_id": "60aed194-8587-4c9f-87bc-906b2a7ae732",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:research-team-grant-contract-scanner": {
-      "kind": "openclaw-cron",
-      "cron_id": "f4ea413e-c591-41ee-8933-7a927ed60c67",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true,
-      "selftest": "python3 scripts/cron_hygiene.py --selftest",
-      "restricted_agent": "research-web"
-    },
-    "cron:research-team-investor-capital-markets": {
-      "kind": "openclaw-cron",
-      "cron_id": "29aab815-7580-465e-b7f8-1d9b467dce82",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:research-team-policy-regulatory-watch": {
-      "kind": "openclaw-cron",
-      "cron_id": "5f3b0529-ae16-41e3-adef-d0de59c7479f",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:research-team-technology-ip-monitor": {
-      "kind": "openclaw-cron",
-      "cron_id": "1cf93736-764c-42f7-879c-9eeba6b40568",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:rto-dd-support-digest-ainigma": {
-      "kind": "openclaw-cron",
-      "cron_id": "4c974a8b-5759-4b66-b4db-125553af4a8a",
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:sam-gov-api-key-renewal-89-day-expiry": {
-      "kind": "openclaw-cron",
-      "cron_id": "2f914ea5-31fc-43c9-8410-74c278150d83",
-      "cadence_s": 7344000,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:sbir-spacewerx-topic-fit-watch-exos-filtered": {
-      "kind": "openclaw-cron",
-      "cron_id": "b942779c-9a82-4048-b6c1-e0fa5e0b817b",
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:solar-report-7pm": {
-      "kind": "openclaw-cron",
-      "cron_id": "6751f847-9c5d-45d2-8097-4f295062dcb8",
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false
-    },
-    "cron:spacewerx-on-orbit-logistics-concept-paper-open-call-watch": {
-      "kind": "openclaw-cron",
-      "cron_id": "f2c9dda5-49fa-40b1-84df-26565bac3307",
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": true
-    },
-    "cron:test-bucket-d-sales-agent-run-one-shot": {
-      "kind": "openclaw-cron",
-      "cron_id": "11feb1de-192a-4948-83f5-b5ceea7d70fc",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false,
-      "one_shot": true
-    },
-    "cron:trending-content-scanner": {
-      "kind": "openclaw-cron",
-      "cron_id": "bcff8330-ebb9-45e2-a2b6-5fdf64faa552",
-      "cadence_s": 345600,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "Lizi Quinn",
-      "enabled": true
-    },
-    "cron:verify-rdre-durable-drop-one-shot": {
-      "kind": "openclaw-cron",
-      "cron_id": "2b6e4087-567d-4e3b-94d4-2f820dcc1ad8",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false,
-      "one_shot": true
-    },
-    "cron:veteran-fund-mike-sherbakov-follow-up": {
-      "kind": "openclaw-cron",
-      "cron_id": "4c3413e0-7082-4654-a8e6-43fc4dfe6902",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false,
-      "one_shot": true
-    },
-    "cron:vfw-tundra-amp-powerstep-rfq-follow-up": {
-      "kind": "openclaw-cron",
-      "cron_id": "3299389d-ca8d-498c-9a6e-0afd27a6faa3",
-      "cadence_s": null,
-      "warn_grace": 2.5,
-      "fail_consecutive_errors": 2,
-      "owner": "John Quinn",
-      "enabled": false,
-      "one_shot": true
-    },
-    "com.exos.cron-telemetry": {
-      "cadence_s": 900,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "Exo (infra) / John Quinn",
-      "selftest": "python3 scripts/cron_telemetry.py --selftest"
-    },
-    "com.exos.diu-hycat-cso-watch": {
-      "cadence_s": 50400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.doc-cm-drift": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.qb-supply-sync": {
-      "cadence_s": 1800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.qb-invoice-watch": {
-      "cadence_s": 300,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.mrp-nightly": {
-      "cadence_s": 86400,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "Exo (infra) / John Quinn"
-    },
-    "com.exos.dr-backup": {
-      "cadence_s": 3600,
-      "warn_grace": 3,
-      "fail_grace": 8,
-      "owner": "John Quinn",
-      "selftest": "python3 scripts/dr_verify.py --link"
-    },
-    "com.exos.backup-watchdog": {
-      "cadence_s": 3600,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn",
-      "selftest": "python3 scripts/backup_watchdog.py --selftest"
-    },
-    "com.exos.dr-hot-sync": {
-      "cadence_s": 300,
-      "warn_grace": 3,
-      "fail_grace": 12,
-      "owner": "John Quinn"
-    },
-    "com.exos.lease-renew": {
-      "cadence_s": 60,
-      "warn_grace": 3,
-      "fail_grace": 10,
-      "owner": "John Quinn",
-      "selftest": "/usr/bin/python3 scripts/failover_monitor.py --selftest"
-    },
-    "com.exos.failover-monitor": {
-      "cadence_s": 60,
-      "warn_grace": 5,
-      "fail_grace": 15,
-      "owner": "John Quinn",
-      "host": "mini",
-      "selftest": "/usr/bin/python3 scripts/failover_monitor.py --selftest",
-      "note": "runs on the Mini; liveness read by failover_validate over ssh (failover-monitor.json last_run_epoch)"
-    },
-    "com.exos.decisions-discord-feed": {
-      "cadence_s": 120,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.backlog-grind-apply": {
-      "cadence_s": 600,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.exo3-field-report": {
-      "cadence_s": 604800,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn",
-      "selftest": "python3 scripts/exo3_field_report.py --dry-run",
-      "governance_checks": [
-        "docx in drafts/exo3-field-report/ newer than 7d on Monday → else FAIL",
-        "failure count in exo3-field-failures.json non-decreasing → else WARN",
-        "exactly one open Decision dedupeKey=exo3-field-report-<week> per 7d window → else WARN"
-      ]
-    },
-    "com.exos.naftu-attestation-ready": {
-      "cadence_s": 300,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn"
-    },
-    "com.exos.blk3-send-pack-build": {
-      "cadence_s": 86400,
-      "warn_grace": 4,
-      "fail_grace": 8,
-      "owner": "John Quinn",
-      "selftest": "/usr/bin/python3 scripts/blk3_send_pack.py selftest",
-      "note": "weekdays only; weekend gap is expected"
-    },
-    "com.exos.blk3-send-pack-apply": {
-      "cadence_s": 600,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn",
-      "selftest": "/usr/bin/python3 scripts/blk3_send_pack.py eval",
-      "governance_checks": [
-        "output eval: duplicate-send check + recipient-domain guard (blk3_send_pack.py eval) must PASS",
-        "human-click gate: answeredByEmail in {lquinn@,jquinn@}"
-      ]
-    },
-    "com.exos.dibc-leverage-watch": {
-      "cadence_s": 43200,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn",
-      "selftest": "/usr/bin/python3 scripts/dibc_leverage_watch.py --selftest",
-      "eval_type": "output",
-      "governance_checks": [
-        "--selftest PASS (classifier + own-traffic exclusion + per-message-id dedupe)",
-        "at most one Jon DM per solicitation message id (state/dibc-leverage-state.json)",
-        "non-solicitation mail never alerts (R-NONEWS)"
-      ]
-    },
-    "com.exos.failure-fixer-exo3": {
-      "cadence_s": 900,
-      "warn_grace": 2.5,
-      "fail_grace": 6,
-      "owner": "John Quinn",
-      "selftest": "/usr/bin/python3 scripts/failure_fixer_exo3.py --selftest",
-      "eval_type": "output",
-      "governance_checks": [
-        "--selftest PASS (dedupe one-attempt, <=3 fix runs/hour, one run per file set, forbidden paths, allow-listed commands, verify guard)",
-        "every staged fix → exactly one Decision per signature episode (dedupeKey failure-fix:<sig>:e<N>)",
-        "approved fixes execute only on a human click (answeredByEmail / users.json name)",
-        "commits touching secrets/BOMs/decisions.json/migrate.js are auto-reverted (fleet_log guardrail_revert)",
-        "applied fixes reported once/day; silent when none (R-NONEWS)"
-      ]
-    },
-    "com.exos.lizi-daily-4pm": {
-      "cadence_s": 86400,
-      "warn_grace": 2,
-      "fail_grace": 4,
-      "owner": "Lizi Quinn",
-      "one_shot": false
-    },
-    "com.exos.rolling-opps-exo3": {
-      "cadence_s": 86400,
-      "warn_grace": 1.5,
-      "fail_grace": 3,
-      "owner": "John Quinn",
-      "selftest": "/usr/bin/python3 scripts/rolling_opps_exo3.py --selftest",
-      "eval_type": "output",
-      "governance_checks": [
-        "--selftest PASS (12 checks)",
-        "exactly one open rolling-focus task at any time (query tasks tags cs.{rolling-focus} state open = 1)",
-        "weekly miss produces exactly one #exomac-system line (deliver.py 10-min dedupe)"
-      ]
-    }
+ "_doc": "ExO3 GOVERN/ASSURE Pillar-1 eval thresholds (Eval Wave 1, 2026-09-20). Read by scripts/agent_eval.py.",
+ "_scoring": "FAIL if launchd LastExitStatus!=0 (crash) OR a delivery_exhausted event in window OR stale beyond fail_grace. WARN if stale beyond warn_grace OR spooled/warn events in window. Else OK. FAIL escalates one deduped alert to the system channel.",
+ "window_hours": 26,
+ "agents": {
+  "com.exos.decision-docs-guard-exo3": {
+   "cadence_s": 300,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/decision_docs_guard_exo3.py --selftest",
+   "eval_type": "output",
+   "governance_checks": [
+    "--selftest PASS (replays D-7282043: drafts/ ref in context, no docs pinned -> docx + same-stem pdf companion attached; .md never attached; missing refs reported; pinned/docKeys none/human-linked cards untouched; idempotent; dd_reviewer assignee never auto-exposed)",
+    "_meta.json written read->modify->tmp->os.replace with re-read immediately before write; prior records preserved",
+    "re-ingest uses the SAME dedupeKey and all existing fields; refuses if the server did not update the same decision id in place",
+    "one #exomac-system note per decision per missing-file set (never Jon's DM)"
+   ]
   },
-  "_eval_wave_2": {
-    "added": 98,
-    "date": "2026-09-23",
-    "note": "extended eval coverage to recurring+loaded agents beyond the 12 send agents"
+  "com.exos.clockout-watcher": {
+   "cadence_s": 3600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
   },
-  "_cron_evals": {
-    "added": 57,
-    "date": "2026-09-29",
-    "note": "kind openclaw-cron entries are scored by agent_eval.check_crons() from the OpenClaw state DB (read-only): FAIL on consecutive_errors >= fail_consecutive_errors (escalates once); WARN if no run within warn_grace x cadence_s (cadence = longest gap in the cron schedule), or a one-shot still unrun 24h after due. Disabled crons are skipped (drift-checked only). cadence_s is recomputed live if null."
+  "com.exos.mc-email-command": {
+   "cadence_s": 600,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "John Quinn",
+   "selftest": "python3 scripts/mc-email-command.py --selftest",
+   "governance_checks": [
+    "deliverable_task_link orphan events (level warn) -> WARN",
+    "selftest (d): '@Exobot invoice' routing + invoice_command_exo3 --selftest must PASS"
+   ]
   },
-  "auto_register_crons": true,
-  "auto_register_crons_approved": "D-7281949"
+  "com.exos.delivery-sweeper": {
+   "cadence_s": 300,
+   "warn_grace": 4,
+   "fail_grace": 12,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.decision-send-watcher": {
+   "cadence_s": 180,
+   "warn_grace": 5,
+   "fail_grace": 15,
+   "owner": "John Quinn"
+  },
+  "com.exos.payload-intake": {
+   "cadence_s": 600,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "Lizi Quinn / John Quinn"
+  },
+  "com.exos.send-confirmation-tracker": {
+   "cadence_s": 43200,
+   "warn_grace": 1.6,
+   "fail_grace": 3,
+   "owner": "John Quinn"
+  },
+  "com.exos.weekly-investor-update": {
+   "cadence_s": 604800,
+   "warn_grace": 1.2,
+   "fail_grace": 1.6,
+   "owner": "John Quinn"
+  },
+  "com.exos.sent-loop-closer": {
+   "cadence_s": 900,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "John Quinn"
+  },
+  "com.exos.capture-action-dispatch": {
+   "cadence_s": 1200,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "John Quinn"
+  },
+  "com.exos.priority-inbox-watcher": {
+   "cadence_s": 600,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "John Quinn"
+  },
+  "com.exos.forwarded-mail-watch": {
+   "cadence_s": 300,
+   "warn_grace": 4,
+   "fail_grace": 12,
+   "owner": "John Quinn"
+  },
+  "com.exos.quote-close-stamp": {
+   "cadence_s": 300,
+   "warn_grace": 4,
+   "fail_grace": 12,
+   "owner": "John Quinn"
+  },
+  "com.exos.assignment-notifier": {
+   "cadence_s": 300,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.auto-promote-members": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.bamboo-newhire-watcher": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.blocked-senders-update": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.capability-gap-scan": {
+   "cadence_s": 21600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.capital-bridge-funds": {
+   "cadence_s": 1800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.capital-bridge-nudge": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.capstone-access-monitor": {
+   "cadence_s": 600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.capstone-email-capture": {
+   "cadence_s": 1800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.channel-session-rotate": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.claude-auth-keepalive": {
+   "cadence_s": 9000,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.completion-watchdog": {
+   "cadence_s": 1200,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.cracks-digest": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.crm-dashboard-refresh": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.crm-dd-engine": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.cron-watchdog": {
+   "cadence_s": 1800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.csl-screen": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Neil Milburn / John Quinn"
+  },
+  "com.exos.daily-burndown": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.dashboard-data-refresh": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.dataroom-bd-refresh": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.dataroom-integrity": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.dd-blocklist-monthly": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.deadline-capture": {
+   "cadence_s": 3600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.deadline-watch": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.decision-note-router": {
+   "cadence_s": 300,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.decision-triage": {
+   "cadence_s": 1800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.derisk-orbital": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.doc-manager": {
+   "cadence_s": 900,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.due-date-scheduler": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.email-people-crm": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.email-tracker": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.entity-dedupe": {
+   "cadence_s": 21600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.erp-backup": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.expense-analytics": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.expense-workflow": {
+   "cadence_s": 300,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.failover-validate": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.file-maintenance": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.fleet-status": {
+   "cadence_s": 900,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.followup-nudge-digest": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.japan-trip-dedupe": {
+   "cadence_s": 1800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.lead-auto-capture": {
+   "cadence_s": 1200,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.legacy-triage": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.mc-asset-backup": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.mc-briefing": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.mc-doc-reconcile": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.mc-email-tracker": {
+   "cadence_s": 1200,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.mc-md-export": {
+   "cadence_s": 1800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Neil Milburn / John Quinn"
+  },
+  "com.exos.mc-meeting-prep": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.mission-score": {
+   "cadence_s": 7200,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.mnda-registry": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.nightly-security": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Neil Milburn / John Quinn"
+  },
+  "com.exos.opfinance-alerts": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.opfinance-pulse": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.opp-deep-triage": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.opportunities-source": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.opportunity-engine": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.outreach-autoclose": {
+   "cadence_s": 1200,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.outreach-reply-tracker": {
+   "cadence_s": 1320,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.overnight-resolver": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.payload-commission-trigger": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.payload-sales-engine": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.piee-login-reminder": {
+   "cadence_s": 2592000,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Neil Milburn / John Quinn"
+  },
+  "com.exos.program-state": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.pursuit-dedup": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.qb-deposit-sync": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "python3 scripts/qb_deposit_sync.py --selftest"
+  },
+  "com.exos.ready-action-verify": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.recurring-tasks": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.release-lizi-followups": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Lizi Quinn"
+  },
+  "com.exos.research-competitive": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.research-grant-scanner": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.research-investor": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.research-policy": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.research-rocket-report": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.research-tech-ip": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.role-autoassign": {
+   "cadence_s": 600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.sam-amendment-watch": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.sam-flightopps-watch": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.sam-osp4-watch": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.sent-followup-tracker": {
+   "cadence_s": 10800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.series-a-worklist": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "paused": "Series A worklist paused until the Ainigma RTO resolves (Jon); don't re-enable"
+  },
+  "com.exos.subject-dedup-scan": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.supabase-backup": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.survey-ingest": {
+   "cadence_s": 21600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.task-attach-reconciler": {
+   "cadence_s": 1800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.task-auto-reassign": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.task-dedupe": {
+   "cadence_s": 21600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/dupe_collapse.py --selftest"
+  },
+  "com.exos.task-ledger-snapshot": {
+   "cadence_s": 300,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.task-note-command": {
+   "cadence_s": 300,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/task-note-command.py --selftest"
+  },
+  "com.exos.task-question-answer": {
+   "cadence_s": 300,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.team-email-task-tracker": {
+   "cadence_s": 10800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.title3-osc-watch": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.transcript-ingest": {
+   "cadence_s": 900,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.util-metrics": {
+   "cadence_s": 600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.warm-followup": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.weekly-employee-report": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.weekly-meeting-prep": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.weekly-rsi": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.weekly-team-performance": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.auto-resume": {
+   "cadence_s": 900,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "John Quinn"
+  },
+  "com.exos.decision-override-rollup": {
+   "cadence_s": 604800,
+   "warn_grace": 1.5,
+   "fail_grace": 3,
+   "owner": "John Quinn"
+  },
+  "com.exos.inventory-capture": {
+   "cadence_s": 180,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "John Quinn"
+  },
+  "com.exos.lves-survey-report": {
+   "cadence_s": 1800,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "John Quinn"
+  },
+  "com.exos.orphaned-attachment-watch": {
+   "cadence_s": 86400,
+   "warn_grace": 1.5,
+   "fail_grace": 3,
+   "owner": "John Quinn"
+  },
+  "com.exos.receiving-capture": {
+   "cadence_s": 90,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "John Quinn"
+  },
+  "com.exos.mc-guard-weekly": {
+   "cadence_s": 604800,
+   "warn_grace": 1.5,
+   "fail_grace": 3,
+   "owner": "John Quinn"
+  },
+  "com.exos.supabase-diskio-maintenance": {
+   "cadence_s": 604800,
+   "warn_grace": 1.5,
+   "fail_grace": 3,
+   "owner": "John Quinn"
+  },
+  "com.exos.vaultwarden-backup": {
+   "cadence_s": 86400,
+   "warn_grace": 1.5,
+   "fail_grace": 3,
+   "owner": "John Quinn"
+  },
+  "com.exos.erau-ernst-followup": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "John Quinn",
+   "one_shot": true
+  },
+  "com.exos.faa-rfi-followup": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "John Quinn",
+   "one_shot": true
+  },
+  "com.exos.hotel-choice-nudge": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "John Quinn",
+   "one_shot": true
+  },
+  "com.exos.kyle-forms-reminder-lizi": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "Lizi Quinn",
+   "one_shot": true
+  },
+  "com.exos.lizi-erau-trip": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "Lizi Quinn",
+   "one_shot": true
+  },
+  "com.exos.lizi-oehme-linkedin": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "Lizi Quinn",
+   "one_shot": true
+  },
+  "com.exos.lizi-planet-linkedin": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "Lizi Quinn",
+   "one_shot": true
+  },
+  "com.exos.lizi-spec-pitchday": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "Lizi Quinn",
+   "one_shot": true
+  },
+  "com.exos.lizi-stoke-linkedin": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "Lizi Quinn",
+   "one_shot": true
+  },
+  "com.exos.lizi-vellinger-linkedin": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "Lizi Quinn",
+   "one_shot": true
+  },
+  "com.exos.meeting-agenda-neil": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "Neil Milburn / John Quinn",
+   "one_shot": true
+  },
+  "com.exos.meeting-agenda-nudge": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "John Quinn",
+   "one_shot": true
+  },
+  "com.exos.ny-trip-cancel-reminder": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "John Quinn",
+   "one_shot": true
+  },
+  "com.exos.spaceweek-prep-reminder": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "John Quinn",
+   "one_shot": true
+  },
+  "com.exos.step-grant-reminder": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "John Quinn",
+   "one_shot": true
+  },
+  "com.exos.step-grant-sept2": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "John Quinn",
+   "one_shot": true
+  },
+  "com.exos.und-student-concepts": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "John Quinn",
+   "one_shot": true
+  },
+  "com.exos.uplink-pitch-lock": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "John Quinn",
+   "one_shot": true
+  },
+  "com.exos.missioncontrol": {
+   "cadence_s": 86400,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.mc-tunnel": {
+   "cadence_s": 86400,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.lan-tunnel": {
+   "cadence_s": 86400,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.warm-ollama": {
+   "cadence_s": 86400,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.run-failures-report": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.mc-recycle-purge": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "cron:acqbot-awards-sync-follow-up": {
+   "kind": "openclaw-cron",
+   "cron_id": "f1464af0-74b1-4706-aa5f-c3512fff4700",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true,
+   "one_shot": true
+  },
+  "cron:agent-meta-evaluator-nightly": {
+   "kind": "openclaw-cron",
+   "cron_id": "1202feb8-8079-42df-a7d3-c33ca838f18e",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:agent-self-improvement-implementer-weekly": {
+   "kind": "openclaw-cron",
+   "cron_id": "ed638bd8-d478-487b-a238-9f2f789a8466",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:apac-deal-flow-weekly-scan": {
+   "kind": "openclaw-cron",
+   "cron_id": "28a46633-1a11-439a-887b-dfb24224b12a",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:blk3-payload-sales-engine": {
+   "kind": "openclaw-cron",
+   "cron_id": "804832dd-39ea-485b-bd81-26c00dd91afa",
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:crm-dashboard-refresh": {
+   "kind": "openclaw-cron",
+   "cron_id": "a56299c6-d0be-41dc-a881-ec5c9c8ceb53",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:daily-10-pm-briefing-email": {
+   "kind": "openclaw-cron",
+   "cron_id": "155b1806-c829-443e-a1ee-3e7b70e285a3",
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:daily-email-opportunity-scanner": {
+   "kind": "openclaw-cron",
+   "cron_id": "8bc72d87-7962-4ef8-b77a-eb404c6c388c",
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:daily-task-backlog-grind-dedup-stale-close-batch-to-jon": {
+   "kind": "openclaw-cron",
+   "cron_id": "51e09612-a217-43e0-a7a9-a3243c59a5a0",
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:decisions-matrix-daily-update-r-017": {
+   "kind": "openclaw-cron",
+   "cron_id": "77ee570f-6957-456f-a687-7d28bedeabc3",
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:descartes-vc-renewal-decision-cut-over-to-in-house-csl": {
+   "kind": "openclaw-cron",
+   "cron_id": "cc150b55-8c35-424b-9efe-233293dd8bbc",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true,
+   "one_shot": true
+  },
+  "cron:discord-mission-control-sync": {
+   "kind": "openclaw-cron",
+   "cron_id": "c5b07fbf-43f0-4dea-8c68-b2aa105d9536",
+   "cadence_s": 259200,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:diu-hycat-open-solicitation-watch-bd-032": {
+   "kind": "openclaw-cron",
+   "cron_id": "ad2b3471-e26c-4265-b9e9-b6a7bb817d72",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:diu-hycat-outreach-send-reminder": {
+   "kind": "openclaw-cron",
+   "cron_id": "6028e2b9-8adc-4a67-9fa0-8fca5a2d3183",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false,
+   "one_shot": true
+  },
+  "cron:dpa-title-iii-reauthorization-watch": {
+   "kind": "openclaw-cron",
+   "cron_id": "60d808ad-3e3c-445f-b491-ce4da29459aa",
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:exomac-system-wake": {
+   "kind": "openclaw-cron",
+   "cron_id": "3a9112dc-c7f9-416e-a48c-f04415689af4",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false,
+   "one_shot": true
+  },
+  "cron:exos-aerospace-bd-daily-intel": {
+   "kind": "openclaw-cron",
+   "cron_id": "d7ed7449-2191-4574-8c8f-7b2d5900831e",
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:exos-aerospace-daily-opportunity-scan": {
+   "kind": "openclaw-cron",
+   "cron_id": "f8e2535b-207a-4d59-aefc-38560d1639a5",
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:exos-capital-bridge-agent-1m": {
+   "kind": "openclaw-cron",
+   "cron_id": "fa596321-b5c0-4915-8208-2782874df039",
+   "cadence_s": 259200,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:exos-capture-agent-nasa-rdre-phase-iii": {
+   "kind": "openclaw-cron",
+   "cron_id": "8aef3ee2-678f-4058-a8fb-dda07d636c23",
+   "cadence_s": 259200,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:exos-capture-agent-nih-microgravity": {
+   "kind": "openclaw-cron",
+   "cron_id": "018a38fe-d87b-4824-abb0-fa4700109c11",
+   "cadence_s": 259200,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:exos-capture-agent-noaa-erb-ac4-sacss": {
+   "kind": "openclaw-cron",
+   "cron_id": "049e8c95-7082-470a-9f0f-c66f8845da1c",
+   "cadence_s": 259200,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:exos-investor-update-weekly-feed-david": {
+   "kind": "openclaw-cron",
+   "cron_id": "14b9917b-eaf4-43eb-b326-787f59886bc1",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:exos-mission-control-weekly-review": {
+   "kind": "openclaw-cron",
+   "cron_id": "f4ccb9d6-53ef-48cb-bda3-2750cfd83ff8",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:exos-national-charter-enterprise-agent-blk3-build": {
+   "kind": "openclaw-cron",
+   "cron_id": "4dbd0e49-7505-420f-a879-823a83cd2727",
+   "cadence_s": 259200,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:exos-sales-agent-payload-bd-full-time": {
+   "kind": "openclaw-cron",
+   "cron_id": "f38b6aa2-075a-4d47-a6ce-046e8644388c",
+   "cadence_s": 259200,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:exos-status-update": {
+   "kind": "openclaw-cron",
+   "cron_id": "2952a034-56d4-45ed-9ad9-ce608fcea26f",
+   "cadence_s": 259200,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:file-maintenance-lessons-learned": {
+   "kind": "openclaw-cron",
+   "cron_id": "c38f1316-8ba4-48af-a16c-9c5b6703b64d",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:heliotech-speaker-slot-teasley-follow-up": {
+   "kind": "openclaw-cron",
+   "cron_id": "2323192f-1924-4632-8205-6bcd1823aa9c",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false,
+   "one_shot": true
+  },
+  "cron:industry-signal-posts": {
+   "kind": "openclaw-cron",
+   "cron_id": "e6d339d7-b932-4f2f-bf82-5259bd12073d",
+   "cadence_s": 345600,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "Lizi Quinn",
+   "enabled": true
+  },
+  "cron:japan-itz-bi-weekly-working-session-toshi-hospo-to-oct": {
+   "kind": "openclaw-cron",
+   "cron_id": "d244fa73-2c4d-44fc-af40-c0a5ab1cb4c8",
+   "cadence_s": 1209600,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:karmen-watch-dow-sbir-26-bz-release-5-topics-opens-aug-26": {
+   "kind": "openclaw-cron",
+   "cron_id": "764159d5-738c-4196-8dea-691ec10eb6ce",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false,
+   "one_shot": true
+  },
+  "cron:lquinn-weekly-crm-follow-up-report": {
+   "kind": "openclaw-cron",
+   "cron_id": "3c5f756b-d536-4417-bbb2-317ad5297b47",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "Lizi Quinn",
+   "enabled": false
+  },
+  "cron:m-star-fy27-pre-position": {
+   "kind": "openclaw-cron",
+   "cron_id": "eb9006cf-5605-4f06-852d-53f763cf1c57",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true,
+   "one_shot": true
+  },
+  "cron:mission-control-email-tracker": {
+   "kind": "openclaw-cron",
+   "cron_id": "8e68de1a-9269-4250-9f0b-fb75945b7ace",
+   "cadence_s": 1800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:monthly-investor-report": {
+   "kind": "openclaw-cron",
+   "cron_id": "9e1b0cf7-ee80-41cc-970d-2d0d3ac89af0",
+   "cadence_s": 2419200,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:nasa-sbir-cryo-phase-i-appendix-watch": {
+   "kind": "openclaw-cron",
+   "cron_id": "bfe8d388-f5e6-4c23-839b-6febf2e67dfe",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:openclaw-update-to-2026-7-1-2-jon-scheduled-11pm": {
+   "kind": "openclaw-cron",
+   "cron_id": "65eec208-10e6-4ec5-a9aa-b99d47ef660d",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false,
+   "one_shot": true
+  },
+  "cron:overnight-resolver": {
+   "kind": "openclaw-cron",
+   "cron_id": "f2ec7aca-8136-43c1-98b4-d2a94340d1ad",
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:overnight-resolver-opus-cost-review": {
+   "kind": "openclaw-cron",
+   "cron_id": "970ab1bc-8ca4-4fb8-aa97-ab4066b00c5d",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false,
+   "one_shot": true
+  },
+  "cron:overnight-resolver-opus-escalation": {
+   "kind": "openclaw-cron",
+   "cron_id": "1f60acb4-e0e0-4ae0-a877-9749eb380d6e",
+   "cadence_s": 172800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:payload-sales-3-a-day": {
+   "kind": "openclaw-cron",
+   "cron_id": "148cdb94-2328-417a-a418-0da6c51ad0b0",
+   "cadence_s": 259200,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:research-team-competitive-intelligence": {
+   "kind": "openclaw-cron",
+   "cron_id": "60aed194-8587-4c9f-87bc-906b2a7ae732",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:research-team-grant-contract-scanner": {
+   "kind": "openclaw-cron",
+   "cron_id": "f4ea413e-c591-41ee-8933-7a927ed60c67",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true,
+   "selftest": "python3 scripts/cron_hygiene.py --selftest",
+   "restricted_agent": "research-web"
+  },
+  "cron:research-team-investor-capital-markets": {
+   "kind": "openclaw-cron",
+   "cron_id": "29aab815-7580-465e-b7f8-1d9b467dce82",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:research-team-policy-regulatory-watch": {
+   "kind": "openclaw-cron",
+   "cron_id": "5f3b0529-ae16-41e3-adef-d0de59c7479f",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:research-team-technology-ip-monitor": {
+   "kind": "openclaw-cron",
+   "cron_id": "1cf93736-764c-42f7-879c-9eeba6b40568",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:rto-dd-support-digest-ainigma": {
+   "kind": "openclaw-cron",
+   "cron_id": "4c974a8b-5759-4b66-b4db-125553af4a8a",
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:sam-gov-api-key-renewal-89-day-expiry": {
+   "kind": "openclaw-cron",
+   "cron_id": "2f914ea5-31fc-43c9-8410-74c278150d83",
+   "cadence_s": 7344000,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:sbir-spacewerx-topic-fit-watch-exos-filtered": {
+   "kind": "openclaw-cron",
+   "cron_id": "b942779c-9a82-4048-b6c1-e0fa5e0b817b",
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:solar-report-7pm": {
+   "kind": "openclaw-cron",
+   "cron_id": "6751f847-9c5d-45d2-8097-4f295062dcb8",
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false
+  },
+  "cron:spacewerx-on-orbit-logistics-concept-paper-open-call-watch": {
+   "kind": "openclaw-cron",
+   "cron_id": "f2c9dda5-49fa-40b1-84df-26565bac3307",
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": true
+  },
+  "cron:test-bucket-d-sales-agent-run-one-shot": {
+   "kind": "openclaw-cron",
+   "cron_id": "11feb1de-192a-4948-83f5-b5ceea7d70fc",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false,
+   "one_shot": true
+  },
+  "cron:trending-content-scanner": {
+   "kind": "openclaw-cron",
+   "cron_id": "bcff8330-ebb9-45e2-a2b6-5fdf64faa552",
+   "cadence_s": 345600,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "Lizi Quinn",
+   "enabled": true
+  },
+  "cron:verify-rdre-durable-drop-one-shot": {
+   "kind": "openclaw-cron",
+   "cron_id": "2b6e4087-567d-4e3b-94d4-2f820dcc1ad8",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false,
+   "one_shot": true
+  },
+  "cron:veteran-fund-mike-sherbakov-follow-up": {
+   "kind": "openclaw-cron",
+   "cron_id": "4c3413e0-7082-4654-a8e6-43fc4dfe6902",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false,
+   "one_shot": true
+  },
+  "cron:vfw-tundra-amp-powerstep-rfq-follow-up": {
+   "kind": "openclaw-cron",
+   "cron_id": "3299389d-ca8d-498c-9a6e-0afd27a6faa3",
+   "cadence_s": null,
+   "warn_grace": 2.5,
+   "fail_consecutive_errors": 2,
+   "owner": "John Quinn",
+   "enabled": false,
+   "one_shot": true
+  },
+  "com.exos.cron-telemetry": {
+   "cadence_s": 900,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "Exo (infra) / John Quinn",
+   "selftest": "python3 scripts/cron_telemetry.py --selftest"
+  },
+  "com.exos.diu-hycat-cso-watch": {
+   "cadence_s": 50400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.doc-cm-drift": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.qb-supply-sync": {
+   "cadence_s": 1800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.qb-invoice-watch": {
+   "cadence_s": 300,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.mrp-nightly": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.dr-backup": {
+   "cadence_s": 3600,
+   "warn_grace": 3,
+   "fail_grace": 8,
+   "owner": "John Quinn",
+   "selftest": "python3 scripts/dr_verify.py --link"
+  },
+  "com.exos.backup-watchdog": {
+   "cadence_s": 3600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "python3 scripts/backup_watchdog.py --selftest"
+  },
+  "com.exos.dr-hot-sync": {
+   "cadence_s": 300,
+   "warn_grace": 3,
+   "fail_grace": 12,
+   "owner": "John Quinn"
+  },
+  "com.exos.lease-renew": {
+   "cadence_s": 60,
+   "warn_grace": 3,
+   "fail_grace": 10,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/failover_monitor.py --selftest"
+  },
+  "com.exos.failover-monitor": {
+   "cadence_s": 60,
+   "warn_grace": 5,
+   "fail_grace": 15,
+   "owner": "John Quinn",
+   "host": "mini",
+   "selftest": "/usr/bin/python3 scripts/failover_monitor.py --selftest",
+   "note": "runs on the Mini; liveness read by failover_validate over ssh (failover-monitor.json last_run_epoch)"
+  },
+  "com.exos.decisions-discord-feed": {
+   "cadence_s": 120,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.backlog-grind-apply": {
+   "cadence_s": 600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.exo3-field-report": {
+   "cadence_s": 604800,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "python3 scripts/exo3_field_report.py --dry-run",
+   "governance_checks": [
+    "docx in drafts/exo3-field-report/ newer than 7d on Monday \u2192 else FAIL",
+    "failure count in exo3-field-failures.json non-decreasing \u2192 else WARN",
+    "exactly one open Decision dedupeKey=exo3-field-report-<week> per 7d window \u2192 else WARN"
+   ]
+  },
+  "com.exos.naftu-attestation-ready": {
+   "cadence_s": 300,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn"
+  },
+  "com.exos.blk3-send-pack-build": {
+   "cadence_s": 86400,
+   "warn_grace": 4,
+   "fail_grace": 8,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/blk3_send_pack.py selftest",
+   "note": "weekdays only; weekend gap is expected"
+  },
+  "com.exos.blk3-send-pack-apply": {
+   "cadence_s": 600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/blk3_send_pack.py eval",
+   "governance_checks": [
+    "output eval: duplicate-send check + recipient-domain guard (blk3_send_pack.py eval) must PASS",
+    "human-click gate: answeredByEmail in {lquinn@,jquinn@}"
+   ]
+  },
+  "com.exos.dibc-leverage-watch": {
+   "cadence_s": 43200,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/dibc_leverage_watch.py --selftest",
+   "eval_type": "output",
+   "governance_checks": [
+    "--selftest PASS (classifier + own-traffic exclusion + per-message-id dedupe)",
+    "at most one Jon DM per solicitation message id (state/dibc-leverage-state.json)",
+    "non-solicitation mail never alerts (R-NONEWS)"
+   ]
+  },
+  "com.exos.failure-fixer-exo3": {
+   "cadence_s": 900,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/failure_fixer_exo3.py --selftest",
+   "eval_type": "output",
+   "governance_checks": [
+    "--selftest PASS (dedupe one-attempt, <=3 fix runs/hour, one run per file set, forbidden paths, allow-listed commands, verify guard)",
+    "every staged fix \u2192 exactly one Decision per signature episode (dedupeKey failure-fix:<sig>:e<N>)",
+    "approved fixes execute only on a human click (answeredByEmail / users.json name)",
+    "commits touching secrets/BOMs/decisions.json/migrate.js are auto-reverted (fleet_log guardrail_revert)",
+    "applied fixes reported once/day; silent when none (R-NONEWS)"
+   ]
+  },
+  "com.exos.lizi-daily-4pm": {
+   "cadence_s": 86400,
+   "warn_grace": 2,
+   "fail_grace": 4,
+   "owner": "Lizi Quinn",
+   "one_shot": false
+  },
+  "com.exos.rolling-opps-exo3": {
+   "cadence_s": 86400,
+   "warn_grace": 1.5,
+   "fail_grace": 3,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/rolling_opps_exo3.py --selftest",
+   "eval_type": "output",
+   "governance_checks": [
+    "--selftest PASS (12 checks)",
+    "exactly one open rolling-focus task at any time (query tasks tags cs.{rolling-focus} state open = 1)",
+    "weekly miss produces exactly one #exomac-system line (deliver.py 10-min dedupe)"
+   ]
+  },
+  "com.exos.weekly-task-agenda-exo3": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 8,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/weekly_task_agenda_exo3.py --selftest",
+   "eval_type": "output",
+   "governance_checks": [
+    "--selftest PASS (agenda covers every target line; edited agenda read-back; no pay data in agenda/xlsx; section roll-up arithmetic)",
+    "every weekly-target line for the week appears on the agenda (verified 10/16: 24/24 lines from #3824-#3831)",
+    "pay rates only in ~/.openclaw/state (0600) and the admin-only MC endpoint",
+    "one Discord DM per week (hours only); questions go to Decisions, never Discord"
+   ]
+  },
+  "com.exos.decision-answer-dispatcher": {
+   "cadence_s": 120,
+   "warn_grace": 5,
+   "fail_grace": 15,
+   "owner": "John Quinn",
+   "governance_checks": [
+    "selftest: python3 scripts/decision_answer_dispatcher.py --selftest must PASS (9/9)"
+   ]
+  }
+ },
+ "_eval_wave_2": {
+  "added": 98,
+  "date": "2026-09-23",
+  "note": "extended eval coverage to recurring+loaded agents beyond the 12 send agents"
+ },
+ "_cron_evals": {
+  "added": 57,
+  "date": "2026-09-29",
+  "note": "kind openclaw-cron entries are scored by agent_eval.check_crons() from the OpenClaw state DB (read-only): FAIL on consecutive_errors >= fail_consecutive_errors (escalates once); WARN if no run within warn_grace x cadence_s (cadence = longest gap in the cron schedule), or a one-shot still unrun 24h after due. Disabled crons are skipped (drift-checked only). cadence_s is recomputed live if null."
+ },
+ "auto_register_crons": true,
+ "auto_register_crons_approved": "D-7281949"
 }
