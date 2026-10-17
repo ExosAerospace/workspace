@@ -18,6 +18,54 @@ V = {
    acc="#ff2a2a", acc_dim="#7a1010", screen="#0a0606", phos="#ff5a4a", phos2="#ffffff", ok="#7fe0a0", warn="#ffcc33", bad="#ff2a2a"),
 }
 
+DEFAULT_BG = """  background-color:{lo} !important;
+  background-image:radial-gradient(ellipse at 50% 40%,transparent 40%,rgba(0,0,0,.75) 100%),
+    repeating-linear-gradient(115deg,rgba(255,255,255,.018) 0 2px,transparent 2px 6px),
+    linear-gradient(90deg,rgba(0,0,0,.35) 1px,transparent 1px) !important;
+  background-size:auto,auto,120px 100% !important;"""
+
+
+def stars(seed_layers):
+    """Tiled starfield: each layer = (tile px, [(x%,y%,radius px,alpha)...])."""
+    out, sizes = [], []
+    for tile, pts in seed_layers:
+        for x, y, r, a in pts:
+            out.append(f"radial-gradient({r}px {r}px at {x}% {y}%,rgba(255,255,255,{a}),transparent)"); sizes.append(f"{tile}px {tile}px")
+    return out, sizes
+
+
+STARS = stars([(173, [(12, 18, 1, .9), (64, 71, 1, .6), (88, 33, 1.4, .8)]),
+               (251, [(31, 52, 1, .7), (77, 9, 1.6, .9), (52, 88, 1, .5)]),
+               (389, [(18, 77, 2, .95), (69, 41, 1.2, .7), (90, 90, 1, .6)]),
+               (97, [(40, 60, .7, .45), (85, 15, .7, .4)])])
+
+
+def space_bg(limb, nebula, base):
+    """Mech x Space body: deep-space base, nebula wash, planet limb glowing at the bottom horizon, starfield."""
+    st, sz = STARS
+    layers = [f"radial-gradient(ellipse 140% 60% at 50% 128%,#000 58%,{limb} 60.5%,{limb}55 62%,transparent 70%)",
+              f"radial-gradient(ellipse 60% 45% at 78% 22%,{nebula}33,transparent 70%)",
+              f"radial-gradient(ellipse 50% 40% at 15% 60%,{nebula}1f,transparent 70%)"] + st
+    sizes = ["100% 100%"] * 3 + sz
+    return (f"  background-color:{base} !important;\n  background-image:{','.join(layers)} !important;\n"
+            f"  background-size:{','.join(sizes)} !important;")
+
+
+SPACE = {
+ "S1_Exos_Orbital": dict(label="S1 · EXOS ORBITAL", steel="#2a2c2f", steel_hi="#55595e", steel_lo="#111214", plate="#1b1d20",
+   acc="#F26A21", acc_dim="#7a3410", screen="#05070a", screen_a="rgba(5,7,10,.86)", phos="#ffb27a", phos2="#f4f6f8", ok="#9be35a", warn="#ffd23d", bad="#ff3b2f",
+   space=("#F26A21", "#F26A21", "#020305")),
+ "S2_Deep_Space_Nebula": dict(label="S2 · DEEP SPACE", steel="#262a33", steel_hi="#4f5666", steel_lo="#0e1015", plate="#191c23",
+   acc="#b38cff", acc_dim="#4d3a7a", screen="#04050c", screen_a="rgba(4,5,12,.84)", phos="#9fd2ff", phos2="#eef4ff", ok="#7fffc4", warn="#ffd23d", bad="#ff4d6d",
+   space=("#6fb6ff", "#8a5cff", "#010208")),
+ "S3_Mars_Dropship": dict(label="S3 · MARS DROPSHIP", steel="#33291f", steel_hi="#6b5644", steel_lo="#140f0b", plate="#231b14",
+   acc="#ff8c42", acc_dim="#7a3a15", screen="#0a0605", screen_a="rgba(10,6,5,.86)", phos="#ffc49a", phos2="#fff1e6", ok="#a8e05f", warn="#ffd23d", bad="#ff3b2f",
+   space=("#d9542b", "#c0392b", "#070302")),
+}
+for _v in SPACE.values():
+    _v["body_bg"] = space_bg(*_v.pop("space"))
+
+
 BOLT = "radial-gradient(circle at {x} {y},{hi} 0 2px,{mid} 3px,{lo} 4px,transparent 4.6px)"
 
 
@@ -38,11 +86,8 @@ def css(v):
   --green:{v['ok']} !important; --done-accent:{v['ok']} !important; --red:{v['bad']} !important; --blocked-accent:{v['bad']} !important;
 }}
 html body {{ font-family:'DIN Condensed','Avenir Next Condensed','Arial Narrow',sans-serif !important; letter-spacing:.04em;
-  background-color:{v['steel_lo']} !important;
-  background-image:radial-gradient(ellipse at 50% 40%,transparent 40%,rgba(0,0,0,.75) 100%),
-    repeating-linear-gradient(115deg,rgba(255,255,255,.018) 0 2px,transparent 2px 6px),
-    linear-gradient(90deg,rgba(0,0,0,.35) 1px,transparent 1px) !important;
-  background-size:auto,auto,120px 100% !important; background-attachment:fixed !important; }}
+{v.get('body_bg') or DEFAULT_BG.format(lo=v['steel_lo'])}
+  background-attachment:fixed !important; }}
 /* header = cockpit canopy frame: thick plate, hazard band, bolts */
 html body header, html body .topbar {{ position:relative;
   background:{bolts},{brushed} !important; border-bottom:6px solid {v['steel_lo']} !important;
@@ -58,7 +103,7 @@ html body h3, html body h4 {{ display:inline-block; color:{v['steel_lo']} !impor
 html body a {{ color:{v['acc']}; }}
 /* panels = armor plate frame (bevel, big chamfer, 4 bolts) around a recessed CRT screen */
 html body .card, html body .stat-card, html body .panel, html body .box, html body .doc-item, html body .hero, html body .modal, html body .modal-content {{
-  background:{bolts},radial-gradient(ellipse at 50% 0%,{v['phos']}10,transparent 70%),linear-gradient({v['screen']},{v['screen']}) padding-box,
+  background:{bolts},radial-gradient(ellipse at 50% 0%,{v['phos']}10,transparent 70%),linear-gradient({v.get('screen_a', v['screen'])},{v.get('screen_a', v['screen'])}) padding-box,
     linear-gradient(135deg,{v['steel_hi']},{v['steel']} 40%,{v['steel_lo']}) border-box !important;
   border:8px solid transparent !important; border-radius:0 !important;
   clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);
@@ -101,7 +146,9 @@ html body table td {{ border-color:{v['steel']} !important; font-family:'Menlo',
 
 
 if __name__ == "__main__":
-    for key, v in V.items():
+    import sys
+    todo = SPACE if "--space" in sys.argv else V
+    for key, v in todo.items():
         p = os.path.join(OUT, f"theme-mech-{key.split('_')[0].lower()}.css"); open(p, "w").write(css(v))
         prev.render("file://" + p, os.path.join(OUT, f"MC_MECH_{key}"), f"OPERATIONS COMMAND · {v['label']}")
         print(key, "ok")
