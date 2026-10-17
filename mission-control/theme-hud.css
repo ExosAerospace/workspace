@@ -1,0 +1,69 @@
+/* Mission Control "Rugged HMD" theme (Jon 2026-10-16: HUD option 3, helmet display, "more ruggedized, especially buttons").
+   Opt-in via /mc-theme.js: ?theme=hud (persists) · ?theme=default (off) · the toggle bottom-left.
+   Overrides shared page variables + surface styling only; no layout changes, so every page keeps working when off. */
+:root, :root body {
+  --navy:#05090d !important; --navy2:#0a1219 !important; --navy3:#0e1821 !important;
+  --card:#0c151d !important; --line:rgba(127,233,255,.22) !important; --border:rgba(127,233,255,.22) !important;
+  --text:#e9fbff !important; --text2:#6fa3b6 !important; --muted:#6fa3b6 !important;
+  --blue:#24323d !important; --blue2:#7fe9ff !important; --accent:#7fe9ff !important; --progress-accent:#7fe9ff !important;
+  --orange:#ffd23d !important; --orange2:#ffd23d !important; --yellow:#ffd23d !important; --purple:#b59cff !important;
+  --green:#5dffb0 !important; --done-accent:#5dffb0 !important; --red:#ff5470 !important; --blocked-accent:#ff5470 !important;
+}
+html body {
+  font-family:'Avenir Next Condensed','DIN Condensed','Arial Narrow',sans-serif !important; letter-spacing:.03em;
+  background-color:#03080d !important;
+  background-image:radial-gradient(ellipse at 50% 35%,rgba(20,52,74,.55) 0%,transparent 65%),
+    linear-gradient(rgba(127,233,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(127,233,255,.03) 1px,transparent 1px) !important;
+  background-size:auto,48px 48px,48px 48px !important; background-attachment:fixed !important;
+}
+/* header = armored top bezel */
+html body header, html body nav.top, html body .topbar {
+  background:linear-gradient(#1a232b,#0b1117) !important; border-bottom:3px solid #2b3944 !important;
+  box-shadow:0 2px 0 #000, inset 0 1px 0 rgba(255,255,255,.08) !important; position:relative; }
+html body header::after { content:''; position:absolute; left:0; right:0; bottom:-7px; height:4px; pointer-events:none;
+  background:repeating-linear-gradient(-45deg,#ffd23d 0 6px,#111 6px 12px); opacity:.55; }
+html body h1, html body h2 { color:#e9fbff !important; letter-spacing:.16em; text-transform:uppercase; text-shadow:0 0 6px rgba(127,233,255,.55); }
+html body h3, html body h4 { color:#7fe9ff !important; letter-spacing:.2em; text-transform:uppercase; }
+html body a { color:#7fe9ff; }
+/* panels = recessed glass in a chamfered armored frame */
+html body .card, html body .stat-card, html body .panel, html body .box, html body .doc-item, html body .task-card, html body .hero, html body .modal, html body .modal-content {
+  background:radial-gradient(circle at 16px 7px,#5b6b77 0 2px,#0b1117 2.6px,transparent 3.2px),radial-gradient(circle at calc(100% - 7px) 7px,#5b6b77 0 2px,#0b1117 2.6px,transparent 3.2px),
+    radial-gradient(circle at 7px calc(100% - 7px),#5b6b77 0 2px,#0b1117 2.6px,transparent 3.2px),radial-gradient(circle at calc(100% - 16px) calc(100% - 7px),#5b6b77 0 2px,#0b1117 2.6px,transparent 3.2px),
+    linear-gradient(rgba(14,24,33,.94),rgba(7,13,19,.94)) !important;
+  border:2px solid #2b3944 !important; border-top-color:#3a4a56 !important; border-radius:0 !important;
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  box-shadow:inset 0 0 0 1px rgba(127,233,255,.16), inset 0 0 18px rgba(0,0,0,.6) !important; }
+/* buttons = machined, raised hardware keys with a press travel */
+html body button:not(#mc-theme-toggle):not(.x), html body .btn, html body .filter-btn, html body .move-btn, html body input[type=submit], html body input[type=button] {
+  font-family:'DIN Condensed','Avenir Next Condensed','Arial Narrow',sans-serif !important; font-weight:700 !important;
+  text-transform:uppercase; letter-spacing:.14em !important; color:#e9fbff !important;
+  background:linear-gradient(#3a4853 0%,#26313a 48%,#1b242c 52%,#222c35 100%) !important;
+  border:1px solid #0a0f13 !important; border-radius:0 !important;
+  clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22), inset 0 -2px 0 rgba(0,0,0,.55), 0 3px 0 #05080b !important;
+  text-shadow:0 1px 0 #000 !important; transition:transform .05s, box-shadow .05s; }
+html body button:not(#mc-theme-toggle):not(.x):hover, html body .btn:hover, html body .filter-btn:hover {
+  color:#7fe9ff !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.22), inset 0 -2px 0 rgba(0,0,0,.55), 0 3px 0 #05080b, 0 0 0 1px #7fe9ff !important; }
+html body button:not(#mc-theme-toggle):not(.x):active, html body .btn:active, html body .filter-btn:active {
+  transform:translateY(2px); box-shadow:inset 0 2px 4px rgba(0,0,0,.7), 0 1px 0 #05080b !important; }
+/* primary = lit key (cyan backlight) */
+html body .btn-primary:not(#mc-theme-toggle):not(.x), html body .btn.primary:not(#mc-theme-toggle):not(.x), html body .btn.green:not(#mc-theme-toggle):not(.x), html body .filter-btn.active:not(#mc-theme-toggle), html body .opp-btn-save:not(#mc-theme-toggle):not(.x) {
+  color:#eaffff !important; border-color:#7fe9ff !important;
+  background:linear-gradient(#2b6f80 0%,#17485a 48%,#0f3a4a 52%,#14505f 100%) !important;
+  box-shadow:inset 0 1px 0 rgba(190,250,255,.45), inset 0 -2px 0 rgba(0,0,0,.5), 0 3px 0 #05080b, 0 0 10px rgba(127,233,255,.35) !important; }
+/* danger = caution-striped guard */
+html body .btn-danger:not(#mc-theme-toggle):not(.x), html body .btn.danger:not(#mc-theme-toggle):not(.x) {
+  background:repeating-linear-gradient(-45deg,#3a1018 0 8px,#5a1622 8px 16px) !important; color:#ffd6dc !important;
+  box-shadow:inset 0 0 0 2px #ff5470, 0 3px 0 #05080b !important; }
+html body .btn.ghost:not(#mc-theme-toggle):not(.x), html body .btn.secondary:not(#mc-theme-toggle):not(.x), html body .opp-btn-ghost:not(#mc-theme-toggle):not(.x) {
+  background:linear-gradient(#1c252d,#11181e) !important; color:#9fd8e8 !important; }
+html body input, html body select, html body textarea {
+  background:#03080d !important; color:#e9fbff !important; border:1px solid #2b3944 !important; border-radius:0 !important;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.7) !important; }
+html body input:focus, html body select:focus, html body textarea:focus { outline:1px solid #7fe9ff !important; }
+html body table th { color:#6fa3b6 !important; letter-spacing:.16em; text-transform:uppercase; border-bottom:2px solid #2b3944 !important; }
+html body table td { border-color:rgba(127,233,255,.12) !important; }
+#mc-theme-toggle { position:fixed; left:12px; bottom:12px; z-index:2147483001; font:700 11px 'DIN Condensed','Arial Narrow',sans-serif;
+  letter-spacing:.18em; background:linear-gradient(#3a4853,#1b242c); color:#7fe9ff; border:1px solid #000; padding:6px 10px; cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2), 0 2px 0 #000; opacity:.85; }
+#mc-theme-toggle:hover { opacity:1; }
