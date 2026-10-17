@@ -1,13 +1,14 @@
 // exo3 eval for mc-theme.js (Jon 2026-10-15 "Joint Ops Center" look): opt-in only, persists, default unchanged.
 const vm = require('vm'), fs = require('fs'), path = require('path'), assert = require('assert');
 const src = fs.readFileSync(path.join(__dirname, '..', 'mc-theme.js'), 'utf8');
-function run(search, stored) {
+function run(search, stored, loading) {
+  const written = [];
   const store = stored ? { mcTheme: stored } : {}; const head = []; const body = [];
-  const doc = { readyState: 'complete', head: { appendChild: n => head.push(n) }, documentElement: {}, body: { appendChild: n => body.push(n) },
+  const doc = { readyState: loading ? 'loading' : 'complete', write: h => written.push(h), head: { appendChild: n => head.push(n) }, documentElement: {}, body: { appendChild: n => body.push(n) },
     getElementById: () => null, createElement: t => { const k = []; return { tag: t, style: {}, kids: k, setAttribute() {}, appendChild: n => k.push(n) }; }, addEventListener() {} };
   vm.runInNewContext(src, { URLSearchParams, location: { search, reload() {} }, document: doc,
     localStorage: { getItem: k => store[k] || null, setItem: (k, v) => { store[k] = v; } } });
-  return { head, body, store };
+  return { head, body, store, written };
 }
 let n = 0; const ok = (c, m) => { assert.ok(c, 'FAIL: ' + m); n++; };
 let r = run('', null); ok(r.head.length === 0 && r.body.length === 2, 'default: no theme css, Display Mode button + menu shown');
@@ -18,5 +19,7 @@ r = run('', 'joc'); ok(r.head.length === 1, 'remembered choice applies on next p
 r = run('?theme=mech', null); ok(r.head[0] && r.head[0].href.indexOf('/theme-mech.css?v=') === 0 && r.store.mcTheme === 'mech', '?theme=mech loads Mech Cockpit + remembers');
 r = run('', 'hud'); ok(r.head[0] && r.head[0].href.indexOf('/theme-mech.css?v=') === 0, 'retired hud choice upgrades to mech');
 r = run('', 'bogus'); ok(r.head.length === 0, 'unknown stored theme falls back to default');
+r = run('', 'mech', true); ok(r.head.length === 0 && r.written.length === 1 && /theme-mech\.css\?v=/.test(r.written[0]), 'during parse: render-blocking <link> via document.write (no flash)');
+r = run('', null, true); ok(r.written.length === 0, 'standard look writes nothing');
 r = run('?theme=default', 'joc'); ok(r.head.length === 0 && r.store.mcTheme === 'default', '?theme=default turns it off');
 console.log(`mc-theme selftest: ${n}/${n} pass`);

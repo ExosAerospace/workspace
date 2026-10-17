@@ -4,7 +4,7 @@
 //   or the "DISPLAY MODE" button bottom-left (Jon 10/16: employees pick the look they prefer). Choice is remembered per browser.
 (function () {
   var KEY = 'mcTheme';
-  var V = '20261016-2252';  // bump on every theme CSS change: server sends .css without no-store, so browsers keep stale copies (Jon 10/16 still saw the old font)
+  var V = '20261016-2258';  // bump on every theme CSS change: server sends .css without no-store, so browsers keep stale copies (Jon 10/16 still saw the old font)
   var THEMES = { mech: { css: '/theme-mech.css', label: 'MECH COCKPIT' }, joc: { css: '/theme-joc.css', label: 'OPS CENTER' } };
   var MENU = [['default', 'Standard', 'Classic Mission Control look'],
               ['mech', 'Mech Cockpit', 'Armored cockpit over Earth orbit'],
@@ -19,8 +19,17 @@
   if (ALIAS[cur]) cur = ALIAS[cur];
   if (!THEMES[cur]) cur = 'default';
   if (cur !== 'default') {
-    var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = THEMES[cur].css + '?v=' + V; l.id = 'mc-theme-css';
-    (document.head || document.documentElement).appendChild(l);
+    // No flash of the standard look (Jon 10/16): while the <head> is still parsing, document.write the <link> so it is
+    // render-blocking like a normal stylesheet (an appended <link> is not, so the old page painted first). Dark base
+    // color is set inline immediately in case the CSS is slow; appendChild is the fallback after parsing.
+    var href = THEMES[cur].css + '?v=' + V;
+    try { document.documentElement.style.backgroundColor = '#05070a'; } catch (e) {}
+    if (document.readyState === 'loading' && document.write) {
+      document.write('<link rel="stylesheet" id="mc-theme-css" href="' + href + '">');
+    } else {
+      var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; l.id = 'mc-theme-css';
+      (document.head || document.documentElement).appendChild(l);
+    }
   }
   function pick(id) { try { localStorage.setItem(KEY, id); } catch (e) {} location.reload(); }
   function addToggle() {
