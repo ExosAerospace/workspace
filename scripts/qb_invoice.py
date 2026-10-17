@@ -470,6 +470,45 @@ def _offering_mark(r, status):
     except Exception as e:
         log(f"WARN offering ledger update failed for #{r.get('doc_number')} -> {status}: {e}")
 
+# ── auto-draft the next milestone (Jon 10/16: "if I click Done, what handles the next steps — invoice etc?") ──
+M2_LEAD_DAYS = 7   # draft M2 a week before L-120 so the Approve & send card is waiting when it falls due
+
+
+def auto_prepare_due(a):
+    """Draft the M2 (40%, L-120) QB invoice for every executed payload order once it is within M2_LEAD_DAYS of
+    L-120. Same gates as a hand-run `prepare` (CSL/export, mission no., billing block) and the same output: an
+    UNSENT QB invoice + an "Approve & send" Decision for Jon. Nothing reaches the customer without his answer.
+    One attempt per order/milestone per day so a blocked draft (e.g. missing billing phone) logs once, not every 5 min."""
+    od = jload(ORDERS, {"orders": []})
+    st = jload(STATE, {"invoices": []})
+    today = datetime.date.today()
+    tried = st.setdefault("auto_prepare", {})
+    for o in od.get("orders", []):
+        if o.get("in_kind") or not o.get("flight_date") or o.get("status") in ("cancelled", "closed"):
+            continue
+        ms = o.get("milestones") or {}
+        if not (ms.get("M1") or {}).get("paid_at") or (ms.get("M2") or {}).get("invoiced_at"):
+            continue
+        due = datetime.date.fromisoformat(o["flight_date"][:10]) - datetime.timedelta(days=120)
+        if today < due - datetime.timedelta(days=M2_LEAD_DAYS):
+            continue
+        if any(r.get("order") == o["id"] and r.get("milestone") == "M2" and r["status"] in ("pending", "sent", "paid") for r in st["invoices"]):
+            continue
+        key = f"{o['id']}:M2"
+        if tried.get(key) == today.isoformat():
+            continue
+        tried[key] = today.isoformat(); jsave(STATE, st)
+        if a.dry_run:
+            print("WOULD DRAFT M2", o["id"], "L-120", due.isoformat()); continue
+        ns = argparse.Namespace(order=o["id"], milestone="M2", customer=None, email=None, phone=None, address=None, amount=None,
+                                desc=None, item=None, terms=None, note=f"auto-drafted: L-120 = {due.isoformat()}", doc_number=None, dry_run=False)
+        try:
+            prepare(ns)
+            st = jload(STATE, {"invoices": []})   # prepare() saved its own record
+        except SystemExit as e:
+            log(f"auto-draft M2 for {o['id']} blocked: {e}")
+            _order_log(o["id"], "M2 auto-draft blocked", str(e))
+
 
 def watch(a):
     st = jload(STATE, {"invoices": []})
@@ -560,6 +599,7 @@ def watch(a):
             changed = True
     if changed:
         jsave(STATE, st)
+    auto_prepare_due(a)
 
 
 def contact(a):
