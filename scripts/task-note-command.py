@@ -26,7 +26,7 @@ Every processed note gets a "✅ Exo:" confirmation reply on the task. Idempoten
 activity ids). Baseline-safe: the first run records existing @Exobot notes and does nothing, so it
 never fires on historical comments. Deterministic; local Ollama only for owner routing (bounded).
 """
-import json, os, re, subprocess, urllib.request, urllib.parse
+import json, os, re, subprocess, sys, urllib.request, urllib.parse
 from datetime import datetime, timezone, timedelta
 
 WS = "/Users/exomac/.openclaw/workspace"
@@ -251,6 +251,57 @@ def link_dotted_subtasks():
         logline(f"WARN link_dotted_subtasks: {e}")
 
 
+REPEAT_WINDOW_S = 300
+
+
+def _norm(b):
+    return re.sub(r"\s+", " ", (b or "").strip().lower())
+
+
+def _similar(a, b):
+    """Near-duplicate re-sends of the SAME ask (e.g. one word edited and re-posted), not different commands
+    like "hours 3.5" then "done" (those stay separate)."""
+    import difflib
+    a, b = _norm(a), _norm(b)
+    return a == b or (min(len(a), len(b)) >= 40 and difflib.SequenceMatcher(None, a, b).ratio() >= 0.75)
+
+
+def coalesce_repeats(cmds, rows, seen, taskid_of):
+    """One reply per request (Jon 10/17, #3808: one ask, posted 3x in 40s, got 3 identical acks + 3 subtasks).
+    Same author + same task + within REPEAT_WINDOW_S: (a) an exact repeat of a note already handled is
+    marked seen and dropped; (b) a burst of new notes is routed once, as the newest note with the distinct
+    texts merged (near-duplicates only: different short commands in a row stay separate). Every absorbed note id is added to `seen` so later runs never re-route it."""
+    def ts(r):
+        return datetime.fromisoformat(r["created_at"].replace("Z", "+00:00"))
+    def key(r):
+        return (taskid_of(r), (r.get("owner") or "").strip().lower())
+    handled = [r for r in rows if r["id"] in seen and taskid_of(r)]
+    fresh = sorted((r for r in cmds if r["id"] not in seen), key=ts)
+    out, used = [], set()
+    for i, r in enumerate(fresh):
+        if r["id"] in used:
+            continue
+        if any(key(h) == key(r) and _similar(h.get("body"), r.get("body"))
+               and abs((ts(r) - ts(h)).total_seconds()) <= REPEAT_WINDOW_S for h in handled):
+            seen.add(r["id"]); logline(f"repeat dropped {r['id']} task {taskid_of(r)}"); continue
+        group = [r] + [x for x in fresh[i + 1:] if x["id"] not in used and key(x) == key(r)
+                       and (ts(x) - ts(r)).total_seconds() <= REPEAT_WINDOW_S and _similar(x.get("body"), r.get("body"))]
+        if len(group) > 1:
+            texts = []
+            for g in group:
+                if _norm(g.get("body")) not in [_norm(t) for t in texts]:
+                    texts.append(g.get("body") or "")
+            merged = dict(group[-1], body=texts[0] if len(texts) == 1 else
+                          texts[0] + "\n\n(also, same request:)\n" + "\n".join(texts[1:]))
+            for g in group[:-1]:
+                used.add(g["id"]); seen.add(g["id"])
+            logline(f"coalesced {len(group)} notes on task {taskid_of(r)} -> {group[-1]['id']}")
+            out.append(merged); used.add(group[-1]["id"])
+        else:
+            out.append(r); used.add(r["id"])
+    return out + [r for r in cmds if r["id"] in seen]   # already-seen rows pass through (skipped below)
+
+
 def main():
     import sys
     link_dotted_subtasks()
@@ -281,6 +332,7 @@ def main():
 
     seen = set(state.get("seen", []))
     acted = 0
+    cmds = coalesce_repeats(cmds, rows, seen, taskid_of)
     for r in cmds:
         aid = r["id"]
         if aid in seen: continue
@@ -353,6 +405,17 @@ def main():
             except Exception as ex:
                 reply(taskid, f"✅ Exo (procedure): couldn't rebuild the {section} procedure ({ex}).")
             logline(f"procedure {aid} task {taskid} section {section}"); acted += 1; continue
+
+        # 0c) effort tracking (weekly-task-agenda-exo3, Jon 10/16): "@Exobot est 6h" (estimate to
+        # complete), "@Exobot week 4h" (planned this week), "@Exobot hours 3.5 [for Mike] [#86]" (actuals
+        # ledger per task/person/week). Must run BEFORE free-form routing, or "hours 3.5" becomes a subtask.
+        try:
+            sys.path.insert(0, os.path.join(WS, "scripts"))
+            import task_effort
+            if task_effort.handle_note(taskid, cmd, owner_of_note, r.get("created_at"), aid, reply):
+                logline(f"effort {aid} task {taskid}: {cmd[:60]}"); acted += 1; continue
+        except Exception as ex:
+            logline(f"WARN effort {aid} task {taskid}: {ex}")
 
         # EXPLICIT new task: "@exo task: <title>" / "create a task ..." / "build a task ..." — the ONLY
         # path that creates a new top-level task from a note (Jon 2026-10-03). Owner = named person,
@@ -457,4 +520,51 @@ def main():
     print(f"acted {acted}")
 
 
-main()
+def selftest():
+    """Failure replay (weekly-task-agenda-exo3, 2026-10-16): before the effort hook, "@Exobot hours 3.5"
+    fell through to step 5 and spawned an "[Exo answering]" subtask instead of logging time. Stubs
+    Supabase + uses temp state/store; never touches live tasks."""
+    import tempfile
+    global STATE, LOG, supa
+    tmp = tempfile.mkdtemp()
+    STATE = os.path.join(tmp, "state.json"); LOG = os.path.join(tmp, "log")
+    json.dump({"seen": []}, open(STATE, "w"))
+    os.environ["TASK_EFFORT_STORE"] = os.path.join(tmp, "te.json")
+    now = datetime.now(timezone.utc).isoformat()
+    rows = [{"id": "st-1", "type": "task_note", "subject": "task:86", "body": "@Exobot hours 3.5", "owner": "Mike Talley", "created_at": now},
+            {"id": "st-2", "type": "task_note", "subject": "task:86", "body": "@Exobot est 60h", "owner": "Mike Talley", "created_at": now},
+            {"id": "st-3", "type": "task_note", "subject": "task:86", "body": "@Exobot week 6h", "owner": "Jon", "created_at": now},
+            {"id": "st-4", "type": "task_note", "subject": "task:86", "body": "@Exobot done", "owner": "Mike Talley", "created_at": now}]
+    calls = []
+
+    def fake(method, path, body=None):
+        calls.append((method, path, body))
+        if method == "GET" and path.startswith("activities"):
+            return rows
+        if method == "GET":
+            return []
+        return [{"id": 99999}]
+    supa = fake
+    main()
+    posts = [c for c in calls if c[0] == "POST"]
+    new_tasks = [c for c in posts if c[1] == "tasks"]
+    replies = [c[2]["body"] for c in posts if c[1] == "activities"]
+    patches = [c for c in calls if c[0] == "PATCH"]
+    store = json.load(open(os.environ["TASK_EFFORT_STORE"]))
+    checks = {
+        "no subtask spawned for effort notes": not new_tasks,
+        "hours logged + confirmed": any("logged 3.5 h on #86" in x for x in replies),
+        "estimate set + confirmed": any("estimate to complete #86 = 60 h" in x for x in replies),
+        "week plan set": any("planned 6 h on #86" in x for x in replies),
+        "store ledger has 3.5 h for Mike": any(a["hours"] == 3.5 and a["email"] == "mtalley@exosaero.com" for a in store["actuals"]),
+        "'done' still marks Done (router intact)": any(c[2] == {"state": "Done"} for c in patches),
+    }
+    bad = [k for k, v in checks.items() if not v]
+    print(f"task-note-command selftest: {len(checks) - len(bad)} passed, {len(bad)} failed" + (f": {bad}" if bad else ""))
+    return 1 if bad else 0
+
+
+if __name__ == "__main__":
+    if "--selftest" in sys.argv:
+        sys.exit(selftest())
+    main()

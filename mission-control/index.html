@@ -2028,10 +2028,12 @@ async function deleteUpdate(id){
   try { await apiFetch('/api/tasks/updates/delete', { method:'POST', body: JSON.stringify({ id }) }); toast('Update deleted'); loadTimeline(currentPanelTaskId); }
   catch(e){ toast('Delete failed: ' + e.message); }
 }
+let _posting = false;   // Jon 10/17 #3808: two notes landed in the same second (Enter + click) -> duplicate Exo routing
 async function postUpdate() {
   const el = document.getElementById('newUpdateText');
   const body = el.value.trim();
-  if (!body || !currentPanelTaskId) return;
+  if (!body || !currentPanelTaskId || _posting) return;
+  _posting = true;
   el.disabled = true;
   try {
     await apiFetch('/api/tasks/updates', {
@@ -2048,6 +2050,7 @@ async function postUpdate() {
   } catch(e) {
     toast('Failed to post: ' + e.message);
   } finally {
+    _posting = false;
     el.disabled = false;
     el.focus();
   }
