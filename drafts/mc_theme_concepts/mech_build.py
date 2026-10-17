@@ -138,15 +138,15 @@ html body .btn-danger{nx}, html body .btn.danger{nx} {{ color:#fff !important;
   text-shadow:0 1px 0 rgba(0,0,0,.9) !important; -webkit-font-smoothing:antialiased; box-shadow:0 6px 0 #000, 0 0 10px {v['bad']}55 !important; }}
 html body .btn.ghost{nx}, html body .btn.secondary{nx}, html body .opp-btn-ghost{nx} {{ background:{key.format(lamp='#333')} !important; color:{v['phos']} !important; }}
 /* header links (Search / Decisions / Fleet / Sign Out) = full-size cockpit keys, not bare text (Jon 10/16 22:27 "wimpy") */
-html body .header-right > a, html body a.nav-link {{ display:inline-flex !important; align-items:center; gap:6px; margin:3px 4px !important;
+html body .header-right > a, html body a.nav-link, html body a.back, html body a.home, html body header a[href='/'], html body header a[href='/index.html'], html body header a[href='index.html'] {{ display:inline-flex !important; align-items:center; gap:6px; margin:3px 4px !important;
   padding:8px 14px 8px 26px !important; font:700 .95rem 'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif !important; text-transform:uppercase;
   letter-spacing:.08em; text-decoration:none !important; color:{v['phos2']} !important; border-radius:0 !important;
   background:{key.format(lamp=v['acc_dim'])} !important;
   border:2px solid #000 !important; border-top-color:{v['steel_hi']} !important;
   clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
   box-shadow:inset 0 2px 0 rgba(255,255,255,.18), inset 0 -4px 0 rgba(0,0,0,.6), 0 6px 0 #000 !important; text-shadow:0 1px 0 rgba(0,0,0,.9); -webkit-font-smoothing:antialiased; }}
-html body .header-right > a:hover, html body a.nav-link:hover {{ background:{key.format(lamp=v['acc'])} !important; color:#fff !important; }}
-html body .header-right > a:active, html body a.nav-link:active {{ transform:translateY(5px); box-shadow:inset 0 3px 6px rgba(0,0,0,.8), 0 1px 0 #000 !important; }}
+html body .header-right > a:hover, html body a.nav-link:hover, html body a.back:hover, html body a.home:hover, html body header a[href='/']:hover, html body header a[href='/index.html']:hover, html body header a[href='index.html']:hover {{ background:{key.format(lamp=v['acc'])} !important; color:#fff !important; }}
+html body .header-right > a:active, html body a.nav-link:active, html body a.back:active, html body a.home:active, html body header a[href='/']:active, html body header a[href='/index.html']:active, html body header a[href='index.html']:active {{ transform:translateY(5px); box-shadow:inset 0 3px 6px rgba(0,0,0,.8), 0 1px 0 #000 !important; }}
 html body .header-right > a#decisionsLink {{ color:#111 !important; text-shadow:0 1px 0 rgba(255,255,255,.35);
   background:radial-gradient(circle at 12px 50%,#fff 0 3px,{v['acc']} 4px,transparent 6px),linear-gradient({v['acc']} 0%,{v['acc']} 45%,{v['acc_dim']} 100%) !important;
   box-shadow:inset 0 2px 0 rgba(255,255,255,.45), inset 0 -4px 0 rgba(0,0,0,.45), 0 6px 0 #000, 0 0 14px {v['acc']}66 !important; }}
