@@ -1,16 +1,19 @@
-// Mission Control theme loader (Jon 2026-10-15; "Rugged HMD" added 2026-10-16). Injected into every MC page by server.js next to the Exobot widget.
+// Mission Control theme loader (Jon 2026-10-15; "Mech Cockpit" 2026-10-16, replacing the short-lived Rugged HMD). Injected into every MC page by server.js next to the Exobot widget.
 // Default look is unchanged; themes are opt-in per browser:
-//   ?theme=hud -> Rugged HMD (theme-hud.css)   ?theme=joc -> Joint Ops Center (theme-joc.css)   ?theme=default -> off
-//   or click the toggle bottom-left (cycles STANDARD -> RUGGED HMD -> OPS CENTER). Choice is remembered.
+//   ?theme=mech -> Mech Cockpit (theme-mech.css)   ?theme=joc -> Joint Ops Center (theme-joc.css)   ?theme=default -> off
+//   or click the toggle bottom-left (cycles STANDARD -> MECH COCKPIT -> OPS CENTER). Choice is remembered.
 (function () {
   var KEY = 'mcTheme';
-  var THEMES = { hud: { css: '/theme-hud.css', label: 'RUGGED HMD' }, joc: { css: '/theme-joc.css', label: 'OPS CENTER' } };
-  var ORDER = ['default', 'hud', 'joc'];
+  var THEMES = { mech: { css: '/theme-mech.css', label: 'MECH COCKPIT' }, joc: { css: '/theme-joc.css', label: 'OPS CENTER' } };
+  var ORDER = ['default', 'mech', 'joc'];
+  var ALIAS = { hud: 'mech' };  // retired 10/16 -> its successor
   try {
     var q = new URLSearchParams(location.search).get('theme');
+    if (ALIAS[q]) q = ALIAS[q];
     if (q === 'default' || THEMES[q]) localStorage.setItem(KEY, q);
   } catch (e) {}
   var cur = 'default'; try { cur = localStorage.getItem(KEY) || 'default'; } catch (e) {}
+  if (ALIAS[cur]) cur = ALIAS[cur];
   if (!THEMES[cur]) cur = 'default';
   if (cur !== 'default') {
     var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = THEMES[cur].css; l.id = 'mc-theme-css';

@@ -61,6 +61,9 @@ SPACE = {
  "S3_Mars_Dropship": dict(label="S3 · MARS DROPSHIP", steel="#33291f", steel_hi="#6b5644", steel_lo="#140f0b", plate="#231b14",
    acc="#ff8c42", acc_dim="#7a3a15", screen="#0a0605", screen_a="rgba(10,6,5,.86)", phos="#ffc49a", phos2="#fff1e6", ok="#a8e05f", warn="#ffd23d", bad="#ff3b2f",
    space=("#d9542b", "#c0392b", "#070302")),
+ "S4_Mars_Dropship_Earth_Limb": dict(label="MARS DROPSHIP · EARTH LIMB", steel="#33291f", steel_hi="#6b5644", steel_lo="#140f0b", plate="#231b14",
+   acc="#ff8c42", acc_dim="#7a3a15", screen="#0a0605", screen_a="rgba(10,6,5,.86)", phos="#ffc49a", phos2="#fff1e6", ok="#a8e05f", warn="#ffd23d", bad="#ff3b2f",
+   space=("#6fb6ff", "#c0392b", "#070302")),  # Jon 10/16 22:14: S3 but with S2's Earth atmosphere at the bottom
 }
 for _v in SPACE.values():
     _v["body_bg"] = space_bg(*_v.pop("space"))
@@ -102,7 +105,7 @@ html body h3, html body h4 {{ display:inline-block; color:{v['steel_lo']} !impor
   box-shadow:inset 0 -2px 0 rgba(0,0,0,.35); text-shadow:none; }}
 html body a {{ color:{v['acc']}; }}
 /* panels = armor plate frame (bevel, big chamfer, 4 bolts) around a recessed CRT screen */
-html body .card, html body .stat-card, html body .panel, html body .box, html body .doc-item, html body .hero, html body .modal, html body .modal-content {{
+html body .card, html body .stat-card, html body .panel, html body .box, html body .doc-item, html body .hero, html body .modal, html body .modal-content, html body .column {{
   background:{bolts},radial-gradient(ellipse at 50% 0%,{v['phos']}10,transparent 70%),linear-gradient({v.get('screen_a', v['screen'])},{v.get('screen_a', v['screen'])}) padding-box,
     linear-gradient(135deg,{v['steel_hi']},{v['steel']} 40%,{v['steel_lo']}) border-box !important;
   border:8px solid transparent !important; border-radius:0 !important;
@@ -148,6 +151,7 @@ html body table td {{ border-color:{v['steel']} !important; font-family:'Menlo',
 if __name__ == "__main__":
     import sys
     todo = SPACE if "--space" in sys.argv else V
+    if "--only" in sys.argv: todo = {k: v for k, v in todo.items() if k.startswith(sys.argv[sys.argv.index("--only") + 1])}
     for key, v in todo.items():
         p = os.path.join(OUT, f"theme-mech-{key.split('_')[0].lower()}.css"); open(p, "w").write(css(v))
         prev.render("file://" + p, os.path.join(OUT, f"MC_MECH_{key}"), f"OPERATIONS COMMAND · {v['label']}")
