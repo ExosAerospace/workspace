@@ -228,12 +228,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--show", type=int, default=0, help="print N full card bodies")
+    ap.add_argument("--allow-no-draft", action="store_true",
+                    help="create cards even when the lead has no AI draft (default: refuse)")
     a = ap.parse_args()
     t = pipeline_text()
     have = existing_keys()
     jobs = [(s, p, l, d, n, False) for s, p, l, d, n in ASSIGN] + \
            [("Sunidhi", p, l, d, n, True) for p, l, d, n in QC]
     shown = 0
+    missing = 0
     for stu, prefix, label, due, note, qc in jobs:
         name, desc = build(t, prefix, label, note, qc)
         title = (f"[Lead · verify AI-READY] {name}" if qc else f"[Lead] {name} — verify + get to READY")[:200]
@@ -241,6 +244,10 @@ def main():
             print("=" * 80, "\n", title, "\n", desc); shown += 1
         if prefix in have:
             print(f"skip (exists #{have[prefix]}): {title}"); continue
+        if "(No draft yet" in desc and not a.allow_no_draft:
+            # 10/6 batch 3 went out with 17 draft-less cards and nobody noticed until 10/14.
+            print(f"BLOCKED (no AI draft — write one into the pipeline first): {title}", file=sys.stderr)
+            missing += 1; continue
         owner, email = STUDENTS[stu]
         row = {"title": title, "description": desc, "owner": owner, "assigned_to": owner,
                "assigned_email": email, "state": "To Do", "category": "Payload Sales",
@@ -250,6 +257,9 @@ def main():
             print(f"DRY {stu:8} {due[:10]} {title}  (draft={'yes' if 'never sent, not checked):' in desc and '(No draft yet' not in desc else 'NO'})")
         else:
             print(f"#{insert(row)} {stu:8} {due[:10]} {title}")
+    if missing:
+        print(f"{missing} card(s) blocked for missing drafts", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":
