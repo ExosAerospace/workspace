@@ -95,3 +95,8 @@ else:
             moved_total += moved
             print(f"    migrated {moved} attachment(s) #{l['id']} -> #{k['id']}")
     print(f"snapshot {p}\nclosed {len(plan)} duplicates; migrated {moved_total} attachment(s)")
+
+# Second pass: tasks whose description says "merged into #N / closed as duplicate" but whose state was
+# never flipped (Jon 2026-10-16, FAA RFI #2361 sat "In Progress" for 6 weeks after its 9/4 merge).
+import subprocess as _sp
+_sp.run(["/usr/bin/python3", os.path.join(WS, "scripts/merge_claim_sweeper.py")] + (["--apply"] if APPLY else []))
