@@ -90,14 +90,67 @@ def parse_request(desc):
     return origid, req
 
 
+REPEAT_RE = re.compile(r"\b(again|(second|third|fourth|2nd|3rd|4th) time|as (I|we) (asked|requested|said)|"
+                       r"like I asked|I already (asked|said)|still (not|doesn't|does not|isn't)|"
+                       r"why (doesn't|does not|didn't|did not|won't|do you refuse))\b", re.I)
+
+
+def thread_context(origid):
+    """Recent conversation + uploads on the task, and the requester's recent @exo asks on OTHER tasks.
+    Without this each resolve saw only one note in isolation: follow-ups like 'see image' or
+    'for the third time' lost the original ask, and a multi-part request got silently half-done
+    (Jon, #2361→#3005, 2026-10-16: 'match the regulations.gov input fields' missed 3 times)."""
+    since = (datetime.now(timezone.utc) - __import__("datetime").timedelta(days=3)).isoformat()
+    notes = supa("GET", f"activities?select=body,owner,created_at&subject=eq.task:{origid}"
+                        f"&created_at=gte.{urllib.parse.quote(since)}&order=created_at.desc&limit=16") or []
+    ack = re.compile(r"^✅ Exo: (got it|on it —)", re.I)
+    lines = [f"[{n['created_at'][5:16]}] {n.get('owner')}: {(n.get('body') or '')[:700]}"
+             for n in reversed(notes) if not ack.match(n.get("body") or "")]
+    other = supa("GET", "activities?select=subject,body,owner,created_at&type=eq.task_note"
+                        f"&created_at=gte.{urllib.parse.quote(since)}&owner=neq.Exo"
+                        "&body=ilike.*%40exo*&order=created_at.desc&limit=12") or []
+    olines = [f"[{n['created_at'][5:16]}] {n.get('subject')} {n.get('owner')}: {(n.get('body') or '')[:500]}"
+              for n in reversed(other) if n.get("subject") != f"task:{origid}"][-6:]
+    ups = []
+    try:
+        meta = json.load(open(os.path.join(WS, "mission-control", "uploads", "_meta.json")))
+        ups = [f"mission-control/uploads/{u['stored_name']} ({u.get('uploaded_at','')[:10]})"
+               for u in meta if str(u.get("task_id")) == str(origid)][-8:]
+    except Exception:
+        pass
+    out = ""
+    if lines:
+        out += "RECENT THREAD ON THIS TASK (oldest→newest; read ALL of it — the note above may be a follow-up):\n" + "\n".join(lines) + "\n\n"
+    if olines:
+        out += "SAME-DAY @exo ASKS ON OTHER TASKS (the request may continue one of these):\n" + "\n".join(olines) + "\n\n"
+    if ups:
+        out += ("FILES ON THIS TASK (newest last) — OPEN any image/PDF the thread refers to ('see image', "
+                "'attached', a screenshot) with the Read tool before answering:\n" + "\n".join(ups) + "\n\n")
+    return out
+
+
 def resolve(origid, request, ctx, suggested=""):
     hint = (f"(Routing hint: before this change the request would have gone to {suggested}. Use them only for a genuine step-4 handoff.)\n\n" if suggested else "")
+    repeat = ("⚠️ REPEAT ASK: the wording says a previous answer missed what was asked. Find the ORIGINAL ask "
+              "in the thread/other-task notes below, quote it verbatim, state exactly what the last answer got "
+              "wrong, and fix THAT. Don't just re-send the last answer with new wording.\n\n"
+              if REPEAT_RE.search(request) else "")
     prompt = (
         "You are Exo, resolving a support request a teammate posted with @Exobot on Mission Control "
         f"task #{origid}. Your job: get them an answer or get it done — never leave it unaddressed.\n\n"
         f"REQUEST (from the note): {request}\n\n"
+        f"{repeat}"
         f"TASK #{origid}: {ctx.get('title','')}\n"
         f"TASK CONTEXT:\n{(ctx.get('description') or '')[:2500]}\n\n"
+        f"{thread_context(origid)}"
+        "DO EXACTLY WHAT WAS ASKED (Jon 2026-10-16):\n"
+        "- Split the request into every distinct ask, taking the wording literally. A multi-part note means ALL parts get done. Never "
+        "deliver 3 of 4 and call it Done.\n"
+        "- 'Match / fit / follow / same as X' (a form, template, site, guide, screenshot) means reproduce X's "
+        "actual structure: open the live source or attached file and use ITS field names, order, required "
+        "marks and limits, not your own labels or summary.\n"
+        "- Before returning, check each ask against what you produced. In the response, show each ask with what you did for it, "
+        "and mark anything not done as NOT DONE + why.\n\n"
         "Handle it — EXO-FIRST (Jon 2026-10-03): if you or a subagent CAN do it, DO it. Never hand a teammate "
         "work you are capable of; the most a human should get is a decision or a one-click approval of what "
         "you already finished.\n"
