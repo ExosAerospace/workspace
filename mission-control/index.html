@@ -1994,7 +1994,15 @@ async function loadTimeline(taskId, opts = {}) {
       </div>`;
     }).join('');
   } catch(e) {
-    el.innerHTML = `<div class="timeline-empty">Failed to load: ${escHtml(e.message)}</div>`;
+    // A transient Supabase hiccup (HTTP 500/timeout) used to wipe the Updates list, even on a silent background
+    // poll (Jon 10/17, #3808). Silent polls now keep what is on screen; a visible load retries twice before erroring.
+    if (opts.silent) return;
+    const tries = opts._tries || 0;
+    if (tries < 2 && taskId == currentPanelTaskId) {
+      setTimeout(() => loadTimeline(taskId, Object.assign({}, opts, { _tries: tries + 1 })), 1500 * (tries + 1));
+      return;
+    }
+    el.innerHTML = `<div class="timeline-empty">Couldn't load updates (${escHtml(e.message)}). <a href="#" onclick="loadTimeline('${String(taskId).replace(/[^0-9A-Za-z_-]/g,'')}');return false;">Retry</a></div>`;
   }
 }
 
