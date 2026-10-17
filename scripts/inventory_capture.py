@@ -149,10 +149,14 @@ def cmd_enqueue(a):
         print("dup")
         return
     qid = "iq_" + datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S%f")
+    # Phone/iPad camera photos are JPEG/HEIC; .png uploads are pasted screen captures (deal terms,
+    # web pages) on non-build tasks. Log them as skipped (visible in `status`, re-settable to
+    # pending) instead of waking the processor.
+    status = "skipped-screenshot" if a.file.lower().endswith(".png") else "pending"
     entry = {"id": qid, "task_id": str(a.task), "upload_id": a.upload,
              "stored_name": a.file, "filename": a.filename or a.file,
              "uploaded_by": a.by or "Unknown", "kind": a.kind or "upload",
-             "status": "pending", "created_at": now()}
+             "status": status, "created_at": now()}
     with open(QUEUE, "a") as f:
         f.write(json.dumps(entry) + "\n")
     logline(f"enqueue {qid} task {a.task} by {a.by} ({a.kind})")
