@@ -28,7 +28,7 @@
    "warn_grace": 3,
    "fail_grace": 8,
    "owner": "John Quinn",
-   "selftest": "python3 scripts/mc-email-command.py --selftest",
+   "selftest": "/usr/bin/python3 scripts/mc-email-command.py --selftest",
    "governance_checks": [
     "deliverable_task_link orphan events (level warn) -> WARN",
     "selftest (d): '@Exobot invoice' routing + invoice_command_exo3 --selftest must PASS"
