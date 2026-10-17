@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import glob
 import os
+import time
 import re
 import sys
 from datetime import datetime, timezone, timedelta
@@ -94,8 +95,15 @@ def should_rotate(session_id: str, oversized: set[str], kills: list[dict]) -> st
     return None
 
 
+# Don't rename a transcript a live run may still be writing.
+ACTIVE_WINDOW_SECONDS = 15 * 60
+
+
 def rotate_session(path: str, dry_run: bool) -> str:
     dest = path + ".rotated"
+    age = time.time() - os.path.getmtime(path)
+    if age < ACTIVE_WINDOW_SECONDS:
+        return f"SKIP (active, written {int(age)}s ago) {os.path.basename(path)}"
     if dry_run:
         return f"WOULD rename {os.path.basename(path)} → {os.path.basename(dest)}"
     os.rename(path, dest)
