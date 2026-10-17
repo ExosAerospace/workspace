@@ -561,6 +561,11 @@
     border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+.exo-wait-bar{display:flex;align-items:center;gap:8px;margin:0 0 12px;padding:10px 12px;border-radius:8px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.35);color:#bfdbfe;font-size:13px}
+.exo-wait-bar .spinner{width:14px;height:14px}
+.timeline-entry.tl-new{animation:tlFlash 2.4s ease-out}
+@keyframes tlFlash{0%{background:rgba(242,106,33,.28)}100%{background:transparent}}
+.tl-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#F26A21;margin-left:6px;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -1802,8 +1807,11 @@ function openEdit(id) {
   switchTab('overview');
 
   // Load timeline and documents
+  _tlSig = ''; _tlTask = null; _docSig = ''; _exoWaitSince = 0;
+  document.querySelectorAll('.panel-tab .tl-dot').forEach(d => d.remove());
   loadTimeline(id);
   loadDocuments(id);
+  startPanelLive();
 }
 
 function renderOverview(task) {
@@ -1938,11 +1946,23 @@ async function decideExpense(id, decision) {
 }
 
 // ── TIMELINE ──
-async function loadTimeline(taskId) {
+// Live panel: the board's 30s auto-refresh pauses while a task is open (so notes aren't wiped),
+// which meant the open task NEVER refreshed — Exo replies only appeared after close/reopen
+// (John 10/16). loadTimeline(id, {silent:true}) re-fetches without the spinner and only re-renders
+// when something changed; panelLivePoll() drives it while the panel is open.
+let _tlSig = '', _tlSeen = new Set(), _tlTask = null;
+async function loadTimeline(taskId, opts = {}) {
   const el = document.getElementById('timelineList');
-  el.innerHTML = '<div class="timeline-empty"><div class="spinner"></div> Loading updates...</div>';
+  if (!opts.silent) el.innerHTML = '<div class="timeline-empty"><div class="spinner"></div> Loading updates...</div>';
   try {
     const updates = await apiFetch(`/api/tasks/updates?task_id=${taskId}`);
+    if (taskId != currentPanelTaskId) return;   // panel moved on while we were fetching
+    const sig = (updates || []).map(u => u.id + ':' + (u.body || '').length).join('|');
+    if (opts.silent && sig === _tlSig && _tlTask == taskId) { renderExoWait(updates || []); return; }
+    const fresh = (_tlTask == taskId) ? (updates || []).filter(u => !_tlSeen.has(u.id)) : [];
+    _tlSig = sig; _tlTask = taskId; _tlSeen = new Set((updates || []).map(u => u.id));
+    if (opts.silent && fresh.length) notifyNewUpdates(fresh);
+    renderExoWait(updates || []);
     if (!updates || updates.length === 0) {
       el.innerHTML = '<div class="timeline-empty">No updates yet. Post a note below to start tracking context.</div>';
       return;
@@ -1964,7 +1984,8 @@ async function loadTimeline(taskId) {
       const canEd = canEditNote(c);
       if (canEd) (window._tlBody = window._tlBody || {})[c.id] = c.body || '';
       const actions = canEd ? `<div class="timeline-actions"><button class="tl-btn" onclick="editUpdate('${c.id}')">Edit</button><button class="tl-btn tl-del" onclick="deleteUpdate('${c.id}')">Delete</button></div>` : '';
-      return `<div class="timeline-entry ${cls}">
+      const isNew = opts.silent && _tlFreshIds.has(c.id);
+      return `<div class="timeline-entry ${cls}${isNew ? ' tl-new' : ''}">
         <div class="timeline-dot"></div>
         <div class="timeline-line"></div>
         <div class="timeline-time">${time}${c.owner ? ' &middot; ' + escHtml(c.owner) : ''}</div>
@@ -2012,8 +2033,10 @@ async function postUpdate() {
     el.value = '';
     el.style.height = ''; el.dataset.manualResize = '';
     toast('Update posted');
+    if (/@exo(bot)?\b/i.test(body)) _exoWaitSince = Date.now();
     loadTimeline(currentPanelTaskId);
     switchTab('updates');
+    startPanelLive();
   } catch(e) {
     toast('Failed to post: ' + e.message);
   } finally {
@@ -2024,12 +2047,81 @@ async function postUpdate() {
 
 // ── TABS ──
 function switchTab(tab) {
+  if (tab === 'updates') document.querySelectorAll('.panel-tab .tl-dot').forEach(d => d.remove());
   document.querySelectorAll('.panel-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === `tab-${tab}`));
 }
 
+// ── LIVE PANEL REFRESH ──
+let _panelLiveTimer = null, _exoWaitSince = 0, _tlFreshIds = new Set(), _docSig = '';
+function startPanelLive() {
+  if (_panelLiveTimer) clearTimeout(_panelLiveTimer);
+  // Fast (4s) while waiting on an @exo reply, otherwise every 10s.
+  _panelLiveTimer = setTimeout(panelLivePoll, _exoWaitSince ? 4000 : 10000);
+}
+async function panelLivePoll() {
+  _panelLiveTimer = null;
+  if (!panelOpen || !currentPanelTaskId) return;
+  if (!document.hidden) {
+    const id = currentPanelTaskId;
+    try { await loadTimeline(id, { silent: true }); } catch (e) {}
+    try { await refreshDocsIfChanged(id); } catch (e) {}
+  }
+  if (panelOpen) startPanelLive();
+}
+async function refreshDocsIfChanged(taskId) {
+  if (currentUserRole === 'early_adopter') return;
+  const res = await fetch(`/api/uploads?task_id=${taskId}&history=1`);
+  if (!res.ok) return;
+  const all = await res.json();
+  const sig = (all || []).map(d => (d.id || d.stored_name) + ':' + (d.current ? 1 : 0)).join('|');
+  if (taskId != currentPanelTaskId) return;
+  if (_docSig && sig !== _docSig) { _docSig = sig; loadDocuments(taskId); toast('Documents updated'); }
+  else _docSig = sig;
+}
+function notifyNewUpdates(fresh) {
+  _tlFreshIds = new Set(fresh.map(u => u.id));
+  const fromExo = fresh.filter(u => /^exo/i.test(u.owner || ''));
+  if (fromExo.length && fromExo.some(u => !/got it|on it/i.test((u.body || '').slice(0, 40)))) _exoWaitSince = 0;
+  const onUpdates = document.getElementById('tab-updates').classList.contains('active');
+  const who = fromExo.length ? 'Exo' : (fresh[0].owner || 'someone');
+  if (!onUpdates) {
+    const t = document.querySelector('.panel-tab[data-tab="updates"]');
+    if (t && !t.querySelector('.tl-dot')) t.insertAdjacentHTML('beforeend', '<span class="tl-dot"></span>');
+  }
+  toast(`New update from ${who}`);
+}
+// "Waiting for Exo" banner: shown when the newest note @mentions Exo and Exo hasn't posted a
+// substantive reply after it. Clears itself when the answer lands.
+function renderExoWait(updates) {
+  let bar = document.getElementById('exoWaitBar');
+  const sorted = [...updates].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  const lastAsk = sorted.find(u => !/^exo/i.test(u.owner || '') && /@exo(bot)?\b/i.test(u.body || ''));
+  let waiting = false, acked = false;
+  if (lastAsk) {
+    const after = sorted.filter(u => new Date(u.created_at) > new Date(lastAsk.created_at) && /^exo/i.test(u.owner || ''));
+    acked = after.length > 0;
+    waiting = !after.some(u => !/^(✅\s*)?exo:\s*(got it|on it)/i.test((u.body || '').trim()));
+    if (waiting && (Date.now() - new Date(lastAsk.created_at)) > 6 * 3600e3) waiting = false;
+  }
+  if (waiting && !_exoWaitSince) { _exoWaitSince = Date.now(); startPanelLive(); }
+  if (!waiting) _exoWaitSince = 0;
+  if (!bar) {
+    const list = document.getElementById('timelineList');
+    list.insertAdjacentHTML('beforebegin', '<div id="exoWaitBar" class="exo-wait-bar" style="display:none"></div>');
+    bar = document.getElementById('exoWaitBar');
+  }
+  bar.style.display = waiting ? '' : 'none';
+  if (waiting) bar.innerHTML = '<div class="spinner"></div> ' + (acked ? 'Exo is working on your note' : 'Waiting for Exo to pick up your note') + ' — the reply will appear here automatically.';
+}
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && panelOpen && currentPanelTaskId) { if (_panelLiveTimer) clearTimeout(_panelLiveTimer); panelLivePoll(); }
+});
+
 function closePanel() {
   panelOpen = false;
+  if (_panelLiveTimer) { clearTimeout(_panelLiveTimer); _panelLiveTimer = null; }
+  _exoWaitSince = 0; _tlSig = ''; _tlTask = null; _docSig = '';
   document.getElementById('panelOverlay').classList.remove('open');
   document.getElementById('detailPanel').classList.remove('open');
   currentPanelTaskId = null;
