@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-04T12:49:13.103453-05:00",
-  "total": 278,
+  "total": 279,
   "standing": 115,
   "ephemeral": 18,
   "service": 6,
@@ -2346,14 +2346,15 @@
       "permission_envelope": "LLM calls; Supabase read+WRITE; external API: quickbooks; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "/usr/bin/python3 scripts/task-note-command.py --selftest + agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 \u2192 else FAIL/escalate; staleness > 2.5x cadence 300s \u2192 WARN)",
-      "telemetry": "logs/task-note-command.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
+      "eval_suite": "/usr/bin/python3 scripts/task-note-command.py --selftest (10 checks; failure replay #3808: 3x repeat burst routes once, handled-note repeat dropped, distinct short commands stay separate) + agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 \u2192 else FAIL/escalate; staleness > 2.5x cadence 300s \u2192 WARN)",
+      "telemetry": "logs/task-note-command.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run); logs/fleet-events.jsonl (agent=task-note-command: coalesced / repeat_dropped)",
       "reusability_scope": "TBD",
       "risk_tier": "MED",
       "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
       "change_log": [
         "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval \u2014 D-7281860",
-        "2026-10-16 weekly-task-agenda-exo3: effort commands '@Exobot est <h>' / 'week <h>' / 'hours <h> [for <name>] [#id]' handled by task_effort.handle_note BEFORE free-form routing (failure replay: 'hours 3.5' used to spawn an [Exo answering] subtask). Added --selftest (stubbed Supabase, temp state/store, 6 checks incl. 'done' still works). Rollback: remove block 0c."
+        "2026-10-16 weekly-task-agenda-exo3: effort commands '@Exobot est <h>' / 'week <h>' / 'hours <h> [for <name>] [#id]' handled by task_effort.handle_note BEFORE free-form routing (failure replay: 'hours 3.5' used to spawn an [Exo answering] subtask). Added --selftest (stubbed Supabase, temp state/store, 6 checks incl. 'done' still works). Rollback: remove block 0c.",
+        "2026-10-17 cd7a006 coalesce near-duplicate @exo notes (same author+task, 5 min) \u2014 Jon 10/17 #3808 3 identical acks; exo3 remediation: +4 selftest replay checks, fleet_log telemetry. Rollback: drop coalesce_repeats() call in main()."
       ],
       "eval_type": "liveness"
     },
@@ -4729,14 +4730,15 @@
       "permission_envelope": "external API: intuit.com, quickbooks (WRITE: Invoice send/delete-unsent only; READ: Invoice); customer email sent BY QuickBooks only after Jon's card answer; writes payload-orders.json + qb-invoices.json; on Approve&send / Cancel / Paid of an offering invoice: updates mission-control/data/offering-ledger.json (+ product workbook mirror) via invoice_command_exo3.ledger_mark (2026-10-03)",
       "memory_boundary": "workspace + MC data dir",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "agent_eval hourly liveness (LastExitStatus=0; staleness > 2.5x cadence 300s \u2192 WARN); guard test: agent/Exo-answered cards are skipped (verified 2026-10-01); scripts/qb_invoice_eval.py; offering ledger hook covered by invoice_command_exo3 --selftest (Cancel releases units)",
-      "telemetry": "logs/qb-invoice.log; ~/.openclaw/logs/qb-invoice-watch.launchd.log",
+      "eval_suite": "python3 scripts/qb_invoice.py --selftest (4 checks: M2 auto-draft replay \u2014 paid-M1 order inside 7-day lead drafted once; early/unpaid/in-kind/cancelled/invoiced skipped; no re-draft next tick) + agent_eval hourly liveness (LastExitStatus=0; staleness > 2.5x cadence 300s \u2192 WARN); guard test: agent/Exo-answered cards are skipped (verified 2026-10-01); scripts/qb_invoice_eval.py; offering ledger hook covered by invoice_command_exo3 --selftest (Cancel releases units)",
+      "telemetry": "logs/qb-invoice.log; ~/.openclaw/logs/qb-invoice-watch.launchd.log; logs/fleet-events.jsonl (agent=qb-invoice-watch: m2_autodraft drafted/blocked)",
       "reusability_scope": "finance AR",
       "risk_tier": "MEDIUM",
       "envelope_source": "authored 2026-10-01",
       "change_log": [
         "2026-10-01 created (Jon approved QB write for invoicing; sends via Decision approval)",
-        "2026-10-03 prepare(): qty x unit-price lines, offering metadata, returns rec; cover email due-on-receipt + online pay for offering invoices; watch(): offering ledger Invoiced/Cancelled/Paid hooks (EXOS-FIN-003-0)"
+        "2026-10-03 prepare(): qty x unit-price lines, offering metadata, returns rec; cover email due-on-receipt + online pay for offering invoices; watch(): offering ledger Invoiced/Cancelled/Paid hooks (EXOS-FIN-003-0)",
+        "2026-10-16 fac51cf watch(): auto_prepare_due drafts M2 (40%, L-120) 7 days early for executed orders \u2192 unsent QB invoice + Approve & send Decision (nothing reaches customer without Jon). 2026-10-17 exo3 remediation: --selftest + fleet_log. Rollback: remove auto_prepare_due(a) from watch()."
       ],
       "eval_type": "liveness"
     },
@@ -5848,13 +5850,17 @@
       "permission_envelope": "browser localStorage key mcTheme only; no network calls beyond loading /theme-joc.css; no data access.",
       "memory_boundary": "browser localStorage",
       "escalation": "if a page renders badly in the theme, the toggle turns it off per browser; remove the server.js injection to disable fleet-wide",
-      "eval_suite": "node mission-control/tests/mc_theme_selftest.js (4 checks: default unchanged + toggle shown; ?theme=joc loads and remembers; remembered choice applies; ?theme=default turns off)",
+      "eval_suite": "node mission-control/tests/mc_theme_selftest.js (10 checks: default unchanged; JOC/Mech/Ops picker loads + remembers; version-stamped CSS URLs; render-blocking link in head, no flash)",
       "eval_type": "output",
       "telemetry": "none needed (presentation only, no actions)",
       "reusability_scope": "all MC pages sharing the --navy/--card/--text variable set",
       "envelope_source": "authored 2026-10-15 at creation",
       "change_log": [
-        "2026-10-15 created"
+        "2026-10-15 created",
+        "2026-10-16 36252a7 Display Mode picker (Standard / Mech Cockpit / Ops Center) on every page; selftest 8/8",
+        "2026-10-16 e0bc17c/3f615e6/8fc5261 Mech Cockpit legibility + header/back-link keys (CSS only)",
+        "2026-10-16 ab8c127 version-stamped theme CSS URLs; 28b2037 render-blocking theme link (no flash); selftest 10/10",
+        "2026-10-17 exo3 remediation: eval_suite + change_log brought current"
       ]
     },
     {
@@ -5939,13 +5945,14 @@
       "permission_envelope": "Wakes OpenClaw agent sessions (openclaw agent --session-key); DMs Jon on failure; own logs/state. Executes only what a HUMAN answered on a Decision.",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "config/agent-evals.json (Wave 1) \u2014 launchd cadence + crash + delivery-exhausted; FAIL escalates",
-      "telemetry": "logs/decision-answer-dispatcher.log; logs/runs/YYYY-MM-DD.jsonl (run_logged)",
+      "eval_suite": "python3 scripts/decision_answer_dispatcher.py --selftest (9 checks: answered model-fix card dispatched [D-7282137 replay]; own-executor families, pure Hold, bot answers, pre-install, note-only skipped; #rd-team routing) + config/agent-evals.json (Wave 1) \u2014 launchd cadence + crash + delivery-exhausted; FAIL escalates",
+      "telemetry": "logs/decision-answer-dispatcher.log; logs/runs/YYYY-MM-DD.jsonl (run_logged); logs/fleet-events.jsonl (agent=decision-answer-dispatcher: dispatch ok/wake_failed \u2014 decision\u2192session trace)",
       "reusability_scope": "TBD",
       "risk_tier": "MEDIUM",
       "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
       "change_log": [
-        "2026-10-17 created (Jon 03:52 \"Fix it so that this does not happen again. I am tired of chasing my responses.\" after D-7282137 sat answered 2.5h); selftest 9/9"
+        "2026-10-17 created (Jon 03:52 \"Fix it so that this does not happen again. I am tired of chasing my responses.\" after D-7282137 sat answered 2.5h); selftest 9/9",
+        "2026-10-17 exo3 remediation: fleet_log decision-trace per dispatch; eval_suite names the selftest"
       ],
       "eval_type": "liveness"
     },
@@ -5969,6 +5976,30 @@
       "lifecycle": "standing",
       "registered": "2026-10-17",
       "envelope_source": "manual registration 2026-10-17"
+    },
+    {
+      "label": "mc-task-panel-exo3",
+      "script": "mission-control/index.html (loadTimeline, postUpdate)",
+      "kind": "module",
+      "schedule": "on demand (browser)",
+      "purpose": "MC task panel Updates tab: shows task updates and posts notes that the Exo note router (com.exos.task-note-command) acts on",
+      "stack_layer": "SENSE/ORCHESTRATE (human input surface)",
+      "autonomy_tier": "L0 (human-driven UI; no autonomous action)",
+      "human_owner": "John Quinn",
+      "permission_envelope": "POST /api/tasks/updates as the signed-in user only; read /api/tasks/updates",
+      "memory_boundary": "none (browser session)",
+      "escalation": "post failure \u2192 toast to user; load failure \u2192 Retry link (no silent wipe)",
+      "eval_suite": "node mission-control/tests/task_panel_selftest.js (5 checks, failure replays Jon 10/17 #3808: silent-poll HTTP 500 keeps Updates; visible load retries 2x then Retry; Enter+click posts once; guard resets)",
+      "telemetry": "server request log (mission-control server); downstream routing traced by task-note-command fleet_log events",
+      "reusability_scope": "all MC task panels",
+      "risk_tier": "low",
+      "envelope_source": "Jon 10/17 #3808",
+      "change_log": [
+        "2026-10-17 7d7534f transient updates error no longer wipes list",
+        "2026-10-17 cd7a006 double-submit guard",
+        "2026-10-17 registered + selftest (exo3 remediation)"
+      ],
+      "eval_type": "output"
     }
   ],
   "eval_wave_1": {

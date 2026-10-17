@@ -1459,7 +1459,8 @@
    "cadence_s": 300,
    "warn_grace": 2.5,
    "fail_grace": 6,
-   "owner": "John Quinn"
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/qb_invoice.py --selftest"
   },
   "com.exos.mrp-nightly": {
    "cadence_s": 86400,
@@ -1621,7 +1622,8 @@
    "owner": "John Quinn",
    "governance_checks": [
     "selftest: python3 scripts/decision_answer_dispatcher.py --selftest must PASS (9/9)"
-   ]
+   ],
+   "selftest": "/usr/bin/python3 scripts/decision_answer_dispatcher.py --selftest"
   },
   "com.exos.cli-session-rotate": {
    "cadence_s": 3600,

@@ -505,9 +505,66 @@ def auto_prepare_due(a):
         try:
             prepare(ns)
             st = jload(STATE, {"invoices": []})   # prepare() saved its own record
+            _fleet("m2_autodraft", {"order": o["id"], "l120": due.isoformat()}, "drafted")
         except SystemExit as e:
             log(f"auto-draft M2 for {o['id']} blocked: {e}")
             _order_log(o["id"], "M2 auto-draft blocked", str(e))
+            _fleet("m2_autodraft", {"order": o["id"], "l120": due.isoformat(), "blocker": str(e)}, "blocked")
+
+
+def _fleet(action, detail, outcome):
+    """exo3 telemetry → logs/fleet-events.jsonl."""
+    if os.environ.get("QBI_SELFTEST"):
+        return
+    try:
+        import fleet_log
+        fleet_log.event("qb-invoice-watch", "orchestrate", action, detail=detail, owner="John Quinn", outcome=outcome)
+    except Exception:
+        pass
+
+
+def selftest():
+    """Failure replay (Jon 10/16, Scentience): clicking Done on M1 left nobody to raise the M2 (40%, L-120)
+    invoice. auto_prepare_due must draft M2 once, inside the 7-day lead, for paid-M1 orders only — never in-kind,
+    cancelled, already-invoiced or early orders, and only one attempt per order per day. prepare() is stubbed:
+    no QB call, no Decision, no live data touched."""
+    import tempfile
+    global ORDERS, STATE, LOG, prepare
+    os.environ["QBI_SELFTEST"] = "1"
+    t = tempfile.mkdtemp()
+    ORDERS, STATE, LOG = (os.path.join(t, n) for n in ("orders.json", "state.json", "log"))
+    today = datetime.date.today()
+    fd = lambda days_to_l120: (today + datetime.timedelta(days=120 + days_to_l120)).isoformat()
+    paid = {"M1": {"paid_at": "2026-10-01"}}
+    orders = [
+        {"id": "due", "flight_date": fd(5), "milestones": paid},
+        {"id": "early", "flight_date": fd(30), "milestones": paid},
+        {"id": "m1-unpaid", "flight_date": fd(5), "milestones": {}},
+        {"id": "in-kind", "in_kind": True, "flight_date": fd(5), "milestones": paid},
+        {"id": "cancelled", "status": "cancelled", "flight_date": fd(5), "milestones": paid},
+        {"id": "m2-done", "flight_date": fd(5), "milestones": dict(paid, M2={"invoiced_at": "2026-10-10"})},
+        {"id": "overdue", "flight_date": fd(-3), "milestones": paid},
+    ]
+    json.dump({"orders": orders}, open(ORDERS, "w")); json.dump({"invoices": []}, open(STATE, "w"))
+    calls = []
+    def fake_prepare(ns):
+        calls.append((ns.order, ns.milestone))
+        st = jload(STATE, {"invoices": []})
+        st["invoices"].append({"order": ns.order, "milestone": ns.milestone, "status": "pending"}); jsave(STATE, st)
+    prepare = fake_prepare
+    a = argparse.Namespace(dry_run=False)
+    auto_prepare_due(a)
+    first = sorted(calls)
+    auto_prepare_due(a)   # second watch tick (5 min later) must not draft again
+    checks = {
+        "paid-M1 order inside 7-day lead drafted as M2": ("due", "M2") in first,
+        "overdue L-120 order drafted": ("overdue", "M2") in first,
+        "early / unpaid / in-kind / cancelled / already-invoiced skipped": len(first) == 2,
+        "second tick does not re-draft": len(calls) == 2,
+    }
+    bad = [k for k, v in checks.items() if not v]
+    print(f"qb_invoice selftest: {len(checks) - len(bad)}/{len(checks)} pass" + (f" FAIL {bad}" if bad else ""))
+    return 1 if bad else 0
 
 
 def watch(a):
@@ -671,4 +728,6 @@ def main():
 
 
 if __name__ == "__main__":
+    if "--selftest" in sys.argv:
+        sys.exit(selftest())
     main()

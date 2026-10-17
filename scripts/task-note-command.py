@@ -85,6 +85,18 @@ def logline(m):
     except Exception: pass
 
 
+def fleet(action, detail, outcome="ok"):
+    """exo3 telemetry: one line to logs/fleet-events.jsonl (never breaks the router)."""
+    if os.environ.get("TNC_SELFTEST"):
+        return
+    try:
+        sys.path.insert(0, os.path.join(WS, "scripts"))
+        import fleet_log
+        fleet_log.event("task-note-command", "orchestrate", action, detail=detail, owner="John Quinn", outcome=outcome)
+    except Exception:
+        pass
+
+
 def load(p, d):
     try: return json.load(open(p))
     except Exception: return d
@@ -283,7 +295,8 @@ def coalesce_repeats(cmds, rows, seen, taskid_of):
             continue
         if any(key(h) == key(r) and _similar(h.get("body"), r.get("body"))
                and abs((ts(r) - ts(h)).total_seconds()) <= REPEAT_WINDOW_S for h in handled):
-            seen.add(r["id"]); logline(f"repeat dropped {r['id']} task {taskid_of(r)}"); continue
+            seen.add(r["id"]); logline(f"repeat dropped {r['id']} task {taskid_of(r)}")
+            fleet("repeat_dropped", {"note": r["id"], "task": taskid_of(r)}); continue
         group = [r] + [x for x in fresh[i + 1:] if x["id"] not in used and key(x) == key(r)
                        and (ts(x) - ts(r)).total_seconds() <= REPEAT_WINDOW_S and _similar(x.get("body"), r.get("body"))]
         if len(group) > 1:
@@ -296,6 +309,7 @@ def coalesce_repeats(cmds, rows, seen, taskid_of):
             for g in group[:-1]:
                 used.add(g["id"]); seen.add(g["id"])
             logline(f"coalesced {len(group)} notes on task {taskid_of(r)} -> {group[-1]['id']}")
+            fleet("coalesced", {"task": taskid_of(r), "kept": group[-1]["id"], "absorbed": [g["id"] for g in group[:-1]]})
             out.append(merged); used.add(group[-1]["id"])
         else:
             out.append(r); used.add(r["id"])
@@ -559,6 +573,23 @@ def selftest():
         "store ledger has 3.5 h for Mike": any(a["hours"] == 3.5 and a["email"] == "mtalley@exosaero.com" for a in store["actuals"]),
         "'done' still marks Done (router intact)": any(c[2] == {"state": "Done"} for c in patches),
     }
+    # Failure replay (Jon 10/17, #3808): one ask posted 3x within 40s got 3 identical acks + 3 subtasks.
+    t0 = datetime.now(timezone.utc)
+    ask = "@Exobot can you pull the NYK contact list and draft the intro note for Toshi to send this week please"
+    burst = [{"id": f"rp-{i}", "subject": "task:3808", "owner": "Jon", "body": ask + ("" if i < 2 else " thanks"),
+              "created_at": (t0 + timedelta(seconds=20 * i)).isoformat()} for i in range(3)]
+    tid = lambda r: re.match(r"task:(\d+)$", r["subject"]).group(1)
+    sn = set()
+    routed = [r for r in coalesce_repeats(list(burst), burst, sn, tid) if r["id"] not in sn]
+    checks["3x repeat burst -> routed once (newest kept)"] = len(routed) == 1 and routed[0]["id"] == "rp-2"
+    checks["absorbed repeats marked seen"] = {"rp-0", "rp-1"} <= sn
+    late = {"id": "rp-3", "subject": "task:3808", "owner": "Jon", "body": ask, "created_at": (t0 + timedelta(seconds=90)).isoformat()}
+    sn2 = {"rp-2"}
+    out2 = [r for r in coalesce_repeats([late], burst + [late], sn2, tid) if r["id"] not in sn2]
+    checks["repeat of already-handled note dropped"] = not out2 and "rp-3" in sn2
+    cmds2 = [{"id": "dc-1", "subject": "task:86", "owner": "Mike", "body": "@Exobot hours 3.5", "created_at": t0.isoformat()},
+             {"id": "dc-2", "subject": "task:86", "owner": "Mike", "body": "@Exobot done", "created_at": (t0 + timedelta(seconds=10)).isoformat()}]
+    checks["different short commands stay separate"] = len(coalesce_repeats(cmds2, cmds2, set(), tid)) == 2
     bad = [k for k, v in checks.items() if not v]
     print(f"task-note-command selftest: {len(checks) - len(bad)} passed, {len(bad)} failed" + (f": {bad}" if bad else ""))
     return 1 if bad else 0
@@ -566,5 +597,6 @@ def selftest():
 
 if __name__ == "__main__":
     if "--selftest" in sys.argv:
+        os.environ["TNC_SELFTEST"] = "1"
         sys.exit(selftest())
     main()

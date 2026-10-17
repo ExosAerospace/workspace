@@ -57,6 +57,18 @@ def log(m):
         f.write(f"{now()} {m}\n")
 
 
+def fleet(action, detail, outcome):
+    """exo3 telemetry → logs/fleet-events.jsonl (decision-trace: which answer woke which session)."""
+    if DRY:
+        return
+    try:
+        sys.path.insert(0, os.path.join(WS, "scripts"))
+        import fleet_log
+        fleet_log.event("decision-answer-dispatcher", "orchestrate", action, detail=detail, owner="John Quinn", outcome=outcome)
+    except Exception:
+        pass
+
+
 def load(p, d):
     try:
         return json.load(open(p))
@@ -170,6 +182,8 @@ def main():
         ok = wake(rec["session"], prompt(d))
         rec["ok"] = ok
         log(f"{'dispatched' if ok else 'WAKE FAILED'} {d['id']} -> {rec['session']} (try {rec['tries']})")
+        fleet("dispatch", {"decision": d["id"], "session": rec["session"], "try": rec["tries"],
+                           "answeredAt": d["answeredAt"]}, "ok" if ok else "wake_failed")
         if not DRY:
             json.dump(st, open(STATE, "w"), indent=1)       # persist per dispatch, not just at the end
         if not ok and rec["tries"] >= MAX_TRIES:
