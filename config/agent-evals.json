@@ -1622,6 +1622,17 @@
    "governance_checks": [
     "selftest: python3 scripts/decision_answer_dispatcher.py --selftest must PASS (9/9)"
    ]
+  },
+  "com.exos.cli-session-rotate": {
+   "cadence_s": 3600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "python3 scripts/cli_session_rotate.py --selftest",
+   "governance_checks": [
+    "selftest PASS (scans project dir, finds kills, finds oversized; no file modifications)",
+    "dry-run lists killed sessions and oversized JSONL; --apply renames to .jsonl.rotated"
+   ]
   }
  },
  "_eval_wave_2": {
