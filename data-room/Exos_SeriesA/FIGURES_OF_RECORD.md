@@ -3,7 +3,7 @@
 
 | Item | Value of record | Notes / never say |
 |---|---|---|
-| **Raise size** | **a $10 million Series A** (Jon 2026-10-10) | Never "$10M first close, tranched to $25M" / "up to $25M" / "$25M Series A" / "tranched against milestones"; not "$40–50M" |
+| **Raise size** | **$215M total raise, beginning with a $10 million Series A** (Jon 2026-10-16: "a total of a $215M raise"; supersedes the 10/10 "$10M only, RTO internal" rule for the FULL deck. Externally say "the balance through our public-markets path"; do not name the RTO) | Never "$10M first close, tranched to $25M" / "up to $25M" / "$25M Series A" / "tranched against milestones"; not "$40–50M" |
 | **Use of funds — the $10M Series A** | Three things: (a) **Scorpius acquisition** — complete the acquisition of Scorpius Space Launch Company (Exos owns 18% today) and bring its composite cryogenic tank technology fully in-house — **$3.4M**; (b) **finish and fly BLK3** — **$2.5M**; (c) **advance next-generation propulsion through a structured trade study** — **$4.1M** (CONFIRMED by Jon 2026-10-10, D-7282041) | External wording: "complete our acquisition of Scorpius". Exos is **not** a propulsion provider — trade study only. **No BLK4** in use of funds or the raise |
 | **BLK4** | **Future, gated orbital path only** — never funded by this raise | The former "$25M expansion" (RDRE $8.0M / BLK4 $9.0M / WC $4.6M) is **retired** (Jon 2026-10-10) |
 | **Valuation** | **$169.7M equity** (Eqvista 409A, 03/31/26; **$8.66/share**; DLOM **36.51%**) | Only number shown. DCF $252M / Market $137.8M / comps live **behind the reconciliation tab**, never side-by-side |
