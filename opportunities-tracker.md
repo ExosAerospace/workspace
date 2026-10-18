@@ -51,13 +51,14 @@ Each opportunity is sourced from ProtonMail inbox analysis, forwarded emails, an
 
 ### OPP-246 | NASA — Orbital In-Space Liquid (Propellant) Transfer Demonstration
 **Source:** Jon — proposal submitted to NASA night of 2026-08-17 (RMPC tank-to-tank transfer deck; real Scorpius Type-5 hardware photos + measured partial-transfer performance).
-**Status:** SUBMITTED (2026-08-17) — TRACKING for NASA response/next action.
+**Status:** CLOSED — NOT SELECTED (NASA TechLeap RMPC result, 2026-10-02; entry filed 2026-08-17).
+**Outcome (2026-10-02):** NASA TechLeap Prize team (hello@nasatechleap.org) notified Jon: after independent judging against the official criteria, the Exos submission to the **Robotically Manipulated Payload Challenge (RMPC)** was not selected as a winner (100+ submissions nationally). No feedback/scores provided. NASA invited future TechLeap participation (challenges announced at nasatechleap.org).
 **Type:** Government proposal — orbital in-space liquid transfer demonstration.
 **What was proposed:** Orbital **non-cryogenic** tank-to-tank liquid transfer demonstration on the Exos/Scorpius Type-5 architecture.
 **Linked flight demo:** BLK3 **Flight 1** will fly a similar configuration performing an **actual LOx (cryogenic) transfer** — flight-demonstrating the harder cryogenic case suborbital, de-risking the orbital proposal with real data.
 **Heritage anchor:** Scorpius Type-5 cryo tanks flew as fuel + LOX tanks on Intuitive Machines' Odysseus & Athena lunar missions (TRL-9). Ladders to in-space refueling / depot / long-duration cryo storage thesis and the Series A narrative.
-**⚠ CONFIRM (Jon-only specifics needed to complete tracking):** NASA program / solicitation number; proposal title/ID; NASA POC; BLK3 Flight 1 target date (and whether "Flight 1" precedes the March 2027 flight the payload pipeline calls "Flight 2").
-**Next action:** Confirm the above specifics with Jon; set a follow-up watch on NASA response. Data-room slide built: `drafts/Exos_InSpace_Propellant_Transfer_Slide.pdf`.
+**Program confirmed (2026-10-02):** NASA TechLeap Prize — Robotically Manipulated Payload Challenge (NASA Flight Opportunities). POC hello@nasatechleap.org.
+**Next action:** None on RMPC (closed). The underlying tank-to-tank transfer work continues via the BLK3 Flight 1 LOx-transfer demo and the NASA Flight Opportunities / TechFlights track (MC #1378, #2545). Optional: request a judges' debrief from hello@nasatechleap.org before reusing the concept in a future TechLeap challenge. Data-room slide: `drafts/Exos_InSpace_Propellant_Transfer_Slide.pdf`.
 **Keywords:** NASA, in-space propellant transfer, cryogenic, LOx transfer, tank-to-tank, RMPC, Type-5, in-space refueling, BLK3 Flight 1.
 
 ### OPP-247 | Intuitive Machines — Tank Acceptance + Qualification Test Services (Exos/SSLC) ⭐ RECURRING SERVICES
@@ -99,7 +100,7 @@ Each opportunity is sourced from ProtonMail inbox analysis, forwarded emails, an
 
 ### OPP-003 | AEDC Velocity Alliance - OTA Consortium Whitepaper
 **Source:** Email #62 (2026-04-02), Email #86 (2026-04-08) - Jon noted: "Exobot Develop a submittal for Exos" | **SUBMITTED:** Email ID 712 (2026-05-31) - Jon confirmed sent to Greg Jones ("Agent Jones" per Jon's note)
-**Status:** 🟢 OPPORTUNITY 2 RESUBMISSION PREPARED (2026-08-19) — Part 4 deficiency RESOLVED. Scorpius now has CAGE 60ZM1 (internal affiliate); **Starfighters International (CAGE 1LZT3, SDB/VOSB) added as the qualified EXTERNAL teaming partner** (above-Mach-2 airborne captive-carry) to clear Part 4; no-cost bonus in-space propellant-transfer research (feeds applied-for NASA RMPC) added at Part 4.3. Revised Submission Note added up top. Docx/PDF + ready-to-forward Greg Jones cover note emailed to Jon. *(Prior: June 10 evaluated INELIGIBLE — passed Parts 1-3 (Type 5 cryo "outstanding"), FAILED Part 4 because Scorpius lacked a CAGE and, at 18% equity, read as intra-company not an external partner.)*
+**Status:** AWARDED - AEDC Velocity Alliance Opp 2 resubmission accepted; base agreement signed 9/23, effective 9/30 (MC #3009, #3576)  _(reconciled by Exo 2026-10-09)_
 **Due:** Submitted May 31 ✅ | Revised June 9 ✅ | Evaluated June 10 (ineligible, Part 4) ✅ | **Opportunity 2 resubmission due Sept 1, 2026** (mandatory Industry Day 16 Sep Teams; site-visit window 1–30 Sep)
 **Type:** OTA Consortium Whitepaper (10 U.S.C. § 4022)
 **Value:** Multi-billion dollar OTA consortium - all future projects competed exclusively among members
@@ -173,7 +174,7 @@ Each opportunity is sourced from ProtonMail inbox analysis, forwarded emails, an
 **Outreach program:** `drafts/japan-suborbital-outreach-program.md`
 **Emailed to Jon:** 2026-04-16
 **Key pitch:** BLK3 as first reusable suborbital system operating in Japan; wet lease model via HOSPO; target JAXA, universities, industrial R&D
-**Regulatory:** Japan Space Activities Act + pending amendment covering reusable rockets; FAA reciprocal recognition provision; ITAR TAA via Neil/State Dept
+**Regulatory:** Japan Space Activities Act + pending amendment covering reusable rockets; FAA reciprocal recognition provision; ITAR TAA via Empowered Official John Quinn (reviewer Denise Shirey)/State Dept
 **Next actions:** (1) Formalize Space COTAN MOU, (2) Begin Cabinet Office pre-consultation, (3) ITAR/TAA assessment, (4) Japanese PUG translation
 
 ### OPP-006 | NASA FOP Teaming - IDIQ 2027 for Microgravity Access Gap
@@ -200,6 +201,16 @@ Each opportunity is sourced from ProtonMail inbox analysis, forwarded emails, an
 **Next action:** (1) Prioritize second payload manifest - contact BD-021 ASGSR targets, BD-015 Narravity, BD-013 Montana; (2) Russ Blink to advise on software/TT&C line items for BLK3.1 budget; (3) Obtain Part 450 launch license for Spaceport America; (4) Finalize NMSA contract for WSMR support
 
 ---
+
+### OPP-636 | NYK Line (Nippon Yusen Kaisha) - Logistics + Consortium Partner: BLK3 Shipping TX->Japan, Sardinia (Italy); SSF Offshore-Recovery Support Contract
+**Source:** Jon in person at Hokkaido Spaceport (HOSPO) event, 2026-10-14 (Discord #general): "NYK will be the provider to ship our rocket for us from Texas to Japan - put them as a consortium partner in the Japan expansion... consider they could be our shipping partner to handle transportation to Sardinia Italy"
+**Status:** ACTIVE - relationship opened 10/14; CRM contacts captured; DD PASS (high)
+**Due:** Shipping quote/logistics plan ahead of first BLK3 Japan campaign (tie to OPP-005 timing); SSF support-contract proposal: next 30 days
+**Type:** Consortium Partner (logistics) + International Commercial (support/consulting contract; ITAR TAA required)
+**Value:** STRATEGIC - (1) single trusted ocean/air logistics provider for BLK3 vehicle + GSE moves TX->Japan (HOSPO) and TX->Sardinia (Copernic/Lady Rocket Italian venture); (2) potential paid support contract on NYK's JAXA Space Strategy Fund offshore reusable-rocket recovery project (NYK lead + MHI; Apr 2025-Mar 2029: capture, post-landing safing, landing deck, remote ops); (3) Japan credibility (TSE:9101, Mitsubishi group, FY ended 3/2026 revenue JPY 2.42T)
+**Key contacts:** Daisuke Suga (Mgr, Advanced Tech & Space Business Dev; daisuke.suga@nykgroup.com), Satohiko Kodama (Mgr, Ocean Engineering; satohiko.kodama@nykgroup.com), Masahiro Morimoto (GM Hokkaido Branch; masahiro.morimoto@nykgroup.com); Toshihisa Kumazawa (Exos Japan BD)
+**Regulatory:** Shipping BLK3/GSE abroad = ITAR export of defense articles (USML Cat IV) -> DSP-5/license per shipment, carrier/forwarder listed on license; technical assistance to NYK on recovery = defense service -> TAA. Export owner = Empowered Official John Quinn (reviewer Denise Shirey). Italy route also needs license + Copernic structure clearance.
+**Next actions:** (1) Toshi/Jon: thank-you + request NYK project-cargo contact for a non-binding TX->Japan/Sardinia logistics estimate (dims/weights only, no technical data); (2) draft Honda-model Phase-1 support proposal to Daisuke Suga (capability-level; TAA to open technical scope); (3) EO export plan for vehicle shipments; (4) add NYK to consortium Japan-expansion pursuit (done 10/14)
 
 ## SERIES A / FUNDRAISING LEADS
 
@@ -426,7 +437,7 @@ Each opportunity is sourced from ProtonMail inbox analysis, forwarded emails, an
 
 ### BD-005 | NASA SBIR - AERO.4.S26B + INSTALG.2.S26A (Both Submitted ✅)
 **Source:** Email #253/#264/#291 (May 4-8) - LM collaboration on Advanced Propulsion Flight Testing | Updated: Emails #469/#475 (May 18) + extensive work May 19-20
-**Status:** ✅ BOTH SUBMITTED - AERO.4.S26B confirmed May 21 2:35 AM ET (#AERO.4.S26B-0742) | INSTALG.2.S26A confirmed May 20 6:10 PM ET (#INSTALG.2.S26A-0496)
+**Status:** CLOSED - NOT AWARDED (both NASA SBIRs declined: INSTALG.2.S26A-0496 9/24 formatting; AERO.4.S26B-0742 not selected, feedback 10/5)  _(reconciled by Exo 2026-10-09)_
 **Contact:** Joseph Epstein (joseph.epstein@lmco.com) + Craig Owens (SBIR lead) | Purdue: Dr. Dianyun Zhang (dianyun@purdue.edu), Dr. Collicott (collicot@purdue.edu) | DSTAR: Dr. Starodubov (subcontractor for AERO.4.S26B)
 **Submitted proposals:**
 - AERO.4.S26B Proposal #AERO.4.S26B-0742: Embedded FBG Structural Health Monitoring for Reusable Composite Launch Vehicle Structures. $276K program ($225K Phase I base + $51K Exos cost-share). PI: Phil Eaton. Submitted 5/21/2026 7:35 AM GMT.
@@ -591,7 +602,7 @@ Each opportunity is sourced from ProtonMail inbox analysis, forwarded emails, an
 
 ### BD-019 | AFRL/RXC - Composite Structures White Paper [PHASE III ELIGIBLE]
 **Source:** Email #487 (May 18) - Boeing FOSS multi-source funding strategy
-**Status:** 🟡 BAA CONFIRMED OPEN (ROLLING) — SUBMISSION UNCONFIRMED — ROUTE VIA DANIEL BREWER
+**Status:** CLOSED - DECLINED by Jon (D-045)  _(reconciled by Exo 2026-10-09)_
 **2026-06-16 update (#rd-team):** Jon asked "when was this due? AFRL/RXC White Paper" in #rd-team at 12:50 PM CT. Exo confirmed: (1) The June 15 date was Exos’ internal Mission Control target (P-026), NOT a hard government cutoff. (2) The BAA (SAM.gov ce72f66…) is an **Open Rolling BAA** — refreshed April 17, 2026, accepting white papers on a continuous basis. (3) BAA is STILL OPEN — being a day past internal target costs nothing. Jon selected option 1 (verify + submit). Best route confirmed: **send through Daniel Brewer (Daniel.Brewer.13@us.af.mil)**, Exos’ Phase II AFRL Contracting Officer — ask him to route to current RXC BAA manager. Do NOT use Mary Ann Sharits cold (stale address).
 **Type:** DoD R&D (AFRL Materials & Manufacturing Directorate, RXC)
 **Due:** Rolling Open BAA — submit ASAP (white paper ready since June 8)
@@ -681,7 +692,7 @@ Each opportunity is sourced from ProtonMail inbox analysis, forwarded emails, an
 
 ### OPP-011 | Leidos ILS2 - Indo-Pacific Logistics and Sustainment Services Teaming RFP
 **Source:** Emails #617/#625 - Jon forwarded (twice) from Leidos Subcontracts (Melissa Dunbar) - May 22, 2026
-**Status:** ❌ PASS - Jon directed: Leidos Indo-Pac is NOT our interest. Only the shipping container portion is relevant, and that's engineering work best pursued direct to Global Secure Shipping (not through Leidos teaming).
+**Status:** CLOSED - LOST (Exos teamed on Leidos ILS2; award went to ManTech 10/4, MC #3368)  _(reconciled by Exo 2026-10-09)_
 **Type:** DoD Subcontract Teaming - Leidos OPP-00270221 (Prime: Leidos, Defense Maritime Business Area)
 **Value:** TBD
 **Contact:** Melissa A. Dunbar, Lead Subcontracts Management | melissa.dunbar@leidos.com | +1 (703) 664-4505
@@ -1309,7 +1320,8 @@ Each opportunity is sourced from ProtonMail inbox analysis, forwarded emails, an
 
 ### BD-032 | DIU HyCAT II - Hypersonic Test Platform (NEW June 9)
 **Source:** Jon request June 9 + web research
-**Status:** NEW - Active CSO open for vendor submissions
+**Status:** SUBMITTED
+**Submitted:** 2026-10-09 by Jon via diu.mil Company Interest form (BLK3 capability statement 10-07, TRL 6, portfolio 10x). DIU contacts if aligned; HyCAT CSO watcher stays on. MC #2488 closed.
 **Type:** DoD OTA / Commercial Solutions Opening (Phase III eligible via FA9300-25-C-6022)
 **Value:** Multi-million (Rocket Lab got $190M/20 flights under HyCAT I; HyCAT II is next phase)
 **Program:** Defense Innovation Unit (DIU) - Hypersonic and High-Cadence Airborne Testing Capabilities (HyCAT)
@@ -1572,7 +1584,7 @@ Each opportunity is sourced from ProtonMail inbox analysis, forwarded emails, an
 | 2026-06-11 (9:00 PM CT - Evening Discord Sync) | All 8 Discord channels | 1 new (FRAUD-002) + 4 key updates | **NEW FRAUD-002:** Sandrine Champlin-Howell / studioreturn.info - cold email to Neil Milburn (June 5); Jon requested DD June 11. Result: CONFIRMED SCAM (dead .info domain, zero web presence, no FINRA/SEC records, advance-fee pattern). Neil to ignore. **FUND-035 + FUND-031 UPDATED:** DC meetings with Richard Phillips (Crossroads Capital) + Ken Runkles + Tom Bacak (Stratelligence) HELD June 11. Outcomes logged. **BD-013 UPDATED:** Post-meeting congressional follow-up briefs sent to jquinn@exosaero.com June 11: Andrew Downing (Sheehy staffer) + Matthew May (Daines staffer) both added to CRM; follow-ups set June 16. **INTEL:** SpaceX IPO confirmed June 12 at $135/share ($1.75T valuation) - Series A narrative window open. Competitive Intel + Tech/IP Monitor + Policy Watch + Grant Scanner all delivered to Jon in #rd-team. TACFI PY26.2 closes June 29 confirmed. Blue Origin pad recovery now possibly 2028 per NASA Isaacman. |
 | 2026-06-12 (6:00 AM CT - Morning Email Scan) | 3 unseen (IDs 850-852) | 1 new (OPP-024) | **NEW OPP-024:** NASA M-STAR NOFO (NNH26ZHA002C) - MUREP Space Technology Artemis Research FY-2026. Jon forwarded June 12. Exos not directly eligible (must be MSI/HBCU/TCU prime); teaming opportunity as industry partner. Deadline August 11, 2026. Scorpius Type 5 cryo tech + RDRE + BLK3 = strong STMD fit; Texas HBCU partner identification needed. **Filtered:** Email 850 (Exo Daily Briefing June 11 - internal); Email 852 (Nightly Security Alert - ExoMac system notifications). |
 | 2026-06-12 (11:00 PM CT - Overnight Resolver - Sonnet) | Inbox + Mission Control full scan | 3 new + 8 advanced | **NEW OPP-025:** NAWCAD Office-Wide BAA (N00421-25-S-0001) - Hypersonic Systems/Advanced Manufacturing - white paper drafted overnight, DUE JUNE 22. **NEW FUND-037:** Al Kim - contact referred by Suliman Sulimani (email #854); details TBD from Jon (Decision D-066). **OPP-024 ADVANCED:** M-STAR teaming brief drafted (`drafts/MUREP-MSTAR-Teaming-Brief-OPP016.md`); Prairie View A&M = priority HBCU partner; Decision D-068. **BD-019 ADVANCED:** AFRL/RXC white paper confirmed complete + submission-ready; Decision D-061. **FUND-035 ADVANCED:** DC follow-up email drafted (`drafts/DC-Followup-Phillips-Runkles-Bacak-June16.md`); Decision D-067. **FUND-031 ADVANCED:** Follow-up email drafted same file; Decision D-067. **DECISIONS POSTED TONIGHT:** D-060 (R-013 SBA E2G urgent reminder), D-061 (BD-019 AFRL/RXC submit), D-023/re (HP-002 Ron Bloom 19-day overdue), D-062 (WHP Sholtis pivot), D-063 (MDB MNDA follow-up), D-064 (TACFI Harvazinski June 25), D-065 (OPP-025 NAWCAD), D-066 (FUND-037 Al Kim details), D-067 (DC follow-ups Phillips/Runkles), D-068 (OPP-024 M-STAR Prairie View). ⚠️ CONTINUING DEADLINES: R-013 SBA E2G (JUNE 14 - call PJC today); BD-019 AFRL/RXC (JUNE 15 - submit white paper); OPP-004 SHY Sprints (JUNE 22); OPP-025 NAWCAD BAA (JUNE 22); BD-020 DARPA TTO (JUNE 22); TACFI NOO (JUNE 29 - Harvazinski June 25); Cerberus Kent call (week of June 16); Vivace meeting (June 17).
-| 2026-06-12 (9:00 PM CT - Evening Discord Sync) | All 8 Discord channels | 4 key updates | **FUND-024 CLOSED (confirmed):** Leonid Capital Partners permanently out - Jon called Garrett Sweetser June 12; 75% equity on default non-negotiable (Chris Lay directive); Jon confirmed "non-starter." Tracker already marked closed; TACFI match implications logged. **BD-017/P3-003 UPDATED:** Leonid OUT as TACFI match source; TSC Direct Award ($2M) = sole remaining match. ⚡ Harvazinski must submit ingest form by June 25; TACFI NOO closes June 29. **OPP-023 UPDATED:** SBA E2G full application package (email to Dr. Erny + Word letter of support) sent to Jon's inbox June 12. Deadline: June 15 at 10:59 PM CST; PJC AOR must submit by June 14. [JON] Forward to Dr. Erny immediately. **FUND-032 UPDATED:** SpaceX IPO confirmed LIVE June 12 (NASDAQ: SPCX, $135/share, up ~11%); social content pack delivered to Lizi Quinn; investor urgency window live through June 20. **REGULATORY INTEL:** FAA Part 450 full transition complete March 17, 2026 - Exos must confirm experimental permit compliance (REG-001). **INTEL:** Astrobotic won $1.9M AFRL SBIR for reusable suborbital RDRE testbed (Xodiac-B) - same exact scope as Exos active Phase II FA9300-25-C-6022; competitive context for Phase III. [Corrected June 14: prior entry said $17.5M, confirmed $1.9M from June 14 competitive intelligence brief] DoW SBIR 26.BZ Release 2 submissions OPEN June 24, CLOSE July 22 (pre-release NOW via spacewerx.us; engage TPOCs this week) - review topic list ASAP. **P-029 UPDATED:** Mission Control confirmed working on both phone + laptop via Cloudflare WARP (http://192.168.1.216:8080); Jon accessed from phone (laptop screen dead during DC trip); authorized for all users per Jon directive June 12. Jon returns to Dallas June 13. |
+| 2026-06-12 (9:00 PM CT - Evening Discord Sync) | All 8 Discord channels | 4 key updates | **FUND-024 CLOSED (confirmed):** Leonid Capital Partners permanently out - Jon called Garrett Sweetser June 12; 75% equity on default non-negotiable (Chris Lay directive); Jon confirmed "non-starter." Tracker already marked closed; TACFI match implications logged. **BD-017/P3-003 UPDATED:** Leonid OUT as TACFI match source; TSC Direct Award ($2M) = sole remaining match. ⚡ Harvazinski must submit ingest form by June 25; TACFI NOO closes June 29. **OPP-023 UPDATED:** SBA E2G full application package (email to Dr. Erny + Word letter of support) sent to Jon's inbox June 12. Deadline: June 15 at 10:59 PM CST; PJC AOR must submit by June 14. [JON] Forward to Dr. Erny immediately. **FUND-032 UPDATED:** SpaceX IPO confirmed LIVE June 12 (NASDAQ: SPCX, $135/share, up ~11%); social content pack delivered to Lizi Quinn; investor urgency window live through June 20. **REGULATORY INTEL:** FAA Part 450 full transition complete March 17, 2026 - Exos must confirm experimental permit compliance (REG-001). **INTEL:** Astrobotic won $1.9M AFRL SBIR for reusable suborbital RDRE testbed (Xodiac-B) - same exact scope as Exos active Phase II FA9300-25-C-6022; competitive context for Phase III. [Corrected June 14: prior entry said $17.5M, confirmed $1.9M from June 14 competitive intelligence brief] DoW SBIR 26.BZ Release 2 submissions OPEN June 24, CLOSE July 22 (pre-release NOW via spacewerx.us; engage TPOCs this week) - review topic list ASAP. **P-029 UPDATED:** Mission Control confirmed working on both phone + laptop via Cloudflare WARP (http://192.168.143.216:8080); Jon accessed from phone (laptop screen dead during DC trip); authorized for all users per Jon directive June 12. Jon returns to Dallas June 13. |
 | 2026-06-13 (10:00 PM CT - Evening Discord Sync) | All 8 Discord channels (limit 50 each) + Mission Control sync | 2 new (P-036 Fractional CFO, OPP-026 EDGAR) + 8 key updates | **NEW P-036:** Jon activated Fractional CFO function June 13 (~8:49 PM CT, #rd-team) - Exo confirmed 8 core functions; gated on QB access + cash/burn info from Jon. Added to Mission Control. **NEW OPP-026:** SEC EDGAR annual report (CIK 0001774765) due June 30 - flagged in daily tracker, no action confirmed. Added to tracker. **UPDATES:** P-019 DC Trip → COMPLETE (Jon returned June 13); FUND-028 WHP Sholtis → DC window missed, post-IPO email outreach live through June 20; OPP-023 SBA E2G → Jon returned, must forward Dr. Erny email TODAY (AOR deadline June 14); HP-002 Ron Bloom → now 20 days overdue; FUND-015 Veteran Fund → valuation mismatch flagged ($169.7M 409A vs. $5-25M thesis), veteran status confirmation needed; Series A active tracks: MDB (MNDA awaiting countersign), Cerberus/Kent (call prep June 16), Vivace/Bruce Morris (meeting June 17). **INTEL delivered today:** Grant & Contract Scanner, BD Intel brief, Competitive Intelligence brief, Policy & Regulatory Watch, Series A capital raise status briefing, 8 social posts to Lizi (SpaceX IPO + RDRE Chakram + Scorpius cryo). SpaceX IPO final: $75B raised, $2.1T valuation, SPCX on Nasdaq. macOS Tahoe 26.5.1 security update available. **PRIORITY ACTIONS THIS WEEK:** (1) Harvazinski/TACFI ingest by Monday June 15 🔴; (2) Cerberus/Kent call prep June 16 🔴; (3) Vivace/Bruce Morris meeting prep June 17 🔴; (4) Dr. Erny email forward TODAY (SBA E2G) 🚨; (5) EDGAR filing assignment by June 16 ⚠️. |
 | 2026-06-13 (6:00 AM CT - Morning Email Scan) | 3 unseen (IDs 855-857) | 0 new opps | **All 3 emails internal/system.** Email 855: Exo Daily Briefing June 12 - confirms active BLOCKERS: HP-002 Ron Bloom engagement letter 18 days overdue; FUND-028-029 WHP Sholtis email UNSENT (DC window closed today); BD-022 ROFR contract still not pulled; HP-004 MDB MNDA awaiting Marlett countersign (follow up today on return); HP-003 TSC SEARF $10M-submit Attachments A-B. Key deadlines surfaced: R-013 SBA E2G call PJC TODAY (June 14 deadline); OPP-004 SHY Sprints go/no-go by June 14; BD-019 AFRL/RXC white paper due June 15; Senate follow-ups (Sheehy/Daines) send Monday June 16. Emails 856-857: Duplicate nightly security alerts (macOS updates ready, OpenClaw audit, port scan) - FILTERED. No external opportunities identified. Jon returning to Greenville today. |
 | 2026-06-14 (6:00 AM CT - Sunday Morning Email Scan) | 2 unseen (IDs 858-859) | 0 new opps | **Both emails internal/system.** Email 858: Exo Daily Briefing June 13 (internal self-to-self) - confirms DC Fly-In wrapped; 6 open blockers remain: R-013 SBA E2G (DUE TODAY), HP-002 Ron Bloom (19 days overdue), HP-004 MDB MNDA, FUND-028 WHP Sholtis, P3-003 TACFI/Harvazinski, BD-022 SSLC ROFR. Upcoming: BD-019 AFRL/RXC Jun 15, Senate follow-ups Jun 16, Vivace Jun 17, OPP-004 Jun 22. Email 859: Nightly Security Alert ExoMac (macOS updates ready, Homebrew upgrades, OpenClaw audit, port scan) - FILTERED. No external opportunities identified. |
@@ -6589,28 +6601,2259 @@ If it ever revives: only via a genuine inbound or a top-tier warm intro; not wor
 **Next action:** Add to CRM as a new partnership prospect and draft an introductory email to Bradley Hatton-Jones proposing a launch-provider partnership, for Jon's review.
 **Source:** https://www.spaceconnectonline.com.au/launch/7186-orbit2orbit-broadens-lab2space-launch-capabilities-through-new-international-partnerships
 
+
+
+
+
+## AUTO-SOURCED — 2026-09-18 (Opportunities Engine)
+
+### OPP-463 | Eta Space — Cryogenic Fluid Management suborbital component qual
+**Status:** NEW — auto-sourced 2026-09-18 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space propulsion / CFM startup
+**Value:** $255,000 (Quarter Payload, up to 34kg CFM test article) + $25,000 live telemetry add-on = ~$280,000
+**Due:** Rolling
+**POC:** Dr. William Notardonato, Founder & CEO — best-guess wnotardonato@etaspace.com (general: info@etaspace.com)
+**Why fit:** Eta Space is flying LOXSAT (NASA Tipping Point, with Rocket Lab) to demo cryogenic fluid management for propellant depots, and BLK3's 2-day-turnaround suborbital cadence is a far cheaper way to iterate CFM sensor/slosh hardware before committing to the orbital demo.
+**Next action:** Draft outreach note for Lizi/Phil's BD queue introducing BLK3 as a low-cost pre-orbital CFM component qual flight.
+**Source:** https://www.nasa.gov/directorates/stmd/tech-demo-missions-program/cryogenic-fluid-management-cfm/nasa-industry-prepare-cryogenic-fuel-technology-demo/
+
+### OPP-464 | Juno Propulsion — Rotating Detonation Rocket Engine suborbital burn test
+**Status:** NEW — auto-sourced 2026-09-18 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial propulsion startup (RDRE)
+**Value:** $255,000-$510,000 (Quarter-Half Payload for engine + thrust stand) + $25,000 telemetry
+**Due:** Rolling
+**POC:** Alexis Harroun, Co-Founder & CEO — best-guess alexis@junopropulsion.com
+**Why fit:** Juno just won a $500K NASA TechLeap Prize plus $1.4M pre-seed to fly the first RDRE in orbit in 2026; a suborbital hot-fire/flight-environment test on BLK3 ahead of the orbital attempt de-risks their engine exactly the way Exos already pitches to propulsion primes.
+**Next action:** Stage an intro email framing BLK3 as an iterative RDRE flight-test rung below their orbital TechLeap flight.
+**Source:** https://payloadspace.com/rotating-detonation-engine-startup-wins-nasa-techleap-prize/
+
+### OPP-465 | Rensselaer Polytechnic Institute (Amir Hirsa) — Protein-Drop Pinning fluids research
+**Status:** NEW — auto-sourced 2026-09-18 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University microgravity/fluids research lab
+**Value:** $45,000 (6U payload class) + $1,200 sealed environment add-on = ~$46,200
+**Due:** Rolling
+**POC:** Dr. Amir Hirsa, Professor, Mechanical, Aerospace & Nuclear Engineering — best-guess hirsaa@rpi.edu
+**Why fit:** NASA Flight Opportunities just selected Hirsa's Protein-Drop Pinning microgravity experiment for flight tests, meaning the science and NASA funding are already secured — he only needs a qualified suborbital ride, which BLK3's short manifest lead time can offer faster than the current queue.
+**Next action:** Stage outreach offering a BLK3 slot as an alternate/backup flight opportunity to his NASA-selected payload.
+**Source:** https://www.nasa.gov/news-release/nasa-selects-15-new-potential-space-technologies-for-flight-tests-looks-to-expand-opportunities/
+
+### OPP-466 | University of Central Florida (Adrienne Dove) — Strata-S1 regolith microgravity testbed
+**Status:** NEW — auto-sourced 2026-09-18 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University planetary science lab
+**Value:** $45,000 (6U class regolith test chamber) + $1,000 event-trigger add-on = ~$46,000
+**Due:** Rolling
+**POC:** Dr. Adrienne "Addie" Dove, Associate Professor, Physics/Planetary Sciences — adrienne.dove@ucf.edu (verified, 407-823-1884)
+**Why fit:** Dove's Strata-S1 regolith-behavior payload was just re-selected by NASA Flight Opportunities for continued microgravity flight testing, giving Exos a funded, flight-ready PI who needs recurring short-duration microgravity windows — a good match for BLK3's repeat-flight cadence.
+**Next action:** Stage outreach to UCF Planetary Sciences Group proposing BLK3 as a recurring Strata testbed ride.
+**Source:** https://planets.ucf.edu/people/adrienne_dove/
+
+### OPP-467 | Airborne Systems — Guided Parafoil High Altitude Research II (GPHAR-II)
+**Status:** NEW — auto-sourced 2026-09-18 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial precision-recovery/deployables
+**Value:** $255,000 (Quarter Payload, deployable parafoil + release mechanism) + $1,000 side-mount add-on
+**Due:** Rolling
+**POC:** Garrett "Storm" Dunker, Principal Investigator — best-guess gdunker@airborne-sys.com
+**Why fit:** Their NASA TechFlights-selected precision-landing parafoil needs real high-velocity, high-altitude deployment and recovery data — conditions BLK3's boost-and-recovery profile replicates far more realistically than the balloon platforms they've used to date.
+**Next action:** Stage outreach positioning BLK3's flight profile as a higher-fidelity deployment/recovery test than their World View balloon flights.
+**Source:** https://www.nasa.gov/centers-and-facilities/ames/nasa-selects-new-technologies-for-flight-tests-for-future-space-exploration-2/
+
+### OPP-468 | The Aerospace Corporation (Justin Lee) — Rapid Calibration of Space Solar Cells in Suborbital Environments
+**Status:** NEW — auto-sourced 2026-09-18 (Opportunities Engine)
+**Type:** Gov Solicitation
+**Segment:** Gov-affiliated FFRDC — avionics/sensor calibration
+**Value:** $22,500 (3U side-by-side calibration array) + $5,000 precision pointing add-on = ~$27,500
+**Due:** Rolling
+**POC:** Justin H. Lee, Engineering Specialist — best-guess justin.lee@aero.org
+**Why fit:** Lee's own NASA-selected project is literally titled 'suborbital environments' solar cell calibration — this is a near-perfect off-the-shelf fit for BLK3's precision-pointing add-on and short-notice reflight cadence for repeat calibration runs.
+**Next action:** Stage outreach to The Aerospace Corporation's Flight Opportunities liaison proposing BLK3 as the suborbital calibration platform.
+**Source:** https://aerospace.org/article/testing-solar-cells-edge-space
+
+### OPP-469 | BioOrbit — pharma crystallization microgravity hardware qualification
+**Status:** NEW — auto-sourced 2026-09-18 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial microgravity science/pharma manufacturing
+**Value:** $45,000 (6U payload class hardware qual) + $1,200 sealed environment add-on = ~$46,200
+**Due:** Rolling
+**POC:** Dr. Katie King, Co-Founder & CEO — business@bioorbit.space (general; best-guess personal katie@bioorbit.space)
+**Why fit:** BioOrbit just closed a £9.8M seed round (the largest ever for in-space drug manufacturing) and is scaling hardware after its ISS Box-E flight; a cheap, fast suborbital qual flight on BLK3 is a logical intermediate rung before their next orbital slot, and they're UK-based with no current US suborbital relationship.
+**Next action:** Stage intro outreach to BioOrbit's business inbox offering BLK3 as a low-cost hardware shakeout flight ahead of their next orbital mission.
+**Source:** https://techfundingnews.com/bioorbit-bags-9-8m-from-localglobe-breega-seedcamp-and-others-in-largest-seed-raise-for-in-space-drug-manufacturing/
+
+### OPP-470 | Space Forge — Pridwen heat shield / ForgeStar re-entry hardware qualification
+**Status:** NEW — auto-sourced 2026-09-18 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space manufacturing / re-entry recovery
+**Value:** $510,000 (Half Payload, heat-shield/capsule article) + $25,000 telemetry = ~$535,000
+**Due:** Rolling
+**POC:** Joshua Western, CEO & Co-Founder — best-guess josh@spaceforge.co.uk
+**Why fit:** Space Forge's whole business model hinges on precision re-entry and recovery of its Pridwen heat shield/ForgeStar capsules, and BLK3's intact-hardware-recovery flight profile is a direct, lower-cost way to flight-qualify recovery/heat-shield hardware before each orbital ForgeStar mission.
+**Next action:** Stage outreach to Space Forge proposing BLK3 as a recurring recovery-hardware qualification flight ahead of ForgeStar missions.
+**Source:** https://www.spaceforge.com/news/the-forge-awakens-mission-overview-part-2
+
+
+
+
+
+## AUTO-SOURCED — 2026-09-19 (Opportunities Engine)
+
+### OPP-471 | Portal Space Systems — Hex Thruster suborbital qualification flight
+**Status:** NEW — auto-sourced 2026-09-19 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space propulsion (solar-thermal propulsion)
+**Value:** ~$285,000 (Quarter Payload $255,000 + live telemetry $25,000 + large-payload integration $5,000)
+**Due:** Rolling
+**POC:** Jeff Thornburg, CEO & Co-Founder — jeff.thornburg@portalsystems.space (best-guess)
+**Why fit:** Portal just closed a $50M Series A (Apr 2026) to scale its ammonia-fed HEX solar-thermal thruster and is running full-scale propulsion tests ahead of an orbital demo on Momentus Vigoride, making a lower-cost suborbital thermal/vibe precursor flight an attractive de-risking step before committing hardware to orbit.
+**Next action:** Stage a discovery outreach draft in Mission Control referencing their Series A and HEX Thruster test program for Jon's review before contact.
+**Source:** https://techcrunch.com/2026/04/09/portal-raises-50-million-to-build-a-new-kind-of-high-power-rocket-engine/
+
+### OPP-472 | Eta Space — cryogenic fluid management (CFM) hardware precursor flight
+**Status:** NEW — auto-sourced 2026-09-19 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial cryo/CFM flight-qualification
+**Value:** ~$540,000 (Half Payload $510,000 + live telemetry $25,000 + large-payload integration $5,000)
+**Due:** Rolling
+**POC:** Dr. William Notardonato, Founder & CEO — info@etaspace.com (best-guess)
+**Why fit:** Eta Space holds a NASA Tipping Point award for LOXSAT, a 9-month orbital CFM demo launching on Rocket Lab Electron/Photon; a BLK3 suborbital flight lets them validate sensor/valve/tank hardware in real reduced-g at a fraction of the cost before committing to the orbital mission — directly on Exos's 'de-risk before orbital' value prop.
+**Next action:** Stage a discovery outreach draft in Mission Control tying BLK3 to LOXSAT precursor testing for Jon's review before contact.
+**Source:** https://cold-facts.org/2025/07/15/eta-space-progresses-cryogenic-fluid-management-technology-in-space-energy-and-beyond/
+
+### OPP-473 | Case Western Reserve Univ. / NASA Glenn — Next Generation Microgravity Research combustion/fluids payload
+**Status:** NEW — auto-sourced 2026-09-19 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University microgravity research (combustion/fluids)
+**Value:** ~$75,500 (custom ~10kg payload $75,000 + basic integration $500)
+**Due:** Rolling
+**POC:** Prof. Ya-Ting Liao, Dept. of Mechanical & Aerospace Engineering — yxl870@case.edu (best-guess)
+**Why fit:** Congress committed $2M in FY26 funding for the CWRU/NASA Glenn Next Generation Microgravity Research program (combustion and fluid physics), and their current ground tool is Glenn's 2.2-second drop tower — BLK3's multi-minute reduced-g window is a natural upgrade path for flight validation.
+**Next action:** Stage a discovery outreach draft in Mission Control citing the FY26 congressional appropriation for Jon's review before contact.
+**Source:** https://case.edu/news/congress-approves-2m-microgravity-space-research
+
+### OPP-474 | University College Dublin (XRMON) — magnesium alloy solidification / bioresorbable implant research
+**Status:** NEW — auto-sourced 2026-09-19 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** International university materials & biomedical microgravity research
+**Value:** ~$46,200 (6U tier $45,000 + sealed environment $1,200)
+**Due:** Rolling
+**POC:** Prof. David Browne, UCD Centre for Space Research / School of Mechanical & Materials Engineering — david.browne@ucd.ie (best-guess)
+**Why fit:** UCD's XRMON Mg-μg module just flew on SSC's ESA-funded SubOrbital Express-5 studying magnesium alloy solidification for next-gen bioresorbable implants; they are a repeat sounding-rocket customer who could use a second, US-based provider with a larger recoverable bay.
+**Next action:** Stage a discovery outreach draft in Mission Control referencing the recent XRMON flight for Jon's review before contact.
+**Source:** https://www.ucd.ie/newsandopinion/news/2026/june/03/ucdspacemissioncouldpavethewayfornext-generationmedicalimplants/
+
+### OPP-475 | Rogue Space Systems — orbital servicing/robotics sensor precursor flight
+**Status:** NEW — auto-sourced 2026-09-19 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial orbital servicing & robotics flight-qualification
+**Value:** ~$260,000 (Quarter Payload $255,000 + precision pointing $5,000)
+**Due:** Rolling
+**POC:** Maj. Gen. Brook Leonard, USAF (ret.), CEO — info@rogue.space (best-guess/general)
+**Why fit:** Rogue holds a $2M SpaceWERX TACFI modification and is prepping its OTP-2B orbital AI micro-data-center/robotics testbed for late-2026 launch; a suborbital flight would let them validate proximity-sensing and thermal survivability of hosted payloads before committing to the orbital mission.
+**Next action:** Stage a discovery outreach draft in Mission Control referencing OTP-2B for Jon's review before contact.
+**Source:** https://rogue.space/news/rogue-space-schedules-2026-launch-of-orbital-test-platform/
+
+### OPP-476 | Benchmark Space Systems — next-gen thruster suborbital flight qualification
+**Status:** NEW — auto-sourced 2026-09-19 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial green propulsion flight-qualification
+**Value:** ~$540,750 (Half Payload $510,000 + external power $750 + live telemetry $25,000 + large-payload integration $5,000)
+**Due:** Rolling
+**POC:** Ryan McDevitt, CEO & VP R&D — ryan.mcdevitt@benchmarkspacesystems.com (best-guess)
+**Why fit:** Benchmark ($56M raised) just delivered Xantus and Ocelot thrusters to orbit on Transporter-15, including hardware supporting Varda's W-5 reentry; BLK3 offers a faster, cheaper qualification loop for their next thruster generation than waiting on rideshare manifests.
+**Next action:** Stage a discovery outreach draft in Mission Control referencing their Transporter-15/Varda W-5 deliveries for Jon's review before contact.
+**Source:** https://www.benchmarkspacesystems.com/news/post/the-benchmark-story
+
+### OPP-477 | Sierra Space — LIFE habitat in-space manufacturing precursor payload
+**Status:** NEW — auto-sourced 2026-09-19 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** Microgravity manufacturing / commercial space station payloads
+**Value:** ~$516,200 (Half Payload $510,000 + sealed environment $1,200 + large-payload integration $5,000)
+**Due:** Rolling
+**POC:** Dr. Jonathan Volk, Senior Manager, In-Space Manufacturing & Advanced Materials — jonathan.volk@sierraspace.com (best-guess)
+**Why fit:** Sierra Space is advancing LIFE habitat in-space manufacturing (semiconductors, pharma, and a new UC San Diego stem-cell research partnership) and needs recurring reduced-g validation for ECLSS/manufacturing hardware ahead of orbital deployment — a role BLK3 can fill faster and cheaper than ISS access.
+**Next action:** Stage a discovery outreach draft in Mission Control referencing the UC San Diego stem-cell partnership for Jon's review before contact.
+**Source:** https://www.sierraspace.com/press-releases/sierra-space-uc-san-diego-partner-to-develop-the-first-stem-cell-research-institute-in-space/
+
+### OPP-478 | United Therapeutics — pulmonary drug microgravity formulation precursor
+**Status:** NEW — auto-sourced 2026-09-19 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Pharma microgravity science
+**Value:** ~$114,200 (custom ~15kg payload $112,500 + sealed environment $1,200 + basic integration $500)
+**Due:** Rolling
+**POC:** Martine Rothblatt, Chairperson & CEO — martine.rothblatt@unither.com (best-guess)
+**Why fit:** United Therapeutics just committed its own capital (May 2026) to develop microgravity drug formulations with Varda for a rare pulmonary disease — the first publicly traded pharma to do so; a BLK3 suborbital flight offers a cheaper crystallization-stability test bed to de-risk formulation chemistry before each costly orbital Varda mission.
+**Next action:** Stage a discovery outreach draft in Mission Control referencing the Varda collaboration for Jon's review before contact.
+**Source:** https://spacenews.com/varda-to-collaborate-with-united-therapeutics-on-microgravity-drug-research/
+
+
+
+
+
+## AUTO-SOURCED — 2026-09-20 (Opportunities Engine)
+
+### OPP-479 | Eta Space — Cryogenic Fluid Management (CFM) Component Flight Test
+**Status:** NEW — auto-sourced 2026-09-20 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (in-space propulsion / cryo-CFM)
+**Value:** ~$150K (custom ~15-20kg instrumented CFM test article: $7,500/kg + $5K large-payload integration + live telemetry add-on)
+**Due:** Rolling
+**POC:** William 'Bill' Notardonato, Founder & CEO — bill@etaspace.com (best-guess; verify via info@etaspace.com)
+**Why fit:** Eta Space is flying an orbital LOX CFM demo (LOXSAT) with NASA/Rocket Lab and needs cheaper, faster suborbital reps to mature sensor/liquid-acquisition hardware before each orbital cycle — exactly the SwRI-style CFM suborbital slot SwRI already fills with Blue Origin, but Eta Space itself is not yet in our pipeline.
+**Next action:** Add Eta Space to CRM as a new prospect and stage a draft intro email from Jon for review, referencing LOXSAT and BLK3's <4g boost/reusable turnaround as a low-cost CFM component test bed.
+**Source:** https://cold-facts.org/2025/07/15/eta-space-progresses-cryogenic-fluid-management-technology-in-space-energy-and-beyond/
+
+### OPP-480 | Case Western Reserve — Two-Phase Flow & Thermal Management Lab (Kharangate)
+**Status:** NEW — auto-sourced 2026-09-20 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University microgravity/thermal research lab
+**Value:** ~$45K-75K (6U cubesat/custom small box tier for boiling/two-phase-flow instrumentation package)
+**Due:** Rolling
+**POC:** Dr. Chirag Kharangate, Assistant Professor, Mechanical & Aerospace Engineering — chirag.kharangate@case.edu (best-guess)
+**Why fit:** CWRU just landed a $2M congressional appropriation with NASA Glenn for a 'Next Generation Microgravity Research' program built around two-phase flow/thermal management, and needs recurring low-cost microgravity flight access beyond NASA's Zero-G aircraft drops.
+**Next action:** Add to CRM and stage a draft intro email from Jon to Dr. Kharangate for review, tied to the new NASA Glenn appropriation and BLK3's short-turnaround flight cadence.
+**Source:** https://case.edu/news/congress-approves-2m-microgravity-space-research
+
+### OPP-481 | United Semiconductors LLC — Microgravity Crystal Growth Process Validation
+**Status:** NEW — auto-sourced 2026-09-20 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial microgravity manufacturing (semiconductors)
+**Value:** ~$150K-255K (Quarter payload tier for crystal-growth furnace hardware, precision pointing + sealed environment add-ons)
+**Due:** Rolling
+**POC:** Geeta Rajagopalan, President & CEO — grajagopalan@unitedsemiconductorsllc.com (best-guess)
+**Why fit:** USLLC has flown two ISS crystal-growth missions and just reserved orbital payload space on Starlab; a BLK3 suborbital flight is a natural lower-cost precursor to de-risk furnace/process hardware before their next orbital commit, and they are not in our current pipeline.
+**Next action:** Add to CRM and stage a draft intro email from Jon for review, positioning BLK3 as a fast precursor test ahead of their Starlab manifest.
+**Source:** https://www.semiconductor-today.com/news_items/2026/mar/usllc-starlab-030326.shtml
+
+### OPP-482 | BioOrbit — Protein Crystallization Reentry Survivability Test
+**Status:** NEW — auto-sourced 2026-09-20 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity biotech/pharma manufacturing (international, UK)
+**Value:** ~$45K-75K (6U/custom small tier, sealed environment + precision pointing add-ons)
+**Due:** Rolling
+**POC:** Dr. Katie King, Founder & CEO — katie@bioorbit.space (best-guess)
+**Why fit:** BioOrbit just closed the UK's largest in-space-manufacturing seed round and is actively testing protein-crystal reentry survivability with other providers (The Exploration Company); Exos's intact-hardware recovery is a direct match for their core technical risk, and they're not yet in our pipeline.
+**Next action:** Add to CRM and stage a draft intro email from Jon for review, emphasizing intact-recovery heritage as a differentiator versus their current reentry test partner.
+**Source:** https://www.clinicaltrialsarena.com/news/bioorbit-2026-pre-clinical-trials-space-manufactured-protein-crystals/
+
+### OPP-483 | Eigen Systems — Gravitational Flow Reactor (GFR) Second-Source Flight Heritage
+**Status:** NEW — auto-sourced 2026-09-20 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (in-space fluid management)
+**Value:** ~$255K (Quarter payload tier, consistent with prior Blue Origin NS-35 class flight)
+**Due:** Rolling
+**POC:** Founder/CEO (name unconfirmed) — info@eigenstrategicsystems.com
+**Why fit:** Eigen Systems just advanced its GFR multiphase fluid-management tech to TRL-7 on a single Blue Origin NS-35 flight; they need a second, lower-cost suborbital provider for repeat flight heritage before scaling to orbital customers, and are not currently in our pipeline.
+**Next action:** Add to CRM, verify founder name via LinkedIn/site, and stage a draft intro email from Jon for review positioning Exos as a second-source suborbital option to Blue Origin.
+**Source:** https://www.eigenstrategicsystems.com/
+
+### OPP-484 | Voyager Technologies (Nanoracks) — Suborbital Manifest Overflow Partnership
+**Status:** NEW — auto-sourced 2026-09-20 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** Broker/aggregator partnership
+**Value:** ~$250K-500K/yr recurring potential (multiple cubesat/BRIC and Quarter-payload manifest slots funneled per year)
+**Due:** Rolling
+**POC:** Scott Rodriguez, VP Government Programs — srodriguez@voyagertechnologies.com (best-guess)
+**Why fit:** Voyager/Nanoracks manages 1,240+ customer experiments across 35 nations and is expanding mission-management contracts (NASA JSC, ATMOS); a manifest-referral partnership would route their microgravity/tech-demo customers needing a US suborbital option onto BLK3 without Voyager building its own launch capability.
+**Next action:** Add to CRM and stage a draft partnership outreach email from Jon for review, proposing BLK3 as Voyager's suborbital manifest option alongside its orbital/ISS services.
+**Source:** https://voyagertechnologies.com/space-solutions/mission-services/
+
+### OPP-485 | University of Southern Queensland — Hypersonics & Rocketry Group (GAsFEx)
+**Status:** NEW — auto-sourced 2026-09-20 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** International university flight-research group (Australia)
+**Value:** ~$22.5K-45K (3U-6U cubesat tier for a hypersonic instrumentation demonstrator)
+**Due:** Rolling
+**POC:** Prof. Ingo Jahn, Head, Hypersonics and Rocketry Group — ingo.jahn@unisq.edu.au (best-guess)
+**Why fit:** UniSQ has flown two GAsFEx hypersonic demonstrators on Germany's MAPHEUS sounding rocket via DLR and is actively seeking additional 'flight-proven, low-cost' platforms for industry/researcher hypersonic data — BLK3's transient ~7g suborbital profile is a direct alternative to the oversubscribed DLR queue.
+**Next action:** Add to CRM and stage a draft intro email from Jon for review, referencing GAsFEx/MAPHEUS-16 and offering BLK3 as a faster-turnaround US alternative.
+**Source:** https://www.unisq.edu.au/news/2025/12/hypersonic-flight-experiment
+
+### OPP-486 | Inversion Space — Arc Reentry Vehicle Subsystem Qualification
+**Status:** NEW — auto-sourced 2026-09-20 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (reentry/logistics)
+**Value:** ~$150K-225K (custom 20-30kg mass-based tier for avionics/GNC/TPS coupon test article)
+**Due:** Rolling
+**POC:** Justin Fiaschetti, Co-Founder & CEO — justin@inversionspace.com (best-guess)
+**Why fit:** Inversion's subscale reentry demo (Ray) suffered a reentry failure and the company is now qualifying its larger Arc vehicle for a 2026 orbital debut; Exos's intact-recovery suborbital flights are an ideal low-cost, iterative venue to de-risk avionics/GNC/thermal-protection hardware before each orbital attempt.
+**Next action:** Add to CRM and stage a draft intro email from Jon for review, pitching BLK3 as an iterative subsystem qualification path ahead of Arc's orbital flight.
+**Source:** https://payloadspace.com/inversion-space-unveils-arc-reentry-vehicle/
+
+
+
+
+
+## AUTO-SOURCED — 2026-09-21 (Opportunities Engine)
+
+### OPP-487 | Georgia Tech LGST Lab — Multiphase CFM TechFlights Demo
+**Status:** NEW — auto-sourced 2026-09-21 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University propulsion / cryogenic fluid management research lab
+**Value:** ~$280,000 (Quarter Payload $255,000 + Live Telemetry add-on $25,000)
+**Due:** Rolling
+**POC:** Dr. Álvaro Romero-Calvo, Assistant Professor & Director, Low-Gravity Science and Technology (LGST) Lab, Georgia Tech AE — alvaro.romerocalvo@ae.gatech.edu (best-guess)
+**Why fit:** His NASA TechFlights award funds up to $1M to buy a commercial suborbital flight, and his multiphase/electromagnetic fluid-management work — directly relevant to Exos's own cryo/Type-V CFM priming focus — needs real reduced-gravity exposure beyond parabolic-flight data.
+**Next action:** Stage a BLK3 capability + rate-card intro packet referencing his TechFlights award for Lizi/Phil to review before outreach.
+**Source:** https://www.ae.gatech.edu/news/2025/01/georgia-tech-cubesat-propellant-innovation-set-transform-space-missions
+
+### OPP-488 | Univ. of Iowa CABOOM Boom-Deployment Flight Demo
+**Status:** NEW — auto-sourced 2026-09-21 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University deployables/instrumentation lab
+**Value:** ~$45,000 (6U CubeSat tier) + $500 basic integration
+**Due:** Rolling
+**POC:** Dr. David Miles, Associate Professor of Physics & Astronomy, University of Iowa (CABOOM PI) — david-miles@uiowa.edu (best-guess)
+**Why fit:** CABOOM's magnetometer-boom deployment has only been validated on parabolic aircraft; a true suborbital flight profile with BLK3's intact-hardware recovery is the logical next TRL step, and it's already NASA Flight Opportunities-funded.
+**Next action:** Stage an intro packet framing BLK3 as the next-TRL flight test beyond parabolic, for review before send.
+**Source:** https://techport.nasa.gov/projects/106689
+
+### OPP-489 | UCLA Wong Lab Chip-Scale Optomechanical PNT Sensor
+**Status:** OUTREACH SENT — Lizi contacted Prof. Wong 2026-10-07 (auto-sourced 2026-09-21)
+**Type:** Payload Sale
+**Segment:** Commercial avionics/ADCS flight-qualification (university-hosted)
+**Value:** ~$23,000 (3U tier $22,500 + $500 basic integration)
+**Due:** Rolling
+**POC:** Prof. Chee Wei Wong, Tannas Professor of Engineering, UCLA ECE (Fang Lu Mesoscopic Optics and Quantum Electronics Lab) — cwwong@ee.ucla.edu (best-guess)
+**Why fit:** The chip-scale accelerometer just flew on a stratospheric balloon under Flight Opportunities and needs the next rung — a real suborbital gravity/vibe profile — to mature toward NASA LunaNet PNT infusion, matching BLK3's fast iterative-turnaround model.
+**Next action:** Await/follow up on Lizi's 10/7 outreach. Standard rate card — small (3U) payload, NO discount (D-7282060 rejected by Lizi 10/12, MC #3707); no Jon pricing approval needed.
+**Source:** https://www.ee.ucla.edu/chee-wei-wong/
+
+### OPP-490 | BioOrbit In-Space Pharma Manufacturing — Suborbital Validation Flight
+**Status:** NEW — auto-sourced 2026-09-21 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity biotech/pharma (protein crystallization)
+**Value:** ~$281,200 (Quarter Payload $255,000 + Sealed Environment $1,200 + Live Telemetry $25,000)
+**Due:** Rolling
+**POC:** Dr. Katie King, Founder & CEO, BioOrbit — business@bioorbit.space (best-guess, general inbox)
+**Why fit:** BioOrbit needs repeated short-duration microgravity runs for protein-crystallization work ahead of orbital scale-up, and BLK3's fast 2-day turnaround plus guaranteed intact-hardware recovery is a better fit for retrieving live crystal samples than one-shot orbital reentry.
+**Next action:** Stage an outreach packet pairing BLK3's recovery guarantee with their $13.2M seed round timeline, for review before send.
+**Source:** https://www.bioorbit.com/
+
+### OPP-491 | JHU APL JANUS Suborbital Integration Partnership
+**Status:** NEW — auto-sourced 2026-09-21 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** Payload broker/aggregator (gov-adjacent)
+**Value:** Framework play — first mission ~$510,000 (Half Payload) aggregating multiple NASA Flight Opportunities-funded instruments, recurring per flight thereafter
+**Due:** Rolling
+**POC:** H. Todd Smith, JANUS Principal Investigator, Johns Hopkins University Applied Physics Laboratory — todd.smith@jhuapl.edu (best-guess)
+**Why fit:** JANUS already exists to broker NASA-funded instruments onto commercial suborbital RLVs; qualifying BLK3 as a second reusable host vehicle with intact recovery gives APL redundancy and gives Exos a recurring multi-payload channel instead of one-off sales.
+**Next action:** Stage a BLK3 vehicle-capability brief for JANUS's provider-qualification review, for Jon/Lizi sign-off before send.
+**Source:** https://www.jhuapl.edu/news/news-releases/210610-janus-flight-test
+
+### OPP-492 | Teachers In Space STEM CubeSat Housing Program
+**Status:** NEW — auto-sourced 2026-09-21 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Education/STEM payload aggregator
+**Value:** $7,500–$45,000 per flight (1U–6U tiers), recurring across school cohorts
+**Due:** Rolling
+**POC:** Elizabeth Kennick, Program Director, Teachers In Space, Inc. — ekennick@teachersinspace.org (best-guess)
+**Why fit:** Their newly NASA-funded standardized 3D-printed payload housing is built for repeat flights across many schools — a recurring-volume fit for BLK3's CubeSat/BRIC tiers rather than a one-off sale.
+**Next action:** Stage an intro packet on BLK3's CubeSat/BRIC tiers and flight cadence for review before send.
+**Source:** https://www.nasa.gov/news-release/nasa-selects-new-technologies-for-parabolic-flights-and-suborbital-launches-2/
+
+
+
+
+
+## AUTO-SOURCED — 2026-09-22 (Opportunities Engine)
+
+### OPP-493 | Eta Space — Cryogenic Fluid Management (CFM) Precursor Testing
+**Status:** NEW — auto-sourced 2026-09-22 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (cryo/CFM propulsion)
+**Value:** ~$255,000 (Quarter Payload, up to 34kg, for a subscale cryo tank/boil-off/pressurization demonstrator)
+**Due:** Rolling
+**POC:** William Notardonato, Founder & CEO — will.notardonato@etaspace.com (best-guess, verify)
+**Why fit:** Eta Space is flying its 11-tech LOXSAT cryogenic propellant-depot demo on an orbital NASA Tipping Point mission and would benefit from a much cheaper, faster BLK3 suborbital precursor flight to de-risk boil-off/pressurization sensors before committing to the next orbital milestone.
+**Next action:** Stage a BLK3 capability brief (CFM subsystem test framing) to Notardonato for Jon's review in Mission Control.
+**Source:** https://satnews.com/2026/05/17/nasa-and-eta-space-finalize-integration-for-loxsat-cryogenic-fuel-demonstration/
+
+### OPP-494 | United Semiconductors LLC — Microgravity Crystal Growth Precursor Flight
+**Status:** NEW — auto-sourced 2026-09-22 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space manufacturing (semiconductor crystals)
+**Value:** ~$112,500 (Custom, ~15kg furnace payload at $7,500/kg + integration)
+**Due:** Rolling
+**POC:** Dr. Geeta Rajagopalan, President & CEO — grajagopalan@unitedsemiconductorsllc.com (best-guess, verify via unitedsemiconductorsllc.com/contact)
+**Why fit:** USLLC just reserved commercial-scale payload space on Starlab to graduate its ISS crystal-growth demo to production — a low-cost BLK3 suborbital flight is a natural, faster iteration platform for furnace hardware validation between ISS runs and the Starlab transition.
+**Next action:** Stage a BLK3 capability brief (in-space manufacturing precursor-test framing) to Rajagopalan for Jon's review in Mission Control.
+**Source:** https://www.unitedsemiconductorsllc.com/contact
+
+### OPP-495 | Beyond Reach Labs — Deployable Solar Array Subscale Demo
+**Status:** NEW — auto-sourced 2026-09-22 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (deployables/power)
+**Value:** ~$510,000 (Half Payload, up to 68kg, for a subscale fold/deploy mechanism demonstrator)
+**Due:** Rolling
+**POC:** Pele Collins, Co-Founder & CEO — pele@beyondreachlabs.io (best-guess, verify via beyondreachlabs.io)
+**Why fit:** YC-backed Beyond Reach Labs (>$175M in LOIs) is targeting a Q2 2027 first in-space demo of its football-field-scale solar arrays; a BLK3 suborbital deployment test ahead of that orbital demo materially de-risks the fold mechanism at a fraction of the cost.
+**Next action:** Stage a BLK3 capability brief (deployment-mechanism risk-reduction framing) to Collins for Jon's review in Mission Control.
+**Source:** https://beyondreachlabs.io/
+
+### OPP-496 | LambdaVision — Protein Retina Bioprocess Platform Diversification
+**Status:** NEW — auto-sourced 2026-09-22 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity science/bio
+**Value:** ~$46,950 (6U CubeLab-class payload $45,000 + sealed environment $1,200 + external power $750)
+**Due:** Rolling
+**POC:** Nicole Wagner, Ph.D., President & CEO — nicole.wagner@lambdavision.com
+**Why fit:** LambdaVision is actively expanding its microgravity thin-film manufacturing process beyond the ISS to new platforms (its first non-ISS flight launches Oct 2026); BLK3 offers a second, independent low-cost microgravity access route to reduce single-platform dependency.
+**Next action:** Stage a BLK3 capability brief (multi-platform diversification framing) to Wagner for Jon's review in Mission Control.
+**Source:** https://www.lambdavision.com/lambdavision-advances-space-based-manufacturing-with-its-first-mission-beyond-the-iss/
+
+### OPP-497 | Portal Space Systems — Solar-Thermal Propulsion Subsystem Test
+**Status:** NEW — auto-sourced 2026-09-22 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (in-space propulsion)
+**Value:** ~$255,000 (Quarter Payload, up to 34kg, for a solar-thermal thruster/heat-exchanger subsystem test)
+**Due:** Rolling
+**POC:** Jeff Thornburg, Co-Founder & CEO — jeff@portalsystems.space (best-guess, verify via portalsystems.space)
+**Why fit:** Fresh off a $50M Series A and first successful solar-thermal propulsion test, Portal needs repeated low-cost thermal/vacuum flight validation of the Supernova propulsion module ahead of its orbital debut — a BLK3 suborbital slot is materially cheaper than orbital iteration.
+**Next action:** Stage a BLK3 capability brief (propulsion subsystem test framing) to Thornburg for Jon's review in Mission Control.
+**Source:** https://techcrunch.com/2026/04/09/portal-raises-50-million-to-build-a-new-kind-of-high-power-rocket-engine/
+
+### OPP-498 | Zenno Astronautics — Superconducting Magnetic Torquer (ADCS) Test
+**Status:** NEW — auto-sourced 2026-09-22 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (ADCS/avionics)
+**Value:** ~$60,000 (Custom, ~8kg superconducting magnet payload at $7,500/kg)
+**Due:** Rolling
+**POC:** Max Arshavsky, Founder & CEO — max@zenno.space (best-guess, verify via zenno.space)
+**Why fit:** Zenno just became the first company to operate a superconducting magnet in space and is redomiciling to the US (LA); a BLK3 suborbital flight offers cheap, fast vibration/thermal qualification of next-gen Z-series torquers between orbital missions.
+**Next action:** Stage a BLK3 capability brief (ADCS component qual framing) to Arshavsky for Jon's review in Mission Control.
+**Source:** https://www.zenno.space/
+
+### OPP-499 | Space LiinTech — AI-Driven Pharma Microgravity Precursor Flight
+**Status:** NEW — auto-sourced 2026-09-22 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity science/bio (international)
+**Value:** ~$38,700 (Custom ~5kg protein-crystallization module $37,500 + sealed environment $1,200)
+**Due:** Rolling
+**POC:** Dr. Byungho Kim, SVP & Head of Space Pharmaceutical Business Division — bhkim@spaceliintech.com (best-guess, verify via spaceliintech.com)
+**Why fit:** Space LiinTech just reserved Starlab payload space for its AI-enabled protein-crystallization pharma platform and is actively scaling beyond ISS; a low-cost BLK3 suborbital run offers a faster, independent validation cycle for its automated module ahead of orbital commitments.
+**Next action:** Stage a BLK3 capability brief (independent precursor-flight framing) to Kim for Jon's review in Mission Control.
+**Source:** https://starlab-space.com/press-releases/space-liintech-reserves-payload-space-aboard-starlab-to-advance-ai-driven-pharmaceutical-research-in-microgravity/
+
+### OPP-500 | Voyager Technologies — Overflow Manifest Reseller Partnership
+**Status:** NEW — auto-sourced 2026-09-22 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** Broker/aggregator
+**Value:** Rev-share/referral structure TBD; potential multi-flight pipeline if Voyager routes overflow/precursor-test customers to BLK3 ($250K–$1M+/yr in brokered bay space)
+**Due:** Rolling
+**POC:** Voyager Technologies Business Development team (via investors.voyagertechnologies.com or press contact) — name TBD, verify via voyagertechnologies.com
+**Why fit:** Voyager manages 1,400+ microgravity missions and just signed manifest deals with Space LiinTech, United Semiconductors, and Icarus Robotics for ISS/Starlab; positioning BLK3 as their low-cost suborbital precursor-test option captures overflow demand before customers commit to orbital slots.
+**Next action:** Stage a partnership outreach brief (suborbital precursor-test channel framing) to Voyager BD for Jon's review in Mission Control.
+**Source:** https://voyagertechnologies.com/press-releases/voyager-enables-microgravity-enabled-drug-discovery/
+
+
+
+
+
+## AUTO-SOURCED — 2026-09-23 (Opportunities Engine)
+
+### OPP-501 | Eta Space — CFM Subsystem Suborbital Qualification Flight
+**Status:** NEW — auto-sourced 2026-09-23 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (cryogenic fluid management)
+**Value:** ~$280,000 (Quarter Payload $255,000 + Live Telemetry $25,000)
+**Due:** Rolling
+**POC:** Dr. William 'Bill' Notardonato, Founder & CEO — best-guess bill.notardonato@etaspace.com
+**Why fit:** Eta Space is flying LOXSAT (11 CFM technologies) on-orbit with NASA/Rocket Lab and would benefit from a low-cost, fast-turnaround suborbital shakeout flight for boil-off/pressurization instrumentation before their next orbital cryo demo.
+**Next action:** Stage an intro outreach draft in MC referencing LOXSAT and the BLK3 rate card for Jon's review.
+**Source:** https://cold-facts.org/2025/07/15/eta-space-progresses-cryogenic-fluid-management-technology-in-space-energy-and-beyond/
+
+### OPP-502 | Varda Space Industries — Reentry Capsule/Avionics Suborbital Qual Flight
+**Status:** NEW — auto-sourced 2026-09-23 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity manufacturing / reentry hardware (pharma-adjacent)
+**Value:** ~$540,000 (Half Payload $510,000 + Large Payload Integration $5,000 + Live Telemetry $25,000)
+**Due:** Rolling
+**POC:** Will Bruey, Co-Founder & CEO — best-guess will@varda.com
+**Why fit:** Varda's core differentiator is intact hardware recovery from orbit; Exos's BLK3 offers a cheap, fast, US-soil suborbital testbed to qualify heat-shield/avionics/recovery subsystems ahead of each new orbital capsule mission.
+**Next action:** Stage a targeted outreach draft in MC pitching BLK3 as a pre-orbital recovery-hardware qualification flight.
+**Source:** https://www.varda.com/announcements/an-update-on-varda-after-w-2
+
+### OPP-503 | Catalyx Space — Deployable Heat Shield Suborbital Demo
+**Status:** NEW — auto-sourced 2026-09-23 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (entry systems / deployables)
+**Value:** ~$516,000 (Half Payload $510,000 + Large Payload Integration $5,000 + In-Flight Event Triggers $1,000)
+**Due:** Rolling
+**POC:** Rifath Shaarook, Co-Founder & CEO — best-guess rifath@catalyx.space
+**Why fit:** Catalyx builds an origami-inspired deployable heat shield for orbital reentry and just closed a $5.4M seed; a BLK3 flight lets them validate deployment/thermal/recovery mechanics in a real flight environment before committing to an orbital demo.
+**Next action:** Stage an intro outreach draft in MC citing their $5.4M seed round and BLK3's intact-recovery capability.
+**Source:** https://www.businesswire.com/news/home/20251030644759/en/Catalyx-Space-Secures-$5.4-Million-Seed-Round-to-Build-for-the-Next-Era-of-Orbital-Logistics
+
+### OPP-504 | Juno Propulsion — RDE Igniter/Avionics Suborbital Flight Test
+**Status:** NEW — auto-sourced 2026-09-23 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (in-space propulsion, rotating detonation engine)
+**Value:** ~$258,000 (Quarter Payload $255,000 + Sealed Environment $1,200 + In-Flight Event Triggers $1,000)
+**Due:** Rolling
+**POC:** Alexis Harroun, Co-Founder & CEO — best-guess alexis@junopropulsion.com
+**Why fit:** Juno won a NASA TechLeap Prize and $1.4M pre-seed to fly the first orbital rotating detonation engine (on Momentus, Q1 2027); a BLK3 suborbital flight is a lower-cost intermediate step to qualify ignition/avionics before the orbital hosted-payload milestone.
+**Next action:** Stage an outreach draft in MC referencing their NASA TechLeap award and proposing a pathfinder suborbital flight.
+**Source:** https://payloadspace.com/rotating-detonation-engine-startup-wins-nasa-techleap-prize/
+
+### OPP-505 | Scout Space — SDA Sensor Suite Flight-Qual (Alternate Provider)
+**Status:** NEW — auto-sourced 2026-09-23 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (sensors / space domain awareness)
+**Value:** ~$285,000 (Quarter Payload $255,000 + Live Telemetry $25,000 + Precision Pointing $5,000)
+**Due:** Rolling
+**POC:** Philip Hover-Smoot, CEO — best-guess philip@scout.space
+**Why fit:** Scout Space already flies its Morning Sparrow SDA sensor on Dawn Aerospace's suborbital spaceplane and holds DARPA/venture backing; a second US-licensed suborbital provider diversifies their flight-test supply chain and de-risks their cadence.
+**Next action:** Stage an outreach draft in MC positioning BLK3 as a second-source suborbital SDA sensor qualification flight.
+**Source:** https://www.compositesworld.com/news/scout-space-dawn-aerospace-complete-suborbital-spaceplane-surveillance-test-flight
+
+### OPP-506 | University of Kentucky GSIL (KREPE Program) — TPS Avionics Ascent/Descent Qual
+**Status:** NEW — auto-sourced 2026-09-23 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University materials/hypersonics lab
+**Value:** ~$255,000 (Quarter Payload)
+**Due:** Rolling
+**POC:** Prof. Alexandre Martin, Director, Gas Surface Interactions Lab / Kentucky Space Grant Consortium — best-guess alexandre.martin@uky.edu
+**Why fit:** UK's KREPE/KRUPS program (funded via NASA/Boeing) builds atmospheric-entry capsule avionics for orbital reentry tests; BLK3 offers a cheaper, faster suborbital dynamic-environment qualification flight for capsule electronics between KREPE orbital missions.
+**Next action:** Stage an outreach draft in MC to Prof. Martin referencing the KREPE-3 program and offering a BLK3 avionics shakeout flight.
+**Source:** https://scholars.uky.edu/en/publications/overview-of-the-krups-hypersonic-test-flight-krepe-2/
+
+### OPP-507 | BioOrbit — BOX-Series Unit Hardware Qualification Flight
+**Status:** NEW — auto-sourced 2026-09-23 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity pharma/biotech (protein crystallization)
+**Value:** ~$257,000 (Quarter Payload $255,000 + Sealed Environment $1,200 + External Power $750)
+**Due:** Rolling
+**POC:** Dr. Katie King, Co-Founder & CEO — best-guess katie@bioorbit.com
+**Why fit:** BioOrbit just closed the largest-ever in-space-manufacturing seed round ($13.2M) and flew its Box-E crystallization unit to ISS in May 2026; a BLK3 flight offers a low-cost hardware/thermal/custody qualification run ahead of future orbital missions.
+**Next action:** Stage an outreach draft in MC referencing their seed raise and offering a hardware-qual flight slot.
+**Source:** https://techfundingnews.com/bioorbit-bags-9-8m-from-localglobe-breega-seedcamp-and-others-in-largest-seed-raise-for-in-space-drug-manufacturing/
+
+### OPP-508 | SpacePharma — Miniaturized Lab Suborbital Qualification Flight
+**Status:** NEW — auto-sourced 2026-09-23 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** International microgravity science (miniaturized lab systems)
+**Value:** ~$46,200 (6U Cubesat/BRIC $45,000 + Sealed Environment $1,200)
+**Due:** Rolling
+**POC:** Yossi Yamin, Co-Founder & CEO — best-guess yossi@spacepharma.health
+**Why fit:** Swiss-Israeli SpacePharma builds compact automated microgravity lab modules and holds fresh EIC Accelerator funding (EUR 2M grant + EUR 7.5M investment); BLK3 gives them a US-based suborbital option to qualify lab hardware between orbital/parabolic campaigns.
+**Next action:** Stage an outreach draft in MC introducing BLK3 as a US suborbital qualification option alongside their EIC-funded roadmap.
+**Source:** https://tracxn.com/d/companies/spacepharma/__b1XY-l8yvl9wlYJJKiberltP70GQ83bz9S37Vmc7IVQ
+
+
+
+
+
+## AUTO-SOURCED — 2026-09-24 (Opportunities Engine)
+
+### OPP-509 | Eta Space — CFM subsystem flight-qualification campaign
+**Status:** NEW — auto-sourced 2026-09-24 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space propulsion / cryogenic fluid management (CFM)
+**Value:** $510,000–$1,012,500 (Half–Full bay, multi-flight CFM component test campaign)
+**Due:** Rolling
+**POC:** Bill Notardonato, Founder/CEO — bill.notardonato@etaspace.com (best-guess)
+**Why fit:** Eta Space is building the LOXSAT cryogenic depot demo (NASA Tipping Point, launching on Electron 2026) and needs cheap, fast, repeatable suborbital reflights to de-risk individual CFM components before committing hardware to the expensive orbital mission — exactly BLK3's 2-day-turnaround reusable value prop.
+**Next action:** Draft an intro deck comparing BLK3 iterative-reflight economics to a single orbital CFM demo, stage to Jon's inbox for review before any outbound contact.
+**Source:** https://satnews.com/2026/05/17/nasa-and-eta-space-finalize-integration-for-loxsat-cryogenic-fuel-demonstration/
+
+### OPP-510 | Juno Propulsion — RDRE thruster suborbital flight test
+**Status:** NEW — auto-sourced 2026-09-24 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** In-space propulsion startup (rotating detonation rocket engine)
+**Value:** $280,000 (Quarter payload + live telemetry add-on)
+**Due:** Flight test window: Summer 2026 (NASA TechLeap-funded)
+**POC:** Alexis Harroun, CEO & Co-founder — alexis@junopropulsion.com (best-guess)
+**Why fit:** Juno won a NASA TechLeap Prize (up to $500K) explicitly earmarked for a 2026 flight test of their green-propellant RDRE thruster; Exos already runs its own RDRE pipeline (Hermes/NASA Phase III), making this both a payload sale and a consortium/co-development angle worth flagging to Jon.
+**Next action:** Stage a consortium-angle outreach note (payload sale + potential RDRE test-partner framing) to Jon's inbox for review before any outbound contact.
+**Source:** https://payloadspace.com/rotating-detonation-engine-startup-wins-nasa-techleap-prize/
+
+### OPP-511 | SpaceWorks/Astral Materials — semiconductor crystal furnace precursor test
+**Status:** NEW — auto-sourced 2026-09-24 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** In-space manufacturing (microgravity silicon crystal growth)
+**Value:** $535,000 (Half payload + live telemetry add-on)
+**Due:** Flight test window: Q2 2026 orbital demo (NASA TechLeap-funded) — suborbital precursor test would precede
+**POC:** Tyler Kunsa, VP of Defense & Space — tyler.kunsa@spaceworks.aero (best-guess)
+**Why fit:** SpaceWorks/Astral Materials is flying a recoverable microgravity semiconductor crystal-growth furnace to orbit in Q2 2026; a BLK3 suborbital flight offers a lower-cost, faster-turnaround way to validate the furnace and reentry recovery process before committing to the orbital mission.
+**Next action:** Draft a precursor-test pitch (furnace validation + intact-hardware-recovery angle) and stage to Jon's inbox for review before any outbound contact.
+**Source:** https://payloadspace.com/spaceworks-astral-materials-to-demo-in-orbit-manufacturing-in-2026/
+
+### OPP-512 | BioOrbit — protein crystallization microgravity precursor flight
+**Status:** NEW — auto-sourced 2026-09-24 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity pharma / biologics manufacturing (UK)
+**Value:** $281,200 (Quarter payload + sealed environment + live telemetry add-ons)
+**Due:** Rolling
+**POC:** Dr. Katie King, CEO/Co-founder — business@bioorbit.space (confirmed company inbox)
+**Why fit:** BioOrbit just closed the world's largest in-space-manufacturing seed round (£9.8M) and is racing toward 2026 pre-clinical trials of space-crystallized protein drugs; a sealed-environment BLK3 flight is a fast, cheap way to validate their crystallization hardware ahead of their ISS module commitment.
+**Next action:** Draft a sealed-environment payload pitch and stage to Jon's inbox for review before any outbound contact.
+**Source:** https://www.bioorbit.space/
+
+### OPP-513 | University of Iowa (Miles Research Lab) — CABOOM boom deployment reflight
+**Status:** NEW — auto-sourced 2026-09-24 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University research — deployable structures / magnetometry
+**Value:** $46,000 (6U cubesat tier + in-flight event triggers add-on)
+**Due:** Rolling
+**POC:** Prof. David Miles, Miles Research Lab — david-miles@uiowa.edu (best-guess)
+**Why fit:** NASA-funded (~$200K) CABOOM boom-deployment/magnetometer tech has already been drop-tested at ZERO-G; a small, cheap BLK3 cubesat-tier reflight would give them real microgravity deployment data they can't get from parabolic flights alone.
+**Next action:** Draft a cubesat-tier flight offer and stage to Jon's inbox for review before any outbound contact.
+**Source:** https://miles.lab.uiowa.edu/caboom
+
+### OPP-514 | Carthage College (Wisconsin Space Grant) — Microgravity Ullage Trapping iterative reflights
+**Status:** NEW — auto-sourced 2026-09-24 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University research — in-space refueling / propellant management
+**Value:** $510,000 (two Quarter-payload flights, iterative test campaign)
+**Due:** Flight test window: Summer 2026 (NASA TechLeap-funded)
+**POC:** Prof. Kevin Crosby, Director, Wisconsin Space Grant Consortium — kcrosby@carthage.edu (best-guess)
+**Why fit:** Crosby's team won a NASA TechLeap Prize (up to $500K) for Microgravity Ullage Trapping and has already flown on Blue Origin New Shepard and sounding rockets with an explicit hands-on, iterative student-reflight model — a direct match for BLK3's 2-day-turnaround reusable cadence.
+**Next action:** Draft a multi-flight iterative-campaign offer emphasizing reflight cadence, stage to Jon's inbox for review before any outbound contact.
+**Source:** https://www.carthage.edu/live/news/55881-carthage-professor-wins-500000-nasa-prize-to-fund
+
+### OPP-515 | Ambrosia Space Manufacturing — cell separation centrifuge microgravity test
+**Status:** NEW — auto-sourced 2026-09-24 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** In-space biomanufacturing (bioreactors, centrifuges)
+**Value:** $535,750 (Half payload + external power + live telemetry add-ons)
+**Due:** Flight test window: Summer 2026 (NASA TechLeap-funded)
+**POC:** Mario Maggio, Founder/CEO — mario@ambrosiaspace.com (best-guess)
+**Why fit:** Ambrosia won a NASA TechLeap Prize for a cell-separation centrifuge for in-space nutrient production and needs a powered, telemetry-equipped microgravity flight to validate hardware before their funded flight test window.
+**Next action:** Draft a powered-payload flight pitch and stage to Jon's inbox for review before any outbound contact.
+**Source:** https://www.factoriesinspace.com/ambrosia
+
+### OPP-516 | Ecoatoms — HERMES biomedical extraction/reagent-mixing payload
+**Status:** NEW — auto-sourced 2026-09-24 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Space biomedical payloads / automated life-science hardware
+**Value:** $46,200 (6U cubesat tier + sealed environment add-on)
+**Due:** Flight test window: Summer 2026 (NASA TechLeap-funded)
+**POC:** Dr. Solange Massa, Founder/CEO — solange@ecoatoms.com (best-guess)
+**Why fit:** Ecoatoms already has a track record of suborbital/orbital biomedical payload flights (SpaceX, Blue Origin) and just won a NASA TechLeap Prize for HERMES, a genetic-material extraction/reagent-mixing payload well-suited to a sealed, small-form-factor BLK3 slot.
+**Next action:** Draft a sealed cubesat-tier flight offer and stage to Jon's inbox for review before any outbound contact.
+**Source:** https://www.unr.edu/nevada-today/news/2024/ecoatoms-milestones
+
+
+
+
+
+## AUTO-SOURCED — 2026-09-25 (Opportunities Engine)
+
+### OPP-517 | Eta Space — suborbital precursor test of cryogenic fluid management (CFM) components
+**Status:** NEW — auto-sourced 2026-09-25 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** In-space propulsion / cryogenic fluid management flight qualification
+**Value:** Quarter Payload ~$255,000 (component-level LAD/valve/sensor test article, <34kg)
+**Due:** Rolling
+**POC:** Dr. William Notardonato, Founder & CEO, Eta Space — wnotardonato@etaspace.com
+**Why fit:** Eta Space just finished NASA-funded LOXSAT integration for an orbital Rocket Lab Photon demo and needs cheap, fast, repeatable suborbital flights to de-risk individual CFM subsystems (liquid acquisition devices, chilldown hardware) before committing them to costly orbital missions — exactly BLK3's de-risking value prop.
+**Next action:** Stage an outreach package to Notardonato positioning BLK3's 2-day-turnaround suborbital flights as a low-cost CFM component test bed ahead of their next Tipping Point milestone.
+**Source:** https://satnews.com/2026/05/17/nasa-and-eta-space-finalize-integration-for-loxsat-cryogenic-fuel-demonstration/
+
+### OPP-518 | BioOrbit — microgravity protein-crystallization precursor flights ahead of 2026 pre-clinical trials
+**Status:** NEW — auto-sourced 2026-09-25 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial microgravity pharma manufacturing (monoclonal antibody crystallization)
+**Value:** 1U–3U BRIC tier $7,500–$22,500 per crystallization cassette; scalable to Quarter Payload ($255,000) for a multi-cassette campaign
+**Due:** Rolling
+**POC:** Dr. Katie King, Co-Founder & CEO, BioOrbit — katie@bioorbit.space
+**Why fit:** BioOrbit just closed the largest-ever seed round (£9.8M) for in-space drug manufacturing and is racing toward 2026 pre-clinical trials of space-made mAb crystals under the new UK MHRA framework — they need more, cheaper flight cycles than ISS/Redwire access allows, which BLK3's cadence and price point directly serve.
+**Next action:** Stage an intro proposal to Dr. King framing BLK3 as a faster, US-based iteration path to complement their UK regulatory timeline.
+**Source:** https://www.bioorbit.space/
+
+### OPP-519 | Exobiosphere — suborbital microgravity screening campaigns alongside their ISS missions
+**Status:** NEW — auto-sourced 2026-09-25 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity drug-discovery CRO
+**Value:** Quarter Payload $255,000 (recurring screening campaign) or 6U cubesat tier $45,000 per single-mission unit
+**Due:** Rolling
+**POC:** Kyle Acierno, Co-Founder & CEO, Exobiosphere — kyle@exobiosphere.com
+**Why fit:** Exobiosphere just announced two new ISS drug-discovery missions with Voyager and is scaling commercial demand for microgravity screening; they're funded and actively adding flight capacity, making them a live buyer for a cheaper/faster suborbital complement to ISS turnaround times.
+**Next action:** Stage outreach proposing BLK3 as a faster-cadence, lower-cost suborbital tier complementary to the ISS missions they just added with Voyager.
+**Source:** https://www.stocktitan.net/news/VOYG/commercial-demand-for-microgravity-drug-discovery-accelerates-as-o4lufghm9ndb.html
+
+### OPP-520 | SpacePharma — suborbital validation flights for miniaturized microgravity lab units
+**Status:** NEW — auto-sourced 2026-09-25 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity lab-in-a-box hardware (pharma/biotech R&D)
+**Value:** 6U cubesat tier $45,000 per lab unit; multi-unit campaign could reach Quarter Payload $255,000
+**Due:** Rolling
+**POC:** Yossi Yamin, Co-Founder & CEO, SpacePharma — yossi@spacepharma.health
+**Why fit:** SpacePharma sells microgravity access 'at a fraction of the cost' of traditional platforms and already flies compact lab hardware to ISS repeatedly for pharma clients — BLK3 offers them an even lower-cost, faster-turnaround precursor tier to validate hardware and protocols before committing customer payloads to ISS.
+**Next action:** Stage an outreach email to Yamin proposing BLK3 as a rapid validation flight tier for their lab-unit hardware ahead of ISS missions.
+**Source:** https://www.spacepharma.health/missions
+
+### OPP-521 | Nanoracks (Voyager Technologies) — wholesale suborbital integration partnership
+**Status:** NEW — auto-sourced 2026-09-25 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** Payload integration broker/aggregator
+**Value:** Wholesale multi-flight capacity agreement, est. $510,000–$1,012,500 (Half–Full bay equivalent across bundled customer payloads)
+**Due:** Rolling
+**POC:** Amela Wilson, CEO, Nanoracks (Voyager Technologies) — amela.wilson@voyagertechnologies.com
+**Why fit:** Nanoracks already runs a dedicated suborbital customer-integration business teamed exclusively with Blue Origin; as a publicly traded company (NYSE: VOYG) actively expanding microgravity customer volume, they have clear commercial incentive to add a second reusable suborbital provider to diversify supply and offer customers more launch dates.
+**Next action:** Stage a partnership pitch to Wilson proposing BLK3 as a second integrated suborbital option alongside their existing Blue Origin relationship.
+**Source:** https://voyagertechnologies.com/insights/nanoracks-team-with-blue-origin-on-suborbital-research/
+
+### OPP-522 | University of Florida Space Institute — repeat suborbital flyer for gene-expression payloads
+**Status:** NEW — auto-sourced 2026-09-25 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University space biology research (NASA-funded)
+**Value:** 1U–2U cubesat tier $7,500–$15,000 per flight, with repeat-flyer potential
+**Due:** Rolling
+**POC:** Dr. Robert (Rob) Ferl, Director, UF Space Institute & Distinguished Professor — robferl@ufl.edu
+**Why fit:** Ferl is the first NASA-funded researcher to personally fly his own plant gene-expression payload on a commercial suborbital rocket (Blue Origin, via Flight Opportunities/TechFlights funding) and is actively pursuing repeat flights — a proven, funded suborbital buyer who can be won onto BLK3 for his next flight.
+**Next action:** Stage outreach to Ferl positioning BLK3 as an additional, lower-cost suborbital provider for his next TechFlights-funded flight.
+**Source:** https://innovate.research.ufl.edu/2024/08/28/first-nasa-supported-researcher
+
+### OPP-523 | Sandia National Laboratories (MACH-TB hypersonic TPS program) — thermal protection material flight screening
+**Status:** NEW — auto-sourced 2026-09-25 (Opportunities Engine)
+**Type:** Gov Solicitation
+**Segment:** DoD hypersonic thermal-protection-system materials testing
+**Value:** Custom payload (mass/volume-based), est. $50,000–$150,000 per flight for wedge/tile TPS samples with sensor packages
+**Due:** Rolling
+**POC:** Justin Wagner, Aerospace Engineer/Project Lead, Sandia National Laboratories (collaboration contact: Erin Mussoni, eemusso@sandia.gov)
+**Why fit:** Sandia's TPS team already flies quarter-sized to 4-inch sensorized material samples on the Multi-Service Advanced Capability Hypersonics Test Bed suborbital program to validate their new rapid heat-shield modeling tool; BLK3's reusable, fast-turnaround suborbital cadence is a natural additional flight-test venue for their ongoing 2026 material screening campaign.
+**Next action:** Stage an outreach package to the Sandia collaboration office (Mussoni) proposing BLK3 as an added suborbital flight-test venue for their TPS material screening.
+**Source:** https://www.sandia.gov/labnews/2025/12/18/it-is-rocket-science-new-heat-shields-faster/
+
+### OPP-524 | Rowan University (Capellades Lab) — independent suborbital precursor path for pharma crystallization
+**Status:** NEW — auto-sourced 2026-09-25 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University pharma crystallization research (NASA InSPA funded)
+**Value:** 1U–3U cubesat tier $7,500–$22,500
+**Due:** Rolling
+**POC:** Dr. Gerard Capellades, Assistant Professor of Chemical Engineering, Rowan University — capellades@rowan.edu
+**Why fit:** Capellades runs a NASA InSPA-funded crystallization research program currently dependent on Redwire's PIL-BOX/ISS access; a suborbital option would give his lab a faster, independent, lower-cost testing cadence for new crystallization formulations without waiting on ISS manifest slots.
+**Next action:** Stage outreach to Capellades proposing a BLK3 suborbital slot as a faster precursor-testing complement to his ISS crystallization work.
+**Source:** https://today.rowan.edu/news/2026/05/could-growing-crystals-in-space-improve-drugs.html
+
+
+
+
+
+## AUTO-SOURCED — 2026-09-26 (Opportunities Engine)
+
+### OPP-525 | UTA Aerodynamics Research Center — ONR Hypersonic Heat-Shield Materials
+**Status:** NEW — auto-sourced 2026-09-26 (Opportunities Engine)
+**Type:** Gov Solicitation
+**Segment:** University propulsion/materials research lab (hypersonic)
+**Value:** ~$110,000 (custom instrumented heat-shield coupon payload ~10-15kg @ $7,500/kg + live telemetry $25,000 + basic/large integration $5,500)
+**Due:** Rolling
+**POC:** Dr. Luca Maddalena, Director, Aerodynamics Research Center, University of Texas at Arlington — lmaddalena@uta.edu (best-guess, UTA faculty pattern)
+**Why fit:** UTA's ONR-funded hypersonic ARC (arc-jet/wind-tunnel heat-shield work with Univ. of Arizona and UIUC, ~$2.1M grant) needs real flight-relevant thermal/dynamic data to validate ground-test results, and BLK3's intact-recovery suborbital flight plus Greenville, TX proximity is a natural low-cost complement to their lab work.
+**Next action:** Stage a Mission Desk quote for a custom instrumented coupon payload + telemetry add-on in Mission Control for Jon's review.
+**Source:** https://www.uta.edu/news/news-releases/2022/07/26/maddalena-onr-grant
+
+### OPP-526 | Space Forge — Pridwen Heat-Shield Suborbital Pathfinder
+**Status:** NEW — auto-sourced 2026-09-26 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space manufacturing / reentry hardware (UK)
+**Value:** ~$280,000 (Quarter Payload $255,000 + large-payload integration $5,000 + live telemetry $25,000-ish scoped down; final scope TBD)
+**Due:** Rolling
+**POC:** Joshua Western, Co-Founder & CEO, Space Forge — j.western@spaceforge.co.uk (best-guess)
+**Why fit:** Space Forge just banked £10M from ESA to advance its Pridwen fold-out reentry heat shield after ForgeStar-1's orbital test consumed the hardware on reentry; BLK3's intact-recovery capability lets them fly and physically get the deployed shield article BACK for inspection — something no orbital reentry test can offer.
+**Next action:** Draft an intro deck referencing Pridwen + intact-recovery angle and stage it in Mission Control for Jon's review before outreach.
+**Source:** https://spacewatch.global/2026/06/space-forge-secures-10m-to-accelerate-development-of-its-pridwen-orbital-payload-reentry-heat-shield/
+
+### OPP-527 | Portal Space Systems — Flare Solar-Thermal Thruster Flight Qualification
+**Status:** NEW — auto-sourced 2026-09-26 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space propulsion / satellite servicing
+**Value:** ~$170,000 (custom payload, thruster+avionics est. ~20kg @ $7,500/kg = $150,000 + basic/large integration $5,500)
+**Due:** Rolling
+**POC:** Jeff Thornburg, Co-Founder & CEO, Portal Space Systems — jeff@portalsystems.space (best-guess)
+**Why fit:** Portal just vacuum-tested its 3D-printed Flare solar-thermal thruster and is racing toward the Starburst-1 orbital debut on Transporter-18 in Q4 2026; a suborbital flight-environment (thermal/vibe/shock) shakeout on BLK3 ahead of that orbital commitment de-risks the debut exactly the way Exos pitches to orbital programs.
+**Next action:** Stage a targeted outreach note citing the Starburst-1 timeline in Mission Control for Jon's review.
+**Source:** https://3dprint.com/321172/portal-becomes-first-to-test-3d-printed-solar-thermal-thruster-for-multi-orbit-spacecraft/
+
+### OPP-528 | BioOrbit — BOX Microgravity Crystallization Hardware Qualification
+**Status:** NEW — auto-sourced 2026-09-26 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity biotech / pharma manufacturing (UK)
+**Value:** ~$50,000 (6U-class custom hardware payload $45,000 + basic integration $500 + sealed environment $1,200)
+**Due:** Rolling
+**POC:** Molly Mulligan, President, BioOrbit (ex-Redwire BD) — molly.mulligan@bioorbit.com (best-guess); alt. Katie King, Co-Founder & CEO — katie@bioorbit.com
+**Why fit:** BioOrbit raised the largest-ever seed round (£9.8M) for in-space drug manufacturing and needs to de-risk its autonomous BOX crystallization hardware before committing it to a costly orbital slot; a lower-cost suborbital shakeout flight with guaranteed intact recovery is a logical pathfinder step, and their president's Redwire background means she already speaks the suborbital-vs-orbital trade language.
+**Next action:** Draft a pathfinder-flight pitch positioning BLK3 as a pre-orbital hardware validation step and stage it in Mission Control for Jon's review.
+**Source:** https://techfundingnews.com/bioorbit-bags-9-8m-from-localglobe-breega-seedcamp-and-others-in-largest-seed-raise-for-in-space-drug-manufacturing/
+
+### OPP-529 | Metakosmos — Kosmosuit Sensor/Telemetry Hardware Upgrade Flight
+**Status:** NEW — auto-sourced 2026-09-26 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial spacesuit / bioastronautics hardware (Australia)
+**Value:** ~$45,000-70,000 (6U-class payload $45,000, or custom mass if scaling up suit hardware, + basic integration $500 + live telemetry add-on if flown)
+**Due:** Rolling
+**POC:** Kiriti Rambhatla, Founder & CEO, Metakosmos — info@metakosmos.com.au (company inbox; best-guess for exec)
+**Why fit:** Metakosmos already flies Kosmosuit telemetry/sensor payloads on Sunburnt Space's Mini Meggs (only ~30 seconds of microgravity at ~90km); BLK3 offers materially longer microgravity duration, higher altitude, and guaranteed intact hardware recovery — a clear upgrade path as their Kernel360 platform matures toward higher-fidelity human-systems validation.
+**Next action:** Stage a comparison one-pager (BLK3 vs. their current 30-sec/90km flight profile) in Mission Control for Jon's review.
+**Source:** https://www.spaceconnectonline.com.au/launch/6945-sunburnt-space-confirms-march-window-for-suborbital-rocket-launches
+
+
+
+
+
+## AUTO-SOURCED — 2026-09-27 (Opportunities Engine)
+
+### OPP-530 | Beyond Reach Labs — Flarewing deployable solar array qualification flight
+**Status:** NEW — auto-sourced 2026-09-27 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (deployables)
+**Value:** ~$285,000 (Quarter payload $255,000 + live telemetry add-on $25,000 + basic integration $500)
+**Due:** Rolling
+**POC:** Pele Collins, Co-Founder & CTO (deployment mechanisms) — best-guess pele@beyondreachlabs.io; alt. Mitchell Fogelson, Co-Founder & CEO — mitchell@beyondreachlabs.io
+**Why fit:** YC-backed ($10M raised) Brooklyn startup just opened a facility to qualify its football-field-scale Flarewing deployable solar array ahead of a 2027 orbital demo, and needs a suborbital shock/vibe/deployment-dynamics flight to de-risk the mechanism before committing to an expensive orbital slot.
+**Next action:** Stage an intro draft in MC referencing their Sept 2026 Brooklyn facility opening and BLK3's suborbital deployment-qualification fit for Jon's review.
+**Source:** https://satnews.com/2026/09/23/beyond-reach-labs-opens-brooklyn-aerospace-facility-to-scale-deployable-high-power-solar-arrays/
+
+### OPP-531 | Portal Space Systems — Supernova avionics/sensor risk-reduction flight
+**Status:** NEW — auto-sourced 2026-09-27 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (avionics/sensors/ADCS)
+**Value:** ~$285,000 (Quarter payload $255,000 + precision pointing $5,000 + live telemetry $25,000)
+**Due:** Rolling
+**POC:** Jeff Thornburg, CEO & Co-Founder — best-guess jeff.thornburg@portalsystems.space
+**Why fit:** Portal ($70.5M raised) is running staged orbital risk-reduction flights (Mini-Nova on Vigoride) for its Supernova avionics/sensor stack ahead of Starburst-1 in Q4 2026; a BLK3 suborbital flight offers a faster, cheaper vibration/thermal/sensor-heritage checkpoint than another rideshare slot.
+**Next action:** Stage a draft for Jon citing their Mini-Nova test campaign and offering BLK3 as an interim avionics qualification flight.
+**Source:** https://www.geekwire.com/2026/portal-space-mini-nova-in-orbit/
+
+### OPP-532 | Yuri GmbH — ScienceShell bioreactor suborbital precursor campaign
+**Status:** NEW — auto-sourced 2026-09-27 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity science/biotech broker
+**Value:** ~$24,950/flight (3U tier $22,500 + sealed environment $1,200 + basic integration $500); likely multi-flight campaign potential
+**Due:** Rolling
+**POC:** Maria Birlem, Co-Founder & CEO — best-guess maria.birlem@yurigravity.com; general contact@yurigravity.com
+**Why fit:** German space-biotech firm runs a portfolio of modular bioreactor/ScienceShell payloads for ISS and commercial platforms and needs cheaper, faster suborbital precursor flights to validate hardware before committing customer experiments to orbital slots — a segment (int'l microgravity biotech aggregator) distinct from our existing broker pipeline.
+**Next action:** Stage an intro draft in MC positioning BLK3 as a low-cost precursor validation flight ahead of Yuri's ISS/orbital missions, for Jon's review.
+**Source:** https://yurigravity.com/about-us
+
+### OPP-533 | FOMS Inc — ZBLAN fiber-draw microgravity demonstration
+**Status:** NEW — auto-sourced 2026-09-27 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity manufacturing (materials/photonics)
+**Value:** ~$261,200 (Quarter payload $255,000 + large-payload integration $5,000 + sealed environment $1,200)
+**Due:** Rolling
+**POC:** FOMS Inc. leadership — general contact info@fomsinc.com (San Diego, CA); best-guess title CEO/Program Manager
+**Why fit:** NASA SBIR-funded ($873K) ZBLAN optical-fiber manufacturer has already proven microgravity fiber quality gains on ISS and parabolic flights; a suborbital BLK3 flight offers a cheaper dedicated-duration microgravity draw test between ISS campaigns.
+**Next action:** Stage a draft in MC introducing SPACEavailable capacity and citing FOMS's prior parabolic/ISS ZBLAN work, for Jon's review.
+**Source:** https://spacenews.com/foms-reports-high-quality-zblan-production-on-iss/
+
+### OPP-534 | LambdaVision — protein-based retinal implant manufacturing flight
+**Status:** NEW — auto-sourced 2026-09-27 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity biotech (pharma/biomanufacturing)
+**Value:** ~$46,700 (6U tier $45,000 + sealed environment $1,200 + basic integration $500)
+**Due:** Rolling
+**POC:** Nicole Wagner, Ph.D., President & CEO — nicole.wagner@lambdavision.com
+**Why fit:** Farmington, CT biotech has flown protein-crystal/artificial-retina manufacturing hardware on ISS via NASA SBIR funding and needs lower-cost, higher-cadence microgravity test opportunities to iterate manufacturing parameters outside the ISS queue.
+**Next action:** Stage an intro draft in MC referencing their NASA SBIR retinal-implant microgravity work and BLK3's cadence advantage, for Jon's review.
+**Source:** https://www.biospace.com/lambdavision-to-study-light-activated-proteins-on-nasa-s-upcoming-flight-to-international-space-station
+
+### OPP-535 | HeetShield Inc — thermal protection material flight test
+**Status:** NEW — auto-sourced 2026-09-27 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University/small-business flight-relevant research (thermal protection materials)
+**Value:** ~$17,000 (2U tier $15,000 + side-mount add-on $1,000 + in-flight event triggers $1,000)
+**Due:** Rolling
+**POC:** Steve Miller, Founder, President & CEO — info@heetshield.com
+**Why fit:** Flagstaff, AZ small business already flew NASA Flight Opportunities/SBIR-funded thermal insulation samples on a suborbital rocket and is actively commercializing the tech across NASA/AFRL/USMC/NSF funding lines — a natural repeat/second-flight prospect for BLK3's boost/reentry thermal environment.
+**Next action:** Stage a draft in MC citing their prior NASA Flight Opportunities suborbital test and offering a BLK3 external side-mount slot, for Jon's review.
+**Source:** https://www.openpr.com/news/3644327/heetshield-inc-s-next-gen-thermal-insulations-tested-aboard
+
+
+
+
+## AUTO-SOURCED — 2026-09-28 (Opportunities Engine)
+
+### OPP-536 | Eta Space — Suborbital CFM Precursor Test
+**Status:** NEW — auto-sourced 2026-09-28 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (cryogenic fluid management / in-space propulsion)
+**Value:** ~$280K (Quarter Payload $255K + live telemetry $25K + basic integration $500)
+**Due:** Rolling
+**POC:** William Notardonato, Founder & CEO — bnotardonato@etaspace.com (best guess) — Eta Space LLC, Rockledge FL
+**Why fit:** Eta Space just spent $27M proving cryogenic fluid management tech via Rocket Lab's costly LOXSAT orbital demo, so a $280K BLK3 suborbital flight gives them a cheap, fast, recoverable-hardware precursor test for boil-off/transfer components before their next orbital iteration.
+**Next action:** Stage a Mission Control outreach draft to Notardonato referencing LOXSAT for Jon's review before send.
+**Source:** https://etaspace.com/about
+
+### OPP-537 | Inversion Space — Arc Capsule Subsystem Suborbital Test
+**Status:** NEW — auto-sourced 2026-09-28 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (reentry capsule / space cargo delivery)
+**Value:** ~$536K (Half Payload $510K + in-flight event triggers $1K + live telemetry $25K)
+**Due:** Rolling
+**POC:** Justin Fiaschetti, Co-Founder & CEO — justin@inversionspace.com (best guess) — Inversion Space
+**Why fit:** Inversion is racing to fly Arc's full-scale reentry vehicle in 2026 on $44M Series A plus a $71M AFRL/SpaceWERX STRATFI award, and BLK3's intact hardware recovery is exactly what they need to ground-truth parachute/capsule subsystems cheaply before committing them to an orbital Arc mission.
+**Next action:** Stage a Mission Control outreach draft to Fiaschetti for Jon's review before send.
+**Source:** https://payloadspace.com/inversion-raises-44m-series-a-to-build-its-arc/
+
+### OPP-538 | LambdaVision — Protein Film Manufacturing Flight
+**Status:** NEW — auto-sourced 2026-09-28 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity science/materials/bio (space pharma/biotech)
+**Value:** ~$24K (3U Side-by-Side $22.5K + sealed environment $1.2K + basic integration $500)
+**Due:** Rolling
+**POC:** Nicole Wagner, PhD, President & CEO — nwagner@lambdavision.com (best guess) — LambdaVision, Inc.
+**Why fit:** LambdaVision has flown 9 ISS missions to perfect a sedimentation-free protein-film coating process and, with over $17M raised, is a strong candidate for a cheaper, faster suborbital cadence on BLK3 to iterate between costly ISS slots.
+**Next action:** Stage a Mission Control outreach draft to Wagner for Jon's review before send.
+**Source:** https://today.uconn.edu/2022/10/tip-startup-lambdavision-brings-promising-microgravity-manufacturing-experiments-back-to-earth/
+
+### OPP-539 | BioServe Space Technologies — Broker Partnership
+**Status:** NEW — auto-sourced 2026-09-28 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** Brokers/aggregators (microgravity payload integrator)
+**Value:** $45K-$90K per brokered flight (aggregated 3U-6U customer payloads), recurring across their pharma/biotech client base
+**Due:** Rolling
+**POC:** Stefanie Countryman, MBA, Director — countrym@colorado.edu — BioServe Space Technologies, CU Boulder
+**Why fit:** BioServe is a turnkey integrator that has flown hundreds of pharma/biotech/university experiments across 85+ missions and just reserved Starlab capacity, meaning they're actively shopping additional flight venues — BLK3 gives their client roster a lower-cost, faster-turnaround suborbital option alongside ISS.
+**Next action:** Stage a Mission Control outreach draft to Countryman for Jon's review before send.
+**Source:** https://www.colorado.edu/center/bioserve/capabilities
+
+### OPP-540 | Kratos Defense — JHTO Thermal Protection System Test Campaign
+**Status:** NEW — auto-sourced 2026-09-28 (Opportunities Engine)
+**Type:** Gov Solicitation
+**Segment:** Gov-adjacent commercial (hypersonics / thermal protection systems)
+**Value:** ~$540K/flight (Half Payload $510K + large-payload integration $5K + telemetry $25K); JHTO contract implies a recurring multi-flight test cadence
+**Due:** Rolling
+**POC:** Kratos Hypersonics Business Development — hypersonics@kratosdefense.com (best guess) — Kratos Defense & Security Solutions
+**Why fit:** Kratos just won a Joint Hypersonics Transition Office contract to standardize thermal-protection-system test throughput, and BLK3's frequent, recoverable-hardware suborbital flights are a direct match for the low-cost repeat TPS test articles JHTO is trying to scale nationally.
+**Next action:** Stage a Mission Control outreach draft referencing the JHTO contract for Jon's review before send.
+**Source:** https://www.kratosdefense.com/newsroom/kratos-awarded-contract-to-streamline-hypersonic-materials-development
+
+### OPP-541 | Case Western Reserve — NASA Glenn Next-Gen Microgravity Research
+**Status:** NEW — auto-sourced 2026-09-28 (Opportunities Engine)
+**Type:** Gov Solicitation
+**Segment:** University materials/fluids/combustion research
+**Value:** ~$15.5K-$255K depending on apparatus size (2/3 BRIC $15K up to Quarter Payload $255K), drawn from the $2M federal microgravity research appropriation
+**Due:** Rolling
+**POC:** Prof. Yasuhiro Kamotani, Dept. of Mechanical & Aerospace Engineering — yxk3@case.edu (best guess) — Case Western Reserve University / NASA Glenn microgravity partnership
+**Why fit:** Congress just appropriated $2M for CWRU/NASA Glenn's Next Generation Microgravity Research program in materials and fluid physics, and BLK3's payload bay is a ready-made suborbital test venue for that new funding line.
+**Next action:** Stage a Mission Control outreach draft to the CWRU microgravity program for Jon's review before send.
+**Source:** https://case.edu/news/congress-approves-2m-microgravity-space-research
+
+### OPP-542 | University of Florida — Astraeus Space Institute (Robert Ferl)
+**Status:** NEW — auto-sourced 2026-09-28 (Opportunities Engine)
+**Type:** Gov Solicitation
+**Segment:** University microgravity/bio research (NASA Flight Opportunities PI)
+**Value:** Up to $255K-$500K (Quarter Payload within a NASA TechFlights award of up to $500K)
+**Due:** Rolling
+**POC:** Robert Ferl, PhD, Professor & Director, Astraeus Space Institute — rferl@ufl.edu (best guess) — University of Florida
+**Why fit:** Ferl is a sitting NASA TechFlights PI on genomics/gene-expression suborbital biology with a flight award already in hand, so he's actively shopping commercial suborbital providers for the 2026 flight window BLK3 can serve.
+**Next action:** Stage a Mission Control outreach draft to Ferl referencing his TechFlights award for Jon's review before send.
+**Source:** https://www.nasa.gov/technology/first-nasa-supported-researcher-to-fly-on-suborbital-rocket/
+
+### OPP-543 | Nanoracks (Voyager Technologies) — Suborbital Broker Partnership
+**Status:** NEW — auto-sourced 2026-09-28 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** Brokers/aggregators (payload integration & manifest management)
+**Value:** $50K-$500K/flight in brokered third-party payloads if Nanoracks adds BLK3 as a second suborbital vehicle alongside New Shepard, recurring
+**Due:** Rolling
+**POC:** Mike Lewis, Chief Innovation Officer — mlewis@voyagertechnologies.com (best guess) — Nanoracks, a Voyager Technologies company
+**Why fit:** Nanoracks already runs a standardized-locker suborbital brokerage on Blue Origin's New Shepard for researcher and TechRise payloads, so pitching BLK3 as a second/backup suborbital manifest option taps a broker with an existing customer pipeline instead of building one from scratch.
+**Next action:** Stage a Mission Control outreach draft to Lewis proposing a BLK3 manifest slot for Jon's review before send.
+**Source:** https://spacenews.com/nanoracks-and-blue-origin-team-to-fly-suborbital-research-payloads/
+
+
+
+
+
+## AUTO-SOURCED — 2026-09-29 (Opportunities Engine)
+
+### OPP-544 | Ambrosia Space Manufacturing Corp — bioreactor/centrifuge flight test
+**Status:** NEW — auto-sourced 2026-09-29 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial microgravity biomanufacturing (in-space biotech)
+**Value:** 6U CubeSat class $45,000 up to Quarter Payload $255,000 depending on final centrifuge hardware mass
+**Due:** Rolling
+**POC:** Mario Maggio, CEO & Founder — mario@ambrosia.space (best-guess)
+**Why fit:** NASA TechLeap STPC winner ($500K prize) for its cell-separation centrifuge needs a commercial flight test slot ahead of its ABBY orbital mission, and BLK3's short-turnaround suborbital cadence fits a hardware shakeout flight.
+**Next action:** Stage a BLK3 capability brief + rate card in the AI Mission Desk for review before outreach.
+**Source:** https://www.nasatechleap.org/nasa-techleap-prize-announces-ten-winners-of-space-technology-payload-challenge
+
+### OPP-545 | Helogen Corporation — HEL-IOS bioreactor flight validation
+**Status:** NEW — auto-sourced 2026-09-29 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial microgravity biomanufacturing (in-space biotech)
+**Value:** 6U CubeSat class ~$45,000 (custom hardware, mass-priced at $7,500/kg if larger)
+**Due:** Rolling
+**POC:** Shishir Bankapur, Founder & CEO — shishir@helogen.com (best-guess)
+**Why fit:** Fresh $7.1M seed round and a TechLeap STPC win obligate Helogen to fly a flight-test payload; a low-cost suborbital slot de-risks the HEL-IOS bioreactor before their planned October orbital missions.
+**Next action:** Stage a BLK3 capability brief + rate card in the AI Mission Desk for review before outreach.
+**Source:** https://runtimewire.com/article/helogen-raises-7-1m-seed-orbital-biomanufacturing
+
+### OPP-546 | SpaceWorks Enterprises — microgravity semiconductor crystal manufacturing
+**Status:** NEW — auto-sourced 2026-09-29 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Materials/manufacturing (microgravity semiconductor crystal growth)
+**Value:** Quarter Payload $255,000 (established 25-yr NASA SBIR firm with larger flight budgets)
+**Due:** Rolling
+**POC:** John E. Bradford, PhD, CEO — jbradford@spaceworks.aero (best-guess)
+**Why fit:** TechLeap STPC winner for high-cadence microgravity silicon crystal manufacturing; long NASA SBIR track record and standing flight budget make them a credible near-term buyer for BLK3 qualification flights.
+**Next action:** Stage a BLK3 capability brief + rate card in the AI Mission Desk for review before outreach.
+**Source:** https://www.nasatechleap.org/nasa-techleap-prize-announces-ten-winners-of-space-technology-payload-challenge
+
+### OPP-547 | Carthage College / Wisconsin Space Grant Consortium — acoustic ullage trapping
+**Status:** NEW — auto-sourced 2026-09-29 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University propulsion/fluid-management research
+**Value:** 1U–3U CubeSat class $7,500–$22,500
+**Due:** Rolling
+**POC:** Dr. Kevin Crosby, Professor of Physics & Director, Wisconsin Space Grant Consortium — kcrosby@carthage.edu
+**Why fit:** $500K NASA TechLeap award for acoustic propellant ullage-trapping needs a real microgravity flight test, and a low-cost suborbital CubeSat slot on BLK3 fits a university research budget.
+**Next action:** Stage a BLK3 capability brief + rate card in the AI Mission Desk for review before outreach.
+**Source:** https://www.carthage.edu/live/news/55881-carthage-professor-wins-500000-nasa-prize-to-fund
+
+### OPP-548 | Ecoatoms — standardized payload infrastructure (HERMES) + channel potential
+**Status:** NEW — auto-sourced 2026-09-29 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** Payload infrastructure / automated chem-bio systems for microgravity
+**Value:** Initial 3U payload $22,500, with recurring multi-flight channel potential
+**Due:** Rolling
+**POC:** Solange Massa, Founder & CEO — solange@ecoatoms.com (best-guess)
+**Why fit:** Reno-based TechLeap STPC winner building standardized microgravity payload infrastructure for NASA and Fortune 500 clients — a direct flight buyer today and a potential reseller channel funneling future customers to BLK3.
+**Next action:** Stage a BLK3 capability brief + rate card in the AI Mission Desk for review before outreach.
+**Source:** https://www.unr.edu/nevada-today/news/2024/ecoatoms-milestones
+
+### OPP-549 | Inversion Space — Arc reentry capsule TPS validation
+**Status:** NEW — auto-sourced 2026-09-29 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (thermal protection systems / reentry)
+**Value:** Custom volume-priced TPS test article $60,000–$120,000 + Live Telemetry add-on $25,000
+**Due:** Rolling
+**POC:** Justin Fiaschetti, Sr. Director of Business Development — justin@inversionspace.com (best-guess)
+**Why fit:** Building the Arc reentry capsule toward a 2026 orbital debut, Inversion needs cheaper, faster-turnaround suborbital re-entry-environment flights to iterate TPS material tests before committing to costly orbital slots.
+**Next action:** Stage a BLK3 capability brief + rate card in the AI Mission Desk for review before outreach.
+**Source:** https://www.compositesworld.com/news/inversion-space-looks-to-2026-orbital-flight-for-space-delivery-vehicle-arc
+
+### OPP-550 | Cambrian Defence & Space — cancer/stem-cell microgravity research broker (Australia)
+**Status:** NEW — auto-sourced 2026-09-29 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** International research broker (biomedical microgravity, defense-adjacent BD firm)
+**Value:** Recurring per-flight payloads in the $22,500–$255,000 range once routed
+**Due:** Rolling
+**POC:** Tiffany Sharp, Director – Space — tiffany@cambrianexecutive.com (best-guess)
+**Why fit:** Actively books commercial suborbital rocket flights for Australian cancer-stem-cell microgravity research (Univ. of Adelaide Centre for Cancer Biology) — a direct strategic match to Exos's own flown glioblastoma stem-cell heritage, and a channel for recurring biomedical payloads.
+**Next action:** Stage a BLK3 capability brief highlighting Exos's glioblastoma flight heritage in the AI Mission Desk for review before outreach.
+**Source:** https://www.spaceconnectonline.com.au/r-d/7274-cancer-research-heads-to-space-aboard-european-rocket-on-adelaide-led-microgravity-mission
+
+### OPP-551 | BioOrbit — protein crystallization hardware shakeout flight
+**Status:** NEW — auto-sourced 2026-09-29 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Pharma/biotech microgravity manufacturing
+**Value:** Sealed Environment 6U class ~$45,000 + Sealed Environment add-on $1,200 (hardware/process validation only — full crystallization runs need longer-duration orbital microgravity)
+**Due:** Rolling
+**POC:** Molly Mulligan, President, BioOrbit Inc. — business@bioorbit.space
+**Why fit:** London-based BioOrbit raised the world's largest in-space-manufacturing seed round and is racing toward 2026 pre-clinical trials; a low-cost BLK3 suborbital flight offers a fast hardware/process validation step ahead of its orbital BOX missions.
+**Next action:** Stage a BLK3 capability brief + rate card in the AI Mission Desk for review before outreach.
+**Source:** https://www.clinicaltrialsarena.com/news/bioorbit-2026-pre-clinical-trials-space-manufactured-protein-crystals/
+
+
+
+## AUTO-SOURCED — 2026-09-30 (Opportunities Engine)
+
+### OPP-552 | Worcester Polytechnic Institute — Two-Phase Flow/Boiling Microgravity Payload
+**Status:** NEW — auto-sourced 2026-09-30 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University propulsion/fluids research lab
+**Value:** $280,000 (Quarter Payload $255,000 + Live Telemetry $25,000)
+**Due:** Rolling
+**POC:** Prof. Jamal Yagoobi, PI, Mechanical Engineering, WPI — jyagoobi@wpi.edu
+**Why fit:** NASA TechFlights-funded (up to $1M award) electrically-driven liquid film boiling research is currently limited to ~20-second ZeroG parabolic bursts, and BLK3's ~3-4 minutes of suborbital microgravity would give Yagoobi's ISS-precursor dataset far more usable test time per dollar.
+**Next action:** Stage a capability-fit outreach draft in MC citing the NASA TechFlights award and BLK3's microgravity duration advantage over parabolic flight.
+**Source:** https://www.nasa.gov/directorates/stmd/first-nasa-supported-researcher-to-fly-on-suborbital-rocket/
+
+### OPP-553 | Case Western Reserve University / NASA Glenn — Next Generation Microgravity Research Program
+**Status:** NEW — auto-sourced 2026-09-30 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University microgravity/thermal-fluids research program
+**Value:** $255,000–$510,000 (Quarter to Half Payload, multi-experiment manifest)
+**Due:** Rolling
+**POC:** Dr. Chirag Kharangate, Associate Professor & Director, Two-Phase Flow and Thermal Management Lab, Case School of Engineering — kharangate@case.edu
+**Why fit:** Congress just approved $2M in FY26 funding for a new CWRU/NASA Glenn microgravity research program spanning fluid dynamics, thermal management, and combustion — exactly BLK3's payload sweet spot — and the program is actively standing up flight opportunities now.
+**Next action:** Stage an MC outreach draft to Kharangate referencing the FY26 congressional appropriation and offering a manifest slot on BLK3 Flight 2.
+**Source:** https://case.edu/news/congress-approves-2m-microgravity-space-research
+
+### OPP-554 | University of North Dakota — Human Spaceflight Laboratory (Lunar Dust / ISRU Payloads)
+**Status:** NEW — auto-sourced 2026-09-30 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University human-spaceflight & planetary-science research lab
+**Value:** $255,000 (Quarter Payload) + $1,200 Sealed Environment add-on
+**Due:** Rolling
+**POC:** Dr. Pablo de León, Professor & Chair, Dept. of Space Studies; Director, Human Spaceflight Laboratory, UND — pablo.deleon@und.edu
+**Why fit:** De León's ASCENT lunar-dust-contamination experiment is currently confined to 15-second parabolic bursts in Switzerland; a suborbital BLK3 flight gives his lab orders of magnitude more microgravity dwell time to study dust behavior relevant to Artemis-class lunar return operations.
+**Next action:** Stage an MC outreach draft to de León positioning BLK3 as a longer-duration successor test platform to the Ohio State–Starlab parabolic campaign.
+**Source:** https://blogs.und.edu/und-today/2026/09/und-experiment-takes-flight-to-study-lunar-dust-in-microgravity/
+
+### OPP-555 | CisLunar Industries — EPIC Power Processing Unit Flight Qualification
+**Status:** NEW — auto-sourced 2026-09-30 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space manufacturing / electric propulsion power electronics
+**Value:** $255,000 (Quarter Payload) + $25,000 Live Telemetry
+**Due:** Rolling
+**POC:** Gary Calnan, CEO & Co-Founder, CisLunar Industries — gary@cislunarindustries.com
+**Why fit:** CisLunar already proved out a 2024 suborbital flight (with ThinkOrbital) to validate its EPIC PPU line for electric-thruster customers, and as a NASA Flight Opportunities awardee they have a standing need for recurring flight-qualification slots as EPIC-PPU-1000/6000 scale to production.
+**Next action:** Stage an MC outreach draft to Calnan referencing their prior suborbital flight heritage and offering a BLK3 slot for the next EPIC PPU qualification run.
+**Source:** https://www.cislunarindustries.com/post/cislunar-industries-awarded-nasa-flight-opportunity-for-orbital-demonstration-of-power-processing
+
+### OPP-556 | Orbit Fab — RAFTI Fueling Port Dynamic Environment Qualification
+**Status:** NEW — auto-sourced 2026-09-30 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space propellant/refueling infrastructure
+**Value:** $255,000 (Quarter Payload) + $750 External Power add-on
+**Due:** Rolling
+**POC:** Daniel Faber, CEO, Orbit Fab — daniel@orbitfab.com
+**Why fit:** Fresh off a $20M Series B and GEO refueling missions with Astroscale/DoD in 2026, Orbit Fab needs continued flight-representative vibration/thermal qualification runs for its RAFTI/GRIP hardware ahead of scaling to hundreds of ports, and a reusable suborbital platform is cheaper per-qual-cycle than orbital rideshare.
+**Next action:** Stage an MC outreach draft to Faber's team offering BLK3 as a low-cost recurring qualification flight path for RAFTI hardware iterations.
+**Source:** https://www.orbitfab.com/news/rafti-flight-qualified/
+
+### OPP-557 | BioOrbit — Protein Crystallization Suborbital Precursor Test
+**Status:** NEW — auto-sourced 2026-09-30 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial microgravity pharmaceutical manufacturing (international, UK)
+**Value:** $255,000 (Quarter Payload) + $1,200 Sealed Environment add-on
+**Due:** Rolling
+**POC:** Dr. Katie King, Co-Founder & CEO, BioOrbit — business@bioorbit.space
+**Why fit:** BioOrbit just closed the largest-ever seed round for in-space drug manufacturing (£9.8M) and is preparing pre-clinical crystallization trials in 2026; a suborbital BLK3 flight is a far cheaper way to de-risk their BOX crystallization hardware before committing it to an orbital factory mission.
+**Next action:** Stage an MC outreach draft to BioOrbit's business inbox positioning BLK3 as a low-cost hardware-validation flight ahead of their orbital pre-clinical campaign.
+**Source:** https://hlth.com/insights/news/bioorbit-raises-13-2m-seed-round-to-advance-space-based-drug-manufacturing
+
+### OPP-558 | Benchmark Space Systems — ASCENT Thruster Flight Heritage Demonstration
+**Status:** NEW — auto-sourced 2026-09-30 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space propulsion (flight qualification)
+**Value:** $510,000 (Half Payload) + $25,000 Live Telemetry + $5,000 Large Payload Integration
+**Due:** Rolling
+**POC:** Chris Carella, EVP Business Development & Strategy, Benchmark Space Systems — events@benchmark-space.com
+**Why fit:** Benchmark just completed AFRL hotfire testing on its 22N Macaw ASCENT thruster and needs flight heritage data ahead of full SPRINT-program integration; BLK3 offers an intact-recovery suborbital demo that returns hardware for post-flight teardown analysis — something orbital demos can't do.
+**Next action:** Stage an MC outreach draft to Carella emphasizing BLK3's intact-hardware-recovery advantage for post-flight propulsion teardown analysis.
+**Source:** https://experiorlabs.com/benchmark/
+
+### OPP-559 | Yuri GmbH — Microgravity-as-a-Service Aggregator Partnership
+**Status:** NEW — auto-sourced 2026-09-30 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** International microgravity payload broker/aggregator
+**Value:** Full Payload $1,012,500+ (multi-customer manifest, recurring per-flight revenue)
+**Due:** Rolling
+**POC:** Mark Kugel, Co-Founder & Managing Director, Yuri GmbH — info@yuri.bio
+**Why fit:** Yuri already brokers microgravity flights across ISS, orbital, suborbital, and parabolic platforms for 60+ customers in 25 countries (incl. NASA, ESA, DLR, MIT, GSK) but has no current reusable-suborbital-rocket capacity in its portfolio, making it a manifest-filling aggregator channel rather than a single payload.
+**Next action:** Stage an MC outreach draft to Yuri's business team proposing BLK3 as an added platform option in their microgravity service portfolio.
+**Source:** https://www.factoriesinspace.com/yuri
+
+
+
+
+
+## AUTO-SOURCED — 2026-10-01 (Opportunities Engine)
+
+### OPP-560 | Juno Propulsion Inc. — RDRE flight-test article
+**Status:** NEW — auto-sourced 2026-10-01 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** In-space propulsion / flight-qualification startup
+**Value:** ~$100K-$120K (custom 10-15kg engine test article + live telemetry $25K + event triggers $1K + basic integration)
+**Due:** NASA-funded flight test targeted for later 2026
+**POC:** Dr. Alexis Harroun, Founder & CEO — alexis@junopropulsion.com (best-guess)
+**Why fit:** NASA TechLeap Prize winner ($500K) plus a new $1.2M NSF grant explicitly earmarked for a rotating-detonation-engine flight demo, and they are actively shopping for a commercial suborbital ride.
+**Next action:** Stage a Mission Control opportunity + draft intro email for Jon's review referencing the NSF/TechLeap award and BLK3 custom-payload fit.
+**Source:** https://www.junopropulsion.com/news/juno-propulsion-awarded-nsf-sbir
+
+### OPP-561 | SpaceWorks Enterprises / Astral Materials — COSMIC crystallization + RED25 reentry demo
+**Status:** NEW — auto-sourced 2026-10-01 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity materials manufacturing (semiconductor crystals)
+**Value:** ~$190K (25kg custom payload against RED25 reentry capsule mass) + telemetry $25K
+**Due:** Payload Build Round 2 in progress 2026
+**POC:** John Olds, President & CEO, SpaceWorks Enterprises — jolds@spaceworks.aero (best-guess)
+**Why fit:** NASA TechLeap awardee building a reentry capsule for in-space silicon crystal growth; a BLK3 suborbital precursor flight is a lower-cost way to validate thermal/structural performance of the RED25 capsule before committing to an orbital slot.
+**Next action:** Stage CRM entry and draft a precursor-flight proposal for Jon's review pairing RED25 qualification with BLK3's intact-recovery value prop.
+**Source:** https://www.spaceworks.aero/spaceworks-enterprises-awarded-a-nasa-techleap-prize-in-partnership-with-astral-materials/
+
+### OPP-562 | Helogen Corporation — Cellular Experiment Laboratory System (CELS)
+**Status:** NEW — auto-sourced 2026-10-01 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity bio/life-sciences manufacturing
+**Value:** ~$71K (6U bioreactor $45K + sealed environment $1.2K + telemetry $25K)
+**Due:** Rolling
+**POC:** Shishir Bankapur, Founder & CEO, Helogen Corporation — shishir@helogencorp.com (best-guess)
+**Why fit:** NASA TechLeap winner ($500K) and freshly raised $7.1M seed for orbital biomanufacturing; a BLK3 flight offers a cheap, fast microgravity shakeout for CELS hardware ahead of their Starlab/orbital missions.
+**Next action:** Stage CRM entry and draft outreach for Jon's review positioning BLK3 as a low-cost hardware risk-reduction flight before their orbital biomanufacturing missions.
+**Source:** https://runtimewire.com/article/helogen-raises-7-1m-seed-orbital-biomanufacturing
+
+### OPP-563 | Ambrosia Space Manufacturing Corporation — Cell Separation Centrifuge
+**Status:** NEW — auto-sourced 2026-10-01 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity bio/life-sciences manufacturing
+**Value:** ~$281K (quarter payload $255K + external power $750 + telemetry $25K)
+**Due:** Rolling
+**POC:** Mario Maggio, Founder & CEO, Ambrosia Space Manufacturing Corporation — mario@ambrosiaspace.com (best-guess)
+**Why fit:** NASA TechLeap awardee ($500K) developing a crewed-mission nutrient-production centrifuge that needs microgravity validation under power and data telemetry — a direct match for a BLK3 quarter-bay flight.
+**Next action:** Stage CRM entry and draft intro email for Jon's review citing their TechLeap award and the centrifuge's power/telemetry needs against BLK3 add-ons.
+**Source:** https://www.stpc.nasatechleap.org/news/nasa-techleap-prize-announces-ten-winners-of-space-technology-payload-challenge
+
+### OPP-564 | Carthage College (Dr. Kevin Crosby) — Microgravity Ullage Trapping
+**Status:** NEW — auto-sourced 2026-10-01 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University propulsion/fluids research lab
+**Value:** ~$71K (6U payload $45K + event triggers $1K + telemetry $25K)
+**Due:** Rolling
+**POC:** Dr. Kevin M. Crosby, Hedberg Distinguished Professor, Physics & Astronomy, Carthage College — kcrosby@carthage.edu
+**Why fit:** NASA TechLeap Prize winner ($500K) running a JSC-partnered acoustic ullage-trapping study for in-space refueling that needs a genuine microgravity/boost-coast flight profile BLK3 can provide.
+**Next action:** Stage CRM entry and draft outreach for Jon's review noting the NASA JSC collaboration and TechLeap funding as a near-term BLK3 fit.
+**Source:** https://www.carthage.edu/live/profiles/741-kevin-crosby
+
+### OPP-565 | Beyond Reach Labs — Flarewing deployable solar array qualification
+**Status:** NEW — auto-sourced 2026-10-01 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (deployables/power systems)
+**Value:** ~$290K (quarter payload $255K + large-payload integration $5K + precision pointing $5K + telemetry $25K)
+**Due:** Targeting first in-orbit flight demo in 2027
+**POC:** Mitchell Fogelson, Founder & CEO, Beyond Reach Labs — mitch@beyondreachlabs.io (best-guess)
+**Why fit:** YC-backed startup with $175M+ in LOIs and a fresh $10M seed racing toward a 2027 orbital deployment demo; a BLK3 suborbital flight is a credible, lower-cost deployment/vibration qualification step for the Flarewing mechanism before that orbital commitment.
+**Next action:** Stage CRM entry and draft a qualification-flight pitch for Jon's review timed to their new Brooklyn factory ramp-up.
+**Source:** https://satnews.com/2026/09/23/beyond-reach-labs-opens-brooklyn-aerospace-facility-to-scale-deployable-high-power-solar-arrays/
+
+### OPP-566 | Dcubed GmbH (Deployables Cubed) — in-space manufacturing boom/deployable test article
+**Status:** NEW — auto-sourced 2026-10-01 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** International commercial flight-qualification (in-space manufacturing/deployables)
+**Value:** ~$86K (custom payload $60K volume-based + event triggers $1K + telemetry $25K)
+**Due:** Rolling
+**POC:** Thomas Sinn, Co-Founder & CEO, Dcubed GmbH — thomas.sinn@dcubed.space (best-guess)
+**Why fit:** German in-space-manufacturing startup (Series A, opening a US office) with precursor boom/solar-array print-and-deploy missions already planned for 2026 — a BLK3 suborbital flight is a natural, cheaper US-based qualification step for their mechanisms ahead of orbital missions.
+**Next action:** Stage CRM entry and draft outreach for Jon's review flagging their new US-office expansion as the opening to pitch a domestic suborbital qualification flight.
+**Source:** https://spacenews.com/dcubed-raises-4-4-million-euros-for-in-space-manufacturing/
+
+### OPP-567 | Space Dust Research & Technologies LLC — Electron Beam Dust Mitigation (EBDM)
+**Status:** NEW — auto-sourced 2026-10-01 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University/startup spinout — exploration tech flight qualification
+**Value:** ~$49K (3U payload $22.5K + sealed environment $1.2K + telemetry $25K)
+**Due:** Rolling
+**POC:** Dr. Xu Wang, Co-Founder, LASP/CU Boulder — xwang@lasp.colorado.edu (best-guess)
+**Why fit:** NASA TechLeap awardee (CU Boulder/LASP spinout) developing electron-beam lunar dust mitigation that needs a genuine flight environment to validate hardware before an orbital or lunar test — a small cubesat-class BLK3 slot fits their scale and budget.
+**Next action:** Stage CRM entry and draft outreach for Jon's review citing the TechLeap award and LASP/CU Boulder flight-heritage need.
+**Source:** https://www.colorado.edu/venturepartners/startup-portfolio/space-dust-research-technologies-llc
+
+
+
+
+## AUTO-SOURCED — 2026-10-02 (Opportunities Engine)
+
+### OPP-568 | Juno Propulsion – rotating detonation engine (Project Iris) flight-test payload
+**Status:** NEW — auto-sourced 2026-10-02 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (in-space propulsion)
+**Value:** $255,000 (Quarter bay, up to 34 kg) + $5,500 integration = $260,500 list. Possible add-on: live telemetry $25,000. Sizing is an estimate; engine mass is unverified.
+**Due:** Rolling
+**POC:** Alexis Harroun, CEO & co-founder (best-guess email: alexis@junopropulsion.com, unverified; also try the contact form at junopropulsion.com)
+**Why fit:** Juno won a NASA TechLeap Prize of up to $500K, raised a $1.4M pre-seed, and is building a flight-ready RDE for a 2027 demo, so a cheap suborbital hot-fire heritage flight on BLK3 would de-risk that demo.
+**Next action:** Stage a draft intro and a one-page RDE-on-BLK3 fit sheet in the Decisions queue for Jon's review (no external send), and confirm via NASA Flight Opportunities whether Juno's TechLeap flight is orbital-only or also open to suborbital.
+**Source:** https://payloadspace.com/rotating-detonation-engine-startup-wins-nasa-techleap-prize/
+
+### OPP-569 | Carthage College (Prof. Kevin Crosby) – Microgravity Ullage Trapping (MUT) payload
+**Status:** NEW — auto-sourced 2026-10-02 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University propellant-management / microgravity lab, NASA-funded
+**Value:** Estimate ~$45,000 (6U-equivalent) to $255,000 (Quarter bay), depending on the final mass and volume of the acoustic-ullage payload, which is unverified. Add the $500 basic integration fee.
+**Due:** Rolling
+**POC:** Kevin Crosby, Professor of Physics (best-guess email: kcrosby@carthage.edu, unverified; confirm via his Carthage faculty profile)
+**Why fit:** Crosby won a NASA TechLeap Prize of up to $500K to fly MUT, which uses acoustic fields to trap pressurant bubbles for propellant venting and needs low-g time. His hardware was due to NASA by 1 Apr 2026, and BLK3's few minutes of microgravity could give repeat or follow-on flights.
+**Next action:** Stage a draft inquiry and a MUT-on-BLK3 fit note for Jon's review (no external send), and check the Flight Opportunities flight manifest to see whether the Crosby payload has already flown.
+**Source:** https://www.carthage.edu/live/news/55881-carthage-professor-wins-500000-nasa-prize-to-fund
+
+### OPP-570 | Georgia Tech Low-Gravity Lab (Dr. Álvaro Romero-Calvo) – fluid and propellant microgravity experiments
+**Status:** NEW — auto-sourced 2026-10-02 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University propulsion / microgravity lab
+**Value:** Estimate ~$45,000 (6U-equivalent) to $255,000 (Quarter bay), pending payload definition. Unverified.
+**Due:** Rolling
+**POC:** Álvaro Romero-Calvo, Assistant Professor, Daniel Guggenheim School of Aerospace Engineering (best-guess email: alvaro.romerocalvo@ae.gatech.edu, unverified; confirm at lowgravitylab.ae.gatech.edu)
+**Why fit:** Romero-Calvo co-devised the MUT concept with Crosby and runs a dedicated low-gravity lab, so he is a second, independent buyer for the same flight-relevant research.
+**Next action:** Pull the lab's publications and funding sources from lowgravitylab.ae.gatech.edu and stage a tailored fit brief in the CRM for Jon's review.
+**Source:** https://lowgravitylab.ae.gatech.edu/news-log/
+
+### OPP-571 | Helogen Corporation – CELS autonomous biology payload
+**Status:** NEW — auto-sourced 2026-10-02 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity bio / space-biotech startup
+**Value:** Estimate $22,500 (Full BRIC) to $255,000 (Quarter bay), depending on the CELS form factor, which is unverified. Add the $500 integration fee.
+**Due:** Rolling
+**POC:** Shishir Bankapur, Founder & CEO (email unknown; try the contact page at helogen.com, which is unverified, or LinkedIn)
+**Why fit:** Helogen holds a $500K NASA TechLeap Prize for CELS, a sample-prep system that needs flight validation, and has reportedly raised a $7.1M seed ahead of two orbital missions this October. BLK3 offers a cheap, fast, recoverable bio pre-flight for the next hardware revision.
+**Next action:** Verify the $7.1M seed and the October mission dates at the runtimewire source, then stage a bio-payload fit brief for Jon's review.
+**Source:** https://runtimewire.com/article/helogen-raises-7-1m-seed-orbital-biomanufacturing
+
+### OPP-572 | Orbital Operations – cryogenic propellant management demo
+**Status:** NEW — auto-sourced 2026-10-02 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (cryo / CFM, in-space propulsion)
+**Value:** Estimate $255,000 (Quarter bay) to $510,000 (Half bay) list, plus $5,500 integration. Sizing is unverified.
+**Due:** Rolling
+**POC:** Ben Schleuniger, Co-founder (best-guess email: ben@orbitalops.tech, unverified); alternate: Ross Doherty, Co-founder
+**Why fit:** They raised an $8.8M seed (Initialized Capital) for a two-stage cryogenic management system (90 K and 20 K) with an orbital demo planned for 2027. A suborbital cryo risk-reduction flight on BLK3 fits their timeline and Exos's cryo-tank experience.
+**Next action:** Stage a cryo-demo fit brief and a Quarter/Half bay quote draft in the Decisions queue for Jon's review (no external send).
+**Source:** https://payloadspace.com/orbital-operations-raises-8-8m-for-high-thrust-orbital-vehicle/
+
+### OPP-573 | PAVE Space – LYOBA kick-stage engine and avionics risk-reduction flight
+**Status:** NEW — auto-sourced 2026-10-02 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** International commercial flight-qualification startup (in-space propulsion)
+**Value:** Estimate $255,000 (Quarter bay) to $510,000 (Half bay) list, plus $5,500 integration. Foreign-entity export (ITAR/EAR) screening is required first. Sizing is unverified.
+**Due:** Rolling
+**POC:** Julie Böhning, CEO (email unknown; use the contact page at pave-space.com, unverified); alternate: Jérémy Marciacq, Co-founder
+**Why fit:** This Swiss startup raised a $40M seed (Visionaries Club and Creandum) and plans an engine hotfire before end of 2026 and a first platform launch in 2027, so a suborbital propulsion heritage flight could fit before that launch.
+**Next action:** Run CSL denied-party and export screening, then stage a foreign-outreach brief for Jon's approval under the foreign-outreach policy (no external send).
+**Source:** https://payloadspace.com/pave-space-raises-40m-for-in-space-propulsion-tech/
+
+### OPP-574 | Howmet Aerospace — strategic M&A / JV (Ainigma-sourced)
+**Status:** DUE DILIGENCE — DD PASS 2026-10-02 (SAM.gov exclusions + OFAC clear); internal only, no contact with Howmet
+**Type:** Corp Dev / M&A — strategic (acquisition of Exos, JV, or partnership)
+**Category:** corp-dev/M&A
+**Segment:** Large-cap aerospace manufacturer (NYSE: HWM, Pittsburgh): engine products, fastening systems, engineered structures, forged wheels
+**Value:** TBD. Ainigma framing is an acquisition of Exos worth 'a few hundred million' (unverified, advisor estimate, no offer)
+**Due:** Rolling
+**POC:** via Ainigma Capital, Michael Sheldon (michael@ainigmacapital.com), RTO advisor. No Howmet POC yet
+**Source:** Ainigma / Michael Sheldon, 2026-10-02. Hub task #2596 (Ainigma RTO)
+**Why fit:** Howmet has aerospace-grade casting, forging, fastener and metallic-structures capacity at scale. Exos would need that kind of capacity for BLK3 rate builds and the BLK4 Heavy orbital path. It also adds a strategic-acquirer path alongside the RTO roll-up
+**Next action:** Jon reviews the DD memo (drafts/Howmet_Aerospace_DD_2026-10-02.docx on #2596) and decides whether to ask Ainigma for a warm intro to Howmet corp-dev. Lead with a supplier/JV thesis. No external contact until Jon approves
+
+
+
+
+
+## AUTO-SOURCED — 2026-10-04 (Opportunities Engine)
+
+### OPP-575 | Blackswan Space – RPO Kit vision-based-nav suborbital pre-qualification (BLK3 F2)
+**Status:** NEW — auto-sourced 2026-10-04 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (sensors / autonomous nav)
+**Value:** $22,500 (3U side-by-side) to $45,000 (6U 2X3 array) at list, plus $500 basic integration. Add-ons: live telemetry $25k and event triggers $1k would take it to about $71.5k.
+**Due:** Rolling
+**POC:** Marius Klimavičius, Founder & CEO, marius@blackswan.space (best-guess email, unverified)
+**Why fit:** Blackswan closed a €2.5M seed on 2026-09-30 to fund the first in-space demo of its RPO Kit, which is expected on a hosted payload in Q4 2027, and a Mar-Apr 2027 suborbital flight could give it flight heritage and sensor-in-the-loop data before that.
+**Next action:** Stage a one-page 'de-risk before Q4 2027 hosted demo' pitch with a 3U/6U quote for Lizi to review; do not send externally until Jon approves.
+**Source:** https://tech.eu/2026/09/30/blackswan-space-raises-eur25m-to-take-autonomous-spacecraft-navigation-into-orbit/
+
+### OPP-576 | PAVE Space – propulsion subsystem / avionics suborbital risk-reduction
+**Status:** NEW — auto-sourced 2026-10-04 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (in-space propulsion)
+**Value:** $255,000 (Quarter payload, up to 34 kg) at list, plus $5,000 large-payload integration and $500 basic integration. Up to $510,000 for a Half payload if they fly a larger propulsion or avionics stack.
+**Due:** Rolling
+**POC:** Julie Böhning, Co-founder & CEO, julie@pave.space (best-guess email, unverified); alternate: Jérémy Marciacq, Co-founder (CTO-type role, unverified)
+**Why fit:** PAVE raised a $40M seed, plans its first in-orbit demo for October 2026, and is building a storable-bipropellant kick stage (LYOBA) and the IBEX platform. Both need many flight-environment data points, and BLK3's recoverable hardware gives intact post-flight inspection.
+**Next action:** Stage a dossier with a Quarter-payload quote and a 'recovered-hardware data' angle in the CRM; before any outreach, check export-control and foreign-outreach policy because PAVE is a Swiss company.
+**Source:** https://payloadspace.com/pave-space-raises-40m-for-in-space-propulsion-tech/
+
+### OPP-577 | UCF Center for Microgravity Research (Colwell) – regolith/impact microgravity experiments
+**Status:** NEW — auto-sourced 2026-10-04 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University microgravity / planetary-surface research lab
+**Value:** $7,500/kg. A 10 kg experiment is $75,000 as a custom payload; a Quarter payload is $255,000 if several experiments are bundled. Likely to be funded through a NASA Flight Opportunities award rather than lab funds.
+**Due:** Rolling
+**POC:** Dr. Joshua Colwell, Professor of Physics and Director, Center for Microgravity Research and Education, UCF, joshua.colwell@ucf.edu (best-guess email, unverified)
+**Why fit:** NASA previously selected three of Colwell's proposals (two on suborbital rockets) for dust and impact behaviour in microgravity, and BLK3's longer low-g time would suit repeat or follow-on runs.
+**Next action:** Check the source for award dates, then verify his current NASA Flight Opportunities or TechFlights status and open grants, and stage a BLK3 microgravity-duration sheet for the CRM.
+**Source:** https://sciences.ucf.edu/news/nasa-selects-3-ucf-projects-for-flight-opportunities-program/
+
+### OPP-578 | NASA Flight Opportunities TechFlights – current solicitation as a funding channel for third-party BLK3 buyers
+**Status:** NEW — auto-sourced 2026-10-04 (Opportunities Engine)
+**Type:** Gov Solicitation
+**Segment:** NASA Flight Opportunities / TechFlights funding channel
+**Value:** The prior TechFlights solicitation was about $6.5M. A single awardee could fund a $255k Quarter payload up to the $1,012,500 Full bay. Realistic pipeline is 2-4 awardees at $15k-$255k each.
+**Due:** Rolling
+**POC:** Flight Opportunities Program Office, NASA Armstrong (AFRC), via the program contact page, no direct email (unverified)
+**Why fit:** NASA pays commercial providers to fly selected technologies, and Exos is the only one of the three FAA-licensed reusable providers currently selling suborbital capacity, so researchers can budget BLK3 into their proposals.
+**Next action:** Check NSPIRES for a 2026-27 TechFlights solicitation (this search could not confirm one is open) and stage a BLK3 'proposal-ready' pricing and spec sheet that PIs can cite in their budgets.
+**Source:** https://www.nasa.gov/news-release/nasa-seeks-innovative-suborbital-flight-technology-proposals/
+
+
+
+
+## AUTO-SOURCED — 2026-10-05 (Opportunities Engine)
+
+### OPP-579 | Astral Materials – microgravity GaN/semiconductor furnace, larger-volume flight-qual campaign
+**Status:** NEW — auto-sourced 2026-10-05 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space materials / flight-qualification startup
+**Value:** Quarter bay $255,000 (≤34 kg) + $5,000 large-payload integration + $500 basic integration = $260,500; upside to Half bay $510,000 + $5,500 integration for a multi-furnace rack
+**Due:** Rolling
+**POC:** Jessica Frick, CEO, Astral Materials, jessica@astralmaterials.com (best-guess; verify on LinkedIn or the company site)
+**Why fit:** Astral publicly chose suborbital flights to cut development cycles for its microgravity furnace (up to 100 Aurora flights in Oklahoma), and BLK3's 135 kg bay and 25x36 in envelope would let it fly a full furnace and process-control stack that a small spaceplane bay may not hold.
+**Next action:** Stage a one-page SPACEavailable brief for Astral covering furnace-class payload volume, external power ($750) and live telemetry ($25k) add-ons, and an apogee and microgravity-time comparison against Aurora, for Jon to review before any outreach.
+**Source:** https://www.dawnaerospace.com/latest-news/spaceplane-oklahoma
+
+### OPP-580 | University of Florida (Ferl / Paul) – BISS and researcher-tended suborbital plant/cell biology
+**Status:** NEW — auto-sourced 2026-10-05 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University microgravity bio lab (NASA Flight Opportunities-funded)
+**Value:** BRIC-class or cubesat-format bio payload $7,500 to $45,000 per flight (Full BRIC $22,500; 6U $45,000), or Quarter bay $255,000 for a multi-experiment imaging rack. Likely entry is a $22,500 to $45,000 rider.
+**Due:** Rolling
+**POC:** Dr. Robert Ferl, Distinguished Professor, UF Horticultural Sciences, rferl@ufl.edu (best-guess); co-PI Dr. Anna-Lisa Paul, apaul@ufl.edu (best-guess)
+**Why fit:** Ferl and Paul have flown BISS five or more times on New Shepard under NASA Flight Opportunities and Biological and Physical Sciences funding, and they are developing researcher-tended suborbital protocols, so a second reusable provider with a larger bay and recoverable hardware fits their flight cadence.
+**Next action:** Stage a UF-specific BRIC/6U rider quote (live telemetry add-on $25k, sealed environment $1,200) and a note on flight-opportunity eligibility, for Jon or Lizi to review before any contact.
+**Source:** https://news.ufl.edu/2024/04/ferl-blue-origin/
+
+### OPP-581 | Carthage College Space Sciences (Crosby) – propellant-gauging / fluid-in-microgravity experiments
+**Status:** NEW — auto-sourced 2026-10-05 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University cryo/fluid-physics lab with NASA KSC Cryogenics Lab collaboration
+**Value:** Quarter bay $255,000 for a full propellant-gauging rig, or 3U to 6U sub-rack $22,500 to $45,000; add precision pointing $5k and event triggers $1k
+**Due:** Rolling
+**POC:** Dr. Kevin Crosby, Professor of Physics and Director, Carthage Space Sciences / Wisconsin Space Grant, kcrosby@carthage.edu (best-guess)
+**Why fit:** Crosby's group flew a sound-wave fuel-level measurement experiment with the NASA KSC Cryogenics Lab under Flight Opportunities, which is a direct match for BLK3 cryo/CFM flight-qualification, and the program has an established student-payload culture.
+**Next action:** Stage a Carthage brief pairing a low-cost 3U/6U student rack tier with a Quarter-bay path for the follow-on CFM gauging rig, and check Wisconsin Space Grant funding eligibility before any outreach.
+**Source:** https://carthage.edu/academics/experiential-learning/space-sciences/current-projects/rockets
+
+### OPP-582 | NASA EPSCoR Suborbital Flight Opportunity (SFO) awardees – state-funded university flight buyers
+**Status:** NEW — auto-sourced 2026-10-05 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University EPSCoR research teams (28 eligible jurisdictions, including Montana, Oklahoma, NM, Nevada, Kansas)
+**Value:** Each SFO award is $250,000 over 3 years with NASA covering flight costs, which is about one Quarter bay ($255,000) or a 6U to Half-bay rider ($45,000 to $510,000). Pipeline of 3 to 6 awardees, roughly $135k to $1.5M if aggregated.
+**Due:** Rolling
+**POC:** State NASA EPSCoR Project Directors, e.g. Oklahoma NASA EPSCoR office (okepscor.org) and Nevada NASA EPSCoR SPO (nasa.epscorspo.nevada.edu). Named PIs and emails are not yet verified; the first step is to pull the PI roster from the state office sites.
+**Why fit:** SFO awardees (e.g. Oklahoma State's ionizing-radiation dosimeter flight demo) have NASA-funded flight budgets but a small number of reusable suborbital providers, and BLK3's mid-West/NM flight profile and integration pricing fit these mature but small payloads.
+**Next action:** Pull the current awardee list and PI contacts from each state EPSCoR site into the CRM, confirm whether Exos is an eligible SFO provider, and stage a Quarter-bay and 6U price sheet for Jon's review.
+**Source:** https://nasa.epscorspo.nevada.edu/funding/suborbital-can/
+
+### OPP-583 | Oklahoma State University (NASA EPSCoR SFO) – upper-atmosphere ionizing-radiation dosimeter flight demo
+**Status:** NEW — auto-sourced 2026-10-05 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University radiation / sensors lab, NASA EPSCoR funded
+**Value:** Likely 3U to 6U sensor payload $22,500 to $45,000, plus live telemetry $25,000 = about $47,500 to $70,000 all-in (+$500 integration)
+**Due:** Rolling
+**POC:** OSU SFO PI (name not confirmed). Route via Oklahoma NASA EPSCoR office, https://okepscor.org. Email to be verified.
+**Why fit:** OSU already holds a NASA EPSCoR suborbital flight award for dosimeters to be flown in the upper atmosphere, so funding and a flight need exist, and BLK3's higher apogee and exposure time give better radiation data than a short hop.
+**Next action:** Identify the OSU PI through the Oklahoma EPSCoR news page and OSU engineering faculty pages, then stage a 3U/6U dosimeter rider quote for Jon's review.
+**Source:** https://www.nasa.gov/news-release/nasa-awards-universities-1-4m-for-space-station-suborbital-research
+
+### OPP-584 | Space Forge – Pridwen heat-shield and ForgeStar follow-on suborbital reentry/thermal test
+**Status:** NEW — auto-sourced 2026-10-05 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space manufacturing / reentry hardware startup (UK/US)
+**Value:** Quarter bay $255,000 + $5,500 integration = $260,500, or Half bay $510,000 + $5,500 for a full-scale shield article; live telemetry add-on $25,000
+**Due:** Rolling
+**POC:** Joshua Western, CEO and Co-founder, Space Forge, josh@spaceforge.com (best-guess); alt: Space Forge US BD lead (to be identified)
+**Why fit:** Space Forge has tested its origami-style Pridwen deployable shield on parabolic flight and launched ForgeStar-1, so a recoverable suborbital test of deployables and thermal hardware at altitude is a logical next flight-qual step before more orbital missions.
+**Next action:** Stage a deployables/heat-shield flight-qual brief for Space Forge covering BLK3 deploy-and-recover capability and add-ons (event triggers $1k, live telemetry $25k), and check export and foreign-outreach policy before any contact (UK entity).
+**Source:** https://infineospace.substack.com/p/space-forge-origin-story-first-iterations
+
+
+
+
+## AUTO-SOURCED — 2026-10-06 (Opportunities Engine)
+
+### OPP-585 | Astral Materials – microgravity semiconductor crystal growth suborbital pre-flight (NASA TechLeap)
+**Status:** NEW — auto-sourced 2026-10-06 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space manufacturing / NASA TechLeap-funded
+**Value:** $45,000 (6U-equivalent) to $255,000 (Quarter bay, ≤34 kg), plus $25,000 live telemetry add-on if wanted. Mid-point estimate ~$70K–$255K.
+**Due:** Rolling
+**POC:** Dr. Jessica Frick, Cofounder & CEO, Astral Materials. Email unverified; best guess jessica@astralmaterials.com (confirm domain and address on the company site).
+**Why fit:** Astral is developing silicon crystal growth that needs microgravity. A BLK3 flight (~3–4 min of microgravity on a reusable vehicle) would let them test the furnace and process before further orbital missions.
+**Next action:** Stage a CRM record and a Lizi-voice intro draft in MC for review. Include a 6U/Quarter quote and the early-2027 flight window. Do not send externally.
+**Source:** https://www.spaceworks.aero/spaceworks-enterprises-awarded-a-nasa-techleap-prize-in-partnership-with-astral-materials/
+
+### OPP-586 | NASA TechLeap Space Technology Payload Challenge cohort (10 teams, up to $500K each + flight test)
+**Status:** NEW — auto-sourced 2026-10-06 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** NASA-funded startups (flight-test prize winners)
+**Value:** $7,500–$255,000 per team depending on mass. Cubesat/BRIC-class runs $7,500–$45,000; a Quarter bay is $255,000. Cohort potential is roughly $0.3M–$1M+ if 3–4 teams book.
+**Due:** Rolling
+**POC:** Individual team PIs. Names not retrieved in search. Pull the roster from the NASA Flight Opportunities TechLeap page. Program contact is the NASA Flight Opportunities office; no verified email.
+**Why fit:** The teams have prize money earmarked for a flight test. NASA announced them on 6/26/2025, and testing was targeted for summer 2026, which implies some have slipped or are still unmatched to a vehicle.
+**Next action:** Pull the full team list and each team's assigned flight provider from the NASA TechLeap page. Stage the unassigned teams as CRM leads, tagged and screened through CSL.
+**Source:** https://www.nasa.gov/stmd-flight-opportunities/access-flight-tests/nasa-techleap-prize-information/space-technology-payload-challenge/
+
+### OPP-587 | Georgia Tech Low Gravity Lab – smallsat propellant positioning / cryo ullage control
+**Status:** NEW — auto-sourced 2026-10-06 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University propulsion / CFM lab
+**Value:** $22,500 (3U) to $255,000 (Quarter bay). Estimated ~$45K–$255K.
+**Due:** Rolling
+**POC:** Low Gravity Lab principal investigator (name not verified in search). Use the lab's contact page; email unverified, likely the PI's @gatech.edu address.
+**Why fit:** The lab has already flown propellant-management devices on parabolic flights through NASA Flight Opportunities. Parabolic runs last about 20 s, so BLK3's longer microgravity period is the natural next step.
+**Next action:** Identify the PI and current funding (NASA Flight Opportunities or SBIR) from the lab page. Stage a CRM record and a draft intro that compares BLK3 duration to parabolic.
+**Source:** https://lowgravitylab.ae.gatech.edu/smallsat-propellant-positioning
+
+### OPP-588 | Eta Space – cryogenic fluid management (LOXSAT follow-on / risk-reduction flights)
+**Status:** NEW — auto-sourced 2026-10-06 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial CFM / in-space propulsion
+**Value:** $255,000 (Quarter bay) to $510,000 (Half bay) for a CFM component test article. Add $25,000 for live telemetry.
+**Due:** Rolling
+**POC:** Dr. William 'Bill' Notardonato, Founder, Eta Space. Email unverified; best guess bill@etaspace.com (confirm the domain).
+**Why fit:** Eta Space is flying LOXSAT with NASA, a 9-month demo of 11 CFM technologies. Suborbital flights of individual components such as gauging and pressure control could reduce risk before or alongside that mission.
+**Next action:** Stage a CRM record and verify the contact route. Draft a CFM-specific intro that cites Exos cryo-priming work, for human review.
+**Source:** https://cislunarspace.cn/en/space-news/2026/05/2026-05-14-nasa-loxsat-cryogenic-demo/
+
+### OPP-589 | Space Cargo Unlimited (Phoenix 2 / BentoBox) – European in-space manufacturing
+**Status:** NEW — auto-sourced 2026-10-06 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** International microgravity manufacturing / pharma-materials
+**Value:** $45,000 (6U) to $255,000 (Quarter bay). Estimated ~$45K–$255K for pre-orbital process validation.
+**Due:** Rolling
+**POC:** Business-development contact at Space Cargo Unlimited (name not retrieved). Email unverified; use the company's contact form or LinkedIn to identify the BD lead.
+**Why fit:** The company raised €27.5M (Series A, Sept 2025). It is flying Phoenix 2 / BentoBox in 2026 and has a sustained need for microgravity validation of its manufacturing experiments.
+**Next action:** Run CSL and export (ITAR/EAR) screening on the non-U.S. entity first. Then stage a CRM record and a foreign-outreach-policy review item for human sign-off.
+**Source:** https://newspaceeconomy.ca/2025/11/13/european-startups-advance-commercial-space-manufacturing-with-2026-mission/
+
+### OPP-590 | Inbound Aerospace (IIT Madras incubated) – India launch/avionics startup flight-qualification
+**Status:** NEW — auto-sourced 2026-10-06 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** International startup / avionics-propulsion flight qualification
+**Value:** $22,500 (3U) to $255,000 (Quarter bay). Estimated ~$45K–$255K. Low-probability, funded by a $1M seed round.
+**Due:** Rolling
+**POC:** Founders (names not verified in search). Email unverified; identify through the company website or the Speciale Invest announcement.
+**Why fit:** The company is early-stage and raised $1M from Speciale Invest. Low-cost suborbital flight heritage on a licensed U.S. reusable vehicle is a typical need for such a company.
+**Next action:** Before staging, run CSL and export screening and review against the foreign-outreach policy. Deprioritize unless a U.S. export path is cleared.
+**Source:** https://www.outlookbusiness.com/corporate/iit-madras-incubated-start-up-inbound-aerospace-bags-1-mn-from-speciale-invest
+
+
+
+
+## AUTO-SOURCED — 2026-10-07 (Opportunities Engine)
+
+### OPP-591 | Elethron ĀTAR substrate-manufacturing hardware: BLK3 pre-flight microgravity test
+**Status:** NEW — auto-sourced 2026-10-07 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial microgravity materials / semiconductor
+**Value:** $45,000 (6U-equivalent 2X3 array) to $255,000 (Quarter bay, <=34 kg); upsell with live telemetry +$25,000
+**Due:** Rolling
+**POC:** Elethron leadership (name not verified; confirm on elethron.com). Best-guess email: info@elethron.com. Title: CEO/Founder
+**Why fit:** Elethron just reserved a Starlab payload slot for a six-month in-orbit pilot of its ĀTAR platform, and a short suborbital flight on BLK3 would let it check hardware and process behaviour in microgravity before that commitment.
+**Next action:** Stage a researched dossier in the CRM, with the POC name and email verified from the Elethron site and the Starlab announcement, plus a draft Quarter-bay/6U quote for Lizi to review (no external send).
+**Source:** https://satnews.com/2026/09/29/starlab-elethron-partner-for-autonomous-in-space-semiconductor-processing/
+
+### OPP-592 | Saber Astronautics: Starlab payload channel partner, suborbital pre-qualification aggregator
+**Status:** NEW — auto-sourced 2026-10-07 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** Broker / aggregator
+**Value:** Resale channel. Each Starlab customer needing pre-flight qualification is $7,500 (1U) to $255,000 (Quarter), with a full-bay aggregation target of $1,012,500.
+**Due:** Rolling
+**POC:** Saber Astronautics business development (name not verified; confirm on saberastro.com). Best-guess email: info@saberastro.com. Title: CEO/BD Lead
+**Why fit:** Saber now provides feasibility assessments, hardware integration and in-orbit operations support to Starlab customers, so it can bundle BLK3 as the low-cost flight-qualification step ahead of orbital payload services.
+**Next action:** Stage a partnership one-pager and a reseller/referral term sheet draft in MC for Jon's review. Check the relationship-first and no-advisor-retainer rules before drafting (no external send).
+**Source:** https://www.militaryaerospace.com/home/news/55320846/starlab-space-partners-with-saber-astronautics-for-payload-services-on-commercial-space-station
+
+### OPP-593 | Colorado Space Grant Consortium (RockSat-X / RockOn): university payload aggregation
+**Status:** NEW — auto-sourced 2026-10-07 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University / education suborbital research
+**Value:** Multi-team aggregation: 4 to 6 university 3U to 6U payloads at $22,500 to $45,000 each ($90,000 to $270,000), or a Quarter bay at $255,000
+**Due:** Rolling
+**POC:** Chris Koehler, Director, Colorado Space Grant Consortium. Best-guess email: christopher.koehler@colorado.edu (unverified)
+**Why fit:** The consortium manages the NASA-partnered RockSat student payload programs, which depend on a few annual sounding-rocket flights from Wallops. A second, commercial BLK3 flight to >85 km at cubesat-class prices would add flight capacity for its many university teams.
+**Next action:** Stage the verified contact in the CRM and draft a BLK3 education/cubesat-tier brief. Add a task to check whether the NASA Space Grant funding lines allow commercial flights (no external send).
+**Source:** https://www.nasa.gov/missions/sounding-rockets/rocksat-x-student-experiments-launching-aug-14-from-nasa-wallops/
+
+### OPP-594 | NASA TechRise student teams (2026-27 cycle): commercial suborbital flight capacity
+**Status:** NEW — auto-sourced 2026-10-07 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** NASA Flight Opportunities / education
+**Value:** Per-team 1U to 3U lots at $7,500 to $22,500. A 35-team batch like the current Virgin Galactic cohort would be a block of about 3 to 6U-class slots, roughly $45,000 to $270,000 per flight.
+**Due:** Rolling
+**POC:** NASA Flight Opportunities / TechRise program office (name not verified; check nasa.gov/techrise-student-challenge). Best-guess email: flightopportunities@nasa.gov (unverified). Title: Program Manager
+**Why fit:** TechRise now relies on Virgin Galactic and World View for flights, and a fifth cohort of 60 teams is flying in 2026 with a new 2026-27 cycle opening. A second BLK3 flight offers another commercial option and could help get Exos onto the Flight Opportunities provider roster.
+**Next action:** Stage a note to confirm Exos's Flight Opportunities provider-pool status and the next solicitation timing, and flag it for Jon (no external send).
+**Source:** https://www.nasa.gov/stmd-flight-opportunities/access-flight-tests/techrise/projects-from-the-next-generation-take-flight/
+
+
+
+
+## AUTO-SOURCED — 2026-10-08 (Opportunities Engine)
+
+### OPP-595 | WVU Microgravity Research Team (Sierros) - 3D printing / foam materials in microgravity
+**Status:** NEW — auto-sourced 2026-10-08 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University microgravity materials lab (NASA Flight Opportunities alumni)
+**Value:** $260,500 (Quarter bay $255,000 + basic integration $500 + large-payload integration $5,000). Add-on: in-flight event triggers $1,000. A cheaper entry point is a 6U-equivalent at $45,000 if the printer is compact.
+**Due:** Rolling
+**POC:** Dr. Konstantinos Sierros, Associate Professor and Associate Chair for Research, Mechanical & Aerospace Engineering, WVU (best-guess email: konstantinos.sierros@mail.wvu.edu; faculty page lists phone 304-293-3420, so verify the email there first)
+**Why fit:** Their custom microgravity 3D printer has only flown on 20-second parabolic arcs, and BLK3 gives several minutes of microgravity on a reusable vehicle at a price a TechFlights award can cover.
+**Next action:** Stage a WVU prospect record in the CRM, pull the confirmed email from the faculty page, and draft a one-page BLK3 microgravity-duration brief for Jon's review (staging only, no external send).
+**Source:** https://konstantinossierros.faculty.wvu.edu/group
+
+### OPP-596 | RPI Ring-Sheared Drop bioreactor (Hirsa) - suborbital follow-on
+**Status:** NEW — auto-sourced 2026-10-08 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University microgravity bio / fluids lab (NASA Flight Opportunities alumni)
+**Value:** $260,500 (Quarter bay $255,000 + $5,500 integration). Add-ons: sealed environment $1,200 and live telemetry $25,000 would suit a bio payload.
+**Due:** Rolling
+**POC:** Prof. Amir Hirsa, Professor of Mechanical, Aerospace & Nuclear Engineering, Rensselaer Polytechnic Institute (best-guess email: hirsaa@rpi.edu, unverified)
+**Why fit:** Their ring-sheared drop bioreactor was matured on parabolic flights through Flight Opportunities and later flew to the ISS, so a minutes-long suborbital flight is a natural next test, and the sealed-environment add-on fits a bio payload.
+**Next action:** Stage an RPI prospect record, check whether they hold a current NASA or NSF award that could fund a flight, and prepare a quote sheet for Jon to approve.
+**Source:** https://www.nasa.gov/news-release/nasa-selects-15-new-potential-space-technologies-for-flight-tests-looks-to-expand-opportunities
+
+### OPP-597 | Creare - liquid propellant transfer / cryogenic fluid management flight test
+**Status:** NEW — auto-sourced 2026-10-08 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (cryo / CFM)
+**Value:** $535,500 (Half bay $510,000 + $5,500 integration + live telemetry $25,000). Upside: $1,018,000 if they need the full bay.
+**Due:** Rolling
+**POC:** Creare Business Development / Space Systems lead (name unconfirmed; best-guess role inbox: info@creare.com, so identify the named PI for the 2022 TechFlights liquid-transfer award via the NASA award page)
+**Why fit:** Creare won a NASA TechFlights award in 2022 for liquid propellant transfer, and BLK3 is a reusable suborbital vehicle that can give them the microgravity and settling-transition conditions needed to mature the technology.
+**Next action:** Identify the named Creare PI on the 2022 TechFlights award, check their flight-vendor status, and stage a CFM-focused BLK3 fit brief for Jon (internal only).
+**Source:** https://executivebiz.com/2021/12/nasa-to-fund-9-space-tech-projects-under-techflights-solicitation
+
+### OPP-598 | Paragon Space Development Corp - liquid condensation capture / separation and life-support tech
+**Status:** NEW — auto-sourced 2026-10-08 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (thermal / life support)
+**Value:** $515,500 (Half bay $510,000 + $5,500 integration). Add-on: sealed environment $1,200.
+**Due:** Rolling
+**POC:** Paragon Space Development Corporation Business Development (name unconfirmed; best-guess: bizdev@paragonsdc.com, so confirm the named TechFlights PI)
+**Why fit:** Paragon has a 2022 TechFlights award for condensate capture and separation, which needs repeated microgravity exposure, and it regularly buys commercial flight services.
+**Next action:** Look up Paragon's TechFlights PI and flight-vendor history, and stage a prospect record with a recommended Half-bay quote for Jon's review.
+**Source:** https://potomacofficersclub.com/news/nasa-selected-nine-entities-to-test-commercial-space-vehicles
+
+### OPP-599 | Giner (Giner ELX) - fuel cell energy storage flight test
+**Status:** NEW — auto-sourced 2026-10-08 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (power / energy storage)
+**Value:** $260,500 (Quarter bay $255,000 + $5,500 integration). Add-ons: external power $750 and sealed environment $1,200.
+**Due:** Rolling
+**POC:** Giner ELX Business Development / Principal Investigator on the 2022 TechFlights award (name and email unconfirmed; verify before staging)
+**Why fit:** Giner has a 2022 TechFlights award for a fuel cell energy storage device, a power system that needs a flight-relevant microgravity and vibration environment, and BLK3 offers both on a reusable vehicle.
+**Next action:** Confirm the Giner PI and whether the 2022 award's flights are already booked, then stage a Quarter-bay quote for Jon's approval.
+**Source:** https://potomacofficersclub.com/news/nasa-selected-nine-entities-to-test-commercial-space-vehicles
+
+### OPP-600 | Rhea Space Activity - navigation / landing systems flight test
+**Status:** NEW — auto-sourced 2026-10-08 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification (navigation / avionics)
+**Value:** $260,500 (Quarter bay $255,000 + $5,500 integration). Add-ons: precision pointing $5,000 and in-flight event triggers $1,000.
+**Due:** Rolling
+**POC:** Rhea Space Activity leadership / PI on the 2022 TechFlights award (name and email unconfirmed; verify before staging)
+**Why fit:** Rhea has a 2022 TechFlights award for navigation and landing technology, and BLK3's vertical landing profile and precision-pointing add-on give them a repeatable test.
+**Next action:** Confirm the Rhea PI and current funding, and stage a navigation / landing-focused BLK3 brief for Jon's review.
+**Source:** https://potomacofficersclub.com/news/nasa-selected-nine-entities-to-test-commercial-space-vehicles
+
+
+
+
+## AUTO-SOURCED — 2026-10-09 (Opportunities Engine)
+
+### OPP-601 | Carthage College / Wisconsin Space Grant – Microgravity Ullage Trapping (MUT) flight test
+**Status:** NEW — auto-sourced 2026-10-09 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University propulsion / cryo-propellant management (NASA TechLeap winner)
+**Value:** $45,000 (6U-equivalent tier) to $255,000 (Quarter bay, 34 kg), plus $500 basic integration, plus $5,000 large-payload integration if Quarter. Add-ons: live telemetry $25,000, sealed environment $1,200.
+**Due:** Rolling
+**POC:** Dr. Kevin Crosby, Professor of Physics & Wisconsin Space Grant Director, Carthage College. Email is a best guess: kcrosby@carthage.edu. Confirm on carthage.edu.
+**Why fit:** Carthage won a NASA TechLeap Prize (up to $500K plus a flight test) for propellant-tank ullage trapping, has flown before on New Shepard and G-Force One, and needs repeat microgravity coast time on a reusable suborbital vehicle.
+**Next action:** Stage a one-page BLK3 Flight 2 microgravity-window and price sheet for Jon to review, and add Crosby to the CRM as a prospect (staging only, no external send).
+**Source:** https://www.nasa.gov/stmd-flight-opportunities/access-flight-tests/nasa-techleap-prize-information/space-technology-payload-challenge/
+
+### OPP-602 | Juno Propulsion – RDRE satellite-propulsion flight demo (green propellants)
+**Status:** NEW — auto-sourced 2026-10-09 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space propulsion flight qualification (NASA TechLeap winner)
+**Value:** $255,000 (Quarter bay) to $510,000 (Half bay), plus $5,500 integration and $25,000 live telemetry. List price about $285,500 to $540,500.
+**Due:** Rolling
+**POC:** Dr. Alexis Harroun, Founder & CEO, Juno Propulsion. Email is a best guess: alexis@junopropulsion.com. Confirm via the company site or LinkedIn.
+**Why fit:** Juno won a NASA TechLeap Prize for a rotating detonation engine and needs flight data before its orbital demo. A short BLK3 Flight 2 hot-fire or thermal-vibe data point de-risks that step.
+**Next action:** Stage a BLK3 payload-fit memo: bay envelope, propellant and safety constraints, and Part 450 payload-hazard flow-down. Exos is the vehicle provider, not a propulsion provider, so it should be framed as a hosted-payload test only.
+**Source:** https://payloadspace.com/rotating-detonation-engine-startup-wins-nasa-techleap-prize
+
+### OPP-603 | SpaceWorks Enterprises + Astral Materials – COSMIC silicon crystal precursor test
+**Status:** NEW — auto-sourced 2026-10-09 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity materials / in-space manufacturing (NASA TechLeap winner)
+**Value:** $255,000 (Quarter bay) to $510,000 (Half bay) for a furnace and sample module, plus $5,500 integration. Add-ons: sealed environment $1,200, external power $750.
+**Due:** Rolling
+**POC:** SpaceWorks Enterprises business-development lead (name to confirm on spaceworks.aero). Email is a best guess: info@spaceworks.aero. Astral Materials founders are a secondary contact.
+**Why fit:** Their orbital COSMIC mission is scheduled for 2027. A suborbital furnace and sample precursor on BLK3 Flight 2 would de-risk the thermal and microgravity process before that launch.
+**Next action:** Stage a SpaceWorks/Astral account brief with a precursor-test pitch and a Quarter-bay quote draft. Check CRM first for any past SpaceWorks contact.
+**Source:** https://www.spaceworks.aero/spaceworks-and-astral-materials-advance-in-nasa-space-technology-payload-challenge/
+
+### OPP-604 | Helogen Corporation – CELS autonomous bio lab flight test
+**Status:** NEW — auto-sourced 2026-10-09 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity bio / sample-handling automation (NASA TechLeap winner)
+**Value:** $255,000 (Quarter bay, 34 kg), plus $5,500 integration. Add-ons: live telemetry $25,000 and sealed environment $1,200. About $286,700.
+**Due:** Rolling
+**POC:** Helogen CEO (first name Shishir, surname unverified), Helogen Corporation. Email is a best guess, so find it on the company site or LinkedIn before use.
+**Why fit:** CELS is an autonomous biological sample-preparation payload designed for suborbital, hosted-orbital and CLPS use. Live telemetry matches the CELS real-time-data pitch, and it is already prize-funded for a flight test.
+**Next action:** Stage a contact-research task to confirm the CEO's identity and email, then queue a BLK3 sealed-environment and live-telemetry quote draft for Jon's review.
+**Source:** https://www.nasa.gov/stmd-flight-opportunities/access-flight-tests/nasa-techleap-prize-information/space-technology-payload-challenge/
+
+### OPP-605 | Ambrosia Space Manufacturing – Cel-Sep centrifuge microgravity test
+**Status:** NEW — auto-sourced 2026-10-09 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity bio / space food and nutrient production (NASA TechLeap winner)
+**Value:** $255,000 (Quarter bay), plus $5,500 integration. A compact unit could fit the $45,000 (6U) tier instead. Add-on: sealed environment $1,200.
+**Due:** Rolling
+**POC:** Ambrosia Space Manufacturing founder/CEO (name to confirm via the BIO convention exhibitor page). Email is a best guess: info@ambrosiaspace.com. Confirm the domain.
+**Why fit:** Cel-Sep is a prize-funded centrifuge with a flight test planned. BLK3 offers a short micro-g window, and the payload could be turned around quickly after recovery.
+**Next action:** Stage a contact-research task, then a short BLK3 fit note covering envelope, g-loads and recovery turnaround.
+**Source:** https://convention.bio.org/exhibitors/ambrosia-space
+
+### OPP-606 | Space Dust Research & Technologies (CU Boulder/LASP) – Electron Beam Dust Mitigation test
+**Status:** NEW — auto-sourced 2026-10-09 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University spin-out sensors / lunar technology (NASA TechLeap winner)
+**Value:** $45,000 (6U tier) to $255,000 (Quarter bay), plus $500 to $5,500 integration. Add-ons: external power $750, side mount with window $1,000.
+**Due:** Rolling
+**POC:** Dr. Mihaly Horanyi, Co-founder, Space Dust Research & Technologies, CU Boulder Physics/LASP. Email is a best guess: mihaly.horanyi@colorado.edu. Dr. Xu Wang is the co-founder.
+**Why fit:** The electron-beam dust-mitigation hardware needs vacuum and flight-relevant exposure, and the team has LASP flight heritage and prize funding.
+**Next action:** Stage a payload-fit one-pager focused on the side-mount and vacuum-exposure configuration for review.
+**Source:** https://www.colorado.edu/venturepartners/space-dust-research-technologies-llc
+
+### OPP-607 | Ecoatoms – HERMES extraction and reagent-mixing hardware
+**Status:** NEW — auto-sourced 2026-10-09 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity bio / chemistry hardware (NASA TechLeap winner, repeat flyer)
+**Value:** $45,000 (6U tier) to $255,000 (Quarter bay). Add-on: sealed environment $1,200.
+**Due:** Rolling
+**POC:** Ecoatoms leadership (Atherton, CA; name to confirm on the company site). Email is a best guess: info@ecoatoms.com.
+**Why fit:** Ecoatoms has flown on New Shepard before (a NASA TechFlights 2021 selection) and won a TechLeap Prize for HERMES. They are a repeat suborbital buyer who may be open to a second provider.
+**Next action:** Stage a contact-research task and a competitive comparison versus New Shepard on price per kg and manifest availability.
+**Source:** https://www.nasa.gov/technology/nasa-selects-nine-space-technologies-for-commercial-suborbital-flight-tests/
+
+### OPP-608 | Aerofly LLC – Rego-LIFT regolith conveyance for oxygen ISRU
+**Status:** NEW — auto-sourced 2026-10-09 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial ISRU / flight-qualification startup (NASA TechLeap winner)
+**Value:** $255,000 (Quarter bay, 34 kg), plus $5,500 integration. Lower if it fits a Custom volume tier.
+**Due:** Rolling
+**POC:** Aerofly LLC principal (name and email to be researched). There is no verified contact yet.
+**Why fit:** Rego-LIFT is a prize-funded technology with a flight test planned, and it needs partial-gravity or microgravity exposure of regolith handling. BLK3 provides a short micro-g window and recovery of intact hardware.
+**Next action:** Stage a contact-research task to find the Aerofly principal, then add the prospect to the CRM at low priority until the fit is confirmed.
+**Source:** https://www.nasa.gov/stmd-flight-opportunities/access-flight-tests/nasa-techleap-prize-information/space-technology-payload-challenge/
+
+
+
+
+## AUTO-SOURCED — 2026-10-10 (Opportunities Engine)
+
+### OPP-609 | UF Cryogenic Chilldown / Boil-off Reduction (Chung lab) - BLK3 Flight 2 Quarter Payload
+**Status:** NEW — auto-sourced 2026-10-10 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University propulsion / cryo-CFM (NASA Flight Opportunities PI)
+**Value:** $255,000 (Quarter bay, 34 kg) + $5,500 integration; live telemetry add-on $25,000 -> ~$285,500
+**Due:** Rolling
+**POC:** Dr. Jacob N. Chung, Professor and PI, Mechanical & Aerospace Engineering, University of Florida - jnchung@ufl.edu (best guess; verify on the UF directory)
+**Why fit:** The Chung lab has flown NASA Flight Opportunities-funded reduced-gravity cryogenic chilldown experiments on parabolic aircraft (Zero-G Corp), and BLK3 gives it a longer, higher-fidelity microgravity window on a reusable suborbital vehicle.
+**Next action:** Stage a one-page BLK3 Flight 2 quarter-bay fit sheet (chilldown duration vs. parabolic seconds, 34 kg / 25x36 in envelope) for Jon's review before any outreach, and check the Flight Opportunities flight-summary page for Chung's follow-on funding.
+**Source:** https://innovate.research.ufl.edu/2025/07/16/uf-engineering-team-tackles-spaceflight-fuel-challenge-in-zero-gravity-experiment
+
+### OPP-610 | UCF NASA Flight Opportunities-selected space tech projects - cubesat/BRIC-class and Quarter Payload slots
+**Status:** NEW — auto-sourced 2026-10-10 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University microgravity / space-tech labs (NASA TechFlights selectees)
+**Value:** $22,500-$45,000 per 3U-6U unit, or $255,000 for a Quarter bay if consolidated. Pipeline range is $22.5K-$255K.
+**Due:** Rolling
+**POC:** UCF Flight Opportunities PIs (3 projects selected; confirm names on the UCF news page) - best-guess email firstname.lastname@ucf.edu; contact via the UCF Office of Research and the Florida Space Institute as a fallback
+**Why fit:** UCF already has three projects approved for suborbital rocket, balloon or parabolic flights, so they hold NASA flight funding that can be redirected to a reusable suborbital vehicle with a published rate card.
+**Next action:** Stage a PI-identification worksheet (names, project titles, which ones are slated for suborbital rocket flights) and a BLK3 cubesat/BRIC tier price sheet for Jon's approval.
+**Source:** https://www.ucf.edu/news/nasa-selects-3-ucf-projects-for-flight-opportunities-program/
+
+### OPP-611 | Radian Aerospace - Dur-E-Therm thermal protection system flight test
+**Status:** NEW — auto-sourced 2026-10-10 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (reentry TPS / hypersonic)
+**Value:** $255,000 (Quarter bay) for a TPS coupon and instrumentation rack; $510,000 (Half) if combined with a sensor suite
+**Due:** Rolling
+**POC:** Radian Aerospace CTO / VP Engineering (name to be confirmed on LinkedIn) - best-guess info@radian.com or the contact form at radian.com
+**Why fit:** Radian has said it is looking for ways to test Dur-E-Therm, and BLK3's reusable suborbital profile gives a relevant thermal and acoustic flight environment at a fraction of an orbital rideshare's cost.
+**Next action:** Stage a TPS-test concept note (side-mount window add-on $1,000, precision pointing $5,000, live telemetry $25,000) and have Jon assign a technical lead to identify Radian's CTO.
+**Source:** https://payloadspace.com/radian-plans-re-entry-vehicle-for-hypersonic-tests/
+
+### OPP-612 | Atmos Space Cargo - Phoenix reentry capsule subsystem and avionics pre-qualification
+**Status:** NEW — auto-sourced 2026-10-10 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity / reentry logistics startup (Europe)
+**Value:** $255,000 (Quarter bay) for a subsystem or sensor pre-flight; up to $510,000 (Half) for a full avionics and TPS rack
+**Due:** Rolling
+**POC:** Sebastian Klaus, CEO / Co-founder, Atmos Space Cargo - sebastian.klaus@atmos-space-cargo.com (best guess; verify)
+**Why fit:** Atmos is preparing its Phoenix 2 orbital return mission for 2026 with Space Cargo Unlimited, and a low-cost BLK3 suborbital flight could retire reentry-avionics and sensor risk before the next Phoenix build.
+**Next action:** Stage an international-outreach review under the foreign outreach policy (ITAR/EAR screen and CSL check) before any contact, with a draft one-pager attached.
+**Source:** https://aviationweek.com/space/launch-vehicles-propulsion/orbital-cargo-firms-aim-make-space-reentry-routine
+
+### OPP-613 | Varda Space Industries - TPS tile and hypersonic sensor pre-qualification
+**Status:** NEW — auto-sourced 2026-10-10 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity manufacturing / reentry capsule operator
+**Value:** $255,000 (Quarter bay) for TPS tile and sensor coupons; $510,000 (Half) for a multi-experiment rack. Both are budgetary.
+**Due:** Rolling
+**POC:** Will Bruey, CEO / Co-founder, Varda Space Industries - will@varda.com (best guess; verify); alternate: Varda Head of Engineering
+**Why fit:** Varda's W-6 capsule is flying NASA Ames instrumented TPS tiles and new autonomous-navigation hardware, so it has a recurring need for cheap, fast pre-flight environment data that BLK3 can provide.
+**Next action:** Stage a Varda dossier in the CRM (funding, W-series cadence, prior vendors) with a BLK3 tile-test concept for Jon's decision on whether to approach.
+**Source:** https://www.easternprogress.com/varda-launches-w-6-expanding-hypersonic-reentry-and-autonomous-navigation-capabilities/article_cf979863-7bd2-559b-8c5b-e82138f3c128.html
+
+### OPP-614 | Starlab commercial payload reservers (United Semiconductors, LambdaVision) - suborbital precursor flights
+**Status:** NEW — auto-sourced 2026-10-10 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity materials/bio (via Voyager Starlab reservations)
+**Value:** $22,500-$45,000 (3U-6U or BRIC class) per customer for a precursor experiment; $255,000 (Quarter) if either customer wants a larger apparatus
+**Due:** Rolling
+**POC:** United Semiconductors LLC leadership (name TBD) and Nicole Wagner, CEO, LambdaVision - best guess nicole@lambdavision.com (verify)
+**Why fit:** Both are moving experiments from ISS demonstrations toward production on Starlab, which is more than three years away, and BLK3 offers an inexpensive intermediate microgravity test of crystal growth or thin-film processes.
+**Next action:** Stage a materials/bio fit memo (flight duration needed vs. BLK3 microgravity window) for Jon's review, with both companies flagged in the CRM as not yet contacted.
+**Source:** https://voyagertechnologies.com/?p=120818
+
+
+
+
+## AUTO-SOURCED — 2026-10-11 (Opportunities Engine)
+
+### OPP-615 | Portal Space Systems: BLK3 flight qualification of high-power thruster and avionics subsystems
+**Status:** NEW — auto-sourced 2026-10-11 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (in-space propulsion)
+**Value:** $510,000 (Half bay, up to 68 kg) + $5,500 integration ($500 basic + $5,000 large payload) = $515,500 list; add live telemetry $25,000 = $540,500. A Quarter bay is $255,000 if only a subsystem flies.
+**Due:** Rolling
+**POC:** Ian Vorbach, Chief Revenue Officer, best-guess ivorbach@portalspacesystems.com (domain and format unverified; confirm via LinkedIn or the company site before use). Alternate: Jeff Thornburg, CEO/co-founder.
+**Why fit:** Portal closed a $50M Series A in April 2026 (Geodesic Capital and Mach33 led; Booz Allen Ventures participated) and targets a Q4 2026 on-orbit demo, so a reusable suborbital flight in Mar-Apr 2027 could retire subsystem risk (valves, avionics, thermal) ahead of later missions.
+**Next action:** Stage a one-page SPACEavailable fit brief and a draft intro for Jon's review in the MC outreach queue, confirm Vorbach's email, and do not send externally.
+**Source:** https://techcrunch.com/2026/04/09/portal-raises-50-million-to-build-a-new-kind-of-high-power-rocket-engine/
+
+### OPP-616 | Varda Space Industries: suborbital qualification of reentry TPS, sensors and avionics
+**Status:** NEW — auto-sourced 2026-10-11 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity manufacturing / reentry testbed (commercial)
+**Value:** $255,000 (Quarter bay, up to 34 kg) + $5,500 integration = $260,500 list; $285,500 with live telemetry. Upsell to a Half bay at $510,000 if they fly a multi-article rack.
+**Due:** Rolling
+**POC:** Will Bruey, CEO/co-founder, best-guess will@varda.com (unverified). A better route may be the hosted-payload or payloads systems integration lead; the person in that role is not confirmed.
+**Why fit:** Varda is building a hypersonic reentry testbed and hosted-payload business (including for the USAF), and a cheap, reusable, recoverable suborbital flight lets it or its customers test sensors and materials before committing to a capsule slot.
+**Next action:** Pull the hosted-payload lead's name from Varda's job postings and LinkedIn, then stage a tailored 'pre-capsule test flight' brief for Jon's review. Check the AFRL/SpaceWERX overlap first so we don't collide with the existing pipeline.
+**Source:** https://www.hjkc.de/_blog/21086-raumfahrt-u-s-air-force-to-test-hardware-at-hypersonic-speeds-on-varda-s-space-capsules/
+
+### OPP-617 | Space Forge (UK): ForgeStar-2 return-path hardware, furnace and heat-shield pre-qualification
+**Status:** NEW — auto-sourced 2026-10-11 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity materials / in-space manufacturing
+**Value:** $255,000 (Quarter bay) + $5,500 integration = $260,500 list; a 6U-equivalent module would be $45,000 + $500 integration.
+**Due:** Rolling
+**POC:** Joshua Western, CEO/co-founder, best-guess josh.western@spaceforge.com (unverified).
+**Why fit:** Space Forge flew ForgeStar-1 in December 2025 and plans to build and launch ForgeStar-2 in 2026-2027 for the first attempt to return space-made semiconductor material, so it needs recoverable-hardware and thermal test flights, which BLK3 offers.
+**Next action:** Stage a draft brief and an ITAR/EAR and foreign-person screening note in MC. UK counterparty, so it needs the Empowered Official (John Quinn) and reviewer Denise Shirey, and it goes through the CJ gate before any outreach.
+**Source:** https://spaceodysseyhub.com/companies/space-forge
+
+### OPP-618 | ATMOS Space Cargo (Germany): PHOENIX 2/3 heat-shield, inflatable-shield and GNC sensor flight test
+**Status:** NEW — auto-sourced 2026-10-11 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial return-capsule developer (European)
+**Value:** $255,000 (Quarter bay) + $5,500 integration = $260,500 list; with precision pointing ($5,000) and live telemetry ($25,000) = $290,500.
+**Due:** Rolling
+**POC:** Sebastian Klaus, CEO/co-founder, best-guess sebastian.klaus@atmos-space-cargo.com (unverified). The CEO's name is from memory and not confirmed by this search, so verify it.
+**Why fit:** ATMOS is accelerating PHOENIX 2, a recoverable capsule aimed at research and manufacturing downmass, and its launch has slipped, so a low-cost recoverable suborbital flight could de-risk its inflatable heat shield and avionics.
+**Next action:** Verify the CEO's name and contact path, then stage a draft brief in MC. Foreign entity, so it goes through the export-control and CJ gate before any outreach, per foreign-outreach policy.
+**Source:** https://europeanspaceflight.com/atmos-moves-forward-with-phoenix-3-as-phoenix-2-launch-slips/
+
+### OPP-619 | University of Florida (Ferl / Paul lab): follow-on gene-expression and plant-biology flights (BRIC-class)
+**Status:** NEW — auto-sourced 2026-10-11 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University microgravity bio lab (NASA Flight Opportunities-funded)
+**Value:** $22,500 (Full BRIC, up to 3 kg) per flight, plus $500 basic integration; $45,000 for a 6U-equivalent multi-canister set. This is a small account, but it gives credible academic flight heritage.
+**Due:** Rolling
+**POC:** Dr. Robert (Rob) Ferl, Distinguished Professor, UF Horticultural Sciences, best-guess rferl@ufl.edu (unverified). Co-PI: Dr. Anna-Lisa Paul, apaul@ufl.edu (best guess).
+**Why fit:** Ferl was the first NASA-funded academic to run his own experiment on a commercial suborbital rocket (New Shepard) and studies gene expression through gravity transitions, so a BRIC-style payload on BLK3, which has no seat constraint, is a natural repeat customer.
+**Next action:** Check whether Ferl has an active NASA TechFlights or Space Biology award, then stage a BRIC-tier quote and a cost-compare against New Shepard in MC for Jon's review.
+**Source:** https://www.nasa.gov/directorates/stmd/first-nasa-supported-researcher-to-fly-on-suborbital-rocket/
+
+
+
+
+
+## AUTO-SOURCED — 2026-10-12 (Opportunities Engine)
+
+### OPP-620 | Eta Space – Cryo/CFM suborbital risk-reduction flight (follow-on to LOXSAT 1)
+**Status:** NEW — auto-sourced 2026-10-12 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (cryo/CFM)
+**Value:** $540,500 est. (Half bay $510,000 + large-payload integration $5,000 + basic integration $500 + live telemetry $25,000). Fallback Quarter bay $255,000 + $5,500 integration.
+**Due:** Rolling
+**POC:** Bill Notardonato, CEO, bill.notardonato@etaspace.com (email is a guess; confirm on LinkedIn or the company site)
+**Why fit:** Eta Space is a ULA-alumni CFM startup with a $27M NASA Tipping Point award for the LOXSAT 1 orbital demo and a planned Cryo-Dock depot, so cheap suborbital runs on valves, pressure control and slosh could retire risk before the next orbital step.
+**Next action:** Stage a one-page BLK3 CFM-test brief (SPACEavailable bay, telemetry add-on, hardware recovery) in the CRM as a draft for John's review and warm-intro routing; do not send externally.
+**Source:** https://cislunarspace.cn/en/space-news/2026/05/2026-05-14-nasa-loxsat-cryogenic-demo/
+
+### OPP-621 | University of Florida (Ferl/Paul) – researcher-tended plant gene-expression payloads
+**Status:** NEW — auto-sourced 2026-10-12 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University microgravity bio lab
+**Value:** $45,000 est. (6U-equivalent, 2X3 array) + $500 basic integration. Upsell to Quarter bay $255,000 if they add multiple fixation-tube sets.
+**Due:** Rolling
+**POC:** Rob Ferl, Distinguished Professor, rferl@ufl.edu (best guess); co-PI Anna-Lisa Paul, alp@ufl.edu (best guess)
+**Why fit:** UF holds NASA Flight Opportunities funding for suborbital gene-expression work, and BLK3 would give them an uncrewed, lower-cost, repeatable platform with recovered hardware for their fixation-tube protocols.
+**Next action:** Stage a draft quote for a 6U-equivalent bio payload with a 'second platform' pitch and queue it for John's approval.
+**Source:** https://news.ufl.edu/2024/04/ferl-blue-origin/
+
+### OPP-622 | Worcester Polytechnic Institute – electrically driven liquid film boiling microgravity campaign
+**Status:** NEW — auto-sourced 2026-10-12 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University propulsion/thermal-fluids lab (NASA REDDI awardee)
+**Value:** $260,500 est. (Quarter bay $255,000 + $5,000 large-payload integration + $500 basic). Add sealed environment $1,200 if needed.
+**Due:** Rolling
+**POC:** Prof. Jamal Yagoobi, Dept. of Mechanical & Materials Engineering, jyagoobi@wpi.edu (best guess, and the PI on this award is unverified)
+**Why fit:** WPI's boiling experiment was selected under NASA's REDDI Flight Opportunities call as preparation for an ISS experiment, and it needs repeated minutes-long microgravity runs that BLK3 can provide.
+**Next action:** Stage a CRM record and a draft capability sheet comparing BLK3 microgravity time and price against their current flight provider, then confirm the PI before any outreach.
+**Source:** https://executivebiz.com/?p=248584
+
+### OPP-623 | University of Iowa – CubeSat articulated boom microgravity test
+**Status:** NEW — auto-sourced 2026-10-12 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University deployables lab (NASA REDDI awardee)
+**Value:** $45,000 est. (6U 2X3 array) + $500 integration. Add precision pointing $5,000 and event triggers $1,000 if they want timed deployment.
+**Due:** Rolling
+**POC:** PI for 'CubeSat Articulated Boom Option Optimization in Microgravity', College of Engineering, University of Iowa (name and email unverified; look up on the NASA REDDI selection list and Iowa directory)
+**Why fit:** The deployable boom is a small-form-factor payload that fits a 6U slot, and NASA REDDI funding shows an active flight budget, so a follow-on flight on BLK3 with in-flight event triggers would be a natural next step.
+**Next action:** Identify the PI from the NASA selection list, then stage a 6U + event-trigger quote draft in the CRM.
+**Source:** https://executivebiz.com/?p=248584
+
+### OPP-624 | North Carolina State University – lightweight strain-energy deployed spacecraft booms
+**Status:** NEW — auto-sourced 2026-10-12 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University deployables/structures lab (NASA REDDI awardee)
+**Value:** $45,000 est. (6U 2X3 array) + $500 integration. A 3U side-by-side at $22,500 is the low case.
+**Due:** Rolling
+**POC:** PI for 'Lightweight Strain-energy Deployed Spacecraft Booms', NC State Mechanical & Aerospace Engineering (name and email unverified; confirm from the NASA selection list)
+**Why fit:** NC State has a NASA-funded deployable-boom project that needs a flight-environment test, and BLK3's small-bay pricing is a fit for a follow-on or a second-unit test.
+**Next action:** Confirm the PI and the status of their REDDI flight, then stage a 3U/6U quote draft for John's review.
+**Source:** https://executivebiz.com/?p=248584
+
+### OPP-625 | NASA Flight Opportunities – TechFlights/REDDI awardee pipeline (program-level channel)
+**Status:** NEW — auto-sourced 2026-10-12 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** NASA Flight Opportunities PIs / program channel
+**Value:** Aggregate potential: 3-6 awardees at $22,500-$260,500 each (about $135K-$1.0M). Per-flight estimates are priced off the rate card.
+**Due:** Rolling
+**POC:** NASA Flight Opportunities program office (Armstrong/Ames), contact via nasa.gov/stmd-flight-opportunities; named program manager to be identified
+**Why fit:** NASA pays for PIs' integration and flight, so BLK3 could be a lower-cost vendor on the Flight Opportunities provider roster. Awardees such as WPI, Iowa, NC State and UF could then fly without the PI paying out of pocket.
+**Next action:** Stage a task to review current Flight Opportunities provider on-ramp requirements and draft a capability statement for John's sign-off.
+**Source:** https://www.nasa.gov/stmd-flight-opportunities/access-flight-tests
+
+
+
+
+
+## AUTO-SOURCED — 2026-10-13 (Opportunities Engine)
+
+### OPP-626 | University of Florida (Astraeus Space Institute) – cryogenic propellant boil-off suppression flight demo
+**Status:** NEW — auto-sourced 2026-10-13 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University propulsion / cryo-CFM lab
+**Value:** Quarter Payload $255,000 + $5,000 large-payload integration + $500 basic integration = $260,500. Add Live Telemetry ($25,000) for $285,500. Upsell to Half Bay ($510,000) if a full tank assembly is flown.
+**Due:** Rolling
+**POC:** Jacob Chung, Ph.D., Professor, Mechanical & Aerospace Engineering, UF / Astraeus Space Institute – best-guess email jnchung@ufl.edu (unverified; confirm on the UF MAE directory)
+**Why fit:** Chung's team already ran a NASA Flight Opportunities zero-gravity test of boil-off-reducing coatings and methods. A suborbital rocket flight is the next step up from the parabolic aircraft tests, and a 3-5 minute microgravity window fits cryo fluid-settling studies.
+**Next action:** Stage a draft intro note and a one-page SPACEavailable cryo-payload fit sheet in MC for John's review. Look up Chung's current NASA Flight Opportunities or STMD award number to confirm funding before outreach.
+**Source:** https://innovate.research.ufl.edu/2025/07/16/uf-engineering-team-tackles-spaceflight-fuel-challenge-in-zero-gravity-experiment
+
+### OPP-627 | Oklahoma Suborbital Spaceplane Challenge – overflow and unselected research teams (OSIDA / Dawn Aerospace)
+**Status:** NEW — auto-sourced 2026-10-13 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** University / state-funded research consortium
+**Value:** Pipeline of 3-5 Oklahoma-led teams, each flying 6U-class payloads at $45,000 + $500 integration = $45,500. A Quarter Bay at $255,000 could be shared as a consolidated university payload. Realistic first-year total is $135K-$255K.
+**Due:** Applications closed 2026-09-25. Selections are pending, and Dawn flights start mid to late 2027.
+**POC:** Grayson Ardies, CEO, Oklahoma Space Industry Development Authority (OSIDA) – email unverified; get it from the oklahoma.gov/aerospace contact page
+**Why fit:** Dawn's Aurora spaceplane is limited to about 15 kg and 127 s of microgravity, and its flights start in mid to late 2027. BLK3 offers up to 135 kg and flies in Mar-Apr 2027, so teams that were not selected or that outgrow 15 kg are a natural overflow buyer set.
+**Next action:** Stage a briefing note on an OSIDA overflow offer and a shortlist of the Oklahoma applicant institutions (OSU, OU, and others) for John to review. Do not contact OSIDA until John approves the partnership angle.
+**Source:** https://oklahoma.gov/aerospace/outreach-advocacy/newsroom/first-u-s---runway-to-space--challenge-for-spaceplane-payload-te.html
+
+### OPP-628 | NASA TechRise Student Challenge alumni (Virgin Galactic / World View flights, 2026 cohort)
+**Status:** NEW — auto-sourced 2026-10-13 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Education / student suborbital research
+**Value:** A BRIC- or cubesat-class payload runs $7,500 (1U) to $45,000 (6U), plus $500 integration. A consortium of 4-6 school or university teams could fill a Quarter Bay at $255,000, or 6U-equivalent slots at $45,500 each.
+**Due:** Rolling
+**POC:** NASA Flight Opportunities / TechRise program office, NASA Armstrong – named teacher or PI contacts must be pulled from the NASA winners list; no verified individual email
+**Why fit:** There were 60 funded teams in 2026, and their TechRise flights were short-duration and Virgin Galactic- or balloon-limited. Re-flight demand for rocket-class microgravity and ascent loads is likely, and the price points are small.
+**Next action:** Pull the TechRise 2026 winner roster, rank the teams by hardware maturity and university affiliation, and stage a one-page 1U-6U student rideshare offer for John's approval.
+**Source:** https://www.nasa.gov/stmd-flight-opportunities/access-flight-tests/techrise/projects-from-the-next-generation-take-flight/
+
+### OPP-629 | NASA Flight Opportunities – commercial suborbital provider on-ramp for BLK3 (TechFlights and TechLeap buyers)
+**Status:** NEW — auto-sourced 2026-10-13 (Opportunities Engine)
+**Type:** Gov Solicitation
+**Segment:** Gov program channel (buyer pool of TechFlights PIs)
+**Value:** Each TechFlights PI typically buys a Quarter Bay at $255,000 or a 6U-class slot at $45,000, with NASA paying the provider. Indicative pool value is $255K-$1.0M per flight if 1-4 PIs are placed.
+**Due:** No 2026 TechFlights solicitation found. NASA TechLeap Robotically Manipulated Payload Challenge applications were due 2026-08-12.
+**POC:** Flight Opportunities Program Office, NASA Armstrong Flight Research Center – no named individual or verified email; identify the current program manager from nasa.gov/stmd-flight-opportunities
+**Why fit:** This is the main channel that funds university and startup PIs for suborbital tests. Exos could use the existing BLK3 NASA on-ramp work to be listed as a provider, which would route funded PIs to SPACEavailable.
+**Next action:** Stage a note for John on the next provider-selection or IDIQ opening, and pull the 2022-2025 PI list so the funded-PI prospect list can be built.
+**Source:** https://www.nasa.gov/stmd-flight-opportunities/access-flight-tests
+
+
+
+
+
+## AUTO-SOURCED — 2026-10-14 (Opportunities Engine)
+
+### OPP-630 | ATMOS Space Cargo: PHOENIX 2 reentry capsule subsystem validation
+**Status:** NEW — auto-sourced 2026-10-14 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (reentry / return logistics)
+**Value:** $255,000 (Quarter bay, up to 34 kg) + $5,500 integration + $25,000 live telemetry = ~$285,500 list. Upside: Half bay $510,000 for a full capsule mockup.
+**Due:** Rolling
+**POC:** Sebastian Klaus, Co-founder & CEO, sebastian.klaus@atmos-space-cargo.com (best-guess email, unverified)
+**Why fit:** ATMOS is developing PHOENIX 2 and 2.1 (targeted H2 2026) and needs cheap, recoverable flight tests of reentry, recovery and GNC subsystems before its seven planned orbital-return missions with Space Cargo Unlimited.
+**Next action:** Stage a Quarter-bay quote and a BLK3 Flight 2 recovery and telemetry one-pager in the CRM for Lizi to review and approve before any outreach.
+**Source:** https://payloadspace.com/atmos-and-space-cargo-unlimited-target-first-reentry-mission-in-2026/
+
+### OPP-631 | Eta Space: cryogenic fluid management component risk reduction (LOXSAT follow-on / Cryo-Dock)
+**Status:** NEW — auto-sourced 2026-10-14 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Cryo / CFM flight qualification
+**Value:** $255,000 (Quarter bay) + $5,500 integration = ~$260,500 list. A Half bay with sealed environment is $510,000 + $1,200 + $5,500.
+**Due:** Rolling
+**POC:** Dr. William (Bill) Notardonato, Founder & CEO, bill.notardonato@etaspace.com (best-guess email, unverified)
+**Why fit:** Eta Space is flying LOXSAT-1 (a 135 kg zero-boiloff LOX demo, NET 17 Jul 2026), and its planned Cryo-Dock commercial depot (targeting 2030) will need further sub-scale suborbital tests of valves, pressure control and densification hardware.
+**Next action:** Check the LOXSAT-1 launch outcome, then stage a CFM-specific payload brief that leans on the cryo-priming positioning in the CRM.
+**Source:** https://www.nextspaceflight.com/launches/details/6824/
+
+### OPP-632 | Inversion Space: Arc / reentry TPS and avionics suborbital risk-reduction flight
+**Status:** NEW — auto-sourced 2026-10-14 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (reentry vehicles)
+**Value:** $510,000 (Half bay, up to 68 kg) + $5,500 integration + $5,000 precision pointing = ~$520,500 list.
+**Due:** Rolling
+**POC:** Justin Fiaschetti, Co-founder & CEO, justin@inversionspace.com (best-guess email, unverified)
+**Why fit:** Inversion competes with Varda and ATMOS, and recoverable BLK3 flights let it test thermal protection, parachute and avionics articles at a low cost per iteration.
+**Next action:** Verify the current POC and recent funding on Inversion's site and Crunchbase, then stage a Half-bay quote draft for Lizi.
+**Source:** https://payloadspace.com/atmos-space-cargo-is-go-for-reentry
+
+### OPP-633 | Varda Space Industries: pre-orbital hardware validation for the USAF reentry payload-testing program
+**Status:** NEW — auto-sourced 2026-10-14 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity manufacturing / reentry testbed
+**Value:** $510,000 (Half bay) to $1,012,500 (Full bay). All-in Full bay is $1,018,000.
+**Due:** Rolling
+**POC:** Will Bruey, Co-founder & CEO, will@varda.com (best-guess email, unverified). A better route may be the head of its Prometheus / hypersonic testbed program.
+**Why fit:** Varda holds a $48M USAF award for payload testing on its reentry capsules and has raised $578M in total, so it can pay list price to de-risk customer payloads and subsystems on a suborbital recovered flight ahead of its orbital W-series missions.
+**Next action:** Identify the Varda customer-payload or business-development lead via LinkedIn and stage a Half/Full-bay quote. Varda may also be a competitor on pricing, so decide positioning with John first.
+**Source:** https://india.entrepreneur.com/news-and-trends/varda-space-industries-raises-usd-187-mn-in-series-c/494510
+
+### OPP-634 | NASA Flight Opportunities TechFlights: PI-funded flights on BLK3 (provider-catalog route)
+**Status:** NEW — auto-sourced 2026-10-14 (Opportunities Engine)
+**Type:** Gov Solicitation
+**Segment:** NASA Flight Opportunities / TechFlights PIs
+**Value:** Pipeline channel. Each PI award typically funds a Quarter-bay flight ($255,000) or less, and cubesat-class tiers run $7,500 to $45,000. Aggregate potential is multiple PI-funded payloads per flight.
+**Due:** Check NSPIRES for the current TechFlights Appendix close date (not confirmed in search results)
+**POC:** NASA STMD Flight Opportunities program office (Armstrong Flight Research Center). Individual contact to be identified via the NASA Flight Opportunities newsletter.
+**Why fit:** TechFlights PIs get NASA money earmarked for commercial suborbital flights, and Exos is the only provider currently selling Flight 2 capacity, so BLK3 should be listed as an available flight option to selected PIs.
+**Next action:** Pull the latest TechFlights selections list and the Flight Opportunities provider-eligibility requirements, then stage a PI-targeted SPACEavailable one-pager.
+**Source:** https://www.nasa.gov/stmd-flight-opportunities/
+
+### OPP-635 | NSF-funded university payload researchers (NSF-eligible launch provider route)
+**Status:** NEW — auto-sourced 2026-10-14 (Opportunities Engine)
+**Type:** Other
+**Segment:** University microgravity / materials / bio labs
+**Value:** Typical grant-sized buys are Quarter-bay or smaller: $7,500 to $45,000 cubesat/BRIC tiers up to $255,000.
+**Due:** Rolling
+**POC:** To be identified: PIs listed in current NSF awards for suborbital payloads. No named individual was found in the search results.
+**Why fit:** A published guide to NSF-eligible payload launch providers shows that NSF grantees can budget flights on eligible providers, and BLK3's minutes-scale payload return suits bio and materials experiments.
+**Next action:** Review the NSF-eligible provider guide and the NSF award database for active suborbital-flight grants, and stage a target list of 10 PIs in the CRM.
+**Source:** https://greenlaunch.space/feeds/blog/nsf-payload-launch-grant-eligible-providers
+
+
+
+
+
+## AUTO-SOURCED — 2026-10-15 (Opportunities Engine)
+
+### OPP-637 | Juno Propulsion: suborbital pre-flight of rotating-detonation engine before Project Iris (orbital) demo
+**Status:** NEW — auto-sourced 2026-10-15 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (in-space propulsion)
+**Value:** $255,000 (Quarter bay, up to 34 kg) + $5,000 large-payload integration + $500 basic integration = $260,500. Upside: Half bay $510,000 if a full thruster and feed system is flown.
+**Due:** Target a decision before Project Iris integration (Q1 2027 hosted flight on Momentus Vigoride 8)
+**POC:** Dr. Alexis Harroun, CEO, alexis@junopropulsion.com (best guess; verify domain). Alternate: Dr. Ari Martinez, CTO.
+**Why fit:** Juno has an NSF SBIR Phase II ($1.2M) and a 2027 on-orbit demo, so a BLK3 Flight 2 flight in Mar-Apr 2027 could give them a low-cost test of the RDE in a vibration and microgravity environment; I did not confirm that they want suborbital testing.
+**Next action:** Stage a personalized Quarter-bay SPACEavailable one-pager and a draft message to Dr. Harroun in the outreach queue for Jon/Lizi review; do not send.
+**Source:** https://www.geekwire.com/2026/juno-propulsion-nsf-non-toxic-space-propulsion/
+
+### OPP-638 | Voyager Technologies / ATMOS Space Cargo: broker channel for suborbital pre-flight of microgravity payloads
+**Status:** NEW — auto-sourced 2026-10-15 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** Broker / aggregator
+**Value:** Reseller or referral channel. A single customer 6U is $45,000; a Half bay filled by Voyager customers is $510,000. Note that Voyager could resell the bay at a margin.
+**Due:** Rolling
+**POC:** Voyager Europe mission integration / business development lead (name not found), via the contact form at voyagertechnologies.com; email unknown.
+**Why fit:** Voyager and ATMOS signed an MOU in Feb 2026 for end-to-end microgravity missions with mutual customer referrals, and a suborbital rehearsal on BLK3 would suit customers heading to orbital return flights.
+**Next action:** Research the specific Voyager Europe BD contact and stage a partnership brief (BLK3 as a pre-orbital test step) for Jon's review.
+**Source:** https://www.businesswire.com/news/home/20260216567666/en
+
+### OPP-639 | NASA Flight Opportunities: TechFlights solicitation, to get Exos listed so awardees can book BLK3
+**Status:** NEW — auto-sourced 2026-10-15 (Opportunities Engine)
+**Type:** Gov Solicitation
+**Segment:** NASA Flight Opportunities / TechFlights PIs
+**Value:** Per awardee: typically a Quarter bay ($255,000) or less, paid by NASA to the flight provider. Multiple awards could fill a Half bay ($510,000).
+**Due:** Unconfirmed. Check NSPIRES for the current TechFlights cycle (past cycles ran with a preliminary proposal in about June and full proposals in about October).
+**POC:** NASA Flight Opportunities program office (Armstrong Flight Research Center); no named contact. Use the program inbox on nasa.gov/stmd-flight-opportunities.
+**Why fit:** The program funds PIs to test on commercial suborbital rockets, so PIs who select BLK3 bring NASA-paid flights, and Exos is listed as the only provider selling payload capacity.
+**Next action:** Verify the current NSPIRES TechFlights cycle and Exos's flight-provider status on the Flight Opportunities roster, then stage a one-page provider update for review.
+**Source:** https://www.executivegov.com/articles/nasa-seeks-tech-payloads-under-flight-opportunities-program
+
+### OPP-640 | University of Iowa MILES Lab (CABOOM): deployable CubeSat magnetometer boom
+**Status:** NEW — auto-sourced 2026-10-15 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University lab (deployables)
+**Value:** $22,500 (3U) to $45,000 (6U), plus $500 integration. Add precision pointing ($5,000) if needed.
+**Due:** Rolling
+**POC:** Prof. David Miles, PI, david-miles@uiowa.edu (best guess), Department of Physics & Astronomy.
+**Why fit:** CABOOM was selected for NASA Flight Opportunities funding, but that selection is old (2018 era), so I could not confirm a current flight need; a small deployable fits a 6U slot on BLK3.
+**Next action:** Check the MILES Lab site and publications for current boom or flight plans, then stage a 6U quote draft only if there is an active need.
+**Source:** https://miles.lab.uiowa.edu/node/96
+
+### OPP-641 | NC State (Prof. Mark Pankow): strain-energy deployed composite booms
+**Status:** NEW — auto-sourced 2026-10-15 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University lab (deployables / solar sail structures)
+**Value:** $22,500 (3U) to $45,000 (6U), plus $500 integration; a larger boom demonstrator would be a Quarter bay at $255,000 plus $5,500 integration.
+**Due:** Rolling
+**POC:** Prof. Mark Pankow, PI, mpankow@ncsu.edu (best guess), Mechanical & Aerospace Engineering.
+**Why fit:** A NASA Flight Opportunities PI for deployable booms (solar arrays and sail arms); that selection is old, but a rocket flight gives a repeatable deployment test.
+**Next action:** Check NCSU for any current flight funding, then stage a tailored quote and one-pager for review.
+**Source:** https://executivebiz.com/2018/04/six-future-space-technologies-selected-for-nasa-flight-opportunities-program
+
+### OPP-642 | WPI (Prof. Jamal Yagoobi): electrohydrodynamic liquid-film thermal management
+**Status:** NEW — auto-sourced 2026-10-15 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University lab (thermal / fluids in microgravity)
+**Value:** $22,500 to $45,000 (3U to 6U) for a small experiment; $255,000 (Quarter) for a larger test cell.
+**Due:** Rolling
+**POC:** Prof. Jamal Yagoobi, PI, jyagoobi@wpi.edu (best guess), Mechanical & Materials Engineering.
+**Why fit:** NASA-funded microgravity fluid-boiling work, previously flown on parabolic aircraft only; a suborbital rocket gives a longer, cleaner microgravity period with no aircraft g-jitter.
+**Next action:** Confirm whether there is current funding or a new proposal, then stage a micro-g-duration comparison and quote for review.
+**Source:** https://www.wpi.edu/news/announcements/professor-jamal-yagoobi-receives-nasa-award
+
+
+
+
+
+## AUTO-SOURCED — 2026-10-16 (Opportunities Engine)
+
+### OPP-643 | Juno Propulsion - RDRE flight-qualification payload (pre-Project Iris risk reduction)
+**Status:** NEW — auto-sourced 2026-10-16 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (in-space propulsion)
+**Value:** $260,500 (Quarter bay $255,000 + large-payload integration $5,000 + basic integration $500); +$25,000 live telemetry optional = $285,500
+**Due:** Rolling
+**POC:** Dr. Alexis Harroun, CEO, alexis@junopropulsion.com (best-guess email; verify on LinkedIn/company site)
+**Why fit:** Juno has a $1.2M NSF SBIR Phase II to push its rotating-detonation thruster PDU to TRL 8 and plans an on-orbit demo on Momentus Vigoride 8 in 2027, so a suborbital flight in Mar-Apr 2027 would retire propulsion and avionics risk before that launch.
+**Next action:** Stage a payload-fit one-pager and quote (Quarter bay, live telemetry add-on) in MC drafts for Jon's review, and check the CRM for any existing Juno or Momentus-related thread first. Do not send externally.
+**Source:** https://www.geekwire.com/2026/juno-propulsion-nsf-non-toxic-space-propulsion/
+
+### OPP-644 | Eta Space - cryogenic fluid management component/sensor flight test (LOXSAT follow-on)
+**Status:** NEW — auto-sourced 2026-10-16 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification startup (cryo/CFM)
+**Value:** $510,000 (Half bay) + $5,500 integration = $515,500; Quarter-bay scoped alternative $260,500
+**Due:** Rolling
+**POC:** Dr. William Notardonato, CEO, wnotardonato@etaspace.com (best-guess email; domain and format unverified)
+**Why fit:** Eta Space holds a $25M NASA Tipping Point contract and is flying LOXSAT (zero-boiloff LOX storage, densification, transfer) to LEO, so a short suborbital flight could test cryogenic hardware and sensors in microgravity ahead of follow-on orbital demos.
+**Next action:** Stage a cryo-payload-fit brief for Jon's review, citing the sealed-environment add-on and the BLK3 cryo heritage already on file. Do not send externally.
+**Source:** https://cislunarspace.cn/en/space-news/2026/05/2026-05-14-nasa-loxsat-cryogenic-demo/
+
+### OPP-645 | UCF Colwell Lab - microgravity dust/regolith collision experiments (CORE/COLLIDE heritage) on BLK3 Flight 2
+**Status:** NEW — auto-sourced 2026-10-16 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University microgravity science lab (NASA-funded PI)
+**Value:** $22,500 (Full BRIC) to $45,000 (6U); $255,000+ if a larger Quarter-bay rack is needed. Integration is $500 on cubesat/BRIC tiers.
+**Due:** Rolling
+**POC:** Dr. Joshua Colwell, Professor of Physics, joshua.colwell@ucf.edu (best-guess from UCF's first.last format)
+**Why fit:** Colwell's CORE and COLLIDE experiments were selected for NASA Flight Opportunities suborbital flights and need repeated microgravity time, which a low-cost BRIC-size slot on Flight 2 could provide.
+**Next action:** Stage a BRIC-tier quote and a note on how Exos can support a Flight Opportunities proposal, for Jon's approval. Do not send externally.
+**Source:** https://sciences.ucf.edu/news/nasa-selects-3-ucf-projects-for-flight-opportunities-program/
+
+### OPP-646 | Varda Space Industries - avionics/sensor and reentry-subsystem flight qualification
+**Status:** NEW — auto-sourced 2026-10-16 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial microgravity manufacturing (pharma)
+**Value:** $260,500 (Quarter bay + integration); $510,000 if a Half bay is scoped
+**Due:** Rolling
+**POC:** Will Bruey, Co-founder & CEO, will@varda.com (best-guess email; verify before use)
+**Why fit:** Varda raised a $251M Series D, has six reentry missions complete and a dozen more planned through 2028, and a May 2026 United Therapeutics collaboration, so it can fund a recovered suborbital flight to test sensors or process hardware.
+**Next action:** Stage a recovered-payload and fast-turnaround pitch for Jon's review, and ask Exos BD to find a warm intro through the existing NASA and AFRL contacts. Do not send externally.
+**Source:** https://www.pharmamanufacturing.com/industry-news/news/55409066/varda-raises-251m-to-scale-space-based-drug-manufacturing
+
+
+
+
+
+## AUTO-SOURCED — 2026-10-17 (Opportunities Engine)
+
+### OPP-647 | Georgia Tech LGST Lab: SmallSat propellant positioning flight test
+**Status:** NEW — auto-sourced 2026-10-17 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** University propulsion / fluid management (NASA TechFlights PI)
+**Value:** $45,000 (6U) to $255,000 (Quarter bay, if the rig is larger); add live telemetry $25,000 -> about $70,000-$280,000
+**Due:** Rolling
+**POC:** Prof. Álvaro Romero-Calvo, Asst. Professor, Daniel Guggenheim School of Aerospace Engineering, Georgia Tech, romero-calvo@gatech.edu (best guess, unverified)
+**Why fit:** Their heat-driven CubeSat propellant positioning needs minutes of real microgravity, and BLK3 offers that with intact recovery of the hardware.
+**Next action:** Stage a draft 6U/Quarter quote plus a microgravity-window one-pager in MC for Lizi's review; do not send. Confirm the PI's contact through the gatech.edu directory first.
+**Source:** https://www.ae.gatech.edu/news/2025/01/georgia-tech-cubesat-propellant-innovation-set-transform-space-missions
+
+### OPP-648 | Creare: screened-channel cryogenic LAD suborbital demo
+**Status:** NEW — auto-sourced 2026-10-17 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial flight-qualification / cryo CFM
+**Value:** $255,000 (Quarter bay) plus $25,000 live telemetry and $1,200 sealed environment = about $281,200
+**Due:** Rolling
+**POC:** Creare Space Systems / Cryogenics group lead (name to be confirmed on the Creare site), info@creare.com as fallback (best guess), Principal Engineer
+**Why fit:** Creare's liquid acquisition device has so far been tested only on parabolic flights, and a rocket flight with several minutes of microgravity is the natural next test.
+**Next action:** Have the research agent identify the named Creare PI from the NASA Flight Opportunities award page, then stage a Quarter-bay quote and capability brief in MC.
+**Source:** https://www.creare.com/creare-award-from-nasa-flight-opportunities-program/
+
+### OPP-649 | Space Forge: Pridwen heat shield / manufacturing-payload suborbital pre-qualification
+**Status:** NEW — auto-sourced 2026-10-17 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Commercial in-space manufacturing / reentry
+**Value:** $255,000 (Quarter bay) to $510,000 (Half bay); add precision pointing $5,000
+**Due:** Rolling
+**POC:** Joshua Western, CEO & Co-founder, Space Forge, josh@spaceforge.com (best guess, unverified)
+**Why fit:** Space Forge has already flight-validated its origami Pridwen shield on parabolic flights, so BLK3 could provide a repeatable recovered-hardware reentry-like environment between orbital missions.
+**Next action:** Stage a UK/foreign outreach packet under the foreign-outreach policy, including an export screen and a Quarter/Half quote draft in MC. Hold for review.
+**Source:** https://infineospace.substack.com/p/space-forge-origin-story-first-iterations
+
+### OPP-650 | Varda Space Industries: sub-systems and TPS risk-reduction flights ahead of the 2027 cadence
+**Status:** NEW — auto-sourced 2026-10-17 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Microgravity manufacturing / pharma (Varda W-series)
+**Value:** $255,000 (Quarter) to $510,000 (Half); a Full bay at $1,012,500 would be a stretch case
+**Due:** Varda plans 7 more missions in 2027: 2 in Q1, 2 in Q2, 3 in Q3. Test windows are needed ahead of that.
+**POC:** Will Bruey, CEO & Co-founder, Varda Space Industries, will@varda.com (best guess, unverified)
+**Why fit:** The W-8/W-9 payloads included navigation demos, exterior thermal-protection materials and pharma. Components like these could be pre-tested on BLK3 before riding Varda's 2027 missions.
+**Next action:** Stage a briefing on BLK3's Flight 2 window (Mar-Apr 2027) against Varda's Q1/Q2 2027 mission cadence, with a Half-bay quote draft, for Lizi to review.
+**Source:** https://space.com/space-exploration/launches-spacecraft/2-spacecraft-in-orbit-and-8-more-coming-soon-varda-has-big-plans-for-in-space-manufacturing
+
+### OPP-651 | ATMOS Space Cargo: PHOENIX return-vehicle subsystem and customer-payload flights
+**Status:** NEW — auto-sourced 2026-10-17 (Opportunities Engine)
+**Type:** Payload Sale
+**Segment:** Reentry / return-capsule startup (international)
+**Value:** $255,000 (Quarter) to $510,000 (Half); with live telemetry about $280,000-$535,000
+**Due:** Rolling
+**POC:** Sophia Bickel (CEO) or Fynn Fischer (co-founder), ATMOS Space Cargo, info@atmos-space-cargo.com (best guess, confirm named contacts)
+**Why fit:** ATMOS has a referral MOU with Voyager Europe and sells return-capable microgravity missions, so it needs flight-qualification of heat-shield and recovery components, and its referral network could also bring BLK3 additional customers.
+**Next action:** Stage a foreign-outreach screening checklist (export/ITAR, denied-party) and a draft partner brief in MC. Hold until the Empowered Official clears it.
+**Source:** https://atmos-space-cargo.com/voyager-and-atmos-accelerate-access-to-space/
+
+### OPP-652 | Voyager Technologies: payload-aggregator channel for microgravity customers (Starlab / ISS users)
+**Status:** NEW — auto-sourced 2026-10-17 (Opportunities Engine)
+**Type:** Partnership
+**Segment:** Broker / aggregator
+**Value:** Per customer flight, $7,500/kg or $7,500-$45,000 for cubesat/BRIC tiers. Target a bundled Half-bay reseller deal of about $510,000.
+**Due:** Rolling
+**POC:** Voyager Technologies business development / mission management lead (name to be identified), bd@voyagertechnologies.com (best guess)
+**Why fit:** Voyager already refers payload customers to partners such as ATMOS, so a suborbital rung ahead of ISS and Starlab flights could suit its users.
+**Next action:** Stage a reseller-terms one-pager and the Flight 2 availability brief in MC for Lizi's review. Do not send.
+**Source:** https://www.streetinsider.com/Press+Releases/Voyager+and+ATMOS+Accelerate+Access+to+Space/26003721.html
+
 <!-- PAYLOAD-PIPELINE-AUTO:BEGIN (managed by payload_pipeline_to_opps.py) -->
 
 ## PAYLOAD BUYERS — auto-bridged from BLK3 pipeline
 
-### PAY-9628 | Purdue University — Zucrow Labs / APECS Lab
-**Status:** RESEARCHING — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** University propulsion research
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Prof. Timothée Pourpoint (Joseph Liston Professor, AAE) — APECS Lab director
-**Why fit:** Purdue's APECS research explicitly needs flight-relevant environments; lab ground testing + BLK3 suborbital flight = TRL step-up. Pourpoint's hypergolic/hydrogen work is ideal for a recover-and-inspect flight profile.
-**Next action:** Draft + send tailored email to Pourpoint. ✅ Draft ready below.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Purdue's APECS research explicitly needs flight-relevant environments; lab ground testing + BLK3 suborbital flight = TRL step-up. Pourpoint's hy_
-
 ### PAY-8526 | AFRL Space Vehicles Directorate (Kirtland AFB, NM)
 **Status:** RESEARCHING — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Gov / Defense
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Col. Richard R. Beckman — Director, Space Vehicles Directorate (VERIFIED: assumed command 2025-07-15; afrl.af.mil news)
 **Why fit:** AFRL Space Vehicles needs frequent suborbital flight test opportunities for component TRL advancement. BLK3's 2-3 day turnaround + recoverable hardware is ideal for iterating space component experiments. SpaceWERX BAAs often include suborbital flight qualification as an eligible use.
 **Next action:** Identify SBIR open topic or reach program manager at Space Vehicles via SpaceWERX. Jon best placed to open this door.
@@ -6618,95 +8861,47 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Purdue's APECS re
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. AFRL Space Vehicles needs frequent suborbital flight test opportunities for component TRL advancement. BLK3's 2-3 day turnaround + recoverable h_
 
 ### PAY-4566 | SpaceTango (Lexington, KY) — Broker/Integrator
-**Status:** RESEARCHING — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Status:** OUTREACH SENT (Exo 10/8: Lizi emailed Rosales 10/5) — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Broker / aggregator
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Twyman Clements — CEO & Co-founder (confirmed public figure)
 **Why fit:** SpaceTango could act as a payload aggregator for BLK3 — filling the bay with 3-5 of their existing customer payloads instead of Exos selling one-by-one. One deal with SpaceTango = multiple customers. Suborbital is a lower-cost precursor they can sell to clients who want flight data before committing to ISS slots.
 **Next action:** Draft + send broker partnership pitch to Clements. ✅ Draft ready below.
 **Source:** tasks/blk3-payload-sales-pipeline.md
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. SpaceTango could act as a payload aggregator for BLK3 — filling the bay with 3-5 of their existing customer payloads instead of Exos selling one_
 
-### PAY-6526 | Texas A&M — Aerospace Engineering, Propulsion/CFM
-**Status:** RESEARCHING — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** University — propulsion + cryogenics
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Prof. Karen Taminger (visiting / adjunct) or Prof. Adonios Karpetis — combustion/propulsion, TAMU AE Dept.
-**Why fit:** TAMU propulsion researchers need flight-relevant pressure/vibration/thermal environments to validate combustion diagnostics. Geographic proximity = low integration cost and potential ongoing partnership.
-**Next action:** Jon has TX aerospace community relationships — warm intro via Jon directly or through Texas aerospace network. Draft outreach below.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. TAMU propulsion researchers need flight-relevant pressure/vibration/thermal environments to validate combustion diagnostics. Geographic proximit_
-
-### PAY-8282 | Redwire Space — In-Space Manufacturing / Materials
-**Status:** RESEARCHING — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** Commercial qual / microgravity manufacturing
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Andrew Rush — President & CEO, Redwire Space
-**Why fit:** Redwire's in-space manufacturing processes need microgravity exposure at various durations; suborbital is ideal for short-duration characterization experiments before committing to ISS slots. BLK3 recover-and-inspect is directly useful for post-flight material analysis.
-**Next action:** Jon to reach out at next conference or via warm intro. Redwire is public — BD contact info available on investor/partner pages.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Redwire's in-space manufacturing processes need microgravity exposure at various durations; suborbital is ideal for short-duration characterizat_
-
 ### PAY-6187 | Space Port Australia (Dr. Gabrielle Caswell)
 **Status:** READY — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** International / Education / Life-Science microgravity
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Dr. Gabrielle Caswell — Founder/Director, Space Port Australia Pty Ltd
 **Why fit:** Caswell’s stated research priorities (biological, microgravity human factors, space medicine) map directly to a suborbital recovery flight. BLK3’s recover-and-refly model lets her team run iterative life-science experiments at a fraction of ISS cost. As an international partner, this also opens the door to Exos Italia / Southern Hemisphere outreach. Blue Origin’s New Shepard loss to the NSRC community creates a direct opening.
 **Next action:** Jon to send Draft D below. ✅ Draft ready.
 **Source:** tasks/blk3-payload-sales-pipeline.md
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Caswell’s stated research priorities (biological, microgravity human factors, space medicine) map directly to a suborbital recovery flight. BLK3_
 
-### PAY-3280 | Merck Research Labs — ISS Biologics Formulation Program
-**Status:** RESEARCHING — Draft H targeted for Jon to route via ISS Nati — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** Bucket C — Big pharma, proven repeat ISS buyer
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** MRL External Science & Innovation team
-**Why fit:** Merck's ISS crystal growth program faces the same continuity gap. Suborbital (~5-7 minutes microgravity) isn't identical to ISS (weeks), but it enables faster screening of crystallization conditions — they can run 10 BLK3 experiments in the time it takes to get one ISS slot. For early-stage candidates, suborbital is the screening stage before committing ISS resources. This maps to how Merck already uses parabolic flight (short-duration) alongside ISS (long-duration).
-**Next action:** (1) Identify Merck's current ISS/space program contact via ISS National Lab (CASIS connection) or LinkedIn; (2) Jon to reach out via warm path through ISS NL or directly to Merck External Innovation
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Merck's ISS crystal growth program faces the same continuity gap. Suborbital (~5-7 minutes microgravity) isn't identical to ISS (weeks), but it _
-
 ### PAY-1754 | Axiom Space — Research Continuity Gap Customer
-**Status:** ENGAGED ✅ — live call held 2026-08-18 (John + Lizi + Chyree  — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Status:** OUTREACH SENT (Exo 10/8: Lizi replied on Batton thread 10/7) — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Bucket C — Commercial station builder; their clients ARE ISS research customers
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Dr. Lucie Low — Chief Scientist, Axiom Space (confirmed public role)
 **Why fit:** Axiom's research clients are exactly our Bucket C — they're ISS customers who need interim platforms during the transition. Axiom cannot do suborbital (they're building orbital infrastructure). BLK3 suborbital is NOT a competitor to Axiom — it's a complementary interim platform their clients can use to maintain research cadence during the gap. Pitch: "Partner with us as the suborbital bridge for your research clients while AxStation ramps up — we keep their programs alive and TRL-advancing; they come to you ready for orbital operations."
 **Next action:** Lizi send PUG + follow-up email (drafted 2026-08-18). Then propose a concrete short-duration pre-qual POC (battery/vacuum or parts-qual) as the first paid demo. Logged to CRM (Chyree@axiomspace.com) + MC opp PAY-1754.
 **Source:** tasks/blk3-payload-sales-pipeline.md
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Axiom's research clients are exactly our Bucket C — they're ISS customers who need interim platforms during the transition. Axiom cannot do subo_
 
-### PAY-5486 | NCATS / Tissue Chips in Space — NIH Research Continuity
-**Status:** RESEARCHING — already partially covered by NIH pursuit (Capt — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** Bucket C — NIH-funded ISS research (bridges to our existing NIH pursuit)
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Dr. Danilo Tagle — Associate Director for Special Initiatives, NCATS (confirmed public role; leads Tissue Chips in Space program)
-**Why fit:** Tissue chip experiments at suborbital timescales (5-7 min) can screen for gravity-responsive phenotypes before committing to full ISS experiments. This maps to our existing NIH STTR pitch. Tagle is the exact person in our NIH pursuit (Capture Agent v3) — this bridges both tracks.
-**Next action:** Coordinate with NIH Capture Agent — Tagle may be reachable through the NCATS/ISS-NL pathway we're already working. Do NOT duplicate outreach; coordinate.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Tissue chip experiments at suborbital timescales (5-7 min) can screen for gravity-responsive phenotypes before committing to full ISS experiment_
-
 ### PAY-8582 | NRL Space Science Division (Code 7600) — NEW PROSPECT ⭐⭐
 **Status:** NEW → RESEARCHING ✅ Draft M below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Gov / Defense / Navy research — already buys sounding rocket time
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Superintendent, NRL Space Science Division, Code 7600 (Washington, D.C.)
 **Why fit:** NRL Code 7600 already BUYs sounding rocket time — BLK3 offers a step up: 135 kg vs. typical NASA sounding rocket 35-50 kg, recoverable hardware (NRL gets their instrument back for post-flight inspection), and 2-3 day turnaround vs. multi-year NASA Wallops scheduling queues. Also: Spaceport America (NM) is geographically adjacent to Kirtland AFB / AFRL — NRL could pair a BLK3 flight with AFRL coordination. Atmospheric angle: NRL middle-atmosphere research overlaps with Exos's NOAA/SACSS atmospheric-sampling positioning.
 **Next action:** Jon to review Draft M; route via NRL public affairs or ONR program office relationship. — check.
@@ -6715,10 +8910,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. NRL Code 7600 alr
 
 ### PAY-7832 | Embry-Riddle Aeronautical University — Dr. Pedro LLanos ⭐⭐⭐ TOP NEW PRIORITY
 **Status:** NEW → RESEARCHING ✅ Draft O below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** University — propulsion + microgravity + biomedical research
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Dr. Pedro LLanos — Associate/Full Professor, Embry-Riddle Aeronautical University (Daytona Beach campus)
 **Why fit:** 
 **Next action:** Jon to send Draft O. This is the highest-value new cold outreach this run — he already buys suborbital flights from a foreign provider; we are the superior domestic alternative.
@@ -6726,11 +8921,11 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. NRL Code 7600 alr
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline._
 
 ### PAY-2052 | Johns Hopkins APL — Joshua Wolk, BLAST Program / Targets (MDA) ⭐⭐⭐ ACTIVE BUYER
-**Status:** NEW → RESEARCHING ✅ Draft T below (gov route — Jon to send o — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Status:** OUTREACH SENT (Exo 10/8: Lizi followed up with Wolk 10/7) — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Gov / Defense — missile defense suborbital flight test (UASD/MDA funded)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Joshua Wolk — Program Manager, Targets Program, APL Air & Missile Defense Sector
 **Why fit:** 
 **Next action:** Jon to review Draft T; route via MDA/AFRL contacts or direct to Joshua Wolk. This is highest-value new prospect this run — they are actively buying commercial suborbital flight test and are explicitly planning follow-ons.
@@ -6739,118 +8934,46 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline._
 
 ### PAY-6877 | Draper Laboratory — DMEN Team (Lunar GNC / Terrain Navigation) ⭐⭐
 **Status:** NEW → RESEARCHING ✅ Draft U below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Gov / NASA — commercial space R&D nonprofit, active NASA FO suborbital customer
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Draper Space Systems Division (specific DMEN PI not publicly named in press releases)
 **Why fit:** - Blue Origin New Shepard gap — New Shepard's flight suspension left Draper without their primary suborbital partner. BLK3 is the natural domestic replacement.
 **Next action:** Cold outreach via bd@draper.com is appropriate given their active NASA FO status; Jon to send or route via NASA FO community intro (Draper is a known FO participant). Fast-track — Draper needs a platform NOW; their DMEN campaign is actively stalled without a Blue Origin replacement.
 **Source:** tasks/blk3-payload-sales-pipeline.md
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. - Blue Origin New Shepard gap — New Shepard's flight suspension left Draper without their primary suborbital partner. BLK3 is the natural domest_
 
-### PAY-2046 | Stanford SPaSE / Prof. Tonghun Lee — STATUS + DRAFT ADDED
-**Status:** RESEARCHING — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** 
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** 
-**Why fit:** 
-**Next action:** Do NOT cold-email Lee directly. Instead, use Sandia HOT-H warm path — if Jon land the Sandia conversation, mention Lee as a potential follow-on academic collaborator.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline._
-
-### PAY-1449 | Varda Space Industries — Will Bruey (CEO/Co-founder) ⭐⭐⭐ PARTNER/MULTIPLIER PLAY
-**Status:** NEW → RESEARCHING ✅ Draft W below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** Commercial in-space manufacturing / Pharma platform — referral/partner play
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Will Bruey — CEO & Co-founder, Varda Space Industries (El Segundo, CA)
-**Why fit:** 
-**Next action:** Jon to send Draft W. Cold outreach appropriate. Conference intro (ASCEND/Space Symposium) is ideal warm path.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline._
-
-### PAY-5095 | Impulse Space — Tom Mueller, Founder/CEO/CTO ⭐⭐
-**Status:** NEW → RESEARCHING ✅ Draft Y below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** Commercial in-space propulsion / OTV startup — component flight qualification
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Tom Mueller — Founder, CEO & CTO, Impulse Space (Redondo Beach, CA)
-**Why fit:** Impulse iterates fast on propulsion hardware. Flight environment validation (vibration, thermal cycling, near-vacuum at ~100 km apogee) of Deneb structural components and Helios subsystems before orbital mission integration is exactly the "test to failure first" culture Mueller built at SpaceX. BLK3 delivers 5-7 min near-vacuum + full ascent vibration profile + hardware back in 2-3 days.
-**Next action:** Jon to review Draft Y.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Impulse iterates fast on propulsion hardware. Flight environment validation (vibration, thermal cycling, near-vacuum at ~100 km apogee) of Deneb_
-
 ### PAY-7143 | Intuitive Machines — Tim Crain (CTO/Co-founder) ⭐⭐⭐ WARM — SCORPIUS CONNECTION
-**Status:** NEW → READY ✅ Draft Z below (warm Scorpius entry — Jon to le — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Status:** DROPPED — John 2026-10-17 'drop this task' (already working with IM directly) — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Commercial lunar CLPS — active buyer of flight hardware qualification; direct Scorpius partner history
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** 
 **Why fit:** IM-3 and beyond need rigorous pre-mission qualification of sensor suites (altimeters, IMUs, terrain cameras), avionics, and communications hardware. BLK3 provides 5-7 min of actual microgravity + ascent/descent vibration + thermal cycling + hardware returned in 2-3 days. For a program with two consecutive lander failures, a fast suborbital qualification loop is exactly the de-risk play. Pitch angle: "Same rigor that Scorpius brought to your cryo tanks — now on the flight environment side, from the same team."
 **Next action:** Jon to open via Scorpius relationship angle (mention Exos owns 18% of Scorpius + ROFR, whose cryo tanks flew IM-1 + IM-2). Direct email to Tim Crain at tcrain@intuitivemachines.com.
 **Source:** tasks/blk3-payload-sales-pipeline.md
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. IM-3 and beyond need rigorous pre-mission qualification of sensor suites (altimeters, IMUs, terrain cameras), avionics, and communications hardw_
 
-### PAY-9805 | Astrobotic Technology — John Thornton (CEO) ⭐⭐
-**Status:** NEW → RESEARCHING ✅ Draft AA below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** Commercial lunar CLPS — Peregrine failure creates strong qualification motivation; Griffin-2+ in pipeline
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** John Thornton — CEO, Astrobotic Technology (Pittsburgh, PA)
-**Why fit:** Three angles:
-**Next action:** Jon to send Draft AA or identify warm path via CLPS community (NASA GSFC/JPL CLPS program office is the mutual touchpoint). — Astrobotic is new-space; Thornton is well-networked in the commercial lunar community.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Three angles:_
-
 ### PAY-7841 | Rhodium Scientific — Olivia Gamez Holzhaus (CEO/Founder) ⭐⭐⭐ MULTIPLIER PLAY
-**Status:** NEW → RESEARCHING ✅ Draft AC below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Status:** NEW → RESEARCHING ✅ Draft AC below. → OUTREACH SENT (Lizi vi — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Space biotech CRO / mission integrator — active ISS NL customer + Starlab partner
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Olivia Gamez Holzhaus — Founder and CEO, Rhodium Scientific, LLC
 **Why fit:** Same multiplier play as BioServe and SpaceTango — one Rhodium conversation unlocks their client book. Their clients are exactly our Bucket C profile (biotech, pharma, life sciences) but entering through Rhodium's service layer rather than direct. BLK3 suborbital = fast pre-screen Rhodium offers their clients before committing expensive Starlab orbital resources. Rhodium handles the integration science; BLK3 provides the flight.
 **Next action:** Jon to send Draft AC, or identify warm intro via ISS NL or Starlab network first.
 **Source:** tasks/blk3-payload-sales-pipeline.md
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Same multiplier play as BioServe and SpaceTango — one Rhodium conversation unlocks their client book. Their clients are exactly our Bucket C pro_
 
-### PAY-2695 | Delta Biosciences — Dominykas Milašius (Co-founder) / Dr. Donatas Žmuidinavičius (CTO) ⭐⭐
-**Status:** NEW → RESEARCHING ✅ Draft AD below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** Pharma stability + bioreactor research, space-as-a-service CRO — active ISS + Starlab reservation
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** 
-**Why fit:** Delta's pharma stability clients need to SCREEN formulations and excipient behavior in microgravity before committing to long-duration ISS/Starlab experiments. BLK3's 5-7 min of genuine microgravity + hardware returned in 2-3 days is the fast-screen layer: identify which formulation candidates behave interestingly in reduced gravity before they're locked into a 3-year ISS study or an expensive Starlab slot. Also: BLK3 can validate Delta's own payload hardware (bioreactor systems, sample containers) in actual flight vibration/thermal environment before orbital deployment — reducing the risk of hardware failure on a long-duration mission.
-**Next action:** Cold outreach to dominykas@deltabiosciences.com is appropriate — they're a commercial company with an active business model. Starlab warm path via Marshall Smith is a secondary option.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Delta's pharma stability clients need to SCREEN formulations and excipient behavior in microgravity before committing to long-duration ISS/Starl_
-
-### PAY-9729 | Ursa Major Technologies — Chris Spagnoletti (CEO) ⭐⭐ AFRL/DoD BRIDGE
-**Status:** NEW → RESEARCHING ✅ Draft AE below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** Defense / Propulsion — AM-manufactured engine component qualification + AFRL relationship crossover
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Chris Spagnoletti — CEO, Ursa Major Technologies (appointed Feb 19, 2026)
-**Why fit:** Ursa Major's value proposition is rapid iteration of AM-manufactured propulsion hardware in real flight environments. BLK3 complements their program by providing a recoverable payload platform for:
-**Next action:** Jon to review Draft AE. Route via AFRL contact network if possible;
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Ursa Major's value proposition is rapid iteration of AM-manufactured propulsion hardware in real flight environments. BLK3 complements their pro_
-
 ### PAY-1862 | DIU HyCAT Program — Col. Nicholas Estep ⭐⭐⭐ ACTIVE COMMERCIAL SUBORBITAL BUYER
 **Status:** NEW → RESEARCHING ✅ Draft AF below (gov route — Jon to ident — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Gov / Defense — DoD active buyer of commercial suborbital hypersonic flight testing
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Col. Nicholas Estep (LtCol, PhD) — Technical Program Manager, DIU HyCAT (Hypersonic and High-Cadence Airborne Testing Capabilities)
 **Why fit:** 
 **Next action:** Jon to route through existing DoD contacts or Jon's AFRL SBIR relationship (FA9300-25-C-6022). This is the most commercially important DoD hypersonic flight test program active today — BLK3 belongs in this conversation.
@@ -6859,34 +8982,22 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline._
 
 ### PAY-4836 | Kratos Defense & Security Solutions — Josh Peterson (SVP, MACH-TB) ⭐⭐⭐ $1.45B MACH-TB CONTRACT
 **Status:** NEW → RESEARCHING ✅ Draft AG below. Cold BD to Peterson appr — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Defense — DoD prime contractor for Multi-Service Advanced Capability Hypersonic Test Bed; active high-tempo hypersonic payload integrator
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Josh Peterson — Senior Vice President & Product Manager, Kratos Unmanned Systems/Hypersonic Programs
 **Why fit:** Kratos is the payload integrator for MACH-TB. Their customers (Army, Navy, Air Force hypersonic programs) need to qualify sensors, avionics, structural components, and materials BEFORE they're committed to an expensive MACH-TB flight test vehicle. BLK3 is the pre-qualification layer before MACH-TB commitment:
 **Next action:** Jon to send Draft AG. — Kratos's Unmanned Systems division has long history with DoD.
 **Source:** tasks/blk3-payload-sales-pipeline.md
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Kratos is the payload integrator for MACH-TB. Their customers (Army, Navy, Air Force hypersonic programs) need to qualify sensors, avionics, str_
 
-### PAY-8311 | LASP (Laboratory for Atmospheric and Space Physics) — Dr. Brian Fleming ⭐⭐
-**Status:** NEW → RESEARCHING ✅ Draft AH below (warm outreach; confirmed — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** University / Gov research — NASA-funded instrument development, active sounding rocket PI
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Dr. Brian Fleming — Research Professor, LASP / Dept. of Astrophysics & Planetary Sciences, CU Boulder
-**Why fit:** LASP's instrument development pipeline follows a pattern: build → ground calibration → sounding rocket → SmallSat → full mission. BLK3 fills the sounding-rocket-equivalent step with more capacity (135 kg vs. typical NASA sounding rocket 35-50 kg), recoverable hardware in 2-3 days, and a faster scheduling cadence than the NASA Wallops queue. BLK3 is particularly relevant for:
-**Next action:** Jon to send Draft AH to Brian Fleming OR pursue via NASA Flight Opportunities programmatic route (Fleming is already a NASA FO community member — he actively puts payloads on sounding rockets).
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. LASP's instrument development pipeline follows a pattern: build → ground calibration → sounding rocket → SmallSat → full mission. BLK3 fills the_
-
 ### PAY-6489 | Hypersonix Launch Systems USA — David Waterhouse (CEO) ⭐⭐⭐ ACTIVE HyCAT TESTBED PARTNER
 **Status:** NEW → RESEARCHING ✅ Draft AI below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** DoD / HyCAT testbed developer — Australian company with US arm; active multi-flight suborbital campaign underway
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** David Waterhouse — CEO & Co-founder, Hypersonix Launch Systems
 **Why fit:** 
 **Next action:** Jon to cold-email David Waterhouse directly (commercial BD — not gov-route). This is the single most timing-sensitive prospect in the pipeline given the active 6th HASTE flight just completed. A BLK3 + Hypersonix partnership could also serve as the entry into the broader HyCAT testbed ecosystem.
@@ -6894,11 +9005,11 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. LASP's instrument
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline._
 
 ### PAY-7573 | NCAR / ACOM — Dr. Eric Apel (Atmospheric Chemistry) ⭐⭐ BRIDGES TO SACSS/NOAA PURSUIT
-**Status:** NEW → RESEARCHING ✅ Draft AK below (warm path via Darin Tooh — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Status:** IN DISCUSSION (Eric Apel replied 10/13: colleague very inter — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Gov/NSF-funded atmospheric research — sounding rocket and airborne campaigns; bridges to existing NOAA SACSS capture
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Dr. Eric Apel — Senior Scientist, Atmospheric Chemistry Observations & Modeling (ACOM), NCAR / UCAR (Boulder, CO)
 **Why fit:** 1. Altitude capability — BLK3 reaches ~100 km apogee — above the service ceiling of any aircraft and above balloon altitude, directly sampling the mesosphere and lower thermosphere that ACOM cares about. NASA sounding rockets (Wallops) typically carry ~35-50 kg; BLK3 offers 135 kg — a much larger instrument suite.
 **Next action:** Coordinate with SACSS/NOAA Capture Agent (cron 049e8c95). Darin Toohey (CU, Co-PI on SACSS) is the natural bridge to NCAR ACOM — same campus, overlapping scientific community. Ask Toohey for intro to Apel before cold outreach.
@@ -6907,58 +9018,22 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. 1. Altitude capab
 
 ### PAY-4980 | DEVCOM Aviation & Missile Center (AvMC) — Propulsion/Sensors Division ⭐⭐⭐ HUNTSVILLE CLUSTER
 **Status:** NEW → RESEARCHING ✅ Draft AO below (gov route — Jon to send  — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Gov / Army DoD — missile + aviation hardware R&D and qualification
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** 
 **Why fit:** 1. Suborbital qualification environment — AvMC qualifies missile seekers, avionics, and propulsion components in ground labs + flight test at Redstone Test Center. BLK3 adds a higher-altitude flight qualification option: actual near-vacuum thermal and vibration environments (to ~100 km) with recovered hardware in 2-3 days. For Army hypersonic weapon components, this bridges the gap between Redstone Range testing and full-scale DoD test infrastructure.
 **Next action:** Jon to route via AFRL SBIR relationship (FA9300-25-C-6022) or existing DoD contacts toward AvMC Propulsion/Sensors program leads. — same conversation that opens UAH also opens AvMC.
 **Source:** tasks/blk3-payload-sales-pipeline.md
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. 1. Suborbital qualification environment — AvMC qualifies missile seekers, avionics, and propulsion components in ground labs + flight test at Re_
 
-### PAY-4618 | Hermeus — AJ Piplica (CEO) ⭐⭐⭐ ALREADY AT SPACEPORT AMERICA
-**Status:** NEW → RESEARCHING ✅ Draft AL below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** Commercial defense aviation / hypersonic platform developer
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** AJ Piplica — CEO & Co-founder, Hermeus
-**Why fit:** 1. Altitude gap — Quarterhorse Mk 2.1 is supersonic at ~50,000 ft. BLK3 reaches ~100 km (328,000 ft) — near-vacuum, true space boundary. Hermeus needs flight data on TPS materials, avionics, sensors, and structural test articles in the actual near-vacuum/re-entry thermal environment their Mach 5+ Mk 3 platform will experience. BLK3 provides that data before Hermeus builds and flies Mk 3.
-**Next action:** Jon cold-email AJ Piplica directly — peer-to-peer founder conversation, same launch site, natural partnership. This is the strongest peer-company BD conversation in the full pipeline. No warm intro needed; Spaceport America co-location is the opening line.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. 1. Altitude gap — Quarterhorse Mk 2.1 is supersonic at ~50,000 ft. BLK3 reaches ~100 km (328,000 ft) — near-vacuum, true space boundary. Hermeus_
-
-### PAY-1368 | Firehawk Aerospace — Will Edwards (CEO) ⭐⭐ TEXAS NEIGHBOR + AFWERX FUNDED
-**Status:** NEW → RESEARCHING ✅ Draft AM below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** Commercial/Defense propulsion startup — 3D-printed solid/hybrid rocket motors
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Will Edwards — CEO & Co-founder, Firehawk Aerospace (Addison, TX)
-**Why fit:** 1. Altitude/environment gap — Firehawk's Texas facility handles low-altitude flight tests (comparable to DOE/standard test ranges, <50,000 ft). Their 3D-Ultra propellant and hybrid engines need qualification data in the actual near-vacuum, high-altitude thermal and vibration environment that operational missiles and launch vehicles experience. BLK3 provides the ~100 km suborbital environment their ground range can't replicate.
-**Next action:** Jon direct-outreach to Will Edwards — peer founder, Texas neighbor, AFWERX mutual ground. This could become an ongoing multi-flight relationship (they have multiple analog programs to qualify). — could turn this from cold to warm same week.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. 1. Altitude/environment gap — Firehawk's Texas facility handles low-altitude flight tests (comparable to DOE/standard test ranges, <50,000 ft). _
-
-### PAY-2994 | Starlab Space / Voyager — Marshall Smith (CEO) ⭐⭐ NANORACKS LEGACY + ISS TRANSITION
-**Status:** NEW → RESEARCHING ✅ Draft AN below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** Commercial station / research aggregator — successor to NanoRacks (ISS bridge play)
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Marshall Smith — CEO, Starlab Space LLC (appointed August 2025)
-**Why fit:** - Same thesis as Axiom (Draft H/K) but targeting Starlab/Voyager's distinct customer base:
-**Next action:** Jon outreach to Marshall Smith (peer-level: Exos CEO → Starlab CEO) or approach via NanoRacks BD team. Smith's NASA background means a well-framed letter from a fellow aerospace operator will land. This is cold outreach, but Smith is known to be accessible at industry events.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. - Same thesis as Axiom (Draft H/K) but targeting Starlab/Voyager's distinct customer base:_
-
 ### PAY-9943 | Space Dynamics Laboratory (SDL / USU) — Alan Thurgood, Civil & Commercial Space ⭐⭐⭐ DUAL UARC + ALBUQUERQUE FIELD OFFICE
 **Status:** NEW → RESEARCHING ✅ Draft AR below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Gov / Defense / National Lab — UARC for USSF AND Missile Defense Agency; active instrument builder, sounding rocket customer
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** 
 **Why fit:** 
 **Next action:** Jon to identify warm path via existing AFRL/Kirtland contacts (SDL has Albuquerque office — same NM DoD community). ; worth a check. After APL/Wolk conversation lands (#21), ask Wolk for SDL intro — same MDA community.
@@ -6967,10 +9042,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline._
 
 ### PAY-6557 | BAE Systems Space & Mission Systems (ex-Ball Aerospace) — Boulder, CO ⭐⭐ INSTRUMENT MANUFACTURER, WARM VIA AFRL/USSF
 **Status:** NEW → RESEARCHING ✅ Draft AV below (warm path via AFRL/USSF  — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Defense prime / space instrument manufacturer — spacecraft, mission payloads, optical/antenna systems; DoD + NASA + NOAA programs
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** 
 **Why fit:** BAE Systems Space builds sophisticated, expensive flight instruments — EO/IR sensors, UV spectrographs, radar systems, and optical payloads — that need flight environment validation before integration on orbital platforms. BLK3 provides:
 **Next action:** DO NOT cold-email Palombo. Best path: (1) If AFRL SBIR relationship (FA9300-25-C-6022) yields an AFRL program manager who has worked with BAE Systems Space on sensor programs, ask for intro. (2) If SDL (#44) conversation lands, ask Thurgood for BAE Systems Space intro — they share the USSF program community.
@@ -6979,70 +9054,166 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. BAE Systems Space
 
 ### PAY-7294 | Castelion — Tactical Hypersonic Missile Startup ⭐⭐ TIMELY HYPERSONICS QUALIFIER
 **Status:** NEW → RESEARCHING ✅ Draft AW below (HOLD — identify POC befo — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Defense / Commercial — tactical hypersonic missile development; component and motor qualification needed
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Castelion leadership (company is early-stage, ~2022-2023 founded; exact CEO name not publicly confirmed in available sources)
 **Why fit:** Castelion's tactical hypersonic missile components (guidance avionics, TPS materials, aeroshell structures, seeker/sensor packages) need flight-environment qualification at near-vacuum altitudes before integration into a full missile test vehicle. BLK3:
 **Next action:** Identify Castelion CEO/founder via LinkedIn before outreach.
 **Source:** tasks/blk3-payload-sales-pipeline.md
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Castelion's tactical hypersonic missile components (guidance avionics, TPS materials, aeroshell structures, seeker/sensor packages) need flight-_
 
-### PAY-7373 | Exobiosphere — (CEO TBD — POC not fully confirmed) ⭐ EMERGING PHARMA CRO PLAY
-**Status:** NEW → RESEARCHING (HOLD on outreach — identify POC first; al — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** Pharma/Biotech — space-based pre-clinical CRO, active ISS customer
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** CEO/Founder not publicly confirmed from available sources
-**Why fit:** Exobiosphere's OHTS platform needs actual flight validation before it can serve pharma clients at scale. BLK3 suborbital:
-**Next action:** Price off rate card; stage tailored outreach for Jon to approve.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Exobiosphere's OHTS platform needs actual flight validation before it can serve pharma clients at scale. BLK3 suborbital:_
-
-### PAY-9342 | York Space Systems — Dirk Wallinger (CEO) ⭐⭐⭐ NYSE-LISTED DOD SATELLITE PRIME + ORBION EP ACQUISITION
-**Status:** NEW → RESEARCHING ✅ Draft BF below. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
-**Segment:** DoD prime satellite manufacturer — SDA PWSA production, in-space propulsion (Orbion acquisition), DoD/commercial payload customers
-**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Dirk Wallinger — CEO & Founder, York Space Systems (Denver, CO)
-**Why fit:** 
-**Next action:** Jon CEO-to-CEO cold outreach to Dirk Wallinger (public company; Wallinger is active on CNBC and in press). Frame around Orbion EP hardware qual first, then referral arrangement as secondary. — could be a warm path given York's DoD prime status.
-**Source:** tasks/blk3-payload-sales-pipeline.md
-_desc: Payload buyer sourced from BLK3 Payload Sales pipeline._
-
 ### PAY-3730 | Siwei Fan — Cryogenic Propellant Gauging in Low-Gravity (ERT/EIT) ⭐⭐⭐ STRATEGIC (dual-use for Exos's own cryo program)
 **Status:** ENGAGED — awaiting his docs, then price + solicitation hunt. — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** University research → BLK3 payload + potential technology collaboration
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** 
 **Why fit:** 
 **Next action:** Price off rate card; stage tailored outreach for Jon to approve.
 **Source:** tasks/blk3-payload-sales-pipeline.md
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline._
 
+### PAY-7783 | MSGC — Montana Space Grant Consortium / Montana NASA EPSCoR (BOREALIS)
+**Status:** OUTREACH SENT (Exo 10/8: Lizi emailed Des Jardins 10/8) — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
+**Segment:** Montana T1 — University
+**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** Angela Des Jardins, Ph.D. (Director, Montana Space Grant Consortium and Director, Montana NASA EPSCoR, angela.desjardins@montana.edu); Amy Brown (Deputy Director, Montana NASA EPSCoR, amy.brown11@montana.edu); Chris (Christina) Flynn (Program Coordinator, MSGC / Montana NASA EPSCoR, christina.flynn1@montana.edu)
+**Why fit:** Strong channel partner. BOREALIS students are the natural next step from balloon to suborbital rocket payloads, and the EPSCoR Research/ISS/Flight calls could fund Montana PI payloads on BLK3. Also a gateway to all 23 member campus reps.
+**Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+**Source:** tasks/blk3-payload-sales-pipeline.md
+_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Strong channel partner. BOREALIS students are the natural next step from balloon to suborbital rocket payloads, and the EPSCoR Research/ISS/Flig_
+
+### PAY-3738 | MTech — Montana Technological University (Butte)
+**Status:** IN DISCUSSION (Lizi emailed Bryce Hill 10/9; he replied same — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
+**Segment:** Montana T1 — University
+**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** Bryce Hill, Ph.D. (Professor and Department Head, Electrical Engineering, bhill@mtech.edu); Katie Hailer, Ph.D. (Vice Chancellor for Research and Dean of the Graduate School, khailer@mtech.edu); Xiaobing Zhou, Ph.D. (Professor of Geophysics, Geological Engineering; MSGC Campus Representative for Montana Tech, xzhou@mtech.edu)
+**Why fit:** Moderate, emerging fit. The RockOn! team is a natural candidate for a follow-on student rocket payload (RockSat-C-style) on BLK3, and a sensor/instrument qualification flight is plausible. Lower priority than MSU.
+**Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+**Source:** tasks/blk3-payload-sales-pipeline.md
+_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Moderate, emerging fit. The RockOn! team is a natural candidate for a follow-on student rocket payload (RockSat-C-style) on BLK3, and a sensor/i_
+
+### PAY-7708 | UMontana — University of Montana (Missoula)
+**Status:** IN DISCUSSION (Lizi emailed Paul Lukacs; he replied 10/9: co — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
+**Segment:** Montana T1 — University
+**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** Paul Lukacs, Ph.D. (Interim Vice President for Research and Creative Scholarship (from July 2, 2026), paul.lukacs@umontana.edu); Jeremy Crowley (Director, Autonomous Aerial Systems Office (AASO), jeremy.crowley@mso.umt.edu); Chani (Chantanelle) Nava (MSGC Campus Representative, University of Montana - Missoula, chantanelle.nava@mso.umt.edu)
+**Why fit:** Weak to moderate. Approach via the VPR's office to surface any microgravity or life-science PIs, and via AASO for sensor/remote-sensing payload testing. Do not claim prior UM space-flight heritage. Note that search results often conflate UM with MSU's SSEL.
+**Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+**Source:** tasks/blk3-payload-sales-pipeline.md
+_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Weak to moderate. Approach via the VPR's office to surface any microgravity or life-science PIs, and via AASO for sensor/remote-sensing payload _
+
+### PAY-8444 | Salish Kootenai College (Pablo, MT — tribal college)
+**Status:** RESEARCHING (POC verified 2026-09-30; no draft yet) — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
+**Segment:** Montana T4 — Tribal college / education
+**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** Matt Seeley (Dean, Natural Resources & Sciences Division, matt_seeley@skc.edu); Lee Slater (Faculty; Department Contact, Information Technology, Engineering & Computer Science (ITECS), lee_slater@skc.edu)
+**Why fit:** Education/outreach fit. Candidate for a sponsored student payload, e.g. through MSGC/NASA MUREP funding. Note: MSGC currently lists SKC as 'Seeking a Representative'. Per policy, no free flights: this must be sold or grant-funded.
+**Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+**Source:** tasks/blk3-payload-sales-pipeline.md
+_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Education/outreach fit. Candidate for a sponsored student payload, e.g. through MSGC/NASA MUREP funding. Note: MSGC currently lists SKC as 'Seek_
+
+### PAY-1573 | Chief Dull Knife College (Lame Deer, MT — tribal college)
+**Status:** RESEARCHING (POC verified 2026-09-30; no draft yet) → OUTREA — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
+**Segment:** Montana T4 — Tribal college / education
+**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** Jim Bertin (Math Instructor; rocket team advisor; MSGC Campus Representative, jbertin@cdkc.edu)
+**Why fit:** Education fit. A student payload step-up from high-power rocketry to suborbital, if funded (MSGC/NASA). Low revenue priority.
+**Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+**Source:** tasks/blk3-payload-sales-pipeline.md
+_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Education fit. A student payload step-up from high-power rocketry to suborbital, if funded (MSGC/NASA). Low revenue priority._
+
+### PAY-4513 | Resonon (Bozeman)
+**Status:** RESEARCHING (Exo 10/12: real fit, built NASA ARCSTONE hypers — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
+**Segment:** Montana T2 — Photonics/Sensors
+**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** Rand Swanson (CEO & Co-Founder, email not public)
+**Why fit:** A good match for the Exos value case. Suborbital flights with recovered hardware could flight-qualify or test new space and high-altitude hyperspectral heads before CubeSat or satellite missions. It could also serve as a demo sensor on a BLK3 flight. The company is small (about 11 staff), so pitch it as a low-cost test or co-marketing opportunity.
+**Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+**Source:** tasks/blk3-payload-sales-pipeline.md
+_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. A good match for the Exos value case. Suborbital flights with recovered hardware could flight-qualify or test new space and high-altitude hypers_
+
+### PAY-1112 | Spectrum Lab — Montana State University (Bozeman)
+**Status:** IN DISCUSSION (Lizi emailed Krishna 10/12; he replied same d — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
+**Segment:** Montana T2 — Photonics/Sensors
+**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** Krishna Mohan Rupavatharam (Director, MSU Spectrum Lab, krishna.rupavatharam@montana.edu); Tamara Moe (Research Program & Grants Manager, MSU Spectrum Lab, tamara.moe@montana.edu)
+**Why fit:** Spectrum Lab could put a suborbital demo of an RF-photonic or spectral sensor, or of radiation- and vibration-qualified photonics, into a grant proposal. Pitch it as a university research flight. S2's last public news is Aug 2020 (DARPA award), so its current activity level is unverified. It shares an address (2310 University Way, Bozeman) with Bridger's building complex.
+**Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+**Source:** tasks/blk3-payload-sales-pipeline.md
+_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Spectrum Lab could put a suborbital demo of an RF-photonic or spectral sensor, or of radiation- and vibration-qualified photonics, into a grant _
+
+### PAY-6680 | Lumibird Photonics USA — Quantel (Bozeman)
+**Status:** PARKED (Exo 10/12, Lizi review: no named contact, no verifie — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
+**Segment:** Montana T2 — Photonics/Sensors
+**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** No public named lead — route via org / warm intro
+**Why fit:** There are two angles. (1) As a customer: flight-qualifying rugged laser heads or rangefinder or LiDAR parts. (2) As a partner: its environmental and optical test lab could complement Exos flight tests for shared customers. Lumibird is a French-listed group, so apply the foreign-parent screen for any controlled work. No Bozeman site lead is public, so start through the main line.
+**Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+**Source:** tasks/blk3-payload-sales-pipeline.md
+_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. There are two angles. (1) As a customer: flight-qualifying rugged laser heads or rangefinder or LiDAR parts. (2) As a partner: its environmental_
+
+### PAY-5728 | CACI — Belgrade MT site (ex-Ascent Vision Technologies)
+**Status:** PARKED (Exo 10/12, Lizi review: defense prime site, no named — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
+**Segment:** Montana T2 — Photonics/Sensors
+**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** No public named lead — route via org / warm intro
+**Why fit:** Fits the Exos test-side, missile-defense-adjacent positioning: flight-qualifying EO/IR payloads for high-altitude or space tracking. There is no named public local site lead. The route in is CACI corporate BD or the C-UAS business line, or a warm intro through the Montana High Tech Business Alliance. Lee Dingman was AVT President in 2020, but his current role is unverified and he is not included.
+**Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+**Source:** tasks/blk3-payload-sales-pipeline.md
+_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Fits the Exos test-side, missile-defense-adjacent positioning: flight-qualifying EO/IR payloads for high-altitude or space tracking. There is no_
+
 ### PAY-7763 | Matt Lesiw / TDP International
 **Status:** READY — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Commercial / commemorative
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Matt Lesiw (mjlesiw@gmail.com)
 **Why fit:** 1U commemorative watch payload, verbally accepted 7/27; booking confirmation prepared
 **Next action:** Send Booking Confirmation (ready in Jon's inbox) → countersignature + deposit. Watch payment-in-kind option. MC #1144.
 **Source:** tasks/blk3-payload-sales-pipeline.md
 _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. 1U commemorative watch payload, verbally accepted 7/27; booking confirmation prepared_
 
+### PAY-3280 | Merck Research Labs (Paul Reichert)
+**Status:** READY — payload buyer (auto-bridged from pipeline)
+**Type:** Payload Sale (BLK3 early 2027)
+**Segment:** Bucket C — Big Pharma
+**Value:** $1,012,500 (full-bay list; final quote priced off rate card)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** paul.reichert@merck.com
+**Why fit:** Proven ISS PCG buyer; pembrolizumab → FDA-approved; wants "next chapter"; screening angle
+**Next action:** Jon to send Draft J (2026-07-03) — warm path via ISS NL if cold
+**Source:** tasks/blk3-payload-sales-pipeline.md
+_desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Proven ISS PCG buyer; pembrolizumab → FDA-approved; wants "next chapter"; screening angle_
+
 ### PAY-1894 | Fortastra ("Mike")
 **Status:** OUTREACH SENT (2026-07-29, Jon) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Commercial space / on-orbit asset protection
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** Mike (full name TBD)
 **Why fit:** Sensor suite needs real-space validation (radiation, thermal, ESD, deploy mechanics) before first orbital ride — classic suborbital de-risk fit
 **Next action:** Research Mike + seed round; call-prep brief; follow up ~5-7 days if no reply. MC task #1697
@@ -7051,10 +9222,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Sensor suite need
 
 ### PAY-7493 | John Welsh
 **Status:** OUTREACH SENT (Lizi: 2026-07-30 + follow-up 2026-08-18) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Aerospace / propulsion (indiv. contact; prospect OR referral conduit)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** jwelshr@gmail.com (personal)
 **Why fit:** Aerospace + propulsion background; Lizi pitched him as either a direct payload prospect or a warm path to "someone else on your team or network." Fit = propulsion instrumentation, thermal/pressure, advanced materials, sensor validation on recoverable BLK3 flight
 **Next action:** Lizi driving. Company/role unknown — enrich (LinkedIn, current program). If no reply to 8/18 follow-up by ~8/25, one nudge or ask for the referral he hinted at. Owner: Lizi
@@ -7063,10 +9234,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Aerospace + propu
 
 ### PAY-4934 | Aevum (Jay @ aevum.us)
 **Status:** OUTREACH SENT (Lizi: 2026-07-29 + follow-up 2026-08-18) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Autonomous aircraft / responsive launch / aerospace logistics (Jay Skylus co.; Ravn X autonomous launch UAV)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** jay@aevum.us
 **Why fit:** BLK3 = recoverable flight-test platform for Aevum's autonomous systems, avionics, comms hardware, and sensors — real launch environment + hardware back in 2-3 days for inspection/iteration. Lizi also asked Jay for a referral to the right person if not him
 **Next action:** Lizi driving. Enrich: confirm Aevum's current program status (co. went quiet post-2021) + Jay's current role. If no reply to 8/18 follow-up by ~8/25, one nudge or ask for the referral Lizi offered. Owner: Lizi
@@ -7075,10 +9246,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. BLK3 = recoverabl
 
 ### PAY-2659 | Andrew P. Noonan (Vanderbilt ADL)
 **Status:** OUTREACH SENT (Lizi: 2026-07-30 + follow-up 2026-08-18) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Edu — Vanderbilt University, Aerospace Design Laboratory (student projects, research payloads, flight systems)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** andrew.p.noonan@vanderbilt.edu
 **Why fit:** Vanderbilt's Aerospace Design Laboratory is a strong student/research BLK3 fit: student-built experiments, sensors & instrumentation, subsystem validation, microgravity research, and other recoverable tech demos — real suborbital flight data plus post-flight hardware recovery to iterate. Lizi also asked Andrew for an intro to the better ADL contact if it isn't him
 **Next action:** Lizi driving. Enrich (web down this cycle): confirm Andrew's role/title at ADL (student, staff, faculty) + best-fit active project/team. If no reply to 8/18 follow-up by ~8/25, one nudge or ask for the ADL referral he hinted at. US university — marketing/PUG releasable; export-screen anything beyond the guide. Owner: Lizi
@@ -7087,10 +9258,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Vanderbilt's Aero
 
 ### PAY-1359 | Michael (Mike) Klassen (CSE)
 **Status:** OUTREACH SENT (Lizi: 2026-07-30 + follow-up 2026-08-18) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Combustion R&D — Combustion Science & Engineering, Inc. (Columbia, MD; SBIR/DoD combustion, ignition, fire-suppression)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** mklassen@csefire.com
 **Why fit:** CSE is a strong combustion-instrumentation BLK3 fit: combustion-related sensors, pressure & thermal measurements, materials testing, and other recoverable tech demos — gather data in a real launch environment, recover hardware, and use results to validate models or support continued SBIR/DoD development. Lizi also asked Michael for an intro to the better CSE flight-testing contact if it isn't him
 **Next action:** Lizi driving. DD PASS 8/18 (Klassen = VP & Principal Research Engineer, ~28 yrs, VERIFIED; also VP/CTO at affiliated LPP Combustion). US firm — marketing/PUG releasable; export-screen anything beyond the guide. If no reply to 8/18 follow-up by ~8/25, one nudge or ask for the right CSE contact / referral he offered. Owner: Lizi
@@ -7099,10 +9270,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. CSE is a strong c
 
 ### PAY-3104 | Matthew ("energomatt321")
 **Status:** OUTREACH SENT (Lizi: 2026-07-30 + follow-up 2026-08-18) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Unknown segment — individual contact (prospect OR referral conduit)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** energomatt321@gmail.com (personal)
 **Why fit:** Lizi pitched BLK3 as a fit for sensors/instrumentation, subsystem validation, advanced materials, microgravity, or other recoverable tech demos; also asked Matthew for a referral to the better person on his team/network if not him. Full identity/company TBD (personal Gmail, "energo-" hints energy sector)
 **Next action:** Lizi driving. Enrich: identify Matthew's full name, company/program (personal Gmail — low signal). If no reply to 8/18 follow-up by ~8/25, one nudge or ask for the referral he hinted at. Owner: Lizi
@@ -7111,10 +9282,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Lizi pitched BLK3
 
 ### PAY-5489 | Ivan Klimov
 **Status:** OUTREACH SENT (Lizi: 2026-07-29 + follow-up 2026-08-18) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Propulsion engineering (indiv. contact; prospect OR referral conduit)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** iklimov87@gmail.com (personal)
 **Why fit:** Propulsion background; Lizi pitched him for propulsion-related hardware/instrumentation needing real flight data + post-flight recovery — pressure/thermal measurements, sensor validation, materials testing beyond ground test. Also asked for an intro to the right person on his team if not him
 **Next action:** Lizi driving. Company/role unknown — enrich (LinkedIn, current program/employer). If no reply to 8/18 follow-up by ~8/25, one nudge or ask for the referral he hinted at. Owner: Lizi
@@ -7123,10 +9294,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Propulsion backgr
 
 ### PAY-7053 | Kingston University (Dr. M. Claus)
 **Status:** OUTREACH SENT (Lizi: 2026-07-30 + follow-up 2026-08-18) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Intl/edu — UK university (hypersonics, propulsion, student launch-vehicle)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** m.claus@kingston.ac.uk
 **Why fit:** Kingston's hypersonics/propulsion/student launch-vehicle work is a natural fit for BLK3: propulsion instrumentation, aerothermal measurements, flight-hardware validation, sensor packages, and recoverable tech demos. Strong student-team angle — take a project beyond ground test, get real suborbital flight data, recover hardware for analysis. Lizi also asked Dr. Claus for a referral to the right person at Kingston if it's not him
 **Next action:** Lizi driving. Enrich: confirm Dr. Claus's dept/role at Kingston + best-fit research/student program. If no reply to 8/18 follow-up by ~8/25, one nudge or ask for the referral to the right Kingston contact. EXPORT NOTE: UK (foreign) — PUG/marketing releasable; export-screen anything beyond the guide (detailed ICD/CAD/FEA) before sending. Owner: Lizi
@@ -7135,10 +9306,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Kingston's hypers
 
 ### PAY-6216 | Kanishk V. Ganga (Oxford)
 **Status:** OUTREACH SENT (Lizi: 2026-07-30 + follow-up 2026-08-18) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Intl/edu — Univ. of Oxford researcher (hypersonic flow, combustion, shock-driven experiments, instrumentation)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** kanishkvganga@gmail.com (personal)
 **Why fit:** Kanishk's hypersonics/combustion/shock research is a strong BLK3 fit: pressure & thermal measurements, flow diagnostics, radiation sensing, materials testing, and other recoverable instrumentation flown in a real high-speed environment, with hardware returned post-flight to compare experimental/computational results against actual flight data. Lizi also asked for a referral if there's a better Oxford contact for a flight experiment or broader research opportunity
 **Next action:** Lizi driving. Enrich: confirm Kanishk's dept/group/role at Oxford + best-fit active project. If no reply to 8/18 follow-up by ~8/25, one nudge or ask for the Oxford referral he hinted at. EXPORT NOTE: UK (foreign) — PUG/marketing releasable; export-screen anything beyond the guide (detailed ICD/CAD/FEA) before sending. Owner: Lizi
@@ -7147,10 +9318,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Kanishk's hyperso
 
 ### PAY-2793 | Richard French (Rocket Lab) ⭐ HIGH-VALUE PROSPECT/CONDUIT
 **Status:** OUTREACH SENT (Lizi: 2026-07-30 + follow-up 2026-08-18) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Senior spacecraft/BD decision-maker — VP, Business Development & Strategy, Space Systems at Rocket Lab (VERIFIED via rocketlabcorp.com/about/team, AIAA, Planetary Society; at Rocket Lab since 2019). 12+ yrs at JPL leading planetary-mission development; UMich CLaSP Alumnus of the Year 2025. Owns Rocket Lab's Photon spacecraft line + high-end satellite components: propulsion, reaction wheels, star trackers, avionics, solar arrays, end-to-end mission services & on-orbit ops. Contacted at personal email (richard.t.french@gmail.com)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** richard.t.french@gmail.com (personal)
 **Why fit:** Exceptional BLK3 fit AND referral conduit. Direct fit = recoverable flight validation of Rocket Lab satellite components/subsystems (avionics, star trackers, reaction wheels, propulsion, solar arrays, comms) before committing to a full orbital mission — real launch environment + hardware back in 2-3 days for inspection/iteration. As VP-BD he also sits atop a deep spacecraft-components + planetary-mission network; Lizi explicitly asked for the right person at Rocket Lab or an intro to another team. STRATEGIC: Rocket Lab is both a giant and a component supplier — a component-qual relationship is a credible wedge
 **Next action:** Lizi driving. Enrich done (role VERIFIED). If no reply to 8/18 follow-up by ~8/25, one nudge or ask for the referral to the right Rocket Lab Space Systems contact. NOTE: US company (no foreign-export gate); still export-screen anything beyond the Payload User Guide (detailed ICD/CAD/FEA) before sending. Owner: Lizi
@@ -7159,10 +9330,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Exceptional BLK3 
 
 ### PAY-8195 | Kavic (R.) Kumar — Univ. of Maryland College Park / NASA GSFC AstroPix (ASTEP FFR) 🎓 UMD researcher + 🏛️ NASA-program — warm (Jon @ HelioTech 2026) · UTD-capstone candidate
 **Status:** NEW (warm lead, updated 2026-09-02) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Detector TRL advancement — UMD College Park researcher working the NASA GSFC AstroPix CMOS pixel detector for future gamma-ray MeV astrophysics; ASTEP FFR = joint tech-demo of AstroPix V3 Quad Chips + MOTIV (Rocket Lab) robotic-arm payload in LEO
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** krk18@umd.edu (UMD, provided by Jon 9/2) · alt kavic.r.kumar@nasa.gov (AstroPix/NASA)
 **Why fit:** Warm conference lead — AstroPix summary talk at the 2026 NASA HelioTech / Orbital Flight Symposium (8/31); badge shows Univ. of Maryland, College Park; Jon provided his UMD email 9/2. Dual affiliation: UMD (his badge/.edu address) + NASA GSFC AstroPix program. Potential in-space/suborbital test: a recoverable BLK3 flight is a lower-cost, faster-cadence way to advance AstroPix chip TRL (particle/radiation environment, thermal, in-flight telemetered data) with hardware recovered for inspection — a stepping stone alongside the LEO ASTEP demos. Candidate suborbital-test opportunity for the UTD capstone to develop. Refs: AstroPix V3 arXiv:2501.11698; A-STEP proceedings arXiv:2411.03165.
 **Next action:** Contactable as a UMD researcher (krk18@umd.edu) — UTD may run PUG-level academic outreach here. BUT the subject is the NASA GSFC AstroPix program: keep it marketing/PUG only, and route anything touching AstroPix hardware/technical data or a NASA-program commitment through Jon + export screen (detector = export-sensitive). Prefer the .edu address for first contact; the .gov address is the NASA-program channel (Jon). Enrich: Kumar's role/team, AstroPix PI (Caputo/Steinhebel line), whether a suborbital TRL step is wanted between LEO demos. Owner: Jon (gov substance) / Lizi-UTD (PUG academic outreach)
@@ -7171,10 +9342,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Warm conference l
 
 ### PAY-3415 | Alexander Barrie (Aurora Engineering) — warm (Jon @ HelioTech 2026)
 **Status:** NEW (warm lead, 2026-08-31) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Commercial / flight-software & autonomy — spacecraft operational autonomy, onboard/reactive science ("Enabling Reactive Science Through Operational Autonomy"); NASA GSFC science-ops heritage (MMS/FPI-class instruments)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** abarrie@auroraengineering.com
 **Why fit:** Warm conference lead — presented at the 2026 HelioTech / Orbital Flight Symposium; Jon captured the contact off the title slide (8/31). BLK3 fit: recoverable suborbital flight = a real-environment testbed for autonomy/flight-software and reactive-science algorithms (onboard event detection, autonomous instrument tasking) with hardware + data recovered in 2-3 days for iteration before an orbital ride. Also a conduit into the GSFC science-operations / autonomy community.
 **Next action:** Commercial contact (auroraengineering.com) — normal outreach OK; UTD/Lizi can work it, Exos approves the send. Enrich: Aurora Engineering's current programs + Barrie's role, and whether they have a flight-autonomy payload/experiment wanting a suborbital test. Marketing/PUG releasable; export-screen anything beyond the Payload User Guide (flight-software/autonomy can be export-sensitive). Owner: Lizi/UTD
@@ -7183,10 +9354,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Warm conference l
 
 ### PAY-4018 | Kirk Maddox (Applied Aerospace & Defense / NeXolve) — warm (Jon @ HelioTech 2026)
 **Status:** NEW (warm lead, 2026-08-31) — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Commercial — deployable space structures + advanced polymer/thin-film materials (NeXolve = JWST sunshield, Artemis-1/NEA Scout solar sail, CP1 polyimide film, drag/deorbit sails); Applied A&D adds large-scale composite + metallic mfg (Huntsville AL, by NASA MSFC)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** kirk.maddox@nexolve.com
 **Why fit:** Warm conference lead — Applied A&D presented at the 2026 HelioTech / Orbital Flight Symposium; Jon captured Maddox's contact off the closing slide (8/31). Opportunity = YES. (1) Payload customer: deployable mechanisms (sails, sunshields, drag/deorbit) and thin-film materials get a real suborbital flight test — deployment dynamics in microgravity, launch vibration/thermal, materials exposure — with hardware recovered in ~2-3 days for post-flight inspection, de-risking before a costlier orbital ride. Applied A&D builds a NEW deployable-subsystems line (solar arrays, sunshields, passive deorbit) — all classic recoverable-flight-test candidates. (2) Strategic (Jon): Huntsville/MSFC/MDA teaming + possible advanced-materials/coatings supplier angle — consortium/partner lens, route to Jon.
 **Next action:** Commercial (nexolve.com / applied-ad.com) — normal outreach OK; UTD/Lizi work the payload angle, Exos approves the send. Enrich: which deployable/materials programs want flight validation + funding path (NASA/DoD/IRAD). Flag the Huntsville-teaming/supplier angle to Jon separately (consortium lens). Marketing/PUG releasable; deployables/materials = export-sensitive — export-screen anything beyond the Payload User Guide. Owner: Lizi/UTD (payload) + Jon (strategic)
@@ -7195,10 +9366,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Warm conference l
 
 ### PAY-9588 | Adrian Daw (NASA Goddard Space Flight Center) 🏛️ GOV — warm (Jon @ HelioTech 2026) · 🎓 UTD-scope
 **Status:** READY — John outreach drafted 9/1, sent to John's inbox (lea — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Gov science / solar instrument development — EUV diffraction gratings, optical coatings, photon sieves (NASA HTIDeS-funded); PI/instrument lead across EUNIS, SNIFS, ESIS-II sounding-rocket missions and the MUSE (Multi-slit Solar Explorer) EUV spectrograph
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** adrian.daw@nasa.gov (VERIFIED 9/1 — NASA GSFC bio, NPP listing, solar-physics list; ph 301-286-2278; Solar Physics Lab Code 671; PI EUNIS, IRIS Mission Scientist)
 **Why fit:** Warm conference lead — "Technology Infusion Success: MUSE" talk at the 2026 NASA HelioTech / Orbital Flight Symposium; Jon flagged him for more sounding-rocket missions (9/1). Prime sounding-rocket-class fit: BLK3 is a reusable, recoverable platform for exactly the EUV solar instruments Daw matures on sounding rockets — gratings/coatings/photon-sieve tech maturation, calibration flights, and above-atmosphere solar observing windows, with hardware recovered in ~2-3 days for reflight. Lead with the flight: next BLK3 flight late Q1 / early Q2 2027, 135 kg SPACEavailable...™.
 **Next action:** GOV (.gov) — outreach routes through Jon; NO cold student/Lizi send (UTD enriches/scopes only). Enrich: his current sounding-rocket manifest (ESIS-II and follow-ons) and which instrument/tech would want a recoverable suborbital flight. Marketing/PUG releasable; EUV optics = export-sensitive, export-screen anything beyond the Payload User Guide. Owner: Jon
@@ -7207,10 +9378,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Warm conference l
 
 ### PAY-5889 | Gregory Miller (Southwest Research Institute — SwRI) — warm (Jon met @ HelioTech 2026)
 **Status:** NEW (warm lead, 2026-09-02) — reach out after Jon's meeting  — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Commercial/nonprofit research — SwRI Principal Scientist; space instrumentation & spaceflight mass spectrometry; Calibration Lead, Europa Clipper MASPEX instrument (San Antonio)
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** gregory.miller@swri.org (SwRI standard format — UNVERIFIED, confirm on SwRI planetary-science staff page before send) · ph 210-522-2215 (verified)
 **Why fit:** Warm in-person lead — Jon met him at the 2026 HelioTech / Orbital Flight Symposium and wants to reach out after his meeting (9/2). Fit: recoverable BLK3 flight for space-instrument calibration, sensor/mass-spec component testing, and TRL advancement in a real flight environment with hardware back in ~2-3 days. Another SwRI entry point alongside the existing SwRI HOT line (C.J. Nolen / A. Stern). Lead with the flight: next BLK3 flight late Q1 / early Q2 2027, 135 kg SPACEavailable...™.
 **Next action:** SwRI = nonprofit research institute (not .gov) — normal outreach OK once Jon says go. SwRI does heavy gov/DoD work, so keep it marketing/PUG; export-screen anything beyond the Payload User Guide. Verify his exact SwRI email before any send. Owner: Jon (met him)
@@ -7219,10 +9390,10 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Warm in-person le
 
 ### PAY-7346 | Danielle McCulloch (NASA HQ — Flight Opportunities Program Executive) ⭐⭐⭐ HIGH-VALUE STRATEGIC 🏛️ GOV — warm (Jon @ HelioTech 2026)
 **Status:** ACTIVE relationship — live FO application (in-orbit fuel tra — payload buyer (auto-bridged from pipeline)
-**Type:** Payload Sale (BLK3 March 2027)
+**Type:** Payload Sale (BLK3 early 2027)
 **Segment:** Gov / NASA STMD — Program Executive, NASA Flight Opportunities (strategic integration between researchers, mission stakeholders, and FLIGHT PROVIDERS; ex-PM/deputy PM of FO). Moderated the "Access to Commercial Flight" panel
 **Value:** $1,012,500 (full-bay list; final quote priced off rate card)
-**Due:** BLK3 Flight 2 — March 2027
+**Due:** BLK3 Flight 2 — early 2027
 **POC:** danielle.mcculloch@nasa.gov (CONFIRMED by Jon 9/2) · LinkedIn /in/ddmcculloch · in CRM (record cleaned/enriched 9/2, id ece4c2c7)
 **Why fit:** Warm conference lead — Jon caught her HelioTech panel (9/2). NOT a payload sale — this is the FO PROVIDER-ONBOARDING relationship. She is the HQ gatekeeper to the exact lane [[project_blk3_nasa_onramp]] targets: 2 BLK3 flights >85 km → NASA Flight Opportunities provider status (~$1M/flight). FO just added hosted-orbital capability; she integrates providers into the program. Ties to the FO Community-of-Practice webinar track (incl. today's lunar-suborbital session). Strategic play: position Exos/BLK3 as an FO commercial suborbital (and capsule-return) provider. EXISTING RELATIONSHIP (Jon 9/2): met before; Exos has APPLIED to her latest FO program (hosted-orbital) for an IN-ORBIT FUEL TRANSFER demo (Scorpius Type-5 / cryo heritage). Jon to speak with her directly re: in-orbit fuel transfer AND the entX Project Lazarus RHU flight. Also a NASA FO POC for the Project Hermes SBIR Phase II→III conversion (with Peters/Kelly).
 **Next action:** GOV (.gov) — Jon owns this directly; NO cold student/Lizi send. Strategic John↔HQ (FO provider onboarding + in-orbit fuel transfer application + RHU flight), not a UTD payload target. Ties to the 2-flight >85 km FO on-ramp. Owner: John
@@ -7233,90 +9404,76 @@ _desc: Payload buyer sourced from BLK3 Payload Sales pipeline. Warm conference l
 
 <!-- DERISK-ORBITAL-AUTO:BEGIN (managed by derisk_orbital_outreach.py) -->
 
-## DE-RISK ORBITAL — auto-sourced 2026-09-17
+## DE-RISK ORBITAL — auto-sourced 2026-10-17
 
-### DRO-6575 | UC Berkeley Space Sciences Laboratory – FOXSI Program
-**Status:** NEW — DRO sourced 2026-09-17; lead w/ open BLK3 Mar-2027 slot
-**Type:** De-Risk Orbital Outreach (Pool A)
-**Segment:** Suborbital repeat-flier
-**Country:** USA
-**Value:** 521500
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Dr. Juan Camilo "Milo" Buitrago-Casas, Assistant Research Physicist & Principal Investigator, FOXSI mission, milo@ssl.berkeley.edu
-**Why fit:** FOXSI's precision optics/detector stack must currently be refurbished between expendable Terrier-Black Brant flights, so BLK3's reusable airframe and guaranteed intact recovery directly cuts their instrument-reflight cost and schedule risk.
-**Owner:** jquinn@exosaero.com
-**Next action:** add to CRM for research
-**Source:** https://www.ssl.berkeley.edu/foxsi5-feature-jun26/
-_desc: De-Risk Orbital target (Suborbital repeat-flier). FOXSI's precision optics/detector stack must currently be refurbished between expendable Terrier-Black Brant flights, so BLK3's reusable airframe and guaranteed intact re_
-
-### DRO-9989 | Solstar Space Co.
-**Status:** NEW — DRO sourced 2026-09-17; lead w/ open BLK3 Mar-2027 slot
-**Type:** De-Risk Orbital Outreach (Pool A)
-**Segment:** Suborbital repeat-flier
-**Country:** USA
-**Value:** 71250
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** M. Brian Barnett, Founder, President & CEO, barnett@solstarspace.com
-**Why fit:** Solstar is already a repeat New Shepard flier maturing SBIR-funded comms hardware, and BLK3's live-telemetry option plus 2-3 day reflight turnaround lets them iterate tests and get the flown hardware back intact.
-**Owner:** jquinn@exosaero.com
-**Next action:** add to CRM for research
-**Source:** https://solstarspace.com/company/
-_desc: De-Risk Orbital target (Suborbital repeat-flier). Solstar is already a repeat New Shepard flier maturing SBIR-funded comms hardware, and BLK3's live-telemetry option plus 2-3 day reflight turnaround lets them iterate tes_
-
-### DRO-1527 | Innospace
-**Status:** NEW — DRO sourced 2026-09-17; lead w/ open BLK3 Mar-2027 slot · international target: marketing outreach only, controlled technical-data transfer stays ITAR-gated
-**Type:** De-Risk Orbital Outreach (Pool B)
-**Segment:** Orbital launch developer (risk mitigation)
-**Country:** South Korea
-**Value:** 540500
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Kim Soo-jong, Founder & CEO, soojong.kim@innospc.com
-**Why fit:** After HANBIT-Nano's debut orbital attempt failed, Innospace needs to flight-validate its hybrid engine control and avionics package on a cheap reusable hop before risking its next orbital shot.
-**Owner:** toshihisa@exosaero.com
-**Next action:** add to CRM for research
-**Source:** https://spacenews.com/innospace-plans-second-launch-in-2026-after-failure-of-first-hanbit-nano-rocket/
-_desc: De-Risk Orbital target (Orbital launch developer (risk mitigation)). After HANBIT-Nano's debut orbital attempt failed, Innospace needs to flight-validate its hybrid engine control and avionics package on a cheap reusable_
-
-### DRO-1583 | MaiaSpace
-**Status:** NEW — DRO sourced 2026-09-17; lead w/ open BLK3 Mar-2027 slot · international target: marketing outreach only, controlled technical-data transfer stays ITAR-gated
-**Type:** De-Risk Orbital Outreach (Pool B)
-**Segment:** Orbital launch developer (risk mitigation)
-**Country:** France
-**Value:** 545500
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Yohann Leroy, Chief Executive Officer, yohann.leroy@maia-space.com
-**Why fit:** Maia's reusability bet rides entirely on unproven GNC recovery/landing software, which can be flight-qualified on a cheap suborbital hop before MaiaSpace bets its first orbital vehicle on it.
-**Owner:** jquinn@exosaero.com
-**Next action:** add to CRM for research
-**Source:** https://europeanspaceflight.com/everything-we-know-about-arianegroups-mysterious-maiaspace-startup/
-_desc: De-Risk Orbital target (Orbital launch developer (risk mitigation)). Maia's reusability bet rides entirely on unproven GNC recovery/landing software, which can be flight-qualified on a cheap suborbital hop before MaiaSpa_
-
-### DRO-3283 | ATSpace
-**Status:** NEW — DRO sourced 2026-09-17; lead w/ open BLK3 Mar-2027 slot · international target: marketing outreach only, controlled technical-data transfer stays ITAR-gated
+### DRO-9173 | Gilmour Space Technologies
+**Status:** NEW — DRO sourced 2026-10-17; lead w/ open BLK3 Mar-2027 slot · international target: marketing outreach only, controlled technical-data transfer stays ITAR-gated
 **Type:** De-Risk Orbital Outreach (Pool B)
 **Segment:** Orbital launch developer (risk mitigation)
 **Country:** Australia
-**Value:** 285500
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Nick Chang, Chief Operating Officer, nick.chang@atspace.com.au
-**Why fit:** ATSpace just proved its hybrid propulsion on its own 80km suborbital hop and needs a lower-cost, hardware-recovering path to keep qualifying engine and telemetry components before committing them to an orbital vehicle.
+**Value:** $1,018,000 (full bay + integration); upsell $25,000 live telemetry
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** Adam Gilmour, Founder & CEO, adam@gspacetech.com
+**Why fit:** A reusable suborbital hop on Flight 2 lets Gilmour flight-test avionics, GNC and separation hardware cheaply before committing the next Eris vehicle.
 **Owner:** toshihisa@exosaero.com
-**Next action:** add to CRM for research
-**Source:** https://atspace.com.au/updates/news/atspace-conducts-successful-launch-of-australian-made-a01-rocket-at-the-southern-launch-koonibba-test-range
-_desc: De-Risk Orbital target (Orbital launch developer (risk mitigation)). ATSpace just proved its hybrid propulsion on its own 80km suborbital hop and needs a lower-cost, hardware-recovering path to keep qualifying engine and_
+**Next action:** Stage a launcher-risk-mitigation one-pager tied to the Flight 2 bay and route it through the Australia NCE channel for Jon's review. Do not send externally. Confirm the current POC and email first.
+**Source:** https://www.gspacetech.com
+_desc: De-Risk Orbital target (Orbital launch developer (risk mitigation)). A reusable suborbital hop on Flight 2 lets Gilmour flight-test avionics, GNC and separation hardware cheaply before committing the next Eris vehicle. P_
 
-### DRO-7428 | Tendeg, LLC
-**Status:** NEW — DRO sourced 2026-09-17; lead w/ open BLK3 Mar-2027 slot
+### DRO-4090 | Rocket Factory Augsburg (RFA)
+**Status:** NEW — DRO sourced 2026-10-17; lead w/ open BLK3 Mar-2027 slot · international target: marketing outreach only, controlled technical-data transfer stays ITAR-gated
+**Type:** De-Risk Orbital Outreach (Pool B)
+**Segment:** Orbital launch developer (risk mitigation)
+**Country:** Germany
+**Value:** $515,500 (half bay) to $1,018,000 (full bay)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** Indulis Kalnins, Co-founder & CEO, indulis.kalnins@rfa.space
+**Why fit:** RFA can test engine-adjacent and avionics hardware on a reusable suborbital hop before it commits to the next orbital vehicle build.
+**Owner:** jquinn@exosaero.com
+**Next action:** Stage a risk-mitigation brief on the Flight 2 bay. Include the export-screen note and wait for Jon's approval before any outreach.
+**Source:** https://www.rfa.space
+_desc: De-Risk Orbital target (Orbital launch developer (risk mitigation)). RFA can test engine-adjacent and avionics hardware on a reusable suborbital hop before it commits to the next orbital vehicle build. Program: RFA One: _
+
+### DRO-7906 | Stoke Space Technologies
+**Status:** NEW — DRO sourced 2026-10-17; lead w/ open BLK3 Mar-2027 slot
+**Type:** De-Risk Orbital Outreach (Pool B)
+**Segment:** Orbital launch developer (risk mitigation)
+**Country:** United States
+**Value:** $1,018,000 (full bay)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** Andy Lapsa, Co-founder & CEO, andy@stokespace.com
+**Why fit:** Stoke can flight-test TPS and recovery elements on a cheap reusable suborbital hop before betting the Nova second stage on them.
+**Owner:** jquinn@exosaero.com
+**Next action:** Stage a TPS/recovery-validation brief mapped to the Flight 2 bay, and check the CRM for an existing relationship first.
+**Source:** https://www.stokespace.com
+_desc: De-Risk Orbital target (Orbital launch developer (risk mitigation)). Stoke can flight-test TPS and recovery elements on a cheap reusable suborbital hop before betting the Nova second stage on them. Program: Nova fully re_
+
+### DRO-2969 | Phantom Space Corporation
+**Status:** NEW — DRO sourced 2026-10-17; lead w/ open BLK3 Mar-2027 slot
+**Type:** De-Risk Orbital Outreach (Pool B)
+**Segment:** Orbital launch developer (risk mitigation)
+**Country:** United States
+**Value:** $515,500 (half bay); $260,500 (quarter bay) fallback
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** Jim Cantrell, Co-founder & CEO, info@phantomspace.com
+**Why fit:** A low-cost reusable suborbital hop lets Phantom retire avionics and component risk before it commits a Daytona to orbit.
+**Owner:** jquinn@exosaero.com
+**Next action:** Stage a launcher-risk-mitigation brief for Jon's review and confirm the best POC. Do not send externally.
+**Source:** https://www.phantomspace.com
+_desc: De-Risk Orbital target (Orbital launch developer (risk mitigation)). A low-cost reusable suborbital hop lets Phantom retire avionics and component risk before it commits a Daytona to orbit. Program: Daytona orbital launc_
+
+### DRO-6129 | Sidus Space
+**Status:** NEW — DRO sourced 2026-10-17; lead w/ open BLK3 Mar-2027 slot
 **Type:** De-Risk Orbital Outreach (Pool C)
 **Segment:** Orbital sat/payload developer (TRL advancement)
-**Country:** USA
-**Value:** 406500
-**Due:** BLK3 Flight 2 — March 2027
-**POC:** Gregg Freebury, President & CEO, gregg@tendeg.com
-**Why fit:** A suborbital flight lets Tendeg demonstrate stowed-to-deployed mechanism reliability and RF performance under real flight loads, qualifying the new NewTEN antenna before it's committed to a Lockheed/SDA satellite bus.
+**Country:** United States
+**Value:** $260,500 (quarter bay)
+**Due:** BLK3 Flight 2 — early 2027
+**POC:** Carol Craig, Founder, CEO & Chair, info@sidusspace.com
+**Why fit:** A suborbital hop gives Sidus hardware flight heritage and TRL advancement before committing to an orbital ride.
 **Owner:** jquinn@exosaero.com
-**Next action:** add to CRM for research
-**Source:** https://www.tendeg.com/tendeg-launches-newten-steerable-compact-antenna-at-smallsat/
-_desc: De-Risk Orbital target (Orbital sat/payload developer (TRL advancement)). A suborbital flight lets Tendeg demonstrate stowed-to-deployed mechanism reliability and RF performance under real flight loads, qualifying the ne_
+**Next action:** Stage a TRL-advancement note for Jon's review and check the CRM for prior contact first.
+**Source:** https://www.sidusspace.com
+_desc: De-Risk Orbital target (Orbital sat/payload developer (TRL advancement)). A suborbital hop gives Sidus hardware flight heritage and TRL advancement before committing to an orbital ride. Program: LizzieSat payload and sen_
 
 <!-- DERISK-ORBITAL-AUTO:END -->

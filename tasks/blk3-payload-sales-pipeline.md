@@ -994,8 +994,8 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
 - **Active programs:** IM-3 Nova-C lander — planned launch H2 2026, carrying 6+ payloads; IM-4 and IM-5 in planning (NASA CLPS task orders). IM is also building a data relay satellite constellation ("Near Space Network" nodes) and expanding into lunar infrastructure services. After IM-1 and IM-2 both tipped over on landing, IM-3 engineering team is acutely motivated to de-risk every component it can.
 - **Why BLK3 fits:** IM-3 and beyond need rigorous pre-mission qualification of sensor suites (altimeters, IMUs, terrain cameras), avionics, and communications hardware. BLK3 provides 5-7 min of actual microgravity + ascent/descent vibration + thermal cycling + hardware returned in 2-3 days. For a program with two consecutive lander failures, a fast suborbital qualification loop is exactly the de-risk play. Pitch angle: "Same rigor that Scorpius brought to your cryo tanks — now on the flight environment side, from the same team."
 - **Funding:** NASA CLPS task orders ($77M+). Also commercial: IM has raised $170M+. Component qualification budget is real.
-- **Status:** NEW → **READY** ✅ Draft Z below (warm Scorpius entry — Jon to lead)
-- **Next action:** Jon to open via Scorpius relationship angle (mention Exos owns 18% of Scorpius + ROFR, whose cryo tanks flew IM-1 + IM-2). Direct email to Tim Crain at tcrain@intuitivemachines.com.
+- **Status:** DROPPED — John 2026-10-17 (email: 'drop this task'); John already working with IM directly (7/24, D-360). Do not re-stage or re-draft.
+- **Next action:** NONE — dropped. (Was: Jon to open via Scorpius relationship angle (mention Exos owns 18% of Scorpius + ROFR, whose cryo tanks flew IM-1 + IM-2). Direct email to Tim Crain at tcrain@intuitivemachines.com.
 
 ---
 #### 27. Astrobotic Technology — John Thornton (CEO) ⭐⭐
@@ -1499,7 +1499,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   2. **Referral arrangement** — Sierra Space refers their payload customer pipeline to BLK3 suborbital as an interim flight option; customers maintain research cadence; Sierra Space maintains the relationship. Costs Sierra Space nothing; provides their customers a bridge.
   3. **LIFE habitat research pipeline** — Customers signing up for future LIFE/Orbital Reef missions have the same pre-flight validation need. BLK3 = the fast pre-screen before their LIFE slot.
 - **Funding:** Commercial (Sierra Nevada corporate + investors); NASA CRS-2 contract; well-capitalized.
-- **Status:** NEW → RESEARCHING ✅ Draft AP below. Cold BD outreach to Vice appropriate.
+- **Status:** NEW → RESEARCHING ✅ Draft AP below. Cold BD outreach to Vice appropriate. → OUTREACH SENT (Lizi via send pack 2026-10-15, D-7282127, to daniel.jablonsky@sierraspace.com)
 - **Next action:** Jon peer-founder outreach to Tom Vice. Angle: "BLK3 keeps your payload customers active while Dream Chaser cargo missions finalize — no cost to you, big value to your client relationships."
 
 ---
@@ -1607,7 +1607,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   3. **Rapid iteration culture match** — Hermeus's entire philosophy is "hardware richness and rapid iterative prototyping" — Piplica explicitly said this in the Series C announcement. BLK3's 2-3 day recover-and-refly is the same philosophy applied to suborbital payload testing. They will understand this immediately.
   4. **DIU/AFRL TRL advancement** — Hermeus holds a DIU contract for hypersonic testing. Suborbital data from BLK3 would support that contract's TRL advancement deliverables.
 - **Funding:** $350M Series C fresh (April 2026); $1B valuation; DIU contract revenue. Well-capitalized; payload slot cost is not a constraint.
-- **Status:** LOST (Exo 10/8, Lizi lead review: weak fit)
+- **Status:** LOST (Exo 10/8, Lizi lead review: weak fit) → OUTREACH SENT (Lizi via send pack 2026-10-15, D-7282127, to zach@hermeus.com)
 - **Next action:** Jon cold-email AJ Piplica directly — peer-to-peer founder conversation, same launch site, natural partnership. This is the strongest peer-company BD conversation in the full pipeline. No warm intro needed; Spaceport America co-location is the opening line.
 
 ---
@@ -1905,7 +1905,7 @@ Maintained by the local-model "BLK3 Payload Sales Engine" (daily) + Exo/Jon. See
   - AFWERX relationship: Both Exos and Castelion likely have AFWERX SBIR connections — shared AFRL program office creates a natural warm path
 - **⚠️ POC GAP:** CEO/founder name NOT confirmed from available search data. Do NOT cold-email without identifying the right person first. Recommended: (1) Jon search LinkedIn for Castelion leadership; ; (3) Route via DIU HyCAT/Estep (#32) who is in the same commercial hypersonics ecosystem — ask Estep to intro Castelion.
 - **Funding:** AFWERX/DoD SBIR (inferred from company profile); early-stage VC likely. Budget is real if DoD-funded.
-- **Status:** NEW → RESEARCHING ✅ Draft AW below (HOLD — identify POC before sending
+- **Status:** NEW → RESEARCHING ✅ Draft AW below (HOLD — identify POC before sending → OUTREACH SENT (Lizi via send pack 2026-10-15, D-7282127, to bryon@castelion.com)
 - **Next action:** Identify Castelion CEO/founder via LinkedIn before outreach.
 
 ---
