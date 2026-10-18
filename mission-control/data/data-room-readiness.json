@@ -1,92 +1,101 @@
 {
-  "generated": "2026-10-10T08:34:54",
+  "generated": "2026-10-17T21:25:01",
   "status": "GREEN",
-  "score": 55,
+  "score": 52,
   "counts": {
     "block": 0,
-    "warn": 15,
+    "warn": 16,
     "missing_gates": 0,
-    "scanned": 24,
+    "scanned": 35,
     "not_text_scanned": 0
   },
   "blocks": [],
   "warns": [
     {
+      "file": "data-room/Contracts_DoD/00_REGISTER_DoD_Contract_Wins.md",
+      "severity": "WARN",
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~18d (may predate a locked figure)"
+    },
+    {
       "file": "data-room/Copernic_Executed/00_REGISTER_Copernic_Exos_Executed_Agreements.md",
       "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~20d (may predate a locked figure)"
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~27d (may predate a locked figure)"
     },
     {
       "file": "data-room/Copernic_Executed/Copernic_Exos_WetLease_OM_Agreement_2024_EDITABLE.docx",
       "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~20d (may predate a locked figure)"
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~27d (may predate a locked figure)"
     },
     {
       "file": "data-room/Corporate/Exos_Aerospace_Investments_LLC/Board_Meeting_Kit_TEMPLATES.docx",
       "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~15d (may predate a locked figure)"
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~21d (may predate a locked figure)"
     },
     {
       "file": "data-room/Corporate/Exos_Aerospace_Investments_LLC/INDEX.md",
       "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~14d (may predate a locked figure)"
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~21d (may predate a locked figure)"
     },
     {
-      "file": "data-room/Exos_SeriesA/05_Market_Information/5.1_Market_Research_Exos_2026-08_rev-2026-10-10.docx",
+      "file": "data-room/Exos_SeriesA/06_Business_Development/Exos_BD_Engine_Pipeline_Stats_2026-09-07.docx",
+      "severity": "WARN",
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~39d (may predate a locked figure)"
+    },
+    {
+      "file": "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_PitchDeck_FULL_2026-10-17_r7.pptx",
+      "severity": "WARN",
+      "rule": "BLK4 tied to the raise / use of funds (BLK4 = future, gated orbital path only, Jon 10/10)",
+      "match": "BLK4",
+      "context": "by the Series A; base-case revenue does not depend on BLK4"
+    },
+    {
+      "file": "data-room/Japan/UPLOAD_650_2026-10-16/5_Market__5.1_Market_Research_Exos_rev-2026-10-16.docx",
       "severity": "WARN",
       "rule": "absolute 'world's first' / 'only operational|reusable'",
       "match": "only reusable",
       "context": "ons. Exos does not develop the engine; it provides the only reusable, recoverable flight-test platform able to characterize"
     },
     {
-      "file": "data-room/Exos_SeriesA/06_Business_Development/Exos_BD_Engine_Pipeline_Stats_2026-09-07.docx",
+      "file": "data-room/Japan/_superseded/UPLOAD_650_2026-10-16_v1/5_Market__5.1_Market_Research_Exos_rev-2026-10-16.docx",
       "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~32d (may predate a locked figure)"
-    },
-    {
-      "file": "data-room/Exos_SeriesA/06_Business_Development/Exos_Contracts_Applied_For_2026-09-07.docx",
-      "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~32d (may predate a locked figure)"
-    },
-    {
-      "file": "data-room/Exos_SeriesA/_CANONICAL/Exos_Policy_Tailwind_NSTP_2026-08-21.docx",
-      "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~49d (may predate a locked figure)"
+      "rule": "absolute 'world's first' / 'only operational|reusable'",
+      "match": "only reusable",
+      "context": "ons. Exos does not develop the engine; it provides the only reusable, recoverable flight-test platform able to characterize"
     },
     {
       "file": "data-room/Navy_Commission/DATA_ROOM_MANIFEST.md",
       "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~46d (may predate a locked figure)"
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~53d (may predate a locked figure)"
     },
     {
       "file": "data-room/Navy_Commission/EXOS_Navy_Commission_Presentation_2026-08-11.pptx",
       "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~46d (may predate a locked figure)"
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~53d (may predate a locked figure)"
     },
     {
       "file": "data-room/SSLC/Exos_Board_Meeting_Request_Scorpius_2026-08-28.docx",
       "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~43d (may predate a locked figure)"
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~49d (may predate a locked figure)"
     },
     {
       "file": "data-room/SSLC/Exos_Scorpius_AssetPurchase_TermSheet_forCounsel_2026-08-28.docx",
       "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~43d (may predate a locked figure)"
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~49d (may predate a locked figure)"
     },
     {
       "file": "data-room/SSLC/Exos_to_Eqvista_Scorpius_FairnessOpinion_2026-08-28.docx",
       "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~43d (may predate a locked figure)"
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~49d (may predate a locked figure)"
     },
     {
       "file": "data-room/SSLC/Exos_to_Wertz_SSLC_BoardMeetingRequest_2026-08-28.docx",
       "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~43d (may predate a locked figure)"
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~49d (may predate a locked figure)"
     },
     {
       "file": "drafts/Exos_Strategic_Capital_Deck_2026-08-13.pptx",
       "severity": "WARN",
-      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~41d (may predate a locked figure)"
+      "rule": "stale \u2014 older than FIGURES_OF_RECORD by ~48d (may predate a locked figure)"
     }
   ],
   "governance": {
@@ -95,7 +104,9 @@
         "data-room/Exos_SeriesA/DATA_ROOM_MANIFEST.md",
         "data-room/Exos_SeriesA/Exos_Core_Assets_Analysis.md",
         "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md",
-        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_StrategicDeck_2026-09-06_CURRENT_rev-2026-10-10.pptx",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_LIVE_Business_Planning_document_2026-10-17.docx",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_PitchDeck_FULL_2026-10-17_r7.pptx",
+        "data-room/Japan/UPLOAD_650_2026-10-16/1_Exec_Summary__Exos_Strategic_Deck_rev-2026-10-16_r3.pptx",
         "data-room/SSLC/Exos_Board_Meeting_Request_Scorpius_2026-08-28.docx",
         "data-room/SSLC/Exos_Scorpius_AssetPurchase_TermSheet_forCounsel_2026-08-28.docx",
         "data-room/SSLC/Exos_to_Eqvista_Scorpius_FairnessOpinion_2026-08-28.docx",
@@ -105,7 +116,9 @@
       "C4_listing_narrative (private now / TXSE dated+conditioned)": [
         "data-room/Exos_SeriesA/DATA_ROOM_MANIFEST.md",
         "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md",
-        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_StrategicDeck_2026-09-06_CURRENT_rev-2026-10-10.pptx",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_LIVE_Business_Planning_document_2026-10-17.docx",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_PitchDeck_FULL_2026-10-17_r7.pptx",
+        "data-room/Japan/UPLOAD_650_2026-10-16/1_Exec_Summary__Exos_Strategic_Deck_rev-2026-10-16_r3.pptx",
         "data-room/Navy_Commission/EXOS_Navy_Commission_Presentation_2026-08-11.pptx",
         "drafts/Exos_Strategic_Capital_Deck_2026-08-13.pptx"
       ],
@@ -113,22 +126,29 @@
         "data-room/Copernic_Executed/00_REGISTER_Copernic_Exos_Executed_Agreements.md",
         "data-room/Corporate/Exos_Aerospace_Investments_LLC/INDEX.md",
         "data-room/Exos_SeriesA/DATA_ROOM_MANIFEST.md",
-        "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md"
+        "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_PitchDeck_FULL_2026-10-17_r7.pptx"
       ],
       "C2_base_upside (contracted base; TACFI/entX labeled upside)": [
+        "data-room/Exos_SeriesA/06_Business_Development/Exos_Contracts_Applied_For_2026-10-17.docx",
         "data-room/Exos_SeriesA/DATA_ROOM_MANIFEST.md",
         "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md",
-        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_StrategicDeck_2026-09-06_CURRENT_rev-2026-10-10.pptx",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_LIVE_Business_Planning_document_2026-10-17.docx",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_PitchDeck_FULL_2026-10-17_r7.pptx",
+        "data-room/Japan/UPLOAD_650_2026-10-16/1_Exec_Summary__Exos_Strategic_Deck_rev-2026-10-16_r3.pptx",
         "data-room/Navy_Commission/DATA_ROOM_MANIFEST.md",
         "data-room/Navy_Commission/EXOS_Navy_Commission_Presentation_2026-08-11.pptx",
         "drafts/Exos_Strategic_Capital_Deck_2026-08-13.pptx"
       ],
       "CORE4_ai_platform_asset (AI operating platform = 4th core asset; Jon 8/29)": [
-        "data-room/Exos_SeriesA/05_Market_Information/5.2_Competitive_Analysis_Exos_2026-08_rev-2026-10-10.docx",
+        "data-room/Exos_SeriesA/05_Market_Information/5.2_Competitive_Analysis_Exos_2026-08_rev-2026-10-17.docx",
         "data-room/Exos_SeriesA/06_Business_Development/Exos_BD_Engine_Pipeline_Stats_2026-09-07.docx",
         "data-room/Exos_SeriesA/Exos_Core_Assets_Analysis.md",
         "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md",
-        "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_StrategicDeck_2026-09-06_CURRENT_rev-2026-10-10.pptx",
+        "data-room/Exos_SeriesA/_CANONICAL/Exos_LIVE_Business_Planning_document_2026-10-17.docx",
+        "data-room/Japan/UPLOAD_650_2026-10-16/1_Exec_Summary__Exos_Strategic_Deck_rev-2026-10-16_r3.pptx",
+        "data-room/Japan/UPLOAD_650_2026-10-16/5_Market__5.2_Competitive_Analysis_Exos_rev-2026-10-16.docx",
+        "data-room/Japan/_superseded/UPLOAD_650_2026-10-16_v1/5_Market__5.2_Competitive_Analysis_Exos_rev-2026-10-10.docx",
         "drafts/Exos_Strategic_Capital_Deck_2026-08-13.pptx"
       ]
     },
@@ -142,16 +162,27 @@
     "data-room/Corporate/Exos_Aerospace_Investments_LLC/INDEX.md",
     "data-room/Corporate/Exos_Aerospace_Systems_and_Technologies_Inc/Minute_Book/2026-10-06_Board_Special_Minutes.docx",
     "data-room/Corporate/Exos_Aerospace_Systems_and_Technologies_Inc/Minute_Book/MINUTE_BOOK_INDEX.md",
-    "data-room/Exos_SeriesA/05_Market_Information/5.1_Market_Research_Exos_2026-08_rev-2026-10-10.docx",
-    "data-room/Exos_SeriesA/05_Market_Information/5.2_Competitive_Analysis_Exos_2026-08_rev-2026-10-10.docx",
+    "data-room/Exos_SeriesA/05_Market_Information/5.1_Market_Research_Exos_2026-08_rev-2026-10-17_r2.docx",
+    "data-room/Exos_SeriesA/05_Market_Information/5.2_Competitive_Analysis_Exos_2026-08_rev-2026-10-17.docx",
     "data-room/Exos_SeriesA/06_Business_Development/Exos_BD_Engine_Pipeline_Stats_2026-09-07.docx",
     "data-room/Exos_SeriesA/06_Business_Development/Exos_BD_Engine_Pipeline_Stats_CURRENT.docx",
-    "data-room/Exos_SeriesA/06_Business_Development/Exos_Contracts_Applied_For_2026-09-07.docx",
+    "data-room/Exos_SeriesA/06_Business_Development/Exos_Contracts_Applied_For_2026-10-17.docx",
+    "data-room/Exos_SeriesA/06_Business_Development/Exos_KARMEN_Path_Forward_SpaceWERX_2026-10-17.docx",
     "data-room/Exos_SeriesA/DATA_ROOM_MANIFEST.md",
     "data-room/Exos_SeriesA/Exos_Core_Assets_Analysis.md",
     "data-room/Exos_SeriesA/FIGURES_OF_RECORD.md",
-    "data-room/Exos_SeriesA/_CANONICAL/Exos_Policy_Tailwind_NSTP_2026-08-21.docx",
-    "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_StrategicDeck_2026-09-06_CURRENT_rev-2026-10-10.pptx",
+    "data-room/Exos_SeriesA/_CANONICAL/Exos_LIVE_Business_Planning_document_2026-10-17.docx",
+    "data-room/Exos_SeriesA/_CANONICAL/Exos_Policy_Tailwind_NSTP_2026-10-17_r3.docx",
+    "data-room/Exos_SeriesA/_CANONICAL/Exos_SeriesA_PitchDeck_FULL_2026-10-17_r7.pptx",
+    "data-room/Japan/UPLOAD_650_2026-10-16/1_Exec_Summary__Exos_Japan_Round_650_Fund_2026-10-16_r6.pptx",
+    "data-room/Japan/UPLOAD_650_2026-10-16/1_Exec_Summary__Exos_Strategic_Deck_rev-2026-10-16_r3.pptx",
+    "data-room/Japan/UPLOAD_650_2026-10-16/5_Market__5.1_Market_Research_Exos_rev-2026-10-16.docx",
+    "data-room/Japan/UPLOAD_650_2026-10-16/5_Market__5.2_Competitive_Analysis_Exos_rev-2026-10-16.docx",
+    "data-room/Japan/UPLOAD_650_2026-10-16/6_Business_Dev__Exos_BD_Engine_Pipeline_Stats_CURRENT.docx",
+    "data-room/Japan/_superseded/UPLOAD_650_2026-10-16_v1/1_Exec_Summary__Exos_Japan_Round_650_Fund_2026-10-16_r4.pptx",
+    "data-room/Japan/_superseded/UPLOAD_650_2026-10-16_v1/5_Market__5.1_Market_Research_Exos_rev-2026-10-16.docx",
+    "data-room/Japan/_superseded/UPLOAD_650_2026-10-16_v1/5_Market__5.2_Competitive_Analysis_Exos_rev-2026-10-10.docx",
+    "data-room/Japan/_superseded/UPLOAD_650_2026-10-16_v1/6_Business_Dev__Exos_BD_Engine_Pipeline_Stats_CURRENT.docx",
     "data-room/Navy_Commission/DATA_ROOM_MANIFEST.md",
     "data-room/Navy_Commission/EXOS_Navy_Commission_Presentation_2026-08-11.pptx",
     "data-room/SSLC/Exos_Board_Meeting_Request_Scorpius_2026-08-28.docx",

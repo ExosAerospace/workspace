@@ -45,7 +45,8 @@ BANNED = [
     ("tranched / 'up to $25M' / '$25M Series A' / 'first close' (raise of record = a $10M Series A, Jon 10/10)", rx(r"tranch|up\s+to\s+\$?\s*25\s*M|\$?\s*25\s*M(?:illion)?\s+series\s+a|first\s+close|\$10M\s*(?:→|->)\s*\$25M"), "BLOCK", None, None),
     ("ROFR / 'right of first refusal' / 2021-basis option wording (say 'complete our acquisition of Scorpius', Jon 10/10)", rx(r"\bROFR\b|right\s+of\s+first\s+refusal|frozen\s+2021|2021\s+(?:valuation\s+)?basis"), "BLOCK", None, None),
     ("IM 'Nebula' named as the OTV tank customer (cite 'first tank sale for an orbital transfer vehicle', unnamed, Jon 10/10)", rx(r"\bnebula\b"), "BLOCK", None, None),
-    ("RTO / reverse takeover in an investor-facing doc (internal only, Jon 10/10)", rx(r"reverse[\s-]+takeover|\bRTO\b|\$\s*215\s*M"), "BLOCK", None, None),
+    # $215M total raise is allowed externally (Jon 10/16, FIGURES_OF_RECORD); only naming the RTO stays blocked.
+    ("RTO / reverse takeover in an investor-facing doc (internal only, Jon 10/10)", rx(r"reverse[\s-]+takeover|\bRTO\b"), "BLOCK", None, None),
     ("BLK4 tied to the raise / use of funds (BLK4 = future, gated orbital path only, Jon 10/10)", rx(r"\bBLK[\s-]?4\b"), "WARN", rx(r"future|gated|not\s+funded"), RAISE_CTX),
     ("$40M/$50M in a RAISE context (raise of record is a $10M Series A)", rx(r"\$?\s*[45]0\s*M(?:illion)?\b"), "BLOCK", rx(r"note|pilot\s+fund|consortium|test\s+vehicle|\bIP\b|authority|competitor|per\s+flight"), RAISE_CTX),
     ("valuation drift (only $169.7M shows; $252M/$137.8M live behind recon tab)", rx(r"\$?\s*252\s*M|\$?\s*137\.8\s*M"), "WARN", rx(r"reconcil|dcf|behind\s+the\s+tab"), None),
