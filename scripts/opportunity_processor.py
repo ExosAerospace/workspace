@@ -637,6 +637,28 @@ def main():
     cutoff = (datetime.now() - timedelta(hours=24)).isoformat()
 
     live_opps = [o for o in opps if not is_dead(o) and not is_past_due_dead(o)]
+    # GOVERN (John 10/18, PAY-7143 re-drafted 6x): an opp a human dropped on ANY Decision — even
+    # in a note, even under another route key — is dead here regardless of its tracker status.
+    try:
+        import drop_tombstone_exo3 as _tomb
+        if not _tomb.selftest():                       # output eval replaying PAY-7143; logged to fleet_log
+            print("[tombstone] SELFTEST FAIL — guard still applied; see logs/fleet-events.jsonl")
+        _kept = []
+        for o in live_opps:
+            hit = None if re.search(r"AWARDED|\bWON\b|CONTRACTED", str(o.get("status", "")), re.I) \
+                else _tomb.check(o.get("id", ""), title=o.get("title", ""))
+            if hit:
+                print(f"  tombstoned {o.get('id')} ({hit.get('source') or hit.get('by')}) — skipped")
+                try:
+                    import fleet_log as _fl
+                    _fl.event(AGENT_CLASS, "govern", "tombstone_skip", detail={"opp": o.get("id"), "by": hit.get("source") or hit.get("by")}, owner="John Quinn")
+                except Exception:
+                    pass
+            else:
+                _kept.append(o)
+        live_opps = _kept
+    except Exception as _e:
+        print(f"[tombstone] guard unavailable: {_e}")
     if args.only_prefix:
         live_opps = [o for o in live_opps if str(o.get("id","")).startswith(args.only_prefix)]
     if args.top_only:

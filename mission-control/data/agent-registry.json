@@ -551,15 +551,16 @@
       "permission_envelope": "LLM calls; reads mailbox via Bridge IMAP; Supabase read+WRITE; external API: quickbooks; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
       "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 \u2192 else FAIL/escalate; staleness > 2.5x cadence 300s \u2192 WARN)",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 \u2192 else FAIL/escalate; staleness > 2.5x cadence 300s \u2192 WARN); OUTPUT: drop_tombstone_exo3 --selftest (human_text strips Exo bracket annotations; #3600 replay)",
       "telemetry": "logs/decision-note-router.log; logs/runs/YYYY-MM-DD.jsonl (run_logged: exit + stderr tail per run)",
       "reusability_scope": "TBD",
       "risk_tier": "MED",
       "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
       "change_log": [
-        "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval \u2014 D-7281860"
+        "2026-09-30 r2-launchd-residuals (exo3 r2, Jon directive 2026-09-29 22:38): live launchd definition reloaded onto run_logged wrapper (f60a3e7/a067f0a); every run -> logs/runs/*.jsonl + 06:30 run-failures report; rollback convert_job_to_logged.py --restore; approver John Quinn; status pending Jon approval \u2014 D-7281860",
+        "2026-10-18 (John email: 'make sure whatever was causing the six spin ups of the tim crain task is fixed globally \u2026 EXO3 compliant'): judges only the human's words (Exo '[...]' annotations stripped \u2014 #3600 was spawned from annotations alone); drop/delete notes never spawn a task; '#N drop' cancels task N."
       ],
-      "eval_type": "liveness"
+      "eval_type": "output"
     },
     {
       "label": "com.exos.decision-send-watcher",
@@ -1401,7 +1402,8 @@
       "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
       "eval_type": "liveness",
       "change_log": [
-        "2026-10-16 GET /api/labor-section-cost (admin-only, 403 otherwise; reads ~/.openclaw/state/labor-section-cost.json) + jobcost.html 'Labor by BOM section' panel (hours for all via /api/jobcost labor_sections; $ + per-person only when the admin endpoint answers). weekly-task-agenda-exo3."
+        "2026-10-16 GET /api/labor-section-cost (admin-only, 403 otherwise; reads ~/.openclaw/state/labor-section-cost.json) + jobcost.html 'Labor by BOM section' panel (hours for all via /api/jobcost labor_sections; $ + per-person only when the admin endpoint answers). weekly-task-agenda-exo3.",
+        "2026-10-18 (John email: 'make sure whatever was causing the six spin ups of the tim crain task is fixed globally \u2026 EXO3 compliant'): /api/decisions/ingest refuses any new decision on a tombstoned entity (entity-level, any route key; title-matched for duplicate ids); logs govern/ingest_blocked to fleet_log."
       ]
     },
     {
@@ -1548,13 +1550,16 @@
       "human_owner": "John Quinn",
       "permission_envelope": "LLM calls; reads mailbox via Bridge IMAP; MC local API read; file I/O: MC data JSON; own logs/state",
       "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
-      "escalation": "Decisions board / Jon inbox",
-      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 \u2192 else FAIL/escalate; staleness > 2.5x cadence 86400s \u2192 WARN)",
+      "escalation": "Decisions board / Jon inbox; tombstoned opps skipped (fleet_log govern/tombstone_skip)",
+      "eval_suite": "agent_eval hourly liveness (config/agent-evals.json: loaded + LastExitStatus=0 \u2192 else FAIL/escalate; staleness > 2.5x cadence 86400s \u2192 WARN); OUTPUT: drop_tombstone_exo3 --selftest runs every engine pass (replays PAY-7143 6x regeneration) + agent_eval --selftest",
       "telemetry": "logs/opportunity_processor.log",
       "reusability_scope": "TBD",
       "risk_tier": "LOW",
       "envelope_source": "static code scan of plist-resolved script + one level of local imports, 2026-09-26; HIGH external-address hits hand-verified (none are recipients)",
-      "eval_type": "liveness"
+      "eval_type": "output",
+      "change_log": [
+        "2026-10-18 (John email: 'make sure whatever was causing the six spin ups of the tim crain task is fixed globally \u2026 EXO3 compliant'): live_opps now excludes any opp a human dropped on ANY Decision (answer or note, any route key) via scripts/drop_tombstone_exo3.py; AWARDED/WON/CONTRACTED override."
+      ]
     },
     {
       "label": "com.exos.outreach-autoclose",
@@ -6047,6 +6052,28 @@
       "reusability_scope": "any GL adjustment Exo prepares for the bookkeeper",
       "change_log": [
         "2026-10-17 created; first batch po7-round7-2026-10-17 (Larsen/Heeren conversions + Powers split) -> D-7282139 for Kyle"
+      ]
+    },
+    {
+      "label": "guard:drop-tombstone-exo3",
+      "program": "drop-tombstone-exo3",
+      "script": "drop_tombstone_exo3.py (library + CLI; mirrored in mission-control/server.js dropTombstoneFor)",
+      "kind": "gate (in-process library)",
+      "schedule": "in-process: every /api/decisions/ingest call, every opportunity-engine pass, every payload-pipeline bridge run, every decision-note-router pass",
+      "purpose": "A human DROP is permanent across every generator. Entity (PAY-/OPP-/BD-/FUND-\u2026) is tombstoned when any resolved Decision whose opportunity-scoped dedupeKey names it carries drop intent (answer, or note unless the answer was affirmative; conditional 'if/unless' excluded), or when listed in mission-control/data/drop-tombstones.json. Fixes PAY-7143 (IM/Tim Crain) being re-raised 6x (D-325..D-7282096) + task #3600 after John's 7/24 'Delete this \u2014 already working with them'.",
+      "stack_layer": "GOVERN",
+      "autonomy_tier": "Guardrail (blocks re-raise; never deletes or edits existing decisions/tasks)",
+      "human_owner": "John Quinn",
+      "permission_envelope": "READ: mission-control/data/decisions.json, mission-control/data/drop-tombstones.json. WRITE: drop-tombstones.json only via explicit CLI add/remove (logged); fleet_log events. Blocks: new decision ingest / opp processing / pipeline staging / note-spawned tasks for tombstoned entities. NEVER: external sends, deletions, decision/task edits.",
+      "memory_boundary": "decisions.json (read) + drop-tombstones.json",
+      "escalation": "blocked ingests return {tombstoned:true} and log govern/ingest_blocked; lift a tombstone only with `drop_tombstone_exo3.py remove <ID> --by <human>` (logged)",
+      "eval_suite": "drop-tombstone-selftest (python3 scripts/drop_tombstone_exo3.py --selftest; also inside agent_eval --selftest and every opportunity-engine pass): replays PAY-7143 note-only drop, route-key change, #3600 annotation-only note; guards against false positives (affirmative+stray 'cancel', conditional drop, action-scoped key OPP-003 later AWARDED, duplicate id BD-025 Kolon vs SwRI, date tokens)",
+      "eval_type": "output",
+      "telemetry": "logs/fleet-events.jsonl (agent drop-tombstone-exo3: ingest_blocked, tombstone_add/lift, selftest; opportunity-engine tombstone_skip; decision-note-router drop_no_spawn)",
+      "reusability_scope": "any Exos agent that raises Decisions or work from tracked entities",
+      "risk_tier": "LOW",
+      "change_log": [
+        "2026-10-18 (John email: 'make sure whatever was causing the six spin ups of the tim crain task is fixed globally \u2026 EXO3 compliant'): created."
       ]
     }
   ],

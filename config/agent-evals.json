@@ -242,7 +242,12 @@
    "cadence_s": 300,
    "warn_grace": 2.5,
    "fail_grace": 6,
-   "owner": "John Quinn"
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/drop_tombstone_exo3.py --selftest",
+   "eval_type": "output",
+   "governance_checks": [
+    "--selftest PASS: annotation-only / drop notes never spawn a task \u2014 #3600 replay (2026-10-18)"
+   ]
   },
   "com.exos.decision-triage": {
    "cadence_s": 1800,
@@ -428,7 +433,12 @@
    "cadence_s": 86400,
    "warn_grace": 2.5,
    "fail_grace": 6,
-   "owner": "John Quinn"
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/drop_tombstone_exo3.py --selftest",
+   "eval_type": "output",
+   "governance_checks": [
+    "--selftest PASS: tombstoned opps (human drop on any Decision) never re-processed \u2014 PAY-7143 replay (2026-10-18)"
+   ]
   },
   "com.exos.outreach-autoclose": {
    "cadence_s": 1200,

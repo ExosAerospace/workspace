@@ -520,6 +520,8 @@ def selftest():
     mail_bridge_guard.selftest()
     import cron_prompt_guard  # r2-confirm-gaps: propose-only prompt guard for the 5 human-confirm-gap crons
     cron_prompt_guard.selftest()
+    import drop_tombstone_exo3  # John 10/18: a human drop is permanent across generators (PAY-7143 x6)
+    assert drop_tombstone_exo3.selftest(), "drop_tombstone_exo3 selftest FAIL"
     return 0
 
 AUTO_REG_DECISION = "exo3-auto-register-crons"

@@ -17,6 +17,11 @@ already represented by a non-PAY opportunity (e.g. SwRI lives as BD-024/025).
 Usage: payload_pipeline_to_opps.py [--dry-run]
 """
 import os, re, sys, json, hashlib, subprocess, argparse
+try:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import drop_tombstone_exo3 as _tomb               # GOVERN: human drops are permanent
+except Exception:
+    _tomb = None
 
 WORKSPACE = "/Users/exomac/.openclaw/workspace"
 PIPELINE  = os.path.join(WORKSPACE, "tasks/blk3-payload-sales-pipeline.md")
@@ -165,6 +170,8 @@ def main():
         while oid in ids:                              # hash collision guard
             oid = f"PAY-{(int(oid.split('-')[1]) + 1)}"
         ids.add(oid)
+        if _tomb and _tomb.check(oid, title=p["name"]):
+            continue                                   # a human dropped it on a Decision (PAY-7143 x6, 10/18)
         staged.append((oid, p))
 
     section = BEGIN + "\n\n## PAYLOAD BUYERS — auto-bridged from BLK3 pipeline\n" + \

@@ -5598,6 +5598,43 @@ const server = http.createServer((req, res) => {
   }
 
   // Ingest a new decision (token-protected; used by Exo / cron agents). Public path, validates X-Exo-Token.
+  // ── Drop tombstones (GOVERN, John 2026-10-18) — keep in sync with scripts/drop_tombstone_exo3.py ──
+  function dropTombstoneFor(p, arr) {
+    const ENT = /\b([A-Z]{2,6}-(?!20\d\d\b)\d{2,7})\b/g;
+    const KEY = /^(?:[a-z]+-){0,2}([A-Z]{2,6}-\d{2,7})$/i;
+    const DROP = /\b(drop(ped)?(?!\s+(to|down|back)\b)|delete|kill(ed)?|dead|scrap|do not (pursue|engage|send|contact)|don'?t (pursue|send|contact)|not pursu\w*|no longer (pursu\w*|relevant|needed)|already working with|cancel(led)?|remove this|stop (this|pursuing))\b/i;
+    const COND = /\b(if|unless)\b/i, AFF = /^\s*(send|approve[d]?|yes|go|ok|accept)\b/i;
+    const human = n => String(n || '').replace(/\[[^\]]*\]/g, ' ').trim();
+    const dropIntent = (a, n) => { a = String(a || ''); const h = human(n); return DROP.test(a) || (DROP.test(h) && !AFF.test(a) && !COND.test(h)); };
+    const words = t => String(t || '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter(Boolean);
+    const sameSubject = (a, b) => {
+      const ta = words(a), tb = words(b); if (!ta.length || !tb.length) return true;
+      if (ta.join(' ').slice(0, 30) === tb.join(' ').slice(0, 30)) return true;
+      const A = new Set(ta), B = new Set(tb); let n = 0; for (const w of A) if (B.has(w)) n++;
+      return n / Math.max(1, Math.min(A.size, B.size)) >= 0.6;
+    };
+    const ents = new Set();
+    for (const t of [p.dedupeKey, p.title, p.relatedItem]) for (const m of String(t || '').toUpperCase().replace(/_/g, '-').matchAll(ENT)) ents.add(m[1]);
+    if (!ents.size) return null;
+    const subj = p.relatedItem || p.title || '';
+    const isOpen = s => ['open', 'pending', 'delegated', 'reassigning'].includes(s || 'open');
+    for (const d of arr) {
+      if (isOpen(d.status)) continue;
+      const m = KEY.exec(String(d.dedupeKey || '').trim()); if (!m) continue;
+      const e = m[1].toUpperCase(); if (!ents.has(e) || !dropIntent(d.answer, d.note)) continue;
+      const rel = String(d.relatedItem || ''); const title = rel.trim().toUpperCase() === e ? '' : rel;
+      if (sameSubject(title, subj)) return { entity: e, source: d.id };
+    }
+    try {
+      const tf = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'drop-tombstones.json'), 'utf-8'));
+      for (const t of (tf.tombstones || [])) {
+        const e = String(t.entity || '').toUpperCase();
+        if (e && !t.lifted && ents.has(e) && sameSubject(t.title || '', subj)) return { entity: e, source: t.by || 'drop-tombstones.json' };
+      }
+    } catch {}
+    return null;
+  }
+
   if (req.url === '/api/decisions/ingest' && req.method === 'POST') {
     if ((req.headers['x-exo-token'] || '') !== decisionsToken()) {
       res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'bad token' })); return;
@@ -5615,6 +5652,16 @@ const server = http.createServer((req, res) => {
         // assignee untouched). Treating them as answered froze 45 send-Decisions on July drafts while
         // the Opportunity Engine regenerated newer copies daily (Jon 10/7 "how do we not send an outdated one?").
         const isOpenStatus = s => { s = (s || 'open'); return s === 'open' || s === 'pending' || s === 'delegated' || s === 'reassigning'; };
+        // Drop tombstone (John 10/18: PAY-7143 re-raised 6x after "Delete this — already working with
+        // them"). A human drop on ANY decision about an opportunity — answer or note, any route key —
+        // blocks every new decision on that entity. Mirrors scripts/drop_tombstone_exo3.py (eval there).
+        const tomb = dropTombstoneFor(p, arr);
+        if (tomb) {
+          try { fs.appendFileSync(path.join(__dirname, '..', 'logs', 'fleet-events.jsonl'), JSON.stringify({ ts: now, corr: p.correlationId || '', agent: 'drop-tombstone-exo3', kind: 'govern', action: 'ingest_blocked', owner: 'John Quinn', outcome: 'blocked', level: 'info', detail: { dedupeKey: p.dedupeKey || '', entity: tomb.entity, by: tomb.source, source: p.source || '' } }) + '\n'); } catch {}
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ deduped: true, tombstoned: true, entity: tomb.entity, reason: `dropped by ${tomb.source} — not re-raised` }));
+          return;
+        }
         if (p.dedupeKey) {
           const already = arr.find(d => d.dedupeKey === p.dedupeKey && !isOpenStatus(d.status));
           if (already) {

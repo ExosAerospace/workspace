@@ -951,9 +951,9 @@ Each opportunity is sourced from ProtonMail inbox analysis, forwarded emails, an
 **Family-office channels:**
 - **Point72 Private** (Dan Gwak)
 - **Sabertooth Capital** (Justin Ernest, ~30 family offices, syndicates SpaceX/Anduril/Anthropic) - personalized draft ready
-**IM warm-path asset:** Intuitive Machines intro note drafted (Steve Altemus CEO / Tim Crain CTO / Kam Ghaffarian co-founder+investor). One IM intro beats 50 cold emails. See R-016 in Mission Control.
+**IM warm-path asset:** ~~Intuitive Machines intro note (Altemus / Crain / Ghaffarian), R-016~~ **DROPPED — John 2026-10-18** ("drop everything except the IM test campaign"); task #955 cancelled. Only IM item still live: BD-007 / OPP-247 test campaign (#977).
 **Next actions:**
-1. [JON] Answer 4 decisions in R-016 (IM contact, founder connections, AD Summit reminder, approve 3 drafts)
+1. ~~[JON] Answer 4 decisions in R-016~~ — DROPPED with #955 (John 2026-10-18)
 2. [JON] Identify any existing relationships at Apex, Stoke, Vast, Impulse, Anduril for warm a16z path
 3. [EXO] Send personalized drafts on Jon's approval
 4. [EXO] Set December 2026 reminder for American Dynamism Summit application (on Jon's go)

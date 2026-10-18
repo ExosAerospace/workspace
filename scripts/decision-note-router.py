@@ -49,6 +49,22 @@ DOMAIN = [
 ]
 
 
+try:
+    import sys as _sys
+    _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import drop_tombstone_exo3 as _tomb
+except Exception:
+    _tomb = None
+
+
+def _fl_event(did, action):
+    try:
+        import fleet_log
+        fleet_log.event("decision-note-router", "govern", action, detail={"decision": did}, owner="John Quinn")
+    except Exception:
+        pass
+
+
 def logline(m):
     try:
         with open(LOG, "a") as f: f.write(f"{datetime.now(timezone.utc).isoformat()} {m}\n")
@@ -144,14 +160,23 @@ def main():
         nh = h(note)
         if state.get(d["id"]) == nh: continue
         title = d.get("title") or d.get("question") or d["id"]
+        # GOVERN (John 10/18): task #3600 was spawned from a note that was ONLY Exo's own bracket
+        # annotations ("[pulled back…] [Exo 10/8: Dropped…]"). Judge the human's words only, and a
+        # drop/close note never becomes new work — it is a kill, not a directive.
+        human = _tomb.human_text(note) if _tomb else note
+        if not human:
+            state[d["id"]] = nh; continue
+        drop = bool(_tomb and _tomb.DROP_RE.search(human) and not _tomb.CONDITIONAL_RE.search(human))
 
-        tid = re.search(r"#(\d{2,})", note)
+        tid = re.search(r"#(\d{2,})", human)
         if tid:                                          # UPDATE an existing task
-            taskid, low, did = tid.group(1), note.lower(), []
-            owner = explicit_name(note, roster)
+            taskid, low, did = tid.group(1), human.lower(), []
+            owner = explicit_name(human, roster)
             if owner and re.search(r"reassign|assign to|have\s|hand", low):
                 supa("PATCH", f"tasks?id=eq.{taskid}", {"owner": owner["name"], "assigned_email": owner["email"]}); did.append(f"reassign->{owner['name']}")
-            if re.search(r"\b(done|closed?|complete[d]?|resolved?)\b", low):
+            if drop:
+                supa("PATCH", f"tasks?id=eq.{taskid}", {"state": "Cancelled"}); did.append("Cancelled")
+            elif re.search(r"\b(done|closed?|complete[d]?|resolved?)\b", low):
                 supa("PATCH", f"tasks?id=eq.{taskid}", {"state": "Done"}); did.append("Done")
             supa("POST", "activities", {"type": "task_note", "subject": f"task:{taskid}",
                  "body": f"[from decision {d['id']}] {note}", "owner": "Decisions note", "status": "completed"}); did.append("note")
@@ -160,7 +185,10 @@ def main():
         # An explicit "📝 Instruction" answer is ALWAYS a directive (a missing verb once dropped
         # Jon's D-7281837 "Analyze it on the basis of..." note silently, 2026-09-26).
         instr = "instruction" in str(d.get("answer") or "").lower()
-        if not instr and not ACTION.search(note):        # plain comment, not a directive
+        if drop and not instr:                           # "drop this" kills; never spawns a task
+            logline(f"{d['id']}: drop note — no task spawned"); _fl_event(d["id"], "drop_no_spawn")
+            state[d["id"]] = nh; continue
+        if not instr and not ACTION.search(human):       # plain comment, not a directive
             state[d["id"]] = nh; continue
 
         # Exo-authored decisions: follow-up direction on Exo's own analysis comes back to Exo,
@@ -169,8 +197,8 @@ def main():
         # EXO-FIRST / SUBTASK-FIRST (Jon 2026-10-03): only an EXPLICITLY named person gets the work.
         # Otherwise Exo does it (task-question-answer.py works these) and hands off only a genuine human
         # step. If the decision is about an existing task, the routed item is a SUBTASK of that task.
-        named = explicit_name(note, roster)
-        guess = None if (named or exo_src) else (domain_owner(note, by_email) or ollama_owner(note, roster, by_email))
+        named = explicit_name(human, roster)
+        guess = None if (named or exo_src) else (domain_owner(human, by_email) or ollama_owner(human, roster, by_email))
         rel = next((str(d.get(k)) for k in ("relatedTaskId", "spawned_task", "taskId", "relatedTask", "related_task")
                     if re.fullmatch(r"\d{2,}", str(d.get(k) or "").lstrip("#"))), None)
         rel = rel.lstrip("#") if rel else None

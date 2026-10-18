@@ -1,0 +1,10 @@
+{
+ "tombstones": [
+  {
+   "entity": "PAY-7143",
+   "reason": "John 2026-10-18 email: drop all IM items except the test campaign (BD-007/OPP-247, #977); already working with IM directly",
+   "by": "John Quinn (email command)",
+   "at": "2026-10-18T07:05:21.447115+00:00"
+  }
+ ]
+}
