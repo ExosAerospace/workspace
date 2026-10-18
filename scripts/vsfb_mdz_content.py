@@ -109,9 +109,9 @@ add("p", "**Landing concept.** The reusable vehicle deploys its guided parafoil 
          "and a standby recovery boat; no offshore catch structure is proposed.")
 add("p", "**Live winds from Mission Control.** Before launch and before reentry/canopy deploy, Exos plans to fire "
          "rocket-launched radiosondes along the actual corridor to measure winds aloft in real time. These feed "
-         "Mission Control's release-point computation and the go/no-go decision. This is based on an Exos-developed "
-         "rocket-launched radiosonde concept (Exos heritage, circa 2016); the capability at Vandenberg is planned, "
-         "not yet demonstrated. Over time the wind data shrinks the dispersion zone, and the radiosonde service "
+         "Mission Control's release-point computation and the go/no-go decision. Exos developed and tested this "
+         "rocket-launched radiosonde and wrote the software that runs it; it is technology Exos has to augment local "
+         "winds data. Over time the wind data shrinks the dispersion zone, and the radiosonde service "
          "can be offered to other Western Range users.")
 add("p", "**Mission Control as the differentiator.** The zone's coordination system is MCMS-exo3 (Mission Control / "
          "exo3): scheduling across vehicles, crews, range and road calendars; signed chain of custody; range and FTS "
@@ -197,8 +197,8 @@ add("p", "**Recovery landing concept.** The reusable vehicle deploys its guided 
 add("p", "**Wind go/no-go and live radiosonde measurements.** Exos plans to fire rocket-launched radiosondes along the "
          "actual flight corridor before launch and before the reentry/canopy-deploy decision to measure winds aloft in "
          "real time. The radiosonde data feeds Mission Control's release-point computation and the go/no-go decision "
-         "for canopy deployment. This is based on an Exos-developed rocket-launched radiosonde concept (Exos heritage, "
-         "circa 2016); the capability at Vandenberg is planned, not yet demonstrated. Radiosonde solid motors are "
+         "for canopy deployment. Exos developed and tested this rocket-launched radiosonde and wrote the software that "
+         "runs it; it is technology Exos has to augment local winds data. Radiosonde solid motors are "
          "ordnance: they fly from the assigned launch site or a hazardous parcel with an explosives site plan and range "
          "approval — not from the inert recovery zone. Over time, accumulated wind data shrinks the required dispersion "
          "zone; the radiosonde service can be offered to other Western Range users.")
@@ -253,7 +253,7 @@ add("bl", [
  "GAO found the Space Force currently lacks [3].",
  "**Wind data service for the Western Range.** Rocket-launched radiosondes along the recovery corridor generate "
  "winds-aloft data before each event. Over time this data can be offered to other range users — launch operators, "
- "range safety — as a weather service. Capability is planned, based on Exos heritage circa 2016.",
+ "range safety — as a weather service. Exos developed and tested the radiosonde and its software.",
  "**Reusability ledger.** A per-vehicle record of turnaround, inspection, anomaly, and reflight-readiness — with "
  "chain of custody and operator consent — is the accountability infrastructure reusable launch needs on a "
  "Government range.",
@@ -389,8 +389,8 @@ add("bl", [
  "**Phase 0 read-only Mission Control pilot for SLD 30.** Exos will configure a read-only view of Exos's "
  "Spaceport America operations for SLD 30 stakeholders — no real property required — to demonstrate the "
  "system before any lease is executed.",
- "**Winds-aloft data service (planned).** Rocket-launched radiosonde data from recovery corridor flights, "
- "offered to other range users over time. Capability is planned, based on Exos heritage circa 2016.",
+ "**Winds-aloft data service.** Rocket-launched radiosonde data from recovery corridor flights, "
+ "offered to other range users over time. Built on the radiosonde and software Exos developed and tested.",
  "**Shared zone access.** Any reusable vehicle or capsule on the Western Range can use the recovery zone, "
  "with SLD 30 approval and operator consent — multiplying the value of the infrastructure.",
  "**Government-dedicated coordination view.** Customer-consented, read-only SLD 30 access to zone scheduling "
@@ -455,7 +455,7 @@ add("table", [["Item", "Status"],
               ["MCMS-exo3 extensions and zone coordination features", "Proposed / in development"],
               ["MCMS-exo3 range / FTS process integration", "Proposed, for contract with SLD 30; process work only, not FTS hardware"],
               ["Recovery zone facilities F1–F4", "Proposed expeditionary concept; no design, financing or Government commitment"],
-              ["Rocket-launched radiosonde wind measurement at VSFB", "Planned; based on Exos-developed concept circa 2016; not demonstrated at Vandenberg"],
+              ["Rocket-launched radiosonde wind measurement at VSFB", "Developed and tested by Exos (radiosonde + run software); augments local winds data; not yet operated at Vandenberg"],
               ["BLK4 reusable suborbital (Black Brant-class replacement)", "Planned program; not yet in development; has not flown"],
               ["BLK4 Heavy orbital configuration (three BLK4 cores)", "Funded-future vision; capital-dependent; not under development; no orbital vehicle exists"],
               ["Certifications", "Small Business. NIST SP 800-171 implemented; CMMC 2.0 self-assessment complete (via Atomus). AS9100 in implementation; no facility clearance"]],
