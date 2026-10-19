@@ -57,16 +57,16 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'bhill@mtech.edu (reply on thread)',
                  'he replied 10/9: sharing BLK3 with the IEEE club and Robotics club',
                  'Hi Dr. Hill,\n'
-                 "Thank you again for sharing BLK3 with your IEEE and Robotics clubs! I wanted to check in and see if either group had questions or interest. I'm happy to join a club meeting by "
-                 'video for 15 minutes to walk the students through how a flight works, and to send over our Payload User Guide.\n'
+                 "Thank you again for sharing BLK3 with your IEEE and Robotics clubs! I wanted to check in and see if either group had questions or interest. I've attached a one-page overview of how "
+                 'flying a payload with us works, which might be easy to pass along, and I\'m happy to join a club meeting by video for 15 minutes to walk the students through how a flight works.\n'
                  'Best Regards,\n'
                  'Lizi'),
                 ('University of Montana: Dr. Paul Lukacs (Interim VP Research)',
                  'paul.lukacs@umontana.edu (reply on thread)',
                  'he replied 10/9: coordinating with aligned faculty, will come back with questions',
                  'Hi Paul,\n'
-                 "Thank you again for passing BLK3 along to your faculty. I wanted to check in and see if anyone has questions. I'm happy to set up a short call with interested researchers, or send "
-                 'over our Payload User Guide so they can see what fits.\n'
+                 "Thank you again for passing BLK3 along to your faculty. I wanted to check in and see if anyone has questions. I've attached a one-page overview they can look over, and I'm happy "
+                 'to set up a short call with any interested researchers.\n'
                  'Best Regards,\n'
                  'Lizi')],
  '2026-10-20': [('LinkedIn check: pending connection requests',
@@ -125,8 +125,8 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'krishna.rupavatharam@montana.edu (reply on thread)',
                  'you emailed 10/12; he replied same day: traveling, forwarding to his team to explore options',
                  'Hi Krishna,\n'
-                 "Thank you again for passing BLK3 along to your team. I wanted to check in and see if anyone has questions or ideas they'd like to explore. I'm happy to set up a short call or send "
-                 'over our Payload User Guide so they can see what fits.\n'
+                 "Thank you again for passing BLK3 along to your team. I wanted to check in and see if anyone has questions or ideas they'd like to explore. I've attached a one-page overview they can look "
+                 'over, and I\'m happy to set up a short call.\n'
                  'Best Regards,\n'
                  'Lizi'),
                 ('UC Irvine CubeSat: Sonia Cruze + Katie Lien',
@@ -226,7 +226,7 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'david.lineberry@uah.edu (reply on thread)',
                  'sent 10/8 (#3019): microgravity propellant/fluids experiments on BLK3, offered call + Payload User Guide',
                  'Hi Dr. Lineberry,\n'
-                 "Just following up on my note about flying a propellant or fluids experiment on BLK3 in early 2027. I've attached our Payload User Guide in case it's helpful, and I'd be happy to "
+                 "Just following up on my note about flying a propellant or fluids experiment on BLK3 in early 2027. I've attached a one-page overview in case it's helpful, and I'd be happy to "
                  'set up a quick call with our engineering team.\n'
                  'Best Regards,\n'
                  'Lizi'),
@@ -268,7 +268,7 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'paul.lukacs@umontana.edu (reply on thread)',
                  'he replied 10/9 (passing to faculty); you followed up 10/14 offering a call or the PUG. Skip if he or a faculty member replied',
                  'Hi Paul,\n'
-                 "I hope the semester is going well. I wanted to circle back in case any of your faculty had questions about BLK3. If it's easier, I'm happy to send the Payload User Guide straight "
+                 "I hope the semester is going well. I wanted to circle back in case any of your faculty had questions about BLK3. If it's easier, I'm happy to send our one-page overview straight "
                  'to them, or set up a short call with anyone interested.\n'
                  'Best Regards,\n'
                  'Lizi'),
@@ -299,7 +299,7 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'thomas.sinn@dcubed-space.com (reply on your 10/13 thread)',
                  'you emailed 10/13 about D3PP/Araqys on BLK3, early 2027 (#3738)',
                  'Hello Dr. Sinn,\n'
-                 "Just following up on my note about flying D3PP or Araqys hardware on BLK3. If it would help, I'm happy to send over our Payload User Guide or set up a short call with our team.\n"
+                 "Just following up on my note about flying D3PP or Araqys hardware on BLK3. If it would help, I'm happy to send over our one-page overview or set up a short call with our team.\n"
                  'Best Regards,\n'
                  'Lizi'),
                 ('Scentience: Kordel France resume for the Lead GN&C role (task #2957)',
@@ -323,7 +323,7 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'tclements@spacetango.com (reply on your "BLK3 + Space Tango" thread)',
                  'first note 9/14, nudge 10/15; no reply yet. Skip if he (or Danielle Rosales) replied. If still silent after this, try LinkedIn or ask John for a warm intro',
                  'Hi Twyman,\n'
-                 "One last nudge on BLK3. If a call isn't convenient right now, I'm happy to just send over our Payload User Guide so you can share it with any PIs who might want a quick, "
+                 "One last nudge on BLK3. If a call isn't convenient right now, I'm happy to just send over our one-page overview so you can share it with any PIs who might want a quick, "
                  'recoverable flight before an ISS mission. Who would be the best person on your team to talk with?\n'
                  'Best Regards,\n'
                  'Lizi')],
