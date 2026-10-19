@@ -118,7 +118,7 @@ para(d, "I ask that each item be taken up at a duly noticed special meeting on T
 heading(d, "2.", "Status of the Board’s October 13, 2026 actions")
 table(d, ["Item", "Board action on 10/13", "Status at 10/18"], [
     ["Motion 1: offer and §3 exclusivity", "Deferred. SSLC to send a written counteroffer with its advisor’s comments.",
-     "Not received. The Chairman says comments or a counteroffer will come by Tuesday 10/20."],
+     "Not received as of 10/19. The Chairman says comments or a counteroffer will come by Tuesday 10/20. Taken last on 10/20."],
     ["Motion 2: full read-only access to SSLC’s books for all directors", "Approved.",
      "Done. Established through Exos Mission Control on October 19, 2026, as the Board agreed, because QuickBooks seats are limited. Markus Rufer and Robert Conger were emailed their login instructions that day and have read-only access to SSLC’s books and records. Mission Control is also the platform for the Motion 4 ERP/MRP evaluation."],
     ["Motion 3: correct AR Unbilled / customer-deposit accounting", "Approved; 5 business days.",
@@ -260,9 +260,8 @@ for p in d.paragraphs:
         break
 
 heading(d, "3.", "Requested Board action")
-para(d, "I ask that the Board, at a duly noticed meeting on October 20, 2026:")
+para(d, "I ask that the Board, at a duly noticed meeting on October 20, 2026, take up the following items. Item (a), Motion 1 on the Exos offer, is taken last:")
 reqs = [
-    ("(a) Vote ", "on Motion 1, or receive SSLC’s written counteroffer, as committed on October 13."),
     ("(b) Vote ", "on Motion 5, and resolve that no Microcosm, MDAB or Wertz balance will be paid, prepaid, netted, secured or accrue interest "
                   "before closing without approval by the disinterested directors."),
     ("(c) Direct ", "the CFO to produce the support requested on October 12 (invoices, loan notes, facility agreements and approvals for the April 30, 2026 entries)."),
@@ -279,6 +278,8 @@ reqs = [
     ("(i) Confirm ", "that no individual director or officer can cancel or re-scope the Board-approved Exos commission arrangement, and decide by vote whether "
                      "to approve Attachment A as its written form, with the tail and reimbursement described in Part B."),
     ("(j) Direct ", "a written accounting of the hardware orders described in Part B (contract value, invoiced, collected, outstanding), and a payment schedule for the Exos loan and the Space Tech Expo invoice."),
+    ("(a) Last, vote ", "on Motion 1 (the Exos offer), or receive SSLC’s written counteroffer, as committed on October 13. It is taken last "
+                       "because the counteroffer the Chairman proposed on October 13 has not yet been received."),
 ]
 for lead, txt in reqs:
     bullet(d, txt, lead)
@@ -375,6 +376,7 @@ EMAIL = [
 "Congratulations on the IM order. Please include its deposit and billing schedule in Tuesday’s package so the Board can see its effect on the billed-ahead balance.",
 "On the $15,000 a week: that is what the delay costs Exos. SSLC’s profit belongs to all of its shareholders, Exos included, so it doesn’t offset that cost. "
 "SSLC also still owes Exos the $31,200 loan, with no payment since May 2025, and the $1,500 Space Tech Expo share [____ due date].",
+"I still have not received the counteroffer you proposed on October 13. Please send it before Tuesday. I have put Motion 1 last on the agenda so the Board can take it up with your counteroffer in hand. "
 "I am not withdrawing the offer, but Tuesday is the last date. If the Board has not voted on Motion 1 or delivered a written counteroffer by the end of the October 20 meeting, "
 "I will present our plan in New York without Scorpius, as I said on Friday.",
 "The Board papers, including my notice, my findings on the related-party reclassifications and the motions for Tuesday, follow in my separate email to the Board.",

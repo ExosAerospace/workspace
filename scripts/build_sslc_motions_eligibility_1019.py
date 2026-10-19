@@ -79,20 +79,7 @@ lead("Why that matters.", "On corrective motions (RP-1 to RP-6) the three Microc
      "If they do, each of them is voting to protect a company they run, which §309(a) does not permit [2]. The minutes must record each "
      "director’s interest and vote. A block leaves the transactions unapproved and moves the question to SSLC’s shareholders (Bylaws Art. II §3).")
 
-para("PART 1 — MOTIONS FROM OCTOBER 13 (Motions 2–4 were approved then and need no new vote; Motions 1 and 5 were deferred to this meeting)", bold=True, color=NAVY, after=2)
-motion("Motion 1.", "Exos offer, §3 exclusivity and right of first refusal",
-       "Exos has offered to buy SSLC on the Heads of Terms circulated October 12. Motion 1 asks the Board to accept the offer, confirm "
-       "exclusivity under §3 while the asset purchase agreement is negotiated, and grant Exos a six-month right of first refusal that "
-       "extends automatically during negotiation. On October 13 the Board deferred it, and SSLC committed to a vote or a written "
-       "counteroffer by October 20.",
-       "John Quinn.",
-       "Exos is the buyer. John is CEO and a director of Exos, so this is an interested-director transaction under §310(a) [1]. "
-       "James Wertz, Alice Wertz and Robert Conger are not parties to the Exos offer, but Microcosm has a stake in its terms (the sale exclusions "
-       "Microcosm retains, discussed April 10, 2025) and in the competing October 16 letter of intent, which covers Microcosm too. Each should "
-       "disclose that interest before voting.",
-       "Markus + Robert = 2 of the 3 needed if all five attend. If the motion fails without a Wertz vote, Exos may rely on §310(a)(3) "
-       "and the Eqvista fairness opinion.",
-       "Approve the Exos offer, confirm §3 exclusivity, and grant the ROFR; or record SSLC’s written counteroffer.")
+para("PART 1 — MOTIONS FROM OCTOBER 13 (Motions 2–4 were approved then and need no new vote; Motion 5 was deferred to this meeting; Motion 1 is taken last, in Part 4)", bold=True, color=NAVY, after=2)
 motion("Motion 2.", "Read-only access to SSLC’s books for every director",
        "Approved October 13. Every director gets full read-only access to SSLC’s books so the Board can check the figures it is given. Because "
        "QuickBooks seats are limited, the Board agreed it would be provided through Exos Mission Control. Access was established through "
@@ -238,6 +225,21 @@ motion("Items (c), (e), (h) and (j, part 1).", "Directions to the CFO and inform
        "transactions in which the Microcosm directors are interested (§310(a)–(b), §309(a)) [1][2].",
        None, "Direct the CFO to deliver each item by a stated date.")
 
+para("PART 4 — LAST ITEM: MOTION 1, THE EXOS OFFER (SSLC’s written counteroffer not yet received)", bold=True, color=NAVY, after=2)
+motion("Motion 1.", "Exos offer, §3 exclusivity and right of first refusal",
+       "Exos has offered to buy SSLC on the Heads of Terms circulated October 12. Motion 1 asks the Board to accept the offer, confirm "
+       "exclusivity under §3 while the asset purchase agreement is negotiated, and grant Exos a six-month right of first refusal that "
+       "extends automatically during negotiation. On October 13 the Board deferred it, and SSLC committed to a vote or a written "
+       "counteroffer by October 20. It is the last item on the agenda because, as of October 19, John has not received the "
+       "counteroffer the Chairman proposed on October 13.",
+       "John Quinn.",
+       "Exos is the buyer. John is CEO and a director of Exos, so this is an interested-director transaction under §310(a) [1]. "
+       "James Wertz, Alice Wertz and Robert Conger are not parties to the Exos offer, but Microcosm has a stake in its terms (the sale exclusions "
+       "Microcosm retains, discussed April 10, 2025) and in the competing October 16 letter of intent, which covers Microcosm too. Each should "
+       "disclose that interest before voting.",
+       "Markus + Robert = 2 of the 3 needed if all five attend. If the motion fails without a Wertz vote, Exos may rely on §310(a)(3) "
+       "and the Eqvista fairness opinion.",
+       "Approve the Exos offer, confirm §3 exclusivity, and grant the ROFR; or record SSLC’s written counteroffer.")
 para("")
 para("If the Board does not act on these items, Exos, which holds 18.06% of SSLC’s shares, intends to call a special meeting of "
      "shareholders under Bylaws Art. II §3 (10% threshold). At that meeting, on any approval of Microcosm, MDAB or Wertz transactions, "
