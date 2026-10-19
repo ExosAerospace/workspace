@@ -343,6 +343,14 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "Just checking in to see if you had a chance to look through the Payload User Guide. I'd love to hear what kinds of solar cell tests Qcells is thinking about, so I can point "
                  'you to the right flight profile. Would a quick call sometime in the next couple of weeks work?\n'
                  'Best Regards,\n'
+                 'Lizi'),
+                ('Georgia Tech Quadrant-i: Jonathan Goldman + Penumbra Autonomy (task #997)',
+                 'jongoldman@gatech.edu (reply-all on your "Re: Following up from Georgia Tech Space Week" thread so the Penumbra team stays cc\'d)',
+                 "he replied 10/18, cc'd Penumbra Autonomy (prox-ops image processing) and asked about Reditus/Stef Crum; you replied 10/19 with the one-pager. Skip if Penumbra or Goldman replied",
+                 'Hi Jonathan and Penumbra team,\n'
+                 "Just following up on my note from a couple of weeks ago. I'd love to learn more about where Penumbra is with the image-processing pipeline and whether a BLK3 flight could fit "
+                 'your validation plans. Would a quick 20-minute call work sometime in the next couple of weeks?\n'
+                 'Best Regards,\n'
                  'Lizi')]}
 today=date.today().isoformat()
 items=DUE.get(today,[])
