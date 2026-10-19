@@ -1543,7 +1543,7 @@ const server = http.createServer((req, res) => {
       try {
         const { email, name, password, role, project } = JSON.parse(body);
         if (!email || !name || !password) { res.writeHead(400); res.end(JSON.stringify({ error: 'email, name, password required' })); return; }
-        if (!['admin', 'manager', 'member', 'early_adopter', 'dd_reviewer', 'montana_partner'].includes(role)) { res.writeHead(400); res.end(JSON.stringify({ error: 'role must be admin, manager, member, early_adopter, dd_reviewer, or montana_partner' })); return; }
+        if (!['admin', 'manager', 'member', 'early_adopter', 'dd_reviewer', 'montana_partner', 'sslc_director'].includes(role)) { res.writeHead(400); res.end(JSON.stringify({ error: 'role must be admin, manager, member, early_adopter, dd_reviewer, montana_partner, or sslc_director' })); return; }
         const users = loadUsers();
         if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) { res.writeHead(409); res.end(JSON.stringify({ error: 'Email already exists' })); return; }
         const salt = crypto.randomBytes(32).toString('hex');
@@ -1577,7 +1577,7 @@ const server = http.createServer((req, res) => {
         if (idx === -1) { res.writeHead(404); res.end(JSON.stringify({ error: 'User not found' })); return; }
         if (name) users[idx].name = name;
         if (email) users[idx].email = email;
-        if (role && ['admin', 'manager', 'member', 'early_adopter', 'dd_reviewer', 'montana_partner'].includes(role)) users[idx].role = role;
+        if (role && ['admin', 'manager', 'member', 'early_adopter', 'dd_reviewer', 'montana_partner', 'sslc_director'].includes(role)) users[idx].role = role;
         if (project !== undefined) users[idx].project = project;
         if (active !== undefined) users[idx].active = active;
         if (password) {
@@ -1692,7 +1692,7 @@ const server = http.createServer((req, res) => {
   // DocuSign panel page: full MC session OR ds passcode unlocks it; else passcode prompt.
   if (req.method === 'GET' && (req.url === '/docusign' || req.url.split('?')[0] === '/docusign.html')) {
     const full = getSession(req);
-    if (full && (full.role === 'early_adopter' || full.role === 'montana_partner')) { res.writeHead(302, { 'Location': '/' }); res.end(); return; }
+    if (full && (full.role === 'early_adopter' || full.role === 'montana_partner' || full.role === 'sslc_director')) { res.writeHead(302, { 'Location': '/' }); res.end(); return; }
     if (full || getDsSession(req)) {
       try { res.writeHead(200, { 'Content-Type': 'text/html' }); res.end(fs.readFileSync(path.join(__dirname, 'docusign.html'))); }
       catch (e) { res.writeHead(404); res.end('ExoSign panel not found'); }
@@ -2110,6 +2110,84 @@ const server = http.createServer((req, res) => {
       } catch (e) { return sendJson(500, { error: 'error' }); }
     })();
     return;
+  }
+
+  // ── sslc_director role: SSLC Board director books view (Jon 2026-10-19) ─────────────────────
+  // SSLC Board Motion 2 (Oct 13, 2026): full read-only access to SSLC's books for every director,
+  // provided through Mission Control because QuickBooks seats are limited. Granted to Markus Rufer and
+  // Robert Conger. STRICT default-deny, modeled on montana_partner: they reach ONLY /sslc-board.html +
+  // /api/sslc-board/* (curated SSLC records in partner-docs/sslc/, manifest data/sslc-board.json).
+  // NO Exos data of any kind: no finance, CRM, tasks, decisions, cap table, chat, vault, uploads, admin.
+  // Provision/revoke: python3 scripts/sslc_director_access.py add|deactivate ... --apply
+  if (session && session.role === 'sslc_director') {
+    const fp = req.url.split('?')[0];
+    const allowedPages = ['/sslc-board', '/sslc-board.html', '/login', '/login.html', '/set-password', '/set-password.html'];
+    const sdUser = loadUsers().find(u => u.id === session.userId);
+    if (sdUser && sdUser.must_reset) {
+      if (fp.startsWith('/api/')) {
+        if (!['/api/me', '/api/logout', '/api/change-password'].includes(fp)) { res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Set your own password first.' })); return; }
+      } else if (!['/set-password', '/set-password.html', '/login', '/login.html'].includes(fp) && !fp.startsWith('/brand-assets')) {
+        res.writeHead(302, { 'Location': '/set-password.html' }); res.end(); return;
+      }
+    }
+    if (fp === '/' || fp === '/index.html' || fp === '/dashboard' || fp === '/dashboard.html' || fp === '/welcome' || fp === '/welcome.html') {
+      res.writeHead(302, { 'Location': '/sslc-board.html' }); res.end(); return;
+    }
+    if (fp.startsWith('/api/')) {
+      const ok = fp === '/api/me' || fp === '/api/logout' || fp === '/api/change-password' || fp.startsWith('/api/sslc-board/');
+      if (!ok) {
+        auditDeny(session, req, 'sslc-out-of-scope-api');
+        glog('mc-server', 'sslc_director_deny', 'warn', fp, { email: session.email, method: req.method });
+        res.writeHead(403, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Not available in the SSLC Board books view.' }));
+        return;
+      }
+    } else if (req.method !== 'GET' || (!allowedPages.includes(fp) && !fp.startsWith('/brand-assets'))) {
+      if (fp.startsWith('/uploads/') || fp.startsWith('/viewpdf/') || fp.startsWith('/backup/') || fp.startsWith('/data/') || fp.startsWith('/partner-docs/')) {
+        auditDeny(session, req, 'sslc-blocked-doc-route');
+        glog('mc-server', 'sslc_director_deny', 'warn', fp, { email: session.email, method: req.method });
+      }
+      if (req.method !== 'GET') { res.writeHead(403); res.end('Forbidden'); return; }
+      res.writeHead(302, { 'Location': '/sslc-board.html' }); res.end(); return;
+    }
+  }
+
+  // ── SSLC Board books feeds. Readable by sslc_director + internal admin (preview). ──
+  if (req.url.startsWith('/api/sslc-board/')) {
+    const fp = req.url.split('?')[0];
+    const s = getSession(req);
+    if (!s) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
+    if (!['sslc_director', 'admin'].includes(s.role)) {
+      auditDeny(s, req, 'sslc-feed-wrong-role');
+      res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not permitted' })); return;
+    }
+    const SD_DOC_DIR = path.join(__dirname, 'partner-docs', 'sslc');
+    const q = new URL(req.url, 'http://localhost').searchParams;
+    const sendJson = (code, obj) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(obj)); };
+    const readSd = () => { try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'sslc-board.json'), 'utf8')); } catch (e) { return {}; } };
+    try {
+      if (fp === '/api/sslc-board/summary' && req.method === 'GET') {
+        const m = readSd();
+        glog('mc-server', 'sslc_director_view', 'ok', 'summary', { email: s.email, role: s.role });
+        return sendJson(200, { title: m.title || '', intro: m.intro || '', groups: (m.groups || []).map(g => ({ name: g.name, docs: (g.docs || []).map(d => ({ id: d.id, title: d.title, desc: d.desc, asOf: d.asOf || '' })) })) });
+      }
+      if (fp === '/api/sslc-board/doc' && req.method === 'GET') {
+        const all = [].concat(...(readSd().groups || []).map(g => g.docs || []));
+        const doc = all.find(d => d.id === (q.get('id') || ''));
+        if (!doc) return sendJson(404, { error: 'Not found' });
+        const safe = path.basename(doc.file);
+        const fpath = path.join(SD_DOC_DIR, safe);
+        if (!fs.existsSync(fpath)) return sendJson(404, { error: 'Not found' });
+        const ext = path.extname(safe).toLowerCase();
+        const types = { '.pdf': 'application/pdf', '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', '.xls': 'application/vnd.ms-excel' };
+        glog('mc-server', 'sslc_director_view', 'ok', 'doc:' + safe, { email: s.email, role: s.role });
+        try { fs.appendFileSync(path.join(__dirname, '..', 'logs', 'sslc-board-activity.log'), `[${new Date().toISOString()}] ${s.email || '?'} (${s.role}) viewed ${safe}\n`); } catch (e) {}
+        res.writeHead(200, { 'Content-Type': types[ext] || 'application/octet-stream', 'Content-Disposition': safeContentDisposition(safe, ext === '.pdf' ? 'inline' : 'attachment') });
+        return res.end(fs.readFileSync(fpath));
+      }
+      auditDeny(s, req, 'sslc-unknown-feed');
+      return sendJson(404, { error: 'Not found' });
+    } catch (e) { return sendJson(500, { error: 'error' }); }
   }
 
   // ── Data-room API: manifest + curated doc serving (session-gated; docs are non-sensitive) ──
@@ -6435,7 +6513,7 @@ const server = http.createServer((req, res) => {
       const ext = path.extname(filePath);
       // Auto-inject the global Exobot chat widget into every real MC page (except the
       // public/sandbox pages) so the conversation persists across navigation.
-      const NO_WIDGET = ['login.html', 'set-password.html', 'sign.html', 'docusign.html', 'welcome.html', 'vault.html', 'montana-partner.html', 'exobot-widget.js'];
+      const NO_WIDGET = ['login.html', 'set-password.html', 'sign.html', 'docusign.html', 'welcome.html', 'vault.html', 'montana-partner.html', 'sslc-board.html', 'exobot-widget.js'];
       const base = path.basename(filePath);
       // App pages + scripts must never be served stale: a code deploy has to take effect on the
       // next load, not after a manual hard-refresh. (This is what left Phil on the old "Save Note"

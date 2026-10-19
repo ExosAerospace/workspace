@@ -70,3 +70,6 @@ mission-control/data/ethics-reports.json.tmp
 
 # run_logged.py per-day run records (manifest + conversion.log stay tracked)
 logs/runs/*.jsonl
+
+# SSLC board books (confidential SSLC records) — never in git
+mission-control/partner-docs/sslc/

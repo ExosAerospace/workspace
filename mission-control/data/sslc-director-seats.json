@@ -1,0 +1,48 @@
+{
+  "seats": [
+    {
+      "seat_id": "sd-markus-rufer",
+      "name": "Markus Rufer",
+      "org": "Scorpius Space Launch Company",
+      "created": "2026-10-19",
+      "email": "mrufer@smad.com",
+      "status": "active",
+      "activated_at": "2026-10-19T08:57:22.000Z",
+      "mc_user_id": 29
+    },
+    {
+      "seat_id": "sd-robert-conger",
+      "name": "Robert Conger",
+      "org": "Scorpius Space Launch Company",
+      "created": "2026-10-19",
+      "email": "rconger@smad.com",
+      "status": "active",
+      "activated_at": "2026-10-19T08:57:29.000Z",
+      "mc_user_id": 30
+    }
+  ],
+  "events": [
+    {
+      "ts": "2026-10-19T08:57:22.000Z",
+      "action": "grant",
+      "email": "mrufer@smad.com",
+      "name": "Markus Rufer",
+      "org": "Scorpius Space Launch Company",
+      "mc_user_id": 29,
+      "seat": "sd-markus-rufer",
+      "cloudflare": "added",
+      "corr": "7b6a434b3389412f"
+    },
+    {
+      "ts": "2026-10-19T08:57:29.000Z",
+      "action": "grant",
+      "email": "rconger@smad.com",
+      "name": "Robert Conger",
+      "org": "Scorpius Space Launch Company",
+      "mc_user_id": 30,
+      "seat": "sd-robert-conger",
+      "cloudflare": "added",
+      "corr": "39632f2b5dc240b7"
+    }
+  ]
+}

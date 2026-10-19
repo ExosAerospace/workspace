@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-17T04:56:23",
-  "total": 281,
+  "generated": "2026-10-19T04:04:24",
+  "total": 282,
   "standing": 115,
   "ephemeral": 18,
   "service": 6,
@@ -6075,6 +6075,27 @@
       "change_log": [
         "2026-10-18 (John email: 'make sure whatever was causing the six spin ups of the tim crain task is fixed globally \u2026 EXO3 compliant'): created."
       ]
+    },
+    {
+      "label": "sslc-director-access-exo3",
+      "script": "sslc_director_access.py (+ mission-control/server.js sslc_director role block + /api/sslc-board/{summary,doc} + /sslc-board.html + data/sslc-board.json + partner-docs/sslc/)",
+      "kind": "gate (process, on-demand; human-run CLI) + MC scoped role",
+      "schedule": "on demand \u2014 run after John directs a seat for an SSLC director (MC task #2414)",
+      "purpose": "Delivers SSLC Board Motion 2 (Oct 13, 2026): full read-only access to SSLC's books for every director, through Mission Control because QuickBooks seats are limited (approved by the SSLC Board). Role sslc_director is default-deny: only /sslc-board.html + /api/sslc-board/{summary,doc} serving curated SSLC records (QuickBooks exports, share register, bylaws/articles/SOIs/minutes). The CLI grants/revokes seats: MC user with temp password + forced reset, and the Cloudflare Access 'Mission Control \u2014 approved users' include list.",
+      "stack_layer": "GOVERN/ASSURE",
+      "autonomy_tier": "Human-confirmed (every state change DRY-RUN by default; --apply required; nothing scheduled)",
+      "human_owner": "John Quinn",
+      "permission_envelope": "Writes mission-control/users.json (sslc_director users only; refuses to touch any other account; timestamped backup), mission-control/data/sslc-director-seats.json, Cloudflare Access policy 3bf75a2c include list (app-scoped PUT, one email, verified by re-read). The CLI sends no email/Discord. One-time: on John's explicit 10/19 instruction Exo emailed access instructions to the two directors (Proton, cc John). Server side: read-only file serving from partner-docs/sslc/ by manifest id (basename-locked); no writes.",
+      "memory_boundary": "users.json, sslc-director-seats.json, data/sslc-board.json, partner-docs/sslc/ (SSLC records only), secrets.json cloudflare_zt_token (read). Never Exos finance, CRM, tasks, decisions, cap table, investors, chat, vault, Microcosm documents, the Microcosm proxy, or Exos analyses.",
+      "escalation": "Every out-of-scope request -> auditDeny (role sslc_director) + glog sslc_director_deny; MC Guard scoring/lockout applies (Jon-only unlock). Doc views -> logs/sslc-board-activity.log + glog sslc_director_view. Cloudflare API failure -> prints the exact manual dashboard step. New records added only on John's direction.",
+      "eval_suite": "python3 scripts/sslc_director_access.py --selftest [--live] \u2014 offline: sandbox/feeds wiring, registry entry, every manifest file present, no Exos-internal files; --live: throwaway director/must-reset/admin users against the running MC (director allowed on books view + summary + bylaws PDF + GL download; traversal id rejected; denied on finance/CRM/decisions/tasks/investors/cap-table/vault/chat/dataroom/montana/admin routes + internal pages + raw /data and /partner-docs paths; must-reset confined; admin unchanged) \u2014 PASS 59/59 2026-10-19; agent_eval check_duplicate_sends: scans outbox/sent/ for identical (target, sha256-of-text) pairs within 15 min \u2192 FAIL/escalate on dup",
+      "telemetry": "logs/fleet-events.jsonl (agent sslc-director-access-exo3, kind govern: access_grant / access_revoke / selftest) + logs/sslc-director-access.jsonl + logs/sslc-board-activity.log + governance glog (mc-server sslc_director_view/_deny)",
+      "reusability_scope": "Template for any board-director or counterparty read-only records room (manifest + basename-locked doc feed + seat CLI + Cloudflare include-list grant)",
+      "risk_tier": "MED",
+      "change_log": [
+        "2026-10-19 created (John, #series-a) \u2014 role + books view + CLI; seats granted to Markus Rufer (MC #29) and Robert Conger (MC #30); access instructions emailed by Exo on John's instruction"
+      ],
+      "eval_type": "output"
     }
   ],
   "eval_wave_1": {
