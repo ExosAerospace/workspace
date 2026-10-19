@@ -309,11 +309,11 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "Just a quick follow-up on the GNC role. If you're still interested, I'd love to get your resume over to John. No rush, just didn't want it to slip through the cracks!\n"
                  'Best Regards,\n'
                  'Lizi')],
- '2026-10-29': [('Georgia Tech Space Week follow-ups (12 people, emailed 10/15)',
-                 'reply on each original 10/15 thread: Thomas Orlando, Chris Carr, Binu Tharakan, Hailey Nichols (Locus Lock), Mary Babb Isarov (Qcells), Chad Pozarycki (Deleon, task #3793), Mike '
+ '2026-10-29': [('Georgia Tech Space Week follow-ups (11 people, emailed 10/15)',
+                 'reply on each original 10/15 thread: Thomas Orlando, Chris Carr, Binu Tharakan, Hailey Nichols (Locus Lock), Chad Pozarycki (Deleon, task #3793), Mike '
                  'Riccio (NASA Ames), David Williams (OSU/Starlab), Bill Dynan, Jordan McKaig, Vic Paulson',
                  'two weeks since your 10/15 follow-ups. Skip anyone who replied. Not included: Theo Williams and Henry Schwartz (already in conversation) and Carl Kirkconnell (on hold until SSLC '
-                 "settles). Chunhui Xu replied 10/16 (call after Nov 6), so she's off this list. Phillip Stancil replied 10/18 (referred you to Dr. Mishra, nudge 11/2), so he's off too",
+                 "settles). Chunhui Xu replied 10/16 (call after Nov 6), so she's off this list. Phillip Stancil replied 10/18 (referred you to Dr. Mishra, nudge 11/2), so he's off too. Babbs Isarov (Qcells) replied 10/19 and got the PUG (nudge 11/2)",
                  'Hi [Name],\n'
                  "Just bumping this up in case it got buried after Space Week. I'd still love to find a time to talk about whether a BLK3 flight could fit your work. Happy to send our Payload User's "
                  "Guide if that's easier as a first step.\n"
@@ -333,6 +333,15 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'Hi Dr. Mishra,\n'
                  "Just following up on my note from a couple of weeks ago. I'd love to hear what your team is working on and whether a BLK3 flight could help test a sensor or onboard "
                  'processing before orbit. Would a quick 20-minute call work sometime in the next couple of weeks?\n'
+                 'Best Regards,\n'
+                 'Lizi'),
+                ('Qcells: Babbs (Mary Babb Isarov)',
+                 'marybabb.isarov@qcells.com (reply on your "RE: Following up from Georgia Tech Space Week" thread)',
+                 'she replied 10/19 asking about suborbital vs other profiles; you sent the Payload User Guide + booking link 10/19 and asked what solar tests/exposure Qcells has in mind. Skip if '
+                 'she replied or booked',
+                 'Hi Babbs,\n'
+                 "Just checking in to see if you had a chance to look through the Payload User Guide. I'd love to hear what kinds of solar cell tests Qcells is thinking about, so I can point "
+                 'you to the right flight profile. Would a quick call sometime in the next couple of weeks work?\n'
                  'Best Regards,\n'
                  'Lizi')]}
 today=date.today().isoformat()
