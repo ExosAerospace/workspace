@@ -5,7 +5,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 
-OUT = "/Users/exomac/.openclaw/workspace/drafts/sslc_mc_provisioning/SSLC_MC_Provisioning_Analysis_2026-10-19_r3.docx"
+OUT = "/Users/exomac/.openclaw/workspace/drafts/sslc_mc_provisioning/SSLC_MC_Provisioning_Analysis_2026-10-19_r4.docx"
 
 d = Document()
 st = d.styles["Normal"]; st.font.name = "Calibri"; st.font.size = Pt(10.5)
@@ -57,13 +57,14 @@ SRC_CF = ("cloudflare.com, Access plans", "https://www.cloudflare.com/sase/produ
 SRC_ITAR = ("Federal Register 84 FR 70887, 22 CFR 120.54(a)(5)", "https://www.federalregister.gov/documents/2019/12/26/2019-27438/international-traffic-in-arms-regulations-creation-of-definition-of-activities-that-are-not-exports")
 
 h = d.add_heading("SSLC Mission Control and Email Provisioning: Analysis and Recommendation", level=1)
-p("Prepared by Exo for John Quinn, CEO | 19 October 2026 | r3 | INTERNAL. r3 (Jon 05:15): records that Board Motion 2 books access is established through Mission Control and the director access emails were sent. Not for distribution to SSLC in this form. r1 changes (Jon 04:50-04:51): email cost is $0, and paid mailboxes are dropped. The evaluation uses the SSLC QuickBooks access we already have. The system is packaged as Docker containers, one per company, for reuse. The deliverable is a live demo for the SSLC board. r2 (Jon 04:55): adds the post-acquisition end state (Exos email for all SSLC staff; the full Mission Control suite in SSLC's own section), and the demo now covers every module.")
+p("Prepared by Exo for John Quinn, CEO | 19 October 2026 | r4 | INTERNAL. r4 (Jon 05:26): adds Supabase; the SSLC container needs its own Supabase project. r3 (Jon 05:15): records that Board Motion 2 books access is established through Mission Control and the director access emails were sent. Not for distribution to SSLC in this form. r1 changes (Jon 04:50-04:51): email cost is $0, and paid mailboxes are dropped. The evaluation uses the SSLC QuickBooks access we already have. The system is packaged as Docker containers, one per company, for reuse. The deliverable is a live demo for the SSLC board. r2 (Jon 04:55): adds the post-acquisition end state (Exos email for all SSLC staff; the full Mission Control suite in SSLC's own section), and the demo now covers every module.")
 
 d.add_heading("1. Bottom line", level=2)
 bullet("Deliverable: a live Mission Control demo for the SSLC board, running SSLC's real QuickBooks data in its own container on the Mac Studio. Only SSLC-authorized people and named Exos evaluators can see it.")
 bullet("Containerize: package Mission Control as one Docker image, and run one container per company. Each container has its own data volume (database, users, documents), port, hostname and login policy. The SSLC container cannot read Exos files, because they are not in its container. Docker is already running on the Studio (colima, which also hosts Vaultwarden).")
 bullet("Don't build it as a tab inside the Exos Mission Control. None of the 47 ERP tables has a company field, and the QuickBooks sync assumes one company, so SSLC data would mix with Exos data.")
 bullet("Board Motion 2 is done: SSLC books access was established through Mission Control on 10/19. The QuickBooks (indirect, via Mission Control) access emails were sent from Proton to Markus Rufer and Robert Conger at 03:58 CDT on 10/19, cc John. The same Mission Control platform is what the Motion 4 ERP/MRP evaluation demonstrates.")
+bullet("Supabase: the SSLC container needs its own Supabase project. MC keeps tasks, projects, milestones, task lists, time entries, activities, deals, companies and email templates in Supabase, and the project URL is hard-coded in server.js. A copied container would write SSLC work into Exos's Supabase. Fix: make the URL and key per-container settings and create an 'sslc' project from the same schema. Cost: a free project pauses after 1 week without activity, so use it only for a short demo. In a Pro organization, an extra Micro project is about $10/month ($25 plan, $10 compute credit included).", ("supabase.com/pricing", "https://supabase.com/pricing"))
 bullet("QuickBooks: use the SSLC access we already have, Jon's reports-only login, which already produced the GL detail through 10/12. No new Intuit app and no SSLC-side authorization step are needed for the evaluation.")
 bullet("Email: $0. SSLC people log in with the addresses they already have, as Rufer and Conger do now. If SSLC wants branded addresses, Cloudflare Email Routing forwards them free. No paid mailboxes.")
 bullet("Cash cost to Exos: $0. Build labor is Exo's time.")
