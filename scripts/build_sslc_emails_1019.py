@@ -107,7 +107,7 @@ for t in [
     "NewCap is engaged by Jim and earns 5% on a sale of SSLC and/or Microcosm, put the engagement letter in the minute book, and have any "
     "SSLC-paid part of the fee approved by disinterested directors or by shareholders with the sale.\n"
     "6. The Exos commission, for the record and not for a vote. The Board approved it on April 10, 2025 (15% on new business, 5% on "
-    "repeat customers, paid on receipt of funds). The statement at the last meeting that it was cancelled conflicts with the Bylaws "
+    "repeat customers, paid on receipt of funds). James Wertz’s statement at the October 9, 2026 Board meeting that it was cancelled conflicts with the Bylaws "
     "(Art. III §§1, 9 and 13; Art. V §6): one director cannot cancel a Board-approved arrangement. The motions paper explains this.\n"
     "7. Payment schedule for the Exos loan and the Space Tech Expo invoice. I am interested and will abstain.\n"
     "8. Information items: monthly statements June–September 2026 with an officer’s certificate; terms of the Intuitive Machines order; an "

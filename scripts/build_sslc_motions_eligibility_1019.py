@@ -257,7 +257,7 @@ motion("Item (i).", "The Exos commission: already approved; for the record, not 
        "Four disinterested directors voted for it, so it already meets §310(a)(2) without counting John [1]. The Board has decided this; it "
        "is not on the agenda for a vote.",
        "Not applicable: no vote.",
-       "At the Board’s last meeting, James Wertz stated that he was cancelling the arrangement except for the current PD Aerospace order. "
+       "At the Board’s October 9, 2026 meeting, James Wertz stated that he was cancelling the arrangement except for the current PD Aerospace order. "
        "That statement conflicts with the Bylaws in four ways. (1) Article III, Section 1: the business of the corporation is managed, and "
        "all corporate powers are exercised, by or under the direction of the board of directors, not by one director. (2) Article III, "
        "Section 9: only an act or decision made by a majority of the directors present at a duly held meeting with a quorum is an act of the "
@@ -266,7 +266,7 @@ motion("Item (i).", "The Exos commission: already approved; for the record, not 
        "Bylaws assign; neither gives the chairman power to revoke a Board-approved arrangement. The statement therefore has no effect, and "
        "the April 10, 2025 approval stands unless the Board itself votes to change it.",
        None,
-       "No vote. For the minutes: the April 10, 2025 approval stands, and the statement at the last meeting did not change it.")
+       "No vote. For the minutes: the April 10, 2025 approval stands, and the statement at the October 9, 2026 meeting did not change it.")
 motion("Item (j).", "Exos loan and Space Tech Expo invoice payment schedule",
        "SSLC owes Exos $31,200 of loan principal plus interest, with no payment since May 2, 2025, and $1,500 for SSLC’s share of Space Tech Expo.",
        "John Quinn.", "Exos is the creditor (§310(a)) [1].", "Markus + Robert = 2 of the 3 needed if all five attend.",

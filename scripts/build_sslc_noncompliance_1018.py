@@ -223,7 +223,7 @@ para(d, "A special meeting may be called by the Chairman, the President, any Vic
         "Section 9). Defects can be cured by written waiver (Article III, Section 10). A written update by email is not an act of the Board.")
 
 para(d, "PART B — CARRIED FORWARD FROM THE OCTOBER 17 NOTICE: THE EXOS COMMISSION ARRANGEMENT", bold=True, color=NAVY, space_after=4)
-para(d, "At the Board’s recent meeting, Director James Wertz stated that he was cancelling the Company’s sales commission arrangement with "
+para(d, "At the Board’s October 9, 2026 meeting, Director James Wertz stated that he was cancelling the Company’s sales commission arrangement with "
         "Exos Aerospace Systems & Technologies, Inc. (“Exos”), apart from the current PD Aerospace order. No individual director has that "
         "authority. The October 17 notice is restated below without change.")
 
@@ -276,7 +276,7 @@ reqs = [
                      "with its sender except as the Board directs; and appoint a committee of disinterested directors to evaluate it alongside the Exos offer."),
     ("(h) Receive ", "the terms of the October 16 Intuitive Machines order ($270K): deposit, billing schedule, and effect on the billed-ahead balance."),
     ("(i) Note ", "for the minutes, with no vote, that the Exos commission arrangement was approved by the Board on April 10, 2025 and stands. "
-                   "The statement at the last meeting that it was cancelled conflicts with the Bylaws (Art. III §§1, 9 and 13; Art. V §6) and has no effect. "
+                   "James Wertz’s statement at the October 9, 2026 Board meeting that it was cancelled conflicts with the Bylaws (Art. III §§1, 9 and 13; Art. V §6) and has no effect. "
                    "Attachment A is provided for reference only."),
     ("(j) Direct ", "a written accounting of the hardware orders described in Part B (contract value, invoiced, collected, outstanding), and a payment schedule for the Exos loan and the Space Tech Expo invoice."),
     ("(a) Last, vote ", "on Motion 1 (the Exos offer), or receive SSLC’s written counteroffer, as committed on October 13. It is taken last "
