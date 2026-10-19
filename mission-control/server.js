@@ -6707,7 +6707,8 @@ const server = http.createServer((req, res) => {
     if (!filePath.startsWith(__dirname)) { res.writeHead(403); res.end('Forbidden'); return; }
     // Ethics & Compliance reports are reviewer-only via /api/ethics-report/review — never static.
     if (/^ethics-/.test(path.basename(filePath)) && path.dirname(filePath) === path.join(__dirname, 'data')) { res.writeHead(403); res.end('Forbidden'); return; }
-    const extMap ={ '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.json': 'application/json' };
+    const extMap ={ '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.json': 'application/json',
+      '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.zip': 'application/zip' };
     if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
       const ext = path.extname(filePath);
       // Auto-inject the global Exobot chat widget into every real MC page (except the
