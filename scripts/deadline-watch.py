@@ -142,7 +142,70 @@ def days_until(iso):
         return None
 
 
+BID_TAGS = "{sbir,sttr,baa,rfp,solicitation,proposal,d2p2,cso,grant,tacfi,stratfi,ota,bid}"
+GATE_TAG = "bid-customer-gate-d30"
+GATE_LEAD_DAYS = 30
+
+
+def sb_post(body):
+    k = _key()
+    h = {"apikey": k, "Authorization": "Bearer " + k,
+         "Content-Type": "application/json", "Prefer": "return=representation"}
+    req = urllib.request.Request(SB, data=json.dumps(body).encode(), headers=h, method="POST")
+    return json.load(urllib.request.urlopen(req, timeout=40))
+
+
+def bid_customer_gate(dry=False):
+    """Jon 2026-10-19 (#3044 OOSL D2P2 closed: no USSF customer): every open bid with a due date gets
+    an action item to SECURE THE REQUIRED CUSTOMER/SPONSOR ENGAGEMENT, due 30 days before the bid
+    due date. Not secured by then = no-bid (see bid-requirements fail-fast rule). Idempotent: one
+    subtask per bid (tag GATE_TAG); its due date follows the parent's if the parent moves."""
+    from datetime import timedelta
+    today = date.today()
+    try:
+        bids = sb_get({"select": "id,title,due_date,tags,assigned_email",
+                       "state": "in.(To Do,In Progress,Queued)", "tags": "ov." + BID_TAGS,
+                       "due_date": "gte." + today.isoformat(), "limit": "500"})
+        gates = sb_get({"select": "id,state,due_date,tags", "tags": "cs.{" + GATE_TAG + "}",
+                        "limit": "1000"})
+    except Exception as e:
+        log(f"bid-gate fetch failed: {e}")
+        return
+    by_parent = {}
+    for g in gates:
+        for tg in g.get("tags") or []:
+            if str(tg).startswith("parent:"):
+                by_parent[tg[7:]] = g
+    for b in bids:
+        tags = b.get("tags") or []
+        if "subtask" in tags or any(str(x).startswith("parent:") for x in tags) or GATE_TAG in tags:
+            continue
+        bid_due = date.fromisoformat(b["due_date"][:10])
+        gate_due = max(bid_due - timedelta(days=GATE_LEAD_DAYS), today).isoformat() + "T22:59:00+00:00"
+        g = by_parent.get(str(b["id"]))
+        if g:
+            if g.get("state") not in ("Done", "Cancelled") and (g.get("due_date") or "")[:10] != gate_due[:10]:
+                if not dry:
+                    sb_patch(g["id"], {"due_date": gate_due})
+                log(f"[bid-gate] #{b['id']} gate #{g['id']} re-dated -> {gate_due[:10]}")
+            continue
+        body = {"title": f"[D-30 bid gate] Secure customer/sponsor engagement — #{b['id']} {(b.get('title') or '')[:60]}",
+                "owner": "Exo", "assigned_email": b.get("assigned_email") or "jquinn@exosaero.com",
+                "state": "To Do", "priority": 80, "category": "Task", "source": "deadline-watch",
+                "tags": ["subtask", f"parent:{b['id']}", GATE_TAG, "bid-gate"],
+                "due_date": gate_due,
+                "description": (f"Action due 30 days before bid #{b['id']} is due ({bid_due}). Pull the "
+                                "solicitation's customer/sponsor must-haves verbatim (e.g. DAF D2P2: engaged "
+                                "Space Force operators/program offices/mission owners + 'a clear customer "
+                                "within the US Space Force'; TPOC; letters/memos) and secure documented "
+                                "engagement. Not secured by this date = no-bid. Source: Jon 2026-10-19 on #3044.")}
+        if not dry:
+            sb_post(body)
+        log(f"[bid-gate] #{b['id']} -> created D-30 gate due {gate_due[:10]}{' (DRY)' if dry else ''}")
+
+
 def main():
+    bid_customer_gate(dry="--dry" in sys.argv)
     today = date.today().isoformat()
     try:
         tasks = sb_get({"select": "id,title,state,due_date,tags,description",
