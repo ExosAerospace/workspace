@@ -28,10 +28,44 @@ def lead(label, text, color=None):
     p.add_run(text); p.paragraph_format.space_after = Pt(4); p.paragraph_format.left_indent = Inches(0.2)
 
 
+# r10/19 05:40 (Jon): every motion carries its factual basis, presented neutrally. Figures: SSLC QuickBooks GL 1/1/2024–10/12/2026,
+# balance sheet 10/11/2026, Jim Wertz debt summary 8/31/2026, share register 08-2024.
+BASIS = {
+    "Motion 5.": "Jim Wertz’s October 18 debt summary (as of August 31, 2026) lists $1,020,690 of SSLC debt, of which $857,419 is owed to "
+                 "Microcosm ($447,900), MDAB, the Bookstore ($317,019) and Wertz family members ($92,500). In QuickBooks, the Microcosm "
+                 "balance sits in account 2385 “Due to Microcosm”, created on April 30, 2026 by moving $426,687 of Microcosm bills out of "
+                 "accounts payable; $24,742 of 2026 Microcosm charges were added later, for $451,429 at October 11. The MDAB balance includes "
+                 "$97,302 of interest capitalized on April 30, 2026. The ledger does not show disinterested-director approval for these balances.",
+    "RP-1.": "The transactions are listed under RP-2 to RP-4 below. Taken together, SSLC’s position with Microcosm has moved by about "
+             "$1.6 million (see “The facts behind the related-party motions” above). The SSLC minute books we have do not record "
+             "any disinterested-director approval of them.",
+    "RP-2.": "Two entries dated April 30, 2026. (1) $812,699 of cash SSLC lent Microcosm between January 2019 and October 2025, previously "
+             "recorded in account 1480 “Workman’s Comp Over/Under”, was moved to a new account 1481 “Loan to Microcosm” and, in the same "
+             "entry, netted to zero against Microcosm charges: $294,499 and $423,965 of “intercompany” and “pre-6/2025 reimbursable” "
+             "balances (first booked June 30, 2025), $61,290 for “Judy’s time” and a $32,946 “reimbursables” credit. (2) $426,687 of "
+             "Microcosm bills was moved from accounts payable into 2385 “Due to Microcosm”. The ledger entries carry no invoice-level support. "
+             "Offsetting is allowed only where amounts are determinable and there is an enforceable right of setoff [3]. Some charges may "
+             "prove legitimate; reversal keeps them pending until supported.",
+    "RP-3.": "Through June 2024 SSLC and Microcosm split the rent and utilities of the shared building 50/50. From July 2024 SSLC has paid "
+             "100% with no charge-back to Microcosm. Microcosm’s former half through August 2026 is about $316,000 of rent and $35,000 of "
+             "utilities, about $351,000 in all, not recorded on SSLC’s books.",
+    "RP-4.": "In 2026 SSLC repaid Microcosm $90,000 (May 26) and $64,150 (August 13). Over the same period the Exos loan ($31,200 "
+             "principal) received no payment; the last was May 2, 2025.",
+    "RP-5.": "The entries in question total about $1.26 million posted in QuickBooks ($812,699 netted plus the $451,429 payable), plus "
+             "about $351,000 of unbooked building share. A La Carte Solutions’ fee is split 50/50 between SSLC and Microcosm.",
+    "RP-6.": "The April 30, 2026 entries were posted without being put to the Board. Directors received read-only books access on "
+             "October 19, 2026 under Motion 2.",
+    "Item (d).": "On April 30, 2026, $97,302 of interest was capitalized on the Bookstore (MDAB) note. Alice Wertz has since said MDAB will "
+                 "drop the $100,000 of interest. No signed release or reversing entry is on file.",
+}
+
+
 def motion(num, title, what, cannot, why, math, ask):
     p = d.add_paragraph(); r = p.add_run(f"{num}  {title}"); r.bold = True; r.font.size = Pt(12); r.font.color.rgb = NAVY
     p.paragraph_format.space_before = Pt(12); p.paragraph_format.space_after = Pt(4); p.paragraph_format.keep_with_next = True
     lead("What it means.", what)
+    if num in BASIS:
+        lead("Basis (the facts).", BASIS[num])
     lead("Who cannot vote.", cannot, RED)
     lead("Why.", why)
     if math: lead("Vote needed.", math)
@@ -79,6 +113,23 @@ lead("Why that matters.", "On corrective motions (RP-1 to RP-6) the three Microc
      "If they do, each of them is voting to protect a company they run, which §309(a) does not permit [2]. The minutes must record each "
      "director’s interest and vote. A block leaves the transactions unapproved and moves the question to SSLC’s shareholders (Bylaws Art. II §3).")
 
+p = d.add_paragraph(); r = p.add_run("The facts behind the related-party motions"); r.bold = True; r.font.size = Pt(12); r.font.color.rgb = NAVY
+para("These figures come from SSLC’s own QuickBooks (general ledger January 1, 2024 – October 12, 2026; balance sheet October 11, "
+     "2026). Every director can check them on the SSLC Board Books page. They describe what the books show and do not decide whether any "
+     "particular Microcosm charge is valid.", after=4)
+lead("Before.", "Microcosm owed SSLC about $1.16 million: $812,699 of loans SSLC made to Microcosm between January 2019 and October 2025 "
+     "(recorded in account 1480, “Workman’s Comp Over/Under”, not as a loan to Microcosm), plus about $351,000 of Microcosm’s former 50% "
+     "share of building rent and utilities that SSLC has paid since July 2024 and has not charged back.")
+lead("What changed.", "On April 30, 2026, the $812,699 of loans was netted to zero against Microcosm charges without invoice-level support, "
+     "and $426,687 of Microcosm bills was moved into a new “Due to Microcosm” account (now $451,429 with later charges). The building share "
+     "was never booked.")
+lead("After.", "SSLC now owes Microcosm $451,429, and the books show nothing owed by Microcosm.")
+lead("Net effect.", "About $1.6 million of value moved from SSLC to Microcosm ($1.16 million + $451,429). Of that, about $1.26 million is "
+     "posted entries ($812,699 + $451,429) and about $351,000 is the unbooked building share. Across SSLC’s 872,489 shares (August 2024 "
+     "register) it is about $1.85 a share, borne by every SSLC shareholder in proportion to their holding.")
+lead("What is not known.", "Whether any of the offsetting Microcosm charges are supported by invoices. Some may prove legitimate. The "
+     "related-party motions keep the amounts open until they are supported and approved by directors with no Microcosm interest.")
+
 para("PART 1 — MOTIONS FROM OCTOBER 13 (Motions 2–4 were approved then and need no new vote; Motion 5 was deferred to this meeting; Motion 1 is taken last, in Part 4)", bold=True, color=NAVY, after=2)
 motion("Motion 2.", "Read-only access to SSLC’s books for every director",
        "Approved October 13. Every director gets full read-only access to SSLC’s books so the Board can check the figures it is given. Because "
@@ -120,7 +171,7 @@ motion("Motion 5.", "Related-party balances ($857,419 owed to Microcosm, MDAB an
        "directors’ shares not voting (§310(a)(1)).",
        "Do not accept the related-party balances as stated until invoice-level support is produced and the disinterested directors approve them.")
 
-para("PART 2 — RESOLUTIONS ON THE SELF-DEALING ENTRIES (NOTICE PART A.6)", bold=True, color=NAVY, after=2)
+para("PART 2 — RESOLUTIONS ON THE RELATED-PARTY ENTRIES (NOTICE PART A.6)", bold=True, color=NAVY, after=2)
 para("For each of RP-1 to RP-6: James Wertz, Alice Wertz and Robert Conger should not vote. These resolutions concern transactions with "
      "Microcosm, MDAB and the Wertz family. Jim and Alice have a material financial interest (§310(a)), and Robert Conger is a Microcosm "
      "director and officer (§310(b)). The resolutions are corrective, not approvals, so their duty of loyalty under §309(a) requires them to "
@@ -199,19 +250,23 @@ motion("NC-1.", "NewCap Partners’ engagement",
        "(a) Record that NewCap Partners is engaged by James Wertz and earns a 5% commission on a sale of SSLC and/or Microcosm at the time "
        "of sale, and enter its engagement letter (showing which company pays) in the minute book. (b) Any portion of that fee to be paid by "
        "SSLC is approved only by disinterested directors or by SSLC’s shareholders as part of the sale approval.")
-motion("Item (i).", "The Exos 15% sales-commission arrangement",
+motion("Item (i).", "The Exos commission: already approved; for the record, not for a vote",
        "At its April 10, 2025 meeting, with all five directors present, SSLC’s Board accepted an offer that Exos help find new business for "
        "a 15% commission, payable after SSLC receives the customer’s funds, with repeat customers at 5% and a shared contact list to avoid "
        "double payment. Markus Rufer moved, Robert Conger seconded, and approval was unanimous (minutes signed by Alice Wertz, Secretary). "
-       "Microcosm’s Board (Jim, Alice and Bob) approved the same 15% commission for new contracts Exos brings to Microcosm that day, on "
-       "Alice’s motion. James Wertz later said he was cancelling it. Only the Board can change a Board-approved arrangement (Bylaws Art. III §1, Art. VIII §3).",
-       "John Quinn.", "Exos is the counterparty (§310(a)) [1]. The April 10, 2025 approval already meets §310(a)(2): four disinterested "
-       "directors voted for it, more than the three needed without counting John.",
-       "No new vote is needed for the arrangement to stand. Any change needs a Board vote: Markus + Robert = 2 of the 3 needed if all five "
-       "attend, and John cannot vote.",
-       "Confirm that the April 10, 2025 approval stands and that no single director or officer can cancel it; and vote on adopting the written "
-       "agreement (Attachment A), conformed to the approved terms (15% new business, 5% repeat customers, paid on receipt of funds), with the "
-       "12-month tail and reimbursement of Exos’s SSLC-specific sales costs.")
+       "Four disinterested directors voted for it, so it already meets §310(a)(2) without counting John [1]. The Board has decided this; it "
+       "is not on the agenda for a vote.",
+       "Not applicable: no vote.",
+       "At the Board’s last meeting, James Wertz stated that he was cancelling the arrangement except for the current PD Aerospace order. "
+       "That statement conflicts with the Bylaws in four ways. (1) Article III, Section 1: the business of the corporation is managed, and "
+       "all corporate powers are exercised, by or under the direction of the board of directors, not by one director. (2) Article III, "
+       "Section 9: only an act or decision made by a majority of the directors present at a duly held meeting with a quorum is an act of the "
+       "Board; no motion to cancel was made or voted on. (3) Article III, Section 13: action outside a meeting needs the written consent of "
+       "all directors; there was none. (4) Article V, Section 6: the chairman presides at meetings and has only the powers the Board or the "
+       "Bylaws assign; neither gives the chairman power to revoke a Board-approved arrangement. The statement therefore has no effect, and "
+       "the April 10, 2025 approval stands unless the Board itself votes to change it.",
+       None,
+       "No vote. For the minutes: the April 10, 2025 approval stands, and the statement at the last meeting did not change it.")
 motion("Item (j).", "Exos loan and Space Tech Expo invoice payment schedule",
        "SSLC owes Exos $31,200 of loan principal plus interest, with no payment since May 2, 2025, and $1,500 for SSLC’s share of Space Tech Expo.",
        "John Quinn.", "Exos is the creditor (§310(a)) [1].", "Markus + Robert = 2 of the 3 needed if all five attend.",
