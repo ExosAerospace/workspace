@@ -1,645 +1,1773 @@
 {
- "entries": [
-  {
-   "id": "IMP-001",
-   "agent": "com.exos.payload-sales-engine",
-   "govlog": "payload-sales",
-   "cron": null,
-   "change": "plist pin /usr/bin/python3 (10/4)",
-   "hypothesis": "Homebrew python lacked python-docx; pinning system python ends the green-but-errored docx failures",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": "No module named 'docx'",
-   "at": "2026-10-04T09:05:00-05:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 6,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 129.0,
-    "sig_errors": 3
-   },
-   "confound": "docx failure surfaced via completion-watchdog worker scan, not a govlog 'error' event — verdict also checks watchdog for the signature"
-  },
-  {
-   "id": "IMP-002",
-   "agent": "com.exos.mc-email-command",
-   "govlog": "email-command",
-   "cron": null,
-   "change": "994012e",
-   "hypothesis": "sys.path before shim import ends 'No module named durable_send_shim' quiet errors",
-   "metrics": [
-    "reliability",
-    "turnaround"
-   ],
-   "error_signature": "durable_send_shim",
-   "at": "2026-10-04T12:00:00-05:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 311,
-    "reliability": 0.794,
-    "quiet_errors": 64,
-    "turnaround_s": 1.2,
-    "sig_errors": 2
-   },
-   "confound": "baseline includes 62 IMAP login errors from the 9/28-29 Mac Studio migration (Bridge not signed in) — judge this fix on the durable_send_shim signature only (2 in baseline)"
-  },
-  {
-   "id": "IMP-003",
-   "agent": "com.exos.delivery-sweeper",
-   "govlog": null,
-   "cron": null,
-   "change": "784c961 sweeper inline-grace",
-   "hypothesis": "Sweeper skipping spool files <218s old ends duplicate Discord posts (race with live send)",
-   "metrics": [
-    "dup_sends",
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-04T09:10:00-05:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 1098,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 0.3,
-    "dup_sends": 10
-   }
-  },
-  {
-   "id": "IMP-004",
-   "agent": "cron:backlog-grind",
-   "govlog": null,
-   "cron": "51e09612-a217-43e0-a7a9-a3243c59a5a0",
-   "change": "784c961",
-   "hypothesis": "Guarded propose + Decision card keeps grind reliable while cutting Jon review load; watch tokens/turnaround don't rise",
-   "metrics": [
-    "reliability",
-    "cost",
-    "turnaround"
-   ],
-   "error_signature": null,
-   "at": "2026-10-04T09:10:00-05:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 7,
-    "reliability": 1.0,
-    "turnaround_s": 126.5,
-    "cost_tokens": 79227
-   }
-  },
-  {
-   "id": "IMP-005",
-   "agent": "com.exos.followup-nudge-digest",
-   "govlog": null,
-   "cron": null,
-   "change": "43fbc11",
-   "hypothesis": "Grouping multi-recipient sends as one thread (and same-org replies) removes false 'no reply' nudges, e.g. Graham/Raquel on the Ainigma thread Michael answered; dry-run backlog 11 -> 7 false-free",
-   "metrics": [
-    "reliability",
-    "turnaround"
-   ],
-   "error_signature": null,
-   "at": "2026-10-04T17:03:32.923702+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 6,
-    "reliability": 0.833,
-    "quiet_errors": 0,
-    "turnaround_s": 34.8
-   }
-  },
-  {
-   "id": "IMP-006",
-   "agent": "com.exos.fleet-status-heartbeat",
-   "govlog": null,
-   "cron": null,
-   "change": "6355fda",
-   "hypothesis": "Reading the new state_json schema ends the hourly false 'Fleet exception' DMs; signature dedupe stops identical repeats",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-04T17:04:52.322626+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 133,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 11.1
-   }
-  },
-  {
-   "id": "IMP-007",
-   "agent": "com.exos.capstone-question-answerer",
-   "govlog": null,
-   "cron": null,
-   "change": "9a3c352",
-   "hypothesis": "Taking the model out of the posting path (agent returns marked text; script validates, posts, and verifies the row + Done) plus a 3x/15-min retry and a re-firing ETA watchdog plus a daily >8h stale check will cut unanswered UTD questions past ETA from 6 (10/2-10/3, 2 days silent) to 0, with every failure reaching Discord within one ETA. Baseline: 7 of 7 questions 3357-3363 failed agent self-post (no tools, false ANSWERED, truncation); watchdog fired once per task then latched.",
-   "metrics": [
-    "reliability",
-    "turnaround"
-   ],
-   "error_signature": null,
-   "at": "2026-10-04T17:27:50.261531+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 280,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 0.6
-   }
-  },
-  {
-   "id": "IMP-008",
-   "agent": "com.exos.decisions-discord-feed",
-   "govlog": null,
-   "cron": null,
-   "change": "0a386e9",
-   "hypothesis": "Treating CLI timeout as delivered (at-most-once) plus output eval catches duplicates => dup Discord posts drop to 0 over 7d (baseline: 6 dup posts on 2026-10-04)",
-   "metrics": [
-    "dup_sends"
-   ],
-   "error_signature": null,
-   "at": "2026-10-04T17:40:38.173269+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 398,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 0.3,
-    "dup_sends": 10
-   }
-  },
-  {
-   "id": "IMP-009",
-   "agent": "com.exos.exo3-gate",
-   "govlog": null,
-   "cron": null,
-   "change": "0a386e9",
-   "hypothesis": "Idempotent delivery + eval_type gate + blast-radius warn will eliminate dup-send class of incidents and enforce output eval coverage for side-effecting agents",
-   "metrics": [
-    "reliability",
-    "dup_send_rate",
-    "eval_coverage"
-   ],
-   "error_signature": null,
-   "at": "2026-10-04T17:48:02.018147+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-010",
-   "agent": "com.exos.mc-email-command",
-   "govlog": null,
-   "cron": null,
-   "change": "f21a25a",
-   "hypothesis": "Auto-attach of new task uploads now requires the reply to cite the task # or filename; stops concurrent Exo sessions' files (e.g. R&D QRE sheet on #1200) riding out on unrelated @exo replies. Expect 0 cross-task attachments in 7d.",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-04T18:56:20.175787+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 321,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 1.2
-   }
-  },
-  {
-   "id": "IMP-011",
-   "agent": "cron:fnex-term-sheet",
-   "govlog": null,
-   "cron": "7b3d90cd-010a-47ab-864d-96bb9e18bf1b",
-   "change": "registered + held-release-integrity output eval (10/5)",
-   "hypothesis": "Output eval catches any counterparty card released before John answers; loop stays ok until self-removal",
-   "metrics": [
-    "reliability",
-    "cost",
-    "turnaround"
-   ],
-   "error_signature": null,
-   "at": "2026-10-05T17:57:20.315793+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 10,
-    "reliability": 1.0,
-    "turnaround_s": 100.1,
-    "cost_tokens": 84610
-   }
-  },
-  {
-   "id": "IMP-012",
-   "agent": "invoice-command-exo3",
-   "govlog": null,
-   "cron": null,
-   "change": "2c83492",
-   "hypothesis": "Invoices carry customer address+phone+email; sends without them are blocked, so no invoice goes out without contact info (#3418)",
-   "metrics": [
-    "reliability",
-    "turnaround"
-   ],
-   "error_signature": null,
-   "at": "2026-10-05T19:51:56.526175+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-013",
-   "agent": "payload-commission-trigger",
-   "govlog": null,
-   "cron": null,
-   "change": "49cdeb0",
-   "hypothesis": "Flight-2 payload payments (Scentience, Lesiw) now fire a commission-check task on first QB receipt; previously unregistered so commissions would be silently missed",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-05T20:59:34.564360+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-014",
-   "agent": "qb-invoice",
-   "govlog": null,
-   "cron": null,
-   "change": "67994b2",
-   "hypothesis": "Invoices whose Decision was answered with an instruction (not Approve/Hold/Cancel) used to stall forever; auto re-filing a fresh Approve&send card once the contact block is complete should cut instruction-to-send turnaround to one Jon click with zero manual re-files",
-   "metrics": [
-    "reliability",
-    "turnaround"
-   ],
-   "error_signature": null,
-   "at": "2026-10-05T21:29:39.286806+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-015",
-   "agent": "payload-sales-engine",
-   "govlog": null,
-   "cron": null,
-   "change": "bdeec5e",
-   "hypothesis": "Drafts told Lizi to send from her mailbox but signed as John, forcing a manual re-sign on every draft; signing as Lizi removes that edit and the risk of sending under the wrong name",
-   "metrics": [
-    "reliability",
-    "turnaround"
-   ],
-   "error_signature": null,
-   "at": "2026-10-05T21:38:57.398499+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-016",
-   "agent": "decision-send-watcher",
-   "govlog": null,
-   "cron": null,
-   "change": "2f80fb7",
-   "hypothesis": "Stale-draft sends drop to 0: watcher upgrades every resolved draft to newest dated copy; mc-attach refuses older-over-newer (6b29a96). Baseline 10/7: 45 open send-Decisions referenced a stale file.",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-07T13:49:25.542916+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-017",
-   "agent": "opportunity-engine",
-   "govlog": null,
-   "cron": null,
-   "change": "8c7a67e",
-   "hypothesis": "Delegated send-Decisions refresh in place and drafts pass COPY_RULES at generation, so open send-Decisions referencing a stale or off-rule draft stay at 0 (baseline 10/7: 45 stale, 3 with March 2027 copy)",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-07T14:00:46.592176+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-018",
-   "agent": "com.exos.priority-inbox-watcher",
-   "govlog": null,
-   "cron": null,
-   "change": "c96a667",
-   "hypothesis": "IMAP pollers of Jon's Proton INBOX (priority-inbox-watcher, mc-email-command, project-email-router, transcript-ingest, survey-ingest, doc-manager, payload-intake + 12 hardened) now select readonly + fetch BODY.PEEK[]; expect Jon's unread (\\Seen-absent) INBOX count to stay >0 for mail he hasn't opened (was 0 of 3209 on 10/7) with no drop in poller reliability",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-07T17:02:37.009993+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 1001,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 0.5
-   }
-  },
-  {
-   "id": "IMP-019",
-   "agent": "com.exos.dr-hot-sync",
-   "govlog": null,
-   "cron": null,
-   "change": "ssh retry + RPO-aware exit; Mini SystemUIServer runaway killed (10/7)",
-   "hypothesis": "Transient SSH blips no longer page; real RPO breaches (>15 min) still do; Mini CPU freed",
-   "metrics": [
-    "reliability",
-    "turnaround"
-   ],
-   "error_signature": "Connection timed out during banner exchange",
-   "at": "2026-10-07T19:13:52.838326+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 1466,
-    "reliability": 0.999,
-    "quiet_errors": 0,
-    "turnaround_s": 3.5,
-    "sig_errors": 0
-   }
-  },
-  {
-   "id": "IMP-020",
-   "agent": "com.exos.agent-eval",
-   "govlog": null,
-   "cron": null,
-   "change": "self-retired/remote-host/paused/running-after-restart handling + internal one-shot auto-registration (10/7)",
-   "hypothesis": "Removes false FAIL/drift pages (naftu done, failover-monitor on Mini, series-a paused, MC restart, one-shot reminders) without hiding real failures",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-07T19:13:53.133433+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 168,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 0.9
-   }
-  },
-  {
-   "id": "IMP-021",
-   "agent": "com.exos.blk3-send-pack-apply",
-   "govlog": null,
-   "cron": null,
-   "change": "a16cffc",
-   "hypothesis": "Student-verified BLK3 leads get emailed within 1 business day of Lizi's click (was 13 of 16 never sent); zero duplicate sends and zero gov/foreign recipients (output eval PASS); apply job reliability >= 0.99",
-   "metrics": [
-    "reliability",
-    "turnaround",
-    "dup_sends"
-   ],
-   "error_signature": null,
-   "at": "2026-10-07T19:25:39.803932+00:00",
-   "status": "measuring",
-   "baseline": {
-    "dup_sends": 6
-   }
-  },
-  {
-   "id": "IMP-022",
-   "agent": "com.exos.outreach-autoclose",
-   "govlog": null,
-   "cron": null,
-   "change": "d2793d4",
-   "hypothesis": "no-autoclose opt-out tag stops hub/tracker tasks (DIBC #870) from being auto-closed by a single outbound send, and daily-burndown no longer re-tags them",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-08T06:08:06.592692+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 502,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 4.3
-   }
-  },
-  {
-   "id": "IMP-023",
-   "agent": "decision-send-watcher",
-   "govlog": null,
-   "cron": null,
-   "change": "9676c79",
-   "hypothesis": "Bare option answers (Send/All three) on send-Decisions now auto-deliver; expect 0 answered-but-undelivered send cards after 10/8 07:00Z",
-   "metrics": [
-    "reliability",
-    "turnaround"
-   ],
-   "error_signature": null,
-   "at": "2026-10-08T13:05:32.919328+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-024",
-   "agent": "decision-send-watcher",
-   "govlog": null,
-   "cron": null,
-   "change": "963a07f",
-   "hypothesis": "Inline-draft Decisions no longer get a fuzzy-matched wrong attachment; drafts go in the email body instead",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-08T14:52:35.204002+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-025",
-   "agent": "opportunity-engine",
-   "govlog": null,
-   "cron": null,
-   "change": "a7cbf69",
-   "hypothesis": "Payload outreach Send cards route to Lizi's inbox signed as Lizi; Jon stops receiving payload drafts meant for Lizi",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-08T16:02:40.891954+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-026",
-   "agent": "mission-control-imap",
-   "govlog": null,
-   "cron": null,
-   "change": "ff0bb98",
-   "hypothesis": "Exo helper emails tagged X-Exo-No-Task no longer become tasks; dropped leads marked LOST stop being re-drafted by the payload engine",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-08T16:52:24.481169+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-027",
-   "agent": "weekly-investor-update",
-   "govlog": null,
-   "cron": null,
-   "change": "441114f",
-   "hypothesis": "Stale ROFR claim removed from standing status; date-gated feature block lets one-off investor items ride the weekly without hand edits",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-08T22:37:45.440449+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-028",
-   "agent": "com.exos.outreach-reply-tracker",
-   "govlog": null,
-   "cron": null,
-   "change": "8fcf2bf",
-   "hypothesis": "Newsletter/bulk mail (incl. forwarded) no longer produces false NEGATIVE outreach-reply alerts",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-09T00:12:21.568228+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 455,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 3.8
-   }
-  },
-  {
-   "id": "IMP-029",
-   "agent": "com.exos.fleet-status-heartbeat",
-   "govlog": null,
-   "cron": null,
-   "change": "1a054ad",
-   "hypothesis": "Fleet failures reach Jon with a fix already launched (applied / awaiting approval D-xxx / in progress) via failure-fixer-exo3, so Jon no longer has to ask Exo to fix each failure; failing-job time-to-fix falls",
-   "metrics": [
-    "reliability",
-    "turnaround"
-   ],
-   "error_signature": null,
-   "at": "2026-10-09T00:29:40.526269+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 168,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 0.8
-   }
-  },
-  {
-   "id": "IMP-030",
-   "agent": "com.exos.decisions-discord-feed",
-   "govlog": null,
-   "cron": null,
-   "change": "786bed40ce94675db5229069b9d3148d8b0d676e",
-   "hypothesis": "int priority score / dict options / null created crash fixed by type-tolerant card() + --selftest",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": "AttributeError: 'int' object has no attribute 'lower'",
-   "at": "2026-10-09T05:14:49.285225+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 3514,
-    "reliability": 0.893,
-    "quiet_errors": 0,
-    "turnaround_s": 0.3,
-    "sig_errors": 0
-   }
-  },
-  {
-   "id": "IMP-031",
-   "agent": "com.exos.email-people-crm",
-   "govlog": null,
-   "cron": null,
-   "change": "538724307cc0880ceb474ee645798c371acfa9b6",
-   "hypothesis": "Proton Bridge drops idle IMAP session during long Ollama extraction (UID FETCH EOF) fixed by reconnect+retry and per-message state persistence",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": "imaplib.IMAP4.abort: command: UID => socket error: EOF",
-   "at": "2026-10-09T08:29:21.118663+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 7,
-    "reliability": 0.857,
-    "quiet_errors": 0,
-    "turnaround_s": 1654.6,
-    "sig_errors": 0
-   }
-  },
-  {
-   "id": "IMP-032",
-   "agent": "lizi-piee-keepalive",
-   "govlog": null,
-   "cron": null,
-   "change": "4eaef5b",
-   "hypothesis": "Completion-based 30-day PIEE login reminders with daily overdue escalation keep Lizi's PIEE account from locking",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-09T13:40:06.606949+00:00",
-   "status": "measuring",
-   "baseline": {}
-  },
-  {
-   "id": "IMP-033",
-   "agent": "com.exos.task-note-command",
-   "govlog": null,
-   "cron": null,
-   "change": "dotted-subtask self-heal (10/9)",
-   "hypothesis": "No more 'NNNN.n' tasks appearing as duplicate top-level cards; they nest under the parent",
-   "metrics": [
-    "reliability"
-   ],
-   "error_signature": null,
-   "at": "2026-10-09T20:05:47.291477+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 2012,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 0.4
-   }
-  },
-  {
-   "id": "IMP-037",
-   "agent": "com.exos.decision-docs-guard-exo3",
-   "govlog": null,
-   "cron": null,
-   "change": "9352648",
-   "hypothesis": "Open Decision cards that reference drafts/capture/data-room documents in their text always carry those documents (pinned docKeys or decision-linked uploads); recurrence of docs-in-text-but-none-attached (D-7282043 class) drops to 0. Baseline 10/10: 5 open cards (D-7282043 hand-fixed, D-7281961, D-7282027, D-7282035, D-7282039) referenced existing docs with nothing pinned.",
-   "metrics": [
-    "reliability",
-    "turnaround"
-   ],
-   "error_signature": "references document but card has no documents",
-   "at": "2026-10-10T21:04:47.828444+00:00",
-   "status": "measuring",
-   "baseline": {
-    "runs": 1,
-    "reliability": 1.0,
-    "quiet_errors": 0,
-    "turnaround_s": 0.1,
-    "sig_errors": 0
-   }
-  }
- ]
+  "entries": [
+    {
+      "id": "IMP-001",
+      "agent": "com.exos.payload-sales-engine",
+      "govlog": "payload-sales",
+      "cron": null,
+      "change": "plist pin /usr/bin/python3 (10/4)",
+      "hypothesis": "Homebrew python lacked python-docx; pinning system python ends the green-but-errored docx failures",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": "No module named 'docx'",
+      "at": "2026-10-04T09:05:00-05:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 6,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 129.0,
+        "sig_errors": 3
+      },
+      "confound": "docx failure surfaced via completion-watchdog worker scan, not a govlog 'error' event \u2014 verdict also checks watchdog for the signature",
+      "after": {
+        "runs": 7,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 138.5,
+        "sig_errors": 0
+      },
+      "verdict": "IMPROVED",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 =",
+        "sig_errors 3\u21920 \u2713"
+      ],
+      "measured_at": "2026-10-12T01:00:09.406385+00:00"
+    },
+    {
+      "id": "IMP-002",
+      "agent": "com.exos.mc-email-command",
+      "govlog": "email-command",
+      "cron": null,
+      "change": "994012e",
+      "hypothesis": "sys.path before shim import ends 'No module named durable_send_shim' quiet errors",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": "durable_send_shim",
+      "at": "2026-10-04T12:00:00-05:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 311,
+        "reliability": 0.794,
+        "quiet_errors": 64,
+        "turnaround_s": 1.2,
+        "sig_errors": 2
+      },
+      "confound": "baseline includes 62 IMAP login errors from the 9/28-29 Mac Studio migration (Bridge not signed in) \u2014 judge this fix on the durable_send_shim signature only (2 in baseline)",
+      "after": {
+        "runs": 980,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.8,
+        "sig_errors": 0
+      },
+      "verdict": "IMPROVED",
+      "checks": [
+        "reliability 0.794\u21921.0 \u2713",
+        "quiet_errors 64\u21920 \u2713",
+        "turnaround_s 1.2\u21920.8 =",
+        "sig_errors 2\u21920 \u2713"
+      ],
+      "measured_at": "2026-10-12T01:00:09.406385+00:00"
+    },
+    {
+      "id": "IMP-003",
+      "agent": "com.exos.delivery-sweeper",
+      "govlog": null,
+      "cron": null,
+      "change": "784c961 sweeper inline-grace",
+      "hypothesis": "Sweeper skipping spool files <218s old ends duplicate Discord posts (race with live send)",
+      "metrics": [
+        "dup_sends",
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-04T09:10:00-05:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 1098,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.3,
+        "dup_sends": 10
+      },
+      "after": {
+        "runs": 2012,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.3,
+        "dup_sends": 0
+      },
+      "verdict": "IMPROVED",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 =",
+        "dup_sends 10\u21920 \u2713"
+      ],
+      "measured_at": "2026-10-12T01:00:09.406385+00:00"
+    },
+    {
+      "id": "IMP-004",
+      "agent": "cron:backlog-grind",
+      "govlog": null,
+      "cron": "51e09612-a217-43e0-a7a9-a3243c59a5a0",
+      "change": "784c961",
+      "hypothesis": "Guarded propose + Decision card keeps grind reliable while cutting Jon review load; watch tokens/turnaround don't rise",
+      "metrics": [
+        "reliability",
+        "cost",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-04T09:10:00-05:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 7,
+        "reliability": 1.0,
+        "turnaround_s": 126.5,
+        "cost_tokens": 79227
+      },
+      "after": {
+        "runs": 7,
+        "reliability": 1.0,
+        "turnaround_s": 320.9,
+        "cost_tokens": 66223
+      },
+      "verdict": "REGRESSED",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "turnaround_s 126.5\u2192320.9 \u2717",
+        "cost_tokens 79227\u219266223 \u2713"
+      ],
+      "measured_at": "2026-10-12T01:00:09.406385+00:00"
+    },
+    {
+      "id": "IMP-005",
+      "agent": "com.exos.followup-nudge-digest",
+      "govlog": null,
+      "cron": null,
+      "change": "43fbc11",
+      "hypothesis": "Grouping multi-recipient sends as one thread (and same-org replies) removes false 'no reply' nudges, e.g. Graham/Raquel on the Ainigma thread Michael answered; dry-run backlog 11 -> 7 false-free",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-04T17:03:32.923702+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 6,
+        "reliability": 0.833,
+        "quiet_errors": 0,
+        "turnaround_s": 34.8
+      },
+      "after": {
+        "runs": 7,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 54.2
+      },
+      "verdict": "REGRESSED",
+      "checks": [
+        "reliability 0.833\u21921.0 \u2713",
+        "quiet_errors 0\u21920 =",
+        "turnaround_s 34.8\u219254.2 \u2717"
+      ],
+      "measured_at": "2026-10-12T01:00:09.406385+00:00"
+    },
+    {
+      "id": "IMP-006",
+      "agent": "com.exos.fleet-status-heartbeat",
+      "govlog": null,
+      "cron": null,
+      "change": "6355fda",
+      "hypothesis": "Reading the new state_json schema ends the hourly false 'Fleet exception' DMs; signature dedupe stops identical repeats",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-04T17:04:52.322626+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 133,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 11.1
+      },
+      "after": {
+        "runs": 168,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.6
+      },
+      "verdict": "NO CHANGE",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-12T01:00:09.406385+00:00"
+    },
+    {
+      "id": "IMP-007",
+      "agent": "com.exos.capstone-question-answerer",
+      "govlog": null,
+      "cron": null,
+      "change": "9a3c352",
+      "hypothesis": "Taking the model out of the posting path (agent returns marked text; script validates, posts, and verifies the row + Done) plus a 3x/15-min retry and a re-firing ETA watchdog plus a daily >8h stale check will cut unanswered UTD questions past ETA from 6 (10/2-10/3, 2 days silent) to 0, with every failure reaching Discord within one ETA. Baseline: 7 of 7 questions 3357-3363 failed agent self-post (no tools, false ANSWERED, truncation); watchdog fired once per task then latched.",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-04T17:27:50.261531+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 280,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.6
+      },
+      "after": {
+        "runs": 671,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.6
+      },
+      "verdict": "NO CHANGE",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 =",
+        "turnaround_s 0.6\u21920.6 ="
+      ],
+      "measured_at": "2026-10-12T01:00:09.406385+00:00"
+    },
+    {
+      "id": "IMP-008",
+      "agent": "com.exos.decisions-discord-feed",
+      "govlog": null,
+      "cron": null,
+      "change": "0a386e9",
+      "hypothesis": "Treating CLI timeout as delivered (at-most-once) plus output eval catches duplicates => dup Discord posts drop to 0 over 7d (baseline: 6 dup posts on 2026-10-04)",
+      "metrics": [
+        "dup_sends"
+      ],
+      "error_signature": null,
+      "at": "2026-10-04T17:40:38.173269+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 398,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.3,
+        "dup_sends": 10
+      },
+      "after": {
+        "runs": 4904,
+        "reliability": 0.923,
+        "quiet_errors": 0,
+        "turnaround_s": 0.3,
+        "dup_sends": 0
+      },
+      "verdict": "IMPROVED",
+      "checks": [
+        "dup_sends 10\u21920 \u2713"
+      ],
+      "measured_at": "2026-10-12T01:00:09.406385+00:00"
+    },
+    {
+      "id": "IMP-009",
+      "agent": "com.exos.exo3-gate",
+      "govlog": null,
+      "cron": null,
+      "change": "0a386e9",
+      "hypothesis": "Idempotent delivery + eval_type gate + blast-radius warn will eliminate dup-send class of incidents and enforce output eval coverage for side-effecting agents",
+      "metrics": [
+        "reliability",
+        "dup_send_rate",
+        "eval_coverage"
+      ],
+      "error_signature": null,
+      "at": "2026-10-04T17:48:02.018147+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-12T01:00:09.406385+00:00"
+    },
+    {
+      "id": "IMP-010",
+      "agent": "com.exos.mc-email-command",
+      "govlog": null,
+      "cron": null,
+      "change": "f21a25a",
+      "hypothesis": "Auto-attach of new task uploads now requires the reply to cite the task # or filename; stops concurrent Exo sessions' files (e.g. R&D QRE sheet on #1200) riding out on unrelated @exo replies. Expect 0 cross-task attachments in 7d.",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-04T18:56:20.175787+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 321,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 1.2
+      },
+      "after": {
+        "runs": 981,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.8
+      },
+      "verdict": "NO CHANGE",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-12T01:00:09.406385+00:00"
+    },
+    {
+      "id": "IMP-011",
+      "agent": "cron:fnex-term-sheet",
+      "govlog": null,
+      "cron": "7b3d90cd-010a-47ab-864d-96bb9e18bf1b",
+      "change": "registered + held-release-integrity output eval (10/5)",
+      "hypothesis": "Output eval catches any counterparty card released before John answers; loop stays ok until self-removal",
+      "metrics": [
+        "reliability",
+        "cost",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-05T17:57:20.315793+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 10,
+        "reliability": 1.0,
+        "turnaround_s": 100.1,
+        "cost_tokens": 84610
+      },
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-012",
+      "agent": "invoice-command-exo3",
+      "govlog": null,
+      "cron": null,
+      "change": "2c83492",
+      "hypothesis": "Invoices carry customer address+phone+email; sends without them are blocked, so no invoice goes out without contact info (#3418)",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-05T19:51:56.526175+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-013",
+      "agent": "payload-commission-trigger",
+      "govlog": null,
+      "cron": null,
+      "change": "49cdeb0",
+      "hypothesis": "Flight-2 payload payments (Scentience, Lesiw) now fire a commission-check task on first QB receipt; previously unregistered so commissions would be silently missed",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-05T20:59:34.564360+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-014",
+      "agent": "qb-invoice",
+      "govlog": null,
+      "cron": null,
+      "change": "67994b2",
+      "hypothesis": "Invoices whose Decision was answered with an instruction (not Approve/Hold/Cancel) used to stall forever; auto re-filing a fresh Approve&send card once the contact block is complete should cut instruction-to-send turnaround to one Jon click with zero manual re-files",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-05T21:29:39.286806+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-015",
+      "agent": "payload-sales-engine",
+      "govlog": null,
+      "cron": null,
+      "change": "bdeec5e",
+      "hypothesis": "Drafts told Lizi to send from her mailbox but signed as John, forcing a manual re-sign on every draft; signing as Lizi removes that edit and the risk of sending under the wrong name",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-05T21:38:57.398499+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-016",
+      "agent": "decision-send-watcher",
+      "govlog": null,
+      "cron": null,
+      "change": "2f80fb7",
+      "hypothesis": "Stale-draft sends drop to 0: watcher upgrades every resolved draft to newest dated copy; mc-attach refuses older-over-newer (6b29a96). Baseline 10/7: 45 open send-Decisions referenced a stale file.",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-07T13:49:25.542916+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-017",
+      "agent": "opportunity-engine",
+      "govlog": null,
+      "cron": null,
+      "change": "8c7a67e",
+      "hypothesis": "Delegated send-Decisions refresh in place and drafts pass COPY_RULES at generation, so open send-Decisions referencing a stale or off-rule draft stay at 0 (baseline 10/7: 45 stale, 3 with March 2027 copy)",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-07T14:00:46.592176+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-018",
+      "agent": "com.exos.priority-inbox-watcher",
+      "govlog": null,
+      "cron": null,
+      "change": "c96a667",
+      "hypothesis": "IMAP pollers of Jon's Proton INBOX (priority-inbox-watcher, mc-email-command, project-email-router, transcript-ingest, survey-ingest, doc-manager, payload-intake + 12 hardened) now select readonly + fetch BODY.PEEK[]; expect Jon's unread (\\Seen-absent) INBOX count to stay >0 for mail he hasn't opened (was 0 of 3209 on 10/7) with no drop in poller reliability",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-07T17:02:37.009993+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 1001,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.5
+      },
+      "after": {
+        "runs": 1007,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.5
+      },
+      "verdict": "NO CHANGE",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-019",
+      "agent": "com.exos.dr-hot-sync",
+      "govlog": null,
+      "cron": null,
+      "change": "ssh retry + RPO-aware exit; Mini SystemUIServer runaway killed (10/7)",
+      "hypothesis": "Transient SSH blips no longer page; real RPO breaches (>15 min) still do; Mini CPU freed",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": "Connection timed out during banner exchange",
+      "at": "2026-10-07T19:13:52.838326+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 1466,
+        "reliability": 0.999,
+        "quiet_errors": 0,
+        "turnaround_s": 3.5,
+        "sig_errors": 0
+      },
+      "after": {
+        "runs": 1987,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 3.7,
+        "sig_errors": 0
+      },
+      "verdict": "NO CHANGE",
+      "checks": [
+        "reliability 0.999\u21921.0 =",
+        "quiet_errors 0\u21920 =",
+        "turnaround_s 3.5\u21923.7 =",
+        "sig_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-020",
+      "agent": "com.exos.agent-eval",
+      "govlog": null,
+      "cron": null,
+      "change": "self-retired/remote-host/paused/running-after-restart handling + internal one-shot auto-registration (10/7)",
+      "hypothesis": "Removes false FAIL/drift pages (naftu done, failover-monitor on Mini, series-a paused, MC restart, one-shot reminders) without hiding real failures",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-07T19:13:53.133433+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 168,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.9
+      },
+      "after": {
+        "runs": 167,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 1.2
+      },
+      "verdict": "NO CHANGE",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-021",
+      "agent": "com.exos.blk3-send-pack-apply",
+      "govlog": null,
+      "cron": null,
+      "change": "a16cffc",
+      "hypothesis": "Student-verified BLK3 leads get emailed within 1 business day of Lizi's click (was 13 of 16 never sent); zero duplicate sends and zero gov/foreign recipients (output eval PASS); apply job reliability >= 0.99",
+      "metrics": [
+        "reliability",
+        "turnaround",
+        "dup_sends"
+      ],
+      "error_signature": null,
+      "at": "2026-10-07T19:25:39.803932+00:00",
+      "status": "verdict",
+      "baseline": {
+        "dup_sends": 6
+      },
+      "after": {
+        "runs": 1007,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.1,
+        "dup_sends": 0
+      },
+      "verdict": "IMPROVED",
+      "checks": [
+        "dup_sends 6\u21920 \u2713"
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-022",
+      "agent": "com.exos.outreach-autoclose",
+      "govlog": null,
+      "cron": null,
+      "change": "d2793d4",
+      "hypothesis": "no-autoclose opt-out tag stops hub/tracker tasks (DIBC #870) from being auto-closed by a single outbound send, and daily-burndown no longer re-tags them",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-08T06:08:06.592692+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 502,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 4.3
+      },
+      "after": {
+        "runs": 503,
+        "reliability": 0.998,
+        "quiet_errors": 0,
+        "turnaround_s": 4.6
+      },
+      "verdict": "NO CHANGE",
+      "checks": [
+        "reliability 1.0\u21920.998 =",
+        "quiet_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-023",
+      "agent": "decision-send-watcher",
+      "govlog": null,
+      "cron": null,
+      "change": "9676c79",
+      "hypothesis": "Bare option answers (Send/All three) on send-Decisions now auto-deliver; expect 0 answered-but-undelivered send cards after 10/8 07:00Z",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-08T13:05:32.919328+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-024",
+      "agent": "decision-send-watcher",
+      "govlog": null,
+      "cron": null,
+      "change": "963a07f",
+      "hypothesis": "Inline-draft Decisions no longer get a fuzzy-matched wrong attachment; drafts go in the email body instead",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-08T14:52:35.204002+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-025",
+      "agent": "opportunity-engine",
+      "govlog": null,
+      "cron": null,
+      "change": "a7cbf69",
+      "hypothesis": "Payload outreach Send cards route to Lizi's inbox signed as Lizi; Jon stops receiving payload drafts meant for Lizi",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-08T16:02:40.891954+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-026",
+      "agent": "mission-control-imap",
+      "govlog": null,
+      "cron": null,
+      "change": "ff0bb98",
+      "hypothesis": "Exo helper emails tagged X-Exo-No-Task no longer become tasks; dropped leads marked LOST stop being re-drafted by the payload engine",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-08T16:52:24.481169+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-027",
+      "agent": "weekly-investor-update",
+      "govlog": null,
+      "cron": null,
+      "change": "441114f",
+      "hypothesis": "Stale ROFR claim removed from standing status; date-gated feature block lets one-off investor items ride the weekly without hand edits",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-08T22:37:45.440449+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-028",
+      "agent": "com.exos.outreach-reply-tracker",
+      "govlog": null,
+      "cron": null,
+      "change": "8fcf2bf",
+      "hypothesis": "Newsletter/bulk mail (incl. forwarded) no longer produces false NEGATIVE outreach-reply alerts",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-09T00:12:21.568228+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 455,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 3.8
+      },
+      "after": {
+        "runs": 456,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 3.0
+      },
+      "verdict": "NO CHANGE",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-029",
+      "agent": "com.exos.fleet-status-heartbeat",
+      "govlog": null,
+      "cron": null,
+      "change": "1a054ad",
+      "hypothesis": "Fleet failures reach Jon with a fix already launched (applied / awaiting approval D-xxx / in progress) via failure-fixer-exo3, so Jon no longer has to ask Exo to fix each failure; failing-job time-to-fix falls",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-09T00:29:40.526269+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 168,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.8
+      },
+      "after": {
+        "runs": 167,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 3.2
+      },
+      "verdict": "REGRESSED",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 =",
+        "turnaround_s 0.8\u21923.2 \u2717"
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-030",
+      "agent": "com.exos.decisions-discord-feed",
+      "govlog": null,
+      "cron": null,
+      "change": "786bed40ce94675db5229069b9d3148d8b0d676e",
+      "hypothesis": "int priority score / dict options / null created crash fixed by type-tolerant card() + --selftest",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": "AttributeError: 'int' object has no attribute 'lower'",
+      "at": "2026-10-09T05:14:49.285225+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 3514,
+        "reliability": 0.893,
+        "quiet_errors": 0,
+        "turnaround_s": 0.3,
+        "sig_errors": 0
+      },
+      "after": {
+        "runs": 4942,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.3,
+        "sig_errors": 0
+      },
+      "verdict": "IMPROVED",
+      "checks": [
+        "reliability 0.893\u21921.0 \u2713",
+        "quiet_errors 0\u21920 =",
+        "sig_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-031",
+      "agent": "com.exos.email-people-crm",
+      "govlog": null,
+      "cron": null,
+      "change": "538724307cc0880ceb474ee645798c371acfa9b6",
+      "hypothesis": "Proton Bridge drops idle IMAP session during long Ollama extraction (UID FETCH EOF) fixed by reconnect+retry and per-message state persistence",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": "imaplib.IMAP4.abort: command: UID => socket error: EOF",
+      "at": "2026-10-09T08:29:21.118663+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 7,
+        "reliability": 0.857,
+        "quiet_errors": 0,
+        "turnaround_s": 1654.6,
+        "sig_errors": 0
+      },
+      "after": {
+        "runs": 7,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 1308.3,
+        "sig_errors": 0
+      },
+      "verdict": "IMPROVED",
+      "checks": [
+        "reliability 0.857\u21921.0 \u2713",
+        "quiet_errors 0\u21920 =",
+        "sig_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-032",
+      "agent": "lizi-piee-keepalive",
+      "govlog": null,
+      "cron": null,
+      "change": "4eaef5b",
+      "hypothesis": "Completion-based 30-day PIEE login reminders with daily overdue escalation keep Lizi's PIEE account from locking",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-09T13:40:06.606949+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-033",
+      "agent": "com.exos.task-note-command",
+      "govlog": null,
+      "cron": null,
+      "change": "dotted-subtask self-heal (10/9)",
+      "hypothesis": "No more 'NNNN.n' tasks appearing as duplicate top-level cards; they nest under the parent",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-09T20:05:47.291477+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 2012,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.4
+      },
+      "after": {
+        "runs": 2012,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.6
+      },
+      "verdict": "NO CHANGE",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-034",
+      "agent": "com.exos.outreach-autoclose",
+      "govlog": null,
+      "cron": null,
+      "change": "aec74d9c5b85975a313f8bb7539fa9e118d4a5ce",
+      "hypothesis": "Non-tuple IMAP FETCH items (md[0][1] -> int) crashed parse; fixed by _fetch_bytes() picking the first (hdr, bytes) tuple",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": "AttributeError: 'int' object has no attribute 'decode'",
+      "at": "2026-10-09T20:48:34.760679+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 503,
+        "reliability": 0.998,
+        "quiet_errors": 0,
+        "turnaround_s": 4.4,
+        "sig_errors": 0
+      },
+      "after": {
+        "runs": 502,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 4.6,
+        "sig_errors": 0
+      },
+      "verdict": "NO CHANGE",
+      "checks": [
+        "reliability 0.998\u21921.0 =",
+        "quiet_errors 0\u21920 =",
+        "sig_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-035",
+      "agent": "com.exos.opportunity-engine",
+      "govlog": null,
+      "cron": null,
+      "change": "a959c695256666e38f1a3c1d73aaa893c0143af6",
+      "hypothesis": "parse_value regex [\\d.]+ matched bare '.' and crashed float(); fixed by requiring a digit in the number pattern + --selftest",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": "ValueError: could not convert string to float: '.'",
+      "at": "2026-10-10T11:35:46.712948+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 14,
+        "reliability": 0.929,
+        "quiet_errors": 0,
+        "turnaround_s": 1975.3,
+        "sig_errors": 0
+      },
+      "after": {
+        "runs": 14,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 1084.5,
+        "sig_errors": 0
+      },
+      "verdict": "IMPROVED",
+      "checks": [
+        "reliability 0.929\u21921.0 \u2713",
+        "quiet_errors 0\u21920 =",
+        "sig_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-036",
+      "agent": "data-room-integrity",
+      "govlog": null,
+      "cron": null,
+      "change": "882c272",
+      "hypothesis": "Adding Jon 10/10 strategy rules (tranched/25M, ROFR, Nebula, RTO, BLK4-in-raise) scoped to data-room/Exos_SeriesA catches off-strategy wording before the room reopens; pre-10/10 originals now BLOCK until archived",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-10T12:42:27.969020+00:00",
+      "status": "verdict",
+      "baseline": {},
+      "after": {},
+      "verdict": "NO CHANGE",
+      "checks": [],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-037",
+      "agent": "com.exos.decision-docs-guard-exo3",
+      "govlog": null,
+      "cron": null,
+      "change": "9352648",
+      "hypothesis": "Open Decision cards that reference drafts/capture/data-room documents in their text always carry those documents (pinned docKeys or decision-linked uploads); recurrence of docs-in-text-but-none-attached (D-7282043 class) drops to 0. Baseline 10/10: 5 open cards (D-7282043 hand-fixed, D-7281961, D-7282027, D-7282035, D-7282039) referenced existing docs with nothing pinned.",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": "references document but card has no documents",
+      "at": "2026-10-10T21:04:47.828444+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 1,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.1,
+        "sig_errors": 0
+      },
+      "after": {
+        "runs": 2014,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.1,
+        "sig_errors": 0
+      },
+      "verdict": "NO CHANGE",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 =",
+        "turnaround_s 0.1\u21920.1 =",
+        "sig_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-038",
+      "agent": "com.exos.capstone-capture",
+      "govlog": null,
+      "cron": null,
+      "change": "148b581a45f5a9ef9347ae5687efb53dd9476f74",
+      "hypothesis": "py3.9 fromisoformat crash on 5-digit Supabase fractional seconds fixed by normalizing fraction to 6 digits in parse_ts",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": "ValueError: Invalid isoformat string: '2026-10-10T23:37:02.91331+00:00'",
+      "at": "2026-10-10T23:53:09.771222+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 1815,
+        "reliability": 0.995,
+        "quiet_errors": 0,
+        "turnaround_s": 0.8,
+        "sig_errors": 0
+      },
+      "after": {
+        "runs": 4997,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.8,
+        "sig_errors": 0
+      },
+      "verdict": "IMPROVED",
+      "checks": [
+        "reliability 0.995\u21921.0 \u2713",
+        "quiet_errors 0\u21920 =",
+        "sig_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-039",
+      "agent": "com.exos.qb-invoice-watch",
+      "govlog": null,
+      "cron": null,
+      "change": "1c666f3",
+      "hypothesis": "INK milestone lets in-kind payload orders keep the same QB documentation trail ($1 invoice) without manual QB work",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-11T21:31:59.993078+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 2008,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.5
+      },
+      "after": {
+        "runs": 2003,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 1.8
+      },
+      "verdict": "REGRESSED",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 =",
+        "turnaround_s 0.5\u21921.8 \u2717"
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-040",
+      "agent": "com.exos.mc-email-command",
+      "govlog": null,
+      "cron": null,
+      "change": "5b5213f",
+      "hypothesis": "No forwarded email is cut short again: full body saved to disk; agents get up to 60K chars plus an explicit pointer if longer; zero 'truncated in capture' gaps",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-12T00:48:04.658377+00:00",
+      "status": "verdict",
+      "baseline": {
+        "runs": 979,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.8
+      },
+      "after": {
+        "runs": 989,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.7
+      },
+      "verdict": "NO CHANGE",
+      "checks": [
+        "reliability 1.0\u21921.0 =",
+        "quiet_errors 0\u21920 ="
+      ],
+      "measured_at": "2026-10-19T01:00:12.769470+00:00"
+    },
+    {
+      "id": "IMP-041",
+      "agent": "com.exos.payload-intake",
+      "govlog": null,
+      "cron": null,
+      "change": "86cb7ed",
+      "hypothesis": "Website quote form already requires phone + billing address; intake (payload_intake_quote -> payload_questionnaire) now upserts them by email onto CRM contacts/company and payload orders, qb_invoice falls back to CRM address, and lead-auto-capture paginates past the 1000-row cap so it stops creating duplicate contacts. Expect zero invoices blocked for missing phone/address on questionnaire customers and no new same-email duplicate contacts.",
+      "metrics": [
+        "reliability",
+        "turnaround",
+        "dup_sends"
+      ],
+      "error_signature": "missing: phone",
+      "at": "2026-10-12T06:38:03.964611+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 1005,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 1.7,
+        "dup_sends": 0,
+        "sig_errors": 0
+      }
+    },
+    {
+      "id": "IMP-042",
+      "agent": "com.exos.sam-flightopps-watch",
+      "govlog": null,
+      "cron": null,
+      "change": "e20c06144b5b616fa2fc04aa64f599a726520d4f",
+      "hypothesis": "openclaw message send TimeoutExpired crash + notices marked seen before delivery fixed by catching timeout, 120s x2 retry, marking seen only after delivery",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": "subprocess.TimeoutExpired: openclaw message send timed out after 60 seconds",
+      "at": "2026-10-12T12:00:28.144094+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 1,
+        "reliability": 0.0,
+        "quiet_errors": 0,
+        "turnaround_s": 64.4,
+        "sig_errors": 0
+      }
+    },
+    {
+      "id": "IMP-043",
+      "agent": "blk3-send-pack",
+      "govlog": null,
+      "cron": null,
+      "change": "55c1879",
+      "hypothesis": "Removing 'I hope you are doing well' opener (Lizi: obvious AI marker) reduces Lizi rewrites of send-pack drafts",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-12T15:36:49.946443+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-044",
+      "agent": "blk3-send-pack",
+      "govlog": null,
+      "cron": null,
+      "change": "841a962",
+      "hypothesis": "Status guard stops LOST leads from entering daily send packs (2 slipped through 10/9)",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-12T15:40:13.055487+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-045",
+      "agent": "payload-sales-engine",
+      "govlog": null,
+      "cron": null,
+      "change": "98ac4cf",
+      "hypothesis": "Approved-facts prompt + banned-phrase lint means Lizi stops getting drafts with 'minutes of microgravity'/SPACEavailable/Flight 2 slot claims",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-12T19:52:32.895712+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-046",
+      "agent": "dd-blocklist-monthly",
+      "govlog": null,
+      "cron": null,
+      "change": "0ee2bbf",
+      "hypothesis": "Monthly company blocklist now includes all failed-DD registry domains (was missing ~45); failed-DD adds hit Phil's list immediately instead of next Monday",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-13T14:24:51.960097+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-047",
+      "agent": "email-tracker",
+      "govlog": null,
+      "cron": null,
+      "change": "1860b79",
+      "hypothesis": "From-name 'Exo' skip stops Exo helper emails becoming tasks (X-Exo-No-Task header is stripped on Proton Sent copies; #3719/#3720/#3733 leaked)",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-13T14:52:51.176580+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-048",
+      "agent": "decision-send-watcher",
+      "govlog": null,
+      "cron": null,
+      "change": "822de6c",
+      "hypothesis": "Lizi stops receiving '[Ready to send]' drafts that still contain one-of-only-three / manifest / John signature without warning",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-13T14:53:23.523174+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-049",
+      "agent": "com.exos.decision-triage",
+      "govlog": null,
+      "cron": null,
+      "change": "1a06b1e57f2cf8a424ba4473f5700492e754de94",
+      "hypothesis": "int relatedItem TypeError fixed by coercing decision fields to str (_f helper) + --selftest",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": "TypeError: can only concatenate str (not \"int\") to str",
+      "at": "2026-10-13T20:52:06.691842+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 336,
+        "reliability": 0.997,
+        "quiet_errors": 0,
+        "turnaround_s": 0.5,
+        "sig_errors": 0
+      }
+    },
+    {
+      "id": "IMP-050",
+      "agent": "mc-attach-exo3",
+      "govlog": null,
+      "cron": null,
+      "change": "2fcbe5d",
+      "hypothesis": "Family chaining + task-wide identical-upload skip cuts duplicate/drifting task documents (2414: 80 shown current -> 16 working + 12 reference); measure new chain_family/skip_identical events vs new doc_keys per task",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-13T20:56:40.670898+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-051",
+      "agent": "payload-orders-exo3",
+      "govlog": null,
+      "cron": null,
+      "change": "2fcbe5d",
+      "hypothesis": "Hybrid waiver confirmation + in-kind INK path + ExoSign-default reason close the payload process gaps Jon found 10/11; measure waivers confirmed by L-90 and in-kind orders reaching close",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-13T20:56:40.942209+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-052",
+      "agent": "doc-families-exo3",
+      "govlog": null,
+      "cron": null,
+      "change": "6531a2c",
+      "hypothesis": "Retiring the newest iteration retires older copies; working set on #2414 stays at real deliverables (7)",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-13T21:00:27.224318+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-053",
+      "agent": "blk3-send-pack",
+      "govlog": null,
+      "cron": null,
+      "change": "99879e9",
+      "hypothesis": "Lighter flight-campaign form + FAQ link in first-touch emails raises inbound form submissions vs the full questionnaire",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-13T21:11:32.559172+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-054",
+      "agent": "com.exos.task-attach-reconciler",
+      "govlog": null,
+      "cron": null,
+      "change": "27628276bed4e043f596b65824141ab4adc3238a",
+      "hypothesis": "transient Supabase network errors (timeout/DNS) crashed job fixed by retry+backoff and clean skip on persistent outage",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": "urllib.error.URLError: <urlopen error timed out>",
+      "at": "2026-10-14T03:08:34.870296+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 337,
+        "reliability": 0.997,
+        "quiet_errors": 0,
+        "turnaround_s": 2.2,
+        "sig_errors": 0
+      }
+    },
+    {
+      "id": "IMP-055",
+      "agent": "payload-orders",
+      "govlog": null,
+      "cron": null,
+      "change": "388214d",
+      "hypothesis": "Sending the wet-sign cross-waiver with the LSA gets originals to Exos well before L-90 (no late-waiver gate misses)",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-14T13:33:56.846096+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-056",
+      "agent": "invoice-command-exo3",
+      "govlog": null,
+      "cron": null,
+      "change": "6262738",
+      "hypothesis": "One Approve&send card per QB invoice; approvals on sibling cards honored -> zero duplicate invoice Decisions, zero stuck approved invoices",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-14T17:42:52.373385+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-057",
+      "agent": "com.exos.expense-workflow",
+      "govlog": null,
+      "cron": null,
+      "change": "7cd1514",
+      "hypothesis": "JPY reimbursements reach Finance with the yen amount + rate + rail, so international expenses are paid in yen without manual conversion",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-15T07:12:21.624115+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 2014,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.0
+      }
+    },
+    {
+      "id": "IMP-058",
+      "agent": "argon-reviewer-exo3",
+      "govlog": null,
+      "cron": null,
+      "change": "a3726b6",
+      "hypothesis": "Independent Argon pre-send review catches overclaims/inconsistencies in investor+partner docs before Jon sees them (pilot: 6 real issues in 4 shipped docs)",
+      "metrics": [
+        "reliability",
+        "cost"
+      ],
+      "error_signature": null,
+      "at": "2026-10-16T00:42:27.228990+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-059",
+      "agent": "com.exos.team-email-task-tracker",
+      "govlog": null,
+      "cron": null,
+      "change": "7a5604e03fa96c7cf42cd22e655fcd5fff0e22f7",
+      "hypothesis": "transient truncated Graph JSON (JSONDecodeError) aborting all mailboxes fixed by gget retry/backoff + per-mailbox skip on read errors",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": "json.decoder.JSONDecodeError: Expecting ',' delimiter",
+      "at": "2026-10-16T11:05:15.754432+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 57,
+        "reliability": 0.982,
+        "quiet_errors": 0,
+        "turnaround_s": 47.8,
+        "sig_errors": 1
+      }
+    },
+    {
+      "id": "IMP-060",
+      "agent": "blk3-send-pack",
+      "govlog": null,
+      "cron": null,
+      "change": "3f761fc",
+      "hypothesis": "Send pack stops emailing orgs whose UTD student lead card is still open; expect 0 sends to open-card orgs (baseline: 9 such sends 10/8-10/15)",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-16T11:14:56.718032+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-061",
+      "agent": "com.exos.task-dedupe",
+      "govlog": null,
+      "cron": null,
+      "change": "c3e1f8e",
+      "hypothesis": "Open tasks whose description claims merged/duplicate into #N get closed within 6h; zero such orphans on the board (was: #2361 open 6 wks)",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-17T00:56:04.729041+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 28,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 1.8
+      }
+    },
+    {
+      "id": "IMP-062",
+      "agent": "mission-control-ui",
+      "govlog": null,
+      "cron": null,
+      "change": "8ee73af",
+      "hypothesis": "Open task panel now polls Updates (10s; 4s while an @exo note is unanswered) and Documents, with a 'waiting for Exo' banner; Exo replies appear without close/reopen, so Jon stops re-asking or escalating to Discord when a reply has already posted",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-17T01:07:44.454730+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-063",
+      "agent": "com.exos.qb-invoice-watch",
+      "govlog": null,
+      "cron": null,
+      "change": "fac51cf",
+      "hypothesis": "M2 invoices are drafted for Jon's approval by L-127 without anyone remembering; first case PO2C-2026-001 drafts 2026-11-08",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-17T04:03:29.945939+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 2003,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 1.7
+      }
+    },
+    {
+      "id": "IMP-064",
+      "agent": "com.exos.task-note-command",
+      "govlog": null,
+      "cron": null,
+      "change": "cd7a006",
+      "hypothesis": "Zero duplicate Exo acks/subtasks from re-posted notes (was 3 acks + 3 subtasks on #3808 10/17)",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-17T07:16:26.095872+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 2012,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.6
+      }
+    },
+    {
+      "id": "IMP-065",
+      "agent": "com.exos.cli-session-rotate",
+      "govlog": null,
+      "cron": null,
+      "change": "592f56d",
+      "hypothesis": "Rotating oversized/killed claude-cli sessions + 2h idle session reset eliminates 600s watchdog kills (baseline: 6 kills 10/16-10/17)",
+      "metrics": [
+        "reliability",
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-17T09:03:49.805705+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-066",
+      "agent": "com.exos.task-note-command",
+      "govlog": null,
+      "cron": null,
+      "change": "cd7a006,16e10c9",
+      "hypothesis": "Coalescing near-duplicate @exo notes (same author+task, 5 min) gives one reply per request: 0 duplicate acks/subtasks (baseline 3 identical acks + 3 subtasks on #3808 10/17)",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-17T09:04:37.056305+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 2011,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.6
+      }
+    },
+    {
+      "id": "IMP-067",
+      "agent": "com.exos.decision-answer-dispatcher",
+      "govlog": null,
+      "cron": null,
+      "change": "f960659,16e10c9",
+      "hypothesis": "Auto-dispatching every human-answered Decision gets execution started within 4 min of the answer (baseline D-7282137 sat answered 2.5h)",
+      "metrics": [
+        "turnaround",
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-17T09:04:37.326170+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 6,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.4
+      }
+    },
+    {
+      "id": "IMP-068",
+      "agent": "com.exos.qb-invoice-watch",
+      "govlog": null,
+      "cron": null,
+      "change": "fac51cf,16e10c9",
+      "hypothesis": "Auto-drafting M2 (40%, L-120) 7 days early means every M2 Approve & send card is waiting before L-120 (baseline: manual, none raised without Jon asking)",
+      "metrics": [
+        "turnaround"
+      ],
+      "error_signature": null,
+      "at": "2026-10-17T09:04:37.586822+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 2003,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 1.7
+      }
+    },
+    {
+      "id": "IMP-069",
+      "agent": "mc-task-panel-exo3",
+      "govlog": null,
+      "cron": null,
+      "change": "7d7534f,cd7a006,16e10c9",
+      "hypothesis": "Transient updates errors no longer blank the Updates list and Enter+click posts once (baseline: HTTP 500 wiped list + duplicate post on #3808 10/17)",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-17T09:04:37.858328+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-070",
+      "agent": "com.exos.mc-email-command",
+      "govlog": null,
+      "cron": null,
+      "change": "aa34e07",
+      "hypothesis": "Hidden-text prompt injection via forwarded/cc'd external mail can no longer trigger actions (0 hidden-instruction executions); Jon's own hidden @exo notes still execute",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-17T10:49:30.525187+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 992,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.8
+      }
+    },
+    {
+      "id": "IMP-071",
+      "agent": "mc-email-command",
+      "govlog": null,
+      "cron": null,
+      "change": "fb286d1",
+      "hypothesis": "MJML/marketing forwards (Acqbot) no longer arrive blank: hidden-text guard honors child font-size/color reset",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-17T22:03:25.729888+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-072",
+      "agent": "data-room-integrity",
+      "govlog": null,
+      "cron": null,
+      "change": "ec098e5",
+      "hypothesis": "Dropping stale $215M BLOCK (superseded by Jon 10/16 FoR) clears false RED on canonical deck+plan; RTO naming still blocked",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-18T02:25:15.299185+00:00",
+      "status": "measuring",
+      "baseline": {}
+    },
+    {
+      "id": "IMP-073",
+      "agent": "com.exos.opportunity-engine",
+      "govlog": null,
+      "cron": null,
+      "change": "70a0817",
+      "hypothesis": "Drop tombstones (John 10/18): zero re-raised decisions/tasks on human-dropped entities (baseline: PAY-7143 re-raised 6x + #3600; 13 dropped opps still in engine wave pool)",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-18T07:07:02.267531+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 14,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 1084.5
+      }
+    },
+    {
+      "id": "IMP-074",
+      "agent": "com.exos.decision-note-router",
+      "govlog": null,
+      "cron": null,
+      "change": "70a0817",
+      "hypothesis": "Drop tombstones (John 10/18): zero re-raised decisions/tasks on human-dropped entities (baseline: PAY-7143 re-raised 6x + #3600; 13 dropped opps still in engine wave pool)",
+      "metrics": [
+        "reliability"
+      ],
+      "error_signature": null,
+      "at": "2026-10-18T07:07:02.552265+00:00",
+      "status": "measuring",
+      "baseline": {
+        "runs": 2015,
+        "reliability": 1.0,
+        "quiet_errors": 0,
+        "turnaround_s": 0.1
+      }
+    },
+    {
+      "date": "2026-10-19",
+      "title": "SSLC Mission Control demo container (provision-entity-exo3 template)",
+      "category": "infrastructure",
+      "description": "Built multi-entity Docker container pattern for MC. New entities (SSLC, future JV partners) get isolated MC+ERP via `provision_entity_exo3.sh`: separate SQLite ERP, Docker volume, Cloudflare tunnel ingress, CF Access OTP policy, launchd watchdog, nightly backup lane. Demonstrates MC as platform, not just Exos internal tool.",
+      "impact": "Enables $0-cash MC demo for SSLC board; ERP/MRP runs with realistic helium-tank manufacturing demo data; positions MC for portfolio-company licensing.",
+      "agent": "sslc-mc-container-exo3",
+      "related_decision": "D-7282144",
+      "files_changed": [
+        "mission-control/server.js (multi-entity ENTITY/IS_EXOS/DATA_DIR/ERP_DB_PATH env vars)",
+        "docker/Dockerfile.mc",
+        "docker/entrypoint.sh",
+        ".dockerignore",
+        "scripts/provision_entity_exo3.sh",
+        "scripts/com.exos.sslc-mc-container-exo3 (launchd)",
+        "scripts/seed_sslc_demo.js",
+        "scripts/mc-asset-backup.py (sslc.db backup lane)"
+      ]
+    }
+  ]
 }

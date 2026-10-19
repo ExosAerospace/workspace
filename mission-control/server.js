@@ -35,11 +35,19 @@ function glog(agent, evt, status, detail, fields) {
   try { if (govlog) govlog.event(govlog.newRun(agent), evt, status || 'info', detail || '', fields || {}); } catch (e) {}
 }
 
-const PORT = 8080;
+// ── Container/entity configuration (ENTITY, PORT, DATA_DIR, ERP_DB_PATH from env) ──
+// Default env = current Exos behavior. ENTITY=sslc|<name> activates per-entity isolation.
+// DATA_DIR overrides where users.json, uploads/, data/ live (volume mount in Docker).
+// ERP_DB_PATH overrides the SQLite ERP database file (one db per container).
+const ENTITY = process.env.ENTITY || 'exos';
+const IS_EXOS = (ENTITY === 'exos');
+const DATA_DIR = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : __dirname;
+const ERP_DB_PATH = process.env.ERP_DB_PATH || path.join(__dirname, '..', 'erp-foundation', 'mc.db');
+const PORT = parseInt(process.env.PORT || '8080', 10);
 const MD_FILE = path.join(__dirname, '../exos-mission-control.md');
-const CRM_FILE = path.join(__dirname, 'crm-data.json');
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
-const UPLOADS_META = path.join(__dirname, 'uploads', '_meta.json');
+const CRM_FILE = path.join(DATA_DIR, 'crm-data.json');
+const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
+const UPLOADS_META = path.join(DATA_DIR, 'uploads', '_meta.json');
 const MAX_UPLOAD_SIZE = 25 * 1024 * 1024; // 25 MB
 const ALLOWED_EXTENSIONS = ['.pdf','.docx','.xlsx','.pptx','.doc','.xls','.ppt','.png','.jpg','.jpeg','.heic','.webp','.gif','.svg','.csv','.txt','.zip','.md'];
 
@@ -558,6 +566,176 @@ function uploadDocKey(name) {
   s = s.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   return s || 'document';
 }
+// Document FAMILY for the Decisions main view (Jon 2026-10-10: "eliminate all the superseded from the
+// main view"). Revisions of one document often carry different doc_keys/filenames (dates, v2, draft/
+// final/clean/jq, _pdf companions), so per-key "current" flags alone left ~50 revisions on a card.
+// Family = key/filename with those revision tokens stripped anywhere; the main view keeps the newest.
+function uploadDocFamily(m) {
+  let s = String((m && (m.doc_key || '')) || '').toLowerCase() || uploadDocKey(m && m.filename);
+  s = s.replace(/\.(pdf|docx?|xlsx?|pptx?|md|html?)$/g, '');
+  s = s.replace(/\d{4}-\d{2}-\d{2}|\d{8}|\b\d{1,2}-\d{1,2}\b/g, ' ');
+  s = s.replace(/(^|[^a-z0-9])(v\d+|r\d+|draft|final|clean|jq|revised|rev|updated|copy|send|ready|pdf|docx|word)(?=[^a-z0-9]|$)/g, ' ');
+  s = s.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return s || uploadDocKey(m && m.filename);
+}
+
+// ── Canonical Decision documents (Jon 2026-10-05) ──────────────────────────────────────────
+// A Decision card shows ONLY the currently relevant docs; the task keeps the full history.
+//   • d.docKeys = [doc_key,…] (+ optional d.docTask) → PINNED mode: exactly the CURRENT (highest
+//     version, current!==false) upload of each key on that task, in docKeys order. Follows new
+//     versions attached via scripts/mc-attach.py --doc-key automatically. A sibling key
+//     "<key>__pdf" (LibreOffice render, keeps highlights) becomes the review_url; the original is
+//     the download.
+//   • no docKeys → uploads linked to the decision itself (decision_id) win; the linked tasks'
+//     current docs are only the fallback when nothing is linked to the decision.
+// Shared by GET /api/decisions and the dd_reviewer doc gate so both resolve identically.
+const DECISION_OFFICE_EXT = new Set(['docx', 'pptx', 'xlsx', 'doc', 'ppt', 'xls']);
+function loadDecisionOrderTasks() {
+  // Payload orders (PO2C-…) carry their MC task ids; a decision whose relatedItem is an
+  // order must surface that task's documents too (invoice/LSA approvals were dead-ending).
+  const orderTasks = {};
+  try {
+    const po = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'payload-orders.json'), 'utf-8'));
+    for (const o of (Array.isArray(po) ? po : (po.orders || []))) {
+      const ids = String(o.task_ids || '').match(/\d+/g) || [];
+      if (o.id && ids.length) orderTasks[String(o.id).toUpperCase()] = ids;
+    }
+  } catch (e) { /* no orders file */ }
+  return orderTasks;
+}
+// Resolve EVERY way a decision can point at a task (dedicated fields, bare-number relatedItem,
+// "task 2467" text, payload-order id).
+function decisionLinkedTaskIds(d, orderTasks) {
+  const ids = new Set();
+  const ri = String(d.relatedItem == null ? '' : d.relatedItem).trim();
+  for (const v of [d.taskId, d.relatedTaskId, d.related_task, d.relatedTask, d.spawned_task]) {
+    const m = /(\d+)/.exec(String(v == null ? '' : v)); if (m) ids.add(m[1]);
+  }
+  if (/^#?\d+$/.test(ri)) ids.add(ri.replace('#', ''));
+  for (const m of ri.matchAll(/task\s*#?\s*(\d+)/gi)) ids.add(m[1]);
+  for (const t of ((orderTasks || {})[ri.toUpperCase()] || [])) ids.add(t);
+  return [...ids];
+}
+// Returns { mode: 'pinned'|'decision'|'task'|'none', attachments, externalStored:Set }.
+// externalStored = stored_names an external (dd_reviewer) assignee may open: pinned or
+// decision-linked docs only — never the task-fallback set (internal working files live there).
+function resolveDecisionDocs(d, upMeta, linkedIds) {
+  const did = String(d.id);
+  const toAtt = (m, extra) => {
+    const ext = (String(m.stored_name).split('.').pop() || '').toLowerCase();
+    const enc = encodeURIComponent(m.stored_name);
+    return Object.assign({
+      id: m.id, filename: m.filename, ext,
+      url: '/uploads/' + enc,
+      review_url: DECISION_OFFICE_EXT.has(ext) ? '/viewpdf/' + enc : '/uploads/' + enc,
+      size: m.size, uploaded_at: m.uploaded_at,
+      from_task: String(m.decision_id) === did ? null : (m.task_id != null ? String(m.task_id) : null),
+    }, m.role ? { role: m.role } : {}, extra || {});
+  };
+  const keys = Array.isArray(d.docKeys) ? d.docKeys.map(k => String(k || '').trim()).filter(Boolean) : [];
+  // docKeys ["none"] = this decision has no documents to review; never fall back to the task's files.
+  if (keys.length === 1 && keys[0].toLowerCase() === 'none') {
+    return { mode: 'none', attachments: [], externalStored: new Set(), missing: [] };
+  }
+  if (keys.length) {
+    let taskIds = linkedIds || [];
+    if (d.docTask != null && String(d.docTask).trim() !== '') taskIds = String(d.docTask).match(/\d+/g) || [];
+    const taskSet = new Set(taskIds.map(String));
+    const latest = key => upMeta.filter(m => m.current !== false && m.doc_key === key && m.stored_name &&
+        (String(m.decision_id) === did || (m.task_id != null && taskSet.has(String(m.task_id)))))
+      .sort((a, b) => (Number(b.version || 1) - Number(a.version || 1))
+        || String(b.uploaded_at || '').localeCompare(String(a.uploaded_at || '')))[0] || null;
+    const keySet = new Set(keys);
+    const attachments = [], externalStored = new Set(), missing = [];
+    for (const key of keys) {
+      // "<key>__pdf" listed alongside "<key>" is folded in as the companion, not shown twice.
+      if (key.endsWith('__pdf') && keySet.has(key.slice(0, -5))) continue;
+      const orig = latest(key), pdf = key.endsWith('__pdf') ? null : latest(key + '__pdf');
+      const main = orig || pdf;
+      if (!main) { missing.push(key); continue; }
+      const extra = { doc_key: key, version: Number(main.version || 1), pinned: true };
+      if (orig && pdf) {
+        extra.review_url = '/uploads/' + encodeURIComponent(pdf.stored_name);
+        extra.review_version = Number(pdf.version || 1);
+        externalStored.add(pdf.stored_name);
+      }
+      if (!main.role && pdf && pdf.role) extra.role = pdf.role;
+      attachments.push(toAtt(main, extra));
+      externalStored.add(main.stored_name);
+    }
+    return { mode: 'pinned', attachments, externalStored, missing };
+  }
+  const idSet = new Set((linkedIds || []).map(String));
+  const seenDirect = new Set();
+  const direct = upMeta.filter(m => m.current !== false && String(m.decision_id) === did)
+    .sort((a, b) => String(b.uploaded_at || '').localeCompare(String(a.uploaded_at || '')))
+    .filter(m => { const k = uploadDocFamily(m); if (seenDirect.has(k)) return false; seenDirect.add(k); return true; });
+  if (direct.length) {
+    return { mode: 'decision', attachments: direct.map(m => toAtt(m)), externalStored: new Set(direct.map(m => m.stored_name)), missing: [] };
+  }
+  // A decision linked to several tasks (e.g. a payload order's task_ids) sees the same doc attached
+  // to each task — show it once (newest per doc_key/filename), not once per task.
+  // Superseded revisions stay out of the main view: newest per document FAMILY (see uploadDocFamily).
+  const seenDoc = new Set();
+  const fromTask = upMeta.filter(m => m.current !== false && m.task_id != null && idSet.has(String(m.task_id)))
+    .sort((a, b) => String(b.uploaded_at || '').localeCompare(String(a.uploaded_at || '')))
+    .filter(m => {
+      const k = uploadDocFamily(m);
+      if (seenDoc.has(k)) return false;
+      seenDoc.add(k); return true;
+    });
+  // Unpinned card on a busy task: show only the newest few; everything else lives behind
+  // the card's "Full history" task link (Jon 10/10: the 10/6-minutes card listed ~50 files).
+  const TASK_FALLBACK_MAX = 5;
+  const shown = fromTask.slice(0, TASK_FALLBACK_MAX);
+  return { mode: shown.length ? 'task' : 'none', attachments: shown.map(m => toAtt(m)), externalStored: new Set(), missing: [],
+           hiddenCount: Math.max(0, fromTask.length - shown.length) };
+}
+// Ingest helper: docKeys must be an array of non-empty strings; [] clears; anything else = not supplied.
+function normDocKeys(v) {
+  if (v == null) return undefined;
+  if (!Array.isArray(v)) v = [v];
+  return v.map(k => String(k == null ? '' : k).trim()).filter(Boolean).slice(0, 25);
+}
+// Name/alias → canonical login email (same rule GET /api/decisions uses for per-user scoping).
+function makeDecisionCanon() {
+  const cache = new Map();
+  return v => {
+    const s = String(v || '').trim().toLowerCase();
+    if (!s) return '';
+    if (cache.has(s)) return cache.get(s);
+    const em = /([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})/i.exec(s);
+    const key = em ? em[1] : s;
+    const u = findOwnerUser(key);
+    const out = (u && u.email) ? u.email.toLowerCase() : key;
+    cache.set(s, out);
+    return out;
+  };
+}
+// dd_reviewer doc gate: may this external session open uploads/<storedName>? Only when it is a
+// current pinned (or decision-linked) document of a decision assigned to them (assignedTo/approver).
+// Pure given its inputs (decisions + meta injectable for the offline unit test).
+function ddReviewerDecisionDocAllowed(session, storedName, decisions, upMeta, canon) {
+  if (!session || !session.email || !storedName) return false;
+  storedName = String(storedName);
+  if (storedName.includes('/') || storedName.includes('..') || storedName.startsWith('_') || storedName.startsWith('.')) return false;
+  canon = canon || makeDecisionCanon();
+  decisions = decisions || loadDecisions();
+  upMeta = upMeta || loadUploadsMeta();
+  const meC = canon(session.email);
+  if (!meC) return false;
+  const orderTasks = loadDecisionOrderTasks();
+  for (const d of decisions) {
+    const st = d.status || 'open';
+    if (st === 'cancelled' || st === 'superseded' || st === 'deleted') continue;
+    const assignee = canon(d.assignedTo || 'jquinn@exosaero.com');
+    const approver = canon(d.approver || '');
+    if (!(assignee === meC || (approver && approver === meC))) continue;
+    const r = resolveDecisionDocs(d, upMeta, decisionLinkedTaskIds(d, orderTasks));
+    if (r.externalStored.has(storedName)) return d.id;
+  }
+  return false;
+}
 
 // --- Office-doc -> PDF rendition for in-browser "Open" (viewing) ---
 // Browsers can't render .docx/.doc inline; we generate a cached PDF so the
@@ -755,15 +933,22 @@ function parseMultipart(req) {
   });
 }
 
-// Supabase config
-const SUPABASE_URL = 'https://pcrgpuoljylqcumijvnw.supabase.co';
+// Supabase config — per-container env vars override the Exos defaults
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://pcrgpuoljylqcumijvnw.supabase.co';
 // exo3 audit fix #1: the server uses the PRIVATE (secret/service_role) key from ~/.openclaw/secrets.json,
 // never the publishable key — so the anon role can be revoked at the DB and a leaked publishable key
 // reads nothing. This key must never be sent to a browser.
+// SUPABASE_KEY env var (Docker secret) takes precedence over secrets.json lookup.
 const SUPABASE_KEY = (() => {
+  if (process.env.SUPABASE_KEY) return process.env.SUPABASE_KEY;
   try { return JSON.parse(fs.readFileSync(path.join(process.env.HOME || '/Users/exomac', '.openclaw', 'secrets.json'), 'utf8')).supabase_service_role_key; }
-  catch (e) { console.error('FATAL: cannot read supabase_service_role_key from ~/.openclaw/secrets.json', e.message); process.exit(1); }
+  catch (e) {
+    if (!IS_EXOS) { console.warn('[MC] SUPABASE_KEY not configured — Supabase features (tasks, programs) disabled for this entity instance'); return null; }
+    console.error('FATAL: cannot read supabase_service_role_key (set SUPABASE_KEY env or populate secrets.json)', e.message); process.exit(1);
+  }
 })();
+// Tasks/programs/milestones run on Supabase; SQLite ERP features work without it.
+const SUPABASE_ENABLED = !!(SUPABASE_URL && SUPABASE_KEY);
 const PROTON_PW = (() => { try { return (JSON.parse(require('fs').readFileSync(require('os').homedir() + '/.openclaw/secrets.json', 'utf8')).protonmail_bridge_smtp_password) || ''; } catch (e) { return ''; } })();  // secrets.json, not hardcoded (2026-09-10)
 
 // Teamwork config (moved server-side from teamwork.html)
@@ -835,6 +1020,7 @@ function _sbCacheable(pathAndQuery) {
 }
 
 function supabaseRequest(method, pathAndQuery, body, _replay) {
+  if (!SUPABASE_ENABLED) return Promise.resolve(method === 'GET' ? [] : {});
   const isGet = method === 'GET';
   const cacheKey = isGet ? ('GET ' + pathAndQuery) : null;
   if (isGet && _sbCacheable(pathAndQuery)) {
@@ -1169,7 +1355,7 @@ function parseTasksFromMD() {
 
 // ── ROLE-BASED AUTH ──
 const crypto = require('crypto');
-const USERS_FILE = path.join(__dirname, 'users.json');
+const USERS_FILE = path.join(DATA_DIR, 'users.json');
 
 function loadUsers() {
   try { return JSON.parse(fs.readFileSync(USERS_FILE, 'utf-8')); }
@@ -1959,18 +2145,34 @@ const server = http.createServer((req, res) => {
     // page/API through this sandbox's default-deny. A dd_reviewer NOT on the finance allowlist still
     // gets nothing (that block already returned/redirected).
     const allowedAPIs = ['/api/me', '/api/logout', '/api/dataroom', '/api/dataroom-doc', '/api/chat', '/api/chat/result', '/api/operational-finance', '/api/capital-bridge'];
-    const allowedPages = ['/dataroom', '/dataroom.html', '/mtp', '/mtp.html', '/finance', '/finance.html', '/login', '/login.html', '/set-password', '/set-password.html', '/welcome', '/welcome.html'];
+    const allowedPages = ['/dataroom', '/dataroom.html', '/mtp', '/mtp.html', '/finance', '/finance.html', '/login', '/login.html', '/set-password', '/set-password.html', '/welcome', '/welcome.html', '/decisions', '/decisions.html'];
+    // Jon 2026-10-05: Ainigma (dd_reviewer) may see + answer ONLY Decision cards assigned to them
+    // (FNEX term-sheet decisions). Exact paths only: list + answer. Scoping/authorization is enforced
+    // in the handlers (GET filters to assignedTo/approver; answer requires assignee). No ingest/note/reassign.
+    const ddDecisionAPI = (fp === '/api/decisions' && req.method === 'GET') || (fp === '/api/decisions/answer' && req.method === 'POST');
     // Landing: send them straight to the data room, never the internal dashboard.
     if (fp === '/' || fp === '/index.html' || fp === '/dashboard' || fp === '/dashboard.html' || fp === '/dataroom') {
       res.writeHead(302, { 'Location': '/dataroom.html' }); res.end(); return;
     }
     if (fp.startsWith('/api/')) {
-      if (!allowedAPIs.some(p => fp === p || fp.startsWith(p))) {
+      if (!ddDecisionAPI && !allowedAPIs.some(p => fp === p || fp.startsWith(p))) {
         auditDeny(session, req, 'dd-out-of-scope-api');
         res.writeHead(403, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Not available in the RTO due-diligence data room.' }));
         return;
       }
+    } else if (req.method === 'GET' && (fp.startsWith('/uploads/') || fp.startsWith('/viewpdf/')) && (() => {
+      // Jon 2026-10-05 canonical Decision docs: an assignee may open ONLY the current pinned
+      // (docKeys) / decision-linked document of a Decision assigned to them. Single flat stored
+      // name only; everything else falls through to the block below (auditDeny + redirect).
+      let stored = '';
+      try { stored = decodeURIComponent(fp.replace(/^\/(uploads|viewpdf)\//, '')); } catch (e) { return false; }
+      const decId = ddReviewerDecisionDocAllowed(session, stored);
+      if (!decId) return false;
+      try { fs.appendFileSync(path.join(__dirname, '..', 'logs', 'dd-activity.log'), `[${new Date().toISOString()}] ${session.email || '?'} (${session.role}) viewed decision doc ${decId}: ${stored}\n`); } catch (e) {}
+      return true;
+    })()) {
+      // allowed — fall through to the normal /uploads/ or /viewpdf/ handler
     } else if (req.method === 'GET' && !allowedPages.some(p => fp === p) && !fp.startsWith('/brand-assets') && !fp.startsWith('/exobot-widget.js')) {
       // Block raw doc/upload routes and every internal page for this sandbox.
       if (fp.startsWith('/uploads/') || fp.startsWith('/viewpdf/') || fp.startsWith('/backup/')) auditDeny(session, req, 'dd-blocked-doc-route');
@@ -2258,7 +2460,7 @@ const server = http.createServer((req, res) => {
     let erp;
     try {
       const { openErp } = require('../erp-foundation/dal');
-      erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: email || 'mc-server', agent: 'mc-commissions-view' });
+      erp = openErp(ERP_DB_PATH, { actor: email || 'mc-server', agent: 'mc-commissions-view' });
       let scope, rows;
       if (fullView.has(email)) {
         scope = 'full';
@@ -2289,7 +2491,7 @@ const server = http.createServer((req, res) => {
     let erp;
     try {
       const { openErp } = require('../erp-foundation/dal');
-      erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: (session && session.email) || 'mc-server', agent: 'mc-hr-directory' });
+      erp = openErp(ERP_DB_PATH, { actor: (session && session.email) || 'mc-server', agent: 'mc-hr-directory' });
       const employees = erp.getEmployees();
       const org_units = erp.getOrgUnits();
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -2307,7 +2509,7 @@ const server = http.createServer((req, res) => {
     let erp;
     try {
       const { openErp } = require('../erp-foundation/dal');
-      erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: (session && session.email) || 'mc-server', agent: 'mc-asset-register' });
+      erp = openErp(ERP_DB_PATH, { actor: (session && session.email) || 'mc-server', agent: 'mc-asset-register' });
       const assets = erp.listAssets().map(a => ({ ...a, event_list: erp.listAssetEvents(a.id) }));
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ count: assets.length, assets }));
@@ -2324,7 +2526,7 @@ const server = http.createServer((req, res) => {
     let erp;
     try {
       const { openErp } = require('../erp-foundation/dal');
-      erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: (session && session.email) || 'mc-server', agent: 'mc-production' });
+      erp = openErp(ERP_DB_PATH, { actor: (session && session.email) || 'mc-server', agent: 'mc-production' });
       const work_orders = erp.listWorkOrders().map(w => ({ ...w, ops_list: erp.listWorkOrderOps(w.id) }));
       const ncrs = erp.listNCRs();
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -2365,7 +2567,7 @@ const server = http.createServer((req, res) => {
     let erp;
     try {
       const { openErp } = require('../erp-foundation/dal');
-      erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: (session && session.email) || 'mc-server', agent: 'mc-schedule' });
+      erp = openErp(ERP_DB_PATH, { actor: (session && session.email) || 'mc-server', agent: 'mc-schedule' });
       const projId = (new URLSearchParams(req.url.split('?')[1] || '')).get('project') || 'tw-902146';
       const sched = erp.getProjectSchedule(projId);
       const cpm = scheduleCPM(sched.tasks || []);
@@ -2394,7 +2596,7 @@ const server = http.createServer((req, res) => {
         if (state !== undefined) patch.state = state || null;
         if (predecessors !== undefined) patch.predecessors = Array.isArray(predecessors) ? predecessors.filter(p => p && p !== id) : [];
         const { openErp } = require('../erp-foundation/dal');
-        erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: (session && session.email) || 'mc-server', agent: 'mc-schedule-edit' });
+        erp = openErp(ERP_DB_PATH, { actor: (session && session.email) || 'mc-server', agent: 'mc-schedule-edit' });
         const row = erp.updateScheduleTask(id, patch);
         if (!row) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'task not found' })); return; }
         res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true }));
@@ -2429,7 +2631,7 @@ const server = http.createServer((req, res) => {
           if (pd.purpose) exPurpose = pd.purpose;
         } catch (e) { /* leave blank if unparseable; manager reads the attachment */ }
         let mgrEmail = null, mgrName = null;
-        try { const { openErp } = require('../erp-foundation/dal'); const erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: email, agent: 'expense-submit' }); const me = erp.getEmployeeByEmail(email); mgrEmail = me && me.manager_email; mgrName = me && me.manager_name; erp.close(); } catch (e) {}
+        try { const { openErp } = require('../erp-foundation/dal'); const erp = openErp(ERP_DB_PATH, { actor: email, agent: 'expense-submit' }); const me = erp.getEmployeeByEmail(email); mgrEmail = me && me.manager_email; mgrName = me && me.manager_name; erp.close(); } catch (e) {}
         const fileUrl = '/uploads/expenses/' + encodeURIComponent(stored);
         const amtStr = exAmount != null ? Number(exAmount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '?';
         const task = {
@@ -2525,7 +2727,7 @@ const server = http.createServer((req, res) => {
           fileUrl = '/uploads/expenses/' + encodeURIComponent(stored);
         }
         let mgrEmail = null, mgrName = null;
-        try { const { openErp } = require('../erp-foundation/dal'); const erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: email, agent: 'expense-create' }); const me = erp.getEmployeeByEmail(email); mgrEmail = me && me.manager_email; mgrName = me && me.manager_name; erp.close(); } catch (e) {}
+        try { const { openErp } = require('../erp-foundation/dal'); const erp = openErp(ERP_DB_PATH, { actor: email, agent: 'expense-create' }); const me = erp.getEmployeeByEmail(email); mgrEmail = me && me.manager_email; mgrName = me && me.manager_name; erp.close(); } catch (e) {}
         const amtStr = Number(total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const flagged = (screen.flag_count || 0) > 0;
         const lineTxt = lines.map(l => {
@@ -4832,8 +5034,12 @@ const server = http.createServer((req, res) => {
         const scopeOf = m => taskId ? String(m.task_id) === String(taskId)
           : projectId ? String(m.project_id) === String(projectId)
           : decisionId ? String(m.decision_id) === String(decisionId) : false;
+        // Photos never version each other: phones name every shot "image.jpg"/IMG_xxxx, so a new
+        // photo would hide the previous (different) one. Only an explicit doc_key versions an image.
+        const isImage = /^\.(jpe?g|png|heic|heif|webp|gif)$/i.test(entry.extension || '');
         let prevVer = 0;
         for (const m of meta) {
+          if (isImage && !parts.doc_key) break;
           if (!scopeOf(m) || m.current === false) continue;
           if ((m.doc_key || uploadDocKey(m.filename)) !== entry.doc_key) continue;
           m.current = false;
@@ -5207,6 +5413,20 @@ const server = http.createServer((req, res) => {
       return;
     }
     res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'unknown receiving route' }));
+    return;
+  }
+
+  // ── LABOR COST BY BOM SECTION (weekly-task-agenda-exo3) — ADMIN ONLY ────────────────────────────
+  // Section + per-person loaded labor $ derived from BambooHR pay (confidential). The JSON lives outside
+  // git and outside MC (~/.openclaw/state, 0600), written by scripts/weekly_task_agenda_exo3.py. Non-admins
+  // get 403; the hours-only roll-up reaches everyone through /api/jobcost (job_cost.py).
+  if (req.url.split('?')[0] === '/api/labor-section-cost' && req.method === 'GET') {
+    if (!session || session.role !== 'admin') {
+      res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'admin only' })); return;
+    }
+    let lsc = { error: 'not generated yet', sections: [], persons: [] };
+    try { lsc = JSON.parse(fs.readFileSync(path.join(require('os').homedir(), '.openclaw', 'state', 'labor-section-cost.json'), 'utf8')); } catch (e) {}
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(lsc));
     return;
   }
 
@@ -5720,6 +5940,8 @@ const server = http.createServer((req, res) => {
     let body = ''; req.on('data', c => body += c); req.on('end', () => {
       try {
         const p = JSON.parse(body || '{}');
+        // Options must be plain strings: {label:...} objects crashed the whole Decisions page (D-7281984, 10/7).
+        if (Array.isArray(p.options)) p.options = p.options.map(o => typeof o === 'string' ? o : String((o && (o.label ?? o.value ?? o.text)) ?? '')).filter(Boolean);
         const arr = loadDecisions();
         const now = new Date().toISOString();
         // De-dupe is GLOBAL on dedupeKey (any status), not just open. A stable dedupeKey identifies
@@ -5760,7 +5982,11 @@ const server = http.createServer((req, res) => {
             source: p.source || existing.source, updated: now,
             agentClass: p.agentClass || existing.agentClass || '', correlationId: p.correlationId || existing.correlationId || '',
             approver: p.approver ?? existing.approver ?? '', assignedTo: p.assignedTo ?? existing.assignedTo ?? '',
+            // Canonical docs: pinned doc_keys (+ optional source task) and a one-line legend.
+            docKeys: normDocKeys(p.docKeys) ?? existing.docKeys, docTask: (p.docTask != null ? String(p.docTask).trim() : undefined) ?? existing.docTask,
+            docLegend: p.docLegend != null ? String(p.docLegend).slice(0, 300) : existing.docLegend,
           });
+          for (const k of ['docKeys', 'docTask', 'docLegend']) if (existing[k] === undefined) delete existing[k];
           saveDecisions(arr);
           res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(existing)); return;
         }
@@ -5775,6 +6001,10 @@ const server = http.createServer((req, res) => {
           agentClass: p.agentClass || '', correlationId: p.correlationId || '',
           approver: p.approver || '', assignedTo: p.assignedTo || '',
         };
+        // Canonical docs (optional): only set when supplied so legacy records stay unchanged.
+        if (normDocKeys(p.docKeys)) d.docKeys = normDocKeys(p.docKeys);
+        if (p.docTask != null && String(p.docTask).trim() !== '') d.docTask = String(p.docTask).trim();
+        if (p.docLegend) d.docLegend = String(p.docLegend).slice(0, 300);
         arr.push(d); saveDecisions(arr);
         // Event-driven delivery: a "deliver-to-Jon draft" decision is delivered NOW, not on the
         // polling watcher's timer — a draft Jon requested shouldn't wait for another job to sweep it.
@@ -5845,49 +6075,19 @@ const server = http.createServer((req, res) => {
     // Match docs linked directly to the decision OR to its related task (relatedItem like
     // "… (task 2467)") — most "approve this document" decisions carry the file on the task, not
     // the decision. Office docs get a /viewpdf review link (inline PDF render); others open raw.
+    // Canonical rule (resolveDecisionDocs): pinned docKeys → exactly those current versions;
+    // else decision-linked docs win; else the linked task's current docs. Full history stays on the task.
     try {
       const upMeta = loadUploadsMeta();
-      const OFFICE = new Set(['docx', 'pptx', 'xlsx', 'doc', 'ppt', 'xls']);
-      // Payload orders (PO2C-…) carry their MC task ids; a decision whose relatedItem is an
-      // order must surface that task's documents too (invoice/LSA approvals were dead-ending).
-      let orderTasks = {};
-      try {
-        const po = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'payload-orders.json'), 'utf-8'));
-        for (const o of (Array.isArray(po) ? po : (po.orders || []))) {
-          const ids = String(o.task_ids || '').match(/\d+/g) || [];
-          if (o.id && ids.length) orderTasks[String(o.id).toUpperCase()] = ids;
-        }
-      } catch (e) { /* no orders file */ }
+      const orderTasks = loadDecisionOrderTasks();
       for (const d of arr) {
-        // Resolve EVERY way a decision can point at a task (dedicated fields, bare-number
-        // relatedItem, "task 2467" text, payload-order id) — previously only the text form worked.
-        const ids = new Set();
-        const ri = String(d.relatedItem == null ? '' : d.relatedItem).trim();
-        for (const v of [d.taskId, d.relatedTaskId, d.related_task, d.relatedTask, d.spawned_task]) {
-          const m = /(\d+)/.exec(String(v == null ? '' : v)); if (m) ids.add(m[1]);
-        }
-        if (/^#?\d+$/.test(ri)) ids.add(ri.replace('#', ''));
-        for (const m of ri.matchAll(/task\s*#?\s*(\d+)/gi)) ids.add(m[1]);
-        for (const t of (orderTasks[ri.toUpperCase()] || [])) ids.add(t);
-        d.linkedTaskIds = [...ids];
-        // Current versions only (superseded drafts just clutter the review row); docs linked to
-        // the decision itself first, then the related task's docs, newest first.
-        const linked = upMeta.filter(m => m.current !== false && (
-          String(m.decision_id) === String(d.id) ||
-          (m.task_id != null && ids.has(String(m.task_id)))))
-          .sort((a, b) => ((String(b.decision_id) === String(d.id)) - (String(a.decision_id) === String(d.id)))
-            || String(b.uploaded_at || '').localeCompare(String(a.uploaded_at || '')));
-        d.attachments = linked.map(m => {
-          const ext = (String(m.stored_name).split('.').pop() || '').toLowerCase();
-          const enc = encodeURIComponent(m.stored_name);
-          return {
-            id: m.id, filename: m.filename, ext,
-            url: '/uploads/' + enc,
-            review_url: OFFICE.has(ext) ? '/viewpdf/' + enc : '/uploads/' + enc,
-            size: m.size, uploaded_at: m.uploaded_at,
-            from_task: String(m.decision_id) === String(d.id) ? null : (m.task_id != null ? String(m.task_id) : null),
-          };
-        });
+        const ids = decisionLinkedTaskIds(d, orderTasks);
+        d.linkedTaskIds = ids;
+        const r = resolveDecisionDocs(d, upMeta, ids);
+        d.attachments = r.attachments;
+        d.docMode = r.mode;
+        if (r.hiddenCount) d.docHidden = r.hiddenCount;
+        if (r.missing && r.missing.length) d.missingDocKeys = r.missing;
         // An explicit review_url on the decision record wins as the primary reviewable.
         if (d.review_url && !d.attachments.some(a => a.review_url === d.review_url)) {
           d.attachments.unshift({ filename: d.review_label || 'Review document', review_url: d.review_url, url: d.review_url, ext: '' });
@@ -5896,8 +6096,6 @@ const server = http.createServer((req, res) => {
     } catch (e) { /* attachments are best-effort */ }
     res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(arr)); return;
   }
-        // Options must be plain strings: {label:...} objects crashed the whole Decisions page (D-7281984, 10/7).
-        if (Array.isArray(p.options)) p.options = p.options.map(o => typeof o === 'string' ? o : String((o && (o.label ?? o.value ?? o.text)) ?? '')).filter(Boolean);
 
   // Create a decision from inside the dashboard (session-gated)
   if (req.url === '/api/decisions' && req.method === 'POST') {
@@ -6036,7 +6234,7 @@ const server = http.createServer((req, res) => {
         else if (to) {
           try {
             const { openErp } = require('../erp-foundation/dal');
-            const erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: rsess.email || 'mc', agent: 'decision-reassign' });
+            const erp = openErp(ERP_DB_PATH, { actor: rsess.email || 'mc', agent: 'decision-reassign' });
             const emps = erp.getEmployees(); erp.close();
             const hit = emps.find(e => (e.full_name || '').toLowerCase() === to.toLowerCase())
               || emps.find(e => (e.full_name || '').toLowerCase().includes(to.toLowerCase()));
@@ -6182,9 +6380,12 @@ const server = http.createServer((req, res) => {
           // Edit overlay (description / req / location).
           const ed  = bomEdits[key] || null;
           let desc  = row.description || '';
+          let vpn   = row.vendor_pn || '', mpn = row.mfg_pn || '';
           let loc   = '', eby = '', eat = '', enote = '', serial = '';
           if (ed) {
             if (ed.description !== undefined && ed.description !== '') desc = ed.description;
+            if (ed.vendor_pn !== undefined) vpn = String(ed.vendor_pn);
+            if (ed.mfg_pn !== undefined) mpn = String(ed.mfg_pn);
             if (ed.req !== undefined && ed.req !== '') {
               qty = String(ed.req);
               const qn = parseFloat(qty);
@@ -6325,12 +6526,9 @@ const server = http.createServer((req, res) => {
         let ov = {}; try { ov = JSON.parse(fs.readFileSync(ovPath, 'utf-8')); } catch {}
         ov[firm] = Object.assign({}, ov[firm] || {}, fields, { _updated: new Date().toISOString(), _by: (session.email || '') });
         fs.mkdirSync(path.dirname(ovPath), { recursive: true });
-          let vpn   = row.vendor_pn || '', mpn = row.mfg_pn || '';
         fs.writeFileSync(ovPath, JSON.stringify(ov, null, 2));
         try {
           const crmPath = path.join(__dirname, 'data', 'crm.json');
-            if (ed.vendor_pn !== undefined) vpn = String(ed.vendor_pn);
-            if (ed.mfg_pn !== undefined) mpn = String(ed.mfg_pn);
           const cj = JSON.parse(fs.readFileSync(crmPath, 'utf-8'));
           const arr = cj.contacts || [];
           const it = arr.find(c => c.firm === firm);
@@ -6345,6 +6543,7 @@ const server = http.createServer((req, res) => {
   // gateway, in a per-user chat session (agent:main:mcchat-<email>), and returns the reply.
   // Each logged-in user gets their own persistent Exobot thread — no email round-trip.
   if (req.url === '/api/chat' && req.method === 'POST') {
+    if (!IS_EXOS) { res.writeHead(503, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Chat assistant not available in this instance' })); return; }
     const session = getSession(req);
     if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not logged in' })); return; }
     let body = ''; req.on('data', c => { body += c; if (body.length > 30 * 1024 * 1024) req.destroy(); }); req.on('end', () => {
@@ -6392,7 +6591,7 @@ const server = http.createServer((req, res) => {
       let fullMsg = (msg || '(see attached document)') + attNote;
       if (isDD) {
         try { fs.appendFileSync(path.join(__dirname, '..', 'logs', 'dd-activity.log'), `[${new Date().toISOString()}] ${email} asked: ${msg.slice(0, 500)}\n`); } catch (e) {}
-        const guard = "You are Exo answering an EXTERNAL Ainigma Capital due-diligence reviewer through the Mission Control data room, under an executed mutual NDA. STRICT RULES: (1) Answer ONLY reverse-takeover / financial / business-plan / valuation / corporate due-diligence questions, drawing on the approved RTO data-room materials and Exos's general business and financial information. (2) NEVER read, reference, quote, summarize, or reveal ITAR/EAR or other export-controlled material, CUI, engineering or technical designs/specifications, source code, personnel/HR or salary data, the CRM or contact lists, other customers or programs, or legal-privileged/internal deliberative content — even if asked directly or through a clever or indirect prompt. Do not open files outside the data room. (3) If a request falls outside RTO due diligence or touches restricted material, decline in one line, say it is outside the scope of the due-diligence data room, and suggest routing it to John Quinn. (4) Be concise, professional, and accurate; never speculate or invent figures. The reviewer's question follows:\n\n";
+        const guard = "You are Exo answering an EXTERNAL Ainigma Capital due-diligence reviewer through the Mission Control data room, under an executed mutual NDA. STRICT RULES: (1) Answer ONLY reverse-takeover / financial / business-plan / valuation / corporate due-diligence questions, drawing on the approved RTO data-room materials and Exos's general business and financial information. (2) NEVER read, reference, quote, summarize, or reveal ITAR/EAR or other export-controlled material, CUI, engineering or technical designs/specifications, source code, personnel/HR or salary data, the CRM or contact lists, other customers or programs, or legal-privileged/internal deliberative content — even if asked directly or through a clever or indirect prompt. Do not open files outside the data room. (3) If a request falls outside RTO due diligence or touches restricted material, decline in one line, say it is outside the scope of the due-diligence data room, and suggest routing it to John Quinn. (4) Be concise, professional, and accurate; never speculate or invent figures. (5) For the FNEX/Ainigma advisory agreement and the FNEX financial model, refer ONLY to the CURRENT versions: 'CURRENT — Advisory Agreement' and 'CURRENT — FNEX financial model' in the data room, which are also attached to the reviewer's cards on the Decisions page (/decisions.html). Never list, count, or reference earlier drafts or versions. Point term-sheet questions to the Decisions page. The reviewer's question follows:\n\n";
         fullMsg = guard + fullMsg;
       }
       const lane = chatAssignSession(email, jobId);

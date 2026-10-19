@@ -169,6 +169,21 @@ def main():
         try: shutil.copy2(src_db, os.path.join(dbdst, "mc.db"))
         except Exception as e2: logline(f"ERROR mc.db copy: {e2}")
 
+    # 1b) sslc.db — export from Docker volume via container cp
+    sslc_dst = os.path.join(snap, "sslc-mc"); os.makedirs(sslc_dst, exist_ok=True)
+    sslc_tmp = os.path.join(sslc_dst, "sslc.db.tmp")
+    sslc_final = os.path.join(sslc_dst, "sslc.db")
+    try:
+        r = subprocess.run(["docker", "cp", "sslc-mc-container-exo3:/data/sslc.db", sslc_tmp],
+                           timeout=60, capture_output=True)
+        if r.returncode == 0:
+            shutil.move(sslc_tmp, sslc_final)
+            logline("sslc.db backup from Docker volume OK")
+        else:
+            logline(f"WARN sslc.db docker cp: {r.stderr.decode()[:100]}")
+    except Exception as e:
+        logline(f"WARN sslc.db backup skipped ({e})")
+
     # 2) trees + files via rsync --link-dest (hard-link incremental; link-dest must mirror each subtree)
     have_latest = os.path.exists(latest)
     for t in TREES:

@@ -1,0 +1,42 @@
+# Exclude secrets and credentials
+secrets.json
+*.secrets.json
+*.env
+.env
+.openclaw/
+
+# Runtime state and large data
+mission-control/uploads/*
+!mission-control/uploads/_meta.json
+mission-control/data/backups/
+mission-control/data/*-snapshot-*.json
+mission-control/data/*.backup-*.json
+mission-control/data/recycle-bin/
+mission-control/partner-docs/
+erp-foundation/mc.db
+erp-foundation/mc.db-shm
+erp-foundation/mc.db-wal
+
+# Bak files
+*.bak*
+*.bak-*
+
+# git
+.git/
+.gitignore
+
+# Docker
+.dockerignore
+
+# Python caches
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Large build artifacts
+node_modules/
+.claude/
+drafts/
+docs/
+legacy-*/

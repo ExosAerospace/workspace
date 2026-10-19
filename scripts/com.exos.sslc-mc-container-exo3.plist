@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.exos.sslc-mc-container-exo3</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-c</string>
+    <string>
+      # Ensure the SSLC MC container is running under colima/Docker.
+      # Docker's --restart=unless-stopped handles crash recovery;
+      # this plist handles the login/reboot case where Docker starts before this plist.
+      export PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin
+      STATUS=$(docker inspect -f '{{.State.Running}}' sslc-mc-container-exo3 2>/dev/null || echo "missing")
+      if [ "$STATUS" = "true" ]; then
+        echo "[sslc-mc] Container already running"
+        exit 0
+      elif [ "$STATUS" = "false" ]; then
+        echo "[sslc-mc] Restarting stopped container"
+        docker start sslc-mc-container-exo3
+      else
+        echo "[sslc-mc] Container not found — recreating"
+        docker run -d \
+          --name sslc-mc-container-exo3 \
+          --restart unless-stopped \
+          -e ENTITY=sslc \
+          -e PORT=8081 \
+          -e DATA_DIR=/data \
+          -e ERP_DB_PATH=/data/sslc.db \
+          -e SUPPLY_DB=/data/sslc.db \
+          -e MRP_DB=/data/sslc.db \
+          -e SUPABASE_URL="" \
+          -e SUPABASE_KEY="" \
+          -p 8081:8081 \
+          -v sslc-mc-data:/data \
+          exos-mc:latest
+      fi
+    </string>
+  </array>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>KeepAlive</key>
+  <dict>
+    <key>SuccessfulExit</key>
+    <false/>
+  </dict>
+
+  <key>StartInterval</key>
+  <integer>300</integer>
+
+  <key>StandardOutPath</key>
+  <string>/Users/exomac/.openclaw/workspace/logs/sslc-mc-container.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/exomac/.openclaw/workspace/logs/sslc-mc-container.err</string>
+</dict>
+</plist>

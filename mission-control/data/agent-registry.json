@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-19T04:04:24",
-  "total": 282,
+  "total": 284,
   "standing": 115,
   "ephemeral": 18,
   "service": 6,
@@ -6096,6 +6096,29 @@
         "2026-10-19 created (John, #series-a) \u2014 role + books view + CLI; seats granted to Markus Rufer (MC #29) and Robert Conger (MC #30); access instructions emailed by Exo on John's instruction"
       ],
       "eval_type": "output"
+    },
+    {
+      "label": "com.exos.sslc-mc-container-exo3",
+      "exo3_name": "sslc-mc-container-exo3",
+      "script": "docker run exos-mc:latest (entity=sslc)",
+      "kind": "service",
+      "schedule": "persistent (launchd StartInterval=300, KeepAlive.SuccessfulExit=false)",
+      "purpose": "Isolated Mission Control ERP/MRP container for SSLC entity. Serves MC on port 8081 behind sslc.exosaero.space (Cloudflare Access). Separate SQLite ERP (sslc.db), separate Docker volume (sslc-mc-data). No access to Exos data, Supabase, or external services.",
+      "stack_layer": "SENSE",
+      "autonomy_tier": "Execute-within-bounds",
+      "human_owner": "John Quinn",
+      "permission_envelope": "Docker container on port 8081; volume sslc-mc-data:/data; reads only its own SQLite db (sslc.db); no Supabase; no Exos file access; CF Access app 9c0d5a4a-3003-4f41-9bba-844d97b248ec (Jon-only OTP). launchd managed via ~/Library/LaunchAgents/",
+      "memory_boundary": "sslc-mc-data Docker volume only; no Exos workspace access",
+      "telemetry": "fleet_log: logs/sslc-mc-container.log + logs/sslc-mc-container.err; docker inspect status in launchd run",
+      "eval_suite": "selftest via provision_entity_exo3.sh isolation checks: (1) container responds HTTP 401 on port 8081; (2) /app/erp-foundation/mc.db not reachable (absent or image-only); (3) /data/sslc.db has schema tables; (4) no Exos env vars (SUPABASE_KEY/URL empty, IS_EXOS=false)",
+      "eval_type": "isolation_test + liveness",
+      "risk_tier": "low",
+      "ai_in_critical_path": false,
+      "rollback_path": "docker stop sslc-mc-container-exo3 && launchctl bootout gui/$(id -u) com.exos.sslc-mc-container-exo3",
+      "escalation": "Jon inbox (jquinn@exosaero.com)",
+      "reusability_scope": "template for future entity containers via scripts/provision_entity_exo3.sh",
+      "registered": "2026-10-19T11:30:37",
+      "enabled": true
     }
   ],
   "eval_wave_1": {
@@ -6161,5 +6184,6 @@
       "cron:overnight-resolver"
     ],
     "note": "kind openclaw-cron; label cron:<slug(name)>; drift matched on cron_id. Telemetry via scripts/cron_telemetry.py; evals via agent_eval.py cron checks."
-  }
+  },
+  "updated": "2026-10-19T11:30:37"
 }
