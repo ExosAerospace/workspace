@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Dated follow-up digest for Lizi (10/14-10/29 dates at 09:00 CT). Emails only items due today whose
-CRM contact hasn't been touched since the send. Self-unloads after 10/29."""
+"""Dated follow-up digest for Lizi (10/14-11/02 dates at 09:00 CT). Emails only items due today whose
+CRM contact hasn't been touched since the send. Self-unloads after 11/02."""
 import os, json, subprocess, urllib.request
 from datetime import date
 from email.message import EmailMessage
@@ -311,9 +311,9 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'Lizi')],
  '2026-10-29': [('Georgia Tech Space Week follow-ups (12 people, emailed 10/15)',
                  'reply on each original 10/15 thread: Thomas Orlando, Chris Carr, Binu Tharakan, Hailey Nichols (Locus Lock), Mary Babb Isarov (Qcells), Chad Pozarycki (Deleon, task #3793), Mike '
-                 'Riccio (NASA Ames), David Williams (OSU/Starlab), Bill Dynan, Phillip Stancil, Jordan McKaig, Vic Paulson',
+                 'Riccio (NASA Ames), David Williams (OSU/Starlab), Bill Dynan, Jordan McKaig, Vic Paulson',
                  'two weeks since your 10/15 follow-ups. Skip anyone who replied. Not included: Theo Williams and Henry Schwartz (already in conversation) and Carl Kirkconnell (on hold until SSLC '
-                 "settles). Chunhui Xu replied 10/16 (call after Nov 6), so she's off this list",
+                 "settles). Chunhui Xu replied 10/16 (call after Nov 6), so she's off this list. Phillip Stancil replied 10/18 (referred you to Dr. Mishra, nudge 11/2), so he's off too",
                  'Hi [Name],\n'
                  "Just bumping this up in case it got buried after Space Week. I'd still love to find a time to talk about whether a BLK3 flight could fit your work. Happy to send our Payload User's "
                  "Guide if that's easier as a first step.\n"
@@ -326,6 +326,14 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "One last nudge on BLK3. If a call isn't convenient right now, I'm happy to just send over our Payload User Guide so you can share it with any PIs who might want a quick, "
                  'recoverable flight before an ISS mission. Who would be the best person on your team to talk with?\n'
                  'Best Regards,\n'
+                 'Lizi')],
+ '2026-11-02': [('UGA Small Satellite Research Lab: Dr. Deepak Mishra (task #997)',
+                 "dmishra@uga.edu (reply on your 10/19 thread, keep Phillip Stancil cc'd)",
+                 'Stancil referred you 10/18; you sent Mishra the one-pager + booking link 10/19. Skip if he replied or booked',
+                 'Hi Dr. Mishra,\n'
+                 "Just following up on my note from a couple of weeks ago. I'd love to hear what your team is working on and whether a BLK3 flight could help test a sensor or onboard "
+                 'processing before orbit. Would a quick 20-minute call work sometime in the next couple of weeks?\n'
+                 'Best Regards,\n'
                  'Lizi')]}
 today=date.today().isoformat()
 items=DUE.get(today,[])
@@ -336,7 +344,7 @@ if items:
     m.set_content("Hi Lizi,\n\nThese are due for a follow-up today if they haven't replied. Each has the contact and a ready-to-send nudge (reply on your original thread so they see the history):\n\n"+"\n".join(lines)+
       "\n\nSkip anyone who already replied, and tell me in #lizi-channel-2 so I log it.\n\n- Exo")
     subprocess.run(["/opt/homebrew/bin/msmtp","-a","protonmail","lquinn@exosaero.com"],input=m.as_bytes(),check=True,timeout=60)
-if today>="2026-10-29":
+if today>="2026-11-02":
     p=os.path.expanduser(f"~/Library/LaunchAgents/{LABEL}.plist")
     try: os.remove(p)
     except Exception: pass
