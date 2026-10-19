@@ -254,6 +254,9 @@ def process_outbox():
     tok = open(os.path.join(WS, "mission-control/data/.decisions-token")).read().strip()
     req = urllib.request.Request("http://localhost:8080/api/decisions", headers={"X-Exo-Token": tok})
     decs = json.load(urllib.request.urlopen(req, timeout=20))
+    # the API lists only open decisions now; answered ones live in decisions.json
+    local = json.load(open(os.path.join(WS, "mission-control/data/decisions.json")))
+    decs += local if isinstance(local, list) else local.get("decisions", [])
     for item in pend:
         d = next((z for z in decs if z.get("dedupeKey") == item["decision_dedupe"]), None)
         if not d or d.get("status") != "answered":
