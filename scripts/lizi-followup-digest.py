@@ -351,6 +351,14 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "Just following up on my note from a couple of weeks ago. I'd love to learn more about where Penumbra is with the image-processing pipeline and whether a BLK3 flight could fit "
                  'your validation plans. Would a quick 20-minute call work sometime in the next couple of weeks?\n'
                  'Best Regards,\n'
+                 'Lizi'),
+                ('Ohio State: Laura Alvarez, business partnerships (task #997)',
+                 'alvarez.147@osu.edu (reply on your 10/19 note; cc williams.4219@osu.edu as on his thread)',
+                 "Prof. David Williams cc'd her 10/17; you sent Laura the one-pager + booking link 10/19. Starlab intro (Henderson/Zea) still open. Skip if she replied or booked",
+                 'Hi Laura,\n'
+                 "Just following up on my note from a couple of weeks ago. I'd love to find a time to talk about how a BLK3 flight could support Ohio State's materials and microscopy "
+                 'work. Would a quick 20-minute call work sometime in the next couple of weeks?\n'
+                 'Best Regards,\n'
                  'Lizi')]}
 today=date.today().isoformat()
 items=DUE.get(today,[])
