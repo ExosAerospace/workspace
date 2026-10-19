@@ -544,7 +544,7 @@ def compose(item):
 
 My name is Lizi Quinn, and I work with the team at Exos Aerospace. We are currently booking payloads for the next flight of BLK3, our reusable suborbital rocket, in early 2027. Given {poss} work in {interest}, it felt like a natural fit to reach out.
 
-Exos has flown commercial payloads since 2018 on our SARGE rocket, and BLK3 is its successor and our latest FAA-licensed vehicle. A few things that may be helpful as you think it over:
+Exos has flown commercial payloads since 2018 on our SARGE rocket, and BLK3 is its successor. Exos holds an FAA Part 431 launch license, transitioning to Part 450. A few things that may be helpful as you think it over:
 
 - The payload bay can carry up to 135 kg, so there is room for one larger experiment or several smaller ones.
 - BLK3 is designed to give about two and a half minutes of continuous microgravity.
