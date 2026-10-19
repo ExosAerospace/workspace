@@ -54,12 +54,27 @@ COMMON_EXCLUDES=(
 [ -f "$CUI_EXCLUDE" ] && COMMON_EXCLUDES+=(--exclude-from="$CUI_EXCLUDE")
 
 RSYNC_RC=0
+# Transport-level rsync failures (255 ssh/tunnel drop, 10/12 socket/protocol, 30/35 timeout) are
+# usually a momentary Cloudflare tunnel blip (10/19: two mid-run "closed by remote host" drops).
+# rsync is incremental, so retry those with backoff before declaring the backup FAILED.
+DR_RETRY_SLEEPS=${DR_RETRY_SLEEPS:-"30 90"}
+rsync_retry() {  # same args as rsync; returns the final rc
+  local rc=0 delay
+  rsync "$@" 2>>"$LOG" && return 0 || rc=$?
+  for delay in $DR_RETRY_SLEEPS; do
+    case "$rc" in 10|12|30|35|255) ;; *) return "$rc" ;; esac
+    log "WARN rsync transport rc=$rc — retrying in ${delay}s"
+    sleep "$delay"
+    rc=0; rsync "$@" 2>>"$LOG" && return 0 || rc=$?
+  done
+  return "$rc"
+}
 run_rsync() {  # $1=src  $2=subdir-under-dest
   local src="$1" sub="$2"
   if [ "$DEST_REMOTE" = "True" ] || [ "$DEST_REMOTE" = "true" ]; then
     local host="${DEST%%:*}" base="${DEST#*:}"
     ssh "$host" "mkdir -p '${base}${sub}'" 2>>"$LOG" || true
-    rsync -az --delete "${COMMON_EXCLUDES[@]}" -e ssh "$src" "${DEST}${sub}" 2>>"$LOG" || RSYNC_RC=$?
+    rsync_retry -az --delete "${COMMON_EXCLUDES[@]}" -e ssh "$src" "${DEST}${sub}" || RSYNC_RC=$?
   else
     mkdir -p "${DEST}${sub}"
     rsync -a --delete "${COMMON_EXCLUDES[@]}" "$src" "${DEST}${sub}" 2>>"$LOG" || RSYNC_RC=$?
@@ -85,7 +100,7 @@ for f in "$HOME/.protonmail-bridge.crt" "$HOME/.msmtprc"; do
   [ -f "$f" ] || continue
   bn=$(basename "$f")
   if [ "$DEST_REMOTE" = "True" ] || [ "$DEST_REMOTE" = "true" ]; then
-    rsync -a -e ssh "$f" "${DEST}openclaw-config/$bn" 2>>"$LOG" || RSYNC_RC=$?
+    rsync_retry -a -e ssh "$f" "${DEST}openclaw-config/$bn" || RSYNC_RC=$?
   else
     cp -p "$f" "${DEST}openclaw-config/$bn" 2>>"$LOG" || RSYNC_RC=$?
   fi
@@ -102,8 +117,8 @@ done
 launchctl list | awk '{print $3}' | grep -E '^com\.exos\.' | sort > "$HOME/Library/LaunchAgents/_loaded.txt" 2>/dev/null || true
 if [ "$DEST_REMOTE" = "True" ] || [ "$DEST_REMOTE" = "true" ]; then
   ssh "${DEST%%:*}" "mkdir -p '${DEST#*:}launchagents'" 2>>"$LOG" || true
-  rsync -a --delete --include='com.exos.*.plist' --include='ai.openclaw.gateway.plist' --include='_loaded.txt' --exclude='*' \
-    -e ssh "$HOME/Library/LaunchAgents/" "${DEST}launchagents/" 2>>"$LOG" || RSYNC_RC=$?
+  rsync_retry -a --delete --include='com.exos.*.plist' --include='ai.openclaw.gateway.plist' --include='_loaded.txt' --exclude='*' \
+    -e ssh "$HOME/Library/LaunchAgents/" "${DEST}launchagents/" || RSYNC_RC=$?
 else
   mkdir -p "${DEST}launchagents"
   rsync -a --delete --include='com.exos.*.plist' --include='ai.openclaw.gateway.plist' --include='_loaded.txt' --exclude='*' \
