@@ -1989,7 +1989,7 @@ async function loadTimeline(taskId, opts = {}) {
         <div class="timeline-dot"></div>
         <div class="timeline-line"></div>
         <div class="timeline-time">${time}${c.owner ? ' &middot; ' + escHtml(c.owner) : ''}</div>
-        <div class="timeline-body">${escHtml(bodyText)}</div>
+        <div class="timeline-body">${escHtml(bodyText).replace(/https?:\/\/[^\s<"']+/g, u => `<a href="${u}" target="_blank" rel="noopener" style="color:var(--blue2)">${u}</a>`)}</div>
         ${actions}
       </div>`;
     }).join('');
