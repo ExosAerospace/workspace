@@ -87,10 +87,9 @@ for t in [
     "Two attachments are for your review before they go to the full Board: a one-page summary of the issue, and a short request "
     "that SSLC and A La Carte Solutions preserve the relevant records while the Board reviews them. The preservation request is "
     "routine and does not stop normal bookkeeping; please tell me if you would change anything in either.",
-    "To help with the booking questions, Paula Lessnick of BBSNV, Exos’s accounting firm, is available to walk you both through the "
-    "entries: how deposits and progress billings should be booked, and why the April 30 netting and reclassification don’t hold up. "
-    "She works for Exos, so take her view as a second opinion rather than the independent review in RP-5. If either of you would "
-    "like a call with her before Tuesday, tell me a time that suits you and I will set it up.",
+    "As the Board agreed on October 13, if you have issues with the deposit and billing correction, Paula Lessnick of BBSNV, "
+    "Exos’s accounting firm, is available for a call. She works for Exos, so take her view as a second opinion rather than the "
+    "independent review in RP-5. Just tell me and I will set it up.",
     "I am also happy to get on a call myself to walk through any of the entries.",
     "Regards,\nJohn",
     "John Quinn\nDirector, Scorpius Space Launch Company",
