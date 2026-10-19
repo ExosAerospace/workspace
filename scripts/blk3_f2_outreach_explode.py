@@ -31,7 +31,7 @@ IDENTITY = ("Exos Aerospace is one of only three FAA-licensed reusable rocket la
             "Our next mission, BLK3 Flight 2, launches in late Q1 / early Q2 2027 from Spaceport "
             "America with 135 kg of payload capacity open now, including small rideshare slots.")
 
-CLOSE = ("I can send our Payload User Guide and hold a tentative slot while you evaluate fit. "
+CLOSE = ("I can send over our one-page payload overview, and I would love to set up a quick call. "
          "Would you have 15 minutes in the next week or two to talk?\n\nBest regards,\nLizi Quinn")
 
 ASK = {
@@ -283,7 +283,7 @@ for i, (first, disp, addr, gate, seg, hook, subj) in enumerate(T):
     desc = (f"CUSTOM OUTREACH EMAIL — send #{seqn} of {len(T)} | scheduled {day.isoformat()} {slot}\n"
             f"Target: {disp}\nTo: {to_line}\n"
             + (f"NOTE: {flag}\n" if flag else "")
-            + "Pricing: do NOT quote $/kg until Jon approves external payload pricing. Offer the Payload User Guide and a tentative slot.\n"
+            + "Pricing: do NOT quote $/kg until Jon approves external payload pricing. Offer the one-page payload overview (SPACEavailable one-pager) + a call; send the Payload User Guide only AFTER a call shows booking interest (Lizi 10/19).\n"
             f"Cadence: 2 sends/business day. If you can do more, tell Jon/Exo and we raise the cap.\n\n"
             "----- READY-TO-SEND DRAFT (from lquinn@exosaero.com) -----\n" + body)
 
