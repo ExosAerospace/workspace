@@ -190,6 +190,7 @@ def build_doc():
     d.add_paragraph("The monthly 'What Exo automated' list and the standing finance item (PO7 notes-due, #2982) "
                     "went out in yesterday's email. They are read-ahead only today, to protect meeting time for the build.")
     d.save(OUT)
+    import agenda_task_status; agenda_task_status.annotate_docx(OUT)  # Lizi 10/20: live MC status on every task ref
     return OUT
 
 

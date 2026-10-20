@@ -123,6 +123,11 @@ def main():
             + (f"\n\nStanding finance item:\n• {notes_due_line}" if notes_due_line else "")
             + "\n\nReply if you want any of it reworded before the meeting.\n\nExo")
         if os.path.isfile(AGENDA):
+            try:  # Lizi 10/20: every task ref on an agenda carries its live MC status
+                sys.path.insert(0, os.path.join(WS, "scripts")); import agenda_task_status
+                agenda_task_status.annotate_docx(AGENDA)
+            except Exception as e:
+                print("agenda status stamp failed:", e)
             m.add_attachment(open(AGENDA, "rb").read(), maintype="application",
                              subtype="vnd.openxmlformats-officedocument.wordprocessingml.document",
                              filename=os.path.basename(AGENDA))

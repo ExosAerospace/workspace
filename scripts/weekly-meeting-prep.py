@@ -155,6 +155,11 @@ def main():
         print(f"{today} is not the day before a weekly Tuesday (or it's the monthly week) — skipping."); return
     meeting_day = today + datetime.timedelta(days=1)
     agenda = build_agenda(meeting_day)
+    try:  # Lizi 10/20: every task ref on an agenda carries its live MC status
+        sys.path.insert(0, os.path.join(WS, "scripts")); import agenda_task_status
+        agenda = agenda_task_status.annotate_text(agenda)
+    except Exception as e:
+        print("agenda status stamp failed:", e)
     # email to Jon (organizer) the day before
     body = f"Hello Jon,\n\nTomorrow ({meeting_day:%A, %b %d}) is the weekly team meeting (10:00 CT). Draft agenda:\n\n{agenda}\n\nReply with edits and I'll update it.\n\n— Exo"
     from email.message import EmailMessage
