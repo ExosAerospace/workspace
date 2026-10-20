@@ -172,7 +172,8 @@ def build_doc():
     st = d.styles["Normal"]; st.font.name = "Calibri"; st.font.size = Pt(10.5)
     h = d.add_heading("BLK3 to Flight + HVRR Flight-Ready Build", level=0)
     p = d.add_paragraph(f"Weekly plan and team meeting agenda. Week of {WEEK_START:%B %-d} to {WEEK_END:%B %-d, %Y}. "
-                        "Meeting: Tuesday Sep 29, 10:00 to 11:00 Central. Meeting leader: John Quinn.")
+                        f"Meeting: Tuesday {WEEK_START + datetime.timedelta(days=1):%B %-d}, 10:00 to 11:00 Central. "
+                        "Meeting leader: John Quinn.")
     p.runs[0].italic = True
     d.add_paragraph("Our focus until further notice (John, 9/29): get BLK3 to its first flight, and finish the HVRR build "
                     "so it is ready to fly. How we work: plan the work, then work the plan. The goals below are suggestions "
