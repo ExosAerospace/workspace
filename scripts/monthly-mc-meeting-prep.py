@@ -20,6 +20,9 @@ OPENCLAW = "/Users/exomac/.local/share/mise/shims/openclaw"
 CHANNEL = "channel:1501636814849577050"
 AGENDA = os.path.join(WS, "drafts", "MC_Work_Management_Meeting_Agenda.docx")
 FORCE = "--force" in sys.argv
+# Lizi 10/20: agendas in plain English — no Exobot jargon. The email and Discord reminder below use short, plain
+# sentences; acronyms are spelled out; no arrows or symbols standing in for words.
+PLAIN_ENGLISH_RULE = "Lizi 10/20: agendas in plain English — no Exobot jargon."
 
 
 def is_last_tuesday(d):
@@ -81,8 +84,8 @@ def capture_notes_due(today):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "a") as f:
         f.write(block)
-    return ("STANDING: Notes-due tracking — David/Kyle to provide PO7 convert-vs-payout detail "
-            "(~$150K est. payout); Neil owns MC #2982.")
+    return ("Convertible notes coming due: David and Kyle will report which 2021 PO7 notes turn into shares and "
+            "which must be paid back in cash (estimated cash payout about $150K). Neil tracks this on Mission Control task #2982.")
 
 
 def is_day_before_last_tuesday(d):
@@ -97,7 +100,7 @@ def main():
     meeting_day = today + datetime.timedelta(days=1)
 
     autos = month_automations()
-    auto_txt = "\n".join("• " + b for b in autos) if autos else "• (I'll fill this in from the month's shipped work.)"
+    auto_txt = "\n".join("- " + b for b in autos) if autos else "- I will fill this in from the work finished this month."
     # route investor-appropriate operational progress into the monthly-report capture (gated + screened)
     try:
         capture_for_investor_report(today, autos)
@@ -115,13 +118,14 @@ def main():
         m = EmailMessage()
         m["From"] = "Exo (Exos AI Assistant) <jquinnexo@pm.me>"
         m["To"] = "jquinn@exosaero.com"
-        m["Subject"] = f"Tomorrow: Mission Control Work Management Meeting — agenda + this month's automations ({meeting_day:%b %d})"
+        m["Subject"] = f"Tomorrow: Monthly Work Meeting agenda, and what Exobot automated this month ({meeting_day:%b %-d})"
         m.set_content(
-            f"Hello Jon,\n\nTomorrow ({meeting_day:%A, %b %d}) is the monthly Mission Control Work Management Meeting. "
-            "Agenda attached.\n\nDraft for Section 2 (what Exo automated this month), from the change log:\n"
+            f"Hello Jon,\n\nTomorrow ({meeting_day:%A, %B %-d}) is the monthly Work Meeting, where we review how we use "
+            "Mission Control. The agenda is attached.\n\nDraft for section 2, what Exobot automated this month. "
+            "It is taken from the list of software changes, so some lines may need rewording:\n"
             + auto_txt
-            + (f"\n\nStanding finance item:\n• {notes_due_line}" if notes_due_line else "")
-            + "\n\nReply if you want any of it reworded before the meeting.\n\nExo")
+            + (f"\n\nFinance item we cover every month:\n- {notes_due_line}" if notes_due_line else "")
+            + "\n\nReply if you want any of this reworded before the meeting.\n\nExo")
         if os.path.isfile(AGENDA):
             try:  # Lizi 10/20: every task ref on an agenda carries its live MC status
                 sys.path.insert(0, os.path.join(WS, "scripts")); import agenda_task_status
@@ -137,10 +141,11 @@ def main():
         print("email error:", e)
 
     # 2) Discord reminder
-    msg = (f"📅 **Mission Control Work Management Meeting — TOMORROW ({meeting_day:%a %b %d})**\n"
-           f"60 min: Work Review · Recursive Self-Improvement · Teaching · Continuous Improvement + Employee Input · Action Items.\n"
-           f"Agenda emailed to Jon. Draft of this month's automations:\n{auto_txt}\n"
-           f"Reminder: send meeting minutes with [TRANSCRIPT] in the subject and I'll auto-capture the action items.")
+    msg = (f"📅 **Monthly Work Meeting tomorrow ({meeting_day:%a %b %-d})**\n"
+           f"60 minutes. Topics: review of the work; how Exobot improved itself; teaching; ideas from the team "
+           f"to work better; action items.\n"
+           f"The agenda was emailed to Jon. Draft list of what Exobot automated this month:\n{auto_txt}\n"
+           f"After the meeting, email the meeting notes with [TRANSCRIPT] in the subject line, and I will add the action items to Mission Control.")
     try:
         subprocess.run([OPENCLAW, "message", "send", "--channel", "discord", "--target", CHANNEL, "-m", msg],
                        timeout=60, capture_output=True)
