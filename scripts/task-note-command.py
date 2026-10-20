@@ -278,13 +278,23 @@ def _similar(a, b):
     return a == b or (min(len(a), len(b)) >= 40 and difflib.SequenceMatcher(None, a, b).ratio() >= 0.75)
 
 
+def _parse_ts(s):
+    """Supabase/Postgres trims trailing zeros from microseconds ('...03.94204+00:00'); python3.9's
+    fromisoformat only accepts 3 or 6 fractional digits, so pad/trim the fraction to 6 first."""
+    s = s.replace("Z", "+00:00")
+    m = re.match(r"^(.*T\d{2}:\d{2}:\d{2})\.(\d+)(.*)$", s)
+    if m:
+        s = f"{m.group(1)}.{(m.group(2) + '000000')[:6]}{m.group(3)}"
+    return datetime.fromisoformat(s)
+
+
 def coalesce_repeats(cmds, rows, seen, taskid_of):
     """One reply per request (Jon 10/17, #3808: one ask, posted 3x in 40s, got 3 identical acks + 3 subtasks).
     Same author + same task + within REPEAT_WINDOW_S: (a) an exact repeat of a note already handled is
     marked seen and dropped; (b) a burst of new notes is routed once, as the newest note with the distinct
     texts merged (near-duplicates only: different short commands in a row stay separate). Every absorbed note id is added to `seen` so later runs never re-route it."""
     def ts(r):
-        return datetime.fromisoformat(r["created_at"].replace("Z", "+00:00"))
+        return _parse_ts(r["created_at"])
     def key(r):
         return (taskid_of(r), (r.get("owner") or "").strip().lower())
     handled = [r for r in rows if r["id"] in seen and taskid_of(r)]
@@ -590,6 +600,13 @@ def selftest():
     cmds2 = [{"id": "dc-1", "subject": "task:86", "owner": "Mike", "body": "@Exobot hours 3.5", "created_at": t0.isoformat()},
              {"id": "dc-2", "subject": "task:86", "owner": "Mike", "body": "@Exobot done", "created_at": (t0 + timedelta(seconds=10)).isoformat()}]
     checks["different short commands stay separate"] = len(coalesce_repeats(cmds2, cmds2, set(), tid)) == 2
+    # Failure replay (failure-fixer 10/20): Supabase 5-digit fraction crashed py3.9 fromisoformat.
+    odd = [{"id": "ts-1", "subject": "task:9", "owner": "Jon", "body": "@Exobot status", "created_at": "2026-10-20T13:56:03.94204+00:00"},
+           {"id": "ts-2", "subject": "task:9", "owner": "Jon", "body": "@Exobot done", "created_at": "2026-10-20T13:56:04.1Z"}]
+    try:
+        checks["odd-precision timestamps parse"] = len(coalesce_repeats(odd, odd, set(), tid)) == 2
+    except ValueError:
+        checks["odd-precision timestamps parse"] = False
     bad = [k for k, v in checks.items() if not v]
     print(f"task-note-command selftest: {len(checks) - len(bad)} passed, {len(bad)} failed" + (f": {bad}" if bad else ""))
     return 1 if bad else 0
