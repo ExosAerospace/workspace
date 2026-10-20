@@ -1392,6 +1392,58 @@
         "basis": [
           "addr:sean@montanaspaceport.com"
         ]
+      },
+      {
+        "message_id": "<39f215f112197727c0982cac67d5de33@pm.me>",
+        "date": "2026-10-19T12:02:11+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "edgar@montanaspaceport.com"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:edgar@montanaspaceport.com"
+        ]
+      },
+      {
+        "message_id": "<647c3ff499ad9706de7b7fc288cde558@pm.me>",
+        "date": "2026-10-19T12:02:15+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "sean@montanaspaceport.com"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:sean@montanaspaceport.com"
+        ]
+      },
+      {
+        "message_id": "<CAGdBmKpUDGL_D=GN9msj71pqiamdA4vn0PFAa6wPpdKKacOxqA@mail.gmail.com>",
+        "date": "2026-10-19T15:02:01+00:00",
+        "direction": "received",
+        "from": "edgar@montanaspaceport.com",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "Re: Your Mission Control weekly",
+        "basis": [
+          "addr:edgar@montanaspaceport.com"
+        ]
+      },
+      {
+        "message_id": "<06d91d0785b74e21f3f0f444448475e8@pm.me>",
+        "date": "2026-10-19T15:10:16+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "edgar@montanaspaceport.com"
+        ],
+        "subject": "Re: Your Mission Control weekly, Exo update",
+        "basis": [
+          "addr:edgar@montanaspaceport.com"
+        ]
       }
     ]
   },
@@ -9059,6 +9111,19 @@
         "basis": [
           "llm:0.90"
         ]
+      },
+      {
+        "message_id": "<be1565c44129d64504cb04da6a8ea544@pm.me>",
+        "date": "2026-10-20T01:56:28+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "lquinn@exosaero.com"
+        ],
+        "subject": "Redwire replied: not a fit for BLK3 (needs 2+ weeks of microgravity)",
+        "basis": [
+          "llm:0.95"
+        ]
       }
     ]
   },
@@ -13536,7 +13601,22 @@
     "correlationId": "3168302c4bda4bfb",
     "approver": "",
     "assignedTo": "",
-    "answeredBy": "John Quinn"
+    "answeredBy": "John Quinn",
+    "email_activity": [
+      {
+        "message_id": "<PH1P110MB15375A839BA01C4066F909E1AC98A@PH1P110MB1537.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-10-19T17:43:39+00:00",
+        "direction": "received",
+        "from": "lquinn@exosaero.com",
+        "to": [
+          "exosmc@proton.me"
+        ],
+        "subject": "Fw: For John Quinn, a quick NYC introduction",
+        "basis": [
+          "llm:0.90"
+        ]
+      }
+    ]
   },
   {
     "id": "D-294",
@@ -13758,6 +13838,19 @@
           "wbaker@princetoncryo.com"
         ],
         "subject": "Re: robotic fuel transfer system- ",
+        "basis": [
+          "addr:david@princetoncryo.com"
+        ]
+      },
+      {
+        "message_id": "<PH1P110MB1537FCDA7FC15F0849C1A149AC98A@PH1P110MB1537.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-10-19T17:27:23+00:00",
+        "direction": "received",
+        "from": "lquinn@exosaero.com",
+        "to": [
+          "boris.khusid@njit.edu"
+        ],
+        "subject": "Re: In-space Refueling Cryogenic Propellants",
         "basis": [
           "addr:david@princetoncryo.com"
         ]
@@ -20170,6 +20263,32 @@
         "basis": [
           "addr:don.proeschel@utdallas.edu"
         ]
+      },
+      {
+        "message_id": "<d0e520e3950f43dd29149547710f1e51@pm.me>",
+        "date": "2026-10-19T12:01:33+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "edwinvandervlist@utdallas.edu"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:edwinvandervlist@utdallas.edu"
+        ]
+      },
+      {
+        "message_id": "<db3fcc8a80ea9b648a4ed464b9942195@pm.me>",
+        "date": "2026-10-19T12:01:38+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "don.proeschel@utdallas.edu"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:don.proeschel@utdallas.edu"
+        ]
       }
     ]
   },
@@ -23413,6 +23532,19 @@
         "basis": [
           "llm:0.90"
         ]
+      },
+      {
+        "message_id": "<BN0P110MB1914B5C886D68D813494E67BAC98A@BN0P110MB1914.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-10-19T15:32:56+00:00",
+        "direction": "received",
+        "from": "peaton@exosaero.com",
+        "to": [
+          "exosmc@proton.me"
+        ],
+        "subject": "FW: Exos Aerospace Connection...",
+        "basis": [
+          "llm:0.90"
+        ]
       }
     ]
   },
@@ -24692,6 +24824,20 @@
           "eva@copernicspace.com"
         ],
         "subject": "Exos final draft contract",
+        "basis": [
+          "addr:eva@copernicspace.com",
+          "addr:gb@copernicspace.com"
+        ]
+      },
+      {
+        "message_id": "<BNAP110MB191762D05B3B5ADE7AF1636BAA67A@BNAP110MB1917.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-10-20T06:26:46+00:00",
+        "direction": "sent",
+        "from": "jquinn@exosaero.com",
+        "to": [
+          "brennan@copernicspace.com"
+        ],
+        "subject": "Re: Exos final draft contract",
         "basis": [
           "addr:eva@copernicspace.com",
           "addr:gb@copernicspace.com"
@@ -34202,6 +34348,20 @@
           "addr:eva@copernicspace.com",
           "addr:gb@copernicspace.com"
         ]
+      },
+      {
+        "message_id": "<BNAP110MB191762D05B3B5ADE7AF1636BAA67A@BNAP110MB1917.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-10-20T06:26:46+00:00",
+        "direction": "sent",
+        "from": "jquinn@exosaero.com",
+        "to": [
+          "brennan@copernicspace.com"
+        ],
+        "subject": "Re: Exos final draft contract",
+        "basis": [
+          "addr:eva@copernicspace.com",
+          "addr:gb@copernicspace.com"
+        ]
       }
     ]
   },
@@ -35268,6 +35428,19 @@
         "basis": [
           "addr:senthil@utdallas.edu"
         ]
+      },
+      {
+        "message_id": "<ac5624b2177184607ad46177d2013e70@pm.me>",
+        "date": "2026-10-19T12:01:43+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "senthil@utdallas.edu"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:senthil@utdallas.edu"
+        ]
       }
     ],
     "answeredBy": "email-tracker"
@@ -36084,6 +36257,32 @@
           "sxm220350@utdallas.edu"
         ],
         "subject": "=?utf-8?q?[Mission_Control]_Task_assigned_to_you:_[Week_7_=C2=B7_Data_Tru?= =?utf-8?q?st]_Check_every_lead_card_moved_to_Done_this_week_(contact_+_c?=",
+        "basis": [
+          "addr:sxm220350@utdallas.edu"
+        ]
+      },
+      {
+        "message_id": "<b679bb463e66e724d459e1b7111e452d@pm.me>",
+        "date": "2026-10-19T12:01:16+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "sxm220350@utdallas.edu"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:sxm220350@utdallas.edu"
+        ]
+      },
+      {
+        "message_id": "<4307cf4a235ef57e4b19adbc67e599bc@pm.me>",
+        "date": "2026-10-19T14:24:24+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "sxm220350@utdallas.edu"
+        ],
+        "subject": "Team Atlas: a NASA prize that could fund our customers' experiments (from Exo)",
         "basis": [
           "addr:sxm220350@utdallas.edu"
         ]
@@ -39781,6 +39980,19 @@
         "basis": [
           "llm:1.00"
         ]
+      },
+      {
+        "message_id": "<1d19929c6d2611784a0289b552d9c021@pm.me>",
+        "date": "2026-10-20T12:03:11+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "lquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?[Mission_Control]_Task_assigned_to_you:_Up/Link_Tuesday_briefin?= =?utf-8?q?g_=E2=80=94_all_meetings_(2026-10-20)?=",
+        "basis": [
+          "llm:0.85"
+        ]
       }
     ],
     "answeredBy": "John Quinn"
@@ -41560,6 +41772,19 @@
         "basis": [
           "addr:michael@ainigmacapital.com"
         ]
+      },
+      {
+        "message_id": "<87794a8833ef80e8f3f5199f85f853de@pm.me>",
+        "date": "2026-10-19T12:01:54+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "michael@ainigmacapital.com"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:michael@ainigmacapital.com"
+        ]
       }
     ],
     "answer": "Approve & send the drafted reply as-is",
@@ -43305,6 +43530,45 @@
         "basis": [
           "addr:edgar@montanaspaceport.com"
         ]
+      },
+      {
+        "message_id": "<39f215f112197727c0982cac67d5de33@pm.me>",
+        "date": "2026-10-19T12:02:11+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "edgar@montanaspaceport.com"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:edgar@montanaspaceport.com"
+        ]
+      },
+      {
+        "message_id": "<CAGdBmKpUDGL_D=GN9msj71pqiamdA4vn0PFAa6wPpdKKacOxqA@mail.gmail.com>",
+        "date": "2026-10-19T15:02:01+00:00",
+        "direction": "received",
+        "from": "edgar@montanaspaceport.com",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "Re: Your Mission Control weekly",
+        "basis": [
+          "addr:edgar@montanaspaceport.com"
+        ]
+      },
+      {
+        "message_id": "<06d91d0785b74e21f3f0f444448475e8@pm.me>",
+        "date": "2026-10-19T15:10:16+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "edgar@montanaspaceport.com"
+        ],
+        "subject": "Re: Your Mission Control weekly, Exo update",
+        "basis": [
+          "addr:edgar@montanaspaceport.com"
+        ]
       }
     ]
   },
@@ -43758,6 +44022,71 @@
           "rconger@smad.com"
         ],
         "subject": "SSLC books: your read-only access through Mission Control (Board Motion 2)",
+        "basis": [
+          "addr:rconger@smad.com"
+        ]
+      },
+      {
+        "message_id": "<d223f18970a4c381bbe05579a69e0b86@pm.me>",
+        "date": "2026-10-19T12:02:29+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "mrufer@smad.com"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:mrufer@smad.com"
+        ]
+      },
+      {
+        "message_id": "<7171397244ff3797aec2a24535d49b44@pm.me>",
+        "date": "2026-10-19T12:02:35+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "rconger@smad.com"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:rconger@smad.com"
+        ]
+      },
+      {
+        "message_id": "<SJ0PR14MB47100E06ED8C347D5600B748CE982@SJ0PR14MB4710.namprd14.prod.outlook.com>",
+        "date": "2026-10-19T14:57:07+00:00",
+        "direction": "received",
+        "from": "rconger@smad.com",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "RE: SSLC books: your read-only access through Mission Control (Board Motion 2)+",
+        "basis": [
+          "addr:rconger@smad.com"
+        ]
+      },
+      {
+        "message_id": "<PH8PR14MB6088E81D774D1D17C8FF7696B5982@PH8PR14MB6088.namprd14.prod.outlook.com>",
+        "date": "2026-10-19T15:51:30+00:00",
+        "direction": "received",
+        "from": "mrufer@smad.com",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "RE: SSLC books: your read-only access through Mission Control (Board Motion 2)",
+        "basis": [
+          "addr:mrufer@smad.com"
+        ]
+      },
+      {
+        "message_id": "<SJ0PR14MB47105A1A3305A10E29FC3845CE982@SJ0PR14MB4710.namprd14.prod.outlook.com>",
+        "date": "2026-10-19T17:17:04+00:00",
+        "direction": "received",
+        "from": "rconger@smad.com",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "RE: SSLC books: your read-only access through Mission Control (Board Motion 2)+",
         "basis": [
           "addr:rconger@smad.com"
         ]
@@ -54629,6 +54958,19 @@
         "basis": [
           "addr:paul.lukacs@umontana.edu"
         ]
+      },
+      {
+        "message_id": "<PH1P110MB153745A82337425680CA7EC3AC98A@PH1P110MB1537.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-10-19T19:48:24+00:00",
+        "direction": "received",
+        "from": "lquinn@exosaero.com",
+        "to": [
+          "bhill@mtech.edu"
+        ],
+        "subject": "Re: A next flight for your RockOn! team",
+        "basis": [
+          "addr:bhill@mtech.edu"
+        ]
       }
     ]
   },
@@ -56427,7 +56769,48 @@
     "approver": "",
     "assignedTo": "jquinn@exosaero.com",
     "answeredBy": "John Quinn",
-    "answeredByEmail": "jquinn@exosaero.com"
+    "answeredByEmail": "jquinn@exosaero.com",
+    "email_activity": [
+      {
+        "message_id": "<39f215f112197727c0982cac67d5de33@pm.me>",
+        "date": "2026-10-19T12:02:11+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "edgar@montanaspaceport.com"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:edgar@montanaspaceport.com"
+        ]
+      },
+      {
+        "message_id": "<CAGdBmKpUDGL_D=GN9msj71pqiamdA4vn0PFAa6wPpdKKacOxqA@mail.gmail.com>",
+        "date": "2026-10-19T15:02:01+00:00",
+        "direction": "received",
+        "from": "edgar@montanaspaceport.com",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "Re: Your Mission Control weekly",
+        "basis": [
+          "addr:edgar@montanaspaceport.com"
+        ]
+      },
+      {
+        "message_id": "<06d91d0785b74e21f3f0f444448475e8@pm.me>",
+        "date": "2026-10-19T15:10:16+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "edgar@montanaspaceport.com"
+        ],
+        "subject": "Re: Your Mission Control weekly, Exo update",
+        "basis": [
+          "addr:edgar@montanaspaceport.com"
+        ]
+      }
+    ]
   },
   {
     "id": "D-7282070",
@@ -57886,7 +58269,22 @@
       "draft-bn-sophiaspace-demillo"
     ],
     "answeredBy": "John Quinn",
-    "answeredByEmail": "jquinn@exosaero.com"
+    "answeredByEmail": "jquinn@exosaero.com",
+    "email_activity": [
+      {
+        "message_id": "<BNAP110MB19178247614A0BC79F45102AAA67A@BNAP110MB1917.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-10-20T06:14:37+00:00",
+        "direction": "sent",
+        "from": "jquinn@exosaero.com",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "Fw: Exos Aerospace <> Sophia Space",
+        "basis": [
+          "llm:0.90"
+        ]
+      }
+    ]
   },
   {
     "id": "D-7282118",
@@ -57927,6 +58325,19 @@
           "kballard@exosaero.com"
         ],
         "subject": "[Mission Control] Task assigned to you: International contractor payments in JPY: approve EXOS-FIN-004 + set up Wise Bus",
+        "basis": [
+          "llm:1.00"
+        ]
+      },
+      {
+        "message_id": "<228010bd13bc94b34225c6ad811f6457@pm.me>",
+        "date": "2026-10-20T06:55:34+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "kballard@exosaero.com"
+        ],
+        "subject": "ASAP: Wise payment to Toshi - JPY 121,775 (MC #3896)",
         "basis": [
           "llm:1.00"
         ]
@@ -58907,7 +59318,7 @@
   {
     "id": "D-7282135",
     "created": "2026-10-16T13:56:12.076Z",
-    "updated": "2026-10-16T13:56:12.076Z",
+    "updated": "2026-10-20T06:44:26.117Z",
     "source": "exo-main",
     "relatedItem": "",
     "title": "Send: NYK / Suga-san asks for meeting times by email (can't open the booking link)",
@@ -58922,13 +59333,13 @@
     ],
     "priority": "med",
     "dedupeKey": "nyk-suga-meeting-times-1016",
-    "status": "delegated",
-    "answer": null,
-    "note": " [auto-batched routine 2026-10-16]",
-    "answeredAt": null,
+    "status": "answered",
+    "answer": "Send",
+    "note": "",
+    "answeredAt": "2026-10-20T06:44:26.117Z",
     "agentClass": "",
     "correlationId": "",
-    "approver": "",
+    "approver": "jquinn@exosaero.com",
     "assignedTo": "Lquinn@exosaero.com",
     "batched": true,
     "owner": "Lizi Quinn",
@@ -58973,8 +59384,39 @@
         "basis": [
           "addr:daisuke.suga@nykgroup.com"
         ]
+      },
+      {
+        "message_id": "<3af5e09e43f52b70c86ccf36bf57fe9f@pm.me>",
+        "date": "2026-10-20T06:44:35+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "lquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?[Ready_to_send_=E2=80=94_from_you]_Send:_NYK_/_Suga-san_asks_fo?= =?utf-8?q?r_meeting_times_by_email_(can't_open_the_booking_link)?=",
+        "basis": [
+          "id:D-7282135",
+          "id:OPP-636"
+        ]
+      },
+      {
+        "message_id": "<70e39fd2ac1c52e17e9e0cd16e2a8cd4@pm.me>",
+        "date": "2026-10-20T12:03:05+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "lquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?[Mission_Control]_Task_assigned_to_you:_[Ready_to_send_?=\r\n =?utf-8?q?=E2=80=94_from_you]_Send:_NYK_/_Suga-san_asks_for_meeting_times?=\r\n =?utf-8?q?_by_email?=",
+        "basis": [
+          "id:D-7282135"
+        ]
       }
-    ]
+    ],
+    "reassignedFrom": "Lquinn@exosaero.com",
+    "needsExoRouting": false,
+    "answeredBy": "John Quinn",
+    "answeredByEmail": "jquinn@exosaero.com"
   },
   {
     "id": "D-7282136",
@@ -59156,7 +59598,7 @@
   {
     "id": "D-7282140",
     "created": "2026-10-17T12:19:19.193Z",
-    "updated": "2026-10-17T12:19:19.193Z",
+    "updated": "2026-10-19T14:22:58.804Z",
     "source": "Exo (email command)",
     "relatedItem": "task #2149 (Orbital Clarity) / student session #3854",
     "title": "Release Exo's Orbital Clarity briefing to the 6 UTD students?",
@@ -59170,10 +59612,10 @@
     ],
     "priority": "high",
     "dedupeKey": "utd-occ-briefing",
-    "status": "open",
-    "answer": null,
+    "status": "answered",
+    "answer": "Yes \u2014 Exo sends to the 6 students",
     "note": "",
-    "answeredAt": null,
+    "answeredAt": "2026-10-19T14:22:58.804Z",
     "agentClass": "",
     "correlationId": "",
     "approver": "",
@@ -59191,8 +59633,36 @@
         "basis": [
           "id:D-7282140"
         ]
+      },
+      {
+        "message_id": "<9a55b97e8d0fcf011060c4ea1a9c0932@pm.me>",
+        "date": "2026-10-19T14:23:57+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "rcs220001@utdallas.edu"
+        ],
+        "subject": "Team Atlas: a NASA prize that could fund our customers' experiments (from Exo)",
+        "basis": [
+          "llm:1.00"
+        ]
+      },
+      {
+        "message_id": "<69fbc1d769c6c96fb3ddcf2f75cf566e@pm.me>",
+        "date": "2026-10-19T14:24:19+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "bxs230052@utdallas.edu"
+        ],
+        "subject": "Team Atlas: a NASA prize that could fund our customers' experiments (from Exo)",
+        "basis": [
+          "llm:1.00"
+        ]
       }
-    ]
+    ],
+    "answeredBy": "Lizi Quinn",
+    "answeredByEmail": "lquinn@exosaero.com"
   },
   {
     "id": "D-7282141",
@@ -59293,7 +59763,61 @@
     "assignedTo": "jquinn@exosaero.com",
     "approver": "jquinn@exosaero.com",
     "answeredBy": "John Quinn",
-    "answeredByEmail": "jquinn@exosaero.com"
+    "answeredByEmail": "jquinn@exosaero.com",
+    "email_activity": [
+      {
+        "message_id": "<276f19c615498a2cc1786e2498c6097f@pm.me>",
+        "date": "2026-10-19T12:01:22+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "axh230026@utdallas.edu"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:axh230026@utdallas.edu"
+        ]
+      },
+      {
+        "message_id": "<55de3cfa990d966406f1aefa45a4ffce@pm.me>",
+        "date": "2026-10-19T12:01:27+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "leg240001@utdallas.edu"
+        ],
+        "subject": "Your Mission Control weekly",
+        "basis": [
+          "addr:leg240001@utdallas.edu"
+        ]
+      },
+      {
+        "message_id": "<ea5e9f1d4f9d5aa725dbb013cb4d7091@pm.me>",
+        "date": "2026-10-19T14:24:03+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "leg240001@utdallas.edu"
+        ],
+        "subject": "Team Atlas: a NASA prize that could fund our customers' experiments (from Exo)",
+        "basis": [
+          "addr:leg240001@utdallas.edu"
+        ]
+      },
+      {
+        "message_id": "<f7e3014bd6a5ef3c3afaf849f3452874@pm.me>",
+        "date": "2026-10-19T14:24:13+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "axh230026@utdallas.edu"
+        ],
+        "subject": "Team Atlas: a NASA prize that could fund our customers' experiments (from Exo)",
+        "basis": [
+          "addr:axh230026@utdallas.edu"
+        ]
+      }
+    ]
   },
   {
     "id": "D-7282143",
@@ -59410,15 +59934,428 @@
         "basis": [
           "id:D-7282144"
         ]
+      },
+      {
+        "message_id": "<BNAP110MB1917861332FA7A8A2CE9C7EBAA67A@BNAP110MB1917.NAMP110.PROD.OUTLOOK.COM>",
+        "date": "2026-10-20T06:09:52+00:00",
+        "direction": "sent",
+        "from": "jquinn@exosaero.com",
+        "to": [
+          "jquinnexo@pm.me"
+        ],
+        "subject": "Fw: SSLC books: your read-only access through Mission Control (Board Motion 2)+",
+        "basis": [
+          "llm:0.95"
+        ]
       }
     ],
     "answeredBy": "John Quinn",
     "answeredByEmail": "jquinn@exosaero.com"
   },
   {
+    "id": "D-7282145",
+    "title": "SSLC QB login refresh needed for MC demo container",
+    "status": "answered",
+    "created_at": "2026-10-19T11:22:00Z",
+    "body": "The SSLC QuickBooks session has expired. To load SSLC data into the MC demo container, please refresh the login:\n\n1. Open the 'imported' browser profile in OpenClaw\n2. Navigate to https://app.qbo.intuit.com and log in with the SSLC reports-only credentials\n3. Reply 'done' to this decision \u2014 I will then automatically export Items, Vendors, Open POs, Bills, and Inventory Valuation into the SSLC MC demo container.\n\nAll other demo setup steps are proceeding without QB data and will be ready.",
+    "options": [
+      "done",
+      "skip QB data for now"
+    ],
+    "assignee": "jquinn@exosaero.com",
+    "dedupeKey": "sslc-qb-login-refresh-20261019",
+    "source": "sslc-mc-container-exo3",
+    "email_activity": [
+      {
+        "message_id": "<fcd8e3df79bf938b8b063c2f62041d1f@pm.me>",
+        "date": "2026-10-19T11:35:29+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?SSLC_Mission_Control_demo_is_live_=E2=80=94_ready_to_schedule?=",
+        "basis": [
+          "id:D-7282145"
+        ]
+      }
+    ],
+    "answer": "\ud83d\udcdd Instruction",
+    "note": "@exo I am logged in on this machine, does that work?",
+    "answeredAt": "2026-10-19T11:55:38.721Z",
+    "answeredBy": "John Quinn",
+    "updated": "2026-10-19T11:55:38.721Z",
+    "answeredByEmail": "jquinn@exosaero.com"
+  },
+  {
+    "id": "D-7282146",
+    "created": "2026-10-19T13:06:36.737Z",
+    "updated": "2026-10-20T06:45:07.959Z",
+    "source": "test",
+    "relatedItem": "",
+    "title": "test",
+    "question": "test",
+    "context": "",
+    "proposedAction": "",
+    "type": "yesno",
+    "options": [
+      "Send"
+    ],
+    "priority": "med",
+    "dedupeKey": "test-probe-do-not-use",
+    "status": "answered",
+    "answer": "Send",
+    "note": "",
+    "answeredAt": "2026-10-20T06:45:07.959Z",
+    "agentClass": "",
+    "correlationId": "",
+    "approver": "",
+    "assignedTo": "",
+    "answeredBy": "John Quinn",
+    "answeredByEmail": "jquinn@exosaero.com"
+  },
+  {
+    "id": "D-7282147",
+    "created": "2026-10-19T13:10:37.001Z",
+    "updated": "2026-10-20T06:44:09.249Z",
+    "source": "payload-cadence",
+    "relatedItem": "",
+    "title": "Send: Agile Space Industries (for Chris Pearson), A flight check for Agile's thrusters before the Nyx qualification campaign",
+    "question": "Send this payload outreach to info@agile.space? (Subject: A flight check for Agile's thrusters before the Nyx qualification campaign)",
+    "context": "To: info@agile.space | Subject: A flight check for Agile's thrusters before the Nyx qualification campaign. Draft: capture/Draft_CM_AgileSpaceIndustries_Pearson_ThrusterFlightVal.md. Lizi voice + her booking link; no 'FAA-licensed vehicle' wording (John 10/15). Email VERIFIED: info@agile.space published on agilespaceindustries.com/contact; MX live (O365 GCC). US (Durango, CO). CSL \ud83d\udfe2 Agile Space Industries + Chris Pearson (10/19). Hook: $17M Series A Dec 2025; contracted to deliver flight thrusters for Nyx capsule (2028 ISS docking target); thrusters unflown in real space \u2014 BLK3 qualification lane before Nyx qual campaign. Not defense-facing for this pitch (Nyx is a commercial/ESA vehicle program). Source: agilespaceindustries.com/press/17m-series-a-accelerates-growth",
+    "proposedAction": "Hi Chris,\n\nCongratulations on the Series A and on the Nyx thruster contract. I'm with Exos Aerospace, and I wanted to reach out because a recoverable suborbital flight could be a useful step before your Nyx qualification campaign gets underway.\n\nWe've been flying commercial payloads since 2018 on SARGE, and its enhanced successor, BLK3, is preparing for its first commercial flight in early 2027. For a thruster assembly or a propulsion test article, a BLK3 flight could give Agile:\n\n- Launch loads and vibration on flight-configured hardware.\n- A few minutes of vacuum and microgravity, with telemetry through the flight.\n- The hardware back after landing so your team can inspect it before the Nyx qual campaign locks in.\n\nIf it would be helpful to talk through what a test article could look like, you can book a time on my calendar here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled\n\nBest Regards,\nLizi",
+    "type": "yesno",
+    "options": [
+      "Send",
+      "Edit",
+      "Hold"
+    ],
+    "priority": "med",
+    "dedupeKey": "payload-cadence-CM-2026-10-19",
+    "status": "answered",
+    "answer": "Send",
+    "note": "",
+    "answeredAt": "2026-10-20T06:44:09.249Z",
+    "agentClass": "payload-sales",
+    "correlationId": "",
+    "approver": "",
+    "assignedTo": "",
+    "docKeys": [
+      "draft-cm-agilespaceindustries-pearson-thrusterflightval"
+    ],
+    "answeredBy": "John Quinn",
+    "answeredByEmail": "jquinn@exosaero.com",
+    "email_activity": [
+      {
+        "message_id": "<069907bd3ad1114622770fd162e18b62@pm.me>",
+        "date": "2026-10-20T06:44:40+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?[Ready_to_send_=E2=80=94_from_you]_Send:_Agile_Space_Industries?= =?utf-8?q?_(for_Chris_Pearson),_A_flight_check_for_Agile's_thrusters_befo?= =?utf-8?q?re_the_Nyx_qualification_campaign?=",
+        "basis": [
+          "id:D-7282147"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "D-7282148",
+    "created": "2026-10-19T13:10:48.017Z",
+    "updated": "2026-10-20T06:44:09.075Z",
+    "source": "payload-cadence",
+    "relatedItem": "",
+    "title": "Send: Xona Space Systems (for Brian Manning), Flight data for Pulsar avionics before the constellation ramps up",
+    "question": "Send this payload outreach to media@xonaspace.com? (Subject: Flight data for Pulsar avionics before the constellation ramps up)",
+    "context": "To: media@xonaspace.com | Subject: Flight data for Pulsar avionics before the constellation ramps up. Draft: capture/Draft_CN_XonaSpaceSystems_Manning_PulsarHWVal.md. Lizi voice + her booking link; no 'FAA-licensed vehicle' wording (John 10/15). Email VERIFIED: media@xonaspace.com published on xonaspace.com Series C press release; MX live (M365 GCC: xonagov.mail.protection.office365.us). US (Burlingame, CA). CSL \ud83d\udfe2 Xona Space Systems + Brian Manning (10/19). Defense-adjacent (Space Force STRATFI, GCC email domain): marketing-level only, no tech data. Hook: $170M Series C March 2026; first production Pulsar navigation satellites targeting end-of-2026 launch; hardware avionics/signal processing unflown in production configuration. Source: finance.yahoo.com/sectors/technology/articles/xona-closes-170m-series-c-120000161.html",
+    "proposedAction": "Hi Brian,\n\nCongratulations on the Series C and the accelerated production ramp at the Burlingame factory. I'm with Exos Aerospace, and I wanted to reach out as you prepare your first production Pulsar satellites for launch.\n\nWe've been flying commercial payloads since 2018 on SARGE, and its enhanced successor, BLK3, is preparing for its first commercial flight in early 2027. Before your first production constellation goes up, a BLK3 flight could give Xona:\n\n- Launch loads and vibration on flight-configured avionics or signal hardware.\n- A few minutes of real space environment with telemetry through the flight.\n- The hardware back after landing so your team can verify behavior before the constellation commitment.\n\nIf it would be useful to talk through what a hardware qualification test article could look like, you can book a time on my calendar here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled\n\nBest Regards,\nLizi",
+    "type": "yesno",
+    "options": [
+      "Send",
+      "Edit",
+      "Hold"
+    ],
+    "priority": "med",
+    "dedupeKey": "payload-cadence-CN-2026-10-19",
+    "status": "answered",
+    "answer": "Send",
+    "note": "",
+    "answeredAt": "2026-10-20T06:44:09.075Z",
+    "agentClass": "payload-sales",
+    "correlationId": "",
+    "approver": "",
+    "assignedTo": "",
+    "docKeys": [
+      "draft-cn-xonaspacesystems-manning-pulsarhwval"
+    ],
+    "answeredBy": "John Quinn",
+    "answeredByEmail": "jquinn@exosaero.com",
+    "email_activity": [
+      {
+        "message_id": "<71fae80196f5c4b01cec1f5bb34a96de@pm.me>",
+        "date": "2026-10-20T06:44:42+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinn@exosaero.com"
+        ],
+        "subject": "=?utf-8?q?[Ready_to_send_=E2=80=94_from_you]_Send:_Xona_Space_Systems_(fo?= =?utf-8?q?r_Brian_Manning),_Flight_data_for_Pulsar_avionics_before_the_co?= =?utf-8?q?nstellation_ramps_up?=",
+        "basis": [
+          "id:D-7282148"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "D-7282149",
+    "created": "2026-10-19T13:10:59.942Z",
+    "updated": "2026-10-19T13:12:02.240Z",
+    "source": "payload-cadence",
+    "relatedItem": "",
+    "title": "Send: Spaceium (for Ashi Dissanayake), Flight data for Spaceium's cryo hardware before the in-orbit demo",
+    "question": "Send this payload outreach to ashi@spaceium.com? (Subject: Flight data for Spaceium's cryo hardware before the in-orbit demo)",
+    "context": "To: ashi@spaceium.com | Subject: Flight data for Spaceium's cryo hardware before the in-orbit demo. Draft: capture/Draft_CO_Spaceium_Dissanayake_CryoHWVal.md. Lizi voice + her booking link; no 'FAA-licensed vehicle' wording (John 10/15). Email VERIFIED: ashi@spaceium.com published on YC company page (ycombinator.com/companies/spaceium-inc) and yespress.io/spaceium-inc-yc-s24; MX live (Google). Canada (cleared ally); hardware angle = qualification of cryo valve/seal/structural behavior in microgravity before in-orbit demo, not propellant transfer \u2014 no ITAR flag for initial marketing contact. CSL \ud83d\udfe2 Spaceium + Ashi Dissanayake (10/19). Hook: YC S2024; $86.1M binding commercial contracts; cryogenic fuel storage hardware targeting launch to space 2027 (unflown in real space). Source: ycombinator.com/companies/spaceium-inc",
+    "proposedAction": "Hi Ashi,\n\nCongratulations on the commercial contract momentum and the progress toward your 2027 in-orbit demo. I'm with Exos Aerospace, and I wanted to reach out because a recoverable suborbital flight could be a practical way to get your hardware into real microgravity before the orbital commitment.\n\nWe've been flying commercial payloads since 2018 on SARGE, and its enhanced successor, BLK3, is preparing for its first commercial flight in early 2027. For a cryogenic valve assembly, storage system subscale model, or other hardware article, a BLK3 flight could give Spaceium:\n\n- Launch loads and vibration on flight-configured hardware.\n- A few minutes of microgravity to observe fluid and structural behavior, with telemetry through the flight.\n- The hardware back after landing for post-flight inspection before you commit to the in-orbit demo.\n\nIf it would be useful to talk through what a test article could look like, you can book a time on my calendar here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled\n\nBest Regards,\nLizi",
+    "type": "yesno",
+    "options": [
+      "Send",
+      "Edit",
+      "Hold"
+    ],
+    "priority": "med",
+    "dedupeKey": "payload-cadence-CO-2026-10-19",
+    "status": "open",
+    "answer": null,
+    "note": "",
+    "answeredAt": null,
+    "agentClass": "payload-sales",
+    "correlationId": "",
+    "approver": "",
+    "assignedTo": "",
+    "docKeys": [
+      "draft-co-spaceium-dissanayake-cryohwval"
+    ]
+  },
+  {
+    "id": "D-7282150",
+    "created": "2026-10-19T13:30:07.382Z",
+    "updated": "2026-10-19T14:23:35.332Z",
+    "source": "Exo (BLK3 send pack)",
+    "relatedItem": "",
+    "title": "BLK3 send pack 2026-10-19: 3 payload emails to approve",
+    "question": "Send the 3 BLK3 payload emails below (hold any by number in the note)?",
+    "context": "BLK3 payload-prospect send pack (Jon approved D-7281980, option A). \"Send approved items\" emails every numbered item below from the outreach address, signed as you, Reply-To and Cc you. Hold any item in the note, e.g. \"hold 2 5\". \"Hold all\" sends nothing. Nothing goes out without your click.\n\n1) To: <sales@voyagertechnologies.com>  [Voyager Technologies (NYSE: VOYG)]\n   (student-verified by Sunidhi Mathew (task:3761), fit 4/5)\n   Subject: Payload space for Voyager Technologies on BLK3, early 2027\n\n   Hello Voyager Technologies team,\n\n   My name is Lizi Quinn, and I work with the team at Exos Aerospace. We are currently booking payloads for the next flight of BLK3, our reusable suborbital rocket, in early 2027. Given Voyager Technologies' work in supporting research customers in microgravity, it felt like a natural fit to reach out.\n\n   Exos has flown commercial payloads since 2018 on our SARGE rocket, and BLK3 is its successor and our latest FAA-licensed vehicle. A few things that may be helpful as you think it over:\n\n   - The payload bay can carry up to 135 kg, so there is room for one larger experiment or several smaller ones.\n   - BLK3 is designed to give about two and a half minutes of continuous microgravity.\n   - Your hardware is recovered and returned to you after the flight, so your team can inspect it and work with it directly.\n\n   If any of the teams you work with need a suborbital step before a longer mission, we would be glad to explore how BLK3 could fit alongside what you already offer them.\n\n   If it would be helpful, I'm happy to send over our Payload User's Guide, or you can grab a time for a short scoping call here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled. You're also welcome to tell us what you'd like to fly at https://www.exosaero.com/flight-campaign.\n\n   Best Regards,\n   Lizi\n\n2) To: <sales@benchmark-space.com>  [Benchmark Space Systems]\n   (student-verified by Sunidhi Mathew (task:3760), fit 4/5)\n   Subject: Payload space for Benchmark Space Systems on BLK3, early 2027\n\n   Hello Benchmark Space Systems team,\n\n   My name is Lizi Quinn, and I work with the team at Exos Aerospace. We are currently booking payloads for the next flight of BLK3, our reusable suborbital rocket, in early 2027. Given Benchmark Space Systems' work in supporting research customers in microgravity, it felt like a natural fit to reach out.\n\n   Exos has flown commercial payloads since 2018 on our SARGE rocket, and BLK3 is its successor and our latest FAA-licensed vehicle. A few things that may be helpful as you think it over:\n\n   - The payload bay can carry up to 135 kg, so there is room for one larger experiment or several smaller ones.\n   - BLK3 is designed to give about two and a half minutes of continuous microgravity.\n   - Your hardware is recovered and returned to you after the flight, so your team can inspect it and work with it directly.\n\n   If any of the teams you work with need a suborbital step before a longer mission, we would be glad to explore how BLK3 could fit alongside what you already offer them.\n\n   If it would be helpful, I'm happy to send over our Payload User's Guide, or you can grab a time for a short scoping call here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled. You're also welcome to tell us what you'd like to fly at https://www.exosaero.com/flight-campaign.\n\n   Best Regards,\n   Lizi\n\n3) To: <sales@redwirespace.com>  [Redwire Space]\n   (student-verified by Sunidhi Mathew (task:3759), fit 4/5)\n   Subject: Payload space for Redwire Space on BLK3, early 2027\n\n   Hello Redwire Space team,\n\n   My name is Lizi Quinn, and I work with the team at Exos Aerospace. We are currently booking payloads for the next flight of BLK3, our reusable suborbital rocket, in early 2027. Given Redwire Space's work in in-space materials and manufacturing, it felt like a natural fit to reach out.\n\n   Exos has flown commercial payloads since 2018 on our SARGE rocket, and BLK3 is its successor and our latest FAA-licensed vehicle. A few things that may be helpful as you think it over:\n\n   - The payload bay can carry up to 135 kg, so there is room for one larger experiment or several smaller ones.\n   - BLK3 is designed to give about two and a half minutes of continuous microgravity.\n   - Your hardware is recovered and returned to you after the flight, so your team can inspect it and work with it directly.\n\n   For materials and manufacturing work, the recovered samples and hardware return to you after the flight, so your team can study them directly.\n\n   If it would be helpful, I'm happy to send over our Payload User's Guide, or you can grab a time for a short scoping call here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled. You're also welcome to tell us what you'd like to fly at https://www.exosaero.com/flight-campaign.\n\n   Best Regards,\n   Lizi\n\nNOT in this pack, route to John (gov/.mil/national lab): NASA Glenn Research Center <jason.w.hartwig@nasa.gov>; Sandia National Laboratories <partnerships@sandia.gov>; NRL Space Science Division (Code 7600) <andrew.nicholas@nrl.navy.mil>; Space Dynamics Laboratory (SDL / USU) <info@sdl.usu.edu>; NCATS / Tissue Chips in Space 2.0 <dmitriy.krepkiy@nih.gov>; Draper Laboratory <bd@draper.com>; MIT Lincoln Laboratory <brenizer@ll.mit.edu>; DIU HyCAT Program <press@diu.mil>\n\nNOT in this pack, held: BioOrbit <info@bioorbit.com> (non-US indicator 'UK': hold for export review); Exobiosphere <info@exobiosphere.com> (non-US indicator 'Korean': hold for export review); Hypersonix Launch Systems USA <matt.hill@hypersonix.com> (non-US indicator 'Australian': hold for export review)",
+    "proposedAction": "On approval Exo emails 3 BLK3 payload prospects as Lizi (per-item holds honored)",
+    "type": "choice",
+    "options": [
+      "Send approved items",
+      "Hold all"
+    ],
+    "priority": "normal",
+    "dedupeKey": "blk3-send-pack-2026-10-19",
+    "status": "answered",
+    "answer": "Send approved items",
+    "note": "",
+    "answeredAt": "2026-10-19T14:23:35.332Z",
+    "agentClass": "blk3-send-pack",
+    "correlationId": "",
+    "approver": "lquinn@exosaero.com",
+    "assignedTo": "lquinn@exosaero.com",
+    "answeredBy": "Lizi Quinn",
+    "answeredByEmail": "lquinn@exosaero.com",
+    "email_activity": [
+      {
+        "message_id": "<179241993486.74956.297704347698062635@pm.me>",
+        "date": "2026-10-19T14:25:37+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "sales@voyagertechnologies.com"
+        ],
+        "subject": "Payload space for Voyager Technologies on BLK3, early 2027",
+        "basis": [
+          "addr:sales@voyagertechnologies.com"
+        ]
+      },
+      {
+        "message_id": "<179241993915.74956.14149359531863894904@pm.me>",
+        "date": "2026-10-19T14:25:41+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "sales@benchmark-space.com"
+        ],
+        "subject": "Payload space for Benchmark Space Systems on BLK3, early 2027",
+        "basis": [
+          "addr:sales@benchmark-space.com"
+        ]
+      },
+      {
+        "message_id": "<179241994440.74956.13023759640319392111@pm.me>",
+        "date": "2026-10-19T14:25:47+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "sales@redwirespace.com"
+        ],
+        "subject": "Payload space for Redwire Space on BLK3, early 2027",
+        "basis": [
+          "addr:sales@redwirespace.com"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "D-7282151",
+    "created": "2026-10-19T19:07:19.380Z",
+    "updated": "2026-10-20T06:43:42.497Z",
+    "source": "Exo (email command)",
+    "relatedItem": "3879",
+    "title": "NJIT cryo-propellant rotation simulator (Boris Khusid): take it or pass?",
+    "question": "Do you want to take the NJIT simulator hosting lead (you run the call with Boris), or pass?",
+    "context": "Phil handed this to you (email 10/19 2:06 PM): he wants you to own it and be told only when it's accepted, passed, or completed.\n\nWHAT: Prof. Boris Khusid (NJIT, khusid@njit.edu) wants an off-campus partner to house and operate a NASA-funded two-axis rotation simulator for cryogenic propellant flow (12-17k lb, 25x25x14 ft, 480V 3-ph, LN2). Award: NASA 80NSSC24K1016, $566K congressionally-directed to NJIT, PoP 7/1/2024-8/31/2027 (https://www.usaspending.gov/award/ASST_NON_80NSSC24K1016_080). Boris says he spoke with you about it about a year ago.\n\nDD: PASS with a cost caution. NJIT/Boris/David Money (Princeton CryoTech) clear denied-party screening. The flyer funds the machine, payload and assembly only; facility, power, LN2, staff, insurance and post-8/2027 operation are unaddressed and would land on the host.\n\nHISTORY: same simulator as the Nov 2025 Space Nation/Astroport Midland thread (MC #1837, Lizi, closed; Aug 6 2026 re-open email got no reply on record).\n\nREADY: DD write-up + Boris flyer + a draft reply to Boris (asks the 4 cost/structure questions, proposes a 30-45 min call) are on MC #3879. Nothing has been sent.",
+    "proposedAction": "ACCEPT: Exo emails Phil one line ('John accepted the NJIT simulator lead and is taking the call'), leaves #3879 on John with the draft reply ready for John to send from his account. PASS: Exo emails Phil one line ('John passed on the NJIT simulator lead'), drafts a short polite decline for Phil/John to send, and closes #3879. In both cases: email Phil ONLY that one line at peaton@exosaero.com via msmtp (account protonmail), no analysis, no internal narration. When #3879 is later closed as completed, email Phil one line saying so.",
+    "type": "choice",
+    "options": [
+      "Accept \u2014 I'll take the call with Boris",
+      "Pass on hosting it (send polite decline)"
+    ],
+    "priority": "med",
+    "dedupeKey": "njit-khusid-sim-handoff-3879",
+    "status": "answered",
+    "answer": "Accept \u2014 I'll take the call with Boris",
+    "note": "",
+    "answeredAt": "2026-10-20T06:43:42.497Z",
+    "agentClass": "",
+    "correlationId": "",
+    "approver": "jquinn@exosaero.com",
+    "assignedTo": "jquinn@exosaero.com",
+    "email_activity": [
+      {
+        "message_id": "<5a4932b50b61d9ae174faeea7f4b84ed@pm.me>",
+        "date": "2026-10-19T19:07:44+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "peaton@exosaero.com"
+        ],
+        "subject": "Re: Exos Aerospace Connection..., Exo update, Exo update",
+        "basis": [
+          "id:D-7282151"
+        ]
+      },
+      {
+        "message_id": "<186b8373d0ab2d267cce56398f9d6976@pm.me>",
+        "date": "2026-10-20T06:41:08+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "jquinn@exosaero.com"
+        ],
+        "subject": "Re: Exos Aerospace Connection..., Exo update",
+        "basis": [
+          "id:D-7282151"
+        ]
+      },
+      {
+        "message_id": "<34eb550fe3648e3f9ae18a743b609683@pm.me>",
+        "date": "2026-10-20T06:45:46+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "peaton@exosaero.com"
+        ],
+        "subject": "NJIT simulator lead - accepted",
+        "basis": [
+          "llm:0.98"
+        ]
+      },
+      {
+        "message_id": "<0f572f56c13b863097c4c9e6bb5b0d76@pm.me>",
+        "date": "2026-10-20T12:46:27+00:00",
+        "direction": "sent",
+        "from": "jquinnexo@pm.me",
+        "to": [
+          "peaton@exosaero.com"
+        ],
+        "subject": "NJIT simulator lead - completed",
+        "basis": [
+          "llm:0.95"
+        ]
+      }
+    ],
+    "answeredBy": "John Quinn",
+    "answeredByEmail": "jquinn@exosaero.com"
+  },
+  {
+    "id": "D-7282152",
+    "created": "2026-10-20T06:32:57.000Z",
+    "updated": "2026-10-20T06:43:28.342Z",
+    "source": "payload-sales",
+    "relatedItem": "",
+    "title": "Send: Sidus Space (media inbox), Flight data for Fortis before the LizzieSat launch",
+    "question": "Send this payload outreach to press@sidusspace.com? (Subject: Flight data for Fortis before the LizzieSat launch)",
+    "context": "To: press@sidusspace.com | Subject: Flight data for Fortis before the LizzieSat launch. Draft: capture/Draft_CP_SidusSpace_FortisQual.md. Lizi voice + her booking link; no 'FAA-licensed vehicle' wording (John 10/15); no \\$/kg pricing. Email VERIFIED: press@sidusspace.com published as media contact on every 2026 Sidus Space PRNewswire release; MX live. No named engineering/BD contact surfaced (public company, generic inbox only) \u2014 staged like other media-contact leads (Xona/CN, GRU Space/BW) rather than left parked, since the inbox is live and the qual window is active now. CSL \ud83d\udfe2 Sidus Space, Inc. (2026-10-20). Hook: PRNewswire 2026-06-16, LizzieSat-5 moved off Transporter-18 onto Bandwagon-6 specifically to expand Fortis VPX-Maxima qualification testing before committing it to orbit; \\M registered direct raise May 2026, \\.5M cash, no term debt (StockTitan). Net-new company in CRM (Supabase companies, created 2026-10-19T23:47Z, no existing payload-BD record).",
+    "proposedAction": "Hi there,\n\nCongratulations on completing vibration testing for the next LizzieSat and on the Fortis VPX-Maxima mission computer reaching this milestone. I'm with Exos Aerospace, and I wanted to reach out while your team is still in the qualification window ahead of the Bandwagon-6 launch.\n\nWe've been flying commercial payloads since 2018 on SARGE, and its enhanced successor, BLK3, is preparing for its first commercial flight in early 2027. Before Fortis flies on an operational LizzieSat, a BLK3 flight could give your team:\n\n- Launch loads and vibration on a flight-configured Fortis unit.\n- A few minutes of real space environment with telemetry through the flight.\n- The hardware back after landing so your engineering team can review behavior before the next qualification milestone.\n\nIf it would be useful to talk through what a hardware validation test article could look like, you can book a time on my calendar here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled\n\nBest Regards,\nLizi",
+    "type": "yesno",
+    "options": [
+      "Send",
+      "Edit",
+      "Hold"
+    ],
+    "priority": "med",
+    "dedupeKey": "payload-sales-CP-2026-10-20",
+    "status": "answered",
+    "answer": "Send",
+    "note": "",
+    "answeredAt": "2026-10-20T06:43:28.342Z",
+    "agentClass": "payload-sales",
+    "correlationId": "",
+    "approver": "",
+    "assignedTo": "",
+    "docKeys": [
+      "draft-cp-sidusspace-fortisqual"
+    ],
+    "answeredBy": "John Quinn",
+    "answeredByEmail": "jquinn@exosaero.com"
+  },
+  {
+    "id": "D-7282153",
+    "created": "2026-10-20T12:30:04.473Z",
+    "updated": "2026-10-20T12:32:53.552Z",
+    "source": "Exo (exo3-field-report)",
+    "relatedItem": "",
+    "title": "Share ExO3 field report with Salim Ismail? (2026-W43)",
+    "question": "This week's ExO 3.0 field report is ready. 9 failures catalogued (9 total; see breakdown in the report). Do you want to share it with Salim Ismail? Report: exo3-field-report-2026-W43.docx",
+    "context": "Report: drafts/exo3-field-report/exo3-field-report-2026-W43.docx. Lessons: skills/building-an-exo/references/exos-field-lessons.md. This week's new or open failures: see exo3-field-failures.json. IMPORTANT: Do NOT email Salim directly from this decision \u2014 send to Jon's inbox to forward.",
+    "proposedAction": "Send draft to my inbox to forward \u2192 Exo sends the docx to jquinnexo@pm.me for Jon to forward manually. Skip this week \u2192 no action. Edit first \u2192 Jon edits the docx then decides.",
+    "type": "choice",
+    "options": [
+      "Send draft to my inbox to forward",
+      "Skip this week",
+      "Edit first"
+    ],
+    "priority": "low",
+    "dedupeKey": "exo3-field-report-2026-W43",
+    "status": "open",
+    "answer": null,
+    "note": "",
+    "answeredAt": null,
+    "agentClass": "",
+    "correlationId": "",
+    "approver": "",
+    "assignedTo": "",
+    "docKeys": [
+      "exo3-field-report-2026-w43",
+      "exos-field-lessons"
+    ]
+  },
+  {
     "id": "D-ROUTINE-BATCH",
     "created": "2026-07-31T09:27:05",
-    "updated": "2026-10-16T09:14:47",
+    "updated": "2026-10-19T09:46:28",
     "source": "Decision Triage",
     "title": "\ud83d\udcec Routine outreach auto-delegated (payload \u2192 UTD, BLK3 \u2192 Lizi) \u2014 standing rule",
     "question": "0 routine outreach items are auto-routed per your standing rule (payload sales \u2192 UTD capstone; BLK3 sales \u2192 Lizi). No action needed.",
@@ -59451,20 +60388,64 @@
         "Lquinn@exosaero.com"
       ]
     },
-    "note": "Standing rule applied 2026-10-19: 0 payload \u2192 UTD, 0 BLK3 \u2192 Lizi. Auto-applied every run; not resurfaced to Jon."
+    "note": "Standing rule applied 2026-10-20: 0 payload \u2192 UTD, 0 BLK3 \u2192 Lizi. Auto-applied every run; not resurfaced to Jon."
   },
   {
-    "id": "D-7282145",
-    "title": "SSLC QB login refresh needed for MC demo container",
-    "status": "pending",
-    "created_at": "2026-10-19T11:22:00Z",
-    "body": "The SSLC QuickBooks session has expired. To load SSLC data into the MC demo container, please refresh the login:\n\n1. Open the 'imported' browser profile in OpenClaw\n2. Navigate to https://app.qbo.intuit.com and log in with the SSLC reports-only credentials\n3. Reply 'done' to this decision \u2014 I will then automatically export Items, Vendors, Open POs, Bills, and Inventory Valuation into the SSLC MC demo container.\n\nAll other demo setup steps are proceeding without QB data and will be ready.",
+    "id": "D-7282154",
+    "created": "2026-10-20T13:09:56.000Z",
+    "updated": "2026-10-20T13:09:56.000Z",
+    "source": "payload-cadence",
+    "relatedItem": "",
+    "title": "Send: True Anomaly (for Even Rogers), Flight data for Jackal hardware before the GHOST-R mission",
+    "question": "Send this payload outreach to press@trueanomaly.space? (Subject: Flight data for Jackal hardware before the GHOST-R mission)",
+    "context": "To: press@trueanomaly.space | Subject: Flight data for Jackal hardware before the GHOST-R mission. Draft: capture/Draft_CQ_TrueAnomaly_Rogers_GEOJackalQual.md. Lizi voice + her booking link + UTD one-pager attachment; no 'FAA-licensed vehicle' wording. Email VERIFIED: press@trueanomaly.space published on trueanomaly.space/newsroom (Director of Communications Kristin Q. Cody); MX live (O365 GCC: trueanomaly.mail.protection.office365.us). US (Centennial, CO). Defense/national security \u2014 marketing-level only, no tech data. CSL \ud83d\udfe2 True Anomaly, Inc. + Even Rogers (2026-10-20). Hook: $260M Series C April 2025; selected for GHOST-R GEO reconnaissance prototype contract Sept 2026; GEO Jackal hardware unflown in GEO/cislunar regime. Source: https://finance.yahoo.com/news/true-anomaly-raises-260-million-130000034.html",
+    "proposedAction": "Hi there,\n\nCongratulations on the GHOST-R selection and on the Victus Haze success. I'm with Exos Aerospace, and I wanted to reach out as your team prepares the GEO Jackal configuration ahead of its first deep-space mission.\n\nWe've been flying commercial payloads since 2018 on SARGE, and its enhanced successor, BLK3, is preparing for its first commercial flight in early 2027. For hardware components going into a new orbital regime for the first time, a BLK3 flight can provide:\n\n- Launch loads and vibration on flight-configured hardware.\n- A few minutes of real space environment with telemetry through the flight.\n- The hardware back after landing so your team can verify behavior before the GEO mission.\n\nI've attached a one-page overview of how other teams have used BLK3 for pre-mission hardware validation. If it would be useful to talk through what a test article could look like, you can book a time on my calendar here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled\n\nBest Regards,\nLizi",
+    "type": "yesno",
     "options": [
-      "done",
-      "skip QB data for now"
+      "Send",
+      "Edit",
+      "Hold"
     ],
-    "assignee": "jquinn@exosaero.com",
-    "dedupeKey": "sslc-qb-login-refresh-20261019",
-    "source": "sslc-mc-container-exo3"
+    "priority": "med",
+    "dedupeKey": "payload-cadence-CQ-2026-10-20",
+    "status": "open",
+    "answer": "",
+    "note": "",
+    "agentClass": "payload-sales",
+    "correlationId": "",
+    "approver": "",
+    "assignedTo": "",
+    "docKeys": [
+      "draft-cq-trueanomaly-rogers-geojackalqual"
+    ]
+  },
+  {
+    "id": "D-7282155",
+    "created": "2026-10-20T13:09:56.000Z",
+    "updated": "2026-10-20T13:09:56.000Z",
+    "source": "payload-cadence",
+    "relatedItem": "",
+    "title": "Send: Quantum Space (for Jim Bridenstine), Flight data for Ranger Prime hardware before its Spring 2027 mission",
+    "question": "Send this payload outreach to media@quantumspace.us? (Subject: Flight data for Ranger Prime hardware before its Spring 2027 mission)",
+    "context": "To: media@quantumspace.us | Subject: Flight data for Ranger Prime hardware before its Spring 2027 mission. Draft: capture/Draft_CR_QuantumSpace_Bridenstine_RangerPrimeHWQual.md. Lizi voice + her booking link + UTD one-pager attachment; no 'FAA-licensed vehicle' wording. Email VERIFIED: media@quantumspace.us published on quantumspace.us press releases; MX live (O365 GCC: quantum.mail.protection.office365.us). US (Rockville, MD). Defense/national security \u2014 marketing-level only, no tech data. CSL \ud83d\udfe2 Quantum Space + Jim Bridenstine (2026-10-20). Hook: Ranger Prime first Ranger mission, Spring 2027 launch target (no earlier than); all Ranger hardware unflown; acquired Phase Four propulsion Sept 2025; DARPA LASSO April 2026. Source: https://www.quantumspaceinc.com/blog/where-weve-been-where-were-going-update-on-ranger-prime",
+    "proposedAction": "Hi there,\n\nCongratulations on the DARPA LASSO award and on the progress toward Ranger Prime. I'm with Exos Aerospace, and I wanted to reach out as your team advances toward the Spring 2027 launch window.\n\nWe've been flying commercial payloads since 2018 on SARGE, and its enhanced successor, BLK3, is preparing for its first commercial flight in early 2027. For a first mission with a hard launch schedule, a BLK3 flight can give your team:\n\n- Launch loads and vibration on flight-configured Ranger components or a propulsion test article.\n- A few minutes of real space environment with telemetry through the flight.\n- The hardware back after landing so your engineers can verify behavior before the launch commitment.\n\nI've attached a one-page overview of how other hardware teams have used BLK3 for pre-mission qualification. If it would be useful to talk through what a test article could look like, you can book a time on my calendar here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled\n\nBest Regards,\nLizi",
+    "type": "yesno",
+    "options": [
+      "Send",
+      "Edit",
+      "Hold"
+    ],
+    "priority": "med",
+    "dedupeKey": "payload-cadence-CR-2026-10-20",
+    "status": "open",
+    "answer": "",
+    "note": "",
+    "agentClass": "payload-sales",
+    "correlationId": "",
+    "approver": "",
+    "assignedTo": "",
+    "docKeys": [
+      "draft-cr-quantumspace-bridenstine-rangerprimehwqual"
+    ]
   }
 ]
