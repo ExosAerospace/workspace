@@ -1558,7 +1558,9 @@ h1{font-size:28px;margin-bottom:8px}h1 span{color:#0080ff}
 </body></html>`;
 }
 
+const brandWrap = require('./lib/entity-brand').install(ENTITY); // null for Exos
 const server = http.createServer((req, res) => {
+  if (brandWrap) brandWrap(req, res);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
