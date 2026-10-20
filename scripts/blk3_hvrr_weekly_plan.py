@@ -40,9 +40,6 @@ TARGETS = [
         ("Fin tooling: confirm the machinist job is scheduled (full-size fins, geometry locked). "
          "Send the fin spec package if not yet sent. Note confirmation on #76.",
          "Machinist job scheduled; note on #76", "#76"),
-        ("BLK3 restricted drawings (#1872 Cancelled — explain): post a note on #1872 explaining the "
-         "cancellation and identify where the drawings requirement lives now (or reopen it).",
-         "Note on #1872 explaining cancellation", "#1872"),
         ("$10M building policy: reassign #1374 to Victor per Jon's 9/30 instruction. Close it out.",
          "#1374 reassigned to Victor, state updated", "#1374"),
     ]),
@@ -111,7 +108,7 @@ AGENDA = [
       "early 2027 under the Part 431→450 transition) and the HVRR flight-ready build.",
       "Method: plan the work, work the plan. Weekly targets are committed Tuesday, updated daily, and scored Friday."]),
     ("2. Wk 10/12–10/16 scorecard, 10 min",
-     ["Phil: 0/5 done; master schedule (3 wks overdue), fin tooling, recovery section all open. #1872 cancelled without explanation.",
+     ["Phil: 0/5 done; master schedule (3 wks overdue), fin tooling, recovery section all open.",
       "Neil: 1/3 done (PIEE login); HVRR WBS and Part 450 carry forward.",
       "Steve: 0/2 done; long-lead confirmation and build photos not posted.",
       "Mike: 0/3 done; bulkheads/launch stool independent misses; GHe gated on #3056.",
@@ -128,8 +125,7 @@ AGENDA = [
     ("5. Blockers and decisions, 10 min",
      ["HP He tank final call (#3056): SSLC Parylene evaluation ongoing — gates pressurization section.",
       "Russ Blink: 4 weeks zero avionics deliverables; John direct intervention required.",
-      "Phil master schedule: critical-path tracking is blind without it — 3rd ask.",
-      "#1872 cancellation: what happened to the restricted drawings requirement?"]),
+      "Phil master schedule: critical-path tracking is blind without it — 3rd ask."]),
     ("6. Cadence and close, 5 min",
      ["Daily: update your task by 4 pm (note, photo, or state change). Exo flags only the slips.",
       "Friday 3 pm: scorecard of committed vs done. A miss gets a cause and a recovery date.",
