@@ -1,4 +1,5 @@
-#Requires -Modules ExchangeOnlineManagement
+# Needs ExchangeOnlineManagement. (#Requires removed 2026-10-20: the .psd1 load hangs on ExoMac's portable pwsh;
+# the module is imported via its netCore .psm1 below when not already loaded.)
 <#
 .SYNOPSIS
     Deploys the Exos canonical blocked-senders list as a company-wide
@@ -33,6 +34,10 @@
 
 param(
     [string]$BlockListPath = "$PSScriptRoot\Blocked_Senders_Current.txt",
+    [ValidateSet('Quarantine','Reject')]
+    [string]$Action = 'Quarantine',          # Phil 2026-10-20: send to Microsoft hosted quarantine, not bounce
+    [string[]]$StrictUsers = @(),            # mailboxes to add to the Strict preset (spam/bulk -> quarantine, not Junk)
+    [switch]$Device,                         # device-code sign-in (ExoMac / non-Windows)
     [switch]$WhatIf
 )
 
@@ -88,7 +93,8 @@ if ($WhatIf) {
     Write-Host "  Rule name : $RuleName"
     Write-Host "  Scope     : all inbound (FromScope = NotInOrganization)"
     Write-Host "  Condition : SenderDomainIs OR From list"
-    Write-Host "  Action    : RejectMessageEnhancedStatusCode 5.7.1 (bounce to sender)"
+    Write-Host "  Action    : $Action"
+    if ($StrictUsers.Count) { Write-Host "  Strict preset (spam/bulk -> quarantine) for: $($StrictUsers -join ', ')" }
     Write-Host "  Priority  : 0 (highest)"
     Write-Host ''
     Write-Host '[WHATIF] Domains to block:' -ForegroundColor Yellow
@@ -103,8 +109,16 @@ if ($WhatIf) {
 }
 
 # --- Connect to GCC High Exchange Online -------------------------------------
+if (-not (Get-Module ExchangeOnlineManagement)) {   # Get-Command would autoload the hanging .psd1
+    $exo = Get-ChildItem "$HOME/.local/share/powershell/Modules/ExchangeOnlineManagement/*/netCore/ExchangeOnlineManagement.psm1" -ErrorAction SilentlyContinue | Select-Object -Last 1
+    if ($exo) { Import-Module $exo.FullName } else { Import-Module ExchangeOnlineManagement }
+}
 Write-Host 'Connecting to Exchange Online (GCC High)...' -ForegroundColor Cyan
-Connect-ExchangeOnline -ExchangeEnvironmentName O365USGovGCCHigh -ShowBanner:$false
+if ($Device) {
+    Connect-ExchangeOnline -ExchangeEnvironmentName O365USGovGCCHigh -Device -ShowBanner:$false
+} else {
+    Connect-ExchangeOnline -ExchangeEnvironmentName O365USGovGCCHigh -ShowBanner:$false
+}
 Write-Host 'Connected.' -ForegroundColor Green
 Write-Host ''
 
@@ -123,8 +137,12 @@ $ruleParams = @{
     Enabled                       = $true
     StopRuleProcessing            = $true
     FromScope                     = 'NotInOrganization'   # inbound from outside Exos (was SentToScope=NotInOrganization, which only matched OUTBOUND mail - fixed 2026-09-27)
-    RejectMessageEnhancedStatusCode = '5.7.1'
-    RejectMessageReasonText       = 'Message rejected. Sender is on the Exos denied-party block list.'
+}
+if ($Action -eq 'Quarantine') {
+    $ruleParams['Quarantine'] = $true        # Microsoft 365: delivered to the hosted quarantine
+} else {
+    $ruleParams['RejectMessageEnhancedStatusCode'] = '5.7.1'
+    $ruleParams['RejectMessageReasonText']         = 'Message rejected. Sender is on the Exos denied-party block list.'
 }
 
 # Transport rules need at least one condition. We use SenderDomainIs for
@@ -153,6 +171,19 @@ else {
     New-TransportRule @emailParams | Out-Null
 }
 
+# --- Optional: put named mailboxes in the Strict preset (spam + bulk -> quarantine) ---
+if ($StrictUsers.Count -gt 0) {
+    $strict = Get-EOPProtectionPolicyRule -Identity 'Strict Preset Security Policy' -ErrorAction SilentlyContinue
+    if (-not $strict) {
+        Write-Warning 'Strict preset is not turned on in this tenant (rule missing). Turn on Strict protection once at https://security.microsoft.us/presetSecurityPolicies, then re-run with -StrictUsers.'
+    } else {
+        $sentTo = @($strict.SentTo) + $StrictUsers | Where-Object { $_ } | Sort-Object -Unique
+        Set-EOPProtectionPolicyRule -Identity 'Strict Preset Security Policy' -SentTo $sentTo
+        if ($strict.State -ne 'Enabled') { Enable-EOPProtectionPolicyRule -Identity 'Strict Preset Security Policy' }
+        Write-Host "Strict preset now applies to: $($sentTo -join ', ')" -ForegroundColor Green
+    }
+}
+
 # --- Verify ------------------------------------------------------------------
 Write-Host ''
 Write-Host 'Verifying...' -ForegroundColor Cyan
@@ -167,7 +198,8 @@ foreach ($r in $created) {
     Write-Host "  Rule: $($r.Name)  |  Priority: $($r.Priority)  |  Enabled: $($r.Enabled)"
 }
 Write-Host ''
-Write-Host "All inbound messages from $total blocked senders will be rejected (550 NDR)."
+Write-Host "All inbound messages from $total blocked senders: $Action."
+
 Write-Host 'Review in EAC: https://admin.exchange.microsoft.us -> Mail flow -> Rules'
 Write-Host ''
 Write-Host 'Disconnecting...'
