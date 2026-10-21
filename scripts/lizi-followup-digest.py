@@ -328,7 +328,20 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'Best Regards,\n'
                  'Lizi')],
  # Montana Tech / Bryce Hill 11/2 nudge removed 10/21: he replied, clubs declined, he's booked.
- '2026-11-02': [('UGA Small Satellite Research Lab: Dr. Deepak Mishra (task #997)',
+ '2026-11-02': [('LinkedIn re-check: Kyle Acierno, Shawn Usman, Adam Escobar, Marshall Smith',
+                 'LinkedIn (no email)',
+                 'all 4 still pending on 10/21 (requests sent 10/6-10/8)',
+                 '(No email.) Check again whether any accepted. For anyone who did, tell Exo in #lizi-channel-2 and it drafts the message. Anyone still pending after nearly 4 weeks, '
+                 'just leave it. For Marshall (Starlab), Exo can line up Bradley Henderson (Starlab CCO) instead.'),
+                ('NCAR ACOM: Dr. Eric Apel (task #2200)',
+                 'apel@ucar.edu (reply on your 10/21 note)',
+                 'you followed up 10/21 with the booking link + one-pager. Skip if he booked or replied',
+                 'Hi Eric,\n'
+                 "Just checking back on my note from last week. I'd still love to find a time for a quick Zoom with you and your colleague. Here's my booking link again, or send a couple "
+                 "of times that work and I'll set it up.\n"
+                 'Best Regards,\n'
+                 'Lizi'),
+                ('UGA Small Satellite Research Lab: Dr. Deepak Mishra (task #997)',
                  "dmishra@uga.edu (reply on your 10/19 thread, keep Phillip Stancil cc'd)",
                  'Stancil referred you 10/18; you sent Mishra the one-pager + booking link 10/19. Skip if he replied or booked',
                  'Hi Dr. Mishra,\n'
