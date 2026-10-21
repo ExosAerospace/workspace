@@ -75,11 +75,13 @@ def build():
             ("Referrals: ", "Space Grove introduces companies that need suborbital flight testing to Exos; Exos introduces companies that need a Space Coast base to Space Grove."),
             ("Events: ", "an Exos session at a Space Grove event or podcast on testing hardware in flight before orbit."),
             ("Italy and Europe: ", "student and company links through Exos Aerospace Italia, building on Space Grove's Italian Trade Agency connection."),
+            ("Investor introductions: ", "Exos is raising a $10M Series A. Are there space investors in your network you would be willing to introduce us to? We would welcome the same for Science Fair Payload Award sponsors."),
             ]),
         ("5. Next steps and owners", [
             "Name a lead on each side.",
             "Exos drafts a two-page Science Fair Payload Award concept within two weeks for Space Grove's review.",
             "Exos arranges an introduction call between Space Grove and Nova Space.",
+            "Space Grove shares any space investor and sponsor introductions it can make.",
             "Follow-up call during the week of November 2.",
             "Mutual NDA, then a short memorandum of understanding if both sides want to formalize."]),
     ]:

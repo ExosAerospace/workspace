@@ -63,11 +63,13 @@ def build():
             ("Referrals: ", "Space Grove sends flight-test candidates to Exos; Exos sends customers that need a Space Coast base to Space Grove."),
             ("Event: ", "an Exos session on her Off the Record / Behind Closed Doors podcast series about testing hardware in flight before orbit."),
             ("Italy/Europe: ", "she is an Italian Trade Agency delegate at Maker Faire Rome Oct 23–25. Explore European student and company links through Exos Italia."),
+            ("Investor intros: ", "ask: 'Do you know space investors you could introduce us to? We're raising a $10M Series A.' Space Grove doesn't appear to invest its own money (it preps founders and makes intros), so ask for introductions, not a check. Follow-up: 'Which investors have you brought into deals this year?'"),
             ]),
         ("5. Next steps and owners (3 min)", "", [
             "Agree on owners: Exos (John; Lizi Quinn day-to-day) and Space Grove (Melissa or her delegate).",
             "Exos drafts a 2-page Science Fair Payload Award concept within 2 weeks and sends the payload one-pager.",
             "Exos sets up an intro call between Space Grove and Nova Space / Space Workforce Institute.",
+            "Melissa sends any space investor and sponsor introductions she can make; Exos logs them in the CRM.",
             "Follow-up call in the week of Nov 2 (after her Rome trip and the Oct 28–29 Space Economy Summit at UCF).",
             "If both sides want it in writing later: mutual NDA first, then a simple MOU (reviewed by Counsel)."]),
     ]:
@@ -123,7 +125,7 @@ def build():
 
     h(doc, "RULES FOR THIS MEETING", RED)
     bullets(doc, [
-        "Partnership only. Our background check (10/20) rated Space Grove CAUTION: new company (2 staff on LinkedIn), no public financials or ownership. Don't ask them for investment and don't commit money or exclusivity.",
+        "Partnership only. Our background check (10/20) rated Space Grove CAUTION: new company (2 staff on LinkedIn), no public financials or ownership. Ask her for investor INTRODUCTIONS only, not for Space Grove to invest; don't commit money or exclusivity.",
         "Science fair flights are sold to sponsors, never given away. No price per student payload in the meeting.",
         "No pricing, no valuation, no investor names. If asked about the raise: 'raising a $10M Series A.' Nothing about a reverse merger, $215M or STRATFI.",
         "Don't call BLK3 'FAA-licensed.' Say Exos has flown licensed suborbital flights with full recovery and is moving to the FAA's newer launch rules (Part 450).",
