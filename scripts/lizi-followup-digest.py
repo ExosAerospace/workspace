@@ -421,11 +421,11 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'Best Regards,\n'
                  'Lizi'),
                 ('Magma Space: Alessandro Stabile (task #2307)',
-                 'outreach@magma-space.com (reply on your "For Alessandro: Flight Testing for Your Maglev Reaction Wheel" thread)',
-                 'first note 10/7, nudge 10/21, no reply yet. This is the last check-in. If they stay quiet, Exo moves them to a quarterly touch. Skip if they replied',
+                 'LinkedIn message to Alessandro Stabile (NOT the outreach@ inbox: both emails went to a generic address and may never have reached him)',
+                 'emails 10/7 + 10/21 to outreach@, no reply. 3-message rule: try a different channel before pausing. If no reply on LinkedIn, Exo moves Magma to a 90-day re-touch (2/3). Skip if they replied',
                  'Hi Alessandro,\n'
-                 "One last check-in on a BLK3 flight for your maglev reaction wheel. If the timing isn't right yet, no problem at all. Just let me know when your team is "
-                 "planning its next round of testing and I'll circle back then.\n"
+                 "I sent a couple of notes to Magma's outreach inbox about flying your maglev reaction wheel on BLK3 and wanted to make sure they reached you. "
+                 "If a recovered suborbital test flight could be useful, I'd be glad to set up a short call with our engineering team.\n"
                  'Best Regards,\n'
                  'Lizi'),
                 ('Axiom: Dr. Chyree Batton (task #2031)',
@@ -435,7 +435,21 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "One last check-in on a recovered BLK3 test flight for your battery and vacuum qualification work. If the timing isn't right yet, no problem at all. Just let me know "
                  "when your team is planning that qualification round and I'll circle back then.\n"
                  'Best Regards,\n'
-                 'Lizi')]}
+                 'Lizi')],
+ '2026-12-01': [('UTD AIAA / Comet Rocketry: last call for the BLK3 slot (task #1300)',
+                 'mi.vo@utdallas.edu, olivia.johnson4@utdallas.edu, cc don.proeschel@utdallas.edu (reply on your "Thank you + next steps" thread; Don is the faculty advisor)',
+                 "3 messages (latest 10/21), no reply, outreach paused. This is the ONE deadline exception to the 3-message rule: design coordination + payment to hold the slot are due mid-December. Skip if anyone at UTD replied",
+                 'Hi Mi, Olivia, and Don,\n'
+                 "I wanted to send one last note before our mid-December deadline for the BLK3 payload slot. If the team would like to fly an experiment, design coordination "
+                 "and payment to hold the slot need to be in place by then. If the timing doesn't work this round, no problem at all. Just let me know and I'll keep you in mind "
+                 "for a future flight.\n"
+                 'Best Regards,\n'
+                 'Lizi')],
+ '2027-02-03': [('90-day re-touch: paused contacts (3 messages, no reply)',
+                 'JHU/APL Josh Wolk, UCLA Prof. Chee Wei Wong, Axiom Dr. Chyree Batton, Magma Alessandro Stabile, UTD/Comet (if they never replied), plus any of 11/4\'s sends that went quiet',
+                 "These were paused under your 3-message rule. A re-touch is a NEW message with real news (flight date, test results, new capability), not another nudge. Skip anyone who replied. "
+                 "Tell Exo in #lizi-channel-2 and it will draft each one with the latest BLK3 news",
+                 '(Exo drafts these fresh on request with current news; no stale template.)')]}
 today=date.today().isoformat()
 items=DUE.get(today,[])
 if items:
@@ -445,7 +459,7 @@ if items:
     m.set_content("Hi Lizi,\n\nThese are due for a follow-up today if they haven't replied. Each has the contact and a ready-to-send nudge (reply on your original thread so they see the history):\n\n"+"\n".join(lines)+
       "\n\nSkip anyone who already replied, and tell me in #lizi-channel-2 so I log it.\n\n- Exo")
     subprocess.run(["/opt/homebrew/bin/msmtp","-a","protonmail","lquinn@exosaero.com"],input=m.as_bytes(),check=True,timeout=60)
-if today>="2026-11-04":
+if today>="2027-02-03":
     p=os.path.expanduser(f"~/Library/LaunchAgents/{LABEL}.plist")
     try: os.remove(p)
     except Exception: pass
