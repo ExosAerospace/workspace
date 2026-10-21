@@ -189,6 +189,16 @@ def build_draft(today):
             "• Join: https://gov.teams.microsoft.us/meet/992403746052?p=AMv58nXyIoZZfxCthF",
             "  Meeting ID: 992 403 746 052 · Passcode: gc6U5jP2",
             ],
+        # Lizi 10/21: next week's update reminds investors about the remaining watches.
+        "2026-10-28": [
+            "", "Reminder: BLK3 Edition space-flown watches still available",
+            "• A quick reminder that BLK3 Edition timepieces are still available to Exos investors. Each dial",
+            "  flies to the edge of space and back on our early 2027 BLK3 flight, then is finished into a",
+            "  serialized watch with a certificate of flight.",
+            "• Investor price: $675. A limited number are set aside for Exos investors, first come first served;",
+            "  delivery follows the flight.",
+            "• To reserve one, reply to this email or contact Lizi Quinn (lquinn@exosaero.com).",
+            "  [Lizi: attach EXOS_Watch_Graphic and update the website investor page before this goes out.]"],
     }
     feat = FEATURED.get(today.isoformat(), [])
     if feat:
