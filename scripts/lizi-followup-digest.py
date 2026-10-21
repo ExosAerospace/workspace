@@ -366,7 +366,16 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'work. Would a quick 20-minute call work sometime in the next couple of weeks?\n'
                  'Best Regards,\n'
                  'Lizi')],
- '2026-11-04': [('UF Space Plants Lab: Dr. Rob Ferl (task #3935)',
+ '2026-11-04': [('Array Labs: Ryan Duffy, Head of BD (task #3938)',
+                 'ryan@arraylabs.io (reply on your "Flight data for Array Labs hardware before the cluster launch" thread)',
+                 "first note 10/21 with the one-pager + booking link, no reply yet. Defense-adjacent: keep it marketing-level, no specs. Skip if Ryan or anyone at Array Labs replied",
+                 'Hi Ryan,\n'
+                 "Just following up on my note from a couple of weeks ago. I'd love to set up a short call with our engineering team to see whether a BLK3 flight "
+                 "could fit Array Labs' hardware testing ahead of the cluster launch. Here's my booking link if that's easier: "
+                 "https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled\n"
+                 'Best Regards,\n'
+                 'Lizi'),
+                ('UF Space Plants Lab: Dr. Rob Ferl (task #3935)',
                  'robferl@ufl.edu (reply on your "A recoverable suborbital flight option for the Space Plants Lab" thread)',
                  "first note 10/21 with the one-pager + booking link (mentioned Dr. Anna-Lisa Paul), no reply yet. Skip if he, Dr. Paul, or anyone at UF replied",
                  'Hi Dr. Ferl,\n'
