@@ -281,7 +281,7 @@ function nextDecisionId(arr) {
 const ENVELOPES_FILE = path.join(__dirname, 'data', 'envelopes.json');
 function esignToken() { return crypto.randomBytes(20).toString('hex'); }
 // Shared e-sign envelope creation (used by /api/esign/create and the payload order-to-cash flow).
-async function createEsignEnvelope(req, { title, html, message, subject, signers }) {
+async function createEsignEnvelope(req, { title, html, message, subject, signers, fields }) {
         const valid = (signers || []).filter(s => s && s.email);
         if (!valid.length) { const e = new Error('No signers with email'); e.code = 400; throw e; }
         const host = req.headers['host'] || 'localhost:8080';
@@ -303,6 +303,8 @@ async function createEsignEnvelope(req, { title, html, message, subject, signers
           base: base,
           signers: ordered.map(s => ({ name: s.name||'Signer', email: s.email, role: s.role||'', token: esignToken(), signed:false, signedAt:null, ip:null, signatureType:null, signatureData:null }))
         };
+        const fieldDefs = esignSanitizeFieldDefs(fields, env.signers);
+        if (fieldDefs.length) env.fields = fieldDefs;
         const all = loadEnvelopes(); all.push(env); saveEnvelopes(all);
         const t = esignTransport();
         // All links (for the API response/admin), but SEQUENTIAL routing: email only the first
@@ -320,6 +322,63 @@ async function createEsignEnvelope(req, { title, html, message, subject, signers
 
 function loadEnvelopes() { try { return JSON.parse(fs.readFileSync(ENVELOPES_FILE, 'utf-8')); } catch { return []; } }
 function saveEnvelopes(arr) { fs.mkdirSync(path.dirname(ENVELOPES_FILE), { recursive: true }); fs.writeFileSync(ENVELOPES_FILE, JSON.stringify(arr, null, 2)); }
+// Fillable fields (Jon 2026-10-21, partner DD intake + background-check authorization). The document HTML carries
+// <span class="esign-field" data-field="KEY"></span> placeholders; sign.html turns the current signer's placeholders
+// into inputs and posts the answers with the signature. Answers are baked into env.html so the executed copy shows
+// them. Fields marked sensitive (SSN, DOB, ID numbers) are NEVER written into the document or emails: they go to a
+// 0600 file under data/esign-pii/ for the screening run, and the document shows "Provided — held confidentially".
+const ESIGN_PII_DIR = path.join(__dirname, 'data', 'esign-pii');
+const ESIGN_FIELD_TYPES = ['text', 'textarea', 'email', 'date', 'tel', 'select', 'checkbox'];
+function esignEscape(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
+function esignSanitizeFieldDefs(fields, signers) {
+  if (!Array.isArray(fields)) return [];
+  const firstCounterparty = signers.find(s => !esignIsExosSigner(s)) || signers[0];
+  const seen = new Set();
+  return fields.filter(f => f && /^[A-Za-z0-9_]{1,64}$/.test(f.key || '') && !seen.has(f.key) && seen.add(f.key)).map(f => ({
+    key: f.key, label: String(f.label || f.key).slice(0, 200),
+    type: ESIGN_FIELD_TYPES.includes(f.type) ? f.type : 'text',
+    required: !!f.required, sensitive: !!f.sensitive,
+    options: Array.isArray(f.options) ? f.options.map(o => String(o).slice(0, 120)).slice(0, 50) : undefined,
+    placeholder: f.placeholder ? String(f.placeholder).slice(0, 120) : undefined,
+    signerEmail: (signers.find(s => s.email.toLowerCase() === String(f.signerEmail || '').toLowerCase()) || firstCounterparty).email
+  }));
+}
+// Validate + store one signer's answers. Returns an error string, or null on success (mutates env).
+function esignApplyFieldValues(env, signer, values) {
+  const mine = (env.fields || []).filter(f => f.signerEmail.toLowerCase() === signer.email.toLowerCase());
+  if (!mine.length) return null;
+  values = values && typeof values === 'object' ? values : {};
+  const clean = {}, pii = {};
+  for (const f of mine) {
+    let v = values[f.key];
+    if (f.type === 'checkbox') v = v === true || v === 'true' || v === 'on';
+    else v = String(v == null ? '' : v).replace(/\r\n/g, '\n').trim().slice(0, f.type === 'textarea' ? 4000 : 500);
+    if (f.required && !v) return 'Please complete: ' + f.label;
+    if (v && f.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return 'Invalid email for: ' + f.label;
+    if (v && f.type === 'date' && !/^\d{4}-\d{2}-\d{2}$/.test(v)) return 'Invalid date for: ' + f.label;
+    if (v && f.type === 'select' && f.options && !f.options.includes(v)) return 'Invalid choice for: ' + f.label;
+    if (f.sensitive) pii[f.key] = v; else clean[f.key] = v;
+  }
+  if (Object.keys(pii).length) {
+    fs.mkdirSync(ESIGN_PII_DIR, { recursive: true, mode: 0o700 });
+    const pf = path.join(ESIGN_PII_DIR, env.id + '.json');
+    let prev = {}; try { prev = JSON.parse(fs.readFileSync(pf, 'utf-8')); } catch {}
+    prev[signer.email] = { name: signer.name, submittedAt: new Date().toISOString(), values: pii };
+    fs.writeFileSync(pf, JSON.stringify(prev, null, 2), { mode: 0o600 });
+  }
+  signer.fieldValues = clean;
+  const show = (f) => {
+    if (f.sensitive) return pii[f.key] ? '<em>Provided — held confidentially by Exos</em>' : '<em>Not provided</em>';
+    const v = clean[f.key];
+    if (f.type === 'checkbox') return v ? '&#9746; Yes' : '&#9744; No';
+    return v ? esignEscape(v).replace(/\n/g, '<br>') : '<em>Not provided</em>';
+  };
+  for (const f of mine) {
+    const re = new RegExp('<span class="esign-field" data-field="' + f.key + '"[^>]*>[^<]*</span>', 'g');
+    env.html = (env.html || '').replace(re, '<span class="esign-field-value" style="font-weight:bold;color:#0a1628;">' + show(f) + '</span>');
+  }
+  return null;
+}
 // ── MNDA registry (source of truth for the purple "MNDA on record" border; reused by CRM/ERP/dossiers) ──
 function loadMndaRegistry() { try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'mnda-registry.json'), 'utf-8')); } catch { return {}; } }
 function _mndaNorm(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
@@ -4909,7 +4968,9 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify({
       title: env.title, html: env.htmlStamped || env.html, message: env.message, status: env.status,
       signer: { name: signer.name, email: signer.email, role: signer.role, signed: signer.signed, signedAt: signer.signedAt },
-      signers: env.signers.map(s => ({ name: s.name, role: s.role, signed: s.signed, signedAt: s.signedAt }))
+      signers: env.signers.map(s => ({ name: s.name, role: s.role, signed: s.signed, signedAt: s.signedAt })),
+      fields: (env.fields || []).filter(f => f.signerEmail.toLowerCase() === signer.email.toLowerCase())
+        .map(f => ({ key: f.key, label: f.label, type: f.type, required: f.required, sensitive: f.sensitive, options: f.options, placeholder: f.placeholder }))
     }));
     return;
   }
@@ -4942,7 +5003,7 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/esign/sign' && req.method === 'POST') {
     let body=''; req.on('data',c=>body+=c); req.on('end', async () => {
       try {
-        const { token, signatureType, signatureData } = JSON.parse(body);
+        const { token, signatureType, signatureData, fields: fieldValues } = JSON.parse(body);
         if (!signatureData) { res.writeHead(400,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:'No signature provided'})); return; }
         const all = loadEnvelopes();
         let env=null, signer=null;
@@ -4950,6 +5011,8 @@ const server = http.createServer((req, res) => {
         if (!env) { res.writeHead(404,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:'Invalid signing link'})); return; }
         if (env.expiresAt && Date.now() > Date.parse(env.expiresAt)) { res.writeHead(410,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:'This signing link has expired (5-day limit).'})); return; }
         if (signer.signed) { res.writeHead(409,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:'This document has already been signed — the link is closed.'})); return; }
+        const fieldErr = esignApplyFieldValues(env, signer, fieldValues);
+        if (fieldErr) { res.writeHead(400,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:fieldErr})); return; }
         if (!signer.signed) {
           signer.signed = true;
           signer.signedAt = new Date().toISOString();

@@ -50,6 +50,10 @@ service-account*.json
 mission-control/data/vault.json
 mission-control/data/vault.json.tmp
 
+# ExoSign envelopes + sensitive fillable-field answers (SSN/DOB/ID) — never version PII
+mission-control/data/envelopes.json
+mission-control/data/esign-pii/
+
 mission-control/data/receiving.json
 mission-control/data/qb-pos-cache.json
 mission-control/data/job-costs.json
@@ -70,6 +74,7 @@ mission-control/data/ethics-reports.json.tmp
 
 # run_logged.py per-day run records (manifest + conversion.log stay tracked)
 logs/runs/*.jsonl
+logs/audit-workers/cron-backups/
 
 # SSLC board books (confidential SSLC records) — never in git
 mission-control/partner-docs/sslc/

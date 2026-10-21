@@ -29,6 +29,9 @@
   .tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
   label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:6px}
   input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-size:1rem}
+  .esf-input{width:100%;max-width:520px;padding:7px 9px;margin:3px 0;border:1px solid #9bb3d6;background:#f3f8ff;border-radius:5px;font-size:.95rem;font-family:inherit;box-sizing:border-box}
+  .esf-check{width:auto;transform:scale(1.3);margin:4px 6px}
+  .esf-missing{border-color:#dc2626;background:#fff1f1}
   .preview{margin-top:14px;border:1px dashed #bbb;border-radius:8px;height:90px;display:flex;align-items:center;justify-content:center;background:#fafbfd}
   .preview span{font-size:38px;color:#0a1628}
   .fonts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
@@ -119,6 +122,34 @@ function render() {
     </div>`;
   setupPad();
   updatePreview();
+  mountFields();
+}
+
+// Fillable fields: swap this signer's <span class="esign-field" data-field="KEY"> placeholders for inputs.
+function mountFields(){
+  (env.fields||[]).forEach(f=>{
+    document.querySelectorAll('.docbody .esign-field[data-field="'+f.key+'"]').forEach(span=>{
+      let el;
+      if(f.type==='textarea'){ el=document.createElement('textarea'); el.rows=3; }
+      else if(f.type==='select'){ el=document.createElement('select'); el.innerHTML='<option value="">— select —</option>'+(f.options||[]).map(o=>'<option>'+esc(o)+'</option>').join(''); }
+      else { el=document.createElement('input'); el.type=f.type==='checkbox'?'checkbox':(f.sensitive&&f.type==='text'?'text':f.type); }
+      el.className='esf-input'+(f.type==='checkbox'?' esf-check':''); el.dataset.key=f.key; el.title=f.label;
+      if(f.placeholder) el.placeholder=f.placeholder; else if(f.type!=='checkbox'&&f.type!=='select') el.placeholder=f.label+(f.required?' *':'');
+      if(f.sensitive) el.autocomplete='off';
+      span.replaceWith(el);
+    });
+  });
+}
+function collectFields(){
+  const out={};
+  for(const f of (env.fields||[])){
+    const el=document.querySelector('.esf-input[data-key="'+f.key+'"]');
+    const v=el?(f.type==='checkbox'?el.checked:el.value.trim()):'';
+    if(f.required && !v){ if(el){ el.classList.add('esf-missing'); el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); } alert('Please complete: '+f.label); return null; }
+    if(el) el.classList.remove('esf-missing');
+    out[f.key]=v;
+  }
+  return out;
 }
 
 function setMethod(m){ method=m;
@@ -150,6 +181,7 @@ function typedToDataURL(){
 
 async function submit(){
   let sigData, sigType;
+  const fields=collectFields(); if(fields===null) return;
   if(method==='type'){
     if(!document.getElementById('typedName').value.trim()) return alert('Please type your name.');
     sigData=typedToDataURL(); sigType='typed';
@@ -159,7 +191,7 @@ async function submit(){
   }
   const btn=document.getElementById('signBtn'); btn.disabled=true; btn.textContent='Signing…';
   try{
-    const r=await fetch('/api/esign/sign',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token,signatureType:sigType,signatureData:sigData})});
+    const r=await fetch('/api/esign/sign',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token,signatureType:sigType,signatureData:sigData,fields})});
     const d=await r.json();
     if(d.success) done(false,d.allSigned); else { alert('Error: '+(d.error||'failed')); btn.disabled=false; btn.textContent='Adopt & Sign'; }
   }catch(e){ alert('Submit error: '+e.message); btn.disabled=false; btn.textContent='Adopt & Sign'; }
