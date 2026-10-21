@@ -10,7 +10,7 @@ from docx.oxml import OxmlElement
 
 WS = "/Users/exomac/.openclaw/workspace"
 LH = WS + "/assets/EXOS_Letterhead_Greenville_TX_address_PRIMARY.docx"
-OUT = WS + f"/drafts/Orbital_OnRamp_Questionnaire_{datetime.date.today():%Y-%m-%d}.docx"
+OUT = WS + f"/drafts/Orbital_OnRamp_Questionnaire_{datetime.date.today():%Y-%m-%d}_r2.docx"
 NAVY = RGBColor(0x0A, 0x16, 0x28)
 
 doc = Document(LH)
@@ -73,7 +73,8 @@ section("1. Company and U.S. Government registrations", [
     ("Registered with the State Department's Directorate of Defense Trade Controls (DDTC) under ITAR (22 CFR Part 122)? Registration code and expiration date.", "Also name your Empowered Official, if any."),
     ("Export authorizations held now or in the past 5 years (ITAR licenses or agreements such as DSP-5 or TAA; EAR licenses)?", "List type and number; no technical detail needed."),
     ("Joint Certification Program (DD Form 2345) certification number, and CMMC level or NIST SP 800-171 SPRS score.", ""),
-    ("Facility security clearance or cleared personnel? (Yes/No, and level only.)", "Do not include any classified information."),
+    ("Security clearances — facilities: does the company (or a parent/affiliate) hold a facility security clearance (FCL)? Level, sponsoring agency, and whether you hold approved safeguarding capability or accredited secure space.", "Yes/No and level only. Do not include any classified information."),
+    ("Security clearances — personnel: how many of your employees or key contractors hold active personnel security clearances, at what levels, and in which roles? Any pending investigations or sponsorships?", "Counts, levels and roles only. No names or classified information needed at this stage."),
     ("U.S. Government contracts, grants or Other Transaction agreements in the past 5 years.", "Agency, contract number, value, period, and your role (prime or sub)."),
     ("Government consortium memberships, and your small-business status (SB, SDVOSB, 8(a), HUBZone, WOSB) and NAICS codes.", ""),
 ])
