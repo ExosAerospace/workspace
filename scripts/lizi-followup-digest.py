@@ -272,20 +272,12 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'to them, or set up a short call with anyone interested.\n'
                  'Best Regards,\n'
                  'Lizi'),
-                ('JHU/APL SHELLGAME: Larry Paxton + Latoya Lambert (task #2694), escalate via Josh Wolk',
-                 'larry.paxton@jhuapl.edu, Latoya.Lambert@jhuapl.edu (reply on your 10/14 thread) + joshua.wolk@jhuapl.edu (separate note)',
+                ('JHU/APL SHELLGAME: Larry Paxton + Latoya Lambert (task #2694)',
+                 'larry.paxton@jhuapl.edu, Latoya.Lambert@jhuapl.edu (reply on your 10/14 thread)',
                  'NDA fully executed 9/30; you asked for SHELLGAME flight needs 9/30 and followed up 10/14. Skip if Larry replied or booked',
-                 'To Larry + Latoya (same thread):\n'
                  'Hi Larry,\n'
                  "Just bumping this up in case it got buried. Even a rough idea of SHELLGAME's size, mass and power would help us hold a spot on an early 2027 BLK3 flight. Happy to work around your "
                  'schedule for a quick call.\n'
-                 'Best Regards,\n'
-                 'Lizi\n'
-                 '\n'
-                 'To Josh Wolk (separate note):\n'
-                 'Hi Josh,\n'
-                 "Quick favor: we have an NDA in place with APL for Larry Paxton's SHELLGAME work and I've reached out a couple of times about a BLK3 flight. If you cross paths with Larry, would you "
-                 "mind mentioning it? I'd really appreciate it.\n"
                  'Best Regards,\n'
                  'Lizi'),
                 ('Chief Dull Knife College: Jim Bertin',
@@ -374,7 +366,25 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'work. Would a quick 20-minute call work sometime in the next couple of weeks?\n'
                  'Best Regards,\n'
                  'Lizi')],
- '2026-11-04': [('UCLA: Prof. Chee Wei Wong (task #1300)',
+ '2026-11-04': [('Scout Space: Jessica Jones, PR (task #3936)',
+                 'pr@scout.space (reply on your "A flight check for Scout\'s sensor hardware before the constellation deployment" thread)',
+                 "first note 10/21 asking her to pass it to Josiah Gruber or their engineering lead, no reply yet. Skip if she or anyone at Scout replied",
+                 'Hi Jessica,\n'
+                 "Just following up on my note from a couple of weeks ago. If you were able to pass it along to Josiah or your engineering team, I'd love to "
+                 "set up a short call about a BLK3 flight check for Scout's sensor hardware. Here's my booking link if that's easier: "
+                 "https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled\n"
+                 'Thank you!\n'
+                 'Best Regards,\n'
+                 'Lizi'),
+                ('JHU/APL: Josh Wolk (task #2778)',
+                 'joshua.wolk@jhuapl.edu (reply on your "EXOS BLK3 Follow-Up" thread, cc John)',
+                 'call 9/9, notes 10/7 + 10/21, no reply yet. This is the last check-in. If he stays quiet, Exo moves him to a quarterly touch. Skip if he replied',
+                 'Hi Josh,\n'
+                 "One last check-in on BLK3 for your large-payload work. If the timing isn't right yet, no problem at all. Just let me know when your team is "
+                 "planning its next round of testing and I'll circle back then. Also, if you happen to cross paths with Larry Paxton, we'd love to hear where SHELLGAME stands.\n"
+                 'Best Regards,\n'
+                 'Lizi'),
+                ('UCLA: Prof. Chee Wei Wong (task #1300)',
                  'cheewei.wong@ucla.edu (reply on your "Flight Testing for Your Optomechanical Inertial Sensor" thread)',
                  'first note 10/7, nudge 10/21, no reply yet. This is the last check-in. If he stays quiet, Exo moves him to a quarterly touch. Skip if he replied',
                  'Hi Professor Wong,\n'
@@ -388,6 +398,14 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'Hi Alessandro,\n'
                  "One last check-in on a BLK3 flight for your maglev reaction wheel. If the timing isn't right yet, no problem at all. Just let me know when your team is "
                  "planning its next round of testing and I'll circle back then.\n"
+                 'Best Regards,\n'
+                 'Lizi'),
+                ('Axiom: Dr. Chyree Batton (task #2031)',
+                 'Chyree@axiomspace.com (reply on your "Re: Exos BLK3 Payload User Guide - great connecting today" thread)',
+                 'call 8/18, notes 10/7 + 10/21, no reply yet. This is the last check-in. If there is no reply, Exo moves Axiom to a quarterly touch. Skip if Chyree replied',
+                 'Hi Chyree,\n'
+                 "One last check-in on a recovered BLK3 test flight for your battery and vacuum qualification work. If the timing isn't right yet, no problem at all. Just let me know "
+                 "when your team is planning that qualification round and I'll circle back then.\n"
                  'Best Regards,\n'
                  'Lizi')]}
 today=date.today().isoformat()
