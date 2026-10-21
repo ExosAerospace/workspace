@@ -381,6 +381,14 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "One last check-in on a BLK3 flight for your optomechanical inertial sensor. If the timing isn't right yet, no problem at all. Just let me know when your team is "
                  "planning the next test after the balloon flight and I'll circle back then.\n"
                  'Best Regards,\n'
+                 'Lizi'),
+                ('Magma Space: Alessandro Stabile (task #2307)',
+                 'outreach@magma-space.com (reply on your "For Alessandro: Flight Testing for Your Maglev Reaction Wheel" thread)',
+                 'first note 10/7, nudge 10/21, no reply yet. This is the last check-in. If they stay quiet, Exo moves them to a quarterly touch. Skip if they replied',
+                 'Hi Alessandro,\n'
+                 "One last check-in on a BLK3 flight for your maglev reaction wheel. If the timing isn't right yet, no problem at all. Just let me know when your team is "
+                 "planning its next round of testing and I'll circle back then.\n"
+                 'Best Regards,\n'
                  'Lizi')]}
 today=date.today().isoformat()
 items=DUE.get(today,[])
