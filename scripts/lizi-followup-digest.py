@@ -327,15 +327,8 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'recoverable flight before an ISS mission. Who would be the best person on your team to talk with?\n'
                  'Best Regards,\n'
                  'Lizi')],
- '2026-11-02': [('Montana Tech: Dr. Bryce Hill (task #3658)',
-                 'bhill@mtech.edu (reply on your 10/19 note)',
-                 'you followed up 10/19 with the one-pager + offer to join an IEEE/Robotics club meeting by video. Skip if he replied',
-                 'Hi Dr. Hill,\n'
-                 "Just following up on my note from a couple of weeks ago. If either the IEEE or Robotics club is interested, I'd be glad to join a meeting by video for 15 minutes, "
-                 "or to set up a quick call with you or a faculty advisor. Would sometime in the next couple of weeks work?\n"
-                 'Best Regards,\n'
-                 'Lizi'),
-                ('UGA Small Satellite Research Lab: Dr. Deepak Mishra (task #997)',
+ # Montana Tech / Bryce Hill 11/2 nudge removed 10/21: he replied, clubs declined, he's booked.
+ '2026-11-02': [('UGA Small Satellite Research Lab: Dr. Deepak Mishra (task #997)',
                  "dmishra@uga.edu (reply on your 10/19 thread, keep Phillip Stancil cc'd)",
                  'Stancil referred you 10/18; you sent Mishra the one-pager + booking link 10/19. Skip if he replied or booked',
                  'Hi Dr. Mishra,\n'
