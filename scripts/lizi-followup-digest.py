@@ -366,7 +366,16 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'work. Would a quick 20-minute call work sometime in the next couple of weeks?\n'
                  'Best Regards,\n'
                  'Lizi')],
- '2026-11-04': [('Scout Space: Jessica Jones, PR (task #3936)',
+ '2026-11-04': [('UF Space Plants Lab: Dr. Rob Ferl (task #3935)',
+                 'robferl@ufl.edu (reply on your "A recoverable suborbital flight option for the Space Plants Lab" thread)',
+                 "first note 10/21 with the one-pager + booking link (mentioned Dr. Anna-Lisa Paul), no reply yet. Skip if he, Dr. Paul, or anyone at UF replied",
+                 'Hi Dr. Ferl,\n'
+                 "Just following up on my note from a couple of weeks ago. I'd love to set up a short call with you and Dr. Paul about whether a BLK3 flight could fit "
+                 "the lab's next round of plant gene-expression work. Here's my booking link if that's easier: "
+                 "https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled\n"
+                 'Best Regards,\n'
+                 'Lizi'),
+                ('Scout Space: Jessica Jones, PR (task #3936)',
                  'pr@scout.space (reply on your "A flight check for Scout\'s sensor hardware before the constellation deployment" thread)',
                  "first note 10/21 asking her to pass it to Josiah Gruber or their engineering lead, no reply yet. Skip if she or anyone at Scout replied",
                  'Hi Jessica,\n'
