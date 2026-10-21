@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reserve — SPACEavailable by EXOS</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">
+    <img src="img/logos/exos-logo-black-aerospace.png" alt="EXOS Aerospace" />
+  </a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About EXOS</a></li>
+    <li><a href="flight.html">The Flight</a></li>
+    <li><a href="who-flies.html">Who Flies</a></li>
+    <li><a href="reserve.html" class="active">Reserve</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero hero-reserve" style="min-height:340px;">
+  <div class="inner">
+    <p class="page-tag">Reserve</p>
+    <h1>Ready For Your Spot<br />In Space?</h1>
+    <p class="subtitle">Review the steps below to get started, and if you have any questions, feel free to contact our team.</p>
+  </div>
+</section>
+
+<!-- HOW TO RESERVE -->
+<section>
+  <div class="container">
+    <h2 class="section-heading">How To Reserve</h2>
+    <div class="reserve-steps">
+
+      <div class="reserve-step">
+        <div class="reserve-step-num">1</div>
+        <h3>Tell Us About Your Payload</h3>
+        <p>Complete the Payload Questionnaire with the details about what you want to fly.</p>
+      </div>
+
+      <div class="reserve-step">
+        <div class="reserve-step-num">2</div>
+        <h3>We Review The Details</h3>
+        <p>We'll review your payload for compatibility, safety, integration needs, and mission requirements.</p>
+      </div>
+
+      <div class="reserve-step">
+        <div class="reserve-step-num">3</div>
+        <h3>Prepare For The Flight</h3>
+        <p>If your payload is a fit, we'll work with you on the next steps to prepare for flight.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- READY TO FLY CTA -->
+<section class="section-alt">
+  <div class="container">
+    <div class="ready-to-fly">
+      <h2><span>Ready To Fly?</span></h2>
+      <a href="https://www.exosaero.com/payload-questionnaire" class="btn btn-blue" target="_blank" rel="noopener">
+        Start Your Payload Questionnaire <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="container">
+    <h2 class="section-heading">Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>What information do I need to provide about my payload?</span>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          You'll need to share details such as payload size and mass, power requirements, any hazardous materials or propellants, environmental sensitivities, and what you want to measure or accomplish during the flight. Our team uses this information to evaluate compatibility and safety before approving a payload for flight.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>What kinds of payloads can fly on BLK3?</span>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          BLK3 can accommodate a wide variety of payloads up to 135 kg. This includes scientific experiments, technology demonstrations, sensors, avionics, electronics, biological samples, student projects, and commercial hardware. All payloads must meet safety and integration requirements and are reviewed on a case-by-case basis.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>What is carbon fiber composite?</span>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          Carbon fiber composite is an advanced lightweight material made from carbon fibers embedded in a resin matrix. It offers an exceptional strength-to-weight ratio, which allows BLK3 to carry more propellant and payload while keeping the rocket structure as light and efficient as possible.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>How long will my payload be in microgravity?</span>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          BLK3 is designed for approximately 2.5 minutes of microgravity at the peak of its trajectory at an altitude of approximately 100–110 km. This is a meaningful window for experiments that require sustained low-gravity conditions.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>How do I get started if I want to fly a payload?</span>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          Start by completing the <a href="https://www.exosaero.com/payload-questionnaire" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:underline;">Payload Questionnaire</a>. Our team will review your submission and follow up to discuss compatibility, mission requirements, and next steps. You can also explore the <a href="https://www.exosaero.com/pricing" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:underline;">Payload Calculator</a> to get a sense of pricing. Hardware returned from Spaceport America is back in your hands in minutes after landing.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>Is EXOS FAA licensed for launch operations?</span>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          Yes. EXOS Aerospace holds an FAA Part 431 launch license for BLK3 and is actively transitioning to Part 450. We are one of only three FAA-licensed reusable suborbital launch operators in the United States.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT CTA -->
+<section class="section-alt">
+  <div class="container" style="text-align:center;">
+    <h2 style="color:var(--white);font-size:1.6rem;margin-bottom:0.6rem;">Have More Questions?</h2>
+    <p style="color:var(--muted);margin-bottom:1.25rem;">Reach out to our team directly.</p>
+    <a href="mailto:info@exosaero.com" class="btn btn-blue">info@exosaero.com <span class="arrow">→</span></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>Location</h4>
+      <p>299 FM 1903<br />Greenville, TX 75402</p>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>(430) 966-4005<br /><a href="mailto:info@exosaero.com">info@exosaero.com</a></p>
+    </div>
+    <div class="footer-col social">
+      <div class="social-icons">
+        <a href="https://www.facebook.com/exosaero" aria-label="Facebook" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/exosaero" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" style="fill:none;stroke:white;stroke-width:2"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" style="stroke:white;stroke-width:2;stroke-linecap:round"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@exosaero" aria-label="YouTube" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" style="fill:#2b1e6e"/></svg>
+        </a>
+        <a href="https://x.com/exosaero" aria-label="X" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+      <a href="#" class="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(el) {
+  const item = el.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+
+</body>
+</html>
