@@ -145,7 +145,9 @@ if [ "$RSYNC_RC" -eq 0 ] || [ "$RSYNC_RC" -eq 23 ] || [ "$RSYNC_RC" -eq 24 ]; th
   [ "$RSYNC_RC" -ne 0 ] && log "WARN rsync rc=$RSYNC_RC (partial — a few unreadable/vanished files skipped; treated as OK)"
   # 5) content-hash verify of the critical files on the mirror (secrets, gateway config, MC server,
   #    tunnel creds). A mismatch = checksum FAIL -> no sentinel; the watchdog alerts Jon.
-  if ! python3 "$WS/scripts/dr_verify.py" --verify >>"$LOG" 2>&1; then
+  #    --heal: a file rewritten mid-run (secrets.json token rotation, 10/21) is re-copied once
+  #    and re-verified; only a mismatch that persists after that is a real FAIL.
+  if ! python3 "$WS/scripts/dr_verify.py" --verify --heal >>"$LOG" 2>&1; then
     log "=== DR backup FAILED (checksum verify mismatch) — sentinel NOT updated; watchdog will alert ==="
     exit 1
   fi

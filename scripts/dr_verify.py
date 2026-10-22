@@ -12,6 +12,7 @@ uses to catch "Mini link down" (e.g. FileVault-locked after a power-loss reboot)
 
 CLI:
   dr_verify.py --verify      # exit 0 pass, 1 fail (writes state)
+  dr_verify.py --verify --heal  # on mismatch, re-copy mismatched files once + re-verify
   dr_verify.py --link        # exit 0 link up, 1 down
   dr_verify.py --status
 """
@@ -84,6 +85,19 @@ def verify():
     tmp = STATE + ".tmp"; json.dump(res, open(tmp, "w"), indent=2); os.replace(tmp, STATE)
     return res
 
+def heal(res):
+    """Race-tolerance (secrets.json is rewritten by token rotation mid-run, 10/21): re-copy ONLY
+    the mismatched critical files to the mirror once, then re-verify. A persistent mismatch still FAILs."""
+    remote, host, base = _dest()
+    src = {rel: s for s, rel in CRITICAL}
+    for rel in res.get("mismatched", []):
+        if rel not in src or not os.path.exists(src[rel]):
+            continue
+        dst = f"{host}:{base}{rel}" if remote else os.path.join(base, rel)
+        cmd = ["rsync", "-a"] + (["-e", "ssh"] if remote else []) + [src[rel], dst]
+        subprocess.run(cmd, capture_output=True, timeout=120)
+    return verify()
+
 def read_state():
     try: return json.load(open(STATE))
     except Exception: return None
@@ -91,7 +105,10 @@ def read_state():
 if __name__ == "__main__":
     a = sys.argv[1:] or ["--status"]
     if a[0] == "--verify":
-        r = verify(); print(json.dumps(r)); sys.exit(0 if r["ok"] else 1)
+        r = verify(); print(json.dumps(r))
+        if not r["ok"] and "--heal" in a:
+            r = heal(r); print("heal re-copy + re-verify: " + json.dumps(r))
+        sys.exit(0 if r["ok"] else 1)
     if a[0] == "--link":
         ok, why = link_up(); print(("UP " if ok else "DOWN ") + why); sys.exit(0 if ok else 1)
     if a[0] == "--status":
