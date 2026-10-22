@@ -1623,6 +1623,13 @@ if (entityPages && process.env.FEATURE_CATALOG_SRC) {
   try { entityPages.writeCatalog(process.env.FEATURE_CATALOG_SRC); } catch (e) { console.warn('[MC] entity catalog write failed:', e.message); }
 }
 const brandWrap = require('./lib/entity-brand').install(ENTITY, entityPages ? entityPages.sanitize : null); // null for Exos
+// Entity cells: startup board generated from Settings > Features (+ file-backed tasks when no DB). Null for Exos.
+const startupTasks = require('./lib/startup-tasks').create(ENTITY, path.join(__dirname, 'data'), process.env.STARTUP_PLAYBOOK || '/app/docker-seed/_common/startup-playbook.json');
+if (startupTasks) {
+  let selMtime = 0;
+  const tick = () => { try { const m = fs.statSync(path.join(__dirname, 'data', 'mc-feature-selections.json')).mtimeMs; if (m !== selMtime) { selMtime = m; console.log('[MC] startup board sync', JSON.stringify(startupTasks.sync('settings'))); } } catch (e) { console.warn('[MC] startup board sync failed:', e.message); } };
+  tick(); setInterval(tick, 15000).unref();
+}
 const server = http.createServer((req, res) => {
   if (brandWrap) brandWrap(req, res);
   if (entityPages) {
@@ -2555,6 +2562,7 @@ const server = http.createServer((req, res) => {
 
   // ── SETTINGS > FEATURES (MC-Industry feature matrix + requests; lib/feature-settings.js) ──
   if (req.url.startsWith('/api/settings/feature') && require('./lib/feature-settings').handle(req, res, session)) return;
+  if (startupTasks && !SUPABASE_ENABLED && /^\/api\/(tasks|task-desc)/.test(req.url) && startupTasks.handle(req, res, session)) return;
 
   // ── HR DIRECTORY (read-only) — read-through mirror of BambooHR; directory-level only, no PII ──
   // Bamboo remains the system of record; this serves name/title/department/manager/work-email

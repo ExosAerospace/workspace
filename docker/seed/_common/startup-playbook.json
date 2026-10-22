@@ -1,0 +1,590 @@
+{
+ "version": "2026-10-22",
+ "rep_label": "your Exos rollout rep",
+ "base": {
+  "kickoff": {
+   "title": "Kickoff with your Exos rollout rep",
+   "why": "Sets the go-live date, who your MC administrator is, and which systems you bring up first.",
+   "prereq": [],
+   "steps": [
+    "Book a 45-minute kickoff with your Exos rollout rep.",
+    "Name one MC administrator for your organization (adds users, changes Settings).",
+    "Agree the go-live date and the order systems come up (this board is already in a sensible order: platform \u2192 people \u2192 work management \u2192 finance \u2192 operations).",
+    "List the data you will bring over: customer/contact list, supplier list, open purchase orders, parts/BOM lists, asset list, open jobs.",
+    "Post the agreed date and admin name as a note on this task."
+   ],
+   "done": "Go-live date and administrator are recorded in a note on this task.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 0
+  },
+  "settings": {
+   "title": "Confirm the features switched on in Settings",
+   "why": "Every task on this board is generated from Settings > Features. Turning a feature on adds its setup task here; turning it off removes it (or cancels it if work already started).",
+   "prereq": [],
+   "steps": [
+    "Open Settings (left nav \u2192 Settings).",
+    "Review each group: Work management, Relationships & revenue, Finance & operations, Manufacturing, People & compliance, AI, Platform, Integrations.",
+    "Core items are always on. Tick the Business/Enterprise items you want; untick anything you will not use in the first 90 days.",
+    "Click Save selection. The task board updates within a minute.",
+    "Anything missing from the menu: use the request box on the same page."
+   ],
+   "done": "Selection saved and the board shows one setup task per feature you want.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 0
+  },
+  "golive": {
+   "title": "Go-live review and sign-off",
+   "why": "Confirms every selected system works with your own data before you rely on it.",
+   "prereq": [],
+   "steps": [
+    "Check that every other task in the Startup category on this board is Done or deliberately Cancelled.",
+    "Run one real transaction end to end in each area you switched on (e.g. a task, a supplier PO, an expense report, a receipt).",
+    "Your Exos rollout rep reviews access logs and the backup/recovery check with you.",
+    "Agree the support path after go-live (who to call, response times).",
+    "Mark this task Done."
+   ],
+   "done": "Sign-off note posted and this task marked Done.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 9
+  }
+ },
+ "features": {
+  "roles": {
+   "title": "Set up users and roles",
+   "why": "Controls who sees what. Every page checks the user's role.",
+   "prereq": [],
+   "steps": [
+    "Your administrator opens Admin (left nav \u2192 Admin).",
+    "Click + Add User for each person: name, work email, role. Roles: admin (everything + Settings), manager (approve, edit Settings), member (own and shared tasks), partner/board (read-only portals).",
+    "Each new user gets a temporary password and must set their own at first login.",
+    "Start small: administrators and the people who own the next tasks on this board. Add the rest at go-live.",
+    "Ask your Exos rollout rep to add each user's email to the secure-access policy (see the Cloudflare task) or they will not reach the login page."
+   ],
+   "done": "Every first-wave user can log in and sees the pages their role allows.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 1
+  },
+  "cloudflare": {
+   "title": "Secure access (Cloudflare Zero Trust)",
+   "why": "Mission Control has no open ports. People reach it through an identity check (one-time PIN to their email) before the login page.",
+   "prereq": [],
+   "steps": [
+    "Send your Exos rollout rep the list of user email addresses (same list as Admin).",
+    "The rep adds them to your workspace's access policy.",
+    "Each user opens the workspace link, enters their email, and types the PIN that arrives by email.",
+    "If a PIN does not arrive, check spam/quarantine and allow the sender (Cloudflare Access).",
+    "Removing someone: tell the rep the same day; Admin \u2192 Disable the user."
+   ],
+   "done": "Every user on the list has reached the MC login page once.",
+   "rep": "Your Exos rollout rep does this step for you.",
+   "phase": 1
+  },
+  "guard": {
+   "title": "Security monitoring (MC Guard) \u2014 confirm and review",
+   "why": "Every request is filtered, rate-limited and logged. Nothing to install; this task is the review.",
+   "prereq": [],
+   "steps": [
+    "Ask your Exos rollout rep for the first-week access summary (logins, denied requests).",
+    "Confirm no unexpected users or locations.",
+    "Agree who in your organization receives security notices."
+   ],
+   "done": "First-week access summary reviewed and a security contact named.",
+   "rep": "Your Exos rollout rep runs the report with you.",
+   "phase": 8
+  },
+  "supabase": {
+   "title": "Database and backups \u2014 confirm",
+   "why": "Your workspace keeps its own database, separate from every other organization. This task confirms storage and backup.",
+   "prereq": [],
+   "steps": [
+    "Your workspace currently stores data in its own encrypted volume on the Exos host.",
+    "Ask your Exos rollout rep to show you the last backup time and run a test restore of one record.",
+    "Decide retention: how long deleted items stay recoverable (default 90 days).",
+    "If you prefer a hosted database in your own account, tell the rep before go-live."
+   ],
+   "done": "Backup confirmed and a test restore completed.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 8
+  },
+  "partnerview": {
+   "title": "Partner / board portals",
+   "why": "Read-only views for directors, partners or customers, with nothing else visible.",
+   "prereq": [],
+   "steps": [
+    "List who needs a portal and what they should see (e.g. board packs, a partner's project).",
+    "Your Exos rollout rep creates the portal and its user accounts with the partner/board role.",
+    "Log in as a test portal user with the rep and confirm only the intended items show."
+   ],
+   "done": "Each portal user can log in and sees only their scoped view.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 7
+  },
+  "tasks": {
+   "title": "Jobs & Tasks \u2014 load your work",
+   "why": "The board is where every job, action item and question lives, each with an owner and due date.",
+   "prereq": [],
+   "steps": [
+    "Open Tasks (left nav).",
+    "Click + Add for each open job or action item: title, owner, due date, category.",
+    "Use the category list to group work (e.g. Projects, Board, Customers, Suppliers).",
+    "Open a task to add notes, questions and documents; every change is logged in its timeline.",
+    "Bulk import: send your Exos rollout rep a spreadsheet (title, owner, due date, category, description) and it is loaded for you.",
+    "Owners: tasks owned by 'Team' are visible to every member; tasks owned by a person are visible to that person and to managers."
+   ],
+   "done": "Your open work is on the board with owners and due dates.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 3
+  },
+  "decisions": {
+   "title": "Decisions queue \u2014 set approvers",
+   "why": "One-click approve / hold / drop cards for whoever approves spending, documents and plans.",
+   "prereq": [],
+   "steps": [
+    "Name your approvers (usually the CEO and one backup).",
+    "Make sure each approver has a manager or admin account (Users task).",
+    "Open Decisions (left nav) to see waiting cards. Each card shows the recommendation, the reason and the options.",
+    "Click a choice to answer; add a note if you want something changed. The answer goes back to the related task automatically."
+   ],
+   "done": "Approvers named and one test decision answered.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 3
+  },
+  "dashboard": {
+   "title": "My Dashboard \u2014 set the company default view",
+   "why": "Each person's landing page: their tasks, deadlines and items needing attention.",
+   "prereq": [],
+   "steps": [
+    "Open My Dashboard.",
+    "Click \u2630 Widgets and choose what everyone should see by default.",
+    "An admin clicks Set as Company Default. Each user can still adjust their own."
+   ],
+   "done": "Company default dashboard saved.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 3
+  },
+  "followups": {
+   "title": "Follow-ups \u2014 turn on reminders",
+   "why": "Dated reminders so nothing you send goes unanswered.",
+   "prereq": [],
+   "steps": [
+    "Open Follow-ups.",
+    "Follow-ups are created from tasks and contacts with a date. Mark \u2713 Replied when the answer arrives, or Dismiss.",
+    "Agree a weekly habit: each owner clears their follow-ups every Monday."
+   ],
+   "done": "Each owner has seen the Follow-ups page and the weekly habit is agreed.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 3
+  },
+  "search": {
+   "title": "Global search \u2014 check it finds your records",
+   "why": "One search box across tasks, contacts, companies and documents.",
+   "prereq": [],
+   "steps": [
+    "After loading tasks and contacts, search for three things you know exist.",
+    "If something is missing, tell your Exos rollout rep."
+   ],
+   "done": "Three known records found by search.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 6
+  },
+  "crm": {
+   "title": "CRM & Contacts \u2014 import customers and contacts",
+   "why": "Companies, contacts, deals and activity history in one place.",
+   "prereq": [],
+   "steps": [
+    "Export your current customer/contact list (from email, spreadsheet or an old CRM) to a spreadsheet: company, name, title, email, phone, notes.",
+    "Send it to your Exos rollout rep for import, or add records by hand with + Add.",
+    "Open a contact and click + Log Activity to record a call or meeting; + Add Task to create a follow-up.",
+    "Use Export CSV any time to take your data out."
+   ],
+   "done": "Your active customers and contacts are in the CRM.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 4
+  },
+  "opportunities": {
+   "title": "Opportunities pipeline \u2014 load open bids and deals",
+   "why": "Ranked pipeline of bids, grants and deals by value and deadline.",
+   "prereq": [
+    "crm"
+   ],
+   "steps": [
+    "List every open opportunity: name, customer/agency, value, due date, stage.",
+    "Enter each one on Opportunities (or send the list to your Exos rollout rep).",
+    "Use Close out when an opportunity is won, lost or dropped, so the pipeline stays current.",
+    "Agree a weekly pipeline review."
+   ],
+   "done": "Open opportunities are loaded with values and due dates.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 4
+  },
+  "reading": {
+   "title": "Required reading \u2014 assign policies",
+   "why": "Assign policies (handbook, safety, export rules) and track who has read them.",
+   "prereq": [
+    "roles"
+   ],
+   "steps": [
+    "Collect the policies everyone must read.",
+    "Upload each policy and assign it to the people or roles who must read it.",
+    "Check the acknowledgment list after one week and chase anyone outstanding."
+   ],
+   "done": "Core policies assigned and acknowledgments tracked.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 7
+  },
+  "quickbooks": {
+   "title": "Connect QuickBooks Online",
+   "why": "Finance, supplier, PO and job-cost pages read and write your own QuickBooks company file.",
+   "prereq": [],
+   "steps": [
+    "Your QuickBooks admin signs in when your Exos rollout rep sends the connection link (standard QuickBooks authorization screen) and approves access for Mission Control.",
+    "Confirm the company name shown is your company, not another file.",
+    "The rep runs a read test: vendors, accounts and open bills appear in MC.",
+    "Agree which actions MC may post to QuickBooks (e.g. approved purchase orders only).",
+    "Nothing is written to QuickBooks until a person approves it in MC."
+   ],
+   "done": "MC shows your QuickBooks vendors and accounts, and write permissions are agreed.",
+   "rep": "Your QuickBooks admin signs in once; your Exos rollout rep does the rest.",
+   "phase": 2
+  },
+  "suppliers": {
+   "title": "Suppliers & POs \u2014 load suppliers and open POs",
+   "why": "Supplier records, due diligence and purchase orders, synced to QuickBooks after approval.",
+   "prereq": [
+    "quickbooks"
+   ],
+   "steps": [
+    "Open Suppliers & POs. With QuickBooks connected, your vendors appear automatically; otherwise click \uff0b New supplier.",
+    "For each active supplier, complete contact, terms and any certifications.",
+    "Create a test PO: \uff0b New PO \u2192 add lines (\uff0b Line) \u2192 Save & submit for approval.",
+    "An approver opens it and clicks \u2713 Approve \u2192 QuickBooks. Check the PO appears in QuickBooks with the same number.",
+    "When goods arrive, use Log receipt on the PO (or the Receiving page). Rejected quantities open a quality record automatically.",
+    "Load your other open POs the same way, or send the list to your Exos rollout rep."
+   ],
+   "done": "Active suppliers loaded and one PO approved through to QuickBooks.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 5
+  },
+  "expenses": {
+   "title": "Expense reports \u2014 set approvers and categories",
+   "why": "Staff submit expenses with receipts; managers approve; approved reports export to accounting.",
+   "prereq": [
+    "quickbooks",
+    "roles"
+   ],
+   "steps": [
+    "Agree expense categories (match your QuickBooks expense accounts).",
+    "Name who approves expenses for each team.",
+    "One person submits a test report: + Add line for each item, attach receipts, Submit for approval.",
+    "The approver approves it and confirms the export is correct."
+   ],
+   "done": "One test expense report submitted, approved and exported.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 5
+  },
+  "jobcost": {
+   "title": "Job costing \u2014 set up jobs and labor rates",
+   "why": "Labor and material cost rolled up per job or contract.",
+   "prereq": [
+    "quickbooks"
+   ],
+   "steps": [
+    "List your active jobs/contracts with a job number each.",
+    "Give your Exos rollout rep loaded labor rates by role (or connect your HR system).",
+    "Confirm that POs and time entries carry the job number.",
+    "Open Job Costing and check one job's totals against your own numbers."
+   ],
+   "done": "Active jobs loaded and one job's cost checked against your records.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 5
+  },
+  "assets": {
+   "title": "Asset register \u2014 load equipment",
+   "why": "Tracks equipment and assets: what you own, where it is, its condition.",
+   "prereq": [],
+   "steps": [
+    "Export your fixed-asset or equipment list: description, tag/serial, location, value, date acquired.",
+    "Send it to your Exos rollout rep for import, or enter items on the Asset Register.",
+    "Walk the floor and confirm the top 20 items by value."
+   ],
+   "done": "Asset list loaded and high-value items checked.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 5
+  },
+  "mrp": {
+   "title": "MRP \u2014 load bills of materials and run the first plan",
+   "why": "Material requirements planning: what to buy, and when, from your bills of materials and stock.",
+   "prereq": [
+    "receiving",
+    "suppliers"
+   ],
+   "steps": [
+    "Collect bills of materials for each product or assembly: part number, description, quantity per, preferred supplier, lead time.",
+    "Send them to your Exos rollout rep for loading (spreadsheet is fine).",
+    "Complete the Receiving & inventory task first so stock on hand is right.",
+    "Open MRP and click Run MRP. Review the shortages it lists.",
+    "For a shortage, Make PO draft creates a draft PO on Suppliers & POs for approval."
+   ],
+   "done": "BOMs loaded, MRP run, and the shortage list checked against what you expect.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 6
+  },
+  "production": {
+   "title": "Production control \u2014 set up work orders",
+   "why": "Work orders and build status on the shop floor; rejected parts open quality records.",
+   "prereq": [
+    "mrp"
+   ],
+   "steps": [
+    "List the products or assemblies you build and their main steps.",
+    "Your Exos rollout rep sets up the work-order template with you.",
+    "Open a test work order, move it through each step, and close it.",
+    "Confirm quality records (NCRs) appear when a received part is rejected."
+   ],
+   "done": "One test work order completed end to end.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 6
+  },
+  "receiving": {
+   "title": "Receiving & inventory \u2014 count and load stock",
+   "why": "Receive against POs, keep shop inventory with photos, and track shortfalls.",
+   "prereq": [
+    "suppliers"
+   ],
+   "steps": [
+    "Decide storage locations (rooms, shelves, bins) and label them.",
+    "Do a starting count. Send the count sheet (part number, description, quantity, location) to your Exos rollout rep, or enter it on Shop Inventory.",
+    "Test a receipt: open Receiving, \ud83d\udcf7 photo the packing list, then \u2713 Check in received parts against the PO.",
+    "Use Export CSV on Shop Inventory to check totals against your count."
+   ],
+   "done": "Starting stock loaded and one receipt checked in against a PO.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 6
+  },
+  "hr": {
+   "title": "HR directory \u2014 connect your staff list",
+   "why": "Read-only staff directory and org chart.",
+   "prereq": [],
+   "steps": [
+    "If you use BambooHR, complete the BambooHR task; the directory fills automatically.",
+    "Otherwise send your Exos rollout rep a staff list: name, title, department, manager, email.",
+    "Check the org chart (\ud83d\udda8 Org chart) is right."
+   ],
+   "done": "Directory and org chart correct.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 7
+  },
+  "ethics": {
+   "title": "Ethics & whistleblower reporting \u2014 confirm the channel",
+   "why": "A confidential reporting channel, as your employee handbook requires.",
+   "prereq": [],
+   "steps": [
+    "Name who receives reports (and a backup who is independent of management).",
+    "Your Exos rollout rep sets the recipients.",
+    "Submit a test report marked TEST, check it arrives, then close it.",
+    "Tell staff where the report page is."
+   ],
+   "done": "Recipients set and a test report received.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 7
+  },
+  "agent": {
+   "title": "AI assistant \u2014 learn how to use it",
+   "why": "The assistant answers questions on tasks, drafts documents and emails, does research and files results back to the task.",
+   "prereq": [
+    "claude"
+   ],
+   "steps": [
+    "Open any task and add a note starting with a question; the assistant answers in the task.",
+    "Ask it for a draft (letter, PO description, meeting agenda); the draft is attached to the task for your review.",
+    "Nothing is sent outside your organization without a person approving it.",
+    "Agree with your Exos rollout rep what the assistant may and may not do (e.g. no export-controlled technical data)."
+   ],
+   "done": "Each first-wave user has asked the assistant one question on a task.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 4
+  },
+  "claude": {
+   "title": "AI model connection \u2014 confirm",
+   "why": "The AI model behind the assistant. Your Exos rollout rep manages the connection.",
+   "prereq": [],
+   "steps": [
+    "Your Exos rollout rep confirms the model connection for your workspace.",
+    "Review the data-handling note: what is sent to the model and what is not."
+   ],
+   "done": "Connection confirmed and data-handling note reviewed.",
+   "rep": "Your Exos rollout rep does this step for you.",
+   "phase": 1
+  },
+  "localai": {
+   "title": "Private / local AI models",
+   "why": "Sensitive work runs on models inside the workspace, so the data never leaves it.",
+   "prereq": [],
+   "steps": [
+    "List the kinds of work that must stay private.",
+    "Your Exos rollout rep sizes and enables the local model and routes that work to it."
+   ],
+   "done": "Private workloads listed and routed.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 7
+  },
+  "altmodels": {
+   "title": "Additional AI model providers",
+   "why": "Second-opinion and specialist AI models.",
+   "prereq": [],
+   "steps": [
+    "Tell your Exos rollout rep which providers you approve.",
+    "The rep enables them and confirms routing."
+   ],
+   "done": "Approved providers enabled.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 7
+  },
+  "ollama": {
+   "title": "Local model runtime",
+   "why": "Runs open-weight models on premises.",
+   "prereq": [],
+   "steps": [
+    "Your Exos rollout rep installs and tests the runtime with you."
+   ],
+   "done": "Runtime tested.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 7
+  },
+  "websearch": {
+   "title": "Web research",
+   "why": "Sourced web search for research briefs.",
+   "prereq": [],
+   "steps": [
+    "Your Exos rollout rep enables search for your workspace.",
+    "Ask the assistant one research question on a task and check the sources it cites."
+   ],
+   "done": "One sourced research answer received.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 7
+  },
+  "bamboohr": {
+   "title": "Connect BambooHR",
+   "why": "Directory, org chart and labor rates from your HR system.",
+   "prereq": [],
+   "steps": [
+    "Your BambooHR admin creates an API key for Mission Control.",
+    "Your Exos rollout rep enters it securely (never by email or chat).",
+    "Check the directory fills in."
+   ],
+   "done": "Directory populated from BambooHR.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 2
+  },
+  "proton": {
+   "title": "Connect email (Proton Mail)",
+   "why": "Inbound email becomes CRM activity or tasks; drafts go out from your own mailbox.",
+   "prereq": [],
+   "steps": [
+    "Choose which mailbox(es) to connect.",
+    "Your Exos rollout rep sets up the connection with you on a screen-share.",
+    "Send a test email and check it appears as CRM activity."
+   ],
+   "done": "Test email captured.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 2
+  },
+  "m365": {
+   "title": "Connect Microsoft 365",
+   "why": "Mail, calendar and documents from Microsoft 365.",
+   "prereq": [],
+   "steps": [
+    "Your Microsoft 365 admin approves the Mission Control app (one consent screen).",
+    "Your Exos rollout rep tests mail and calendar access."
+   ],
+   "done": "Mail and calendar test passed.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 2
+  },
+  "discord": {
+   "title": "Connect team chat (Discord)",
+   "why": "Decisions and task notifications in your team channels.",
+   "prereq": [],
+   "steps": [
+    "Choose the channels.",
+    "Your Exos rollout rep adds the bot and tests a notification."
+   ],
+   "done": "Test notification received.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 2
+  },
+  "teamwork": {
+   "title": "Connect Teamwork.com",
+   "why": "Two-way task sync with Teamwork.",
+   "prereq": [],
+   "steps": [
+    "Your Teamwork admin creates an API key.",
+    "Your Exos rollout rep connects it and syncs one project as a test."
+   ],
+   "done": "Test project synced.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 2
+  },
+  "docusign": {
+   "title": "Connect DocuSign",
+   "why": "Send envelopes through DocuSign when a counterparty requires it.",
+   "prereq": [],
+   "steps": [
+    "Your DocuSign admin authorizes Mission Control.",
+    "Send a test envelope to yourself."
+   ],
+   "done": "Test envelope signed.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 2
+  },
+  "peony": {
+   "title": "Connect Peony data room",
+   "why": "Push documents to an external Peony room.",
+   "prereq": [],
+   "steps": [
+    "Your Exos rollout rep connects your Peony account and pushes one test document."
+   ],
+   "done": "Test document visible in Peony.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 2
+  },
+  "samgov": {
+   "title": "SAM.gov opportunity search",
+   "why": "Federal opportunity search into your pipeline.",
+   "prereq": [
+    "opportunities"
+   ],
+   "steps": [
+    "Give your Exos rollout rep your NAICS codes and keywords.",
+    "Review the first week's matches on Opportunities."
+   ],
+   "done": "First matches reviewed.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 7
+  },
+  "csl": {
+   "title": "Denied-party screening",
+   "why": "Screens new contacts and suppliers against the U.S. Consolidated Screening List.",
+   "prereq": [],
+   "steps": [
+    "Your Exos rollout rep enables screening.",
+    "Review the first screening results and name who clears possible matches."
+   ],
+   "done": "Screening on and a reviewer named.",
+   "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
+   "phase": 7
+  }
+ },
+ "phases": {
+  "0": "Plan",
+  "1": "Platform & access",
+  "2": "Connections",
+  "3": "Work management",
+  "4": "Customers & AI",
+  "5": "Finance & purchasing",
+  "6": "Operations",
+  "7": "People & compliance",
+  "8": "Security & backup",
+  "9": "Go-live"
+ }
+}
