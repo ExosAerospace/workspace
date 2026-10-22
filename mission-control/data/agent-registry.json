@@ -6282,6 +6282,24 @@
    "registered": "2026-10-22",
    "envelope_source": "register_cron.py derivation from the live cron",
    "eval_command": "python3 scripts/watch_task_attachment.py selftest"
+  },
+  {
+   "label": "com.exos.mc-cell-access-sync-exo3",
+   "launchd": "com.exos.mc-cell-access-sync-exo3",
+   "script": "scripts/mc_cell_onboard_exo3.py (access-sync | supabase-create | status)",
+   "kind": "process (launchd every 5 min: access-sync --apply) + on-demand CLI",
+   "schedule": "every 300s (access-sync sslc); supabase-create on demand per new cell",
+   "purpose": "Exo-run account setup for customer/entity MC cells (Jon 2026-10-22): Cloudflare Access follows each cell's own Admin user list; creates the cell's hosted Supabase database in the Exos-managed org, loads the schema and stores keys, so customers never touch Cloudflare or Supabase.",
+   "stack_layer": "GOVERN/ASSURE",
+   "autonomy_tier": "Autonomous for access-sync (executes the cell admin's user decisions); supabase-create human-run (--apply)",
+   "human_owner": "John Quinn",
+   "permission_envelope": "Cloudflare Access: PUT include list of the <entity>.exosaero.space 'approved users' policy only (verified by re-read); removes only emails the cell disabled/deleted or that this script added. Supabase Management API: create/read project mc-<entity>, run schema SQL. Writes secrets.json <entity>_supabase_url/_service_key (0600), logs/mc-cell-onboard*.json[l]. Reads cell /data/users.json via docker exec. No email/Discord.",
+   "memory_boundary": "Cell users file (emails/active only), Cloudflare policy, Supabase project metadata. Never reads Exos MC data.",
+   "escalation": "Any API failure -> logs/mc-cell-onboard.jsonl + fleet event outcome=fail; policy mismatch after write -> exit 1 (agent eval flags). Missing Supabase token -> 'blocked' event.",
+   "eval_suite": "python3 scripts/mc_cell_onboard_exo3.py status --entity sslc (output: every active cell user is on the cell's Cloudflare policy; logs/mc-cell-onboard.jsonl outcome=ok after each write, verified by re-read)",
+   "registered": "2026-10-22",
+   "agent": "mc-cell-onboard-exo3",
+   "eval_type": "output"
   }
  ],
  "eval_wave_1": {

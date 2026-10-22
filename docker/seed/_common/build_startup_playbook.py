@@ -24,6 +24,31 @@ OWNER_ROLE = {
   "Sales / business development lead": ["crm", "opportunities", "samgov", "csl"],
   "HR / people lead": ["hr", "ethics", "reading", "bamboohr"],
 }
+# How much of each setup Exo does (exo3: Exo runs every account step it can; people do only the
+# sign-in/consent that legally has to be theirs). level: auto = Exo does all of it; assisted = one
+# step by you, Exo does the rest; guided = your own data/decisions, rep helps.
+AUTO = {
+  "cloudflare": ("auto", "Adds and removes every Admin user on the secure-access policy, every 5 minutes.", "Nothing."),
+  "roles": ("assisted", "Creates secure access for each user you add and sends nothing until you add them.", "Add each person in Admin with a role."),
+  "supabase": ("auto", "Creates your database, loads the Mission Control structure, connects it, moves your data, runs the backup check.", "Nothing (Exos-hosted). Own-cloud option: create the account and invite your rep."),
+  "guard": ("auto", "Turns on monitoring and prepares the first-week access summary.", "Read the summary with your rep; name a security contact."),
+  "claude": ("auto", "Connects the AI model under your workspace's own spending cap.", "Read the data-handling note."),
+  "agent": ("guided", "Answers in task notes from day one.", "Each first-wave user asks one question."),
+  "quickbooks": ("assisted", "Generates the connection link, runs the read test, maps vendors and accounts.", "Your QuickBooks admin clicks Connect and approves once."),
+  "bamboohr": ("assisted", "Connects, syncs the directory and checks the org chart.", "Your BambooHR admin creates an API key and pastes it in the secure form your rep sends."),
+  "proton": ("assisted", "Configures the mail connection and the capture test.", "Mailbox owner signs in once on the rep's screen-share."),
+  "m365": ("assisted", "Registers the app and runs the mail/calendar test.", "Your Microsoft 365 admin clicks Accept on one consent screen."),
+  "discord": ("assisted", "Adds the bot, creates notification routes, sends a test.", "Your server admin clicks Authorize once."),
+  "teamwork": ("assisted", "Connects and syncs one project as a test.", "Your Teamwork admin pastes an API key in the secure form."),
+  "docusign": ("assisted", "Configures the account and sends a test envelope.", "Your DocuSign admin clicks Allow once."),
+  "peony": ("assisted", "Connects and pushes a test document.", "Paste the Peony API key in the secure form."),
+  "samgov": ("auto", "Sets up the search from your NAICS codes and keywords and loads matches into Opportunities.", "Give your rep your NAICS codes and keywords."),
+  "csl": ("auto", "Turns on screening for every new contact and supplier.", "Name who clears possible matches."),
+  "websearch": ("auto", "Enables sourced web research.", "Nothing."),
+  "altmodels": ("auto", "Enables the providers you approve.", "Approve the list."),
+  "ollama": ("assisted", "Installs and tests the runtime.", "Provide the machine."),
+  "localai": ("assisted", "Routes the workloads you list to private models.", "List the sensitive workloads."),
+}
 ROLE_OF = {f: r for r, fs in OWNER_ROLE.items() for f in fs}
 
 BASE = {
@@ -61,18 +86,16 @@ F = {
     ["List your first-wave people: name, work email, job title. Start with the site owner(s), the MC administrator and one lead per area below; add everyone else at go-live.",
      "Your administrator opens Admin (left nav → Admin) and clicks + Add User for each person. Roles: admin (everything, including Settings and users), manager (approves, edits Settings), member (own and shared tasks), partner/board (read-only portals).",
      "Each new user gets a temporary password and sets their own at first login.",
-     "Send the same email list to your Exos rollout rep, who adds it to the secure-access policy. Without that step people cannot reach the login page.",
      "Name a person for each area lead: MC administrator; Finance lead (accounting, suppliers, expenses, job cost); Operations lead (approvals, equipment, inventory, production); Sales / business development lead (customers, pipeline, bids); HR / people lead (staff directory, policies, ethics line). One person can hold several.",
      "Open the Startup tasks on this board. Each one says \"Suggested owner\" — set the Owner field to that person.",
      "Post the list of people and area leads as a note on this task."],
     "Every first-wave user can log in, and every open Startup task has a named owner.", phase=0, rank=2),
   "cloudflare": t("Secure access (Cloudflare Zero Trust)",
     "Mission Control has no open ports. People reach it through an identity check (one-time PIN to their email) before the login page.",
-    ["Send your Exos rollout rep the list of user email addresses (same list as Admin).",
-     "The rep adds them to your workspace's access policy.",
+    ["Nothing to send: Exo keeps the access policy in step with your Admin user list, checking every 5 minutes.",
      "Each user opens the workspace link, enters their email, and types the PIN that arrives by email.",
      "If a PIN does not arrive, check spam/quarantine and allow the sender (Cloudflare Access).",
-     "Removing someone: tell the rep the same day; Admin → Disable the user."],
+     "Removing someone: Admin → Disable the user. Exo removes their access within 5 minutes."],
     "Every user on the list has reached the MC login page once.", rep="Your Exos rollout rep does this step for you.", phase=1),
   "guard": t("Security monitoring (MC Guard) — confirm and review",
     "Every request is filtered, rate-limited and logged. Nothing to install; this task is the review.",
@@ -80,13 +103,14 @@ F = {
      "Confirm no unexpected users or locations.",
      "Agree who in your organization receives security notices."],
     "First-week access summary reviewed and a security contact named.", rep="Your Exos rollout rep runs the report with you.", phase=8),
-  "supabase": t("Database and backups — confirm",
-    "Your workspace keeps its own database, separate from every other organization. This task confirms storage and backup.",
-    ["Your workspace currently stores data in its own encrypted volume on the Exos host.",
-     "Ask your Exos rollout rep to show you the last backup time and run a test restore of one record.",
-     "Decide retention: how long deleted items stay recoverable (default 90 days).",
-     "If you prefer a hosted database in your own account, tell the rep before go-live."],
-    "Backup confirmed and a test restore completed.", phase=8),
+  "supabase": t("Hosted database (Supabase) and backups",
+    "Your workspace gets its own hosted database, separate from every other organization. Exo creates and connects it; you never open a Supabase account unless you want it in your own cloud.",
+    ["Tell your Exos rollout rep which option you want: Exos-hosted (default, included in your package) or installed in your own Supabase/cloud account (Enterprise).",
+     "Exos-hosted: nothing else to do. Exo creates the database, loads the Mission Control structure, connects your workspace and moves your data across.",
+     "Your own account: create a Supabase account at supabase.com, then invite your rollout rep's address as an Owner of the organization. Exo does the rest from there.",
+     "Your rep shows you the last backup time and runs a test restore of one record with you.",
+     "Decide retention: how long deleted items stay recoverable (default 90 days)."],
+    "Hosted database connected, backup time shown and one test restore completed.", phase=1, rank=6),
   "partnerview": t("Partner / board portals",
     "Read-only views for directors, partners or customers, with nothing else visible.",
     ["List who needs a portal and what they should see (e.g. board packs, a partner's project).",
@@ -276,9 +300,11 @@ F = {
 
 for k, v in F.items():
     v["owner_role"] = ROLE_OF.get(k, "MC administrator")
+    lv, exo, you = AUTO.get(k, ("guided", "", ""))
+    v["automation"] = {"level": lv, "exo": exo, "you": you}
 for k, v in BASE.items():
     v["owner_role"] = "Site owner"
-out = {"version": "2026-10-22.2", "rep_label": REP, "base": BASE, "features": F,
+out = {"version": "2026-10-22.3", "rep_label": REP, "base": BASE, "features": F,
        "phases": {"0": "Plan", "1": "Platform & access", "2": "Connections", "3": "Work management",
                   "4": "Customers & AI", "5": "Finance & purchasing", "6": "Operations", "7": "People & compliance",
                   "8": "Security & backup", "9": "Go-live"}}

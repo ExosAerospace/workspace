@@ -32,6 +32,11 @@ function create(entity, dataDir, playbookFile) {
   function describe(p, names, pb) {
     const L = [`Phase ${p.phase}: ${(pb.phases || {})[p.phase] || ''}`, '', p.why, ''];
     if (p.owner_role) L.push('Suggested owner: ' + p.owner_role, '');
+    const A = p.automation;
+    if (A && A.exo) {
+      const lv = { auto: 'Exo does this for you', assisted: 'Exo does this; one step is yours', guided: 'Your data and decisions; your rep helps' }[A.level] || '';
+      L.push(lv + '.', 'Exo does: ' + A.exo, 'Your part: ' + (A.you || 'Nothing.'), '');
+    }
     if (p.prereq && p.prereq.length) L.push('Do first: ' + p.prereq.map(id => names[id] || id).join(', '), '');
     L.push('Steps:'); p.steps.forEach((s, i) => L.push(`${i + 1}. ${s}`));
     L.push('', 'Done when: ' + p.done, '', 'Help: ' + p.rep, '', 'Questions: add a note on this task and ' + pb.rep_label + ' answers here.');
@@ -60,7 +65,7 @@ function create(entity, dataDir, playbookFile) {
       const cur = byId.get(id);
       if (!cur) {
         d.tasks.push({ id, title: w.title, state: 'To Do', owner: 'Team', category: 'Startup', priority: prio(w.p), suggested_owner: w.p.owner_role || null,
-          due_date: null, description: describe(w.p, names, pb), source: 'startup', tags: ['startup', 'group'].concat(w.feature ? ['feature:' + w.feature] : []),
+          due_date: null, description: describe(w.p, names, pb), source: 'startup', tags: ['startup', 'group'].concat(w.feature ? ['feature:' + w.feature] : [], w.p.automation ? ['exo-' + w.p.automation.level] : []),
           created_at: now(), updated_at: now() });
         added++;
       } else if (cur.source === 'startup' && cur.state === 'Cancelled' && cur.cancel_reason === 'feature-off') {

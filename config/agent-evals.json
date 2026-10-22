@@ -1712,6 +1712,19 @@
    "warn_grace": 2.5,
    "fail_grace": 6,
    "owner": "Exo (infra) / John Quinn"
+  },
+  "com.exos.mc-cell-access-sync-exo3": {
+   "cadence_s": 300,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/mc_cell_onboard_exo3.py status --entity sslc",
+   "eval_type": "output",
+   "governance_checks": [
+    "access-sync removes only emails the cell disabled/deleted or that it added itself",
+    "every policy write verified by re-read",
+    "DRY-RUN unless --apply"
+   ]
   }
  },
  "_eval_wave_2": {

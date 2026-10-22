@@ -1,5 +1,5 @@
 {
- "version": "2026-10-22.2",
+ "version": "2026-10-22.3",
  "rep_label": "your Exos rollout rep",
  "base": {
   "kickoff": {
@@ -64,7 +64,6 @@
     "List your first-wave people: name, work email, job title. Start with the site owner(s), the MC administrator and one lead per area below; add everyone else at go-live.",
     "Your administrator opens Admin (left nav \u2192 Admin) and clicks + Add User for each person. Roles: admin (everything, including Settings and users), manager (approves, edits Settings), member (own and shared tasks), partner/board (read-only portals).",
     "Each new user gets a temporary password and sets their own at first login.",
-    "Send the same email list to your Exos rollout rep, who adds it to the secure-access policy. Without that step people cannot reach the login page.",
     "Name a person for each area lead: MC administrator; Finance lead (accounting, suppliers, expenses, job cost); Operations lead (approvals, equipment, inventory, production); Sales / business development lead (customers, pipeline, bids); HR / people lead (staff directory, policies, ethics line). One person can hold several.",
     "Open the Startup tasks on this board. Each one says \"Suggested owner\" \u2014 set the Owner field to that person.",
     "Post the list of people and area leads as a note on this task."
@@ -73,24 +72,33 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 0,
    "rank": 2,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "assisted",
+    "exo": "Creates secure access for each user you add and sends nothing until you add them.",
+    "you": "Add each person in Admin with a role."
+   }
   },
   "cloudflare": {
    "title": "Secure access (Cloudflare Zero Trust)",
    "why": "Mission Control has no open ports. People reach it through an identity check (one-time PIN to their email) before the login page.",
    "prereq": [],
    "steps": [
-    "Send your Exos rollout rep the list of user email addresses (same list as Admin).",
-    "The rep adds them to your workspace's access policy.",
+    "Nothing to send: Exo keeps the access policy in step with your Admin user list, checking every 5 minutes.",
     "Each user opens the workspace link, enters their email, and types the PIN that arrives by email.",
     "If a PIN does not arrive, check spam/quarantine and allow the sender (Cloudflare Access).",
-    "Removing someone: tell the rep the same day; Admin \u2192 Disable the user."
+    "Removing someone: Admin \u2192 Disable the user. Exo removes their access within 5 minutes."
    ],
    "done": "Every user on the list has reached the MC login page once.",
    "rep": "Your Exos rollout rep does this step for you.",
    "phase": 1,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "auto",
+    "exo": "Adds and removes every Admin user on the secure-access policy, every 5 minutes.",
+    "you": "Nothing."
+   }
   },
   "guard": {
    "title": "Security monitoring (MC Guard) \u2014 confirm and review",
@@ -105,23 +113,34 @@
    "rep": "Your Exos rollout rep runs the report with you.",
    "phase": 8,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "auto",
+    "exo": "Turns on monitoring and prepares the first-week access summary.",
+    "you": "Read the summary with your rep; name a security contact."
+   }
   },
   "supabase": {
-   "title": "Database and backups \u2014 confirm",
-   "why": "Your workspace keeps its own database, separate from every other organization. This task confirms storage and backup.",
+   "title": "Hosted database (Supabase) and backups",
+   "why": "Your workspace gets its own hosted database, separate from every other organization. Exo creates and connects it; you never open a Supabase account unless you want it in your own cloud.",
    "prereq": [],
    "steps": [
-    "Your workspace currently stores data in its own encrypted volume on the Exos host.",
-    "Ask your Exos rollout rep to show you the last backup time and run a test restore of one record.",
-    "Decide retention: how long deleted items stay recoverable (default 90 days).",
-    "If you prefer a hosted database in your own account, tell the rep before go-live."
+    "Tell your Exos rollout rep which option you want: Exos-hosted (default, included in your package) or installed in your own Supabase/cloud account (Enterprise).",
+    "Exos-hosted: nothing else to do. Exo creates the database, loads the Mission Control structure, connects your workspace and moves your data across.",
+    "Your own account: create a Supabase account at supabase.com, then invite your rollout rep's address as an Owner of the organization. Exo does the rest from there.",
+    "Your rep shows you the last backup time and runs a test restore of one record with you.",
+    "Decide retention: how long deleted items stay recoverable (default 90 days)."
    ],
-   "done": "Backup confirmed and a test restore completed.",
+   "done": "Hosted database connected, backup time shown and one test restore completed.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 8,
-   "rank": 5,
-   "owner_role": "MC administrator"
+   "phase": 1,
+   "rank": 6,
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "auto",
+    "exo": "Creates your database, loads the Mission Control structure, connects it, moves your data, runs the backup check.",
+    "you": "Nothing (Exos-hosted). Own-cloud option: create the account and invite your rep."
+   }
   },
   "partnerview": {
    "title": "Partner / board portals",
@@ -136,7 +155,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 7,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "tasks": {
    "title": "Jobs & Tasks \u2014 load your work",
@@ -154,7 +178,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 3,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "decisions": {
    "title": "Decisions queue \u2014 set approvers",
@@ -170,7 +199,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 3,
    "rank": 5,
-   "owner_role": "Operations lead"
+   "owner_role": "Operations lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "dashboard": {
    "title": "My Dashboard \u2014 set the company default view",
@@ -185,7 +219,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 3,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "followups": {
    "title": "Follow-ups \u2014 turn on reminders",
@@ -200,7 +239,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 3,
    "rank": 5,
-   "owner_role": "Operations lead"
+   "owner_role": "Operations lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "search": {
    "title": "Global search \u2014 check it finds your records",
@@ -214,7 +258,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 6,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "crm": {
    "title": "CRM & Contacts \u2014 import customers and contacts",
@@ -230,7 +279,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 4,
    "rank": 5,
-   "owner_role": "Sales / business development lead"
+   "owner_role": "Sales / business development lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "opportunities": {
    "title": "Opportunities pipeline \u2014 load open bids and deals",
@@ -248,7 +302,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 4,
    "rank": 5,
-   "owner_role": "Sales / business development lead"
+   "owner_role": "Sales / business development lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "reading": {
    "title": "Required reading \u2014 assign policies",
@@ -265,7 +324,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 7,
    "rank": 5,
-   "owner_role": "HR / people lead"
+   "owner_role": "HR / people lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "quickbooks": {
    "title": "Connect QuickBooks Online",
@@ -282,7 +346,12 @@
    "rep": "Your QuickBooks admin signs in once; your Exos rollout rep does the rest.",
    "phase": 2,
    "rank": 5,
-   "owner_role": "Finance lead"
+   "owner_role": "Finance lead",
+   "automation": {
+    "level": "assisted",
+    "exo": "Generates the connection link, runs the read test, maps vendors and accounts.",
+    "you": "Your QuickBooks admin clicks Connect and approves once."
+   }
   },
   "suppliers": {
    "title": "Suppliers & POs \u2014 load suppliers and open POs",
@@ -302,7 +371,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 5,
    "rank": 5,
-   "owner_role": "Finance lead"
+   "owner_role": "Finance lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "expenses": {
    "title": "Expense reports \u2014 set approvers and categories",
@@ -321,7 +395,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 5,
    "rank": 5,
-   "owner_role": "Finance lead"
+   "owner_role": "Finance lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "jobcost": {
    "title": "Job costing \u2014 set up jobs and labor rates",
@@ -339,7 +418,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 5,
    "rank": 5,
-   "owner_role": "Finance lead"
+   "owner_role": "Finance lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "assets": {
    "title": "Asset register \u2014 load equipment",
@@ -354,7 +438,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 5,
    "rank": 5,
-   "owner_role": "Operations lead"
+   "owner_role": "Operations lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "mrp": {
    "title": "MRP \u2014 load bills of materials and run the first plan",
@@ -374,7 +463,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 6,
    "rank": 5,
-   "owner_role": "Operations lead"
+   "owner_role": "Operations lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "production": {
    "title": "Production control \u2014 set up work orders",
@@ -392,7 +486,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 6,
    "rank": 5,
-   "owner_role": "Operations lead"
+   "owner_role": "Operations lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "receiving": {
    "title": "Receiving & inventory \u2014 count and load stock",
@@ -410,7 +509,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 6,
    "rank": 5,
-   "owner_role": "Operations lead"
+   "owner_role": "Operations lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "hr": {
    "title": "HR directory \u2014 connect your staff list",
@@ -425,7 +529,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 7,
    "rank": 5,
-   "owner_role": "HR / people lead"
+   "owner_role": "HR / people lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "ethics": {
    "title": "Ethics & whistleblower reporting \u2014 confirm the channel",
@@ -441,7 +550,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 7,
    "rank": 5,
-   "owner_role": "HR / people lead"
+   "owner_role": "HR / people lead",
+   "automation": {
+    "level": "guided",
+    "exo": "",
+    "you": ""
+   }
   },
   "agent": {
    "title": "AI assistant \u2014 learn how to use it",
@@ -459,7 +573,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 4,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "guided",
+    "exo": "Answers in task notes from day one.",
+    "you": "Each first-wave user asks one question."
+   }
   },
   "claude": {
    "title": "AI model connection \u2014 confirm",
@@ -473,7 +592,12 @@
    "rep": "Your Exos rollout rep does this step for you.",
    "phase": 1,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "auto",
+    "exo": "Connects the AI model under your workspace's own spending cap.",
+    "you": "Read the data-handling note."
+   }
   },
   "localai": {
    "title": "Private / local AI models",
@@ -487,7 +611,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 7,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "assisted",
+    "exo": "Routes the workloads you list to private models.",
+    "you": "List the sensitive workloads."
+   }
   },
   "altmodels": {
    "title": "Additional AI model providers",
@@ -501,7 +630,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 7,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "auto",
+    "exo": "Enables the providers you approve.",
+    "you": "Approve the list."
+   }
   },
   "ollama": {
    "title": "Local model runtime",
@@ -514,7 +648,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 7,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "assisted",
+    "exo": "Installs and tests the runtime.",
+    "you": "Provide the machine."
+   }
   },
   "websearch": {
    "title": "Web research",
@@ -528,7 +667,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 7,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "auto",
+    "exo": "Enables sourced web research.",
+    "you": "Nothing."
+   }
   },
   "bamboohr": {
    "title": "Connect BambooHR",
@@ -543,7 +687,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 2,
    "rank": 5,
-   "owner_role": "HR / people lead"
+   "owner_role": "HR / people lead",
+   "automation": {
+    "level": "assisted",
+    "exo": "Connects, syncs the directory and checks the org chart.",
+    "you": "Your BambooHR admin creates an API key and pastes it in the secure form your rep sends."
+   }
   },
   "proton": {
    "title": "Connect email (Proton Mail)",
@@ -558,7 +707,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 2,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "assisted",
+    "exo": "Configures the mail connection and the capture test.",
+    "you": "Mailbox owner signs in once on the rep's screen-share."
+   }
   },
   "m365": {
    "title": "Connect Microsoft 365",
@@ -572,7 +726,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 2,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "assisted",
+    "exo": "Registers the app and runs the mail/calendar test.",
+    "you": "Your Microsoft 365 admin clicks Accept on one consent screen."
+   }
   },
   "discord": {
    "title": "Connect team chat (Discord)",
@@ -586,7 +745,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 2,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "assisted",
+    "exo": "Adds the bot, creates notification routes, sends a test.",
+    "you": "Your server admin clicks Authorize once."
+   }
   },
   "teamwork": {
    "title": "Connect Teamwork.com",
@@ -600,7 +764,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 2,
    "rank": 5,
-   "owner_role": "MC administrator"
+   "owner_role": "MC administrator",
+   "automation": {
+    "level": "assisted",
+    "exo": "Connects and syncs one project as a test.",
+    "you": "Your Teamwork admin pastes an API key in the secure form."
+   }
   },
   "docusign": {
    "title": "Connect DocuSign",
@@ -614,7 +783,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 2,
    "rank": 5,
-   "owner_role": "Finance lead"
+   "owner_role": "Finance lead",
+   "automation": {
+    "level": "assisted",
+    "exo": "Configures the account and sends a test envelope.",
+    "you": "Your DocuSign admin clicks Allow once."
+   }
   },
   "peony": {
    "title": "Connect Peony data room",
@@ -627,7 +801,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 2,
    "rank": 5,
-   "owner_role": "Finance lead"
+   "owner_role": "Finance lead",
+   "automation": {
+    "level": "assisted",
+    "exo": "Connects and pushes a test document.",
+    "you": "Paste the Peony API key in the secure form."
+   }
   },
   "samgov": {
    "title": "SAM.gov opportunity search",
@@ -643,7 +822,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 7,
    "rank": 5,
-   "owner_role": "Sales / business development lead"
+   "owner_role": "Sales / business development lead",
+   "automation": {
+    "level": "auto",
+    "exo": "Sets up the search from your NAICS codes and keywords and loads matches into Opportunities.",
+    "you": "Give your rep your NAICS codes and keywords."
+   }
   },
   "csl": {
    "title": "Denied-party screening",
@@ -657,7 +841,12 @@
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
    "phase": 7,
    "rank": 5,
-   "owner_role": "Sales / business development lead"
+   "owner_role": "Sales / business development lead",
+   "automation": {
+    "level": "auto",
+    "exo": "Turns on screening for every new contact and supplier.",
+    "you": "Name who clears possible matches."
+   }
   }
  },
  "phases": {
