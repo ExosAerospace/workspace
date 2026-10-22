@@ -201,7 +201,7 @@ function build(d){
       while(st.length){const c=st.pop(); if(mem.has(c)||!byId0[c]) continue; mem.add(c); (byId0[c].predecessors||[]).forEach(p=>st.push(p));}
       const rows=[...mem].map(id=>byId0[id]).filter(r=>!TRACKS.includes(r.phase)).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
       rows.forEach(r=>placed.add(r.id));
-      groups.push({name:f.id.split('-').pop()+') '+String(f.title).replace(/^FRU ready for integration:\s*/,''),rows,fru:true});
+      groups.push({name:f.id.split('-').pop()+') '+String(f.title).replace(/^FRU ready for integration:\s*/,'').replace(/\s+—.*$/,''),rows,fru:true});
     });
     // GSE = Ground Support Equipment: its own group, NOT an FRU and not required for flight.
     const gse=byId0['mc-gse'];
