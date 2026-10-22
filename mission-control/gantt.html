@@ -212,7 +212,13 @@ function build(d){
     // Non-FRU tracks (Phil Eaton 10/22): Regulatory & Licensing, GNC & Simulation; anything else = other.
     const TRACKS=['Regulatory & Licensing','GNC & Simulation'];
     TRACKS.forEach(tr=>{ const rows=rest.filter(t=>t.phase===tr); groups.push({name:tr+' (not an FRU)'+(rows.length?'':'  (no tasks yet)'),rows}); });
-    const other=rest.filter(t=>!TRACKS.includes(t.phase));
+    // A task with no links into an FRU still belongs to the FRU its vehicle section maps to, so editing
+    // dependencies never makes it vanish from its FRU (Phil Eaton 10/22, Airframe Section Design).
+    const SEC2FRU={'Payload Bay Design and Fabrication':'Payload Section','Payloads':'Payload Section','Pressurization Section':'Pressurization Section',
+      'Recovery Section':'Recovery Section','Flight Software':'Computer Section','Vehicle Electrical Work':'Fin Can','GSE':'GSE'};
+    const fruGroup=n=>groups.find(g=>g.fru&&g.name.replace(/^\d+\)\s*/,'')===n)||(n==='GSE'?groups.gse:null);
+    const other=[];
+    rest.filter(t=>!TRACKS.includes(t.phase)).forEach(t=>{ const g=fruGroup(SEC2FRU[t.section]); if(g){g.rows.push(t);g.rows.sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));} else other.push(t); });
     if(other.length) groups.push({name:'Other (not yet tied to an FRU)',rows:other});
     if(integ.length) groups.push({name:'Full vehicle integration & test',rows:integ});
     if(groups.gse) groups.push(groups.gse);
