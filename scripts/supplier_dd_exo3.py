@@ -183,12 +183,44 @@ def ingest(args):
         print(f"[QB not connected: {e}] — run with --sample, or add qb_* creds to secrets.json.")
         return [], 0, "none"
 
+def reg_held_sam():
+    reg = load(REG, {"suppliers":[]})
+    return [s for s in reg.get("suppliers",[]) if s.get("status")=="held"
+            and any(h.startswith("SAM.gov") for h in s.get("hard_reasons",[]))]
+
+def sam_available():
+    """SAM screen fails open (error -> None -> GREEN). Probe first so an exhausted quota or
+    outage can never auto-clear suppliers."""
+    try:
+        import crm_dd_engine, urllib.request
+        if not crm_dd_engine.SAM_KEY: return False
+        urllib.request.urlopen("https://api.sam.gov/entity-information/v4/exclusions?api_key="
+                               f"{crm_dd_engine.SAM_KEY}&exclusionName=probe", timeout=25).read()
+        return True
+    except Exception as e:
+        print(f"[SAM.gov unavailable: {e}]"); return False
+
+def withdraw_decision(sup, why):
+    """Re-screen came back GREEN: close any still-pending card so it stops asking a human."""
+    arr = load(DECISIONS, []); dk = f"supplier-dd:{sup['id']}"
+    for d in arr:
+        if d.get("dedupeKey")==dk and not (d.get("status")=="answered" and d.get("answer") in ("Approve supplier","Reject / hold")) \
+                and d.get("status") not in ("cancelled","superseded"):
+            d["status"]="superseded"; d["updated"]=datetime.datetime.now().isoformat(timespec="seconds")
+            d["resolution"]=why
+    save(DECISIONS, arr)
+
 def main():
     args = sys.argv[1:]
+    if "--sample" not in args and not sam_available():
+        print("ABORT: SAM.gov exclusions API not answering — refusing to screen (would fail open)."); sys.exit(2)
     suppliers, total, src = ingest(args)
     if "--supplier" in args:
         want = args[args.index("--supplier")+1].lower()
         suppliers = [s for s in suppliers if want in s["name"].lower()]
+    if "--held-sam" in args:
+        held = {s["id"] for s in reg_held_sam()}
+        suppliers = [s for s in suppliers if s["id"] in held]
     if "--limit" in args:
         suppliers = suppliers[:int(args[args.index("--limit")+1])]
     reg = load(REG, {"meta":{}, "suppliers":[]})
@@ -209,6 +241,10 @@ def main():
         if tier=="GREEN":
             rec["status"]="cleared"; rec["cleared_by"]="Exo (auto)"; rec["human_required"]=False
             dossier(sup["name"], "pass", "Supplier-DD-exo3 auto-clear: clean OFAC/SAM/FOCI/media, no concentration.")
+            if idx.get(sup["id"],{}).get("decision_id"):
+                rec["prior_decision_id"]=idx[sup["id"]]["decision_id"]
+                withdraw_decision(sup, "Re-screen GREEN with exact-name SAM matching (prior RED was a "
+                                       "substring false positive, fixed 2026-10-22).")
         else:
             rec["status"]="held"; rec["cleared_by"]=""; rec["human_required"]=True
             rec["decision_id"]=open_decision(sup, tier, flags, hard)

@@ -126,10 +126,26 @@ def sam_excluded(name):
     try:
         with urllib.request.urlopen(url, timeout=25) as r:
             d = json.load(r)
-        if (d.get("totalRecords") or 0) > 0:
-            return f"SAM.gov exclusion/debarment on record ({d.get('totalRecords')} match) — do not engage."
+        # exclusionName is a substring search ("UPS" hits "Diesel Tune-Ups of RI") — only a
+        # normalized exact-name match counts as a hit on THIS entity.
+        target = _norm_entity(name)
+        hits = []
+        for x in d.get("excludedEntity") or []:
+            i = x.get("exclusionIdentification") or {}
+            nm = i.get("entityName") or " ".join(filter(None, [i.get("firstName"), i.get("lastName")]))
+            if nm and _norm_entity(nm) == target:
+                hits.append(f"{nm} (UEI {i.get('ueiSAM') or 'n/a'})")
+        if hits:
+            return f"SAM.gov exclusion/debarment on record ({len(hits)} exact-name match: {'; '.join(hits[:3])}) — do not engage."
     except Exception: return None
     return None
+
+_ENTITY_SUFFIXES = {"inc","incorporated","llc","l","c","ltd","limited","corp","corporation","co",
+                    "company","lp","llp","plc","the","pllc","pc"}
+
+def _norm_entity(s):
+    toks = re.sub(r"[^a-z0-9]+", " ", (s or "").lower()).split()
+    return " ".join(t for t in toks if t not in _ENTITY_SUFFIXES)
 
 def _load_sdn():
     global _SDN
