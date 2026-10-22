@@ -75,10 +75,13 @@
   <div class="controls">
     <button class="btn" onclick="window.print()">🖨 Print / Save as PDF</button>
     <span style="font-size:.78rem;color:var(--text2)">Group by:</span>
-    <button class="btn" data-gb="phase" onclick="setGroupBy('phase')">Phase</button>
+    <button class="btn" data-gb="fru" onclick="setGroupBy('fru')">FRU</button>
+    <button class="btn sec" data-gb="phase" onclick="setGroupBy('phase')">Phase</button>
     <button class="btn sec" data-gb="section" onclick="setGroupBy('section')">Vehicle section</button>
+    <button class="btn sec" onclick="setAllGroups(true)">⊞ Expand all</button>
+    <button class="btn sec" onclick="setAllGroups(false)">⊟ Collapse all</button>
     <button class="btn sec" onclick="downloadSVG()">⬇ Download SVG</button>
-    <span style="font-size:.78rem;color:var(--text2)">Double-click a task to open it · Drag a bar to move it (drag its right edge to change the due date) · Drag the ○ at the end of a bar onto another task to link them · Right-click to add a task or edit dependencies</span>
+    <span style="font-size:.78rem;color:var(--text2)">Double-click a group line to expand/collapse it · Double-click a task to open it · Drag a bar to move it (drag its right edge to change the due date) · Drag the ○ at the end of a bar onto another task to link them · Right-click to add a task or edit dependencies</span>
     <div class="legend">
       <span><i class="swatch" style="background:#3b82f6"></i>To Do</span>
       <span><i class="swatch" style="background:#eab308"></i>In Progress</span>
@@ -116,9 +119,25 @@ function barColor(t){
     if(left<0)return'#dc2626';
     if(left<=DUE_SOON_DAYS)return'#ff8c00';}
   return statusColor(t.state);}
+// Top-level view: groups start collapsed; double-click a group line to expand/collapse it (Phil Eaton 10/22).
+let OPEN=new Set(JSON.parse(localStorage.getItem('ganttOpen')||'[]'));
+function isOpen(k){return OPEN.has(k);}
+function toggleGroup(k){OPEN.has(k)?OPEN.delete(k):OPEN.add(k);localStorage.setItem('ganttOpen',JSON.stringify([...OPEN]));load();}
+function setAllGroups(open){ if(!open) OPEN.clear(); else (window.__GROUPKEYS||[]).forEach(k=>OPEN.add(k)); localStorage.setItem('ganttOpen',JSON.stringify([...OPEN])); load(); }
+// Summary line colour = most urgent child: any past due → red, any due ≤7 days → orange, all done → green, else blue.
+function groupSummary(rows){
+  const now=new Date(), today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  let late=0,soon=0,done=0,start=null,end=null;
+  rows.forEach(t=>{ const sd=String(t.start_date||t.due_date||'').slice(0,10), dd=String(t.due_date||t.start_date||'').slice(0,10);
+    if(sd&&(!start||sd<start))start=sd; if(dd&&(!end||dd>end))end=dd;
+    if(isDone(t.state)){done++;return;} if(!t.due_date) return;
+    const left=daysBetween(today,d2(t.due_date)); if(left<0)late++; else if(left<=DUE_SOON_DAYS)soon++; });
+  const color=late?'#dc2626':soon?'#ff8c00':(rows.length&&done===rows.length)?'#22c55e':'#3b82f6';
+  return {late,soon,done,start,end,color};
+}
 const PHASES=['Design & Analysis','BOM & Materials','Purchasing','Fabrication & Assembly','Software Development & Verification','Integration & Test (FRUs)','Licensing & Regulatory'];
-let GROUPBY=localStorage.getItem('ganttGroupBy')||'phase';
-function setGroupBy(v){GROUPBY=v;localStorage.setItem('ganttGroupBy',v);document.querySelectorAll('[data-gb]').forEach(b=>b.classList.toggle('sec',b.dataset.gb!==v));load();}
+let GROUPBY=localStorage.getItem('ganttGroupBy2')||'fru';
+function setGroupBy(v){GROUPBY=v;localStorage.setItem('ganttGroupBy2',v);document.querySelectorAll('[data-gb]').forEach(b=>b.classList.toggle('sec',b.dataset.gb!==v));load();}
 function guessPhase(title){const t=String(title||'').toLowerCase();
   if(/^bom\b|materials list/.test(t))return'BOM & Materials';
   if(/^(order|purchase|get quote|find suitable)/.test(t))return'Purchasing';
@@ -170,7 +189,22 @@ function build(d){
   const listName={}; lists.forEach(l=>listName[l.id]=l.name);
   tasks.forEach(t=>{ t.section=listName[t.task_list_id]||'(no section)'; t.phase=t.phase||guessPhase(t.title); });
   const groups=[];
-  if(GROUPBY==='phase'){
+  if(GROUPBY==='fru'){
+    const byId0={}; tasks.forEach(t=>byId0[t.id]=t);
+    const fruTasks=tasks.filter(t=>/^mc-fru-\d+$/.test(t.id)).sort((a,b)=>Number(a.id.split('-').pop())-Number(b.id.split('-').pop()));
+    const placed=new Set();
+    fruTasks.forEach(f=>{
+      const mem=new Set(), st=[f.id];
+      while(st.length){const c=st.pop(); if(mem.has(c)||!byId0[c]) continue; mem.add(c); (byId0[c].predecessors||[]).forEach(p=>st.push(p));}
+      const rows=[...mem].map(id=>byId0[id]).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
+      rows.forEach(r=>placed.add(r.id));
+      groups.push({name:f.id.split('-').pop()+') '+String(f.title).replace(/^FRU ready for integration:\s*/,''),rows,fru:true});
+    });
+    const integ=tasks.filter(t=>t.id==='mc-fru-integration'); integ.forEach(t=>placed.add(t.id));
+    const rest=tasks.filter(t=>!placed.has(t.id)).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
+    if(rest.length) groups.push({name:'Vehicle-level, GSE & other (not yet tied to an FRU)',rows:rest});
+    if(integ.length) groups.push({name:'Full vehicle integration & test',rows:integ});
+  } else if(GROUPBY==='phase'){
     const byPh={}; tasks.forEach(t=>{(byPh[t.phase]=byPh[t.phase]||[]).push(t);});
     PHASES.concat(Object.keys(byPh).filter(p=>!PHASES.includes(p))).forEach(p=>{ groups.push({name:p+(byPh[p]?'':'  (no tasks yet — right-click any task → Add task, then pick this section)'),rows:(byPh[p]||[]).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)))}); });
   } else {
@@ -185,7 +219,10 @@ function build(d){
   const nIssues=tasks.filter(t=>t.seqIssues.length).length;
 
   // height
-  let bodyH=0; groups.forEach(g=>{bodyH+=LISTH+g.rows.length*ROW;});
+  const focus0=new URLSearchParams(location.search).get('focus');
+  groups.forEach(g=>{ g.key=GROUPBY+'|'+g.name.replace(/\s+\(no tasks yet.*$/,''); g.open=isOpen(g.key)||(!!focus0&&g.rows.some(r=>r.id===focus0)); });
+  let bodyH=0; groups.forEach(g=>{bodyH+=LISTH+(g.open?g.rows.length*ROW:0);});
+  window.__GROUPKEYS=groups.map(g=>g.key);
   const H=HEADER+bodyH+PAD;
   const W=LEFT+chartW+PAD;
 
@@ -217,9 +254,18 @@ function build(d){
   // rows
   let y=HEADER;
   groups.forEach(g=>{
-    s+='<rect class="g-listbg" x="0" y="'+y+'" width="'+W+'" height="'+LISTH+'"/>';
-    s+='<text class="g-list" x="8" y="'+(y+17)+'">'+esc(g.name)+'</text>';
+    const sm=groupSummary(g.rows);
+    s+='<g class="g-grp" data-grp="'+esc(g.key)+'"><rect class="g-listbg" x="0" y="'+y+'" width="'+W+'" height="'+LISTH+'"/>';
+    s+='<text class="g-list" x="8" y="'+(y+17)+'">'+(g.rows.length?(g.open?'▾ ':'▸ '):'')+esc(g.name)+'</text>';
+    if(g.rows.length){
+      const cnt=g.rows.length+' task'+(g.rows.length>1?'s':'')+(sm.late?' · '+sm.late+' past due':'')+(sm.soon?' · '+sm.soon+' due ≤7d':'')+(sm.done?' · '+sm.done+' done':'');
+      s+='<text class="g-sub" x="'+(LEFT-6)+'" y="'+(y+17)+'" text-anchor="end">'+esc(cnt)+'</text>';
+      if(sm.start&&sm.end){ const sx=x(sm.start), sw=Math.max(4,x(sm.end)-sx);
+        s+='<rect x="'+sx.toFixed(1)+'" y="'+(y+6)+'" width="'+sw.toFixed(1)+'" height="'+(LISTH-12)+'" rx="2" fill="'+sm.color+'" opacity="0.9"><title>'+esc(g.name)+' | '+esc(sm.start)+' → '+esc(sm.end)+' | '+esc(cnt)+' | double-click to '+(g.open?'collapse':'expand')+'</title></rect>'; }
+    }
+    s+='</g>';
     y+=LISTH;
+    if(!g.open) return;
     g.rows.forEach(t=>{
       const nmMax=GROUPBY==='phase'?30:44; const nm=(t.title||'').length>nmMax?(t.title||'').slice(0,nmMax-1)+'…':(t.title||'');
       s+='<g class="g-row" data-tid="'+esc(t.id)+'"><rect class="g-hit" x="0" y="'+y+'" width="'+W+'" height="'+ROW+'"/>';
@@ -281,6 +327,7 @@ async function boardCards(){
 }
 const normT=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 document.getElementById('content').addEventListener('dblclick',async e=>{
+  const gg=e.target.closest('[data-grp]'); if(gg){ toggleGroup(gg.dataset.grp); return; }
   const g=e.target.closest('[data-tid]'); if(!g) return;
   const t=SCHED[g.dataset.tid]; if(!t) return;
   // Open the tab synchronously (inside the double-click) so popup blockers allow it; point it at the card once found.
