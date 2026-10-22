@@ -43,6 +43,8 @@ DRY = "--dry-run" in sys.argv
 WEEK = datetime.datetime.now().strftime("%G-W%V")  # ISO week (was %W → off by one)
 TODAY = datetime.date.today().isoformat()
 REPORT_DOCX = os.path.join(REPORT_DIR, f"exo3-field-report-{WEEK}.docx")
+if DRY:  # dry runs (daily agent_eval selftest) must not overwrite the week's real report
+    REPORT_DOCX = os.path.join("/tmp", f"exo3-field-report-{WEEK}-dry.docx")
 
 
 def log_fleet(agent, kind, action, outcome, detail=None):
@@ -398,7 +400,8 @@ def main():
     decision_id = decision.get("id") if decision else None
 
     # Log to fleet
-    log_fleet(
+    if not DRY:
+      log_fleet(
         agent="exo3-field-report",
         kind="govern",
         action="field_report",
