@@ -308,6 +308,11 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'all 4 still pending on 10/21 (requests sent 10/6-10/8)',
                  '(No email.) Check again whether any accepted. For anyone who did, tell Exo in #lizi-channel-2 and it drafts the message. Anyone still pending after nearly 4 weeks, '
                  'just leave it. For Marshall (Starlab), Exo can line up Bradley Henderson (Starlab CCO) instead.'),
+                ('Higher Orbits: Michelle Lucas (task #1236), touch 3 by TEXT',
+                 'text her cell 281-451-5343 (she offered texting in Feb)',
+                 'emails 10/8 + 10/22 unanswered; Go For Launch! Albuquerque is Nov 7-8. Warm contact, so switch channel instead of a 3rd email. Skip if she replied',
+                 'Hi Michelle, it\'s Lizi with Exos! I sent a couple of emails about a recovered BLK3 flight as another ride for Go For Launch! student experiments. '
+                 'I know this is a crazy week before Albuquerque. Would a quick call after the event work?'),
                 ('NCAR ACOM: Dr. Eric Apel (task #2200)',
                  'apel@ucar.edu (reply on your 10/21 note)',
                  'you followed up 10/21 with the booking link + one-pager. Skip if he booked or replied',
