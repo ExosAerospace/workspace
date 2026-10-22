@@ -17,7 +17,10 @@
     "packages": {
       "core": {"platform_month": 500, "per_user_month": 45, "min_users": 5, "onboarding": 5000},
       "business": {"platform_month": 1000, "per_user_month": 65, "min_users": 10, "onboarding": 15000},
-      "enterprise": {"platform_month": 3000, "per_user_month": 110, "min_users": 25, "onboarding": 40000}}},
+      "enterprise": {"platform_month": 3000, "per_user_month": 110, "min_users": 25, "onboarding": 40000}},
+    "billing": {"list_basis": "annual contract, billed monthly", "prepay_1yr_discount_pct": 10, "prepay_2yr_discount_pct": 15, "month_to_month_uplift_pct": 20,
+      "discount_applies_to": "recurring subscription fees (platform, per-user, add-on modules/integrations); not onboarding, pilots, custom work, hourly, or hosting pass-through",
+      "source": "Jon instruction on D-7282169 (2026-10-22): annual discount for customers who pay in full up front"}},
   "native": [
     {"group": "Work management", "items": [
       {"id": "tasks", "name": "Jobs & Tasks", "tier": "core", "status": "live", "page": "jobs.html", "desc": "Prioritized task board with owners, due dates, subtasks, documents tab and version-controlled attachments. Notes and questions answered in-thread by the AI agent."},

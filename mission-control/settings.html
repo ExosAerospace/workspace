@@ -133,7 +133,9 @@ function price(top,on){
   const users=Math.max(+($('pUsers')&&$('pUsers').value)||pk.min_users,pk.min_users);
   const mo=pk.platform_month+pk.per_user_month*users;
   el.style.display='';
-  el.innerHTML=`<span>Estimate (${esc(P.label||'proposal pricing')}): <b>${top}</b></span><span>Users <input id="pUsers" type="number" min="${pk.min_users}" value="${users}" style="width:60px"> (min ${pk.min_users})</span><span><b>$${mo.toLocaleString()}</b>/month · $${(mo*12).toLocaleString()}/year billed annually</span><span>One-time onboarding $${pk.onboarding.toLocaleString()}${k==='enterprise'?'+':''}</span>`;
+  const B=P.billing||{}, d1=B.prepay_1yr_discount_pct||0, d2=B.prepay_2yr_discount_pct||0, yr=mo*12;
+  const pre=d1?`<span>Paid in full up front: <b>$${Math.round(yr*(1-d1/100)).toLocaleString()}</b>/year (${d1}% off, save $${Math.round(yr*d1/100).toLocaleString()})${d2?` · 2 years up front ${d2}% off: $${Math.round(yr*2*(1-d2/100)).toLocaleString()}`:''}</span>`:'';
+  el.innerHTML=`<span>Estimate (${esc(P.label||'proposal pricing')}): <b>${top}</b></span><span>Users <input id="pUsers" type="number" min="${pk.min_users}" value="${users}" style="width:60px"> (min ${pk.min_users})</span><span><b>$${mo.toLocaleString()}</b>/month · $${yr.toLocaleString()}/year on an annual contract billed monthly</span>${pre}<span>One-time onboarding $${pk.onboarding.toLocaleString()}${k==='enterprise'?'+':''} (not discounted)</span>`;
   $('pUsers').onchange=()=>price(top,on);
 }
 function owners(d){
