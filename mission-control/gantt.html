@@ -31,6 +31,7 @@
   .g-month{fill:var(--text2);font-size:10px}
   .g-grid{stroke:rgba(255,255,255,0.07)}
   .g-listbg{fill:rgba(255,255,255,0.04)}
+  .g-row{cursor:pointer}.g-hit{fill:transparent}.g-row:hover .g-hit{fill:rgba(0,128,255,0.08)}
   .g-today{stroke:#ff6b00;stroke-width:1.5;stroke-dasharray:4 3}
   .g-todaylbl{fill:#ff6b00;font-size:10px;font-weight:700}
   .err{background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.3);color:#ffb0b0;padding:14px 18px;border-radius:10px;font-size:.85rem}
@@ -181,6 +182,7 @@ function build(d){
     y+=LISTH;
     g.rows.forEach(t=>{
       const nm=(t.title||'').length>44?(t.title||'').slice(0,43)+'…':(t.title||'');
+      s+='<g class="g-row" data-tid="'+esc(t.id)+'"><rect class="g-hit" x="0" y="'+y+'" width="'+W+'" height="'+ROW+'"/>';
       s+='<text class="g-lbl" x="16" y="'+(y+15)+'">'+esc(nm)+'</text>';
       if(t.owner) s+='<text class="g-sub" x="'+(LEFT-6)+'" y="'+(y+15)+'" text-anchor="end">'+esc(t.owner)+'</text>';
       const sd=t.start_date||t.due_date, dd=t.due_date||t.start_date;
@@ -195,6 +197,7 @@ function build(d){
         const pg=Number(t.progress)||0;
         if(pg>0&&pg<100) s+='<rect x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+(bw*pg/100).toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="rgba(0,0,0,0.28)"/>';
       }
+      s+='</g>';
       y+=ROW;
     });
   });
@@ -216,8 +219,30 @@ function build(d){
   }
   s+='</svg>';
   SVGSTR=s;
+  SCHED=byId;
   document.getElementById('content').innerHTML=s;
 }
+
+// Double-click a task row/bar → open its Task board card. Gantt tasks link to board cards via the
+// tag `sched:<erp-task-id>` (sched_board_sync.py); fall back to an exact title match.
+let SCHED={}, BOARD=null;
+async function boardCards(){
+  if(!BOARD){const r=await fetch('/api/tasks'); if(!r.ok) throw new Error('HTTP '+r.status); BOARD=await r.json();}
+  return Array.isArray(BOARD)?BOARD:[];
+}
+const normT=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+document.getElementById('content').addEventListener('dblclick',async e=>{
+  const g=e.target.closest('[data-tid]'); if(!g) return;
+  const t=SCHED[g.dataset.tid]; if(!t) return;
+  try{
+    const cards=await boardCards();
+    const card=cards.find(c=>(c.tags||[]).includes('sched:'+t.id))
+      ||cards.find(c=>normT(c.title)===normT(t.title)&&!/done|cancel/i.test(c.state||''))
+      ||cards.find(c=>normT(c.title)===normT(t.title));
+    if(card) window.location='/index.html?task='+encodeURIComponent(card.id);
+    else alert('No Task board card is linked to "'+t.title+'" yet.');
+  }catch(err){ alert('Could not open task: '+err.message); }
+});
 
 function downloadSVG(){
   if(!SVGSTR) return;
