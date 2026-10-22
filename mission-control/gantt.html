@@ -121,6 +121,14 @@ async function load(){
     if(!r.ok) throw new Error('HTTP '+r.status+(r.status===401?' — please sign in':''));
     const d=await r.json();
     if(d.project) document.getElementById('projName').textContent=d.project.name||'BLK3';
+    // People mark work Done on their Task board card: a linked card (tag sched:<id>) that is Done
+    // makes its Gantt bar Done too. Cards auto-closed as stale backlog don't count as finished.
+    try{
+      const cards=await boardCards();
+      const doneBy={}; cards.forEach(c=>{ if((c.state||'')==='Done'&&!(c.tags||[]).includes('closed:stale-backlog'))
+        (c.tags||[]).forEach(tg=>{ if(tg.startsWith('sched:')) doneBy[tg.slice(6)]=c.id; }); });
+      (d.tasks||[]).forEach(t=>{ if(!isDone(t.state)&&doneBy[t.id]){ t.boardDone=doneBy[t.id]; t.state='Done'; } });
+    }catch(e){ /* board unavailable: fall back to schedule status only */ }
     build(d);
   }catch(err){ el.innerHTML='<div class="err">Could not load Gantt: '+esc(err.message)+'</div>'; }
 }
@@ -194,7 +202,7 @@ function build(d){
         const critStroke=t.critical?' stroke="#e879f9" stroke-width="2"':'';
         const st0=String(t.state||'').toLowerCase(); const waitTxt=(st0==='waiting'||st0.includes('block')||st0.includes('hold'))?(' | Waiting on '+((t.predecessors||[]).map(p=>byId[p]).filter(p=>p&&!isDone(p.state)).map(p=>'#'+p.seq+' '+p.title).join(', ')||'— set Depends on')):'';
         const slackTxt=(t.slack!=null)?' | slack '+t.slack+'d'+(t.critical?' (CRITICAL)':''):'';
-        s+='<rect x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+bw.toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="'+col+'"'+critStroke+'><title>'+esc(t.title)+' | '+esc(sd)+' → '+esc(dd)+' | '+esc(t.state||'')+(t.owner?' | '+esc(t.owner):'')+esc(waitTxt)+slackTxt+'</title></rect>';
+        s+='<rect x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+bw.toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="'+col+'"'+critStroke+'><title>'+esc(t.title)+' | '+esc(sd)+' → '+esc(dd)+' | '+esc(t.state||'')+(t.owner?' | '+esc(t.owner):'')+(t.boardDone?' (marked Done on Task board #'+t.boardDone+')':'')+esc(waitTxt)+slackTxt+'</title></rect>';
         const pg=Number(t.progress)||0;
         if(pg>0&&pg<100) s+='<rect x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+(bw*pg/100).toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="rgba(0,0,0,0.28)"/>';
       }

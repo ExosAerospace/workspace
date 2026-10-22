@@ -3886,6 +3886,10 @@ const server = http.createServer((req, res) => {
 
         // Apply update
         const result = await supabaseRequest('PATCH', `tasks?id=eq.${id}`, fields);
+        // A BLK3 schedule card marked Done (or re-opened) updates its Gantt bar.
+        if (fields.state && fields.state !== oldTask.state && (oldTask.tags || []).some(t => String(t).startsWith('sched:'))) {
+          try { require('child_process').spawn('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'sched_board_sync.py'), '--apply'], { stdio: 'ignore', detached: true }).unref(); } catch (e) {}
+        }
 
         // Auto-log meaningful changes as comments
         const changes = [];

@@ -13,7 +13,7 @@ reported as conflicts so a human can say whether the work is really finished.
 Idempotent. Usage: sched_board_sync.py [--apply] [--project tw-902146] [--json]
 (dry-run by default). Called by server.js after every Schedule edit.
 """
-import argparse, importlib.util, json, os, sqlite3, sys, urllib.parse
+import argparse, importlib.util, json, os, sqlite3, subprocess, sys, urllib.parse
 
 WS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB = os.environ.get("ERP_DB_PATH") or os.path.join(WS, "erp-foundation", "mc.db")
@@ -52,6 +52,13 @@ def gantt_tasks(project):
     return [dict(r) for r in rows]
 
 
+def erp_set_done(erp_id):
+    """Audited ERP write through the DAL (same path as the Schedule page edit)."""
+    js = ("const {openErp}=require(process.argv[1]);const e=openErp(process.argv[2],{actor:'sched-board-sync',agent:'sched-board-sync'});"
+          "try{e.updateScheduleTask(process.argv[3],{state:'Done'});}finally{e.close();}")
+    subprocess.run(["node", "-e", js, os.path.join(WS, "erp-foundation", "dal.js"), DB, erp_id], check=True, timeout=30)
+
+
 def due_iso(d):
     return (d or "")[:10] + "T23:59:59+00:00" if d else None
 
@@ -82,6 +89,11 @@ def main():
             cands = [c for c in (supa("GET", q) or []) if norm(c["title"]) == norm(g["title"])]
             cands.sort(key=lambda c: (norm(c["state"]) in CLOSED, "teamwork" not in (c.get("tags") or [])))
             card = cands[0] if cands else None
+        if card and card["state"] == "Done" and not gantt_closed and "closed:stale-backlog" not in (card.get("tags") or []):
+            # Work is marked Done on the person's Task board card -> mark the Gantt task Done.
+            if a.apply: erp_set_done(g["id"])
+            report["updated"].append({"card": card["id"], "title": g["title"], "changes": ["Gantt state → Done (card is Done)"]})
+            gantt_closed = True
         if card and norm(card["state"]) in CLOSED and not gantt_closed:
             # Never reopen a closed card, but still carry the Gantt owner/date so the two never disagree.
             report["conflicts"].append({"card": card["id"], "title": g["title"], "board_state": card["state"], "gantt_owner": owner, "gantt_due": (g["due_date"] or "")[:10]})
