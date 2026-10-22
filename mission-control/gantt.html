@@ -135,15 +135,16 @@ function groupSummary(rows){
   const color=late?'#dc2626':soon?'#ff8c00':(rows.length&&done===rows.length)?'#22c55e':'#3b82f6';
   return {late,soon,done,start,end,color};
 }
-const PHASES=['Design & Analysis','BOM & Materials','Purchasing','Fabrication & Assembly','Software Development & Verification','Integration & Test (FRUs)','Licensing & Regulatory'];
+const PHASES=['Design & Analysis','BOM & Materials','Purchasing','Fabrication & Assembly','Software Development & Verification','GNC & Simulation','Integration & Test (FRUs)','Regulatory & Licensing'];
 let GROUPBY=localStorage.getItem('ganttGroupBy2')||'fru';
 function setGroupBy(v){GROUPBY=v;localStorage.setItem('ganttGroupBy2',v);document.querySelectorAll('[data-gb]').forEach(b=>b.classList.toggle('sec',b.dataset.gb!==v));load();}
 function guessPhase(title){const t=String(title||'').toLowerCase();
   if(/^bom\b|materials list/.test(t))return'BOM & Materials';
   if(/^(order|purchase|get quote|find suitable)/.test(t))return'Purchasing';
-  if(/design|redesign|determine components|simulation|r&d|review|^payload ejector$/.test(t))return'Design & Analysis';
+  if(/simulation|trick|gnc|guidance|trajectory|6-?dof/.test(t))return'GNC & Simulation';
+  if(/design|redesign|determine components|r&d|review|^payload ejector$|methodology/.test(t))return'Design & Analysis';
   if(/fsw|serial|variables|telemetry where|spark|software|firmware|verif/.test(t))return'Software Development & Verification';
-  if(/fcc|licens|faa|regulat|permit|part 450|waiver/.test(t))return'Licensing & Regulatory';
+  if(/fcc|licens|faa|regulat|permit|part 450|waiver/.test(t))return'Regulatory & Licensing';
   if(/integrat|test|fru|acceptance|checkout/.test(t))return'Integration & Test (FRUs)';
   return'Fabrication & Assembly';}
 function monthList(start,end){const out=[];let d=new Date(start.getFullYear(),start.getMonth(),1);
@@ -208,7 +209,11 @@ function build(d){
       rows.forEach(r=>placed.add(r.id)); groups.gse={name:'GSE — Ground Support Equipment (not an FRU · not required for flight)',rows}; }
     const integ=tasks.filter(t=>t.id==='mc-fru-integration'); integ.forEach(t=>placed.add(t.id));
     const rest=tasks.filter(t=>!placed.has(t.id)).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
-    if(rest.length) groups.push({name:'Vehicle-level, GSE & other (not yet tied to an FRU)',rows:rest});
+    // Non-FRU tracks (Phil Eaton 10/22): Regulatory & Licensing, GNC & Simulation; anything else = other.
+    const TRACKS=['Regulatory & Licensing','GNC & Simulation'];
+    TRACKS.forEach(tr=>{ const rows=rest.filter(t=>t.phase===tr); groups.push({name:tr+' (not an FRU)'+(rows.length?'':'  (no tasks yet)'),rows}); });
+    const other=rest.filter(t=>!TRACKS.includes(t.phase));
+    if(other.length) groups.push({name:'Other (not yet tied to an FRU)',rows:other});
     if(integ.length) groups.push({name:'Full vehicle integration & test',rows:integ});
     if(groups.gse) groups.push(groups.gse);
   } else if(GROUPBY==='phase'){
