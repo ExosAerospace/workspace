@@ -8,7 +8,8 @@
 //   • supplier DD status "failed" (human-confirmed exclusion/OFAC) → hard block
 //   • flight-critical PO to a supplier not on the ASL (Approved/Conditional) → blocked unless an admin gives an
 //     override reason (one-time buy; FAI + CoC still required) — the override forces Jon's approval
-//   • Jon approves by Decision card when: total ≥ threshold, flight-critical, DD not cleared (AMBER/RED), or an
+//   • Jon approves by Decision card when: total ≥ threshold, flight-critical, DD not cleared on a DEFENSE-contract PO
+//     (Jon 2026-10-22: DD applies only to defense buys; contract customer USAF/AFRL/Navy/DARPA/... or raw defense:true), or an
 //     ASL override. Otherwise any admin other than the requester approves in the page (segregation of duties).
 // Flowdowns (FAR/DFARS + Exos quality clauses) are selected from the PO's flags, incorporated by reference.
 'use strict';
@@ -87,12 +88,22 @@ function poView(po, cfg) {
   if (po.source === 'mc') out.flowdowns = flowdowns(out, cfg);
   return out;
 }
+const DEFENSE_RE = /\b(USAF|AFRL|Air Force|Army|Navy|ONR|NAVAIR|NAVSEA|DARPA|DoD|DoW|Department of (Defense|War)|Space Force|USSF|SSC|MDA|Missile Defense|DLA|AEDC|SOCOM|DTRA|DIU)\b/i;
+function isDefenseContract(erp, contractId) {
+  if (!contractId) return false;
+  const c = (erp.listContracts() || []).find(x => x.id === contractId || x.number === contractId);
+  if (!c) return false;
+  const r = parse(c.raw_json);
+  return r.defense === true || (r.defense !== false && DEFENSE_RE.test(`${c.customer || ''} ${c.title || ''}`));
+}
 function routeReasons(po, vendor, cfg) {
   const rs = [];
   const thr = Number(cfg.approval.jon_threshold) || 5000;
   if ((Number(po.total) || 0) >= thr) rs.push(`total ≥ ${money(thr)}`);
   if (po.flight_critical) rs.push('flight-critical');
-  if (vendor.dd_tier && vendor.dd_tier !== 'GREEN' && vendor.dd_status !== 'cleared') rs.push(`supplier DD ${vendor.dd_tier} (not cleared)`);
+  // Supplier DD applies only to defense-contract buys (Jon 2026-10-22); the Decision card raised here is the DD sign-off.
+  if (po.defense && !vendor.dd_tier) rs.push('supplier not DD-screened (defense contract) — Exo screens before approval');
+  else if (po.defense && vendor.dd_tier !== 'GREEN' && vendor.dd_status !== 'cleared') rs.push(`supplier DD ${vendor.dd_tier} not cleared (defense contract)`);
   if (po.asl_override) rs.push('ASL override');
   if (po.contract_id && cfg.approval.gov_funded_to_jon) rs.push('charged to a government contract');
   return rs;
@@ -342,7 +353,7 @@ async function handle(req, res, ctx) {
         if (!isAdmin) return send(res, 403, { error: 'Only an admin can override the ASL gate.' });
         override = { by: label, at: now(), reason: String(body.asl_override_reason).slice(0, 500) };
       }
-      const view = { ...r, ...po, asl_override: override };
+      const view = { ...r, ...po, asl_override: override, defense: isDefenseContract(erp, po.contract_id) };
       reasons = routeReasons(view, vendor, cfg);
       const hist = (r.history || []).concat([{ at: now(), by: label, action: 'submitted', detail: reasons.length ? 'to Jon: ' + reasons.join(', ') : 'admin approval' }]);
       erp.upsertPO({ id: po.id, status: 'pending_approval', asl_override: override, approval_route: reasons.length ? 'jon' : 'admin', route_reasons: reasons, history: hist });

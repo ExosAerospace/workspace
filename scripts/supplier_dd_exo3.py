@@ -18,6 +18,11 @@ FLOW (deterministic dispatch — the model is NOT in the approve path):
   python3 scripts/supplier_dd_exo3.py --now            # run against live QuickBooks
   python3 scripts/supplier_dd_exo3.py --sample         # run against a built-in sample list (no QB needed)
   python3 scripts/supplier_dd_exo3.py --supplier "Acme Composites"   # single supplier
+  python3 scripts/supplier_dd_exo3.py --names-file f --defense --program HVRR --no-cards
+      # defense-contract supplier list: screen now, Decision raised when a PO is placed (Jon 2026-10-22)
+
+POLICY (Jon 2026-10-22): human DD sign-off applies only to suppliers used on a defense contract.
+Non-defense AMBER/RED results are kept as status not_required (no Decision card).
 """
 import os, sys, json, subprocess, datetime, urllib.request
 
@@ -229,6 +234,9 @@ def main():
         suppliers = [s for s in suppliers if s["id"] in held]
     if "--limit" in args:
         suppliers = suppliers[:int(args[args.index("--limit")+1])]
+    defense = "--defense" in args          # screened list is used on a defense contract (e.g. HVRR BOM)
+    no_cards = "--no-cards" in args        # screen now; Decision is raised at order time by the PO gate
+    program = args[args.index("--program")+1] if "--program" in args else ""
     reg = load(REG, {"meta":{}, "suppliers":[]})
     idx = {s["id"]:s for s in reg.get("suppliers",[])}
     stats = {"GREEN":0,"AMBER":0,"RED":0}
@@ -251,14 +259,26 @@ def main():
                 rec["prior_decision_id"]=idx[sup["id"]]["decision_id"]
                 withdraw_decision(sup, "Re-screen GREEN with exact-name SAM matching (prior RED was a "
                                        "substring false positive, fixed 2026-10-22).")
+        elif not defense and not idx.get(sup["id"],{}).get("defense_use"):
+            # Jon 2026-10-22: DD sign-off only for suppliers used on a defense contract. Keep the screen
+            # result for reference; no card. Suppliers & POs raises the Decision if one lands on a defense PO.
+            rec["status"]="not_required"; rec["cleared_by"]=""; rec["human_required"]=False
+        elif no_cards:
+            # Defense supplier screened ahead of ordering: the Decision is raised at order time (PO gate).
+            rec["status"]="held_at_order"; rec["cleared_by"]=""; rec["human_required"]=True
         else:
             rec["status"]="held"; rec["cleared_by"]=""; rec["human_required"]=True
             rec["decision_id"]=open_decision(sup, tier, flags, hard)
             dossier(sup["name"], "fail" if tier=="RED" else "caution",
                     ("HELD "+tier+": "+ "; ".join((hard+flags)[:4])))
+        prev = idx.get(sup["id"], {})
+        if defense or prev.get("defense_use"):
+            rec["defense_use"] = True
+            rec["programs"] = sorted(set(prev.get("programs", [])) | ({program} if program else set()))
         idx[sup["id"]]=rec
     reg["suppliers"]=list(idx.values())
-    reg["meta"]={"title":"Supplier-Diligence-exo3 registry","process":"Supplier-Diligence-exo3",
+    pol = (reg.get("meta") or {}).get("policy")
+    reg["meta"]={"policy": pol, "title":"Supplier-Diligence-exo3 registry","process":"Supplier-Diligence-exo3",
                  "principle":"ERP is system of record; this proves readiness (SCRM-1..5), never duplicates.",
                  "concentration_flag":CONCENTRATION_FLAG,"source":src}
     reg["updated"]=datetime.datetime.now().isoformat(timespec="seconds")
