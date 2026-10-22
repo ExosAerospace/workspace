@@ -75,9 +75,11 @@
     <div class="legend">
       <span><i class="swatch" style="background:#3b82f6"></i>To Do</span>
       <span><i class="swatch" style="background:#eab308"></i>In Progress</span>
-      <span><i class="swatch" style="background:#ef4444"></i>Blocked</span>
+      <span><i class="swatch" style="background:#ff8c00"></i>Due within 7 days</span>
+      <span><i class="swatch" style="background:#dc2626"></i>Past due</span>
+      <span><i class="swatch" style="background:#6b7280"></i>Blocked / On hold</span>
       <span><i class="swatch" style="background:#22c55e"></i>Done</span>
-      <span><i class="swatch" style="background:#ff3b3b;border-radius:2px;height:3px;width:16px"></i>Critical path</span>
+      <span><i class="swatch" style="background:#e879f9;border-radius:2px;height:3px;width:16px"></i>Critical path</span>
       <span style="color:#7f8aa3">→ dependency</span>
     </div>
   </div>
@@ -94,8 +96,17 @@ function daysBetween(a,b){return (b-a)/86400000;}
 function statusColor(st){const s=(st||'').toLowerCase();
   if(s==='done'||s==='complete'||s==='completed')return'#22c55e';
   if(s.includes('progress'))return'#eab308';
-  if(s.includes('block')||s.includes('hold'))return'#ef4444';
+  if(s.includes('block')||s.includes('hold'))return'#6b7280';
   return'#3b82f6';}
+// Due-date urgency overrides status color for any task not done: past due = red, due within 7 days = orange.
+const DUE_SOON_DAYS=7;
+function isDone(st){const s=(st||'').toLowerCase();return s==='done'||s==='complete'||s==='completed'||s==='closed';}
+function barColor(t){
+  if(!isDone(t.state)&&t.due_date){const now=new Date();const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    const left=daysBetween(today,d2(t.due_date));
+    if(left<0)return'#dc2626';
+    if(left<=DUE_SOON_DAYS)return'#ff8c00';}
+  return statusColor(t.state);}
 function monthList(start,end){const out=[];let d=new Date(start.getFullYear(),start.getMonth(),1);
   const last=new Date(end.getFullYear(),end.getMonth(),1);
   while(d<=last){out.push(new Date(d));d=new Date(d.getFullYear(),d.getMonth()+1,1);}return out;}
@@ -139,7 +150,7 @@ function build(d){
 
   const document_date=new Date().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
   const cpm=d.cpm||{};
-  const critTxt=cpm.criticalCount?(' · <b style="color:#ff6b6b">critical path '+cpm.criticalCount+' tasks / '+cpm.projectDays+' days</b>'):'';
+  const critTxt=cpm.criticalCount?(' · <b style="color:#e879f9">critical path '+cpm.criticalCount+' tasks / '+cpm.projectDays+' days</b>'):'';
   document.getElementById('meta').innerHTML=
     'Program window <b style="color:var(--text)">'+WIN_START+' → '+WIN_END+'</b> · '+tasks.length+' tasks · '+groups.length+' work packages'+critTxt+' · generated '+document_date+' · Exos Aerospace / Mission Control ERP';
 
@@ -148,7 +159,7 @@ function build(d){
   let s='<svg id="gantt" xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
   s+='<defs>'+
      '<marker id="ah" markerWidth="8" markerHeight="8" refX="6.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#7f8aa3"/></marker>'+
-     '<marker id="ahc" markerWidth="8" markerHeight="8" refX="6.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#ff3b3b"/></marker>'+
+     '<marker id="ahc" markerWidth="8" markerHeight="8" refX="6.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#e879f9"/></marker>'+
      '</defs>';
   // month columns + labels
   months.forEach((m,i)=>{
@@ -175,9 +186,9 @@ function build(d){
       const sd=t.start_date||t.due_date, dd=t.due_date||t.start_date;
       if(sd&&dd){
         let bx=x(sd), bw=Math.max(3,x(dd)-x(sd));
-        const col=statusColor(t.state);
+        const col=barColor(t);
         geom[t.id]={x1:bx,x2:bx+bw,y:y+ROW/2};
-        const critStroke=t.critical?' stroke="#ff3b3b" stroke-width="2"':'';
+        const critStroke=t.critical?' stroke="#e879f9" stroke-width="2"':'';
         const slackTxt=(t.slack!=null)?' | slack '+t.slack+'d'+(t.critical?' (CRITICAL)':''):'';
         s+='<rect x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+bw.toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="'+col+'"'+critStroke+'><title>'+esc(t.title)+' | '+esc(sd)+' → '+esc(dd)+' | '+esc(t.state||'')+(t.owner?' | '+esc(t.owner):'')+slackTxt+'</title></rect>';
         const pg=Number(t.progress)||0;
@@ -190,7 +201,7 @@ function build(d){
   tasks.forEach(t=>{(t.predecessors||[]).forEach(p=>{
     const a=geom[p], b=geom[t.id]; if(!a||!b) return;
     const crit=t.critical && byId[p] && byId[p].critical;
-    const c=crit?'#ff3b3b':'rgba(150,162,186,0.55)';
+    const c=crit?'#e879f9':'rgba(150,162,186,0.55)';
     const mk=crit?'url(#ahc)':'url(#ah)';
     const x1=a.x2, y1=a.y, x2=b.x1-7, y2=b.y;
     const midx=Math.max(x1+8,(x1+x2)/2);
