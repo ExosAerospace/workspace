@@ -2719,6 +2719,43 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── SCHEDULE: add a task before/after an existing one (Gantt right-click; Phil Eaton 2026-10-22) ──
+  // before → new task is a predecessor of the clicked task; after → new task depends on the clicked task.
+  if (req.url.split('?')[0] === '/api/schedule/task' && req.method === 'POST') {
+    if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }
+    let body = ''; req.on('data', c => { body += c; if (body.length > 1e5) req.destroy(); });
+    req.on('end', () => {
+      let erp;
+      try {
+        const { anchor, position, title, owner, start_date, due_date } = JSON.parse(body);
+        if (!anchor || !['before', 'after'].includes(position) || !String(title || '').trim() || !start_date || !due_date) {
+          res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'anchor, position (before|after), title, start_date, due_date required' })); return;
+        }
+        if (String(due_date) < String(start_date)) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'due date is before start date' })); return; }
+        const { openErp } = require('../erp-foundation/dal');
+        erp = openErp(ERP_DB_PATH, { actor: (session && session.email) || 'mc-server', agent: 'mc-schedule-add' });
+        const sched = erp.getProjectSchedule(req.url.includes('project=') ? new URLSearchParams(req.url.split('?')[1]).get('project') : 'tw-902146');
+        const anc = (sched.tasks || []).find(t => String(t.id) === String(anchor));
+        if (!anc) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'anchor task not found' })); return; }
+        const seq = Math.max(0, ...(sched.tasks || []).map(t => Number(t.seq) || 0)) + 1;
+        const id = 'mc-task-' + Date.now();
+        const toTs = d => String(d).slice(0, 10) + 'T00:00:00';
+        erp.upsertTask({ id, project_id: sched.project ? sched.project.id : 'tw-902146', task_list_id: anc.task_list_id, title: String(title).trim().slice(0, 200),
+          state: 'Open', owner: owner ? String(owner).trim() : null, due_date: toTs(due_date), priority: null, category: 'schedule', description: null, source: 'mc',
+          startDate: toTs(start_date), progress: 0, parentTaskId: null, predecessors: position === 'after' ? [anc.id] : [], seq,
+          created_by: (session && session.email) || null, inserted: { position, anchor: anc.id } });
+        if (position === 'before') {
+          let pre = []; try { pre = JSON.parse(anc.predecessors_json || '[]') || []; } catch (e) {}
+          erp.updateScheduleTask(anc.id, { predecessors: [...new Set([...pre, id])] });
+        }
+        try { require('child_process').spawn('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'sched_board_sync.py'), '--apply'], { stdio: 'ignore', detached: true }).unref(); } catch (e) {}
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, id, seq }));
+      } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e).slice(0, 200) })); }
+      finally { try { erp && erp.close(); } catch (e) {} }
+    });
+    return;
+  }
+
   // ── EXPENSE REPORTS: submit (employee) → auto-create manager approval task ──
   if (req.url.split('?')[0] === '/api/expense/submit' && req.method === 'POST') {
     if (!session) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'auth required' })); return; }

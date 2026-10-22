@@ -73,6 +73,7 @@
   <div class="controls">
     <button class="btn" onclick="window.print()">🖨 Print / Save as PDF</button>
     <button class="btn sec" onclick="downloadSVG()">⬇ Download SVG</button>
+    <span style="font-size:.78rem;color:var(--text2)">Double-click a task to open it · Right-click to add a task before/after it</span>
     <div class="legend">
       <span><i class="swatch" style="background:#3b82f6"></i>To Do</span>
       <span><i class="swatch" style="background:#eab308"></i>In Progress</span>
@@ -262,6 +263,70 @@ document.getElementById('content').addEventListener('dblclick',async e=>{
     else { if(win) win.close(); alert('No Task board card is linked to "'+t.title+'" yet.'); }
   }catch(err){ if(win) win.close(); alert('Could not open task: '+err.message); }
 });
+
+// ── Right-click a task → add a new task BEFORE it (new task becomes its predecessor) or AFTER it
+// (new task depends on it). Phil Eaton 2026-10-22.
+let CTX=null;
+const isoD=d=>d.toISOString().slice(0,10);
+const addDays=(s,n)=>{const d=new Date(String(s).slice(0,10)+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return isoD(d);};
+function closeCtx(){const m=document.getElementById('gctx');if(m)m.remove();}
+document.getElementById('content').addEventListener('contextmenu',e=>{
+  const g=e.target.closest('[data-tid]'); if(!g) return;
+  const t=SCHED[g.dataset.tid]; if(!t) return;
+  e.preventDefault(); closeCtx(); CTX=t;
+  const m=document.createElement('div'); m.id='gctx';
+  m.style.cssText='position:fixed;z-index:1000;left:'+e.clientX+'px;top:'+e.clientY+'px;background:#0d1f3c;border:1px solid rgba(255,255,255,.18);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.5);padding:6px;min-width:250px;font-size:.84rem';
+  const item=(lbl,sub,pos)=>'<div onclick="openAddTask(\''+pos+'\')" style="padding:7px 10px;border-radius:6px;cursor:pointer" onmouseover="this.style.background=\'rgba(0,128,255,.18)\'" onmouseout="this.style.background=\'\'"><b>'+lbl+'</b><div style="color:#a0aec0;font-size:.74rem">'+sub+'</div></div>';
+  m.innerHTML='<div style="padding:4px 10px 6px;color:#a0aec0;font-size:.74rem;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:4px">'+esc(t.title)+'</div>'+
+    item('➕ Add new task BEFORE this one','New task must finish first — this task will depend on it','before')+
+    item('➕ Add new task AFTER this one','New task depends on this one — starts when it finishes','after');
+  document.body.appendChild(m);
+});
+document.addEventListener('click',e=>{ if(!e.target.closest('#gctx')) closeCtx(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeCtx();closeAddTask();} });
+function closeAddTask(){const m=document.getElementById('gadd');if(m)m.remove();}
+function openAddTask(pos){
+  closeCtx(); const t=CTX; if(!t) return;
+  const owners=[...new Set(Object.values(SCHED).map(x=>x.owner).filter(Boolean))].sort();
+  let st,du;
+  if(pos==='before'){ du=addDays(t.start_date||t.due_date,-1); st=addDays(du,-6); }
+  else { st=addDays(t.due_date||t.start_date,1); du=addDays(st,6); }
+  const inp='width:100%;background:#0a1628;border:1px solid rgba(255,255,255,.15);border-radius:6px;color:#e8edf5;padding:7px 9px;font-size:.85rem;font-family:inherit';
+  const m=document.createElement('div'); m.id='gadd';
+  m.style.cssText='position:fixed;inset:0;z-index:1001;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center';
+  m.innerHTML='<div style="background:#0f1e38;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:20px 22px;width:440px;max-width:94vw">'+
+    '<h3 style="font-size:1.05rem;margin-bottom:4px">Add task '+(pos==='before'?'BEFORE':'AFTER')+'</h3>'+
+    '<p style="color:#a0aec0;font-size:.8rem;margin-bottom:14px">'+(pos==='before'
+      ?'The new task becomes a predecessor of <b style="color:#e8edf5">'+esc(t.title)+'</b> — that task will wait on it.'
+      :'The new task depends on <b style="color:#e8edf5">'+esc(t.title)+'</b> — it waits for that task to finish.')+'</p>'+
+    '<label style="font-size:.74rem;color:#a0aec0">Task name</label><input id="ga-title" style="'+inp+';margin:3px 0 10px">'+
+    '<label style="font-size:.74rem;color:#a0aec0">Assigned to</label><select id="ga-owner" style="'+inp+';margin:3px 0 10px"><option value="">(unassigned)</option>'+
+      owners.map(o=>'<option'+(o===t.owner?' selected':'')+'>'+esc(o)+'</option>').join('')+'</select>'+
+    '<div style="display:flex;gap:10px"><div style="flex:1"><label style="font-size:.74rem;color:#a0aec0">Start</label><input type="date" id="ga-start" value="'+st+'" style="'+inp+';margin-top:3px"></div>'+
+    '<div style="flex:1"><label style="font-size:.74rem;color:#a0aec0">Due</label><input type="date" id="ga-due" value="'+du+'" style="'+inp+';margin-top:3px"></div></div>'+
+    '<div id="ga-err" style="color:#ffb0b0;font-size:.8rem;margin-top:10px"></div>'+
+    '<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px"><button class="btn sec" onclick="closeAddTask()">Cancel</button>'+
+    '<button class="btn" id="ga-save" onclick="saveAddTask(\''+pos+'\')">Add task</button></div></div>';
+  document.body.appendChild(m);
+  m.addEventListener('click',e=>{ if(e.target===m) closeAddTask(); });
+  document.getElementById('ga-title').focus();
+}
+async function saveAddTask(pos){
+  const t=CTX, err=document.getElementById('ga-err'), btn=document.getElementById('ga-save');
+  const body={anchor:t.id,position:pos,title:document.getElementById('ga-title').value.trim(),owner:document.getElementById('ga-owner').value,
+    start_date:document.getElementById('ga-start').value,due_date:document.getElementById('ga-due').value};
+  if(!body.title){err.textContent='Enter a task name.';return;}
+  if(!body.start_date||!body.due_date){err.textContent='Enter start and due dates.';return;}
+  if(body.due_date<body.start_date){err.textContent='Due date is before the start date.';return;}
+  btn.disabled=true; btn.textContent='Adding…';
+  try{
+    const r=await fetch('/api/schedule/task',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(d.error||('HTTP '+r.status));
+    closeAddTask(); BOARD=null;
+    const u=new URL(location.href); u.searchParams.set('focus',d.id); history.replaceState({},'',u); load();
+  }catch(e){ err.textContent='Could not add task: '+e.message; btn.disabled=false; btn.textContent='Add task'; }
+}
 
 function downloadSVG(){
   if(!SVGSTR) return;
