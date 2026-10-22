@@ -434,6 +434,14 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "I know you're busy, so I'll keep this short. Is there someone on your team I should reach out to directly about a BLK3 flight test? "
                  "I'd be glad to send them the one-pager and set up a short call.\n"
                  'Best Regards,\n'
+                 'Lizi'),
+                ('MSU BOREALIS: Dr. Angela Des Jardins (task #3287)',
+                 'angela.desjardins@montana.edu, cc amy.brown11@montana.edu (reply on your "A next step for BOREALIS student payloads" thread)',
+                 'first note 10/8, follow-up + one-pager 10/22, no reply yet. This is the last check-in. If she stays quiet, Exo moves BOREALIS to the 90-day re-touch (2/3). Skip if she or anyone at MSU BOREALIS replied',
+                 'Hi Angela,\n'
+                 "One last check-in on BLK3 as a next step for your BOREALIS teams. If the timing isn't right this year, no problem at all. Just let me know when "
+                 "your students start planning their next payloads and I'll circle back then.\n"
+                 'Best Regards,\n'
                  'Lizi')],
  '2027-02-03': [('90-day re-touch: paused contacts (3 messages, no reply)',
                  'UCLA Prof. Chee Wei Wong, Axiom Dr. Chyree Batton, Magma Alessandro Stabile, plus any of 11/4\'s sends that went quiet. Also JHU/APL Josh Wolk: he replied 10/22 (interested in avionics risk-reduction/prototype testing, nothing funded yet, will reach out), so send him a news-only note, no ask',
