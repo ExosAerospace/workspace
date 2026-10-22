@@ -234,14 +234,18 @@ const normT=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 document.getElementById('content').addEventListener('dblclick',async e=>{
   const g=e.target.closest('[data-tid]'); if(!g) return;
   const t=SCHED[g.dataset.tid]; if(!t) return;
+  // Open the tab synchronously (inside the double-click) so popup blockers allow it; point it at the card once found.
+  const win=window.open('about:blank','_blank');
   try{
     const cards=await boardCards();
     const card=cards.find(c=>(c.tags||[]).includes('sched:'+t.id))
       ||cards.find(c=>normT(c.title)===normT(t.title)&&!/done|cancel/i.test(c.state||''))
       ||cards.find(c=>normT(c.title)===normT(t.title));
-    if(card) window.location='/index.html?task='+encodeURIComponent(card.id);
-    else alert('No Task board card is linked to "'+t.title+'" yet.');
-  }catch(err){ alert('Could not open task: '+err.message); }
+    const url='/index.html?task='+encodeURIComponent(card?card.id:'');
+    if(card&&win) win.location=url;
+    else if(card) window.open(url,'_blank');
+    else { if(win) win.close(); alert('No Task board card is linked to "'+t.title+'" yet.'); }
+  }catch(err){ if(win) win.close(); alert('Could not open task: '+err.message); }
 });
 
 function downloadSVG(){
