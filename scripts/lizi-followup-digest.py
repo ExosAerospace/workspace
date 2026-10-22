@@ -426,6 +426,14 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "One last check-in on a recovered BLK3 test flight for your battery and vacuum qualification work. If the timing isn't right yet, no problem at all. Just let me know "
                  "when your team is planning that qualification round and I'll circle back then.\n"
                  'Best Regards,\n'
+                 'Lizi'),
+                ('MSU Spectrum Lab: Dr. Krishna Rupavatharam (Director)',
+                 'krishna.rupavatharam@montana.edu (reply on your "Flight Testing Opportunities for Spectrum Lab" thread)',
+                 'first note 10/12 (he replied: traveling, forwarding to his team), check-in + one-pager 10/22, no reply yet. Warm contact, so this asks for a name on his team instead of another nudge. If still quiet, Exo moves Spectrum Lab to the 90-day re-touch (2/3). Skip if he or anyone at Spectrum Lab replied',
+                 'Hi Krishna,\n'
+                 "I know you're busy, so I'll keep this short. Is there someone on your team I should reach out to directly about a BLK3 flight test? "
+                 "I'd be glad to send them the one-pager and set up a short call.\n"
+                 'Best Regards,\n'
                  'Lizi')],
  '2027-02-03': [('90-day re-touch: paused contacts (3 messages, no reply)',
                  'UCLA Prof. Chee Wei Wong, Axiom Dr. Chyree Batton, Magma Alessandro Stabile, plus any of 11/4\'s sends that went quiet. Also JHU/APL Josh Wolk: he replied 10/22 (interested in avionics risk-reduction/prototype testing, nothing funded yet, will reach out), so send him a news-only note, no ask',
