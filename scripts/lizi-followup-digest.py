@@ -403,14 +403,6 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'Thank you!\n'
                  'Best Regards,\n'
                  'Lizi'),
-                ('JHU/APL: Josh Wolk (task #2778)',
-                 'joshua.wolk@jhuapl.edu (reply on your "EXOS BLK3 Follow-Up" thread, cc John)',
-                 'call 9/9, notes 10/7 + 10/21, no reply yet. This is the last check-in. If he stays quiet, Exo moves him to a quarterly touch. Skip if he replied',
-                 'Hi Josh,\n'
-                 "One last check-in on BLK3 for your large-payload work. If the timing isn't right yet, no problem at all. Just let me know when your team is "
-                 "planning its next round of testing and I'll circle back then. Also, if you happen to cross paths with Larry Paxton, we'd love to hear where SHELLGAME stands.\n"
-                 'Best Regards,\n'
-                 'Lizi'),
                 ('UCLA: Prof. Chee Wei Wong (task #1300)',
                  'cheewei.wong@ucla.edu (reply on your "Flight Testing for Your Optomechanical Inertial Sensor" thread)',
                  'first note 10/7, nudge 10/21, no reply yet. This is the last check-in. If he stays quiet, Exo moves him to a quarterly touch. Skip if he replied',
@@ -435,17 +427,8 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "when your team is planning that qualification round and I'll circle back then.\n"
                  'Best Regards,\n'
                  'Lizi')],
- '2026-12-01': [('UTD AIAA / Comet Rocketry: last call for the BLK3 slot (task #1300)',
-                 'mi.vo@utdallas.edu, olivia.johnson4@utdallas.edu, cc don.proeschel@utdallas.edu (reply on your "Thank you + next steps" thread; Don is the faculty advisor)',
-                 "3 messages (latest 10/21), no reply, outreach paused. This is the ONE deadline exception to the 3-message rule: design coordination + payment to hold the slot are due mid-December. Skip if anyone at UTD replied",
-                 'Hi Mi, Olivia, and Don,\n'
-                 "I wanted to send one last note before our mid-December deadline for the BLK3 payload slot. If the team would like to fly an experiment, design coordination "
-                 "and payment to hold the slot need to be in place by then. If the timing doesn't work this round, no problem at all. Just let me know and I'll keep you in mind "
-                 "for a future flight.\n"
-                 'Best Regards,\n'
-                 'Lizi')],
  '2027-02-03': [('90-day re-touch: paused contacts (3 messages, no reply)',
-                 'JHU/APL Josh Wolk, UCLA Prof. Chee Wei Wong, Axiom Dr. Chyree Batton, Magma Alessandro Stabile, UTD/Comet (if they never replied), plus any of 11/4\'s sends that went quiet',
+                 'UCLA Prof. Chee Wei Wong, Axiom Dr. Chyree Batton, Magma Alessandro Stabile, plus any of 11/4\'s sends that went quiet. Also JHU/APL Josh Wolk: he replied 10/22 (interested in avionics risk-reduction/prototype testing, nothing funded yet, will reach out), so send him a news-only note, no ask',
                  "These were paused under your 3-message rule. A re-touch is a NEW message with real news (flight date, test results, new capability), not another nudge. Skip anyone who replied. "
                  "Tell Exo in #lizi-channel-2 and it will draft each one with the latest BLK3 news",
                  '(Exo drafts these fresh on request with current news; no stale template.)')]}
