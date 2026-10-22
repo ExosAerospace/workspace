@@ -324,6 +324,14 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "of times that work and I'll set it up.\n"
                  'Best Regards,\n'
                  'Lizi'),
+                ('Embry-Riddle: Siwei Fan (cryo gauging, pipeline #60)',
+                 'FANS2@erau.edu (reply on your own thread)',
+                 'last check-in: your 9/3 email (Space Grant ballpark + letter of support), then your 10/22 nudge. Skip if he replied',
+                 'Hi Siwei,\n'
+                 "One last check-in from me. If the Space Grant proposal or the payload build is still moving, we're glad to help with a fuller cost estimate or a letter of support whenever "
+                 "you're ready. If the timing isn't right, no worries at all. Just let me know and I'll check back later.\n"
+                 'Best Regards,\n'
+                 'Lizi'),
                 ('UGA Small Satellite Research Lab: Dr. Deepak Mishra (task #997)',
                  "dmishra@uga.edu (reply on your 10/19 thread, keep Phillip Stancil cc'd)",
                  'Stancil referred you 10/18; you sent Mishra the one-pager + booking link 10/19. Skip if he replied or booked',
