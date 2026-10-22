@@ -123,14 +123,13 @@
   },
   "supabase": {
    "title": "Hosted database (Supabase) and backups",
-   "why": "Your workspace gets its own hosted database, separate from every other organization. Exo creates and connects it; you never open a Supabase account unless you want it in your own cloud.",
+   "why": "Your workspace gets its own hosted database, separate from every other organization. Exo creates and connects it, and the cost is included in your subscription. You do not need a Supabase account.",
    "prereq": [],
    "steps": [
-    "Tell your Exos rollout rep which option you want: Exos-hosted (default, included in your package) or installed in your own Supabase/cloud account (Enterprise).",
-    "Exos-hosted: nothing else to do. Exo creates the database, loads the Mission Control structure, connects your workspace and moves your data across.",
-    "Your own account: create a Supabase account at supabase.com, then invite your rollout rep's address as an Owner of the organization. Exo does the rest from there.",
+    "Nothing to sign up for. Exo creates your database in the Exos-managed account, loads the Mission Control structure, connects your workspace and moves your data across.",
     "Your rep shows you the last backup time and runs a test restore of one record with you.",
-    "Decide retention: how long deleted items stay recoverable (default 90 days)."
+    "Decide retention: how long deleted items stay recoverable (default 90 days).",
+    "Need the database in your own cloud account for compliance? Tell your rep (Enterprise option); Exo moves it after you sign in once."
    ],
    "done": "Hosted database connected, backup time shown and one test restore completed.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
@@ -139,8 +138,8 @@
    "owner_role": "MC administrator",
    "automation": {
     "level": "auto",
-    "exo": "Creates your database, loads the Mission Control structure, connects it, moves your data, runs the backup check.",
-    "you": "Nothing (Exos-hosted). Own-cloud option: create the account and invite your rep."
+    "exo": "Creates your database, loads the Mission Control structure, connects it, moves your data, runs the backup check. Hosting and database costs are included in your subscription.",
+    "you": "Nothing."
    }
   },
   "partnerview": {
@@ -350,8 +349,8 @@
    "owner_role": "Finance lead",
    "automation": {
     "level": "assisted",
-    "exo": "Generates the connection link, runs the read test, maps vendors and accounts.",
-    "you": "Your QuickBooks admin clicks Connect and approves once."
+    "exo": "Opens the QuickBooks authorization, approves Mission Control after your sign-in, runs the read test, maps vendors and accounts.",
+    "you": "Sign in to your QuickBooks admin account when Exo opens the sign-in window (Chrome). Exo does every other click and stores the connection securely."
    }
   },
   "suppliers": {
@@ -691,8 +690,8 @@
    "owner_role": "HR / people lead",
    "automation": {
     "level": "assisted",
-    "exo": "Connects, syncs the directory and checks the org chart.",
-    "you": "Your BambooHR admin creates an API key and pastes it in the secure form your rep sends."
+    "exo": "Creates the API key in BambooHR, connects it, syncs the directory and checks the org chart.",
+    "you": "Sign in to your BambooHR admin account when Exo opens the sign-in window (Chrome). Exo does every other click and stores the connection securely."
    }
   },
   "proton": {
@@ -711,8 +710,8 @@
    "owner_role": "MC administrator",
    "automation": {
     "level": "assisted",
-    "exo": "Configures the mail connection and the capture test.",
-    "you": "Mailbox owner signs in once on the rep's screen-share."
+    "exo": "Configures the mail connection and runs the capture test.",
+    "you": "Sign in to your Proton mailbox account when Exo opens the sign-in window (Chrome). Exo does every other click and stores the connection securely."
    }
   },
   "m365": {
@@ -730,8 +729,8 @@
    "owner_role": "MC administrator",
    "automation": {
     "level": "assisted",
-    "exo": "Registers the app and runs the mail/calendar test.",
-    "you": "Your Microsoft 365 admin clicks Accept on one consent screen."
+    "exo": "Registers the app, grants consent after your sign-in, runs the mail/calendar test.",
+    "you": "Sign in to your Microsoft 365 admin account when Exo opens the sign-in window (Chrome). Exo does every other click and stores the connection securely."
    }
   },
   "discord": {
@@ -750,7 +749,7 @@
    "automation": {
     "level": "assisted",
     "exo": "Adds the bot, creates notification routes, sends a test.",
-    "you": "Your server admin clicks Authorize once."
+    "you": "Sign in to your Discord server admin account when Exo opens the sign-in window (Chrome). Exo does every other click and stores the connection securely."
    }
   },
   "teamwork": {
@@ -768,8 +767,8 @@
    "owner_role": "MC administrator",
    "automation": {
     "level": "assisted",
-    "exo": "Connects and syncs one project as a test.",
-    "you": "Your Teamwork admin pastes an API key in the secure form."
+    "exo": "Creates the API key in Teamwork, connects it and syncs one project as a test.",
+    "you": "Sign in to your Teamwork admin account when Exo opens the sign-in window (Chrome). Exo does every other click and stores the connection securely."
    }
   },
   "docusign": {
@@ -787,8 +786,8 @@
    "owner_role": "Finance lead",
    "automation": {
     "level": "assisted",
-    "exo": "Configures the account and sends a test envelope.",
-    "you": "Your DocuSign admin clicks Allow once."
+    "exo": "Authorizes Mission Control, configures the account and sends a test envelope.",
+    "you": "Sign in to your DocuSign admin account when Exo opens the sign-in window (Chrome). Exo does every other click and stores the connection securely."
    }
   },
   "peony": {
@@ -805,8 +804,8 @@
    "owner_role": "Finance lead",
    "automation": {
     "level": "assisted",
-    "exo": "Connects and pushes a test document.",
-    "you": "Paste the Peony API key in the secure form."
+    "exo": "Creates the Peony API key, connects it and pushes a test document.",
+    "you": "Sign in to your Peony account when Exo opens the sign-in window (Chrome). Exo does every other click and stores the connection securely."
    }
   },
   "samgov": {
