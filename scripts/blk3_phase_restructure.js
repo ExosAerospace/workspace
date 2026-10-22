@@ -27,7 +27,7 @@ const PHASE = {
     'Build a complete upgraded pressure section for back 2 back flights', 'Complete fabrication of recovery section', 'Machine the Nosecone Bulkhead',
     'Fabricate wiring harnesses for recovery section', 'Mount GPS antenna'],
   'Software Development & Verification': ['Add serial control of recovery servo', 'Add spark detect to fsw and ITOS', 'Remove unused variables', 'Speed up telemetry where possible', 'Add serial port for servo control'],
-  'Integration & Test (FRUs)': ['Test Recovery methodology for BLK3 system'],
+  'Integration & Test': ['Test Recovery methodology for BLK3 system'],
   'Regulatory & Licensing': ['Engage FCC license preparation'],
 };
 

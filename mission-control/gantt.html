@@ -122,6 +122,9 @@ function barColor(t){
     if(left<=DUE_SOON_DAYS)return'#ff8c00';}
   return statusColor(t.state);}
 // Top-level view: groups start collapsed; double-click a group line to expand/collapse it (Phil Eaton 10/22).
+// 10/22: section names lost their "N) " numbers and "(not an FRU)" notes — carry saved order/open state over.
+(function migrateSectionKeys(){ const fix=k=>String(k).replace(/\|\d+\)\s*/,'|').replace(/ \(not an FRU\)| \(not yet tied to an FRU\)/,'').replace('(not an FRU · not required for flight)','(not required for flight)').replace('Integration & Test (FRUs)','Integration & Test');
+  try{ Object.keys(localStorage).filter(k=>k==='ganttOpen'||k.startsWith('ganttOrder|')).forEach(k=>{ const v=JSON.parse(localStorage.getItem(k)||'[]'); if(Array.isArray(v)) localStorage.setItem(k,JSON.stringify(v.map(fix))); }); }catch(e){} })();
 let OPEN=new Set(JSON.parse(localStorage.getItem('ganttOpen')||'[]'));
 function isOpen(k){return OPEN.has(k);}
 function toggleGroup(k){OPEN.has(k)?OPEN.delete(k):OPEN.add(k);localStorage.setItem('ganttOpen',JSON.stringify([...OPEN]));load();}
@@ -137,7 +140,7 @@ function groupSummary(rows){
   const color=late?'#dc2626':soon?'#ff8c00':(rows.length&&done===rows.length)?'#22c55e':'#3b82f6';
   return {late,soon,done,start,end,color};
 }
-const PHASES=['Design & Analysis','BOM & Materials','Purchasing','Fabrication & Assembly','Software Development & Verification','GNC & Simulation','Integration & Test (FRUs)','Regulatory & Licensing'];
+const PHASES=['Design & Analysis','BOM & Materials','Purchasing','Fabrication & Assembly','Software Development & Verification','GNC & Simulation','Integration & Test','Regulatory & Licensing'];
 let GROUPBY=localStorage.getItem('ganttGroupBy2')||'fru';
 function setGroupBy(v){GROUPBY=v;localStorage.setItem('ganttGroupBy2',v);document.querySelectorAll('[data-gb]').forEach(b=>b.classList.toggle('sec',b.dataset.gb!==v));load();}
 function guessPhase(title){const t=String(title||'').toLowerCase();
@@ -147,7 +150,7 @@ function guessPhase(title){const t=String(title||'').toLowerCase();
   if(/design|redesign|determine components|r&d|review|^payload ejector$|methodology/.test(t))return'Design & Analysis';
   if(/fsw|serial|variables|telemetry where|spark|software|firmware|verif/.test(t))return'Software Development & Verification';
   if(/fcc|licens|faa|regulat|permit|part 450|waiver/.test(t))return'Regulatory & Licensing';
-  if(/integrat|test|fru|acceptance|checkout/.test(t))return'Integration & Test (FRUs)';
+  if(/integrat|test|fru|acceptance|checkout/.test(t))return'Integration & Test';
   return'Fabrication & Assembly';}
 function monthList(start,end){const out=[];let d=new Date(start.getFullYear(),start.getMonth(),1);
   const last=new Date(end.getFullYear(),end.getMonth(),1);
@@ -203,18 +206,18 @@ function build(d){
       while(st.length){const c=st.pop(); if(mem.has(c)||!byId0[c]) continue; mem.add(c); (byId0[c].predecessors||[]).forEach(p=>st.push(p));}
       const rows=[...mem].map(id=>byId0[id]).filter(r=>!TRACKS.includes(r.phase)).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
       rows.forEach(r=>placed.add(r.id));
-      groups.push({name:f.id.split('-').pop()+') '+String(f.title).replace(/^FRU ready for integration:\s*/,'').replace(/\s+—.*$/,''),rows,fru:true});
+      groups.push({name:String(f.title).replace(/^FRU ready for integration:\s*/,'').replace(/\s+—.*$/,''),rows,fru:true});
     });
     // GSE = Ground Support Equipment: its own group, NOT an FRU and not required for flight.
     const gse=byId0['mc-gse'];
     if(gse){ const mem=new Set(), st=[gse.id];
       while(st.length){const c=st.pop(); if(mem.has(c)||!byId0[c]) continue; mem.add(c); (byId0[c].predecessors||[]).forEach(p=>st.push(p));}
       const rows=[...mem].map(id=>byId0[id]).filter(r=>(!placed.has(r.id)||r.id===gse.id)&&!TRACKS.includes(r.phase)).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
-      rows.forEach(r=>placed.add(r.id)); groups.gse={name:'GSE — Ground Support Equipment (not an FRU · not required for flight)',rows}; }
+      rows.forEach(r=>placed.add(r.id)); groups.gse={name:'GSE — Ground Support Equipment (not required for flight)',rows}; }
     const integ=tasks.filter(t=>t.id==='mc-fru-integration'); integ.forEach(t=>placed.add(t.id));
     const rest=tasks.filter(t=>!placed.has(t.id)).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
     // Non-FRU tracks (Phil Eaton 10/22): Regulatory & Licensing, GNC & Simulation; anything else = other.
-    TRACKS.forEach(tr=>{ const rows=rest.filter(t=>t.phase===tr); groups.push({name:tr+' (not an FRU)'+(rows.length?'':'  (no tasks yet)'),rows}); });
+    TRACKS.forEach(tr=>{ const rows=rest.filter(t=>t.phase===tr); groups.push({name:tr+(rows.length?'':'  (no tasks yet)'),rows}); });
     // A task with no links into an FRU still belongs to the FRU its vehicle section maps to, so editing
     // dependencies never makes it vanish from its FRU (Phil Eaton 10/22, Airframe Section Design).
     const SEC2FRU={'Payload Bay Design and Fabrication':'Payload Section','Payloads':'Payload Section','Pressurization Section':'Pressurization Section',
@@ -222,7 +225,7 @@ function build(d){
     const fruGroup=n=>groups.find(g=>g.fru&&g.name.replace(/^\d+\)\s*/,'')===n)||(n==='GSE'?groups.gse:null);
     const other=[];
     rest.filter(t=>!TRACKS.includes(t.phase)).forEach(t=>{ const g=fruGroup(SEC2FRU[t.section]); if(g){g.rows.push(t);g.rows.sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));} else other.push(t); });
-    if(other.length) groups.push({name:'Other (not yet tied to an FRU)',rows:other});
+    if(other.length) groups.push({name:'Other',rows:other});
     if(integ.length) groups.push({name:'Full vehicle integration & test',rows:integ});
     if(groups.gse) groups.push(groups.gse);
   } else if(GROUPBY==='phase'){

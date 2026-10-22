@@ -39,7 +39,7 @@ if (!T.some(x => x.id === 'mc-gse')) {
   if (APPLY) erp.upsertTask({ id: 'mc-gse', project_id: PID, task_list_id: GSE_LIST, title: 'GSE ready (ground support — not required for flight)', state: 'Open', owner: null,
     due_date: du, priority: null, category: 'schedule', description: 'Ground Support Equipment (launch stool, ground + on-board telemetry, payload handling). Not an FRU; nice to have, not required for flight.',
     source: 'mc', startDate: st, progress: 0, parentTaskId: null, predecessors: pre.map(t => t.id), seq: Math.max(...T.map(t => Number(t.seq) || 0)) + 1,
-    phase: 'Integration & Test (FRUs)', created_by: 'peaton@exosaero.com (via Exo)' });
+    phase: 'Integration & Test', created_by: 'peaton@exosaero.com (via Exo)' });
 }
 erp.close();
 console.log((APPLY ? 'APPLIED' : 'DRY RUN') + ': ' + log.length + ' changes'); log.forEach(l => console.log('  ' + l));

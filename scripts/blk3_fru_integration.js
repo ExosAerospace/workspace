@@ -8,7 +8,7 @@ const path = require('path');
 const { openErp } = require(path.join(__dirname, '..', 'erp-foundation', 'dal'));
 const APPLY = process.argv.includes('--apply');
 const erp = openErp(path.join(__dirname, '..', 'erp-foundation', 'mc.db'), { actor: 'exo (for peaton@exosaero.com)', agent: 'blk3-fru-integration' });
-const PID = 'tw-902146', PH = 'Integration & Test (FRUs)';
+const PID = 'tw-902146', PH = 'Integration & Test';
 let T = erp.getProjectSchedule(PID).tasks;
 const get = n => { const t = T.find(x => x.title === n); if (!t) throw new Error('missing: ' + n); return t; };
 const day = (s, n) => { const d = new Date(String(s).slice(0, 10) + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10) + 'T00:00:00'; };
