@@ -13,7 +13,10 @@ Signals per agent:
 
 Emits one eval event per agent to fleet_log; on a NEW FAIL, escalates one deduped
 alert to the system channel via deliver. Runs hourly via launchd.
+Declared config 'selftest' commands run at most once per 24h per agent (120s timeout, repo
+root); a non-zero exit/timeout is an OUTPUT-eval FAIL (deduped alert with output tail).
 Dry-run: AGENT_EVAL_DRYRUN=1 (no escalation, no state write).
+AGENT_EVAL_SELFTEST_ONLY=<regex on label> restricts which selftests run (manual passes).
 """
 import json, os, re, sys, subprocess, plistlib, time, datetime, hashlib, shutil, tempfile
 from pathlib import Path
@@ -407,6 +410,131 @@ def check_duplicate_sends(state, now, _sent_dir=None):
     return results, new_fails
 
 
+SELFTEST_EVERY_S = 24 * 3600   # each declared selftest runs at most once per 24h per agent
+SELFTEST_TIMEOUT_S = 120
+SELFTEST_RUN_BUDGET_S = 900    # wall-clock cap per hourly run; leftovers (oldest-first) run next hour
+SELFTEST_TAIL_LINES = 10
+
+def _run_selftest_cmd(cmd, timeout=SELFTEST_TIMEOUT_S, cwd=None):
+    """Run one declared selftest command from the repo root. Returns (passed, rc, tail).
+    rc None = timeout (whole process group killed). Selftests are fixture/GET-only by design."""
+    import shlex, signal
+    try:
+        p = subprocess.Popen(shlex.split(cmd), cwd=str(cwd or WS), stdout=subprocess.PIPE,
+                             stderr=subprocess.STDOUT, text=True, start_new_session=True,
+                             stdin=subprocess.DEVNULL)
+    except Exception as e:
+        return False, -1, f"could not start: {e}"
+    try:
+        out, _ = p.communicate(timeout=timeout)
+        rc = p.returncode
+    except subprocess.TimeoutExpired:
+        try: os.killpg(p.pid, signal.SIGKILL)
+        except Exception: p.kill()
+        try: out, _ = p.communicate(timeout=10)
+        except Exception: out = ""
+        rc = None
+    lines = [l for l in (out or "").splitlines() if l.strip()][-SELFTEST_TAIL_LINES:]
+    if rc is None: lines.append(f"TIMEOUT after {timeout}s")
+    return rc == 0, rc, "\n".join(lines)
+
+def check_selftests(cfg, state, now, _runner=None, only=None, budget_s=SELFTEST_RUN_BUDGET_S):
+    """OUTPUT eval: execute each agent's declared config 'selftest' command at most once per 24h
+    (last run in state 'selftest:<label>'.last_run). Non-zero exit or timeout = FAIL -> one deduped alert
+    on transition (same new_fails path) carrying the last ~10 output lines; PASS is silent.
+    Not-due agents carry their last status forward. Identical commands run once per pass.
+    `only` = regex on label (AGENT_EVAL_SELFTEST_ONLY) to restrict a manual pass. Never raises."""
+    results, new_fails = [], []
+    runner = _runner or _run_selftest_cmd
+    try:
+        rx = re.compile(only) if only else None
+    except re.error:
+        rx = None
+    todo = []
+    for label, th in cfg.get("agents", {}).items():
+        cmd = str(th.get("selftest") or "").strip()
+        if not cmd or th.get("paused") or (rx and not rx.search(label)): continue
+        todo.append((state.get("selftest:" + label, {}).get("last_run") or 0, label, th, cmd))
+    todo.sort(key=lambda x: (x[0], x[1]))   # oldest-run first so the budget never starves anyone
+    cache, t0 = {}, time.time()
+    for last_run, label, th, cmd in todo:
+        key, short = "selftest:" + label, label.replace("com.exos.", "")
+        prev = state.get(key, {})
+        owner = th.get("owner", "John Quinn")
+        due = now - last_run >= SELFTEST_EVERY_S
+        if due and cache and cmd not in cache and time.time() - t0 > budget_s:
+            due = False   # out of budget this hour; stays due
+        if not due:
+            if prev.get("status"):
+                results.append((key, prev["status"], "selftest not due (last %s)" % prev.get("ts", "?"), owner))
+            continue
+        if cmd not in cache:
+            cache[cmd] = runner(cmd)
+        passed, rc, tail = cache[cmd]
+        status = "OK" if passed else "FAIL"
+        why = "selftest PASS" if passed else (
+            "selftest %s: %s\n%s" % ("TIMEOUT" if rc is None else f"exit {rc}", cmd, tail))
+        results.append((key, status, why, owner))
+        try:
+            import fleet_log
+            fleet_log.event("agent_eval", "govern", "selftest", outcome=status.lower(), owner=owner,
+                            detail={"agent": label, "cmd": cmd, "rc": rc, "tail": tail[-1500:]})
+        except Exception:
+            pass
+        if status == "FAIL" and prev.get("status") != "FAIL":
+            new_fails.append((key, why, owner))
+        state[key] = {"status": status, "ts": datetime.datetime.now().isoformat(timespec="seconds"),
+                      "last_run": now, "rc": rc, "tail": tail[-1500:]}
+    return results, new_fails
+
+def selftest_coverage(cfg, state):
+    """(declared, passing): agents with a config selftest, and those whose last selftest PASSED."""
+    decl = [l for l, th in cfg.get("agents", {}).items() if str(th.get("selftest") or "").strip()]
+    return len(decl), sum(1 for l in decl if state.get("selftest:" + l, {}).get("status") == "OK")
+
+def _selftest_runner_selftest():
+    """Fixture cases for check_selftests: pass, fail, timeout, 24h throttle, dedupe, budget, real runner."""
+    a, b, c = (".".join(["com", "exos", "fixture-st-" + x]) for x in "abc")
+    cfg = {"agents": {a: {"owner": "O", "selftest": "fx pass"}, b: {"owner": "O", "selftest": "fx fail"},
+                      c: {"owner": "O", "selftest": "fx hang"}, "x": {"owner": "O"}}}
+    calls = []
+    def fake(cmd):
+        calls.append(cmd)
+        return {"fx pass": (True, 0, "ok"), "fx fail": (False, 3, "\n".join(f"l{i}" for i in range(10))),
+                "fx hang": (False, None, "partial\nTIMEOUT after 120s")}[cmd]
+    st, now = {}, time.time()
+    res, nf = check_selftests(cfg, st, now, _runner=fake)
+    r = {k: (s, w) for k, s, w, _ in res}
+    assert r["selftest:" + a][0] == "OK" and r["selftest:" + b][0] == "FAIL" and r["selftest:" + c][0] == "FAIL", r
+    assert "exit 3" in r["selftest:" + b][1] and "l9" in r["selftest:" + b][1]       # tail in alert
+    assert "TIMEOUT" in r["selftest:" + c][1]
+    assert sorted(k for k, _, _ in nf) == ["selftest:" + b, "selftest:" + c]         # pass -> silent
+    assert len(calls) == 3 and "selftest:x" not in st
+    # 24h throttle: 1h later nothing reruns, statuses carry forward, no re-alert
+    res2, nf2 = check_selftests(cfg, st, now + 3600, _runner=fake)
+    assert len(calls) == 3 and nf2 == [] and len(res2) == 3
+    assert all("not due" in w for _, _, w, _ in res2)
+    # 24h+ later: reruns; a still-failing selftest does NOT re-alert (deduped)
+    res3, nf3 = check_selftests(cfg, st, now + SELFTEST_EVERY_S + 1, _runner=fake)
+    assert len(calls) == 6 and nf3 == []
+    # identical commands run once per pass; only-filter; budget defers oldest-first
+    cfg2 = {"agents": {a: {"selftest": "fx pass"}, b: {"selftest": "fx pass"}}}
+    calls.clear(); check_selftests(cfg2, {}, now, _runner=fake); assert calls == ["fx pass"]
+    calls.clear(); check_selftests(cfg, {}, now, _runner=fake, only="st-a$"); assert calls == ["fx pass"]
+    calls.clear(); s4 = {}; check_selftests(cfg, s4, now, _runner=fake, budget_s=-1)
+    assert len(calls) == 1 and sum(1 for k in s4 if k.startswith("selftest:")) == 1
+    assert selftest_coverage(cfg, st) == (3, 1)
+    # real runner: pass, fail (tail), timeout (process-group kill)
+    py = sys.executable
+    ok, rc, tail = _run_selftest_cmd(f"{py} -c \"print('hi')\"")
+    assert ok and rc == 0 and tail == "hi"
+    ok, rc, tail = _run_selftest_cmd(f"{py} -c \"import sys; [print(i) for i in range(30)]; sys.exit(2)\"")
+    assert not ok and rc == 2 and tail.splitlines() == [str(i) for i in range(20, 30)]
+    t = time.time(); ok, rc, tail = _run_selftest_cmd(f"{py} -c \"import time; time.sleep(30)\"", timeout=1)
+    assert not ok and rc is None and "TIMEOUT" in tail and time.time() - t < 15
+    ok, rc, _ = _run_selftest_cmd("/nonexistent/binary-fixture")
+    assert not ok
+
 def _dup_send_selftest():
     """Selftest fixture for check_duplicate_sends. Fixture labels don't use literal com.exos.*."""
     tmp = Path(tempfile.mkdtemp())
@@ -506,6 +634,8 @@ def selftest():
     assert cron_telemetry.score_cron(dict(daily, enabled=0), th, now)[0] == "SKIP"
     assert isinstance(cron_telemetry.registry_crons(REGISTRY), dict)
     _dup_send_selftest()
+    _selftest_runner_selftest()
+    print("agent_eval selftest-runner: pass/fail/timeout/24h-throttle/dedupe/budget pass")
     # eval_coverage: reads live registry; just verify keys and types are correct
     cov = eval_coverage()
     assert "error" not in cov, f"eval_coverage returned error: {cov}"
@@ -737,6 +867,9 @@ def main():
     hr_results, hr_fails = check_held_release_integrity(state, now)
     results += hr_results
     new_fail_alerts += hr_fails
+    st_results, st_fails = check_selftests(cfg, state, now, only=os.environ.get("AGENT_EVAL_SELFTEST_ONLY"))
+    results += st_results
+    new_fail_alerts += st_fails
 
     npass = sum(1 for _, s, _, _ in results if s == "OK")
     nwarn = sum(1 for _, s, _, _ in results if s == "WARN")
@@ -744,11 +877,15 @@ def main():
     log(f"eval: {npass} OK / {nwarn} WARN / {nfail} FAIL across {len(results)} agents")
     for short, s, why, owner in results:
         if s != "OK": log(f"  {s}: {short} — {why} (owner {owner})")
+    for short, s, why, owner in st_results:
+        if s == "OK" and "PASS" in why: log(f"  selftest PASS: {short}")
 
     cov = eval_coverage()
     if "error" not in cov:
+        cov["selftest_declared"], cov["selftest_pass"] = selftest_coverage(cfg, state)
         log(f"eval-coverage: {cov['output_eval']}/{cov['side_effecting']} side-effecting agents "
-            f"have output evals ({cov['coverage_pct']}%); {cov['liveness_only']} still liveness-only")
+            f"have output evals ({cov['coverage_pct']}%); {cov['liveness_only']} still liveness-only; "
+            f"selftests passing {cov['selftest_pass']}/{cov['selftest_declared']} declared")
         try:
             import fleet_log
             fleet_log.event("agent_eval", "govern", "eval_coverage", outcome="info",
