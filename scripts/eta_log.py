@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """eta_log.py — log promised vs actual delivery times so ETA defaults can be tuned (Jon 10/2).
+Actual = time from the ask to the FINAL, complete answer, not the first ack (Jon 10/22). Use --asked HH:MM.
 
   python3 scripts/eta_log.py add --task "Howmet DD" --kind research --promised 90 --actual 8
   python3 scripts/eta_log.py report [--days 7]     # per-kind actual/promised ratio + suggested default
@@ -107,7 +108,10 @@ if __name__ == "__main__":
     a.add_argument("--task", required=True)
     a.add_argument("--kind", choices=list(DEFAULTS) + ["other"], required=True)
     a.add_argument("--promised", type=float, required=True)
-    a.add_argument("--actual", type=float, required=True)
+    g = a.add_mutually_exclusive_group(required=True)
+    g.add_argument("--actual", type=float)
+    # Jon 10/22: actual = ask -> FINAL complete answer (not the first ack/partial update)
+    g.add_argument("--asked", help="HH:MM (today, local) the ask arrived; actual = minutes from then until now (the final answer)")
     a.add_argument("--channel", default="")
     r = sp.add_parser("report")
     r.add_argument("--days", type=int, default=7)
@@ -119,7 +123,13 @@ if __name__ == "__main__":
         m, clock = eta(args.kind, args.items)
         print(f"{m} min -> by {clock} CDT")
     elif args.cmd == "add":
-        print(add(args.task, args.kind, args.promised, args.actual, args.channel))
+        actual = args.actual
+        if args.asked:
+            import datetime as _dt
+            now = _dt.datetime.now()
+            h, mi = map(int, args.asked.split(":"))
+            actual = round((now - now.replace(hour=h, minute=mi, second=0, microsecond=0)).total_seconds() / 60, 1)
+        print(add(args.task, args.kind, args.promised, actual, args.channel))
     else:
         for row in analyze(args.days):
             print(row)

@@ -25,6 +25,7 @@ If you want to remember something, WRITE IT TO A FILE. Mental notes don't surviv
 
 - **Sources:** no factual statement without a credible, current source (primary/official, 2023+), linked inline. Can't verify it → say "I couldn't verify this" or leave it out. Exos claims too (no "only/first/fastest", no turnaround times unless sourced).
 - **Ack + ETA:** acknowledge every question immediately with a concrete ETA ("by 3:45 PM CDT"), before doing the work. If the ETA will slip, post a status update with a new ETA. Never go silent.
+  - **The ETA is for the FINAL, complete answer (Jon 2026-10-22)** — every part of the ask done, including subagent/follow-on work, not the first reply or a partial update. Multi-part asks: one ETA covering all parts. Partial updates must restate the final ETA. Log actual = ask → final answer: `eta_log.py add ... --asked HH:MM`.
   - **Realistic ETAs (recalibrated 10/16 from 118 logged asks: 72% of promises were >2x too long).** Defaults = p80 of actual time, no pad: quick lookup/answer 5 min · doc edit 15 min · research/DD 15 min · multi-deliverable build 25 min (+5 min per extra parallel deliverable, never stacked). Get the clock with `python3 scripts/eta_log.py eta --kind build [--items N]`; don't estimate by feel. A late reply is almost always a pickup miss, not slow work — answer first.
   - Log every promised-vs-actual: `python3 scripts/eta_log.py add --task ... --kind quick|edit|research|build --promised N --actual M`. Weekly RSI §14 flags drift and proposes new defaults.
 
