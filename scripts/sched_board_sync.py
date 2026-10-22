@@ -7,8 +7,8 @@ and due date; the board card (Supabase `tasks`) is made to match.
 
 Linking: each Gantt task is tied to one board card via the tag `sched:<erp-task-id>`.
 First run links by exact title (active cards preferred); unmatched owned tasks get a new card.
-Board cards already Done/Cancelled are never reopened. They are reported as conflicts so a
-human can say whether the work is really finished.
+Board cards already Done/Cancelled are never reopened (owner/date still follow the Gantt). They are
+reported as conflicts so a human can say whether the work is really finished.
 
 Idempotent. Usage: sched_board_sync.py [--apply] [--project tw-902146] [--json]
 (dry-run by default). Called by server.js after every Schedule edit.
@@ -83,8 +83,8 @@ def main():
             cands.sort(key=lambda c: (norm(c["state"]) in CLOSED, "teamwork" not in (c.get("tags") or [])))
             card = cands[0] if cands else None
         if card and norm(card["state"]) in CLOSED and not gantt_closed:
+            # Never reopen a closed card, but still carry the Gantt owner/date so the two never disagree.
             report["conflicts"].append({"card": card["id"], "title": g["title"], "board_state": card["state"], "gantt_owner": owner, "gantt_due": (g["due_date"] or "")[:10]})
-            continue
         if not card:
             if gantt_closed: continue
             body = {"title": g["title"], "owner": owner, "assigned_email": email, "state": "To Do",
