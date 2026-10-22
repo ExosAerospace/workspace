@@ -552,7 +552,7 @@ Exos has flown commercial payloads since 2018 on our SARGE rocket, and BLK3 is i
 
 {angle}
 
-If it would be helpful, I'm happy to send over our Payload User's Guide, or you can grab a time for a short scoping call here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled. You're also welcome to tell us what you'd like to fly at https://www.exosaero.com/flight-campaign.
+If it would be helpful, I'm happy to send over our one-page payload overview, or you can grab a time for a short scoping call here: https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled. You're also welcome to tell us what you'd like to fly at https://www.exosaero.com/flight-campaign.
 
 Best Regards,
 Lizi
@@ -944,8 +944,9 @@ def selftest():
     chk(bool(adversary("Beijing Institute, China")), "adversary dropped")
     s, b = compose({"org": "Acme Labs", "segment": "University propulsion", "greeting": "Dr. Smith,"})
     chk(not lint(s + b, "Acme Labs"), "template passes claim lint")
-    chk("early 2027" in b and "Lizi Quinn" in b and "(430) 966-4005" in b and "info@exosaero.com" in b,
-        "template: early 2027 + Lizi + public contacts")
+    # Lizi 10/13: booking link replaces phone/email; Lizi 10/19: first touch = one-pager, never the PUG
+    chk("early 2027" in b and "Lizi Quinn" in b and "bookwithme" in b and "one-page" in b
+        and "Payload User" not in b, "template: early 2027 + Lizi + booking link + one-pager (no PUG)")
     chk(bool(lint("one of only three, March 2027, $1M", "")), "lint catches only/month/price")
     v, _ = guard({"email": "z@nasa.gov", "org": "NASA Glenn", "subject": s, "body": b}, {}, {})
     chk(v == "route_john", "guard: gov -> route_john")
