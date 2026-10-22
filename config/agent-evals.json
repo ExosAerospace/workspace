@@ -1701,11 +1701,11 @@
    "owner": "Lizi Quinn",
    "selftest": "/usr/bin/python3 scripts/utd_weekly_prep.py selftest",
    "eval_type": "output",
-   "paused": "plist created 2026-10-22, not loaded until Lizi's go",
    "governance_checks": [
     "selftest PASS (fixtures only)",
     "utd_weekly_prep.py eval PASS: one Decision per week, creations only after lquinn@/jquinn@ Yes, never twice"
-   ]
+   ],
+   "note": "loaded 2026-10-22 on Jon's go (#utd-exo3capstone)"
   }
  },
  "_eval_wave_2": {
