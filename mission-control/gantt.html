@@ -116,15 +116,16 @@ function barColor(t){
     if(left<0)return'#dc2626';
     if(left<=DUE_SOON_DAYS)return'#ff8c00';}
   return statusColor(t.state);}
-const PHASES=['Design & Analysis','BOM & Materials','Purchasing','Fabrication & Assembly','Flight Software & Electronics','Test & Regulatory'];
+const PHASES=['Design & Analysis','BOM & Materials','Purchasing','Fabrication & Assembly','Software Development & Verification','Integration & Test (FRUs)','Licensing & Regulatory'];
 let GROUPBY=localStorage.getItem('ganttGroupBy')||'phase';
 function setGroupBy(v){GROUPBY=v;localStorage.setItem('ganttGroupBy',v);document.querySelectorAll('[data-gb]').forEach(b=>b.classList.toggle('sec',b.dataset.gb!==v));load();}
 function guessPhase(title){const t=String(title||'').toLowerCase();
   if(/^bom\b|materials list/.test(t))return'BOM & Materials';
   if(/^(order|purchase|get quote|find suitable)/.test(t))return'Purchasing';
   if(/design|redesign|determine components|simulation|r&d|review|^payload ejector$/.test(t))return'Design & Analysis';
-  if(/fsw|serial|variables|telemetry where|spark/.test(t))return'Flight Software & Electronics';
-  if(/test|fcc|license/.test(t))return'Test & Regulatory';
+  if(/fsw|serial|variables|telemetry where|spark|software|firmware|verif/.test(t))return'Software Development & Verification';
+  if(/fcc|licens|faa|regulat|permit|part 450|waiver/.test(t))return'Licensing & Regulatory';
+  if(/integrat|test|fru|acceptance|checkout/.test(t))return'Integration & Test (FRUs)';
   return'Fabrication & Assembly';}
 function monthList(start,end){const out=[];let d=new Date(start.getFullYear(),start.getMonth(),1);
   const last=new Date(end.getFullYear(),end.getMonth(),1);
@@ -171,7 +172,7 @@ function build(d){
   const groups=[];
   if(GROUPBY==='phase'){
     const byPh={}; tasks.forEach(t=>{(byPh[t.phase]=byPh[t.phase]||[]).push(t);});
-    PHASES.concat(Object.keys(byPh).filter(p=>!PHASES.includes(p))).forEach(p=>{ if(byPh[p]) groups.push({name:p,rows:byPh[p].sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)))}); });
+    PHASES.concat(Object.keys(byPh).filter(p=>!PHASES.includes(p))).forEach(p=>{ groups.push({name:p+(byPh[p]?'':'  (no tasks yet — right-click any task → Add task, then pick this section)'),rows:(byPh[p]||[]).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)))}); });
   } else {
     const byList={}; tasks.forEach(t=>{(byList[t.task_list_id]=byList[t.task_list_id]||[]).push(t);});
     lists.forEach(l=>{ if((byList[l.id]||[]).length) groups.push({name:l.name,rows:byList[l.id]}); });
@@ -333,6 +334,8 @@ function openAddTask(pos){
       ?'The new task becomes a predecessor of <b style="color:#e8edf5">'+esc(t.title)+'</b> — that task will wait on it.'
       :'The new task depends on <b style="color:#e8edf5">'+esc(t.title)+'</b> — it waits for that task to finish.')+'</p>'+
     '<label style="font-size:.74rem;color:#a0aec0">Task name</label><input id="ga-title" style="'+inp+';margin:3px 0 10px">'+
+    '<label style="font-size:.74rem;color:#a0aec0">Section</label><select id="ga-phase" style="'+inp+';margin:3px 0 10px">'+
+      PHASES.map(p=>'<option'+(p===(t.phase||guessPhase(t.title))?' selected':'')+'>'+esc(p)+'</option>').join('')+'</select>'+
     '<label style="font-size:.74rem;color:#a0aec0">Assigned to</label><select id="ga-owner" style="'+inp+';margin:3px 0 10px"><option value="">(unassigned)</option>'+
       owners.map(o=>'<option'+(o===t.owner?' selected':'')+'>'+esc(o)+'</option>').join('')+'</select>'+
     '<div style="display:flex;gap:10px"><div style="flex:1"><label style="font-size:.74rem;color:#a0aec0">Start</label><input type="date" id="ga-start" value="'+st+'" style="'+inp+';margin-top:3px"></div>'+
@@ -346,7 +349,7 @@ function openAddTask(pos){
 }
 async function saveAddTask(pos){
   const t=CTX, err=document.getElementById('ga-err'), btn=document.getElementById('ga-save');
-  const body={anchor:t.id,position:pos,title:document.getElementById('ga-title').value.trim(),owner:document.getElementById('ga-owner').value,
+  const body={anchor:t.id,position:pos,title:document.getElementById('ga-title').value.trim(),owner:document.getElementById('ga-owner').value,phase:document.getElementById('ga-phase').value,
     start_date:document.getElementById('ga-start').value,due_date:document.getElementById('ga-due').value};
   if(!body.title){err.textContent='Enter a task name.';return;}
   if(!body.start_date||!body.due_date){err.textContent='Enter start and due dates.';return;}

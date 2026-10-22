@@ -26,8 +26,9 @@ const PHASE = {
     'Payload Airframe Reinforcements', 'Payload Ejection Mechanism', 'Rebuild with large GHe tank', 'Fabricate new GHe tank supports',
     'Build a complete upgraded pressure section for back 2 back flights', 'Complete fabrication of recovery section', 'Machine the Nosecone Bulkhead',
     'Fabricate wiring harnesses for recovery section', 'Mount GPS antenna'],
-  'Flight Software & Electronics': ['Add serial control of recovery servo', 'Add spark detect to fsw and ITOS', 'Remove unused variables', 'Speed up telemetry where possible', 'Add serial port for servo control'],
-  'Test & Regulatory': ['Test Recovery methodology for BLK3 system', 'Engage FCC license preparation'],
+  'Software Development & Verification': ['Add serial control of recovery servo', 'Add spark detect to fsw and ITOS', 'Remove unused variables', 'Speed up telemetry where possible', 'Add serial port for servo control'],
+  'Integration & Test (FRUs)': ['Test Recovery methodology for BLK3 system'],
+  'Licensing & Regulatory': ['Engage FCC license preparation'],
 };
 
 // 2) Design → BOM → purchases → fabrication chains
