@@ -91,6 +91,10 @@ def screen(sup, total_spend):
     if o: hard.append(f"OFAC: {o}")
     s = sam_excluded(name)
     if s: hard.append(f"SAM.gov excluded/debarred: {s}")
+    try:
+        import crm_dd_engine
+        if not s and crm_dd_engine.SAM_UNVERIFIED: flags.append(crm_dd_engine.SAM_UNVERIFIED)
+    except Exception: pass
     verdict, why = classify_country(sup.get("country") or "United States")
     if verdict == "block": hard.append(f"FOCI/adversary country: {why}")
     elif (sup.get("country") or "").strip() and not _is_us(sup.get("country")):
