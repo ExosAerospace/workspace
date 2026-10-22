@@ -128,7 +128,9 @@ def open_decision(sup, tier, flags, hard):
     existing = next((d for d in arr if d.get("dedupeKey")==dk), None)
     if existing:
         # carry the human's prior answer forward; refresh context/tier only
-        existing.update({k:card[k] for k in ("updated","title","context","priority")})
+        keep = ("updated","title","priority") if (existing.get("context") or "").startswith("Exo more-info") \
+               else ("updated","title","context","priority")  # don't clobber researched more-info context
+        existing.update({k:card[k] for k in keep})
         if existing.get("status")=="open": existing["question"]=card["question"]
     else:
         arr.append(card)
