@@ -362,7 +362,16 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'work. Would a quick 20-minute call work sometime in the next couple of weeks?\n'
                  'Best Regards,\n'
                  'Lizi')],
- '2026-11-04': [('UC Irvine CubeSat: Sonia Cruze + Katie Lien',
+ '2026-11-04': [('UAH Propulsion Research Center: Dr. David Lineberry (task #3019), 3rd and last note',
+                 'david.lineberry@uah.edu (reply on your "A flight test option for PRC hardware" thread)',
+                 'first note 10/8, follow-up with the one-pager 10/22, no reply yet. This is message 3: if still quiet after it, pause and re-touch ~90 days later with real news. Skip if he or anyone at UAH replied',
+                 'Hi Dr. Lineberry,\n'
+                 "One last note in case the timing is better now. If a microgravity propellant or fluids test on BLK3 could help any of the PRC's projects, I'd be glad to set up "
+                 "a short call with our engineering team. Here's my booking link if that's easier: "
+                 "https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled\n"
+                 'Best Regards,\n'
+                 'Lizi'),
+                ('UC Irvine CubeSat: Sonia Cruze + Katie Lien',
                  'scruze@uci.edu, klien3@uci.edu (reply on your 10/12 recap thread)',
                  'sent recap + paperwork/payment overview 10/12; waiting on stowed vs ejected, data rate, antenna. Pushed from 10/22 (Lizi: they are good at reaching out). Only send if John has sent them the bay temperature data (#3711) and flight dates (#3712) and they still have not come back',
                  'Hi Sonia and Katie,\n'
