@@ -172,7 +172,7 @@ async function load(){
 }
 
 function build(d){
-  const tasks=(d.tasks||[]).filter(t=>t.start_date||t.due_date);
+  const tasks=(d.tasks||[]).filter(t=>(t.start_date||t.due_date)&&!/^cancel/i.test(t.state||''));   // Cancelled never shows (Phil 10/22)
   const lists=d.lists||[];
   // domain
   let starts=tasks.map(t=>d2(t.start_date||t.due_date)).filter(Boolean);

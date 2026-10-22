@@ -13,7 +13,7 @@ reported as conflicts so a human can say whether the work is really finished.
 Idempotent. Usage: sched_board_sync.py [--apply] [--project tw-902146] [--json]
 (dry-run by default). Called by server.js after every Schedule edit.
 """
-import argparse, importlib.util, json, os, sqlite3, subprocess, sys, urllib.parse
+import argparse, glob, importlib.util, json, os, sqlite3, subprocess, sys, urllib.parse
 
 WS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB = os.environ.get("ERP_DB_PATH") or os.path.join(WS, "erp-foundation", "mc.db")
@@ -59,6 +59,28 @@ def erp_set_done(erp_id):
     subprocess.run(["node", "-e", js, os.path.join(WS, "erp-foundation", "dal.js"), DB, erp_id], check=True, timeout=30)
 
 
+def erp_remove(erp_id):
+    """Cancelled on the board -> delete the Gantt task and drop it from every predecessor list (audited DAL)."""
+    js = ("const {openErp}=require(process.argv[1]);const e=openErp(process.argv[2],{actor:'sched-board-sync',agent:'sched-board-sync'});"
+          "try{const id=process.argv[3];for(const t of e.getProjectSchedule(process.argv[4]).tasks){const p=JSON.parse(t.predecessors_json||'[]');"
+          "if(p.includes(id))e.updateScheduleTask(t.id,{predecessors:p.filter(x=>x!==id)});}e.deleteTask(id);}finally{e.close();}")
+    subprocess.run(["node", "-e", js, os.path.join(WS, "erp-foundation", "dal.js"), DB, erp_id, "tw-902146"], check=True, timeout=30)
+
+
+def recycled_sched_ids():
+    """Gantt ids whose board card a person deleted (MC recycle bin) -> never recreate that card."""
+    out = set()
+    for f in glob.glob(os.path.join(WS, "mission-control", "data", "recycle-bin", "*.jsonl")):
+        try:
+            for line in open(f):
+                if '"sched:' not in line: continue
+                rec = (json.loads(line).get("record") or {})
+                out.update(t[6:] for t in (rec.get("tags") or []) if str(t).startswith("sched:"))
+        except Exception:
+            pass
+    return out
+
+
 def due_iso(d):
     return (d or "")[:10] + "T23:59:59+00:00" if d else None
 
@@ -75,9 +97,19 @@ def main():
                   ",".join("sched:" + t["id"] for t in gantt_tasks(a.project))) or []:
         for tg in c.get("tags") or []:
             if tg.startswith("sched:"): linked[tg[6:]] = c
-    report = {"updated": [], "created": [], "conflicts": [], "unowned": [], "unchanged": 0}
+    report = {"updated": [], "created": [], "conflicts": [], "unowned": [], "removed": [], "unchanged": 0}
+    deleted = recycled_sched_ids()
 
     for g in gantt_tasks(a.project):
+        # Phil Eaton 10/22: a Cancelled task comes off the Gantt and stays closed. Same if its card was deleted.
+        c0 = linked.get(g["id"])
+        if norm(g["state"]) in {"cancelled", "canceled"}:            # cancelled on the Schedule page -> close the card too
+            if a.apply and c0 and norm(c0["state"]) not in {"cancelled", "canceled"}: supa("PATCH", f"tasks?id=eq.{c0['id']}", {"state": "Cancelled"})
+            if a.apply: erp_remove(g["id"])
+            report["removed"].append({"card": c0["id"] if c0 else None, "title": g["title"], "why": "cancelled on schedule"}); continue
+        if (c0 and norm(c0["state"]) in {"cancelled", "canceled"}) or (not c0 and g["id"] in deleted):
+            if a.apply: erp_remove(g["id"])
+            report["removed"].append({"card": c0["id"] if c0 else "(deleted)", "title": g["title"]}); continue
         person = PEOPLE.get(norm(g["owner"]))
         if not person:
             report["unowned"].append({"gantt": g["title"], "owner": g["owner"]}); continue
@@ -132,8 +164,8 @@ def main():
         print(json.dumps(report, indent=1))
     else:
         print(f"{'APPLIED' if a.apply else 'DRY RUN'}: updated {len(report['updated'])}, created {len(report['created'])}, "
-              f"conflicts {len(report['conflicts'])}, unowned {len(report['unowned'])}, unchanged {report['unchanged']}")
-        for k in ("updated", "created", "conflicts", "unowned"):
+              f"conflicts {len(report['conflicts'])}, unowned {len(report['unowned'])}, removed {len(report['removed'])}, unchanged {report['unchanged']}")
+        for k in ("updated", "created", "conflicts", "unowned", "removed"):
             for r in report[k]: print(" ", k, r)
 
 
