@@ -1168,12 +1168,7 @@ async function loadTasks(showFeedback = false) {
       updateCategoryFilter();
       hideError();
       scheduleRefresh();
-      // Arrived from global search with ?task=<id>: open that task's detail panel once.
-      if (pendingTaskOpen) {
-        const tid = pendingTaskOpen; pendingTaskOpen = '';
-        if (tasks.some(t => String(t.id) === String(tid))) { try { openEdit(tid); } catch (e) {} }
-        history.replaceState({}, '', '/index.html');
-      }
+      openPendingTask();
       return;
     }
     const stamp = () => setRefreshBadge('Updated ' + new Date().toLocaleTimeString('en-US', { timeZone:'America/Chicago', hour: '2-digit', minute: '2-digit' }), true);
@@ -1198,6 +1193,7 @@ async function loadTasks(showFeedback = false) {
     updateCategoryFilter();
     hideError();
     stamp();
+    openPendingTask();
   } catch (e) {
     showError('Could not load tasks: ' + e.message);
     setRefreshBadge('Error', false);
@@ -2683,6 +2679,14 @@ document.addEventListener('keydown', e => {
 });
 // Deep-open a task when arriving from global search (?task=<id>): open its detail panel once loaded
 let pendingTaskOpen = new URLSearchParams(location.search).get('task') || '';
+// Arrived with ?task=<id> (global search, Gantt double-click, #<id> links): open that task's panel once the board loads.
+function openPendingTask() {
+  if (!pendingTaskOpen) return;
+  const tid = pendingTaskOpen; pendingTaskOpen = '';
+  if (tasks.some(t => String(t.id) === String(tid))) { try { openEdit(tid); } catch (e) {} }
+  else toast('Task #' + tid + ' is not on the board (it may have been deleted).');
+  history.replaceState({}, '', '/index.html');
+}
 loadTasks(true);
 
 // Ask Exobot is now a GLOBAL widget (see exobot-widget in mission-control, auto-injected
