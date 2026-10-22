@@ -215,6 +215,7 @@ async function loadUsers() {
   const r = await api('/api/admin/users');
   if (!r.ok) return;
   const users = await r.json();
+  USERS = users;
   const tb = document.getElementById('userTable');
   tb.innerHTML = users.map(u => `
     <tr>
@@ -226,7 +227,7 @@ async function loadUsers() {
         <button class="btn btn-sm" onclick="openEditModal(${u.id},'${esc(u.name)}','${esc(u.email)}','${u.role}',${u.active})">Edit</button>
         <button class="btn btn-sm" onclick="resetPw(${u.id},'${esc(u.email)}')">Reset PW</button>
         ${u.active
-          ? `<button class="btn btn-sm" onclick="toggleUser(${u.id},false)">Disable</button>`
+          ? `<button class="btn btn-sm" onclick="toggleUser(${u.id},false)">Disable</button> <button class="btn btn-sm" title="Remove access and hand their open tasks and decisions to someone else" onclick="offboard(${u.id})">Offboard…</button>`
           : `<button class="btn btn-sm" onclick="toggleUser(${u.id},true)">Enable</button>`}
       </td>
     </tr>
@@ -297,6 +298,22 @@ async function saveUser() {
     if (!r.ok) { const e = await r.json(); alert(e.error); return; }
   }
   closeModal();
+  loadUsers();
+}
+
+let USERS = [];
+// Offboard: preview what moves, confirm, then disable + hand off open work (lib/offboard.js).
+async function offboard(id) {
+  const v = USERS.find(u => u.id === id); if (!v) return;
+  const cands = USERS.filter(u => u.active && u.id !== id);
+  const pick = prompt(`Offboard ${v.name} (${v.email}).\nWho takes over their open tasks and decisions? Type the number:\n\n` +
+    cands.map((u, i) => `${i + 1}. ${u.name} (${u.email})`).join('\n'));
+  const s = cands[parseInt(pick, 10) - 1]; if (!s) return;
+  const call = dry => api('/api/admin/users/offboard', { method: 'POST', body: JSON.stringify({ id, successor_id: s.id, dry_run: dry }) }).then(r => r.json());
+  const p = await call(true); if (p.error) { alert(p.error); return; }
+  if (!confirm(`${v.name} → ${s.name}\n\n${p.tasks.length} open task(s) and ${p.decisions.length} open decision(s) move to ${s.name}.\n${v.name}'s account is disabled and signed out now.\n\nGo ahead?`)) return;
+  const r = await call(false); if (r.error) { alert(r.error); return; }
+  alert(`Done. ${r.tasks.length} task(s) and ${r.decisions.length} decision(s) handed to ${s.name}. ${r.access}`);
   loadUsers();
 }
 

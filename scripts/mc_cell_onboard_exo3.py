@@ -7,7 +7,7 @@ account actions built to be as automated as possible with you doing as much of t
 The customer's people make the decisions in their own cell (who is a user, which features are on);
 this script carries out the account plumbing on the Exos host so they never touch Cloudflare or Supabase.
 
-  access-sync --entity E [--apply]     Cloudflare Access follows the cell's Admin user list: every active
+  access-sync --entity E [--apply] [--remove-only]  (exos = Exos MC itself; run --remove-only there)     Cloudflare Access follows the cell's Admin user list: every active
                                        cell user is on the cell's "approved users" policy; a user disabled
                                        or deleted in the cell is removed. Emails that never were cell users
                                        (e.g. Exos support addresses) are left alone. Runs every 5 min (launchd
@@ -82,6 +82,9 @@ def http(method, url, token, body=None, timeout=30):
 
 # ── cell users ──
 def cell_users(entity):
+    if entity == "exos":   # Exos MC runs on the host, not in a container
+        u = load(os.path.join(WS, "mission-control", "users.json"), [])
+        return u if isinstance(u, list) else u.get("users", [])
     out = subprocess.run(["docker", "exec", f"{entity}-mc-container-exo3", "cat", "/data/users.json"],
                          capture_output=True, text=True, timeout=30)
     if out.returncode:
@@ -99,9 +102,9 @@ def cf_policy(entity):
     tok = sec("cloudflare_zt_token")
     if not tok:
         raise RuntimeError("cloudflare_zt_token missing from secrets.json")
-    host = f"{entity}.exosaero.space"
+    host = "mc.exosaero.space" if entity == "exos" else f"{entity}.exosaero.space"
     apps = http("GET", f"https://api.cloudflare.com/client/v4/accounts/{CF_ACC}/access/apps?per_page=200", tok)["result"]
-    app = next((a for a in apps if (a.get("domain") or "").split("/")[0] == host), None)
+    app = next((a for a in apps if (a.get("domain") or "").rstrip("/") == host), None)   # exact host, not path bypass apps
     if not app:
         raise RuntimeError(f"no Cloudflare Access app for {host} (run provision_entity_exo3.sh first)")
     pols = http("GET", f"https://api.cloudflare.com/client/v4/accounts/{CF_ACC}/access/apps/{app['id']}/policies", tok)["result"]
@@ -123,7 +126,7 @@ def cmd_access_sync(a):
     mine = set(st.get(a.entity, {}).get("added", []))
     tok, app_id, pol = cf_policy(a.entity)
     have = emails_of(pol)
-    add = [e for e in want if e not in have]
+    add = [] if a.remove_only else [e for e in want if e not in have]
     # remove only people the cell itself disabled/deleted — never addresses the cell never listed
     rm = [e for e in have if e in off or (e in mine and e not in want)]
     print(f"[{a.entity}] cell users active={len(want)} · policy has {len(have)} · add {add or '-'} · remove {rm or '-'}")
@@ -218,6 +221,7 @@ def main():
         s.add_argument("--entity", required=True)
         s.add_argument("--apply", action="store_true")
         s.add_argument("--region", default="us-east-1")
+        s.add_argument("--remove-only", action="store_true", help="access-sync: only revoke disabled/offboarded users (Exos MC)")
     a = p.parse_args()
     if not a.entity.isalnum():
         sys.exit("entity must be letters/digits")

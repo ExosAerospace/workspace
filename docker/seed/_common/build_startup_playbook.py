@@ -88,6 +88,7 @@ F = {
      "Each new user gets a temporary password and sets their own at first login.",
      "Name a person for each area lead: MC administrator; Finance lead (accounting, suppliers, expenses, job cost); Operations lead (approvals, equipment, inventory, production); Sales / business development lead (customers, pipeline, bids); HR / people lead (staff directory, policies, ethics line). One person can hold several.",
      "Open the Startup tasks on this board. Each one says \"Suggested owner\" — set the Owner field to that person.",
+     "When someone leaves or changes jobs: Admin → Offboard… → pick who takes over. Their sign-in stops at once, secure access is removed within 5 minutes, and every open task and decision they held moves to the successor with a note on each.",
      "Post the list of people and area leads as a note on this task."],
     "Every first-wave user can log in, and every open Startup task has a named owner.", phase=0, rank=2),
   "cloudflare": t("Secure access (Cloudflare Zero Trust)",

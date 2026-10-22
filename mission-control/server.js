@@ -1863,6 +1863,25 @@ const server = http.createServer((req, res) => {
     }); return;
   }
 
+  // Offboard: deactivate + kill sessions + hand open tasks/decisions to a successor (lib/offboard.js, Jon 10/22).
+  if (req.url === '/api/admin/users/offboard' && req.method === 'POST') {
+    const session = requireRole(req, res, 'admin');
+    if (!session) return;
+    let body = ''; req.on('data', c => body += c); req.on('end', async () => {
+      try {
+        const { id, successor_id, dry_run } = JSON.parse(body || '{}');
+        const users = loadUsers();
+        const victim = users.find(u => u.id === id), successor = users.find(u => u.id === successor_id);
+        if (!victim || !successor) { res.writeHead(400); res.end(JSON.stringify({ error: 'person and successor required' })); return; }
+        if (victim.id === successor.id || successor.active === false) { res.writeHead(400); res.end(JSON.stringify({ error: 'successor must be a different, active user' })); return; }
+        if (id === session.userId && !dry_run) { res.writeHead(400); res.end(JSON.stringify({ error: 'Cannot offboard your own account' })); return; }
+        const r = await require('./lib/offboard').run({ victim, successor, dryRun: !!dry_run, who: session.name || session.email, users, saveUsers, sessions, saveSessions,
+          supabaseEnabled: SUPABASE_ENABLED, supabaseRequest, supabaseGetAll, dataDir: path.join(__dirname, 'data'), loadDecisions, saveDecisions });
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(r));
+      } catch (e) { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); }
+    }); return;
+  }
+
   if (req.url.startsWith('/api/admin/users/delete') && req.method === 'POST') {
     const session = requireRole(req, res, 'admin');
     if (!session) return;
