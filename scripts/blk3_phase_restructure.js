@@ -45,7 +45,7 @@ const CHAINS = [
     orders: ['Order recovery-section material', 'Order wire & connectors — recovery harness'],
     fab: { 'Complete fabrication of recovery section': 'Order recovery-section material', 'Machine the Nosecone Bulkhead': 'Order recovery-section material',
            'Fabricate wiring harnesses for recovery section': 'Order wire & connectors — recovery harness' } },
-  { design: 'Determine components for on-board telemetry', bom: 'BOM & materials list — telemetry / GPS', orders: ['Order GPS antenna'], fab: { 'Mount GPS antenna': 'Order GPS antenna' } },
+  // telemetry/GPS BOM removed (Phil 10/22): telemetry is GSE; GPS is covered by the recovery-section BOM
 ];
 
 function setPhase(t, ph) { if (t.phase !== ph) { log.push(`phase  ${t.title} → ${ph}`); if (APPLY) erp.updateScheduleTask(t.id, { phase: ph }); } }
