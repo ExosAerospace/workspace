@@ -364,7 +364,7 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'Checking in on the BLK3 decisions from our recap: stowed vs. ejected, your telemetry data rate and protocol, and the external antenna. Once we have those, we can put the formal '
                  'quote together. Happy to jump on a quick call if it helps the team decide.\n'
                  'Best Regards,\n'
-                 'Lizi'),,
+                 'Lizi'),
                 ('NewOrbit Space: press team, for CEO Anatolii Papulov (task #3937)',
                  'press@neworbit.space (reply on your "A flight check for NewOrbit hardware ahead of NEO-1" thread)',
                  "first note 10/21 asking them to pass it to Anatolii or their engineering lead, no reply yet. If still quiet after this, Exo suggests reaching Anatolii on LinkedIn. Skip if anyone at NewOrbit replied",
