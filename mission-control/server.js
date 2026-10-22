@@ -2698,7 +2698,7 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
       let erp;
       try {
-        const { id, start_date, due_date, owner, state, predecessors } = JSON.parse(body);
+        const { id, start_date, due_date, owner, state, predecessors, phase } = JSON.parse(body);
         if (!id) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'id required' })); return; }
         const patch = {};
         if (start_date !== undefined) patch.start_date = start_date || null;
@@ -2706,6 +2706,7 @@ const server = http.createServer((req, res) => {
         if (owner !== undefined) patch.owner = owner || null;
         if (state !== undefined) patch.state = state || null;
         if (predecessors !== undefined) patch.predecessors = Array.isArray(predecessors) ? predecessors.filter(p => p && p !== id) : [];
+        if (phase !== undefined) patch.phase = phase ? String(phase).slice(0, 60) : null;
         const { openErp } = require('../erp-foundation/dal');
         erp = openErp(ERP_DB_PATH, { actor: (session && session.email) || 'mc-server', agent: 'mc-schedule-edit' });
         const row = erp.updateScheduleTask(id, patch);
@@ -2727,7 +2728,7 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
       let erp;
       try {
-        const { anchor, position, title, owner, start_date, due_date } = JSON.parse(body);
+        const { anchor, position, title, owner, start_date, due_date, phase } = JSON.parse(body);
         if (!anchor || !['before', 'after'].includes(position) || !String(title || '').trim() || !start_date || !due_date) {
           res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'anchor, position (before|after), title, start_date, due_date required' })); return;
         }
@@ -2742,7 +2743,7 @@ const server = http.createServer((req, res) => {
         const toTs = d => String(d).slice(0, 10) + 'T00:00:00';
         erp.upsertTask({ id, project_id: sched.project ? sched.project.id : 'tw-902146', task_list_id: anc.task_list_id, title: String(title).trim().slice(0, 200),
           state: 'Open', owner: owner ? String(owner).trim() : null, due_date: toTs(due_date), priority: null, category: 'schedule', description: null, source: 'mc',
-          startDate: toTs(start_date), progress: 0, parentTaskId: null, predecessors: position === 'after' ? [anc.id] : [], seq,
+          startDate: toTs(start_date), progress: 0, parentTaskId: null, predecessors: position === 'after' ? [anc.id] : [], seq, phase: phase ? String(phase).slice(0, 60) : (anc.phase || null),
           created_by: (session && session.email) || null, inserted: { position, anchor: anc.id } });
         if (position === 'before') {
           let pre = []; try { pre = JSON.parse(anc.predecessors_json || '[]') || []; } catch (e) {}
