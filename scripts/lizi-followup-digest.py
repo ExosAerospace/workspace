@@ -129,14 +129,6 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'over, and I\'m happy to set up a short call.\n'
                  'Best Regards,\n'
                  'Lizi'),
-                ('UC Irvine CubeSat: Sonia Cruze + Katie Lien',
-                 'scruze@uci.edu, klien3@uci.edu (reply on your 10/12 recap thread)',
-                 'sent recap + paperwork/payment overview 10/12; waiting on stowed vs ejected, data rate, antenna',
-                 'Hi Sonia and Katie,\n'
-                 'Checking in on the BLK3 decisions from our recap: stowed vs. ejected, your telemetry data rate and protocol, and the external antenna. Once we have those, we can put the formal '
-                 'quote together. Happy to jump on a quick call if it helps the team decide.\n'
-                 'Best Regards,\n'
-                 'Lizi'),
                 ('Rhea Space Activity: Shawn Usman (Founder & CEO)',
                  "shawn.usman@rheaspaceactivity.com (best-guess address; check it didn't bounce) + LinkedIn",
                  'emailed 10/9 + LinkedIn request 10/7',
@@ -365,7 +357,15 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  'work. Would a quick 20-minute call work sometime in the next couple of weeks?\n'
                  'Best Regards,\n'
                  'Lizi')],
- '2026-11-04': [('NewOrbit Space: press team, for CEO Anatolii Papulov (task #3937)',
+ '2026-11-04': [('UC Irvine CubeSat: Sonia Cruze + Katie Lien',
+                 'scruze@uci.edu, klien3@uci.edu (reply on your 10/12 recap thread)',
+                 'sent recap + paperwork/payment overview 10/12; waiting on stowed vs ejected, data rate, antenna. Pushed from 10/22 (Lizi: they are good at reaching out). Only send if John has sent them the bay temperature data (#3711) and flight dates (#3712) and they still have not come back',
+                 'Hi Sonia and Katie,\n'
+                 'Checking in on the BLK3 decisions from our recap: stowed vs. ejected, your telemetry data rate and protocol, and the external antenna. Once we have those, we can put the formal '
+                 'quote together. Happy to jump on a quick call if it helps the team decide.\n'
+                 'Best Regards,\n'
+                 'Lizi'),,
+                ('NewOrbit Space: press team, for CEO Anatolii Papulov (task #3937)',
                  'press@neworbit.space (reply on your "A flight check for NewOrbit hardware ahead of NEO-1" thread)',
                  "first note 10/21 asking them to pass it to Anatolii or their engineering lead, no reply yet. If still quiet after this, Exo suggests reaching Anatolii on LinkedIn. Skip if anyone at NewOrbit replied",
                  'Hello,\n'
