@@ -741,6 +741,7 @@
     <div class="panel-title-area">
       <div class="panel-task-id" id="panelTaskId">#0</div>
       <div class="panel-task-title" id="panelTaskTitle">Task Title</div>
+      <a id="panelGanttLink" href="/gantt.html" onclick="return ganttLinkClick(event)" style="display:none;margin-top:4px;font-size:12px;font-weight:600;color:var(--blue2);text-decoration:none">📊 Go to Gantt Chart</a>
     </div>
     <span class="panel-state-badge" id="panelStateBadge">To Do</span>
     <div class="owner-badges" id="panelOwnerBadge" style="display:inline-flex;gap:4px;"></div>
@@ -1749,6 +1750,12 @@ function openEdit(id) {
   // Header
   document.getElementById('panelTaskId').textContent = `#${task.id}`;
   document.getElementById('panelTaskTitle').textContent = task.title || 'Untitled';
+  // On the BLK3 Gantt (tag sched:<erp-id>)? Show a link back to its bar.
+  { const gl = document.getElementById('panelGanttLink');
+    const st = (task.tags || []).find(x => String(x).startsWith('sched:'));
+    if (gl) { if (st) { gl.href = '/gantt.html?focus=' + encodeURIComponent(st.slice(6));
+        gl.textContent = fromGantt ? '↩ Return to Gantt Chart' : '📊 Go to Gantt Chart'; gl.style.display = 'inline-block'; }
+      else gl.style.display = 'none'; } }
 
   const badgeEl = document.getElementById('panelStateBadge');
   badgeEl.textContent = stateLabel(task.state);
@@ -2679,6 +2686,14 @@ document.addEventListener('keydown', e => {
 });
 // Deep-open a task when arriving from global search (?task=<id>): open its detail panel once loaded
 let pendingTaskOpen = new URLSearchParams(location.search).get('task') || '';
+// Opened from the Gantt (double-click opens a new tab with &from=gantt): "Return" goes back to that tab.
+const fromGantt = new URLSearchParams(location.search).get('from') === 'gantt';
+function ganttLinkClick(e) {
+  if (fromGantt && window.opener && !window.opener.closed) {
+    try { window.opener.focus(); window.close(); return false; } catch (err) {}
+  }
+  return true;   // follow the link to the Gantt (focused on this task)
+}
 // Arrived with ?task=<id> (global search, Gantt double-click, #<id> links): open that task's panel once the board loads.
 function openPendingTask() {
   if (!pendingTaskOpen) return;

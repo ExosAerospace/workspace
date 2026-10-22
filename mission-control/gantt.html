@@ -230,6 +230,12 @@ function build(d){
   SVGSTR=s;
   SCHED=byId;
   document.getElementById('content').innerHTML=s;
+  // Arrived from a task's "Go to Gantt Chart" link (?focus=<erp-id>): scroll to and highlight that row.
+  const focusId=new URLSearchParams(location.search).get('focus');
+  const fg=focusId&&document.querySelector('[data-tid="'+CSS.escape(focusId)+'"]');
+  if(fg){ const hit=fg.querySelector('.g-hit'); if(hit) hit.style.cssText='fill:rgba(255,214,0,0.18);stroke:#ffd600;stroke-width:1.5';
+    fg.scrollIntoView({block:'center',inline:'nearest'});
+    const bar=geom[focusId]; const cw=document.querySelector('.chartwrap'); if(bar&&cw) cw.scrollLeft=Math.max(0,bar.x1-LEFT-40); }
 }
 
 // Double-click a task row/bar → open its Task board card. Gantt tasks link to board cards via the
@@ -250,7 +256,7 @@ document.getElementById('content').addEventListener('dblclick',async e=>{
     const card=cards.find(c=>(c.tags||[]).includes('sched:'+t.id))
       ||cards.find(c=>normT(c.title)===normT(t.title)&&!/done|cancel/i.test(c.state||''))
       ||cards.find(c=>normT(c.title)===normT(t.title));
-    const url='/index.html?task='+encodeURIComponent(card?card.id:'');
+    const url='/index.html?task='+encodeURIComponent(card?card.id:'')+'&from=gantt';
     if(card&&win) win.location=url;
     else if(card) window.open(url,'_blank');
     else { if(win) win.close(); alert('No Task board card is linked to "'+t.title+'" yet.'); }
