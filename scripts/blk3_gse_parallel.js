@@ -29,7 +29,8 @@ const toGse = ['Determine components for on-board telemetry', 'BOM & materials l
   'Get quote for ground telemetry support', 'Find suitable lifting device(s) for payload', 'Find suitable portable payload processing enclosure'];
 for (const n of toGse) { const t = get(n); if (t.task_list_id !== GSE_LIST) { log.push(`move   "${n}" → GSE section`);
   if (APPLY) { const raw = JSON.parse(require('child_process').execFileSync('sqlite3', [path.join(__dirname, '..', 'erp-foundation', 'mc.db'), `SELECT raw_json FROM task WHERE id='${t.id}'`]).toString());
-    erp.upsertTask({ ...raw, task_list_id: GSE_LIST, predecessors: t.p }); } } }
+    // raw_json can hold stale owner/state (the DAL updates those columns only) → carry current column values.
+    erp.upsertTask({ ...raw, owner: t.owner, state: t.state, due_date: t.due_date, startDate: t.start_date, phase: t.phase, task_list_id: GSE_LIST, predecessors: t.p }); } } }
 // 5) GSE roll-up line (not an FRU; not linked to vehicle integration)
 const feeds = ['Repair or refurbish launch stool scale system', 'Mount GPS antenna', 'Get quote for ground telemetry support', 'Find suitable portable payload processing enclosure'];
 if (!T.some(x => x.id === 'mc-gse')) {
