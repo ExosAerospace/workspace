@@ -31,6 +31,8 @@
   .g-month{fill:var(--text2);font-size:10px}
   .g-grid{stroke:rgba(255,255,255,0.07)}
   .g-listbg{fill:rgba(255,255,255,0.04)}
+  .g-bar{cursor:grab}.g-bar.dragging{cursor:grabbing;opacity:.85}
+  .g-link{fill:#0a1628;stroke:#7fb3ff;stroke-width:1.5;opacity:0;cursor:crosshair}.g-row:hover .g-link{opacity:1}
   .g-row{cursor:pointer}.g-hit{fill:transparent}.g-row:hover .g-hit{fill:rgba(0,128,255,0.08)}
   .g-today{stroke:#ff6b00;stroke-width:1.5;stroke-dasharray:4 3}
   .g-todaylbl{fill:#ff6b00;font-size:10px;font-weight:700}
@@ -73,7 +75,7 @@
   <div class="controls">
     <button class="btn" onclick="window.print()">🖨 Print / Save as PDF</button>
     <button class="btn sec" onclick="downloadSVG()">⬇ Download SVG</button>
-    <span style="font-size:.78rem;color:var(--text2)">Double-click a task to open it · Right-click to add a task before/after it</span>
+    <span style="font-size:.78rem;color:var(--text2)">Double-click a task to open it · Drag a bar to move it (drag its right edge to change the due date) · Drag the ○ at the end of a bar onto another task to link them · Right-click to add a task or edit dependencies</span>
     <div class="legend">
       <span><i class="swatch" style="background:#3b82f6"></i>To Do</span>
       <span><i class="swatch" style="background:#eab308"></i>In Progress</span>
@@ -147,6 +149,7 @@ function build(d){
   const chartW=months.length*MONTHW;
   const totalDays=daysBetween(domStart,domEnd)||1;
   const x=dt=>LEFT+(daysBetween(domStart,d2(typeof dt==='string'?dt:dt.toISOString().slice(0,10)))/totalDays)*chartW;
+  PXDAY=chartW/totalDays;
 
   // group tasks by list, preserve list order; unlisted go last
   const byList={}; tasks.forEach(t=>{(byList[t.task_list_id]=byList[t.task_list_id]||[]).push(t);});
@@ -203,10 +206,11 @@ function build(d){
         const critStroke=t.critical?' stroke="#e879f9" stroke-width="2"':'';
         const st0=String(t.state||'').toLowerCase(); const waitTxt=(st0==='waiting'||st0.includes('block')||st0.includes('hold'))?(' | Waiting on '+((t.predecessors||[]).map(p=>byId[p]).filter(p=>p&&!isDone(p.state)).map(p=>'#'+p.seq+' '+p.title).join(', ')||'— set Depends on')):'';
         const slackTxt=(t.slack!=null)?' | slack '+t.slack+'d'+(t.critical?' (CRITICAL)':''):'';
-        s+='<rect x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+bw.toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="'+col+'"'+critStroke+'><title>'+esc(t.title)+' | '+esc(sd)+' → '+esc(dd)+' | '+esc(t.state||'')+(t.owner?' | '+esc(t.owner):'')+(t.boardDone?' (marked Done on Task board #'+t.boardDone+')':'')+esc(waitTxt)+slackTxt+'</title></rect>';
+        s+='<rect class="g-bar" data-bar="'+esc(t.id)+'" x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+bw.toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="'+col+'"'+critStroke+'><title>'+esc(t.title)+' | '+esc(sd)+' → '+esc(dd)+' | '+esc(t.state||'')+(t.owner?' | '+esc(t.owner):'')+(t.boardDone?' (marked Done on Task board #'+t.boardDone+')':'')+esc(waitTxt)+slackTxt+'</title></rect>';
         const pg=Number(t.progress)||0;
         if(pg>0&&pg<100) s+='<rect x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+(bw*pg/100).toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="rgba(0,0,0,0.28)"/>';
       }
+      if(geom[t.id]) s+='<circle class="g-link" data-link="'+esc(t.id)+'" cx="'+(geom[t.id].x2+7).toFixed(1)+'" cy="'+(y+ROW/2)+'" r="4.5"><title>Drag onto another task: that task will wait on this one</title></circle>';
       s+='</g>';
       y+=ROW;
     });
@@ -279,7 +283,8 @@ document.getElementById('content').addEventListener('contextmenu',e=>{
   const item=(lbl,sub,pos)=>'<div onclick="openAddTask(\''+pos+'\')" style="padding:7px 10px;border-radius:6px;cursor:pointer" onmouseover="this.style.background=\'rgba(0,128,255,.18)\'" onmouseout="this.style.background=\'\'"><b>'+lbl+'</b><div style="color:#a0aec0;font-size:.74rem">'+sub+'</div></div>';
   m.innerHTML='<div style="padding:4px 10px 6px;color:#a0aec0;font-size:.74rem;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:4px">'+esc(t.title)+'</div>'+
     item('➕ Add new task BEFORE this one','New task must finish first — this task will depend on it','before')+
-    item('➕ Add new task AFTER this one','New task depends on this one — starts when it finishes','after');
+    item('➕ Add new task AFTER this one','New task depends on this one — starts when it finishes','after')+
+    '<div onclick="openDeps()" style="padding:7px 10px;border-radius:6px;cursor:pointer;border-top:1px solid rgba(255,255,255,.08);margin-top:4px" onmouseover="this.style.background=\'rgba(0,128,255,.18)\'" onmouseout="this.style.background=\'\'"><b>🔗 Edit dependencies…</b><div style="color:#a0aec0;font-size:.74rem">Change what this task waits on, and what waits on it</div></div>';
   document.body.appendChild(m);
 });
 document.addEventListener('click',e=>{ if(!e.target.closest('#gctx')) closeCtx(); });
@@ -326,6 +331,114 @@ async function saveAddTask(pos){
     closeAddTask(); BOARD=null;
     const u=new URL(location.href); u.searchParams.set('focus',d.id); history.replaceState({},'',u); load();
   }catch(e){ err.textContent='Could not add task: '+e.message; btn.disabled=false; btn.textContent='Add task'; }
+}
+
+// ── Drag to reschedule / drag to link / edit dependencies (Phil Eaton 2026-10-22) ──
+// • Drag a bar left/right → moves the task (same duration). Drag its right edge → changes the due date.
+// • Drag the small circle at a bar's end onto another task → that task now waits on this one.
+// • Right-click → "Edit dependencies…" to add/remove what a task waits on and what waits on it.
+let PXDAY=1, DRAG=null, JUSTDRAGGED=false;
+const tsD=s=>String(s).slice(0,10)+'T00:00:00';
+async function patchTask(body){
+  const r=await fetch('/api/schedule/task',{method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(body)});
+  const d=await r.json().catch(()=>({})); if(!r.ok) throw new Error(d.error||('HTTP '+r.status)); return d;
+}
+function gToast(html,undo){
+  let el=document.getElementById('gtoast'); if(el) el.remove();
+  el=document.createElement('div'); el.id='gtoast';
+  el.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:1002;background:#0d1f3c;border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:10px 16px;font-size:.85rem;box-shadow:0 8px 24px rgba(0,0,0,.5);display:flex;gap:14px;align-items:center';
+  el.innerHTML='<span>'+html+'</span>'+(undo?'<button class="btn sec" id="gundo" style="padding:4px 12px">Undo</button>':'');
+  document.body.appendChild(el);
+  if(undo) document.getElementById('gundo').onclick=async()=>{el.remove();try{await undo();reloadFocus();}catch(e){alert('Undo failed: '+e.message);}};
+  setTimeout(()=>{ if(el.isConnected) el.remove(); },9000);
+}
+function reloadFocus(id){ BOARD=null; if(id){const u=new URL(location.href);u.searchParams.set('focus',id);history.replaceState({},'',u);} load(); }
+function svgPt(e){const svg=document.getElementById('gantt');const r=svg.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top};}
+document.getElementById('content').addEventListener('mousedown',e=>{
+  if(e.button!==0) return;
+  const bar=e.target.closest('.g-bar'), lk=e.target.closest('.g-link');
+  if(lk){ const t=SCHED[lk.dataset.link]; if(!t) return; e.preventDefault();
+    const svg=document.getElementById('gantt'); const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
+    ['x1','x2'].forEach(k=>ln.setAttribute(k,lk.getAttribute('cx'))); ['y1','y2'].forEach(k=>ln.setAttribute(k,lk.getAttribute('cy')));
+    ln.setAttribute('stroke','#7fb3ff');ln.setAttribute('stroke-width','2');ln.setAttribute('stroke-dasharray','5 3');ln.style.pointerEvents='none';svg.appendChild(ln);
+    DRAG={kind:'link',t,ln}; return; }
+  if(!bar) return; const t=SCHED[bar.dataset.bar]; if(!t||!t.start_date||!t.due_date) return; e.preventDefault();
+  const bx=parseFloat(bar.getAttribute('x')), bw=parseFloat(bar.getAttribute('width')), p=svgPt(e);
+  DRAG={kind:(p.x>bx+bw-6&&bw>12)?'resize':'move',t,bar,bx,bw,x0:e.clientX,days:0};
+  bar.classList.add('dragging');
+});
+document.addEventListener('mousemove',e=>{
+  if(!DRAG) return;
+  if(DRAG.kind==='link'){const p=svgPt(e);DRAG.ln.setAttribute('x2',p.x);DRAG.ln.setAttribute('y2',p.y);return;}
+  const days=Math.round((e.clientX-DRAG.x0)/PXDAY); DRAG.days=days;
+  if(DRAG.kind==='move') DRAG.bar.setAttribute('x',(DRAG.bx+days*PXDAY).toFixed(1));
+  else DRAG.bar.setAttribute('width',Math.max(3,DRAG.bw+days*PXDAY).toFixed(1));
+  const ns=DRAG.kind==='move'?addDays(DRAG.t.start_date,days):String(DRAG.t.start_date).slice(0,10), nd=addDays(DRAG.t.due_date,days);
+  let tip=document.getElementById('gdragtip'); if(!tip){tip=document.createElement('div');tip.id='gdragtip';tip.style.cssText='position:fixed;z-index:1003;pointer-events:none;background:#000c;color:#fff;font-size:.78rem;padding:4px 8px;border-radius:6px';document.body.appendChild(tip);}
+  tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+12)+'px'; tip.textContent=ns+' → '+nd+(days?' ('+(days>0?'+':'')+days+'d)':'');
+});
+document.addEventListener('mouseup',async e=>{
+  if(!DRAG) return; const d=DRAG; DRAG=null; const tip=document.getElementById('gdragtip'); if(tip) tip.remove();
+  if(d.kind==='link'){ d.ln.remove();
+    const tg=document.elementFromPoint(e.clientX,e.clientY); const row=tg&&tg.closest&&tg.closest('[data-tid]'); const target=row&&SCHED[row.dataset.tid];
+    if(!target||target.id===d.t.id) return;
+    const pre=target.predecessors||[]; if(pre.includes(d.t.id)){gToast('"'+esc(target.title)+'" already waits on "'+esc(d.t.title)+'".');return;}
+    if(dependsOn(d.t.id,target.id)){alert('That would create a loop: "'+d.t.title+'" already depends on "'+target.title+'".');return;}
+    try{ await patchTask({id:target.id,predecessors:[...pre,d.t.id]}); gToast('🔗 "'+esc(target.title)+'" now waits on "'+esc(d.t.title)+'".',()=>patchTask({id:target.id,predecessors:pre})); reloadFocus(target.id); }
+    catch(err){ alert('Could not link: '+err.message); }
+    return; }
+  d.bar.classList.remove('dragging');
+  if(!d.days) return;
+  JUSTDRAGGED=true; setTimeout(()=>JUSTDRAGGED=false,400);
+  const old={id:d.t.id,start_date:tsD(d.t.start_date),due_date:tsD(d.t.due_date)};
+  const nu={id:d.t.id,start_date:d.kind==='move'?tsD(addDays(d.t.start_date,d.days)):old.start_date,due_date:tsD(addDays(d.t.due_date,d.days))};
+  if(nu.due_date<nu.start_date){ alert("Due date can't be before the start date."); load(); return; }
+  try{ await patchTask(nu);
+    gToast((d.kind==='move'?'📅 Moved':'📅 Due date changed')+' "'+esc(d.t.title)+'": '+nu.start_date.slice(0,10)+' → '+nu.due_date.slice(0,10),()=>patchTask(old));
+    reloadFocus(d.t.id);
+  }catch(err){ alert('Could not save: '+err.message); load(); }
+});
+// block the dblclick-open right after a drag
+document.getElementById('content').addEventListener('dblclick',e=>{ if(JUSTDRAGGED) e.stopImmediatePropagation(); },true);
+function dependsOn(a,b){ // does task a (transitively) wait on task b?
+  const seen=new Set(), st=[a]; while(st.length){const c=st.pop(); if(c===b) return true; if(seen.has(c)) continue; seen.add(c); ((SCHED[c]||{}).predecessors||[]).forEach(p=>st.push(p));} return false; }
+function openDeps(){
+  closeCtx(); const t=CTX; if(!t) return;
+  const all=Object.values(SCHED).sort((a,b)=>String(a.start_date||'').localeCompare(String(b.start_date||'')));
+  const lbl=x=>x.title+(x.owner?' ('+x.owner+')':'')+(x.start_date?' · '+String(x.start_date).slice(5,10).replace('-','/'):'');
+  const preds=new Set(t.predecessors||[]), succ=new Set(all.filter(x=>(x.predecessors||[]).includes(t.id)).map(x=>x.id));
+  const inp='width:100%;background:#0a1628;border:1px solid rgba(255,255,255,.15);border-radius:6px;color:#e8edf5;padding:6px 8px;font-size:.82rem;font-family:inherit';
+  const list=(set,key)=>[...set].map(id=>SCHED[id]?'<label style="display:flex;gap:8px;align-items:center;margin:3px 0;font-size:.82rem"><input type="checkbox" checked data-'+key+'="'+esc(id)+'" style="width:auto"> '+esc(lbl(SCHED[id]))+'</label>':'').join('')||'<div style="color:#7f8aa3;font-size:.8rem">None</div>';
+  const opts=all.filter(x=>x.id!==t.id).map(x=>'<option value="'+esc(x.id)+'">'+esc(lbl(x))+'</option>').join('');
+  const m=document.createElement('div'); m.id='gadd';
+  m.style.cssText='position:fixed;inset:0;z-index:1001;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center';
+  m.innerHTML='<div style="background:#0f1e38;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:20px 22px;width:560px;max-width:94vw;max-height:88vh;overflow:auto">'+
+    '<h3 style="font-size:1.05rem;margin-bottom:12px">🔗 Dependencies: '+esc(t.title)+'</h3>'+
+    '<div style="font-size:.78rem;color:#a0aec0;font-weight:700;margin-bottom:4px">THIS TASK WAITS ON (must finish first)</div><div>'+list(preds,'pred')+'</div>'+
+    '<select id="dp-addpred" style="'+inp+';margin:6px 0 16px"><option value="">+ Add a task this one waits on…</option>'+opts+'</select>'+
+    '<div style="font-size:.78rem;color:#a0aec0;font-weight:700;margin-bottom:4px">TASKS THAT WAIT ON THIS ONE</div><div>'+list(succ,'succ')+'</div>'+
+    '<select id="dp-addsucc" style="'+inp+';margin:6px 0 4px"><option value="">+ Add a task that waits on this one…</option>'+opts+'</select>'+
+    '<div style="color:#7f8aa3;font-size:.74rem;margin-top:6px">Uncheck a task to remove that link.</div><div id="dp-err" style="color:#ffb0b0;font-size:.8rem;margin-top:8px"></div>'+
+    '<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px"><button class="btn sec" onclick="closeAddTask()">Cancel</button><button class="btn" id="dp-save" onclick="saveDeps()">Save</button></div></div>';
+  document.body.appendChild(m); m.addEventListener('click',e=>{ if(e.target===m) closeAddTask(); });
+}
+async function saveDeps(){
+  const t=CTX, err=document.getElementById('dp-err'), btn=document.getElementById('dp-save');
+  const keepP=[...document.querySelectorAll('[data-pred]')].filter(c=>c.checked).map(c=>c.dataset.pred);
+  const addP=document.getElementById('dp-addpred').value; if(addP&&!keepP.includes(addP)) keepP.push(addP);
+  const oldSucc=Object.values(SCHED).filter(x=>(x.predecessors||[]).includes(t.id)).map(x=>x.id);
+  const keepS=[...document.querySelectorAll('[data-succ]')].filter(c=>c.checked).map(c=>c.dataset.succ);
+  const addS=document.getElementById('dp-addsucc').value; if(addS&&!keepS.includes(addS)) keepS.push(addS);
+  for(const p of keepP) if(p===t.id||dependsOn(p,t.id)){err.textContent='Loop: "'+SCHED[p].title+'" already depends on this task.';return;}
+  for(const sId of keepS) if(keepP.includes(sId)||dependsOn(t.id,sId)){err.textContent='Loop: this task already depends on "'+SCHED[sId].title+'".';return;}
+  btn.disabled=true; btn.textContent='Saving…';
+  try{
+    const calls=[], curP=t.predecessors||[];
+    if(curP.length!==keepP.length||curP.some(p=>!keepP.includes(p))) calls.push(patchTask({id:t.id,predecessors:keepP}));
+    oldSucc.filter(id=>!keepS.includes(id)).forEach(id=>calls.push(patchTask({id,predecessors:(SCHED[id].predecessors||[]).filter(p=>p!==t.id)})));
+    keepS.filter(id=>!oldSucc.includes(id)).forEach(id=>calls.push(patchTask({id,predecessors:[...(SCHED[id].predecessors||[]),t.id]})));
+    await Promise.all(calls); closeAddTask(); gToast('🔗 Dependencies saved for "'+esc(t.title)+'".'); reloadFocus(t.id);
+  }catch(e){ err.textContent='Could not save: '+e.message; btn.disabled=false; btn.textContent='Save'; }
 }
 
 function downloadSVG(){
