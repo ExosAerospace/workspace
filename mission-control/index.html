@@ -741,7 +741,7 @@
     <div class="panel-title-area">
       <div class="panel-task-id" id="panelTaskId">#0</div>
       <div class="panel-task-title" id="panelTaskTitle">Task Title</div>
-      <a id="panelGanttLink" href="/gantt.html" onclick="return ganttLinkClick(event)" style="display:none;margin-top:4px;font-size:12px;font-weight:600;color:var(--blue2);text-decoration:none">📊 Go to Gantt Chart</a>
+      <a id="panelGanttLink" href="/gantt.html" target="_blank" rel="opener" onclick="return ganttLinkClick(event)" style="display:none;margin-top:4px;font-size:12px;font-weight:600;color:var(--blue2);text-decoration:none">📊 Go to Gantt Chart</a>
     </div>
     <span class="panel-state-badge" id="panelStateBadge">To Do</span>
     <div class="owner-badges" id="panelOwnerBadge" style="display:inline-flex;gap:4px;"></div>
@@ -2692,7 +2692,10 @@ function ganttLinkClick(e) {
   if (fromGantt && window.opener && !window.opener.closed) {
     try { window.opener.focus(); window.close(); return false; } catch (err) {}
   }
-  return true;   // follow the link to the Gantt (focused on this task)
+  // Go to Gantt: always a NEW tab; leave this task window alone (Phil Eaton 10/22).
+  const a = document.getElementById('panelGanttLink');
+  window.open(a ? a.href : '/gantt.html', '_blank');
+  return false;
 }
 // Arrived with ?task=<id> (global search, Gantt double-click, #<id> links): open that task's panel once the board loads.
 function openPendingTask() {
