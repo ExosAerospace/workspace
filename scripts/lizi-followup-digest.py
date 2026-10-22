@@ -457,6 +457,15 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "your students start planning their next payloads and I'll circle back then.\n"
                  'Best Regards,\n'
                  'Lizi'),
+                ('Salish Kootenai College: Dean Matt Seeley (task #3287), 3rd and last note',
+                 'matt_seeley@skc.edu, cc lee_slater@skc.edu (reply-all on your "A suborbital flight opportunity for SKC students" thread so Lee sees it)',
+                 'first note 10/8 (cc Lee Slater), follow-up 10/22, no reply yet. This is message 3: it asks for a name instead of another nudge. If still quiet, Exo moves SKC to the 90-day re-touch (2/3). Skip if Dean Seeley, Lee, or anyone at SKC replied',
+                 'Hi Dean Seeley,\n'
+                 "One last note on a BLK3 flight for SKC students or faculty. If there's a faculty member or student group I should reach out to directly, I'd be glad to send them "
+                 "our university payload one-pager and set up a short call. Here's my booking link if that's easier: "
+                 "https://outlook.office365.us/bookwithme/user/abb76930b11b4c02a0d4eb449063a66b%40exosaero.com?anonymous&ismsaljsauthenabled\n"
+                 'Best Regards,\n'
+                 'Lizi'),
                 ('Beyond Reach Labs: Mitchell Fogelson (Flarewing), 3rd and last touch',
                  'LinkedIn message to Mitchell Fogelson (NOT founders@beyondreachlabs.io: both emails went to the shared founders@ inbox)',
                  'emails 10/8 + 10/22 to founders@, no reply. 3-message rule: try a different channel before pausing. If still quiet, Exo moves Beyond Reach to the 90-day re-touch (2/3). Skip if Mitchell or anyone at Beyond Reach replied',
