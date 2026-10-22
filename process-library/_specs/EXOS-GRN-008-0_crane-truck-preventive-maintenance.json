@@ -1,0 +1,103 @@
+{
+  "title": "Crane Truck Preventive Maintenance (1998 Freightliner FL112, Outdoor Storage)",
+  "doc_no": "EXOS-GRN-008-0",
+  "area": "Ground Operations",
+  "area_id": "02-ground-operations",
+  "owner": "Facilities / Ground Operations / Exo (approved: John Quinn, Cofounder & CEO)",
+  "rev": "0",
+  "status": "Approved",
+  "issued": "2026-10-21",
+  "intl_release": "Yes",
+  "reference_docs": "Freightliner Business Class Trucks Maintenance Manual STI-266 (models FL50-FL112) and Business Class Trucks Driver's Manual (Daimler Trucks North America); crane manufacturer's operator/service manual (pull by crane serial number); engine and transmission manufacturer maintenance manuals; OSHA 29 CFR 1910.180 (crawler, locomotive and truck cranes); OSHA 29 CFR 1926.1412 (crane inspections, used here as the detailed checklist); FMCSA 49 CFR Part 396 (inspection, repair and maintenance); Kobelco Preventative Maintenance Vol. 1, Hydraulic Cylinder (rod protection in storage); EXOS-GRN-001-0 Crane Operations Procedure; EXOS-ADM-004 (UCR registration).",
+  "remarks": "Applies to the Exos 1998 Freightliner FL112 crane truck (QuickBooks asset 'Freightliner FL 112' / 'Crane Truck'; shop inventory SHOP-01685) that is stored OUTSIDE at Greenville, TX. Truck is run under Freightliner Schedule I (severe service): it travels well under 6,000 miles a year and sits exposed to weather. Because it accrues so few hours and miles, this procedure adds calendar intervals (whichever comes first). Where the crane or engine OEM manual is stricter than this procedure, the OEM manual governs. Asset fields left as ______ must be filled in from the vehicle data plates on first use.",
+  "objective": "keep the Exos crane truck safe, legal, and ready to lift by exercising every hydraulic function on a fixed cadence, performing the Freightliner Schedule I maintenance, completing the OSHA crane inspections, and protecting the truck and crane from corrosion and seal damage while it is stored outdoors.",
+  "overview": "A crane truck that sits outside fails from disuse more than from wear. Seals dry out and harden, water condenses in the hydraulic tank, fuel tanks and air tanks, exposed chrome cylinder rods rust and then cut the rod seals, batteries discharge, and tires flat-spot and weather-check. This procedure prevents that with five layers: (1) a weekly walkaround; (2) an exercise run every 2 weeks that starts and warms the truck, engages the PTO, and cycles every crane hydraulic function through its full stroke, then stows the crane with every cylinder retracted and the exposed rods greased; (3) a documented monthly crane inspection and wire-rope inspection; (4) quarterly, semiannual and annual truck service drawn from the Freightliner Business Class Maintenance Manual (Schedule I, FL112 tables) and crane service drawn from the crane OEM manual; and (5) outdoor-storage protection steps. Freightliner Schedule I intervals for FL50-FL112 are: Initial Maintenance and M1 every 1,000 mi / 100 hr, M2 every 4,000 mi / 400 hr, M3 every 8,000 mi / 800 hr, M4 every 16,000 mi / 1,600 hr, M5 every 32,000 mi / 3,200 hr; vehicles with an hour meter use hours. This truck will rarely reach those, so the calendar intervals in this procedure apply whichever comes first. Engine, transmission and crane components are maintained to their own manufacturer manuals. Every exercise run and inspection is logged on Mission Control task #3107 (Run crane Truck, Field Compressor and Generators). Any defect found that affects safe operation takes the crane out of service (tag the controls) until it is repaired and re-inspected.",
+  "tasks": [
+    {"name": "Task 1 - Asset identification and records setup (one time)", "steps": [
+      "Record from the data plates: VIN ______; engine make/model/serial ______; transmission make/model ______; rear axle make/model and 2-speed (Y/N) ______; crane make/model/serial ______; PTO make/model ______; odometer ______ mi; engine hour meter ______ hr; crane hour meter (if equipped) ______ hr.",
+      "Obtain the crane manufacturer's operator and service manual (with lubrication chart, load chart and hydraulic oil specification) by crane serial number, and the engine and transmission maintenance manuals. Store them with this procedure and a copy in the cab.",
+      "Confirm the crane load chart, operating decals and the hand-signal chart are present and readable in the cab and at the operator station (OSHA 1926.1412(f)(2)(xvii)). Replace any that are missing or unreadable.",
+      "Set up the maintenance log (Mission Control #3107 notes, or a paper log in the cab copied to MC): date, odometer, engine hours, task performed, findings, name and signature. Crane inspection records must carry the date, the inspector's signature and an identifier for each rope (OSHA 1910.180(d)(6) and (g)(1)).",
+      "Take baseline photos: all four sides, every cylinder rod, tires, hydraulic tank sight glass, and under the truck (to compare against future leak spots)."
+    ]},
+    {"name": "Task 2 - Return to service after the October 2026 crane repair", "steps": [
+      "File the repair vendor's final invoice (expected Friday 10/23/2026 per Steven Norsworthy) and work order with this record. Note what was repaired, which hoses/seals/fittings were replaced, and the hydraulic oil type and quantity added.",
+      "Record the vendor's post-repair load check and no-leak result (reported 10/21/2026). OSHA 1926.1412(b) requires a qualified person to inspect and functionally test a repair to a safety-related part before use; get the vendor's signed inspection/load-test statement into the file. If none exists, have a qualified person perform and sign the Task 5 inspection plus a functional test before the next lift.",
+      "Recheck all repaired fittings for weeps after the first two exercise runs (Task 4) and retorque or reseal as needed.",
+      "Pull a baseline hydraulic oil sample (Task 7, step 4) so later samples have something to compare against."
+    ]},
+    {"name": "Task 3 - Weekly outdoor-storage walkaround (about 10 minutes)", "steps": [
+      "Look under the truck and crane for new drips or wet spots (engine oil, coolant, hydraulic oil, fuel, gear oil). Compare with the baseline photos. Trace and report any new leak.",
+      "Check the hydraulic tank sight glass level with the crane stowed and all cylinders retracted.",
+      "Inspect every exposed cylinder rod for rust spots, pitting, or oil beads at the seal. Re-coat exposed rod with grease if the film is gone.",
+      "Drain the air brake reservoirs: open the wet (supply) tank drain first, then the others. The Freightliner driver's manual requires daily draining if there are no automatic drains, and at least weekly draining even with automatic drain valves.",
+      "Check the tires visually for low pressure, cuts, bulges and sidewall cracking. Verify wheel chocks are in place.",
+      "Verify the battery maintainer is connected and charging, or that the battery disconnect is open.",
+      "Check the exhaust stack rain cap, the air intake, the hydraulic tank breather and the cab for water entry, wasp/bird nests and rodent activity. Remove nests; set rodent deterrent if droppings or chewed wiring are found.",
+      "Clear standing water and debris from the bed, the boom rest and outrigger boxes."
+    ]},
+    {"name": "Task 4 - Exercise run and full hydraulic cycle (every 2 weeks)", "steps": [
+      "Before starting: complete the Freightliner pretrip checks for engine oil, coolant level, power steering fluid, fuel level and fuel/water separator, drive belts, hoses and wiring. Do not start with low oil or coolant.",
+      "Start the engine, confirm oil pressure and the air-pressure warning clear, and run until the engine reaches normal operating temperature and air pressure reaches governor cut-out. Check all lights, horn, wipers and backup alarm.",
+      "Set up the crane per EXOS-GRN-001-0: level firm ground, no overhead hazards (power lines), outriggers fully extended and set solidly before the boom leaves its rest. Two people minimum.",
+      "Engage the PTO at idle per the crane manual. Let the hydraulic oil warm by running the pump at low speed for several minutes before operating functions under load.",
+      "Cycle EVERY hydraulic function through its FULL stroke at least 3 times, slowly at first: outriggers/stabilizers (extend, down, up, retract, each side); boom up and down; telescope all sections fully out and fully in; swing the full range both directions; winch pay out and pay in (keep at least the manufacturer's minimum wraps on the drum); jib or knuckle (if equipped). Full stroke wets the entire rod and seal surface and moves fresh oil through every cylinder and valve section.",
+      "Do not hold any function against its end stop (relief valve) for more than a moment; that overheats the oil.",
+      "While cycling, watch and listen for: jerky or slow motion, pump whine or chatter, valve spools that stick or do not return to neutral, hose leaks at flex points, and boom or outrigger drift when the controls are released. Record any finding.",
+      "Test the safety devices that are fitted (anti-two-block, load moment indicator, boom angle indicator, emergency stop, outrigger interlocks) for proper operation.",
+      "Stow the crane: boom in its rest, every cylinder FULLY RETRACTED so the chrome is inside the cylinder in oil (Kobelco PM Vol. 1: retract all cylinders fully for storage). Wipe each rod clean before retracting; then coat any rod surface still exposed with grease. Disengage the PTO.",
+      "Drive the truck at least a few miles on the property or a local loop so the transmission, axles, wheel bearings, brakes and steering get exercised and the tires do not flat-spot. Make several service-brake stops and test the parking brake.",
+      "Shut down, re-drain the air tanks, recheck under the truck for leaks, and reconnect the battery maintainer.",
+      "Log the run on Mission Control #3107: date, odometer, engine hours, functions cycled, any findings, name."
+    ]},
+    {"name": "Task 5 - Monthly documented crane inspection (competent person)", "steps": [
+      "Perform the frequent inspection in OSHA 1910.180(d)(3) / 1926.1412(d)(1) and sign it: control mechanisms for maladjustment and excessive wear; safety devices for malfunction; air and hydraulic lines for deterioration or leakage (especially hoses that flex); hydraulic oil level; hooks and latches for cracks, deformation or wear; rope reeving per the manufacturer; electrical apparatus for malfunction, deterioration, dirt or moisture; tires for inflation and condition; operator station windows and controls.",
+      "Remove any hook from service that has cracks, more than 15 percent increase in normal throat opening, or more than 10 degrees of twist from the plane of the unbent hook (OSHA 1910.180(d)(3)(v)).",
+      "Inspect the full length of the running wire rope (broken wires, kinks, crushing, birdcaging, corrosion, core protrusion, end fittings). Prepare the monthly rope certification record with date, signature and rope identifier (OSHA 1910.180(g)(1)). Clean and apply rope lubricant per the crane manual.",
+      "Inspect structure for cracks, deformation, loose or missing bolts and pins, and corrosion, paying attention to the boom, outrigger beams, crane mounting/torsion box and subframe.",
+      "If the crane has been idle 1 month or more but under 6 months, this inspection plus the rope inspection must be completed before it is placed in service; idle 6 months or more requires the complete periodic inspection (OSHA 1910.180(d)(5)). Keep records at least 3 months; Exos retains them for the life of the asset.",
+      "Any deficiency affecting safe operation: tag the crane controls OUT OF SERVICE and create a repair subtask under #3107."
+    ]},
+    {"name": "Task 6 - Quarterly truck and crane lubrication (Freightliner M1 set, FL112 MOP 00-17)", "steps": [
+      "Grease every chassis fitting until fresh grease purges the old grease (purging water out is the point in outdoor storage): front spring pins and shackles, rear spring pins and equalizers, knuckle pins (top and bottom), tie-rod ends, drag link (both ends), steering driveline slip joint and U-joints, driveline U-joints and slip joints, clutch release bearing and cross-shaft, slack adjusters and brake camshaft brackets (front and rear).",
+      "Check and top up: rear axle lubricant, two-speed axle shift unit (if equipped), manual transmission oil (or automatic fluid), power steering reservoir, hydraulic clutch reservoir (if equipped).",
+      "Inspect and service the Bendix DV-2 automatic drain valves if fitted (FL112: performed at the M1 interval); check axle breathers are clear.",
+      "Brake checks per M1: brake chambers and pushrods, slack adjuster stroke/adjustment, air dryer function, brake valve operation and leak checks, relay and quick-release valves.",
+      "Inspect suspension, tie-rod ends and driveline for wear or looseness.",
+      "Lubricate door hinges, latches and weatherstrips; clean and protect battery terminals.",
+      "Crane: lubricate every point on the crane manufacturer's lubrication chart (boom pivot and cylinder pins, swing bearing, swing gear and pinion, sheaves, winch, outrigger slide pads). Use the grease grades the crane manual specifies.",
+      "Check coolant freeze protection with a refractometer or test strips before the first freeze each fall (Greenville, TX); adjust to the engine maker's spec."
+    ]},
+    {"name": "Task 7 - Semiannual service (spring and fall)", "steps": [
+      "Freightliner M2/M3 items: air compressor inspection; radiator cap check; fan clutch check; transmission breather; exhaust system inspection for leaks and heat damage to nearby wiring; engine drive belt inspection; wheel nut torque check; fuel tank draining (water/sediment) and vent check (MOP 47-01); electrical system connection check; air dryer check.",
+      "Check tire pressures with a gauge and set to the door-placard values; inspect for weather cracking and tread condition.",
+      "Hydraulic system: inspect every hose for cracking, blistering, abrasion and leaks at fittings; check pump shaft seals; inspect cylinders for drift, rod scoring and leaking rod seals (OSHA 1926.1412(f)(2)(x)-(xiii) list).",
+      "Pull a hydraulic oil sample from the crane reservoir with the oil warm, and send it for lab analysis (water content, particle count/ISO cleanliness, viscosity). Water is the main risk in outdoor storage. If the tank has a drain, crack it first to remove settled water.",
+      "Replace the hydraulic tank breather/filler filter if it is dirty or wet; replace hydraulic filters if the indicator calls for it or per the crane manual.",
+      "Standby-crane inspection: OSHA 1910.180(d)(5)(iii) requires standby cranes to be inspected at least semiannually, and more often when exposed to an adverse environment; the monthly Task 5 inspection satisfies this."
+    ]},
+    {"name": "Task 8 - Annual service and inspections", "steps": [
+      "Annual/comprehensive crane inspection by a QUALIFIED person (third-party crane inspector recommended) covering the OSHA 1926.1412(f) list: structure and welds, sheaves and drums, pins, bearings, shafts and gears, brakes and clutches, safety devices and operational aids, power plant, travel and steering, tires, hoses and fittings, pumps and motors, valves (including relief-valve pressure per the manufacturer), cylinders, outrigger pads, electrical wiring, decals, operator seat, steps and guards, plus a functional test. File the signed report.",
+      "FMCSA annual periodic inspection of the truck (49 CFR 396.17) by a qualified inspector; keep the report and display the inspection decal. Keep maintenance records per 49 CFR 396.3.",
+      "Engine oil and filter change and fuel filter/water separator change at least annually even with low hours (or at the engine maker's interval if sooner).",
+      "Freightliner M4 items when due by hours/miles, otherwise inspect annually: engine-support fasteners; air cleaner element (inspect annually, replace per the restriction indicator or when wet/damaged); alternator, battery and starter test (load-test the batteries every fall); radiator pressure flush and coolant change per the coolant type; transmission oil change and magnetic plug cleaning; frame fastener torque; all-axle alignment; axle lubricant change; power steering fluid and filter change.",
+      "Change the crane hydraulic oil and filters per the crane manual, or sooner if the oil analysis shows water or contamination.",
+      "Replace any hydraulic hose that shows cracking, blistering or abrasion through the cover. Hoses on a 1998 truck that have not been replaced should be prioritized by age and condition.",
+      "File the 2027 UCR registration per EXOS-ADM-004 (MC #2129) and renew the vehicle registration (MC #3388)."
+    ]},
+    {"name": "Task 9 - Long-interval items (Freightliner M5: 32,000 mi / 3,200 hr)", "steps": [
+      "These are unlikely to come due by hours on this truck; inspect at the annual service and perform when due or when condition calls for it: Bendix air compressor rebuild/replace; hydraulic clutch fluid replacement; air dryer desiccant replacement; air brake valve disassembly, clean and inspect (E-12, QR-1, R-14, SR-1, ST-3, TC-7, TP-5 as fitted); coolant level sensor cleaning.",
+      "Air dryer desiccant: replace sooner if water is found in the air tanks during weekly draining."
+    ]},
+    {"name": "Task 10 - Outdoor-storage protection (standing condition)", "steps": [
+      "Park on a firm, level, drained gravel or concrete pad, not grass or dirt that holds moisture. Chock the wheels; set the parking brakes.",
+      "Crane stowed in its boom rest with every cylinder fully retracted; exposed rod sections coated with grease and checked weekly.",
+      "Keep fuel tanks at least three-quarters full to limit air space for condensation; drain water from the fuel tanks and fuel/water separator at the semiannual service.",
+      "Battery: maintainer connected, or disconnect switch open between runs. Load-test every fall.",
+      "Keep the exhaust rain cap closed; cover the crane control station/remote and any exposed electrical connectors; keep cab windows and doors closed and sealed.",
+      "Tires: keep at placard pressure; use tire covers if the truck will sit more than a month in sun.",
+      "Wash off mud, bird droppings and debris quarterly; touch up paint chips on the boom and outrigger beams before rust spreads; spray an undercarriage corrosion inhibitor on exposed brackets and fasteners annually.",
+      "If the truck must sit more than 30 days without an exercise run, perform Task 5 before the next lift (OSHA 1910.180(d)(5))."
+    ]}
+  ]
+}

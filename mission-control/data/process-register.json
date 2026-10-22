@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Exos Process & Procedures — Master Register",
-    "updated": "2026-10-15",
+    "updated": "2026-10-21",
     "source": "Lizi turnover → Exo (MC management); schema per Exos Procedures Master List",
     "template": "Exos-US Procedure Template",
     "doc_control": "STATUS on each doc; records in the Exos Work Management System (Mission Control / ERP)",
@@ -1457,13 +1457,29 @@
       "procedure": "International Contractor Payments & Contractor Expense Reimbursement (incl. JPY)",
       "doc_no": "EXOS-FIN-004-0",
       "rev": "0",
-      "status": "Draft",
+      "status": "Approved",
       "intl_release": "No",
       "ack_required": false,
       "owner": "Kyle Ballard (CFO / Finance) / Exo",
-      "remarks": "Created 2026-10-15 at Jon's direction (international contractor payments + expenses, best way to pay in yen, does BambooHR support it). BambooHR Payroll is US-only and cannot pay Japan or JPY; the BambooHR-branded option is the Contractor Management add-on powered by Remote (backup rail). Primary rail = Wise Business (domestic JPY to Japanese bank). OPEN before first use: (1) open the Wise Business account; (2) CPA decides whether to enable QBO Multicurrency (cannot be turned off; Intuit says it does not work with QBO Bill Pay) - until then record the USD actually debited with a JPY memo.",
+      "remarks": "Created 2026-10-15 at Jon's direction (international contractor payments + expenses, best way to pay in yen, does BambooHR support it). BambooHR Payroll is US-only and cannot pay Japan or JPY; the BambooHR-branded option is the Contractor Management add-on powered by Remote (backup rail). Primary rail = Wise Business (domestic JPY to Japanese bank). OPEN before first use: (1) open the Wise Business account; (2) CPA decides whether to enable QBO Multicurrency (cannot be turned off; Intuit says it does not work with QBO Bill Pay) - until then record the USD actually debited with a JPY memo. APPROVED 2026-10-15 by John Quinn, Cofounder & CEO (D-7282118)",
       "files": [
         "12-finance-accounting/EXOS-FIN-004-0_International_Contractor_Payments_&_Contractor_Expense_Reimbursement_(incl._JPY).docx"
+      ],
+      "file_count": 1
+    },
+    {
+      "area": "Ground Operations",
+      "area_id": "02-ground-operations",
+      "procedure": "Crane Truck Preventive Maintenance (1998 Freightliner FL112, Outdoor Storage)",
+      "doc_no": "EXOS-GRN-008-0",
+      "rev": "0",
+      "status": "Approved",
+      "intl_release": "Yes",
+      "ack_required": false,
+      "owner": "Facilities / Ground Operations / Exo (approved: John Quinn, Cofounder & CEO)",
+      "remarks": "Applies to the Exos 1998 Freightliner FL112 crane truck (QuickBooks asset 'Freightliner FL 112' / 'Crane Truck'; shop inventory SHOP-01685) that is stored OUTSIDE at Greenville, TX. Truck is run under Freightliner Schedule I (severe service): it travels well under 6,000 miles a year and sits exposed to weather. Because it accrues so few hours and miles, this procedure adds calendar intervals (whichever comes first). Where the crane or engine OEM manual is stricter than this procedure, the OEM manual governs. Asset fields left as ______ must be filled in from the vehicle data plates on first use.",
+      "files": [
+        "02-ground-operations/EXOS-GRN-008-0_Crane_Truck_Preventive_Maintenance_(1998_Freightliner_FL112,_Outdoor_Storage).docx"
       ],
       "file_count": 1
     }
