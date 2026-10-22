@@ -89,7 +89,7 @@ def main():
             cands = [c for c in (supa("GET", q) or []) if norm(c["title"]) == norm(g["title"])]
             cands.sort(key=lambda c: (norm(c["state"]) in CLOSED, "teamwork" not in (c.get("tags") or [])))
             card = cands[0] if cands else None
-        if card and card["state"] == "Done" and not gantt_closed and "closed:stale-backlog" not in (card.get("tags") or []):
+        if card and card["state"] == "Done" and not gantt_closed:   # Done means done (Phil 10/22)
             # Work is marked Done on the person's Task board card -> mark the Gantt task Done.
             if a.apply: erp_set_done(g["id"])
             report["updated"].append({"card": card["id"], "title": g["title"], "changes": ["Gantt state → Done (card is Done)"]})

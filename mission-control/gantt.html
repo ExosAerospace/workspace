@@ -122,10 +122,10 @@ async function load(){
     const d=await r.json();
     if(d.project) document.getElementById('projName').textContent=d.project.name||'BLK3';
     // People mark work Done on their Task board card: a linked card (tag sched:<id>) that is Done
-    // makes its Gantt bar Done too. Cards auto-closed as stale backlog don't count as finished.
+    // makes its Gantt bar Done too. Done means done (Phil Eaton 10/22) — no exceptions.
     try{
       const cards=await boardCards();
-      const doneBy={}; cards.forEach(c=>{ if((c.state||'')==='Done'&&!(c.tags||[]).includes('closed:stale-backlog'))
+      const doneBy={}; cards.forEach(c=>{ if((c.state||'')==='Done')
         (c.tags||[]).forEach(tg=>{ if(tg.startsWith('sched:')) doneBy[tg.slice(6)]=c.id; }); });
       (d.tasks||[]).forEach(t=>{ if(!isDone(t.state)&&doneBy[t.id]){ t.boardDone=doneBy[t.id]; t.state='Done'; } });
     }catch(e){ /* board unavailable: fall back to schedule status only */ }
