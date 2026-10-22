@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-19T04:04:24",
- "total": 287,
+ "total": 288,
  "standing": 115,
  "ephemeral": 18,
  "service": 6,
@@ -6213,6 +6213,29 @@
    "reusability_scope": "every MC tenant (Exos + trial orgs)",
    "change_log": [
     "2026-10-22 initial build (catalog, page, API, selftest, registry)"
+   ]
+  },
+  {
+   "label": "com.exos.utd-weekly-prep",
+   "program": "utd-weekly-prep-exo3",
+   "script": "scripts/utd_weekly_prep.py",
+   "kind": "launchd",
+   "schedule": "every 15 min tick (plist created 2026-10-22, NOT loaded until Lizi's go): build Sun >=18:00 CT, apply on Lizi Yes, one reminder Tue 09:00 CT",
+   "purpose": "DRAFT-ONLY generator for UTD Team Atlas weekly student tasks + lead-card batch (replaces hand-run utd_weekN_tasks.py / utd_capstone_lead_cards.py; Week 8 was 2 days late). Proposes next week's tasks + leads from capstone-program.json work_queue, files ONE Decision for Lizi ('Go week N tasks + lead batch?'); creates them in MC only after her Yes.",
+   "stack_layer": "EXECUTE",
+   "autonomy_tier": "Propose; execute only on human Yes",
+   "human_owner": "Lizi Quinn",
+   "permission_envelope": "READ Supabase tasks (utd-lead + week-N tags), capstone-program.json, pipeline + drafts files, decisions.json/API; FILE one Decision per week (dedupeKey utd-weekly-prep-wkN) assigned to Lizi; CREATE Supabase tasks (week-N student tasks + lead cards via utd_capstone_lead_cards) ONLY after a Yes answered by lquinn@/jquinn@, once per week; POST at most one Discord reminder per week to channel 1539382179120021616 (plus one exception post if a lead card fails). No email, no prospect contact, no edits/deletes of existing tasks.",
+   "memory_boundary": "writes mission-control/data/utd-weekly-prep-state.json, logs/utd-weekly-prep.log",
+   "escalation": "unanswered by Tue 09:00 CT -> one Discord reminder; lead-card build failure (e.g. no AI draft) -> one Discord post; queue shortfall shown in the Decision context",
+   "eval_suite": "OUTPUT eval: `/usr/bin/python3 scripts/utd_weekly_prep.py selftest` (fixtures only, network + subprocess blocked: week math, Laura 1/Brenda 0/others 3 incl. open cards, parked + open-card orgs skipped, gov -> John voice, dues capped before Nov 20 final, ONE Decision per week, nothing created until approver Yes, non-approver Yes ignored, apply idempotent, one Tue reminder, hand-made week not re-proposed) + `utd_weekly_prep.py eval` on live state (no duplicate Decision, creations only after human Yes, never more than proposed, rules held)",
+   "eval_type": "output",
+   "telemetry": "logs/utd-weekly-prep.log, mission-control/data/utd-weekly-prep-state.json, logs/runs/YYYY-MM-DD.jsonl (run_logged), fleet_log propose events",
+   "reusability_scope": "any weekly cohort program on MC with a Decision-gated task batch",
+   "risk_tier": "MEDIUM",
+   "envelope_source": "Jon 2026-10-22 (automate UTD weekly task/lead-card prep, draft-only, Lizi gate)",
+   "change_log": [
+    "2026-10-22 initial build (generator, Decision gate, apply, Tue reminder, selftest, eval); plist created, not loaded"
    ]
   }
  ],

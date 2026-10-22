@@ -1693,6 +1693,19 @@
    "note": "multi-shot dated runs (10/9-11/4, 12/1, 2/3/2027); self-unloads after 2027-02-03",
    "selftest": "/usr/bin/python3 scripts/lizi-followup-digest.py selftest",
    "eval_type": "output"
+  },
+  "com.exos.utd-weekly-prep": {
+   "cadence_s": 900,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Lizi Quinn",
+   "selftest": "/usr/bin/python3 scripts/utd_weekly_prep.py selftest",
+   "eval_type": "output",
+   "paused": "plist created 2026-10-22, not loaded until Lizi's go",
+   "governance_checks": [
+    "selftest PASS (fixtures only)",
+    "utd_weekly_prep.py eval PASS: one Decision per week, creations only after lquinn@/jquinn@ Yes, never twice"
+   ]
   }
  },
  "_eval_wave_2": {

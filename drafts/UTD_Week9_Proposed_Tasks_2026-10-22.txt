@@ -1,0 +1,48 @@
+UTD Team Atlas — Week 9 PROPOSED tasks + lead batch (DRAFT, nothing created)
+Meeting Thu 2026-10-29 -> next Thu; final presentation Thu Nov 20 10 AM in person (all due dates capped at 2026-11-19); John leaves Nov 29.
+Week gate: Sustained pipeline development; deepen segment and competitive research.
+
+WEEKLY TASKS (10)
+ 1. Roel Saenz               due 2026-10-30  [Week 9 · Lead] Minutes from Thu 10/29 by Fri 10/30; agenda for Thu 11/5 by Tue 11/3
+      1. Send the 10/29 minutes to Lizi by Fri 10/30 (decisions, action items, owners, dates).
+2. Send the next agenda by Tue 11/3.
+3. Post both as notes on this card.
+ 2. Roel Saenz               due 2026-11-05  [Week 9 · Lead] Team lead cards + READY scoreboard on #3164
+      No new lead cards this week. Post the team scoreboard on #3164 (lead cards Done per person). If something is stuck, post one sentence on why and a new date on the card. This week's gate: Sustained pipeline development; deepen segment and competitive research.
+ 3. Roel Saenz               due 2026-11-05  [Week 9 · Lead] Final presentation (Thu Nov 20, 10 AM, in person): deck draft progress + who presents what
+      Post the current deck draft (or outline) on this card with who owns each section and what the handoff to Exos includes (lead list, templates, AI audit, social content). Final presentation is Thu Nov 20, 10 AM, in person; all work has to be finished before it.
+ 4. Laura Granados Lopez     due 2026-11-05  [Week 9 · University segment] ONE lead card this week
+      No new lead cards this week. One lead card per week (Lizi 10/15). If it is not finished by the due date, post one sentence on why and a new date.
+ 5. Adrian Haro              due 2026-11-05  [Week 9 · Commercial segment] Lead cards + segment/competitive research
+      New lead cards: Siwei Fan. Finish your 1 open lead card(s) first. Lizi sends commercial leads, so write in her voice. Use "early 2027" (never a month), "designed for about 2.5 minutes of microgravity", no only/first/fastest, no "FAA-licensed", no refly, no "2-3 day turnaround". Research: sources 2023+, linked.
+ 6. Karan Vijaya Sankar      due 2026-11-05  [Week 9 · Gov/civil segment] Lead cards (John sends)
+      Finish your 3 open lead card(s) first. Government and defense leads are John-send: keep them in John's voice, signed John Quinn, Cofounder and CEO. Confirm current names and leaders (2026 reorgs).
+ 7. Karan Vijaya Sankar      due 2026-11-04  [Week 9 · AI audit] Add this week's AI errors + one-paragraph trend by Wed 11/4
+      Log every Exo error the team found this week (wrong contact, missing draft, banned claim, stale title) with a source, then write a one-paragraph week-over-week trend.
+ 8. Sunidhi Mathew           due 2026-11-05  [Week 9 · Lead] Lead cards
+      Finish your 2 open lead card(s) first. Check who sends each one (John for government and defense, Lizi for everyone else). Use "early 2027" (never a month), "designed for about 2.5 minutes of microgravity", no only/first/fastest, no "FAA-licensed", no refly, no "2-3 day turnaround".
+ 9. Sunidhi Mathew           due 2026-11-05  [Week 9 · Data Trust] Check every lead card moved to Done this week
+      For each teammate card moved to Done this week: contact current? every claim sourced? signed by the right person (John for government and defense, Lizi for everyone else)? 'early 2027' with no month, no only/first/fastest? PASS -> leave it in Done. FAIL -> post what's wrong and move it back to In Progress.
+10. Brenda Segovia Saldana   due 2026-11-03  [Week 9 · Creative] Next week's posts ready for Lizi by Tue 11/3
+      Creative only (no lead cards). Next week's posts from the content calendar, each with its approved link (microsite, exosaero.com/blog, or the payload calculator at exosaero.com/pricing; never the payload questionnaire, PUG or investor blog). No specs, prices or dates; Exos-approved photos only.
+
+LEAD-CARD BATCH (1)
+ 1. Adrian Haro              Siwei Fan — Cryogenic Propellant Gauging in Low-Gravity (ERT/EIT) ⭐⭐⭐ STRATEGIC   [commercial, Lizi sends, score 73, draft=NO - Exo writes one before cards are made]
+
+Open lead cards (count against quota): Karan 3, Adrian 1, Sunidhi 2
+
+SHORTFALL (queue ran out; new lead sourcing needed): Roel 3, Laura 1, Adrian 1, Sunidhi 1
+
+Skipped from the ranked queue:
+  - DIU HyCAT Program — Col. Nicholas Estep ⭐⭐⭐ ACTIVE COMMERCIAL SUBORBIT: org already has a lead card (open or done)
+  - Kratos Defense & Security Solutions — Josh Peterson (SVP, MACH-TB) ⭐⭐⭐: already on a card (#3909)
+  - DIU HyCAT Program — Defense Innovation Unit ⭐⭐⭐ ACTIVE BUYER, TOP NEW : already on a card (#3907)
+  - Montana State University — SSEL (Space Science & Engineering Lab, Boze: org already has a lead card (open or done)
+  - AFRL Space Vehicles Directorate (Kirtland AFB, NM): org already has a lead card (open or done)
+  - Orbit Fab — Peter Shaper (CEO) / Jeff Lints (CCO) ⭐⭐ — STANDING PROJEC: already on a card (#3911)
+  - BAE Systems Space & Mission Systems (ex-Ball Aerospace) — Boulder, CO : already on a card (#3910)
+  - Lumibird Photonics USA — Quantel (Bozeman): parked by Lizi / not a student lead
+  - CACI — Belgrade MT site (ex-Ascent Vision Technologies): parked by Lizi / not a student lead
+  - Intuitive Machines — Tim Crain (CTO/Co-founder) ⭐⭐⭐ WARM — SCORPIUS CO: parked by Lizi / not a student lead
+  - Resonon (Bozeman): already on a card (#3913)
+  - AFRL / SpaceWERX — Updated Entry Point (June 2026 Restructure): already on a card (#3908)
