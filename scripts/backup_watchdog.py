@@ -174,7 +174,7 @@ def selftest():
     down = lambda: (False, "ssh rc=255 Connection timed out")
     up = lambda: (True, "link up")
     SENT.clear(); side_checks(mark, t, probe=down, verify_state={"ok": True})
-    case("Mini locked/unreachable -> one 'link DOWN' alert", len(SENT) == 1 and "link DOWN" in SENT[0])
+    case("Mini locked/unreachable -> one 'Mini offline' notice", len(SENT) == 1 and "Mini offline" in SENT[0])
     SENT.clear(); side_checks(mark, t + 3600, probe=down, verify_state={"ok": True})
     case("still down 1h later -> deduped (no 2nd alert)", len(SENT) == 0)
     SENT.clear(); side_checks(mark, t + 25 * 3600, probe=down, verify_state={"ok": True})

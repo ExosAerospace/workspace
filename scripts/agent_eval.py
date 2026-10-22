@@ -461,7 +461,8 @@ def check_selftests(cfg, state, now, _runner=None, only=None, budget_s=SELFTEST_
         key, short = "selftest:" + label, label.replace("com.exos.", "")
         prev = state.get(key, {})
         owner = th.get("owner", "John Quinn")
-        due = now - last_run >= SELFTEST_EVERY_S
+        # a FAILing selftest re-runs every pass (hourly) so a fix clears it fast instead of sticking 24h (10/22)
+        due = now - last_run >= SELFTEST_EVERY_S or prev.get("status") == "FAIL"
         if due and cache and cmd not in cache and time.time() - t0 > budget_s:
             due = False   # out of budget this hour; stays due
         if not due:
@@ -510,13 +511,14 @@ def _selftest_runner_selftest():
     assert "TIMEOUT" in r["selftest:" + c][1]
     assert sorted(k for k, _, _ in nf) == ["selftest:" + b, "selftest:" + c]         # pass -> silent
     assert len(calls) == 3 and "selftest:x" not in st
-    # 24h throttle: 1h later nothing reruns, statuses carry forward, no re-alert
+    # 1h later: the PASSING selftest is throttled (24h); the 2 FAILING ones re-run (fast clear) w/o re-alert
     res2, nf2 = check_selftests(cfg, st, now + 3600, _runner=fake)
-    assert len(calls) == 3 and nf2 == [] and len(res2) == 3
-    assert all("not due" in w for _, _, w, _ in res2)
-    # 24h+ later: reruns; a still-failing selftest does NOT re-alert (deduped)
+    assert len(calls) == 5 and nf2 == [] and len(res2) == 3
+    r2 = {k: w for k, _, w, _ in res2}
+    assert "not due" in r2["selftest:" + a] and "not due" not in r2["selftest:" + b]
+    # 24h+ later: all rerun; a still-failing selftest does NOT re-alert (deduped)
     res3, nf3 = check_selftests(cfg, st, now + SELFTEST_EVERY_S + 1, _runner=fake)
-    assert len(calls) == 6 and nf3 == []
+    assert len(calls) == 8 and nf3 == []
     # identical commands run once per pass; only-filter; budget defers oldest-first
     cfg2 = {"agents": {a: {"selftest": "fx pass"}, b: {"selftest": "fx pass"}}}
     calls.clear(); check_selftests(cfg2, {}, now, _runner=fake); assert calls == ["fx pass"]
@@ -706,7 +708,7 @@ def self_retired(label):
             if not cands or not re.search(r"self[- ]?(retire|unload)", open(cands[-1], errors="replace").read(4000), re.I):
                 return False
         last = None
-        for f in sorted((WS / "logs" / "runs").glob("*.jsonl"))[-14:]:
+        for f in sorted((WS / "logs" / "runs").glob("*.jsonl")):  # all history: a finished one-shot must not age back into FAIL (10/22)
             for ln in open(f):
                 if f'"{label}"' in ln:
                     try: last = json.loads(ln)

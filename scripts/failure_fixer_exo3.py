@@ -331,6 +331,38 @@ def govlog_failures():
     return out
 
 
+def eval_failures():
+    """agent_eval OUTPUT/liveness FAILs (selftest exit≠0, 'not loaded') from its LATEST hourly pass — launchd exit
+    codes can't see these (Jon 10/22: '4 automated jobs failing — is Exo automatically addressing this?')."""
+    logp = os.path.join(WS, "logs", "agent-eval.log")
+    if not os.path.exists(logp):
+        return []
+    lines = open(logp, errors="replace").read().splitlines()[-3000:]
+    start = max((i for i, l in enumerate(lines) if re.search(r"\] eval: \d+ OK", l)), default=None)
+    if start is None:
+        return []
+    stamp = lines[start][1:20]
+    st = {}
+    try:
+        st = json.load(open(os.path.join(WS, "state", "agent-eval-state.json")))
+    except Exception:
+        pass
+    out = []
+    for l in lines[start + 1:]:
+        if not l.startswith("[" + stamp[:16]) or re.search(r"\] eval: \d+ OK", l):
+            break   # same pass = same minute, until the next summary line
+        m = re.search(r"FAIL: (\S+) — (.+?) \(owner", l)
+        if not m:
+            continue
+        ident, why = m.group(1), m.group(2)
+        key = ident if ident.startswith(("selftest:", "cron:")) else "com.exos." + ident
+        tail = (st.get(key) or {}).get("tail", "")
+        label = key.split(":", 1)[1] if key.startswith("selftest:") else key
+        out.append(make_failure("eval", key, label, why if "not due" not in why else f"selftest failing: {tail[-300:]}",
+                                log_tail=tail))
+    return out
+
+
 def collect(fixture=None):
     if fixture:
         raw = json.load(open(fixture))
@@ -351,7 +383,7 @@ def collect(fixture=None):
                                         r.get("definition", ""), r.get("log_tail", ""), r.get("last_fail_at")))
         return out
     out = []
-    for fn in (cron_failures, launchd_failures, govlog_failures):
+    for fn in (cron_failures, launchd_failures, govlog_failures, eval_failures):
         try:
             out.extend(fn())
         except Exception as e:
