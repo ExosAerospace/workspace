@@ -227,7 +227,9 @@ function build(d){
 
   // height
   const focus0=new URLSearchParams(location.search).get('focus');
-  groups.forEach(g=>{ g.key=GROUPBY+'|'+g.name.replace(/\s+\(no tasks yet.*$/,''); g.open=isOpen(g.key)||(!!focus0&&g.rows.some(r=>r.id===focus0)); });
+  // Jump-to-task (?focus=): open its group ONCE (remembered like a normal expand), so collapsing still works afterwards.
+  groups.forEach(g=>{ g.key=GROUPBY+'|'+g.name.replace(/\s+\(no tasks yet.*$/,''); if(focus0&&g.rows.some(r=>r.id===focus0)) OPEN.add(g.key); g.open=isOpen(g.key); });
+  if(focus0) localStorage.setItem('ganttOpen',JSON.stringify([...OPEN]));
   let bodyH=0; groups.forEach(g=>{bodyH+=LISTH+(g.open?g.rows.length*ROW:0);});
   window.__GROUPKEYS=groups.map(g=>g.key);
   const H=HEADER+bodyH+PAD;
@@ -323,6 +325,7 @@ function build(d){
   if(fg){ const hit=fg.querySelector('.g-hit'); if(hit) hit.style.cssText='fill:rgba(255,214,0,0.18);stroke:#ffd600;stroke-width:1.5';
     fg.scrollIntoView({block:'center',inline:'nearest'});
     const bar=geom[focusId]; const cw=document.querySelector('.chartwrap'); if(bar&&cw) cw.scrollLeft=Math.max(0,bar.x1-LEFT-40); }
+  if(focusId){ const u=new URL(location.href); u.searchParams.delete('focus'); history.replaceState({},'',u); }   // highlight once, then forget
 }
 
 // Double-click a task row/bar → open its Task board card. Gantt tasks link to board cards via the
