@@ -131,6 +131,15 @@ def main():
     L = []
     L.append(f"# Weekly CEO Prioritization Review — {stamp}\n")
     L.append("_Recursive Self-Improvement (LEARN layer). Mission Score is in SHADOW; this audit tunes it before it goes live._\n")
+    # Scorecard (Jon 2026-10-22): four pass/fail performance targets, first thing in the report.
+    score_txt = "scorecard n/a"
+    try:
+        import rsi_scorecard
+        _sl, _sp, _sn = rsi_scorecard.lines(accuracy)
+        L.extend(_sl)
+        score_txt = f"scorecard {_sp}/{_sn}"
+    except Exception as _e:
+        L.append(f"## Scorecard\n- (scorecard module error: {_e})\n")
     # North-Star strategic mix (from mission-scores.json)
     try:
         _sc = json.load(open(SCORES)).get("scores", {})
@@ -307,7 +316,7 @@ def main():
             "id": "RSI-" + hashlib.sha1(dedupe.encode()).hexdigest()[:6].upper(),
             "created": now, "updated": now, "source": "Weekly RSI",
             "title": f"Weekly CEO Prioritization Review — {stamp}",
-            "question": (f"This week: {accuracy}% of top-scored work moved, {len(overdue)} overdue items, "
+            "question": (f"This week: {score_txt}; {accuracy}% of top-scored work moved, {len(overdue)} overdue items, "
                          f"{len(divergence)} score-vs-human divergences, "
                          f"{'cron issues flagged' if cron_issues else 'crons healthy'}, "
                          f"{('⚠️ ' + str(audit_issue_ct) + ' self-audit issue(s)') if audit_issue_ct else 'self-audit clean'}. "
@@ -349,7 +358,7 @@ def main():
             json.dump(arr, open(tmp, "w"), indent=2)
             os.replace(tmp, DEC_FILE)
 
-    alert(f"🧠 Weekly RSI review ({stamp}): top-scored work moved {accuracy}% · {len(overdue)} overdue · "
+    alert(f"🧠 Weekly RSI review ({stamp}): {score_txt} · top-scored work moved {accuracy}% · {len(overdue)} overdue · "
           f"{'⚠️ cron issues' if cron_issues else 'crons OK'} · {len(divergence)} tuning candidates · "
           f"{('⚠️ ' + str(audit_issue_ct) + ' self-audit issue(s)') if audit_issue_ct else 'self-audit ✅'} · "
           f"{'🛒 HW pre-order recommended' if util_provision else ('util:' + str(util_issue_ct) + ' flag(s)' if util_issue_ct else 'util ✅')}. "
