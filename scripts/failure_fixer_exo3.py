@@ -551,6 +551,15 @@ RULES = """RULES (failure-fixer-exo3 — Jon 10/8: "launch a fix and I'll just a
    never git apply/commit/reset in it; exit 0 = fixed>",
  "tested":"<how you verified + result>","needs_jon_reason":"<why staged, else empty>"}"""
 
+# Jon 2026-10-22: "auto prepare fixes as soon as appreciable failures are detected and ask me to approve in a
+# decision." Every fix is PREPARED (patch staged + verified) and goes to Jon as an "Approve fix" Decision; nothing is
+# applied before approval. FIXER_AUTO_APPLY=1 restores the 10/8 safe-fix auto-apply.
+APPROVAL_REQUIRED = os.environ.get("FIXER_AUTO_APPLY") != "1"
+APPROVAL_RULES = """APPROVAL POLICY (Jon 2026-10-22): PREPARE, DON'T APPLY. Even a safe/internal/reversible fix is STAGED, never
+applied: write the patch to PATCH_FILE (must pass `git apply --check --cached PATCH_FILE`), put non-file steps in
+apply_commands, restore the working tree so nothing of yours is left uncommitted, and return outcome "staged" with a
+one-line plain-English cause and fix. Jon approves it on the Decision card; the apply run then applies it."""
+
 TEST_RULES = """TEST MODE (failure-fixer-exo3 selftest of the dispatch path): this is a FIXTURE job, not a real fleet
 job. STAGE ONLY — outcome must be "staged" or "no_fix". Do not apply, commit, kickstart, run crons, or post anything.
 Write the patch to PATCH_FILE (the fixture may be untracked: then it only needs to pass `git apply --check PATCH_FILE`)
@@ -575,6 +584,8 @@ def build_prompt(r, apply_mode=False):
     rules = RULES.replace("PATCH_FILE", patch_file)
     if TEST:
         rules += "\n\n" + TEST_RULES.replace("PATCH_FILE", patch_file)
+    elif APPROVAL_REQUIRED and not apply_mode:
+        rules += "\n\n" + APPROVAL_RULES.replace("PATCH_FILE", patch_file)
     return head + body + rules, patch_file
 
 
@@ -785,7 +796,17 @@ def worker(sig, apply_mode=False):
                 commits.append(git("rev-parse", c).stdout.strip())
         touched = sorted({p for c in commits for p in commit_files(c)})
         bad = [p for p in touched if forbidden(p)]
-        if bad:
+        if commits and APPROVAL_REQUIRED and not apply_mode and not TEST:
+            pf = os.path.join(PATCH_DIR, slug(sig) + f".e{r.get('episode', 1)}.patch")
+            open(pf, "w").write(git("diff", head_before, commits[-1], "--", *touched).stdout)
+            for c in reversed(commits):
+                git("revert", "--no-edit", c)
+            o.update(patch_file=pf, _validation="Fix run applied before approval; auto-reverted and staged for your approval.")
+            fields.update(commits=[])
+            outcome = "staged"
+            trace("guardrail_revert", {"sig": sig, "reason": "approval_required", "commits": commits},
+                  outcome="reverted", corr=corr, level="warn")
+        elif bad:
             for c in reversed(commits):
                 git("revert", "--no-edit", c)
             o["_validation"] = f"Fix run committed forbidden paths {bad}; auto-reverted ({', '.join(c[:7] for c in commits)})."

@@ -919,6 +919,13 @@ def main():
     if not DRY:
         STATE.parent.mkdir(parents=True, exist_ok=True)
         json.dump(state, open(STATE, "w"), indent=2)
+    if new_fail_alerts and not DRY:
+        # Jon 10/22: prepare a fix as soon as a failure is detected — kick the fixer now, not at its next 15-min tick
+        try:
+            subprocess.Popen(["/usr/bin/python3", str(WS / "scripts" / "failure_fixer_exo3.py"), "run"], cwd=str(WS),
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+        except Exception as e:
+            log(f"failure-fixer kick failed: {e}")
     return 0
 
 if __name__ == "__main__":
