@@ -200,10 +200,17 @@ function build(d){
       rows.forEach(r=>placed.add(r.id));
       groups.push({name:f.id.split('-').pop()+') '+String(f.title).replace(/^FRU ready for integration:\s*/,''),rows,fru:true});
     });
+    // GSE = Ground Support Equipment: its own group, NOT an FRU and not required for flight.
+    const gse=byId0['mc-gse'];
+    if(gse){ const mem=new Set(), st=[gse.id];
+      while(st.length){const c=st.pop(); if(mem.has(c)||!byId0[c]) continue; mem.add(c); (byId0[c].predecessors||[]).forEach(p=>st.push(p));}
+      const rows=[...mem].map(id=>byId0[id]).filter(r=>!placed.has(r.id)||r.id===gse.id).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
+      rows.forEach(r=>placed.add(r.id)); groups.gse={name:'GSE — Ground Support Equipment (not an FRU · not required for flight)',rows}; }
     const integ=tasks.filter(t=>t.id==='mc-fru-integration'); integ.forEach(t=>placed.add(t.id));
     const rest=tasks.filter(t=>!placed.has(t.id)).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
     if(rest.length) groups.push({name:'Vehicle-level, GSE & other (not yet tied to an FRU)',rows:rest});
     if(integ.length) groups.push({name:'Full vehicle integration & test',rows:integ});
+    if(groups.gse) groups.push(groups.gse);
   } else if(GROUPBY==='phase'){
     const byPh={}; tasks.forEach(t=>{(byPh[t.phase]=byPh[t.phase]||[]).push(t);});
     PHASES.concat(Object.keys(byPh).filter(p=>!PHASES.includes(p))).forEach(p=>{ groups.push({name:p+(byPh[p]?'':'  (no tasks yet — right-click any task → Add task, then pick this section)'),rows:(byPh[p]||[]).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)))}); });
