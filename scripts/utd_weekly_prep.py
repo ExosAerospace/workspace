@@ -60,7 +60,8 @@ FIRST = {v.split()[0]: v for v in EM}
 QUOTA = {"Roel Saenz": 3, "Laura Granados Lopez": 1, "Karan Vijaya Sankar": 3, "Adrian Haro": 3,
          "Sunidhi Mathew": 3, "Brenda Segovia Saldana": 0}   # Lizi 10/15 + John 10/19
 # Lizi parked / never-student leads (10/12 park; Jon/Scorpius; partner)
-PARKED_RX = re.compile(r"Lumibird|CACI|Intuitive Machines|Space Port Australia|Scorpius|JHU|Johns Hopkins APL", re.I)
+# Siwei Fan: Lizi's own engaged thread (Lizi 10/22) — never a student card
+PARKED_RX = re.compile(r"Lumibird|CACI|Intuitive Machines|Space Port Australia|Scorpius|JHU|Johns Hopkins APL|Siwei Fan", re.I)
 GOV_RX = re.compile(r"\b(NASA|AFRL|SpaceWERX|NRL|DEVCOM|DIU|Air Force|Space Force|Navy|Army|Naval|NIH|NCATS|NOAA|"
                     r"NSF|DoD|DOE|MDA|Sandia|Los Alamos|Livermore|Oak Ridge|Lincoln Lab|Aerospace Corp|FFRDC|"
                     r"UARC|National Lab|Kirtland|Department of)\b", re.I)

@@ -542,14 +542,14 @@ Lizi Quinn, Business Development, Exos Aerospace
 ---
 
 ## Siwei Fan — Embry-Riddle Aeronautical University (cryogenic propellant gauging in low gravity, ERT/EIT) — drafted 2026-10-22
-*Status: ENGAGED (Lizi call 2026-08-19; awaiting his write-up) · follow-up, not cold · review + send from lquinn@exosaero.com · never auto-sent · To: FANS2@erau.edu · Cc: (none; keep separate from the Ernst/ERAU institutional thread per Lizi 8/24)*
+*Status: SUPERSEDED 10/22 — Lizi replies on her own 9/3 thread (Space Grant ballpark, letter of support); not a student card. ENGAGED (Lizi call 2026-08-19) · follow-up, not cold · review + send from lquinn@exosaero.com · never auto-sent · To: FANS2@erau.edu · Cc: (none; keep separate from the Ernst/ERAU institutional thread per Lizi 8/24)*
 *[Exo notes for the reviewer: no prices, no turnaround or refly claims, no "only/first/fastest", no "licensed". NASA did not issue a TechFlights solicitation in 2024 (https://www.nasa.gov/stmd-flight-opportunities/access-flight-tests/nasa-techflights-solicitation-information/), so the draft names no specific program; Lizi confirms the current funding fit before naming one. EXPORT: cryo tank-interface and technical data route through Jon + export screen; keep this email at the PUG/marketing level.]*
 
 Subject: Following up on your low-gravity propellant gauging payload
 
 Hello Siwei,
 
-Thank you again for the conversation in August about your electrical tomography work for gauging cryogenic propellant in low gravity. I'm following up to see how the compact build is coming along, and whether you and Dr. Yanda have had a chance to put together the short write-up we discussed (background, approximate dimensions and mass, and the NASA competition link).
+Thank you again for the conversation in August about your electrical tomography work for gauging cryogenic propellant in low gravity. I'm following up to see how the compact build is coming along, and whether you and Dr. Iyanda have had a chance to put together the short write-up we discussed (background, approximate dimensions and mass, and the NASA competition link).
 
 As a reminder, our BLK3 reusable suborbital rocket is planned to start flying in early 2027. It reaches about 100 km and is designed for about 2.5 minutes of microgravity, and the payload is recovered and returned to your team after the flight. Because BLK3 itself runs on cryogenic liquid oxygen, we think there is a natural fit with what you are building, and we'd like to understand the integration needs early.
 
