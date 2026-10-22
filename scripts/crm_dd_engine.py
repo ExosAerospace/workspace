@@ -138,7 +138,6 @@ def sam_excluded(name):
             nm = i.get("entityName") or " ".join(filter(None, [i.get("firstName"), i.get("lastName")]))
             if nm and _norm_entity(nm) == target:
                 hits.append(f"{nm} (UEI {i.get('ueiSAM') or 'n/a'})")
-        global SAM_UNVERIFIED
         tot, seen = (d.get("totalRecords") or 0), len(d.get("excludedEntity") or [])
         SAM_UNVERIFIED = (f"{tot} SAM name hits, only {seen} checked for exact match — verify manually"
                           if not hits and tot > seen else None)
