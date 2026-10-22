@@ -31,6 +31,7 @@
   .g-month{fill:var(--text2);font-size:10px}
   .g-grid{stroke:rgba(255,255,255,0.07)}
   .g-listbg{fill:rgba(255,255,255,0.04)}
+  .g-grip{fill:#7fb3ff;font-size:15px;cursor:grab;user-select:none}.g-grip:hover{fill:#fff}
   .g-bar{cursor:grab}.g-bar.dragging{cursor:grabbing;opacity:.85}
   .g-link{fill:#0a1628;stroke:#7fb3ff;stroke-width:1.5;opacity:0;cursor:crosshair}.g-row:hover .g-link{opacity:1}
   .g-row{cursor:pointer}.g-hit{fill:transparent}.g-row:hover .g-hit{fill:rgba(0,128,255,0.08)}
@@ -80,8 +81,9 @@
     <button class="btn sec" data-gb="section" onclick="setGroupBy('section')">Vehicle section</button>
     <button class="btn sec" onclick="setAllGroups(true)">⊞ Expand all</button>
     <button class="btn sec" onclick="setAllGroups(false)">⊟ Collapse all</button>
+    <button class="btn sec" onclick="resetSectionOrder()" title="Put the sections back in the default order">↺ Reset section order</button>
     <button class="btn sec" onclick="downloadSVG()">⬇ Download SVG</button>
-    <span style="font-size:.78rem;color:var(--text2)">Double-click a group line to expand/collapse it · Double-click a task to open it · Drag a bar to move it (drag its right edge to change the due date) · Drag the ○ at the end of a bar onto another task to link them · Right-click to add a task or edit dependencies</span>
+    <span style="font-size:.78rem;color:var(--text2)">Drag a section's ⠿ to move it · Double-click a group line to expand/collapse it · Double-click a task to open it · Drag a bar to move it (drag its right edge to change the due date) · Drag the ○ at the end of a bar onto another task to link them · Right-click to add a task or edit dependencies</span>
     <div class="legend">
       <span><i class="swatch" style="background:#3b82f6"></i>To Do</span>
       <span><i class="swatch" style="background:#eab308"></i>In Progress</span>
@@ -242,6 +244,12 @@ function build(d){
   // Jump-to-task (?focus=): open its group ONCE (remembered like a normal expand), so collapsing still works afterwards.
   groups.forEach(g=>{ g.key=GROUPBY+'|'+g.name.replace(/\s+\(no tasks yet.*$/,''); if(focus0&&g.rows.some(r=>r.id===focus0)) OPEN.add(g.key); g.open=isOpen(g.key); });
   if(focus0) localStorage.setItem('ganttOpen',JSON.stringify([...OPEN]));
+  // Section order: Regulatory & Licensing last by default; drag a section's ⠿ grip to reorder (saved per view).
+  { const saved=JSON.parse(localStorage.getItem('ganttOrder|'+GROUPBY)||'null');
+    const rank=k=>{ if(saved){const i=saved.indexOf(k); if(i>=0) return i;} return /Regulatory/.test(k)?1e6:5e5; };
+    const idx=new Map(groups.map((g,i)=>[g,i]));
+    groups.sort((a,b)=>{ const ra=rank(a.key), rb=rank(b.key); return ra!==rb?ra-rb:idx.get(a)-idx.get(b); }); }
+  GROUPY=[];
   let bodyH=0; groups.forEach(g=>{bodyH+=LISTH+(g.open?g.rows.length*ROW:0);});
   window.__GROUPKEYS=groups.map(g=>g.key);
   const H=HEADER+bodyH+PAD;
@@ -277,7 +285,9 @@ function build(d){
   groups.forEach(g=>{
     const sm=groupSummary(g.rows);
     s+='<g class="g-grp" data-grp="'+esc(g.key)+'"><rect class="g-listbg" x="0" y="'+y+'" width="'+W+'" height="'+LISTH+'"/>';
-    s+='<text class="g-list" x="8" y="'+(y+17)+'">'+(g.rows.length?(g.open?'▾ ':'▸ '):'')+esc(g.name)+'</text>';
+    s+='<text class="g-grip" data-grip="'+esc(g.key)+'" x="6" y="'+(y+18)+'"><title>Drag to move this section</title>⠿</text>';
+    s+='<text class="g-list" x="22" y="'+(y+17)+'">'+(g.rows.length?(g.open?'▾ ':'▸ '):'')+esc(g.name)+'</text>';
+    GROUPY.push({key:g.key,y0:y});
     if(g.rows.length){
       const cnt=g.rows.length+' task'+(g.rows.length>1?'s':'')+(sm.late?' · '+sm.late+' past due':'')+(sm.soon?' · '+sm.soon+' due ≤7d':'')+(sm.done?' · '+sm.done+' done':'');
       s+='<text class="g-sub" x="'+(LEFT-6)+'" y="'+(y+17)+'" text-anchor="end">'+esc(cnt)+'</text>';
@@ -454,6 +464,29 @@ function gToast(html,undo){
 }
 function reloadFocus(id){ BOARD=null; if(id){const u=new URL(location.href);u.searchParams.set('focus',id);history.replaceState({},'',u);} load(); }
 function svgPt(e){const svg=document.getElementById('gantt');const r=svg.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top};}
+// ── Drag a section's ⠿ grip up/down to reorder sections (Phil Eaton 10/22) ──
+let GROUPY=[], GDRAG=null;
+document.getElementById('content').addEventListener('mousedown',e=>{
+  const gr=e.target.closest('.g-grip'); if(!gr||e.button!==0) return;
+  e.preventDefault(); e.stopImmediatePropagation();
+  const svg=document.getElementById('gantt'); const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
+  ln.setAttribute('x1','0'); ln.setAttribute('x2',svg.getAttribute('width')); ln.setAttribute('stroke','#7fb3ff'); ln.setAttribute('stroke-width','3'); ln.style.pointerEvents='none'; ln.style.display='none'; svg.appendChild(ln);
+  GDRAG={key:gr.dataset.grip,ln,to:null}; document.body.style.cursor='grabbing';
+},true);
+document.addEventListener('mousemove',e=>{
+  if(!GDRAG) return; const svg=document.getElementById('gantt'); const y=e.clientY-svg.getBoundingClientRect().top;
+  let to=GROUPY.length; for(let i=0;i<GROUPY.length;i++){ const nextY=i+1<GROUPY.length?GROUPY[i+1].y0:+svg.getAttribute('height'); if(y<(GROUPY[i].y0+nextY)/2){to=i;break;} }
+  const ly=to<GROUPY.length?GROUPY[to].y0:+svg.getAttribute('height')-PAD; GDRAG.to=to;
+  GDRAG.ln.setAttribute('y1',ly); GDRAG.ln.setAttribute('y2',ly); GDRAG.ln.style.display='';
+});
+document.addEventListener('mouseup',()=>{
+  if(!GDRAG) return; const d=GDRAG; GDRAG=null; d.ln.remove(); document.body.style.cursor='';
+  if(d.to==null) return;
+  const keys=GROUPY.map(g=>g.key); const from=keys.indexOf(d.key); if(from<0) return;
+  keys.splice(from,1); keys.splice(d.to>from?d.to-1:d.to,0,d.key);
+  localStorage.setItem('ganttOrder|'+GROUPBY,JSON.stringify(keys)); load();
+});
+function resetSectionOrder(){ localStorage.removeItem('ganttOrder|'+GROUPBY); load(); }
 document.getElementById('content').addEventListener('mousedown',e=>{
   if(e.button!==0) return;
   const bar=e.target.closest('.g-bar'), lk=e.target.closest('.g-link');
