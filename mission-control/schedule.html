@@ -31,6 +31,7 @@
   .task{color:var(--text)}
   .st{border-radius:9px;padding:1px 8px;font-size:.68rem;font-weight:700;text-transform:uppercase}
   .st-Done{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+  .st-Waiting{background:rgba(107,114,128,.18);color:#cbd5e1;border:1px solid rgba(107,114,128,.4);white-space:normal}
   .st-Open{background:rgba(0,128,255,.12);color:var(--blue2);border:1px solid rgba(0,128,255,.25)}
   .muted{color:var(--text2)}
   .dates{font-family:ui-monospace,Menlo,monospace;font-size:.78rem}
@@ -70,7 +71,11 @@
 
 <script>
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-const STATES=['To Do','In Progress','Blocked','Done'];
+const STATES=['To Do','In Progress','Waiting','Done'];
+function isWaiting(st){const s=String(st||'').toLowerCase();return s==='waiting'||s.includes('block')||s.includes('hold');}
+// "Waiting on #<n> <task>": names the unfinished predecessor(s) this task is waiting for.
+function waitingLabel(t){const open=(t.predecessors||[]).map(tById).filter(p=>p&&p.state!=='Done');
+  return open.length?'Waiting on '+open.map(p=>'#'+p.seq+' '+p.title).join(', '):'Waiting on — set "Depends on"';}
 let SCHED={tasks:[],lists:[]}, editing=null, IDTOSEQ={}, SEQTOID={};
 function tById(id){return SCHED.tasks.find(t=>String(t.id)===String(id));}
 function predSeqStr(t){return (t.predecessors||[]).map(p=>IDTOSEQ[p]).filter(x=>x!=null).map(n=>'#'+n).join(', ');}
@@ -115,7 +120,7 @@ function viewRow(t){
   const dates=(t.start_date||t.due_date)?('<span class="dates">'+esc(t.start_date||'?')+' → '+esc(t.due_date||'?')+'</span>'):'<span class="muted">—</span>';
   const deps=predSeqStr(t); const slack=(t.slack!=null&&!t.critical)?' <span class="muted" style="font-size:.72rem">('+t.slack+'d slack)</span>':'';
   return '<tr'+(t.critical?' style="background:rgba(255,59,59,0.05)"':'')+'>'+seqCell(t)+'<td class="task">'+esc(t.title||'')+'</td><td>'+dates+'</td><td class="muted">'+esc(t.owner||'—')+'</td>'+
-    '<td><span class="st st-'+esc(t.state)+'">'+esc(t.state)+'</span></td>'+
+    '<td>'+(isWaiting(t.state)?'<span class="st st-Waiting">'+esc(waitingLabel(t))+'</span>':'<span class="st st-'+esc(t.state)+'">'+esc(t.state)+'</span>')+'</td>'+
     '<td class="muted" style="white-space:nowrap">'+(deps?esc(deps):'—')+slack+'</td>'+
     '<td style="text-align:right"><button onclick="startEdit(\''+esc(t.id)+'\')" style="background:none;border:1px solid var(--border);border-radius:6px;color:var(--blue2,#0080ff);cursor:pointer;font-size:.75rem;padding:3px 9px">✏️ Edit</button></td></tr>';
 }

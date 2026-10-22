@@ -2710,6 +2710,8 @@ const server = http.createServer((req, res) => {
         erp = openErp(ERP_DB_PATH, { actor: (session && session.email) || 'mc-server', agent: 'mc-schedule-edit' });
         const row = erp.updateScheduleTask(id, patch);
         if (!row) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'task not found' })); return; }
+        // Gantt owner/dates drive each person's To Do list: push the edit to the Task board (fire-and-forget).
+        try { require('child_process').spawn('/usr/bin/python3', [path.join(__dirname, '..', 'scripts', 'sched_board_sync.py'), '--apply'], { stdio: 'ignore', detached: true }).unref(); } catch (e) {}
         res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true }));
       } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: String(e).slice(0, 200) })); }
       finally { try { erp && erp.close(); } catch (e) {} }

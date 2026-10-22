@@ -77,7 +77,7 @@
       <span><i class="swatch" style="background:#eab308"></i>In Progress</span>
       <span><i class="swatch" style="background:#ff8c00"></i>Due within 7 days</span>
       <span><i class="swatch" style="background:#dc2626"></i>Past due</span>
-      <span><i class="swatch" style="background:#6b7280"></i>Blocked / On hold</span>
+      <span><i class="swatch" style="background:#6b7280"></i>Waiting on another task</span>
       <span><i class="swatch" style="background:#22c55e"></i>Done</span>
       <span><i class="swatch" style="background:#e879f9;border-radius:2px;height:3px;width:16px"></i>Critical path</span>
       <span style="color:#7f8aa3">→ dependency</span>
@@ -96,7 +96,7 @@ function daysBetween(a,b){return (b-a)/86400000;}
 function statusColor(st){const s=(st||'').toLowerCase();
   if(s==='done'||s==='complete'||s==='completed')return'#22c55e';
   if(s.includes('progress'))return'#eab308';
-  if(s.includes('block')||s.includes('hold'))return'#6b7280';
+  if(s==='waiting'||s.includes('block')||s.includes('hold'))return'#6b7280';
   return'#3b82f6';}
 // Due-date urgency overrides status color for any task not done: past due = red, due within 7 days = orange.
 const DUE_SOON_DAYS=7;
@@ -189,8 +189,9 @@ function build(d){
         const col=barColor(t);
         geom[t.id]={x1:bx,x2:bx+bw,y:y+ROW/2};
         const critStroke=t.critical?' stroke="#e879f9" stroke-width="2"':'';
+        const st0=String(t.state||'').toLowerCase(); const waitTxt=(st0==='waiting'||st0.includes('block')||st0.includes('hold'))?(' | Waiting on '+((t.predecessors||[]).map(p=>byId[p]).filter(p=>p&&!isDone(p.state)).map(p=>'#'+p.seq+' '+p.title).join(', ')||'— set Depends on')):'';
         const slackTxt=(t.slack!=null)?' | slack '+t.slack+'d'+(t.critical?' (CRITICAL)':''):'';
-        s+='<rect x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+bw.toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="'+col+'"'+critStroke+'><title>'+esc(t.title)+' | '+esc(sd)+' → '+esc(dd)+' | '+esc(t.state||'')+(t.owner?' | '+esc(t.owner):'')+slackTxt+'</title></rect>';
+        s+='<rect x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+bw.toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="'+col+'"'+critStroke+'><title>'+esc(t.title)+' | '+esc(sd)+' → '+esc(dd)+' | '+esc(t.state||'')+(t.owner?' | '+esc(t.owner):'')+esc(waitTxt)+slackTxt+'</title></rect>';
         const pg=Number(t.progress)||0;
         if(pg>0&&pg<100) s+='<rect x="'+bx.toFixed(1)+'" y="'+(y+4)+'" width="'+(bw*pg/100).toFixed(1)+'" height="'+(ROW-8)+'" rx="3" fill="rgba(0,0,0,0.28)"/>';
       }
