@@ -281,6 +281,13 @@ def main():
     except Exception as _e:
         L.append(f"\n## 17. exo3 code compliance audit\n- (module error: {_e})")
 
+    # §18 Response time (Jon 2026-10-22): first-reply latency + pickup misses from response_watch.py.
+    try:
+        import response_watch
+        L.extend(response_watch.report_section(7))
+    except Exception as _e:
+        L.append(f"\n## 18. Response time\n- (module error: {_e})")
+
     report = "\n".join(L)
 
     os.makedirs(REPORTS, exist_ok=True)

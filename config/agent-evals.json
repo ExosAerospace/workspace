@@ -250,7 +250,7 @@
    "selftest": "/usr/bin/python3 scripts/drop_tombstone_exo3.py --selftest",
    "eval_type": "output",
    "governance_checks": [
-    "--selftest PASS: annotation-only / drop notes never spawn a task \u2014 #3600 replay (2026-10-18)"
+    "--selftest PASS: annotation-only / drop notes never spawn a task — #3600 replay (2026-10-18)"
    ]
   },
   "com.exos.decision-triage": {
@@ -441,7 +441,7 @@
    "selftest": "/usr/bin/python3 scripts/drop_tombstone_exo3.py --selftest",
    "eval_type": "output",
    "governance_checks": [
-    "--selftest PASS: tombstoned opps (human drop on any Decision) never re-processed \u2014 PAY-7143 replay (2026-10-18)"
+    "--selftest PASS: tombstoned opps (human drop on any Decision) never re-processed — PAY-7143 replay (2026-10-18)"
    ]
   },
   "com.exos.outreach-autoclose": {
@@ -1539,9 +1539,9 @@
    "owner": "John Quinn",
    "selftest": "python3 scripts/exo3_field_report.py --dry-run",
    "governance_checks": [
-    "docx in drafts/exo3-field-report/ newer than 7d on Monday \u2192 else FAIL",
-    "failure count in exo3-field-failures.json non-decreasing \u2192 else WARN",
-    "exactly one open Decision dedupeKey=exo3-field-report-<week> per 7d window \u2192 else WARN"
+    "docx in drafts/exo3-field-report/ newer than 7d on Monday → else FAIL",
+    "failure count in exo3-field-failures.json non-decreasing → else WARN",
+    "exactly one open Decision dedupeKey=exo3-field-report-<week> per 7d window → else WARN"
    ]
   },
   "com.exos.naftu-attestation-ready": {
@@ -1591,7 +1591,7 @@
    "eval_type": "output",
    "governance_checks": [
     "--selftest PASS (dedupe one-attempt, <=3 fix runs/hour, one run per file set, forbidden paths, allow-listed commands, verify guard)",
-    "every staged fix \u2192 exactly one Decision per signature episode (dedupeKey failure-fix:<sig>:e<N>)",
+    "every staged fix → exactly one Decision per signature episode (dedupeKey failure-fix:<sig>:e<N>)",
     "approved fixes execute only on a human click (answeredByEmail / users.json name)",
     "commits touching secrets/BOMs/decisions.json/migrate.js are auto-reverted (fleet_log guardrail_revert)",
     "applied fixes reported once/day; silent when none (R-NONEWS)"
@@ -1706,6 +1706,12 @@
     "utd_weekly_prep.py eval PASS: one Decision per week, creations only after lquinn@/jquinn@ Yes, never twice"
    ],
    "note": "loaded 2026-10-22 on Jon's go (#utd-exo3capstone)"
+  },
+  "com.exos.response-watch": {
+   "cadence_s": 120,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Exo (infra) / John Quinn"
   }
  },
  "_eval_wave_2": {

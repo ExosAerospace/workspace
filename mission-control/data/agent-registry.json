@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-19T04:04:24",
- "total": 288,
+ "total": 289,
  "standing": 115,
  "ephemeral": 18,
  "service": 6,
@@ -6237,6 +6237,28 @@
    "change_log": [
     "2026-10-22 initial build (generator, Decision gate, apply, Tue reminder, selftest, eval); plist created, not loaded"
    ]
+  },
+  {
+   "label": "com.exos.response-watch",
+   "script": "response_watch.py",
+   "kind": "recurring",
+   "schedule": "every 120s",
+   "purpose": "Response Watch — logs real first-response latency to Discord requests (RSI §18) and re-injects requests unanswered >10 min (pickup misses). Jon 2026-10-22.",
+   "stack_layer": "SENSE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "Exo (infra) / John Quinn",
+   "permission_envelope": "Discord REST read (EC guild + Jon DM); post to #exomac-system; openclaw agent re-inject into the originating channel session; own logs/state/data",
+   "memory_boundary": "workspace + MC/Supabase (read/write scoped)",
+   "escalation": "Decisions board / Jon inbox",
+   "eval_suite": "agent_eval liveness (config/agent-evals.json cadence 120s); selftest: python3 scripts/response_watch.py --selftest",
+   "telemetry": "logs/response-watch.log; data/response-latency.jsonl; logs/runs/YYYY-MM-DD.jsonl",
+   "reusability_scope": "TBD",
+   "risk_tier": "MED",
+   "envelope_source": "hand-written at creation 2026-10-22",
+   "change_log": [
+    "2026-10-22 created (Jon 14:06 'Go and add this check into the recursive self improvement loop'); approver John Quinn"
+   ],
+   "eval_type": "output"
   }
  ],
  "eval_wave_1": {
@@ -6303,5 +6325,5 @@
   ],
   "note": "kind openclaw-cron; label cron:<slug(name)>; drift matched on cron_id. Telemetry via scripts/cron_telemetry.py; evals via agent_eval.py cron checks."
  },
- "updated": "2026-10-19T11:30:37"
+ "updated": "2026-10-22T14:20:00"
 }
