@@ -482,8 +482,86 @@ def fake_task():
                            "how do I validate a lead card's contact info?\n\nETA promised ..."}
 
 
+# ── OUTPUT eval (exo3 R5): `capstone_question_answerer.py selftest` ──────────
+# Read-only. (1) the offline fixture suite (scripts/test_capstone_question_answerer.py: no network,
+# DB, Discord or model). (2) live read-back, Supabase GET only: every answer this job reports as
+# posted in the last 7 days exists on the student's task as an Exo note, its triage task reads
+# Done, and no triage got more than one posted answer.
+SELFTEST_DAYS = 7
+
+
+def selftest():
+    fails = []
+    t = subprocess.run([sys.executable, os.path.join(os.path.dirname(SELF), "test_capstone_question_answerer.py")],
+                       capture_output=True, text=True, timeout=120)
+    tail = (t.stdout.strip().splitlines() or ["(no output)"])[-1]
+    ok = t.returncode == 0 and tail.startswith("0 failure")
+    print(("PASS " if ok else "FAIL ") + f"fixture suite test_capstone_question_answerer.py: {tail}")
+    if not ok:
+        fails.append("fixtures")
+        print(t.stdout[-1500:] + t.stderr[-800:])
+    now = now_utc()
+    cutoff = now - timedelta(days=SELFTEST_DAYS)
+    posted = {}   # triage -> [activity ids]
+    try:
+        for fn in sorted(os.listdir(RUNLOG_DIR)) if os.path.isdir(RUNLOG_DIR) else []:
+            if not fn.endswith(".result.json"):
+                continue
+            r = json.load(open(os.path.join(RUNLOG_DIR, fn)))
+            if r.get("ok") and str(r.get("info") or "").startswith("activity "):
+                posted.setdefault(int(r["triage"]), []).append((r["info"].split()[1], r.get("finished") or ""))
+        dbl = {k: v for k, v in posted.items() if len(v) > 1}
+        print(("PASS " if not dbl else "FAIL ") + f"live: no triage answered twice ({len(posted)} answered all-time)"
+              + (f" -> {sorted(dbl)}" if dbl else ""))
+        if dbl:
+            fails.append("double-post")
+        recent = {k: v[-1] for k, v in posted.items() if v[-1][1] and cc.parse_ts(v[-1][1]) >= cutoff}
+        errs = []
+        for tid, (aid, _fin) in sorted(recent.items()):
+            tri = get_task(tid)
+            sid = student_task_id(tri) if tri else None
+            act = cc.supa("GET", f"activities?select=id,subject,owner,body&id=eq.{aid}")
+            if not act:
+                errs.append(f"#{tid}: answer activity {aid} not found")
+            elif sid and act[0].get("subject") != f"task:{sid}":
+                errs.append(f"#{tid}: answer on {act[0].get('subject')} not task:{sid}")
+            elif act[0].get("owner") != "Exo" or len((act[0].get("body") or "").split()) < 5:
+                errs.append(f"#{tid}: answer row owner/body wrong")
+            if not tri or tri.get("state") != "Done":
+                errs.append(f"#{tid}: triage state {tri and tri.get('state')} (answer posted, expected Done)")
+        print(("PASS " if not errs else "FAIL ") + f"live: {len(recent)} answer(s) in {SELFTEST_DAYS}d read back on "
+              "the student task + triage Done" + (" -> " + "; ".join(errs[:8]) if errs else ""))
+        if errs:
+            fails.append("read-back")
+        # triage Done only when posted: every state 'ok' in the window must have an ok result file
+        st = load_state()
+        bad = []
+        for k, d in st["dispatched"].items():
+            if d.get("status") != "ok" or not d.get("finished_at") or cc.parse_ts(d["finished_at"]) < cutoff:
+                continue
+            rp = result_path(k, d.get("attempts") or 1)
+            r = json.load(open(rp)) if os.path.exists(rp) else {}
+            if not r.get("ok") or not (str(r.get("info") or "").startswith("activity ") or r.get("skipped")):
+                bad.append(k)
+            elif r.get("skipped"):
+                tri = get_task(int(k))
+                if not tri or tri.get("state") not in ("Done", "Cancelled"):
+                    bad.append(k)
+        print(("PASS " if not bad else "FAIL ") + "live: every 'ok' in state is backed by a posted answer or a "
+              "human close" + (f" -> {bad}" if bad else ""))
+        if bad:
+            fails.append("state")
+    except Exception as e:
+        print(f"FAIL live check error: {type(e).__name__}: {e}")
+        fails.append("live-error")
+    print(f"capstone_question_answerer selftest: {'PASS' if not fails else 'FAIL'} ({len(fails)} failure(s))")
+    return 0 if not fails else 1
+
+
 if __name__ == "__main__":
     sub = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else None
+    if sub == "selftest":
+        sys.exit(selftest())
     if sub in ("post-answer", "worker", "stale-check"):
         ap = argparse.ArgumentParser()
         ap.add_argument("cmd"); ap.add_argument("--triage", type=int)

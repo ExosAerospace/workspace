@@ -77,4 +77,69 @@ def main():
     if not DRY: json.dump(sorted(seen),open(STATE,"w"),indent=0)
     print(f"{'DRY ' if DRY else ''}capstone emails: matched {scanned} from capstone accounts | new tasks {made}")
 
-if __name__=="__main__": main()
+# ── OUTPUT eval (exo3 R5): `capstone_email_capture.py selftest` ─────────────
+# Read-only: fixture run against a fake IMAP mailbox + fake task creator in a temp dir (no Bridge
+# login, no Supabase write), then Supabase GET-only checks of the real tasks this job made.
+def _selftest_fixture():
+    import tempfile, shutil, types
+    g=globals(); saved={k:g[k] for k in ("STATE","USERS","make_task","imaplib","DRY")}
+    tmp=tempfile.mkdtemp(prefix="capemail-selftest-"); res=[]
+    def raw(mid, frm, subj):
+        return (f"Message-ID: <{mid}>\r\nFrom: {frm}\r\nSubject: {subj}\r\nContent-Type: text/plain\r\n\r\nhello").encode()
+    box=[raw("m1@x","Stu Dent <stu@utdallas.edu>","Question 1"), raw("m2@x","Other <other@gmail.com>","Spam"),
+         raw("m1@x","Stu Dent <stu@utdallas.edu>","Question 1")]   # same Message-ID delivered twice
+    class FakeIMAP:
+        def __init__(self,*a): pass
+        def starttls(self): pass
+        def login(self,*a): pass
+        def select(self,*a,**k): return "OK",[b""]
+        def search(self,*a): return "OK",[" ".join(str(i+1) for i in range(len(box))).encode()]
+        def fetch(self,i,_): return "OK",[(b"",box[int(i)-1])]
+        def logout(self): pass
+    made=[]
+    try:
+        json.dump([{"email":"stu@utdallas.edu","name":"Stu Dent","role":"early_adopter","project":"Payload Sales"}],
+                  open(os.path.join(tmp,"users.json"),"w"))
+        g.update(STATE=os.path.join(tmp,"seen.json"), USERS=os.path.join(tmp,"users.json"), DRY=False,
+                 imaplib=types.SimpleNamespace(IMAP4=FakeIMAP),
+                 make_task=lambda n,a,sj,b: made.append((n,a,sj)) or len(made))
+        import io, contextlib
+        with contextlib.redirect_stdout(io.StringIO()):
+            main(); main()
+        res.append(("fixture: one task per Message-ID across duplicate delivery + re-run", len(made)==1))
+        res.append(("fixture: non-capstone sender ignored", all(a=="stu@utdallas.edu" for _,a,_ in made)))
+        res.append(("fixture: seen-state persisted", json.load(open(g["STATE"]))==["<m1@x>"]))
+    finally:
+        g.update(saved); shutil.rmtree(tmp,ignore_errors=True)
+    return res
+
+def _selftest_live():
+    res=[]
+    try:
+        seen=json.load(open(STATE)) if os.path.exists(STATE) else []
+        res.append((f"live: seen-state is a unique list ({len(seen)} ids)", isinstance(seen,list) and len(seen)==len(set(seen))))
+    except Exception as e:
+        res.append((f"live: seen-state unreadable {e}", False))
+    try:
+        r=urllib.request.Request(SB+"/tasks?select=id,title,description,assigned_email&source=eq.capstone-email&order=id",headers=SBH)
+        with urllib.request.urlopen(r,timeout=30) as x: rows=json.load(x)
+        c={}
+        for t in rows: c.setdefault((t.get("title"),t.get("description")),[]).append(t["id"])
+        dup=[v for v in c.values() if len(v)>1]
+        res.append((f"live: no duplicate capstone-email tasks ({len(rows)} tasks)"+(f" -> {dup[:5]}" if dup else ""), not dup))
+        bad=[t["id"] for t in rows if (t.get("assigned_email") or "").lower()!=LIZI]
+        res.append(("live: every capstone-email task assigned to Lizi"+(f" -> {bad}" if bad else ""), not bad))
+    except Exception as e:
+        res.append((f"live: Supabase read error {e}", False))
+    return res
+
+def selftest():
+    res=_selftest_fixture()+_selftest_live()
+    for n,ok in res: print(("PASS " if ok else "FAIL ")+n)
+    nf=sum(1 for _,ok in res if not ok)
+    print(f"capstone_email_capture selftest: {'PASS' if not nf else 'FAIL'} ({len(res)-nf}/{len(res)})")
+    return 0 if not nf else 1
+
+if __name__=="__main__":
+    if len(sys.argv)>1 and sys.argv[1]=="selftest": sys.exit(selftest())
+    main()

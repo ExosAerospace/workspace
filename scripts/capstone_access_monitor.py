@@ -61,6 +61,7 @@ def main():
     off = load_offset()
     if off > size:  # file rotated/truncated
         off = 0
+        save_offset(0)  # persist the reset, else lines appended later are read from the stale offset
     if off == size:
         return
     with open(AUDIT) as f:
@@ -120,5 +121,93 @@ def main():
         email_alert(f"⚠️ Capstone access alert — {len(alerts)} student account(s) probing", body)
 
 
+# ── OUTPUT eval (exo3 R5): `capstone_access_monitor.py selftest` ────────────
+# Read-only: fixture audit log in a temp dir with msmtp faked (nothing is sent), then read-only
+# checks of the real offset state + alert log.
+INTERNAL_RECIPIENTS = {LIZI, JON}
+
+
+def _selftest_fixture():
+    import tempfile, shutil, types
+    g = globals()
+    saved = {k: g[k] for k in ("AUDIT", "STATE", "LOG", "subprocess")}
+    tmp = tempfile.mkdtemp(prefix="capmon-selftest-")
+    sends, res = [], []
+    try:
+        g.update(AUDIT=os.path.join(tmp, "audit.jsonl"), STATE=os.path.join(tmp, "state.json"),
+                 LOG=os.path.join(tmp, "log.txt"),
+                 subprocess=types.SimpleNamespace(run=lambda argv, **k: sends.append((argv, k.get("input")))
+                                                  or types.SimpleNamespace(returncode=0, stderr=b"")))
+        ev = lambda email, url, role="early_adopter": json.dumps({"email": email, "url": url, "role": role}) + "\n"
+        with open(g["AUDIT"], "w") as f:
+            f.write(ev("rev@dd.com", "/api/deals", role="dd_reviewer"))          # not a student
+            f.write(ev("bot@exos-selftest.invalid", "/api/crm"))                  # sandbox self-test account
+            f.write(ev("ok@utdallas.edu", "/api/tasks"))                          # 1 harmless denial
+        main()
+        res.append(("fixture: dd_reviewer / self-test / single harmless denial -> no alert", not sends))
+        with open(g["AUDIT"], "a") as f:
+            f.write(ev("probe@utdallas.edu", "/api/decisions"))
+            f.write(ev("trav@utdallas.edu", "/files/../secrets.json"))
+        main()
+        res.append(("fixture: restricted endpoint + traversal -> exactly one alert", len(sends) == 1))
+        body = (sends[0][1] or b"").decode() if sends else ""
+        res.append(("fixture: alert names both flagged users only",
+                    "probe@utdallas.edu" in body and "trav@utdallas.edu" in body and "ok@utdallas.edu" not in body))
+        rcpts = set(sends[0][0][3:]) if sends else set()
+        res.append(("fixture: alert recipients internal only", rcpts == INTERNAL_RECIPIENTS))
+        main()
+        res.append(("fixture: re-run on same offset -> no re-alert", len(sends) == 1))
+        open(g["AUDIT"], "w").close()           # rotation/truncation, then new denials arrive
+        main()
+        with open(g["AUDIT"], "a") as f:
+            for _ in range(PROBE_THRESHOLD):
+                f.write(ev("p2@utdallas.edu", "/api/tasks"))
+        main()
+        res.append(("fixture: truncated log rescanned; >= threshold denials = probing alert", len(sends) == 2))
+    finally:
+        g.update(saved)
+        shutil.rmtree(tmp, ignore_errors=True)
+    return res
+
+
+def _selftest_live():
+    import re, time
+    res = []
+    try:
+        off = load_offset()
+        size = os.path.getsize(AUDIT) if os.path.exists(AUDIT) else 0
+        res.append((f"live: offset {off} <= audit size {size} (scanner keeping up)", 0 <= off <= size))
+    except Exception as e:
+        res.append((f"live: offset check error {e}", False))
+    try:
+        cutoff = time.time() - 7 * 86400
+        bad = []
+        if os.path.exists(LOG):
+            for line in open(LOG, errors="replace"):
+                m = re.match(r"\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2})", line)
+                if not m or "alert emailed rc=" not in line:
+                    continue
+                if time.mktime(time.strptime(m.group(1), "%Y-%m-%d %H:%M")) < cutoff:
+                    continue
+                if "alert emailed rc=0" not in line:
+                    bad.append(line.strip()[:120])
+        res.append(("live: every alert email in 7d delivered (msmtp rc=0)" + (f" -> {bad[:3]}" if bad else ""), not bad))
+    except Exception as e:
+        res.append((f"live: alert-log check error {e}", False))
+    return res
+
+
+def selftest():
+    res = _selftest_fixture() + _selftest_live()
+    for n, ok in res:
+        print(("PASS " if ok else "FAIL ") + n)
+    nf = sum(1 for _, ok in res if not ok)
+    print(f"capstone_access_monitor selftest: {'PASS' if not nf else 'FAIL'} ({len(res) - nf}/{len(res)})")
+    return 0 if not nf else 1
+
+
 if __name__ == "__main__":
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "selftest":
+        sys.exit(selftest())
     main()

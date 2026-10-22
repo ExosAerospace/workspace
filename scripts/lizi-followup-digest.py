@@ -250,15 +250,6 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "Stoke's reusable LOX/hydrogen story is a natural fit. Would you be the right person to talk with about it, or could you point me to who is?\n"
                  'Best Regards,\n'
                  'Lizi')],
- '2026-10-26': [('UTD AIAA / Comet Rocketry: Mi Vo + Olivia Johnson (task #2753)',
-                 'mi.vo@utdallas.edu + Olivia (reply on your 10/12 check-in thread, cc Phil + Don Proeschel)',
-                 '10/12 you asked for early experiment ideas + shop-tour dates/headcount; design coordination + slot payment due mid-Dec',
-                 'Hi Mi and Olivia,\n'
-                 'Just checking in on the BLK3 experiment. Even a rough idea is a great starting point, and Phil and I are happy to hop on a short call to help shape it. If you have a couple of '
-                 "dates and a headcount for the Greenville shop tour, send them over and we'll get it on the calendar. Mid-December will come up fast, so it would be great to get a concept going "
-                 'soon.\n'
-                 'Best Regards,\n'
-                 'Lizi')],
  '2026-10-27': [('GSA Orlando trip (task #3780): re-check Southwest fares',
                  'southwest.com',
                  'you planned to wait ~2 weeks for the next SWA fare sale before booking',
@@ -450,6 +441,48 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "These were paused under your 3-message rule. A re-touch is a NEW message with real news (flight date, test results, new capability), not another nudge. Skip anyone who replied. "
                  "Tell Exo in #lizi-channel-2 and it will draft each one with the latest BLK3 news",
                  '(Exo drafts these fresh on request with current news; no stale template.)')]}
+
+# ── OUTPUT eval (exo3 R5): `lizi-followup-digest.py selftest` ── read-only; sends nothing.
+# Every DUE date must have a launchd trigger (on-disk plist AND the loaded definition), every item
+# is a complete (name, to, why, draft) entry, no item repeats within a day, the digest goes to Lizi only.
+def selftest():
+    import plistlib, re as _re, sys as _sys
+    fails=[]
+    def chk(name, ok):
+        print(("PASS " if ok else "FAIL ")+name)
+        if not ok: fails.append(name)
+    keys=sorted(DUE)
+    okd=all(_re.fullmatch(r"\d{4}-\d{2}-\d{2}",k) for k in keys)
+    chk(f"DUE has {len(keys)} valid ISO dates", okd and bool(keys))
+    bad=[(k,i) for k in keys for i,it in enumerate(DUE[k]) if len(it)!=4 or not all(isinstance(x,str) and x.strip() for x in it)]
+    chk("every item is a complete (name, to, context, draft) entry"+(f" -> {bad[:5]}" if bad else ""), not bad)
+    dup=[k for k in keys if len({it[0] for it in DUE[k]})!=len(DUE[k])]
+    chk("no item listed twice on the same day"+(f" -> {dup}" if dup else ""), not dup)
+    want={(int(k[5:7]),int(k[8:10])) for k in keys}
+    pl=os.path.expanduser(f"~/Library/LaunchAgents/{LABEL}.plist")
+    if os.path.exists(pl):
+        cal=plistlib.load(open(pl,"rb")).get("StartCalendarInterval") or []
+        cal=cal if isinstance(cal,list) else [cal]
+        have={(c.get("Month"),c.get("Day")) for c in cal}
+        inval=[c for c in cal if not (1<=int(c.get("Day") or 0)<=31 and 1<=int(c.get("Month") or 0)<=12)]
+        miss=sorted(want-have)
+        chk("on-disk plist: every DUE date has a valid trigger"+(f" -> missing {miss}" if miss else "")+(f" invalid {inval}" if inval else ""), not miss and not inval)
+        lp=subprocess.run(["launchctl","print",f"gui/{os.getuid()}/{LABEL}"],capture_output=True,text=True)
+        if lp.returncode==0:
+            live=set()
+            for blk in _re.findall(r"descriptor = \{(.*?)\}", lp.stdout, _re.S):
+                m=_re.search(r'"Month" => (\d+)',blk); d=_re.search(r'"Day" => (\d+)',blk)
+                if m and d: live.add((int(m.group(1)),int(d.group(1))))
+            lmiss=sorted(want-live)
+            chk("loaded launchd job: every DUE date has a trigger"+(f" -> missing {lmiss} (plist fixed on disk? needs a reload)" if lmiss else ""), not lmiss)
+    elif date.today().isoformat()<max(keys):
+        chk("plist present while DUE dates remain", False)
+    chk("digest recipient is Lizi only (internal)", 'msmtp","-a","protonmail","lquinn@exosaero.com"]' in open(__file__).read())
+    print(f"lizi-followup-digest selftest: {'PASS' if not fails else 'FAIL'} ({len(fails)} failure(s))")
+    _sys.exit(0 if not fails else 1)
+import sys as _sys0
+if _sys0.argv[1:2]==["selftest"]:
+    selftest()
 today=date.today().isoformat()
 items=DUE.get(today,[])
 if items:

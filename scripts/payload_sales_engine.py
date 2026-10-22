@@ -583,6 +583,130 @@ def _on_kill(signum, _frame):
     sys.exit(128 + signum)
 
 
+# --- OUTPUT eval (exo3 R5): `payload_sales_engine.py --selftest` ---------------------------
+# Read-only. (1) fixture: write_student_queue() against a temp copy -> only our keys change,
+# ranks contiguous + score-sorted, READY counts only student-verified cards. (2) live: the real
+# capstone-program.json funnel/queue keys are present, internally consistent and fresh.
+QUEUE_KEYS = ("payload_funnel", "funnel_explainer", "work_queue_note", "work_queue")
+FUNNEL_KEYS = ("total", "live", "with_poc", "NEW", "RESEARCHING", "READY", "AI_READY",
+               "STUDENT_DONE", "STUDENT_DONE_SENT", "updated")
+QUEUE_FRESH_FAIL_S = 6 * 3600   # hourly job; 6 missed runs = FAIL
+
+
+def _check_queue_doc(d, mtime=None, now=None):
+    errs = []
+    for k in QUEUE_KEYS:
+        if k not in d:
+            errs.append(f"missing key {k}")
+    if errs:
+        return errs
+    f = d["payload_funnel"]
+    for k in FUNNEL_KEYS:
+        if k not in f:
+            errs.append(f"payload_funnel missing {k}")
+    if errs:
+        return errs
+    for k in FUNNEL_KEYS[:-1]:
+        if not isinstance(f[k], int) or f[k] < 0:
+            errs.append(f"payload_funnel.{k}={f[k]!r} not a non-negative int")
+    if errs:
+        return errs
+    if f["live"] > f["total"]:
+        errs.append("live > total")
+    if f["NEW"] + f["RESEARCHING"] + f["READY"] + f["AI_READY"] > f["total"]:
+        errs.append("stage counts exceed total")
+    if f["STUDENT_DONE_SENT"] > f["STUDENT_DONE"]:
+        errs.append("STUDENT_DONE_SENT > STUDENT_DONE")
+    q = d["work_queue"]
+    if not isinstance(q, list) or len(q) > 30:
+        errs.append("work_queue not a list of <= 30")
+        return errs
+    if len(q) != min(30, f["NEW"] + f["RESEARCHING"]):
+        errs.append(f"work_queue len {len(q)} != min(30, NEW+RESEARCHING={f['NEW'] + f['RESEARCHING']})")
+    if [x.get("rank") for x in q] != list(range(1, len(q) + 1)):
+        errs.append("work_queue ranks not contiguous 1..n")
+    sc = [x.get("score") for x in q]
+    if sc != sorted(sc, reverse=True):
+        errs.append("work_queue not sorted by score desc")
+    for x in q:
+        if x.get("stage") not in ("NEW", "RESEARCHING"):
+            errs.append(f"work_queue item stage {x.get('stage')!r} not workable")
+        if not x.get("name") or not x.get("next_action"):
+            errs.append("work_queue item missing name/next_action")
+    names = [x.get("name") for x in q]
+    if len(names) != len(set(names)):
+        errs.append("duplicate lead in work_queue")
+    if now is not None:
+        try:
+            upd = datetime.date.fromisoformat(f["updated"])
+            if (datetime.date.fromtimestamp(now) - upd).days > 1:
+                errs.append(f"payload_funnel.updated {f['updated']} stale")
+        except Exception:
+            errs.append(f"payload_funnel.updated {f['updated']!r} not ISO date")
+        if mtime is not None and now - mtime > QUEUE_FRESH_FAIL_S:
+            errs.append(f"capstone-program.json not refreshed for {(now - mtime) / 3600:.1f}h")
+    return errs
+
+
+def selftest():
+    global CAPSTONE_JSON, _cards_cache
+    import tempfile, time as _t
+    fails = []
+    real_json, real_glog, real_cache = CAPSTONE_JSON, globals()["glog"], _cards_cache
+    tmpd = tempfile.mkdtemp(prefix="pse-selftest-")
+    try:
+        globals()["glog"] = lambda *a, **k: None
+        CAPSTONE_JSON = os.path.join(tmpd, "capstone-program.json")
+        base = {"program": "UTD", "goal": "keep-me", "work_queue": [{"name": "old"}]}
+        json.dump(base, open(CAPSTONE_JSON, "w"))
+        recs = [
+            {"name": "A Corp", "status": "NEW", "has_poc": True, "block": "funded sbir verified a@b.com"},
+            {"name": "B Labs", "status": "NEW → RESEARCHING", "has_poc": False, "block": "broker"},
+            {"name": "C Inc", "status": "READY (student card #7)", "has_poc": True, "block": "", "card_state": "Done"},
+            {"name": "D AI", "status": "NEW → **READY**", "has_poc": True, "block": ""},
+            {"name": "E Sent", "status": "OUTREACH SENT", "has_poc": True, "block": "", "card_state": "Done"},
+            {"name": "F Lost", "status": "LOST", "has_poc": False, "block": ""},
+        ]
+        _cards_cache = [{"state": "Done"}, {"state": "Done"}, {"state": "In Progress"}]
+        ok = write_student_queue(recs)
+        d = json.load(open(CAPSTONE_JSON))
+        f = d.get("payload_funnel", {})
+        checks = [
+            ("fixture: write ok", ok),
+            ("fixture: program keys preserved", d.get("program") == "UTD" and d.get("goal") == "keep-me"),
+            ("fixture: queue replaced (old entry gone)", all(x.get("name") != "old" for x in d.get("work_queue", []))),
+            ("fixture: funnel counts", (f.get("total"), f.get("live"), f.get("NEW"), f.get("RESEARCHING"),
+                                        f.get("READY"), f.get("AI_READY"), f.get("STUDENT_DONE"),
+                                        f.get("STUDENT_DONE_SENT")) == (6, 5, 1, 1, 1, 1, 2, 1)),
+            ("fixture: queue = workable only, ranked", [x["name"] for x in d["work_queue"]] == ["A Corp", "B Labs"]),
+            ("fixture: validator clean on fresh doc", _check_queue_doc(d, os.path.getmtime(CAPSTONE_JSON), _t.time()) == []),
+        ]
+        bad = dict(d, work_queue=list(reversed(d["work_queue"])))
+        checks.append(("fixture: validator catches bad ranking", bool(_check_queue_doc(bad))))
+        stale = json.loads(json.dumps(d)); stale["payload_funnel"]["updated"] = "2020-01-01"
+        checks.append(("fixture: validator catches stale", bool(_check_queue_doc(stale, None, _t.time()))))
+        for name, c in checks:
+            print(("PASS " if c else "FAIL ") + name)
+            if not c:
+                fails.append(name)
+    finally:
+        CAPSTONE_JSON, _cards_cache = real_json, real_cache
+        globals()["glog"] = real_glog
+        shutil.rmtree(tmpd, ignore_errors=True)
+    # live, read-only
+    try:
+        live = json.load(open(CAPSTONE_JSON, encoding="utf-8"))
+        errs = _check_queue_doc(live, os.path.getmtime(CAPSTONE_JSON), _t.time())
+    except Exception as e:
+        errs = [f"read {CAPSTONE_JSON}: {e}"]
+    print(("PASS " if not errs else "FAIL ") + "live: capstone-program.json funnel/queue valid + fresh"
+          + ("" if not errs else " -> " + "; ".join(errs)))
+    if errs:
+        fails.append("live")
+    print(f"payload_sales_engine queue selftest: {'PASS' if not fails else 'FAIL'} ({len(fails)} failure(s))")
+    return 0 if not fails else 1
+
+
 def main():
     for _sig in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):
         signal.signal(_sig, _on_kill)
@@ -695,4 +819,6 @@ def main():
 
 
 if __name__ == "__main__":
+    if "--selftest" in sys.argv:
+        sys.exit(selftest())
     sys.exit(main())

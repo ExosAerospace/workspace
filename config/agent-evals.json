@@ -140,13 +140,17 @@
    "cadence_s": 600,
    "warn_grace": 2.5,
    "fail_grace": 6,
-   "owner": "John Quinn"
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/capstone_access_monitor.py selftest",
+   "eval_type": "output"
   },
   "com.exos.capstone-email-capture": {
    "cadence_s": 1800,
    "warn_grace": 2.5,
    "fail_grace": 6,
-   "owner": "John Quinn"
+   "owner": "John Quinn",
+   "selftest": "/usr/bin/python3 scripts/capstone_email_capture.py selftest",
+   "eval_type": "output"
   },
   "com.exos.channel-session-rotate": {
    "cadence_s": 604800,
@@ -511,7 +515,9 @@
    "cadence_s": 86400,
    "warn_grace": 2.5,
    "fail_grace": 6,
-   "owner": "Lizi Quinn"
+   "owner": "Lizi Quinn",
+   "selftest": "/usr/bin/python3 scripts/release_lizi_followups.py selftest",
+   "eval_type": "output"
   },
   "com.exos.research-competitive": {
    "cadence_s": 86400,
@@ -1645,6 +1651,48 @@
     "selftest PASS (scans project dir, finds kills, finds oversized; no file modifications)",
     "dry-run lists killed sessions and oversized JSONL; --apply renames to .jsonl.rotated"
    ]
+  },
+  "com.exos.capstone-capture": {
+   "cadence_s": 600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Lizi Quinn",
+   "selftest": "/usr/bin/python3 scripts/capstone_capture.py selftest",
+   "eval_type": "output"
+  },
+  "com.exos.capstone-queue-refresh": {
+   "cadence_s": 3600,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Lizi Quinn",
+   "selftest": "/usr/bin/python3 scripts/payload_sales_engine.py --selftest",
+   "eval_type": "output"
+  },
+  "com.exos.capstone-question-answerer": {
+   "cadence_s": 900,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Lizi Quinn",
+   "selftest": "/usr/bin/python3 scripts/capstone_question_answerer.py selftest",
+   "eval_type": "output"
+  },
+  "com.exos.capstone-question-stale-check": {
+   "cadence_s": 86400,
+   "warn_grace": 2.5,
+   "fail_grace": 6,
+   "owner": "Lizi Quinn",
+   "selftest": "/usr/bin/python3 scripts/capstone_question_answerer.py selftest",
+   "eval_type": "output"
+  },
+  "com.exos.lizi-followup-digest": {
+   "cadence_s": 86400,
+   "warn_grace": 999,
+   "fail_grace": 999,
+   "owner": "John Quinn",
+   "one_shot": true,
+   "note": "multi-shot dated runs (10/9-11/4, 12/1, 2/3/2027); self-unloads after 2027-02-03",
+   "selftest": "/usr/bin/python3 scripts/lizi-followup-digest.py selftest",
+   "eval_type": "output"
   }
  },
  "_eval_wave_2": {

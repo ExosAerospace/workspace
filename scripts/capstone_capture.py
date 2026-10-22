@@ -280,7 +280,163 @@ def process_outbox():
     json.dump(ob, open(OUTBOX, "w"), indent=1, ensure_ascii=False)
 
 
+# ── OUTPUT eval (exo3 R5): `capstone_capture.py selftest` ─────────────────────
+# Read-only: fixtures in a temp dir (fake Supabase / decisions API / msmtp) + read-only checks of
+# the real outputs. No sends, no Supabase writes, no student contact.
+DUP_BASELINE = "2026-10-11T00:00:00+00:00"   # 10/10 re-capture loop (n=373/374 x9) predates the parse_ts fix
+OUTBOX_LEGACY_BEFORE = "2026-09-28T00:00:00+00:00"  # wk5-prompter: released by Jon directly, pre-Decision flow
+STUDENT_DOMAIN = "@utdallas.edu"
+
+
+def _selftest_fixture():
+    import tempfile, types, shutil
+    g = globals()
+    saved = {k: g[k] for k in ("WS", "DATA", "STATE", "LOG", "OUTBOX", "supa", "students", "subprocess", "DRY")}
+    real_urlopen = urllib.request.urlopen
+    tmp = tempfile.mkdtemp(prefix="capcap-selftest-")
+    res = []
+    try:
+        os.makedirs(os.path.join(tmp, "logs")); os.makedirs(os.path.join(tmp, "mission-control/data"))
+        g.update(WS=tmp, DRY=False, DATA=os.path.join(tmp, "exp.jsonl"), STATE=os.path.join(tmp, "state.json"),
+                 LOG=os.path.join(tmp, "log.txt"), OUTBOX=os.path.join(tmp, "mission-control/data/capstone-outbox.json"))
+        now = datetime.now(timezone.utc)
+        acts = [
+            {"id": "a1", "type": "task_note", "subject": "task:101", "owner": "Test Student",
+             "created_at": now.isoformat(), "body": "Checked the POC, it is current."},
+            {"id": "a2", "type": "task_note", "subject": "task:101", "owner": "Test Student",
+             "created_at": now.isoformat(), "body": "how do I find the funding source?"},
+            {"id": "a3", "type": "task_note", "subject": "task:101", "owner": "Exo",
+             "created_at": now.isoformat(), "body": "Exo: captured"},
+        ]
+        posts = []
+
+        def fake_supa(method, path, body=None):
+            if method == "GET" and path.startswith("tasks?select=id,title,state,owner"):
+                return [{"id": 101, "title": "Lead card", "state": "In Progress", "owner": "Test Student", "tags": []}]
+            if method == "GET" and path.startswith("activities?"):
+                return list(acts)
+            if method == "GET":
+                return []
+            posts.append((method, path, body))
+            return [{"id": 900 + len(posts)}]
+        g["supa"] = fake_supa
+        g["students"] = lambda: {"test student": "Test Student"}
+        main(); first = list(posts)
+        main()
+        notes = [b for m, p, b in posts if p == "activities"]
+        tasks = [b for m, p, b in posts if p == "tasks"]
+        rows = [json.loads(l) for l in open(g["DATA"])]
+        res.append(("fixture: 2 student notes -> 2 captures, Exo note ignored", len(rows) == 2))
+        res.append(("fixture: 1 ack note + 1 question ack, 1 triage task", len(notes) == 2 and len(tasks) == 1))
+        res.append(("fixture: re-run posts nothing (no duplicate notes/tasks)", posts == first))
+        res.append(("fixture: question triage carries eta + student-task tags",
+                    bool(tasks) and "utd-question" in tasks[0]["tags"] and "student-task:101" in tasks[0]["tags"]))
+        # outbox: send only on a Lizi Yes; No -> cancelled; open -> untouched; never re-send
+        open(os.path.join(tmp, "mission-control/data/.decisions-token"), "w").write("tok")
+        json.dump([{"dedupeKey": "k-yes", "status": "answered", "answer": "Yes — send"},
+                   {"dedupeKey": "k-no", "status": "answered", "answer": "No"}],
+                  open(os.path.join(tmp, "mission-control/data/decisions.json"), "w"))
+        mk = lambda key, dd: {"key": key, "decision_dedupe": dd, "status": "pending", "cc": "lquinn@exosaero.com",
+                              "reply_to": "lquinn@exosaero.com",
+                              "emails": [{"to": "s1@utdallas.edu", "subject": "s", "body": "b"}]}
+        json.dump([mk("yes", "k-yes"), mk("no", "k-no"), mk("open", "k-open")], open(g["OUTBOX"], "w"))
+        urllib.request.urlopen = lambda *a, **k: __import__("io").BytesIO(
+            json.dumps([{"dedupeKey": "k-open", "status": "open"}]).encode())
+        sends = []
+        g["subprocess"] = types.SimpleNamespace(run=lambda argv, **k: sends.append(argv) or
+                                                types.SimpleNamespace(returncode=0, stderr=b""))
+        process_outbox(); process_outbox()
+        ob = {x["key"]: x for x in json.load(open(g["OUTBOX"]))}
+        res.append(("fixture: outbox sends ONLY the Lizi-Yes item, exactly once", len(sends) == 1
+                    and ob["yes"]["status"] == "sent"))
+        res.append(("fixture: outbox No -> cancelled, open Decision -> still pending",
+                    ob["no"]["status"] == "cancelled" and ob["open"]["status"] == "pending"))
+        res.append(("fixture: is_question rules", is_question("can you check this?") and
+                    not is_question("see https://x.com/?a=1") and not is_question("PASS: contact ok, can you")
+                    and is_question("PASS: @exo is this right")))
+        e = compute_eta(datetime(2026, 10, 22, 2, 0, tzinfo=timezone.utc))  # 21:00 CT + 4h -> next 10 AM
+        res.append(("fixture: ETA never lands 9 PM-8 AM CT", e.astimezone(CT).hour == 10))
+    finally:
+        urllib.request.urlopen = real_urlopen
+        g.update(saved)
+        shutil.rmtree(tmp, ignore_errors=True)
+    return res
+
+
+def _selftest_live():
+    res = []
+    # 1. outbox: every sent item was released by a Lizi Yes before it went out; students only; once each
+    try:
+        ob = json.load(open(OUTBOX)) if os.path.exists(OUTBOX) else []
+        local = json.load(open(os.path.join(WS, "mission-control/data/decisions.json")))
+        decs = {z.get("dedupeKey"): z for z in (local if isinstance(local, list) else local.get("decisions", []))}
+        errs = []
+        keys = [x.get("key") for x in ob]
+        if len(keys) != len(set(keys)):
+            errs.append("duplicate outbox key")
+        for x in ob:
+            if x.get("status") not in ("sent", "partial"):
+                continue
+            to = [e["to"].lower() for e in x.get("emails", [])]
+            if len(to) != len(set(to)):
+                errs.append(f"{x['key']}: duplicate recipient")
+            if any(not t.endswith(STUDENT_DOMAIN) for t in to):
+                errs.append(f"{x['key']}: non-student recipient")
+            if len(x.get("sent") or []) != len(to):
+                errs.append(f"{x['key']}: sent {len(x.get('sent') or [])} for {len(to)} staged emails")
+            if (x.get("sent_at") or "") < OUTBOX_LEGACY_BEFORE and x.get("decision_answer"):
+                continue  # pre-Decision release, recorded explicitly
+            d = decs.get(x.get("decision_dedupe"))
+            if not d or d.get("status") != "answered" or not (d.get("answer") or "").strip().lower().startswith("yes"):
+                errs.append(f"{x['key']}: sent without a Yes on Decision {x.get('decision_dedupe')}")
+            elif (d.get("answeredAt") or "") and parse_ts(d["answeredAt"]) > parse_ts(x["sent_at"]):
+                errs.append(f"{x['key']}: sent before the Decision was answered")
+        res.append(("live: outbox sends only after Lizi-Yes, students only, once each"
+                    + (" -> " + "; ".join(errs) if errs else ""), not errs))
+    except Exception as e:
+        res.append((f"live: outbox check error {e}", False))
+    # 2. experiment dataset: no activity captured twice since the baseline
+    try:
+        rows = [json.loads(l) for l in open(DATA) if l.strip()]
+        seen, dup = set(), []
+        for r in rows:
+            if (r.get("ts") or "") < DUP_BASELINE:
+                continue
+            k = (r.get("ts"), r.get("task_id"), r.get("kind"), r.get("body"))
+            (dup.append(k) if k in seen else seen.add(k))
+        res.append((f"live: capstone-experiments.jsonl no duplicate captures since {DUP_BASELINE[:10]}"
+                    + (f" -> {len(dup)} dup(s) e.g. task {dup[0][1]} {dup[0][0]}" if dup else ""), not dup))
+    except Exception as e:
+        res.append((f"live: dataset check error {e}", False))
+    # 3. Supabase (GET only): no identical Exo ack posted twice on a student task in the last 7 days
+    try:
+        since = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
+        rows = supa("GET", "activities?select=subject,body,created_at&owner=eq.Exo&type=eq.task_note"
+                           f"&created_at=gt.{urllib.parse.quote(since)}&body=like.*data%20point%20%23*&limit=5000")
+        c = {}
+        for r in rows:
+            k = (r.get("subject"), r.get("body"))
+            c[k] = c.get(k, 0) + 1
+        dup = [(k[0], v) for k, v in c.items() if v > 1]
+        res.append((f"live: no duplicate Exo acks on student tasks (7d, {len(rows)} acks)"
+                    + (f" -> {dup[:5]}" if dup else ""), not dup))
+    except Exception as e:
+        res.append((f"live: Supabase read error {e}", False))
+    return res
+
+
+def selftest():
+    res = _selftest_fixture() + _selftest_live()
+    for name, ok in res:
+        print(("PASS " if ok else "FAIL ") + name)
+    nf = sum(1 for _, ok in res if not ok)
+    print(f"capstone_capture selftest: {'PASS' if not nf else 'FAIL'} ({len(res) - nf}/{len(res)})")
+    return 0 if not nf else 1
+
+
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "selftest":
+        sys.exit(selftest())
     if DRY:
         if "--fake" in sys.argv:
             dry_run_fake()
