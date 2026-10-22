@@ -5,9 +5,13 @@
 //   2. BEHAVIOR SCORING — per-identity rolling risk score (rate, distinct records, downloads,
 //      denied calls, automation user-agents, odd hours, new IPs). Runs WATCH-ONLY until Jon
 //      approves tuned thresholds (state.scoring_mode === 'enforce').
-//   3. GRADUATED RESPONSE — low: log; medium: DM Jon + throttle (enforce mode); high/tripwire:
-//      lockout = MC user deactivated + all sessions killed + Cloudflare Access revoked + blocklist.
-//      Only Jon unlocks (scripts/mc_guard.py unlock <key>, or POST /api/admin/guard/unlock).
+//   3. GRADUATED RESPONSE — low: log; medium: DM Jon + throttle (enforce mode);
+//      suspicious (enforce mode): TEMP LOCK — sessions killed + 423 "access paused" for TEMP.first_min,
+//        2nd within TEMP.window_hr = TEMP.second_min, 3rd within the window = permanent lockout.
+//        No MC-user deactivation, no Cloudflare change; auto-expires (state.temp_locked[key].until).
+//      high/tripwire: lockout = MC user deactivated + all sessions killed + Cloudflare Access revoked
+//      + blocklist. Only Jon unlocks (scripts/mc_guard.py unlock <key>, or POST /api/admin/guard/unlock);
+//      in an entity cell (ENTITY set, not 'exos') that cell's active role=admin users may also unlock.
 //   4. TRACEABLE COPIES — every served document carries a per-download trace id (PDF trailer
 //      comment / Office zip comment) recorded with the sha256 in the trace ledger.
 //   5. EVIDENCE — append-only, hash-chained JSONL (logs/mc-guard/evidence.jsonl).
@@ -60,10 +64,22 @@ const T = {
   rpm: [150, 300], records_hr: [300, 1000], downloads_hr: [25, 75], mb_hr: 200,
   denied_10m: [20, 60], medium: 40, high: 80,
 };
+// TEMP LOCK tier (Jon 10/22). Applies only in enforce mode, only to non-exempt identities.
+//   Score bands: >=T.medium (40) alert + throttle · >=TEMP.score (60) temp lock · >=T.high (80) permanent.
+//   e.g. rate >300/min alone = 60 → temp lock; automation UA (40) + rate >150 (30) = 70 → temp lock.
+//   first_min   — 1st temp lock within window_hr
+//   second_min  — 2nd temp lock within window_hr
+//   permanent_on — the Nth temp-lock trigger within window_hr becomes a permanent lockout()
+//   sweep_ms    — how often expired temp locks are cleared (they are also cleared lazily per request)
+const TEMP = { score: 60, first_min: 15, second_min: 60, permanent_on: 3, window_hr: 24, sweep_ms: 60000 };
+const IS_CELL = !!(process.env.ENTITY && process.env.ENTITY !== 'exos');
+let nowFn = () => Date.now();   // test hook only (_setNow)
 
 // ── state ──
 function defaultState() {
-  return { scoring_mode: 'watch', watch_started: new Date().toISOString(), locked: {}, alerts: {} };
+  // temp_locked: key -> { at, until (ISO), minutes, n, reason, userId, name, emails, ip }
+  // temp_history: key -> [ISO of each temp-lock trigger] (pruned to TEMP.window_hr) — drives escalation.
+  return { scoring_mode: 'watch', watch_started: new Date().toISOString(), locked: {}, temp_locked: {}, temp_history: {}, alerts: {} };
 }
 let state = defaultState(), stateMtime = 0, lastStateCheck = 0;
 function loadState(force) {
@@ -100,10 +116,17 @@ function evidence(entry) {
 }
 
 // ── alerts to Jon (async, never blocks) ──
+// Entity cells (containers) usually have no deliver.py / python3: the alert is parked in
+// LOG_DIR/alerts-undelivered.log instead (silent; evidence is always written before any alert).
+const DELIVER = path.join(WS, 'scripts', 'deliver.py');
 function dmJon(text) {
   if (process.env.MC_GUARD_NO_DM) { try { fs.appendFileSync(path.join(LOG_DIR, 'dm-test.log'), text + '\n---\n'); } catch (e) {} return; }
+  if (!fs.existsSync('/usr/bin/python3') || !fs.existsSync(DELIVER)) {
+    try { fs.appendFileSync(path.join(LOG_DIR, 'alerts-undelivered.log'), new Date().toISOString() + ' ' + text + '\n---\n'); } catch (e) {}
+    return;
+  }
   try {
-    const p = spawn('/usr/bin/python3', [path.join(WS, 'scripts', 'deliver.py'), '--target', JON_DISCORD, '--source', 'mc-guard', '-m', text],
+    const p = spawn('/usr/bin/python3', [DELIVER, '--target', JON_DISCORD, '--source', 'mc-guard', '-m', text],
       { cwd: WS, detached: true, stdio: 'ignore' });
     p.on('error', () => {}); p.unref();
   } catch (e) {}
@@ -245,6 +268,7 @@ function lockout(id, reason, evidenceData) {
   deps.saveSessions();
   const emails = [...new Set([id.email, id.cfEmail].filter(e => e && !JON_EMAILS.has(e)))];
   state.locked[id.key] = { at: new Date().toISOString(), reason, userId: id.userId || null, name: id.name || null, emails, ip: id.ip, cf: 'pending' };
+  if (state.temp_locked && state.temp_locked[id.key]) delete state.temp_locked[id.key];   // permanent supersedes temp
   saveState();
   evidence({ event: 'LOCKOUT', key: id.key, reason, identity: id, evidence: evidenceData });
   const who = id.name ? `${id.name} (${id.email})` : (id.cfEmail || id.ip);
@@ -253,9 +277,67 @@ function lockout(id, reason, evidenceData) {
     loadState(true);
     if (state.locked[id.key]) { state.locked[id.key].cf = r; saveState(); }
     evidence({ event: 'CF_REVOKE', key: id.key, result: r });
-    dmJon(`🚨 **MC GUARD — LOCKOUT: ${who}**\nReason: ${reason}\nFrom: ${id.ip}${id.country ? ' (' + id.country + ')' : ''} · UA: ${id.ua.slice(0, 80)}\nDone: MC account deactivated, all sessions killed, Cloudflare ${r.revoked.length ? 'access revoked' : 'revoke FAILED (' + r.errors.join('; ').slice(0, 120) + ') — MC blocklist still holds'}.${ev}\nTo restore: tell me "unlock ${id.key}" (only you can).`);
+    dmJon(`🚨 **MC GUARD — LOCKOUT: ${who}**\nReason: ${reason}\nFrom: ${id.ip}${id.country ? ' (' + id.country + ')' : ''} · UA: ${id.ua.slice(0, 80)}\nDone: MC account deactivated, all sessions killed, Cloudflare ${r.revoked.length ? 'access revoked' : 'revoke FAILED (' + r.errors.join('; ').slice(0, 120) + ') — MC blocklist still holds'}.${ev}\nTo restore: tell me "unlock ${id.key}" (${IS_CELL ? 'you or a cell admin' : 'only you can'}).`);
   });
 }
+
+// ── temp lock (graduated tier below permanent) ──
+function whoOf(id) { return id.name ? `${id.name} (${id.email})` : (id.cfEmail || id.ip); }
+function killSessions(userId) {
+  if (!userId) return;
+  for (const [tok, s] of deps.sessions.entries()) if (s.userId === userId) deps.sessions.delete(tok);
+  deps.saveSessions();
+}
+// Returns 'temp' (temp lock placed) or 'permanent' (escalated to lockout()).
+function tempLock(id, sc) {
+  loadState(true);
+  const now = nowFn();
+  if (!state.temp_locked) state.temp_locked = {};
+  if (!state.temp_history) state.temp_history = {};
+  const hist = (state.temp_history[id.key] || []).filter(ts => now - Date.parse(ts) < TEMP.window_hr * 3600000);
+  hist.push(new Date(now).toISOString());
+  state.temp_history[id.key] = hist;
+  const n = hist.length;
+  const signals = `Signals: ${sc.reasons.join(', ')}`;
+  tracks.delete(id.key);   // fresh metrics after the pause (the 60-min window would otherwise re-trigger at once)
+  if (n >= TEMP.permanent_on) {
+    saveState();
+    evidence({ event: 'TEMP_ESCALATE', key: id.key, n, identity: id, score: sc });
+    lockout(id, `Behavior score ${sc.score} — temp lock #${n} within ${TEMP.window_hr}h`, signals);
+    return 'permanent';
+  }
+  const minutes = n === 1 ? TEMP.first_min : TEMP.second_min;
+  const until = new Date(now + minutes * 60000).toISOString();
+  const emails = [...new Set([id.email, id.cfEmail].filter(e => e && !JON_EMAILS.has(e)))];
+  state.temp_locked[id.key] = { at: new Date(now).toISOString(), until, minutes, n, reason: `Behavior score ${sc.score}`, userId: id.userId || null, name: id.name || null, emails, ip: id.ip };
+  saveState();
+  killSessions(id.userId);
+  evidence({ event: 'TEMP_LOCKOUT', key: id.key, n, minutes, until, identity: id, score: sc });
+  const untilCT = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' }).format(now + minutes * 60000);
+  dmJon(`⏸️ MC GUARD — temp lock ${minutes} min (#${n} in ${TEMP.window_hr}h; #${TEMP.permanent_on} = permanent) for ${whoOf(id)}: score ${sc.score} (${sc.reasons.join(', ')}). Auto-expires ${untilCT} CT; release early: "unlock ${id.key}".`);
+  return 'temp';
+}
+function pausedMessage(mins) { return `Your access is paused for ${mins} minute${mins === 1 ? '' : 's'} because of unusual activity. Contact your administrator.`; }
+function sendPaused(res, p, mins) {
+  const msg = pausedMessage(mins), h = { 'Retry-After': String(mins * 60) };
+  if (p.startsWith('/api/')) { res.writeHead(423, Object.assign({ 'Content-Type': 'application/json' }, h)); res.end(JSON.stringify({ error: msg })); }
+  else { res.writeHead(423, Object.assign({ 'Content-Type': 'text/html' }, h)); res.end(`<html><body style="font-family:system-ui;background:#111;color:#ddd;padding:40px"><h2>Access paused</h2><p>${msg}</p></body></html>`); }
+}
+function findTemp(id) {
+  const tl = state.temp_locked || {};
+  if (tl[id.key]) return [id.key, tl[id.key]];
+  if (id.cfEmail && tl['cf:' + id.cfEmail]) return ['cf:' + id.cfEmail, tl['cf:' + id.cfEmail]];
+  for (const [k, l] of Object.entries(tl)) if (l.emails && ((id.email && l.emails.includes(id.email)) || (id.cfEmail && l.emails.includes(id.cfEmail)))) return [k, l];
+  return null;
+}
+function expireTemp() {
+  const tl = state.temp_locked || {}; const now = nowFn(); let changed = false;
+  for (const [k, l] of Object.entries(tl)) {
+    if (Date.parse(l.until) <= now) { delete tl[k]; tracks.delete(k); changed = true; evidence({ event: 'TEMP_EXPIRED', key: k, until: l.until, n: l.n }); }
+  }
+  if (changed) saveState();
+}
+setInterval(() => { try { loadState(true); expireTemp(); } catch (e) {} }, TEMP.sweep_ms).unref();
 
 // ── public API ──
 function init(d) { deps = d; loadState(true); if (!fs.existsSync(STATE_FILE)) saveState(); adminToken(); }
@@ -264,7 +346,7 @@ function init(d) { deps = d; loadState(true); if (!fs.existsSync(STATE_FILE)) sa
 function check(req, res, session) {
   try {
     loadState();
-    const now = Date.now();
+    const now = nowFn();
     const url = req.url || '';
     const p = url.split('?')[0];
     const id = identify(req, session);
@@ -276,7 +358,9 @@ function check(req, res, session) {
       || Object.values(state.locked).find(l => l.emails && ((id.email && l.emails.includes(id.email)) || (id.cfEmail && l.emails.includes(id.cfEmail))));
     if (lockedHit && !id.exempt) {
       res.writeHead(403, { 'Content-Type': 'text/html' });
-      res.end('<html><body style="font-family:system-ui;background:#111;color:#ddd;padding:40px"><h2>Access suspended</h2><p>This account\'s access to Exos Mission Control has been suspended. Contact John Quinn.</p></body></html>');
+      res.end(IS_CELL
+        ? '<html><body style="font-family:system-ui;background:#111;color:#ddd;padding:40px"><h2>Access suspended</h2><p>This account\'s access to Mission Control has been suspended. Contact your administrator.</p></body></html>'
+        : '<html><body style="font-family:system-ui;background:#111;color:#ddd;padding:40px"><h2>Access suspended</h2><p>This account\'s access to Exos Mission Control has been suspended. Contact John Quinn.</p></body></html>');
       return true;
     }
 
@@ -291,6 +375,17 @@ function check(req, res, session) {
       }
       res.writeHead(404); res.end('Not Found');
       return true;
+    }
+
+    // Temp locks: auto-expire, otherwise 423 with a plain message (tripwires above still fire a permanent lockout during a pause).
+    if (!id.exempt && state.temp_locked && Object.keys(state.temp_locked).length) {
+      expireTemp();
+      const th = findTemp(id);
+      if (th) {
+        if (id.userId) killSessions(id.userId);   // re-login during the pause gets nothing
+        sendPaused(res, p, Math.max(1, Math.ceil((Date.parse(th[1].until) - now) / 60000)));
+        return true;
+      }
     }
 
     if (id.automation) return false;   // on-box jobs: not scored
@@ -331,6 +426,14 @@ function check(req, res, session) {
       evidence({ event: 'SCORE_HIGH', mode: 'enforce', key: id.key, identity: id, score: sc });
       lockout(id, `Behavior score ${sc.score}`, `Signals: ${sc.reasons.join(', ')}`);
       res.writeHead(403, { 'Content-Type': 'text/plain' }); res.end('Access suspended');
+      return true;
+    }
+    // Enforce mode: SUSPICIOUS band (TEMP.score .. T.high) → temp lock (3rd within window → permanent).
+    if (sc.score >= TEMP.score && enforce && !id.exempt) {
+      evidence({ event: 'SCORE_SUSPICIOUS', mode: 'enforce', key: id.key, identity: id, score: sc });
+      if (tempLock(id, sc) === 'permanent') { res.writeHead(403, { 'Content-Type': 'text/plain' }); res.end('Access suspended'); return true; }
+      const l = (state.temp_locked || {})[id.key];
+      sendPaused(res, p, l ? l.minutes : TEMP.first_min);
       return true;
     }
     if (tier >= 2 && (tier > t.lastAlertTier || now - t.lastAlertAt > 3600000)) {
@@ -383,6 +486,14 @@ function traceBuffer(buf, ext, session, req, fileName) {
 // Admin/Jon-only unlock (also used by scripts/mc_guard.py via the state file).
 async function unlock(key, byEmail) {
   loadState(true);
+  const tl = state.temp_locked && state.temp_locked[key];
+  if (tl && !state.locked[key]) {
+    // Admin release of a temp lock: also clears the escalation history (admin judged it a false positive).
+    delete state.temp_locked[key]; if (state.temp_history) delete state.temp_history[key]; saveState();
+    tracks.delete(key);
+    evidence({ event: 'UNLOCK', kind: 'temp', key, by: byEmail });
+    return { ok: true, kind: 'temp', cf_restored: [] };
+  }
   const l = state.locked[key]; if (!l) return { ok: false, error: 'not locked' };
   const users = deps.loadUsers();
   if (l.userId) { const u = users.find(x => x.id === l.userId); if (u) { u.active = true; delete u.guard_locked; deps.saveUsers(users); } }
@@ -396,11 +507,30 @@ async function unlock(key, byEmail) {
       await cfApi('PUT', `/accounts/${CF_ACC}/access/apps/${CF_APP}/policies/${CF_POLICY}`, { name: pol.result.name, decision: pol.result.decision, include: inc, exclude: pol.result.exclude || [], require: pol.result.require || [] });
     }
   }
-  delete state.locked[key]; saveState();
+  delete state.locked[key];
+  if (state.temp_locked) delete state.temp_locked[key];
+  if (state.temp_history) delete state.temp_history[key];
+  saveState();
   tracks.delete(key);
-  evidence({ event: 'UNLOCK', key, by: byEmail, cf_restored: restored });
-  return { ok: true, cf_restored: restored };
+  evidence({ event: 'UNLOCK', kind: 'permanent', key, by: byEmail, cf_restored: restored });
+  return { ok: true, kind: 'permanent', cf_restored: restored };
 }
+
+// Who may view guard status / unlock. Jon everywhere; in an entity cell also that cell's active
+// role=admin users (Jon is not on a cell's user list, and the cell needs its own release path).
+function canAdminEmail(email) {
+  const e = (email || '').toLowerCase();
+  if (!e) return false;
+  if (JON_EMAILS.has(e)) return true;
+  if (!IS_CELL || !deps) return false;
+  try { return deps.loadUsers().some(u => (u.email || '').toLowerCase() === e && u.role === 'admin' && u.active !== false); } catch (ex) { return false; }
+}
+function canUnlock(session) { return !!(session && canAdminEmail(session.email)); }
+// server.js gates /api/admin/guard/* with `guard.JON_EMAILS.has(email)`. Export a Set whose has()
+// = canAdminEmail so cell admins pass that gate without a server.js change. Internally guard.js keeps
+// using the plain JON_EMAILS (exemption + Cloudflare filtering must stay Jon-only).
+class GuardAdminEmails extends Set { has(e) { return canAdminEmail(e); } }
+const GUARD_ADMIN_EMAILS = new GuardAdminEmails(JON_EMAILS);
 // On-box admin (Exo acting on Jon's explicit instruction via scripts/mc_guard.py): loopback only,
 // no Cloudflare headers, and the 0600 token file. External traffic can never satisfy this.
 const ADMIN_TOKEN_FILE = path.join(ROOT, 'data', '.guard-admin-token');
@@ -414,6 +544,7 @@ function isOnBoxAdmin(req) {
   const want = adminToken();
   return id.automation && tok.length === want.length && crypto.timingSafeEqual(Buffer.from(tok), Buffer.from(want));
 }
-function status() { loadState(true); return { scoring_mode: state.scoring_mode, watch_started: state.watch_started, locked: state.locked, thresholds: T }; }
+function status() { loadState(true); expireTemp(); return { scoring_mode: state.scoring_mode, watch_started: state.watch_started, locked: state.locked, temp_locked: state.temp_locked || {}, temp_history: state.temp_history || {}, thresholds: T, temp: TEMP, entity_cell: IS_CELL }; }
 
-module.exports = { init, check, injectBait, traceBuffer, unlock, status, isOnBoxAdmin, JON_EMAILS, TRIPWIRE_EXACT };
+module.exports = { init, check, injectBait, traceBuffer, unlock, status, isOnBoxAdmin, canUnlock, JON_EMAILS: GUARD_ADMIN_EMAILS, TRIPWIRE_EXACT, TEMP, T,
+  _setNow: (fn) => { nowFn = fn || (() => Date.now()); } };

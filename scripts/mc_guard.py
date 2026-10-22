@@ -2,14 +2,16 @@
 """mc_guard.py — control + reporting for the Mission Control Guard (mission-control/lib/guard.js).
 
   python3 scripts/mc_guard.py status            # mode, locked identities, thresholds
-  python3 scripts/mc_guard.py unlock <key>      # ONLY on Jon's explicit instruction
-  python3 scripts/mc_guard.py selftest          # liveness/eval: robots, bait, blocklist, evidence chain
+  python3 scripts/mc_guard.py unlock <key>      # ONLY on Jon's (or, in an entity cell, a cell admin's) instruction;
+                                                #   releases a permanent lock or a temp ("access paused") lock
+  python3 scripts/mc_guard.py selftest          # liveness/eval: robots, bait, blocklist, evidence chain + unit test
+  python3 scripts/mc_guard.py unit              # offline unit test of the graduated response (temp lock tier)
   python3 scripts/mc_guard.py weekly [--dry]    # top data users (7d) + watch-mode tuning proposal → DM Jon
 
 The weekly job (launchd com.exos.mc-guard-weekly, Sat 08:00) is exception-light: it always sends the
 top-users table (Jon asked for it), and adds threshold-tuning numbers while scoring is watch-only.
 """
-import json, os, sys, hashlib, subprocess, urllib.request, statistics
+import json, os, sys, hashlib, shutil, subprocess, urllib.request, statistics
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
@@ -54,8 +56,23 @@ def verify_chain():
     return True, n
 
 
+def unit():
+    """Offline node test of lib/guard.js (temp lock 15m -> 60m -> permanent, 423, expiry, tripwire, cell admins).
+    Uses a temp state dir, no DMs, no Cloudflare. Returns (ok, last output line)."""
+    node = shutil.which("node") or next((p for p in ("/opt/homebrew/bin/node", "/usr/local/bin/node") if os.path.exists(p)), None)
+    if not node:
+        return None, "node not found (unit test skipped)"
+    r = subprocess.run([node, os.path.join(MC, "tests", "guard_templock_selftest.js")], cwd=WS,
+                       capture_output=True, text=True, timeout=120)
+    out = (r.stdout + r.stderr).strip()
+    return r.returncode == 0, out
+
+
 def selftest():
     fails = []
+    ok_unit, out = unit()
+    if ok_unit is False:
+        fails.append("unit test FAILED: " + out.splitlines()[-1][:200] if out else "unit test FAILED")
     try:
         with urllib.request.urlopen(BASE + "/robots.txt", timeout=10) as r:
             if b"/api/export/all" not in r.read():
@@ -118,6 +135,8 @@ def weekly(dry=False):
                      + (" · ⚠️ automated client" if a["ua_auto"] else ""))
     if st.get("locked"):
         lines.append("Locked: " + ", ".join(f"{k} ({v.get('reason')})" for k, v in st["locked"].items()))
+    if st.get("temp_locked"):
+        lines.append("Paused (temp): " + ", ".join(f"{k} until {v.get('until')} (#{v.get('n')})" for k, v in st["temp_locked"].items()))
     if st.get("scoring_mode") == "watch" and rows:
         def p99(vals):
             vals = sorted(vals)
@@ -142,6 +161,10 @@ if __name__ == "__main__":
         print(json.dumps(api("POST", "/api/admin/guard/unlock", {"key": sys.argv[2]}), indent=2))
     elif cmd == "selftest":
         sys.exit(selftest())
+    elif cmd == "unit":
+        ok_unit, out = unit()
+        print(out)
+        sys.exit(0 if ok_unit else 1)
     elif cmd == "weekly":
         rc = selftest()
         sys.exit(weekly(dry="--dry" in sys.argv) or rc)
