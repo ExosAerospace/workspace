@@ -1,0 +1,126 @@
+{
+  "generated_display": "Scorpius sample board",
+  "tasks": [
+    {
+      "id": "P-001",
+      "title": "SAMPLE \u2014 Project milestone: define next test-stand milestone and owner",
+      "state": "In Progress",
+      "owner": "Team",
+      "category": "Projects",
+      "priority": 0,
+      "due_date": null,
+      "description": "Sample task showing how this category works in Mission Control. Replace or delete it.",
+      "source": "sample"
+    },
+    {
+      "id": "P3-001",
+      "title": "SAMPLE \u2014 Program phase gate: assemble review package for next phase gate",
+      "state": "To Do",
+      "owner": "Team",
+      "category": "Program",
+      "priority": 0,
+      "due_date": null,
+      "description": "Sample task showing how this category works in Mission Control. Replace or delete it.",
+      "source": "sample"
+    },
+    {
+      "id": "B-001",
+      "title": "SAMPLE \u2014 Board: prepare agenda and materials for next board meeting",
+      "state": "To Do",
+      "owner": "Team",
+      "category": "Board",
+      "priority": 0,
+      "due_date": null,
+      "description": "Sample task showing how this category works in Mission Control. Replace or delete it.",
+      "source": "sample"
+    },
+    {
+      "id": "R-001",
+      "title": "SAMPLE \u2014 Review: circulate document for internal review and collect comments",
+      "state": "To Do",
+      "owner": "Team",
+      "category": "Review",
+      "priority": 0,
+      "due_date": null,
+      "description": "Sample task showing how this category works in Mission Control. Replace or delete it.",
+      "source": "sample"
+    },
+    {
+      "id": "BD-001",
+      "title": "SAMPLE \u2014 BD: follow up with a prospective customer after intro call",
+      "state": "In Progress",
+      "owner": "Team",
+      "category": "Business Development",
+      "priority": 0,
+      "due_date": null,
+      "description": "Sample task showing how this category works in Mission Control. Replace or delete it.",
+      "source": "sample"
+    },
+    {
+      "id": "C-001",
+      "title": "SAMPLE \u2014 Contracts: route a draft agreement for signature",
+      "state": "To Do",
+      "owner": "Team",
+      "category": "Contracts",
+      "priority": 0,
+      "due_date": null,
+      "description": "Sample task showing how this category works in Mission Control. Replace or delete it.",
+      "source": "sample"
+    },
+    {
+      "id": "FUND-001",
+      "title": "SAMPLE \u2014 Funding: update funding pipeline tracker",
+      "state": "To Do",
+      "owner": "Team",
+      "category": "Funding",
+      "priority": 0,
+      "due_date": null,
+      "description": "Sample task showing how this category works in Mission Control. Replace or delete it.",
+      "source": "sample"
+    },
+    {
+      "id": "REG-001",
+      "title": "SAMPLE \u2014 Regulatory: log a filing deadline and assign owner",
+      "state": "To Do",
+      "owner": "Team",
+      "category": "Regulatory",
+      "priority": 0,
+      "due_date": null,
+      "description": "Sample task showing how this category works in Mission Control. Replace or delete it.",
+      "source": "sample"
+    },
+    {
+      "id": "T-001",
+      "title": "SAMPLE \u2014 General task: example of a one-off action item",
+      "state": "Done",
+      "owner": "Team",
+      "category": "Task",
+      "priority": 0,
+      "due_date": null,
+      "description": "Sample task showing how this category works in Mission Control. Replace or delete it.",
+      "source": "sample"
+    },
+    {
+      "id": "DD-001",
+      "title": "SAMPLE \u2014 Due diligence: respond to an outstanding document request",
+      "state": "To Do",
+      "owner": "Team",
+      "category": "Due Diligence",
+      "priority": 0,
+      "due_date": null,
+      "description": "Sample task showing how this category works in Mission Control. Replace or delete it.",
+      "source": "sample"
+    },
+    {
+      "id": "SYS-001",
+      "title": "SAMPLE \u2014 Systems: add a new team member login to Mission Control",
+      "state": "To Do",
+      "owner": "Team",
+      "category": "Systems",
+      "priority": 0,
+      "due_date": null,
+      "description": "Sample task showing how this category works in Mission Control. Replace or delete it.",
+      "source": "sample"
+    }
+  ]
+}

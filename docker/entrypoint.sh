@@ -23,9 +23,16 @@ if [ ! -f "$DATA_DIR/crm-data.json" ]; then
   echo "[MC entrypoint] Created empty $DATA_DIR/crm-data.json"
 fi
 
-# Seed uploads/_meta.json if none exists
-if [ ! -f "$DATA_DIR/uploads/_meta.json" ]; then
-  echo '{}' > "$DATA_DIR/uploads/_meta.json"
+# Seed uploads/_meta.json if none exists (server expects an array)
+if [ ! -f "$DATA_DIR/uploads/_meta.json" ] || [ "$(cat "$DATA_DIR/uploads/_meta.json")" = "{}" ]; then
+  echo '[]' > "$DATA_DIR/uploads/_meta.json"
+fi
+
+# Entity task board: sample tasks only (never the Exos snapshot)
+if [ -f "/app/docker-seed/$ENTITY/tasks.json" ]; then
+  cp "/app/docker-seed/$ENTITY/tasks.json" /app/mission-control/data/tasks.json
+else
+  echo '{"tasks":[]}' > /app/mission-control/data/tasks.json
 fi
 
 # Initialise the ERP database from schema.sql if not present

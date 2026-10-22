@@ -6,20 +6,30 @@ secrets.json
 .openclaw/
 
 # Runtime state and large data
-mission-control/uploads/*
-!mission-control/uploads/_meta.json
+mission-control/uploads/
+mission-control/data/
+mission-control/dataroom/
+mission-control/sessions.json
+mission-control/users.json*
+governance/*.json
+governance/*.jsonl
 mission-control/data/backups/
 mission-control/data/*-snapshot-*.json
 mission-control/data/*.backup-*.json
 mission-control/data/recycle-bin/
 mission-control/partner-docs/
 erp-foundation/mc.db
+erp-foundation/*.db
+erp-foundation/backups/
+erp-foundation/agent-agreements/
+erp-foundation/sample-data/
 erp-foundation/mc.db-shm
 erp-foundation/mc.db-wal
 
-# Bak files
-*.bak*
-*.bak-*
+# Bak files (** so nested dirs match too)
+**/*.bak*
+**/*.log
+**/*.jsonl
 
 # git
 .git/
@@ -40,3 +50,8 @@ node_modules/
 drafts/
 docs/
 legacy-*/
+
+# Exos instance secrets/URLs (never ship to entity cells)
+mission-control/.ds-passcode
+mission-control/.public-url
+**/.guard-*
