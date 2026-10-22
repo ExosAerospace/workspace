@@ -1633,6 +1633,16 @@ function buildCard(task) {
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+// Escape, then make URLs and #<task-id> references clickable (task refs open that task's panel in place).
+function linkifyDesc(s) {
+  return escHtml(s)
+    .replace(/https?:\/\/[^\s<"']+/g, u => `<a href="${u}" target="_blank" rel="noopener" style="color:var(--blue2)">${u}</a>`)
+    .replace(/(^|[^\w&\/=])#(\d{1,6})\b/g, (m, pre, id) => `${pre}<a href="/index.html?task=${id}" onclick="return openTaskRef(${id})" style="color:var(--blue2);font-weight:600">#${id}</a>`);
+}
+function openTaskRef(id) {
+  if (tasks.some(t => String(t.id) === String(id))) { openEdit(id); return false; }
+  return true; // not on the current board (e.g. cancelled/filtered) — follow the ?task= link
+}
 
 // ── SUBTASKS (work-breakdown) ── parent linkage encoded as a `parent:<id>` tag (no schema change).
 function parentIdOf(t) {
@@ -1885,7 +1895,7 @@ function renderTaskDescription(task) {
     descEl.classList.remove('empty');
   } else if (desc.trim()) {
     if (/^\s*[-*]\s*\[[ xX]\]/m.test(desc)) renderChecklistDesc(task, descEl, desc);
-    else descEl.textContent = desc;
+    else { descEl.style.whiteSpace = 'pre-wrap'; descEl.innerHTML = linkifyDesc(desc); }
     descEl.classList.remove('empty');
   } else {
     descEl.textContent = (task.description === undefined) ? 'Loading…' : 'No description yet. Switch to Edit tab to add one.';
@@ -1904,9 +1914,9 @@ function renderChecklistDesc(task, el, desc) {
       const done = m[2].toLowerCase() === 'x';
       return '<label style="display:flex;gap:8px;align-items:flex-start;margin:3px 0;cursor:pointer">'
         + '<input type="checkbox" ' + (done ? 'checked' : '') + ' onchange="toggleDescCheck(' + JSON.stringify(String(task.id)) + ',' + i + ',this.checked)" style="width:auto;margin-top:3px;flex:none">'
-        + '<span style="' + (done ? 'color:var(--text2);text-decoration:line-through' : '') + '">' + escHtml(m[3]) + '</span></label>';
+        + '<span style="' + (done ? 'color:var(--text2);text-decoration:line-through' : '') + '">' + linkifyDesc(m[3]) + '</span></label>';
     }
-    return '<div style="white-space:pre-wrap">' + escHtml(ln) + '</div>';
+    return '<div style="white-space:pre-wrap">' + linkifyDesc(ln) + '</div>';
   }).join('');
 }
 async function toggleDescCheck(taskId, lineIdx, checked) {
