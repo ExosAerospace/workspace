@@ -2544,6 +2544,9 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── SETTINGS > FEATURES (MC-Industry feature matrix + requests; lib/feature-settings.js) ──
+  if (req.url.startsWith('/api/settings/feature') && require('./lib/feature-settings').handle(req, res, session)) return;
+
   // ── HR DIRECTORY (read-only) — read-through mirror of BambooHR; directory-level only, no PII ──
   // Bamboo remains the system of record; this serves name/title/department/manager/work-email
   // for the MC directory + org-chart views. Requires a logged-in session.

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Features · Mission Control</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--navy:#0a1628;--navy2:#0d1f3c;--navy3:#112248;--blue:#0066cc;--blue2:#0080ff;--orange:#ff6b00;--orange2:#ff8c33;--text:#e8edf5;--text2:#a0aec0;--border:rgba(255,255,255,0.08);--card:#0f1e38;--green:#22c55e;--gold:#e8aa3c;--red:#ff5555}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);min-height:100vh;line-height:1.5}
+  header{background:linear-gradient(135deg,#0a1628 0%,#0d2050 100%);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  header h1{font-size:1.05rem} header p{font-size:.78rem;color:var(--text2)}
+  header a{color:var(--blue2);text-decoration:none;font-size:.85rem;margin-left:14px}
+  .wrap{max-width:1200px;margin:0 auto;padding:24px 24px 64px}
+  .hero{background:linear-gradient(135deg,var(--navy3),var(--navy2));border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:18px}
+  .hero h2{font-size:1.45rem;margin-bottom:6px} .hero p{color:var(--text2);font-size:.9rem;max-width:900px}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0 4px}
+  .bar select,.bar input{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:.85rem}
+  .btn{background:var(--blue);color:#fff;border:0;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:.85rem}
+  .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .tabs{display:flex;gap:6px;margin:18px 0 10px;flex-wrap:wrap}
+  .tab{padding:7px 14px;border-radius:20px;border:1px solid var(--border);cursor:pointer;font-size:.85rem;color:var(--text2)}
+  .tab.on{background:rgba(0,128,255,.15);color:var(--blue2);border-color:rgba(0,128,255,.4)}
+  h3.grp{font-size:.95rem;margin:22px 0 8px;color:var(--gold)}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;font-size:.85rem}
+  th{background:#1F3A5F;text-align:left;padding:8px 10px;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;color:#dfe8f5}
+  td{padding:8px 10px;border-top:1px solid var(--border);vertical-align:top}
+  td.on{width:46px;text-align:center} td.name{width:230px;font-weight:600} td.tier,td.st{width:96px} td.mode{width:150px;color:var(--text2)}
+  td .desc{color:var(--text2);font-weight:400}
+  .pill{display:inline-block;border-radius:12px;padding:1px 9px;font-size:.72rem;font-weight:600}
+  .t-core{background:rgba(34,197,94,.15);color:var(--green)} .t-standard{background:rgba(0,128,255,.15);color:var(--blue2)}
+  .t-advanced{background:rgba(232,170,60,.15);color:var(--gold)} .t-exos{background:rgba(160,174,192,.15);color:var(--text2)}
+  .s-live{color:var(--green)} .s-beta{color:var(--gold)} .s-exos_only{color:var(--text2)}
+  input[type=checkbox]{width:17px;height:17px;accent-color:var(--blue2)}
+  .summary{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:.85rem;color:var(--text2)} .summary b{color:var(--text)}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-top:10px}
+  .card label{display:block;font-size:.8rem;color:var(--text2);margin:10px 0 4px}
+  .card input,.card select,.card textarea{width:100%;background:var(--navy2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font:inherit;font-size:.88rem}
+  .card textarea{min-height:110px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .msg{margin-top:10px;font-size:.85rem} .ok{color:var(--green)} .err{color:var(--red)}
+  .roadmap{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px} .roadmap span{border:1px dashed var(--border);border-radius:12px;padding:2px 10px;font-size:.78rem;color:var(--text2);cursor:pointer}
+  .roadmap span:hover{color:var(--blue2);border-color:var(--blue2)}
+  .req{border-top:1px solid var(--border);padding:8px 0;font-size:.84rem} .req small{color:var(--text2)}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>⚙️ Settings — Features</h1><p>Mission Control feature selection matrix</p></div>
+  <div><a href="index.html">← Mission Control</a><a href="help.html">Getting Started</a></div>
+</header>
+<div class="wrap">
+  <div class="hero">
+    <h2>Choose what Mission Control does for your organization</h2>
+    <p>Every module and integration Mission Control offers today, in one place. <b>Core</b> features are always on. Turn on the rest to match how your team works, then save. Need a system or feature that isn't listed? Use <b>Request</b>.</p>
+    <div class="bar">
+      <label for="tenant" style="font-size:.82rem;color:var(--text2)">Organization</label>
+      <select id="tenant"></select>
+      <input id="newTenant" placeholder="add organization id (e.g. space-grove)" style="width:260px">
+      <button class="btn ghost" id="addTenant">Add</button>
+      <span style="flex:1"></span>
+      <button class="btn ghost" id="pkgCore">Core</button>
+      <button class="btn ghost" id="pkgBiz">Business</button>
+      <button class="btn ghost" id="pkgEnt">Enterprise (all)</button>
+      <button class="btn" id="save">Save selection</button>
+    </div>
+    <div class="summary" id="summary"></div>
+    <div class="msg" id="saveMsg"></div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab on" data-tab="native">Native applications</div>
+    <div class="tab" data-tab="integrations">Integrations (API)</div>
+    <div class="tab" data-tab="request">Request an integration or feature</div>
+  </div>
+
+  <div id="pane-native"></div>
+  <div id="pane-integrations" class="hide"></div>
+  <div id="pane-request" class="hide">
+    <div class="card">
+      <div class="row2">
+        <div><label>Type</label><select id="rqKind"><option value="integration">New integration</option><option value="feature">New feature / module</option><option value="change">Change to an existing feature</option></select></div>
+        <div><label>Priority</label><select id="rqPri"><option value="must">Must have for our rollout</option><option value="nice" selected>Nice to have</option></select></div>
+      </div>
+      <label>System or feature name</label><input id="rqSystem" placeholder="e.g. Salesforce, Gusto, Google Calendar">
+      <label>Short title</label><input id="rqTitle" placeholder="e.g. Two-way sync of deals with Salesforce">
+      <label>What should it do? (who uses it, what data moves, how often)</label><textarea id="rqDetail"></textarea>
+      <div class="bar"><button class="btn" id="rqSend">Submit request</button><span class="msg" id="rqMsg"></span></div>
+      <label style="margin-top:14px">On the roadmap — click to pre-fill</label>
+      <div class="roadmap" id="roadmap"></div>
+    </div>
+    <div class="card" id="reqList"><b>Requests received</b><div id="reqItems"><small style="color:var(--text2)">Visible to admins and managers.</small></div></div>
+  </div>
+</div>
+<script>
+let CAT=null, ENABLED=new Set(), CAN_EDIT=false, TENANT='exos';
+const TIERS={core:'Core',standard:'Business',advanced:'Enterprise',exos:'Exos only'};
+const ST={live:'Live',beta:'Beta',exos_only:'Exos only'};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function allItems(){const o=[];['native','integrations'].forEach(s=>(CAT[s]||[]).forEach(g=>g.items.forEach(i=>o.push(i))));return o}
+function render(){
+  ['native','integrations'].forEach(sec=>{
+    const isInt=sec==='integrations';
+    $('pane-'+sec).innerHTML=(CAT[sec]||[]).map(g=>`<h3 class="grp">${esc(g.group)}</h3><table><tr><th>On</th><th>${isInt?'Integration':'Application'}</th>${isInt?'<th>Connection</th>':''}<th>Package</th><th>Status</th></tr>`+
+      g.items.map(i=>`<tr><td class="on"><input type="checkbox" data-id="${i.id}" ${ENABLED.has(i.id)?'checked':''} ${(i.tier==='core'||!CAN_EDIT)?'disabled':''}></td>
+      <td class="name">${esc(i.name)}${i.page?` <a href="${esc(i.page)}" style="color:var(--blue2);font-size:.75rem;text-decoration:none">open ↗</a>`:''}<div class="desc">${esc(i.desc)}</div></td>
+      ${isInt?`<td class="mode">${esc(i.mode||'')}</td>`:''}
+      <td class="tier"><span class="pill t-${i.tier}">${TIERS[i.tier]||i.tier}</span></td><td class="st s-${i.status}">${ST[i.status]||i.status}</td></tr>`).join('')+'</table>').join('');
+  });
+  document.querySelectorAll('input[type=checkbox][data-id]').forEach(cb=>cb.onchange=()=>{cb.checked?ENABLED.add(cb.dataset.id):ENABLED.delete(cb.dataset.id);summary()});
+  $('roadmap').innerHTML=(CAT.roadmap_integrations||[]).map(r=>`<span>${esc(r)}</span>`).join('');
+  document.querySelectorAll('#roadmap span').forEach(s=>s.onclick=()=>{$('rqKind').value='integration';$('rqSystem').value=s.textContent;$('rqTitle').value='Connect '+s.textContent;$('rqDetail').focus()});
+  ['save','pkgCore','pkgBiz','pkgEnt'].forEach(id=>$(id).disabled=!CAN_EDIT);
+  summary();
+}
+function summary(){
+  const it=allItems(), on=it.filter(i=>ENABLED.has(i.id));
+  const n=on.filter(i=>(CAT.native||[]).some(g=>g.items.includes(i))).length;
+  const top=on.some(i=>i.tier==='advanced')?'Enterprise':on.some(i=>i.tier==='standard')?'Business':'Core';
+  $('summary').innerHTML=`<span><b>${on.length}</b> of ${it.length} selected</span><span><b>${n}</b> applications · <b>${on.length-n}</b> integrations</span><span>Package needed: <b>${top}</b></span>${on.some(i=>i.status==='beta')?'<span style="color:var(--gold)">Includes beta items (generalized during onboarding)</span>':''}${CAN_EDIT?'':'<span>View only — ask an admin to change</span>'}`;
+}
+function pkg(tiers){allItems().forEach(i=>{if(tiers.includes(i.tier))ENABLED.add(i.id);else if(i.tier!=='core')ENABLED.delete(i.id)});render()}
+$('pkgCore').onclick=()=>pkg(['core']); $('pkgBiz').onclick=()=>pkg(['core','standard']); $('pkgEnt').onclick=()=>pkg(['core','standard','advanced']);
+async function load(t){
+  TENANT=t||TENANT;
+  const r=await fetch('/api/settings/features?tenant='+encodeURIComponent(TENANT),{credentials:'same-origin'});
+  if(r.status===401){location.href='/login';return}
+  const d=await r.json(); CAT=d.catalog; ENABLED=new Set(d.enabled); CAN_EDIT=d.can_edit;
+  $('saveMsg').textContent=d.updated_at?`Last saved ${new Date(d.updated_at).toLocaleString()} by ${d.updated_by}`:'Not saved yet — showing Core defaults';
+  $('saveMsg').className='msg'; render(); if(CAN_EDIT)loadReqs();
+}
+async function loadTenants(){
+  const saved=JSON.parse(localStorage.getItem('mcTenants')||'["exos"]');
+  $('tenant').innerHTML=saved.map(t=>`<option ${t===TENANT?'selected':''}>${esc(t)}</option>`).join('');
+}
+$('tenant').onchange=e=>load(e.target.value);
+$('addTenant').onclick=()=>{const v=$('newTenant').value.trim().toLowerCase();if(!/^[a-z0-9][a-z0-9-]{0,39}$/.test(v)){alert('Use lowercase letters, numbers and dashes');return}
+  const s=JSON.parse(localStorage.getItem('mcTenants')||'["exos"]');if(!s.includes(v))s.push(v);localStorage.setItem('mcTenants',JSON.stringify(s));TENANT=v;$('newTenant').value='';loadTenants();load(v)};
+$('save').onclick=async()=>{const r=await fetch('/api/settings/features',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({tenant:TENANT,enabled:[...ENABLED]})});const d=await r.json();
+  $('saveMsg').textContent=r.ok?`Saved ${d.enabled.length} features for ${TENANT}`:(d.error||'Save failed');$('saveMsg').className='msg '+(r.ok?'ok':'err')};
+$('rqSend').onclick=async()=>{const body={tenant:TENANT,kind:$('rqKind').value,priority:$('rqPri').value,system:$('rqSystem').value,title:$('rqTitle').value,detail:$('rqDetail').value};
+  const r=await fetch('/api/settings/feature-request',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json();
+  $('rqMsg').textContent=r.ok?'Request received — thank you':(d.error||'Could not submit');$('rqMsg').className='msg '+(r.ok?'ok':'err');if(r.ok){['rqSystem','rqTitle','rqDetail'].forEach(i=>$(i).value='');if(CAN_EDIT)loadReqs()}};
+async function loadReqs(){const r=await fetch('/api/settings/feature-requests',{credentials:'same-origin'});if(!r.ok)return;const d=await r.json();
+  $('reqItems').innerHTML=d.requests.length?d.requests.slice(0,50).map(q=>`<div class="req"><b>${esc(q.title)}</b> <span class="pill t-${q.priority==='must'?'advanced':'standard'}">${q.priority==='must'?'Must have':'Nice to have'}</span><br><small>${esc(q.kind)} · ${esc(q.system)} · ${esc(q.tenant)} · ${esc(q.who)} · ${new Date(q.ts).toLocaleDateString()}</small>${q.detail?`<div style="margin-top:4px;color:var(--text2)">${esc(q.detail)}</div>`:''}</div>`).join(''):'<small style="color:var(--text2)">No requests yet.</small>'}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));['native','integrations','request'].forEach(p=>$('pane-'+p).classList.toggle('hide',p!==t.dataset.tab))});
+loadTenants(); load('exos');
+</script>
+</body>
+</html>

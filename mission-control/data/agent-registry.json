@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-19T04:04:24",
- "total": 284,
+ "total": 287,
  "standing": 115,
  "ephemeral": 18,
  "service": 6,
@@ -6163,6 +6163,29 @@
    "lifecycle": "self-removing (prompt has an end condition)",
    "registered": "2026-10-21",
    "envelope_source": "register_cron.py derivation from the live cron"
+  },
+  {
+   "human_owner": "John Quinn",
+   "risk_tier": "LOW",
+   "envelope_source": "authored 2026-10-22 (Jon: MC-Industry rollout Settings features selection matrix)",
+   "label": "mc-feature-settings-exo3",
+   "program": "mc-feature-settings-exo3",
+   "script": "mission-control/lib/feature-settings.js + mission-control/settings.html (/api/settings/feature*)",
+   "kind": "process (MC module)",
+   "schedule": "per request",
+   "purpose": "Settings > Features: catalog of every MC native application and API integration (tier, status, description), per-organization on/off selection, and a request form for new integrations/features. Groundwork for the MC-Industry hosted rollout.",
+   "stack_layer": "GOVERN (tenant configuration)",
+   "autonomy_tier": "Advise (records selections + requests; no agent actions, no outbound)",
+   "permission_envelope": "READ data/mc-feature-catalog.json; WRITE data/mc-feature-selections.json (admin/manager only, atomic rename) and APPEND data/mc-feature-requests.jsonl (any signed-in user); APPEND logs/fleet-events.jsonl. No email, no external calls, no Supabase writes.",
+   "memory_boundary": "request-scoped; own data files",
+   "escalation": "Errors -> fleet_log level info outcome fail; requests reviewed by admins on the page",
+   "eval_suite": "node mission-control/tests/feature_settings_selftest.js (11 checks: catalog schema + unique ids + Jon-named integrations present, page links exist, unknown/bad ids rejected, core forced on, per-tenant save, tenant path-injection rejected, request validation, telemetry, 401/403 gates)",
+   "eval_type": "output",
+   "telemetry": "fleet_log agent mc-feature-settings-exo3: selection_saved, feature_request, error",
+   "reusability_scope": "every MC tenant (Exos + trial orgs)",
+   "change_log": [
+    "2026-10-22 initial build (catalog, page, API, selftest, registry)"
+   ]
   }
  ],
  "eval_wave_1": {

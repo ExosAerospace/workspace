@@ -1,0 +1,108 @@
+{
+  "version": "2026-10-22",
+  "owner": "John Quinn",
+  "purpose": "MC-Industry rollout: the menu of Mission Control features an organization can switch on for a trial or hosted deployment. Drives Settings > Features (settings.html).",
+  "tiers": {
+    "core": "Included in every MC deployment",
+    "standard": "Included in the Business package",
+    "advanced": "Included in the Enterprise package or as an add-on",
+    "exos": "Exos-specific; not offered to outside organizations without rework"
+  },
+  "status_legend": {
+    "live": "Running in production at Exos today",
+    "beta": "Working at Exos, needs generalization before an outside org uses it",
+    "exos_only": "Built around Exos programs/data; template only"
+  },
+  "native": [
+    {"group": "Work management", "items": [
+      {"id": "tasks", "name": "Jobs & Tasks", "tier": "core", "status": "live", "page": "jobs.html", "desc": "Prioritized task board with owners, due dates, subtasks, documents tab and version-controlled attachments. Notes and questions answered in-thread by the AI agent."},
+      {"id": "decisions", "name": "Decisions queue", "tier": "core", "status": "live", "page": "decisions.html", "desc": "One-click approve / hold / drop cards for the executive. Answers flow back to the task and trigger the next action automatically."},
+      {"id": "dashboard", "name": "My Dashboard", "tier": "core", "status": "live", "page": "dashboard.html", "desc": "Per-user view of assigned work, deadlines and items needing attention."},
+      {"id": "followups", "name": "Follow-ups", "tier": "core", "status": "live", "page": "followups.html", "desc": "Dated follow-up reminders tied to contacts and tasks, so nothing sent goes unanswered."},
+      {"id": "search", "name": "Global search", "tier": "core", "status": "live", "page": "search.html", "desc": "Search across tasks, contacts, companies and documents."},
+      {"id": "schedule", "name": "Schedule & Gantt", "tier": "standard", "status": "live", "page": "gantt.html", "desc": "Program schedule with dependencies, critical path and slack."}
+    ]},
+    {"group": "Relationships & revenue", "items": [
+      {"id": "crm", "name": "CRM & Contacts", "tier": "core", "status": "live", "page": "crm.html", "desc": "Companies, contacts, deals and activity history; email capture links correspondence to records automatically."},
+      {"id": "opportunities", "name": "Opportunities pipeline", "tier": "standard", "status": "live", "page": "opportunities.html", "desc": "Ranked pipeline of bids, grants and deals by value and deadline, with go/no-go gates."},
+      {"id": "dossiers", "name": "Relationship dossiers", "tier": "standard", "status": "live", "page": "dossier.html", "desc": "One-page briefs on people and organizations before a meeting."},
+      {"id": "consortium", "name": "Consortium / teaming", "tier": "advanced", "status": "beta", "page": "consortium.html", "desc": "Track partners, scopes and backups for multi-party bids."},
+      {"id": "commissions", "name": "Sales commissions", "tier": "advanced", "status": "beta", "page": "commissions.html", "desc": "Commission tracking per rep and deal."},
+      {"id": "orders", "name": "Customer orders", "tier": "advanced", "status": "beta", "page": "payload-orders.html", "desc": "Quote, order, terms and close-out workflow for customer orders (built for Exos payloads; template for others)."}
+    ]},
+    {"group": "Documents & signatures", "items": [
+      {"id": "exosign", "name": "ExoSign e-signature", "tier": "standard", "status": "live", "page": "docusign.html", "desc": "Native e-signature: send, sign, audit certificate, signed copy filed to the task."},
+      {"id": "dataroom", "name": "Data room", "tier": "advanced", "status": "live", "page": "dataroom.html", "desc": "Permissioned due-diligence data room with readiness scoring and reviewer roles."},
+      {"id": "procedures", "name": "Procedures library", "tier": "standard", "status": "live", "page": "process-library.html", "desc": "Controlled procedures with master list, revision history and approver sign-off."},
+      {"id": "reading", "name": "Required reading", "tier": "standard", "status": "live", "page": "required-reading.html", "desc": "Assign policies to staff and track acknowledgment."},
+      {"id": "vault", "name": "Vault", "tier": "advanced", "status": "live", "page": "vault.html", "desc": "Encrypted storage for shared and personal credentials and sensitive records."}
+    ]},
+    {"group": "Finance & operations", "items": [
+      {"id": "finance", "name": "Operational finance", "tier": "advanced", "status": "live", "page": "finance.html", "desc": "Cash, AR/AP and funding views fed from the accounting system (role-gated)."},
+      {"id": "expenses", "name": "Expense reports", "tier": "standard", "status": "live", "page": "expenses.html", "desc": "Submit, approve and export expense reports."},
+      {"id": "jobcost", "name": "Job costing", "tier": "advanced", "status": "live", "page": "jobcost.html", "desc": "Labor and material cost rolled up per job or contract."},
+      {"id": "suppliers", "name": "Suppliers & POs", "tier": "advanced", "status": "live", "page": "suppliers.html", "desc": "Supplier records, due diligence and purchase orders synced to accounting."},
+      {"id": "assets", "name": "Asset register", "tier": "standard", "status": "live", "page": "assets.html", "desc": "Equipment and asset tracking."}
+    ]},
+    {"group": "Manufacturing (optional)", "items": [
+      {"id": "mrp", "name": "MRP", "tier": "advanced", "status": "beta", "page": "mrp.html", "desc": "Material requirements planning from the bill of materials."},
+      {"id": "production", "name": "Production control", "tier": "advanced", "status": "beta", "page": "production.html", "desc": "Work orders and build status on the shop floor."},
+      {"id": "receiving", "name": "Receiving & inventory", "tier": "advanced", "status": "beta", "page": "receiving.html", "desc": "Receive against POs, shop inventory with photos, shortfall tracking."}
+    ]},
+    {"group": "People & compliance", "items": [
+      {"id": "hr", "name": "HR directory", "tier": "standard", "status": "live", "page": "hr.html", "desc": "Read-only staff directory and org chart mirrored from the HR system."},
+      {"id": "people", "name": "Team performance", "tier": "standard", "status": "live", "page": "people.html", "desc": "Throughput and on-time metrics per person and team."},
+      {"id": "screening", "name": "Compliance screening", "tier": "advanced", "status": "live", "page": "compliance-screening.html", "desc": "Denied-party screening of every new contact and supplier against the U.S. Consolidated Screening List."},
+      {"id": "ethics", "name": "Ethics & whistleblower report", "tier": "standard", "status": "live", "page": "report.html", "desc": "Confidential reporting channel per the employee handbook."},
+      {"id": "govready", "name": "Gov / DIB readiness", "tier": "advanced", "status": "beta", "page": "gov-readiness.html", "desc": "Readiness tracker for government contracting (registrations, CMMC, cyber controls)."}
+    ]},
+    {"group": "AI & intelligence", "items": [
+      {"id": "agent", "name": "Exobot AI agent", "tier": "core", "status": "live", "page": "index.html", "desc": "Persistent AI assistant inside MC: answers in-task questions, drafts documents and email, does research, files results back to the task."},
+      {"id": "fleet", "name": "Agent fleet & governance", "tier": "standard", "status": "live", "page": "fleet.html", "desc": "Registry of every automated agent with a named human owner, eval suite, autonomy limits and audit trail (ExO3 model)."},
+      {"id": "research", "name": "Research & intel", "tier": "standard", "status": "live", "page": "research.html", "desc": "Sourced research briefs and market/industry watch feeds."},
+      {"id": "capgaps", "name": "Capability-gap ledger", "tier": "advanced", "status": "live", "page": "capability-gaps.html", "desc": "Gaps between what the organization needs to win and what it has, with owners and closure plans."},
+      {"id": "localai", "name": "Private / local AI models", "tier": "advanced", "status": "beta", "page": "", "desc": "Run sensitive workloads on on-premise open-weight models so data never leaves the tenant."}
+    ]},
+    {"group": "Platform", "items": [
+      {"id": "roles", "name": "Users, roles & SSO-ready login", "tier": "core", "status": "live", "page": "admin.html", "desc": "Role-based access (admin, manager, member, external/partner, board) with per-page permissions."},
+      {"id": "partnerview", "name": "Partner / board portals", "tier": "advanced", "status": "live", "page": "", "desc": "Scoped read-only views for partners, directors or customers."},
+      {"id": "backup", "name": "Backup & recycle bin", "tier": "core", "status": "live", "page": "backup.html", "desc": "Nightly backups; every delete is recoverable for 90 days."},
+      {"id": "guard", "name": "MC Guard security", "tier": "core", "status": "live", "page": "", "desc": "Request filtering, rate limiting and audit logging in front of every page."}
+    ]}
+  ],
+  "integrations": [
+    {"group": "Accounting & HR", "items": [
+      {"id": "quickbooks", "name": "QuickBooks Online", "tier": "standard", "status": "live", "mode": "API (OAuth)", "desc": "Invoices, bills, POs, deposits and journal entries; finance dashboards read live balances."},
+      {"id": "bamboohr", "name": "BambooHR", "tier": "standard", "status": "live", "mode": "API", "desc": "Directory, org chart, new-hire onboarding triggers, loaded labor rates for job costing."}
+    ]},
+    {"group": "Email, calendar & messaging", "items": [
+      {"id": "proton", "name": "Proton Mail", "tier": "standard", "status": "live", "mode": "Proton Bridge (IMAP/SMTP)", "desc": "Inbound email becomes CRM activity or tasks; outbound drafts and sends from the user's mailbox."},
+      {"id": "m365", "name": "Microsoft 365 (incl. GCC High)", "tier": "advanced", "status": "live", "mode": "Microsoft Graph API", "desc": "Mail, calendar, SharePoint documents and tenant security (government-cloud capable)."},
+      {"id": "discord", "name": "Discord", "tier": "standard", "status": "live", "mode": "Bot API", "desc": "Decisions feed, task notifications and chat with the AI agent from team channels."}
+    ]},
+    {"group": "Projects, signatures & data rooms", "items": [
+      {"id": "teamwork", "name": "Teamwork.com", "tier": "standard", "status": "live", "mode": "API", "desc": "Two-way task sync for teams that keep Teamwork as their project tool."},
+      {"id": "docusign", "name": "DocuSign", "tier": "standard", "status": "live", "mode": "API", "desc": "Send envelopes through DocuSign where a counterparty requires it; ExoSign is the native default."},
+      {"id": "peony", "name": "Peony data room", "tier": "advanced", "status": "beta", "mode": "Browser automation", "desc": "Push data-room documents to an external Peony room for investors."}
+    ]},
+    {"group": "Government & compliance data", "items": [
+      {"id": "samgov", "name": "SAM.gov", "tier": "advanced", "status": "live", "mode": "API", "desc": "Federal opportunity search and fit triage into the pipeline."},
+      {"id": "csl", "name": "Consolidated Screening List (trade.gov)", "tier": "advanced", "status": "live", "mode": "API", "desc": "Denied-party screening behind the Compliance Screening module."}
+    ]},
+    {"group": "AI models & research", "items": [
+      {"id": "claude", "name": "Anthropic Claude", "tier": "core", "status": "live", "mode": "API / CLI", "desc": "Primary model for the AI agent."},
+      {"id": "altmodels", "name": "Additional model providers (xAI Grok, Google Gemini, Moonshot Kimi)", "tier": "advanced", "status": "beta", "mode": "API", "desc": "Second-opinion reviewers and specialist tiers routed by task."},
+      {"id": "ollama", "name": "Ollama (local models)", "tier": "advanced", "status": "beta", "mode": "Local runtime", "desc": "On-premise open-weight models for private workloads."},
+      {"id": "websearch", "name": "Web research (Tavily)", "tier": "standard", "status": "live", "mode": "API", "desc": "Sourced web search and page extraction for research briefs."}
+    ]},
+    {"group": "Infrastructure", "items": [
+      {"id": "supabase", "name": "Supabase (Postgres)", "tier": "core", "status": "live", "mode": "Database API", "desc": "System of record for tasks, CRM and activity."},
+      {"id": "cloudflare", "name": "Cloudflare Zero Trust", "tier": "core", "status": "live", "mode": "Access / Tunnel", "desc": "Identity-aware access and encrypted tunnel; no open inbound ports."},
+      {"id": "duet", "name": "Duet 3D printer control", "tier": "exos", "status": "exos_only", "mode": "Duet Web Control API", "desc": "Shop-floor printer status (Exos example of machine integration)."}
+    ]}
+  ],
+  "roadmap_integrations": [
+    "Google Workspace (Gmail, Calendar, Drive)", "Slack", "Salesforce", "HubSpot", "NetSuite", "Xero",
+    "Gusto / Rippling / ADP", "Okta / Entra ID SSO (SAML/OIDC)", "Box / Dropbox", "Jira", "Asana", "Zoom / Teams meetings (transcripts)"
+  ]
+}
