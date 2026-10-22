@@ -25,7 +25,7 @@ const NEVER = new Set([
   'finance.html', // Exos capital-bridge / operational finance
 ]);
 // Shell pages every logged-in user needs.
-const ALWAYS = new Set(['index.html', 'login.html', 'set-password.html', 'settings.html', 'search.html']);
+const ALWAYS = new Set(['index.html', 'login.html', 'set-password.html', 'settings.html', 'search.html', 'setup.html']);
 // Extra pages that belong to a feature beyond the catalog's primary page.
 const EXTRA = { receiving: ['shop-inventory.html', 'inventory.html'], tasks: ['index.html'] };
 

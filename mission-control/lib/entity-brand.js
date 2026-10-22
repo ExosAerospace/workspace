@@ -17,10 +17,16 @@ const BRANDS = {
   },
 };
 
-function brandFor(entity) {
-  if (BRANDS[entity]) return BRANDS[entity];
+function brandFor(entity, override) {
   const up = String(entity || '').toUpperCase();
-  return { legal: up, name: up, short: up, badge: up.slice(0, 2), mtp: null };
+  const base = BRANDS[entity] || { legal: up, name: up, short: up, badge: up.slice(0, 2), mtp: null };
+  if (!override) return base;
+  // data/brand.json (first-run setup, lib/brand-settings.js) wins over the built-in defaults.
+  const o = override;
+  return Object.assign({}, base, {
+    name: o.name || base.name, legal: o.legal || o.name || base.legal, short: o.short || base.short,
+    badge: o.badge || base.badge, botName: o.botName || null, logoUrl: o.logoUrl || null,
+  });
 }
 
 // Order matters: longest/most specific first.
@@ -38,18 +44,51 @@ function rules(b) {
   ];
 }
 
+// Assistant name in display text: "Exobot" and a standalone "Exo" become the cell's bot name.
+// Skipped: identifiers/paths (exobot-widget.js, __mcExobot, ExO3, Exo3), compound owner values
+// such as 'Jon+Exo', and a whole quoted
+// value like 'Exo' or value="Exo" (data values the code compares against, e.g. owner names).
+const BOT_RES = [
+  /(^|[^A-Za-z0-9_\-\/.@$+])Exobot(?![A-Za-z0-9_\-@+]|\.[A-Za-z])/g,
+  /(^|[^A-Za-z0-9_\-\/.@$+])Exo(?![A-Za-z0-9_\-@+]|\.[A-Za-z])/g,
+];
+function renameBot(s, bot) {
+  if (!bot) return s;
+  // Dropdown labels are display text even when quoted whole: { value: 'Exo', label: 'Exo' }.
+  s = s.replace(/(\blabel\s*:\s*(['"]))Exo(?:bot)?\2/g, (m, pre, q) => pre + bot + q);
+  for (const re of BOT_RES) {
+    s = s.replace(re, (m, pre, off, all) => {
+      const after = all[off + m.length];
+      if ((pre === "'" || pre === '"' || pre === '`') && after === pre) return m;
+      return pre + bot;
+    });
+  }
+  return s;
+}
+
+// Uploaded logo replaces the text badge; the wrapper div keeps each page's size and radius.
+function logoTag(b) {
+  return '<div class="brand-logo" style="background:none;padding:0;overflow:hidden"><img src="' + b.logoUrl
+    + '" alt="' + b.short + '" style="width:100%;height:100%;object-fit:contain;display:block"></div>';
+}
+
 // Pages that carry Exos legal templates (offer letters, NDAs with Exos's address and
 // benefits). Swapping the name there would create a false SSLC document, so only the
 // page chrome (title / header) is rebranded and templates stay as-is.
 const CHROME_ONLY = new Set(['docusign.html']);
 
-function rebrand(text, b, chromeOnly) {
+function rebrand(text, b, chromeOnly, page) {
   let s = String(text);
   if (chromeOnly) {
     return s.replace(/<title>[\s\S]*?<\/title>/i, m => applyRules(m, b));
   }
   s = applyRules(s, b);
+  if (b.logoUrl) s = s.replace(/<div class="brand-logo">[^<]{0,4}<\/div>/g, () => logoTag(b));
   if (!b.mtp) s = s.replace(/<a href="mtp\.html" id="mtpBanner"[\s\S]*?<\/a>/, '');
+  // Settings: the company/logo/bot setup stays editable after first run.
+  if (page === 'settings.html' && s.indexOf('href="setup.html"') === -1) {
+    s = s.replace(/(<a href="index\.html">[^<]*<\/a>)/, '$1<a href="setup.html">Company, logo &amp; bot</a>');
+  }
   return s;
 }
 function applyRules(s, b) {
@@ -57,11 +96,13 @@ function applyRules(s, b) {
   return s;
 }
 
-function install(entity, extra) {
+function install(entity, extra, brandSource) {
   if (!entity || entity === 'exos') return null;
-  const b = brandFor(entity);
   // extra(html): optional entity sanitizer (lib/entity-pages.js) applied after rebranding.
+  // brandSource(): optional live override from data/brand.json (re-read on mtime, no restart).
   return function wrap(req, res) {
+    let ov = null; try { ov = brandSource ? brandSource() : null; } catch (e) { ov = null; }
+    const b = brandFor(entity, ov);
     const base = (String(req.url || '').split('?')[0].split('/').pop()) || 'index.html';
     const chromeOnly = CHROME_ONLY.has(base);
     const origWriteHead = res.writeHead;
@@ -78,8 +119,10 @@ function install(entity, extra) {
       try {
         const ct = ctype || String(res.getHeader('Content-Type') || '');
         if (chunk != null && /text\/html|javascript/.test(ct)) {
-          let out = rebrand(Buffer.isBuffer(chunk) ? chunk.toString('utf-8') : chunk, b, chromeOnly);
+          let out = rebrand(Buffer.isBuffer(chunk) ? chunk.toString('utf-8') : chunk, b, chromeOnly, base);
           if (extra) out = extra(out);
+          // Bot name last, so the entity sanitizer's Exo-specific scrubs still match first.
+          if (!chromeOnly) out = renameBot(out, b.botName);
           if (!res.headersSent) res.removeHeader('Content-Length');
           return origEnd.call(this, out, ...rest);
         }
@@ -89,4 +132,4 @@ function install(entity, extra) {
   };
 }
 
-module.exports = { install, rebrand, brandFor };
+module.exports = { install, rebrand, brandFor, renameBot };

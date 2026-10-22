@@ -1622,7 +1622,12 @@ const entityPages = require('./lib/entity-pages').create(ENTITY, path.join(__dir
 if (entityPages && process.env.FEATURE_CATALOG_SRC) {
   try { entityPages.writeCatalog(process.env.FEATURE_CATALOG_SRC); } catch (e) { console.warn('[MC] entity catalog write failed:', e.message); }
 }
-const brandWrap = require('./lib/entity-brand').install(ENTITY, entityPages ? entityPages.sanitize : null); // null for Exos
+// Entity cells: first-run setup (company name, logo, bot name) in data/brand.json. Null for Exos.
+const brandStore = require('./lib/brand-settings').create(ENTITY, path.join(__dirname, 'data'), {
+  defaults: require('./lib/entity-brand').brandFor(ENTITY),
+  onSave: () => { if (startupTasks) console.log('[MC] startup board sync (brand)', JSON.stringify(startupTasks.sync('brand'))); },
+});
+const brandWrap = require('./lib/entity-brand').install(ENTITY, entityPages ? entityPages.sanitize : null, brandStore ? brandStore.effective : null); // null for Exos
 // Entity cells: startup board generated from Settings > Features (+ file-backed tasks when no DB). Null for Exos.
 const startupTasks = require('./lib/startup-tasks').create(ENTITY, path.join(__dirname, 'data'), process.env.STARTUP_PLAYBOOK || '/app/docker-seed/_common/startup-playbook.json');
 if (startupTasks) {
@@ -1648,6 +1653,8 @@ const server = http.createServer((req, res) => {
 
   // MC Guard runs before everything else: blocklist, tripwires, behavior scoring.
   if (guard.check(req, res, getSession(req))) return;
+  // Entity cells: uploaded company logo (public so the login page can show it).
+  if (brandStore && brandStore.handlePublic(req, res)) return;
 
   // Jon-only guard controls: status + unlock (nobody else can release a lockout).
   if (req.url.split('?')[0] === '/api/admin/guard/status' || req.url.split('?')[0] === '/api/admin/guard/unlock') {
@@ -2078,6 +2085,10 @@ const server = http.createServer((req, res) => {
       }
     }
   }
+  // Entity cells: brand API + first-run gate (admin/manager → setup.html, others see a notice).
+  if (!brandStore && req.url.split('?')[0] === '/setup.html') { res.writeHead(404, { 'Content-Type': 'text/plain' }); res.end('Not found'); return; }
+  if (brandStore && brandStore.handle(req, res, session)) return;
+  if (brandStore && brandStore.gate(req, res, session)) return;
   if (session && session.role === 'member') {
     const fp = req.url.split('?')[0];
     // API + data endpoints members may not read. Includes the sensitive pages' data sources so

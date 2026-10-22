@@ -79,6 +79,13 @@ function create(entity, dataDir, playbookFile) {
         }
       }
     }
+    // First-run setup finished (data/brand.json setupComplete) → the brand task closes itself, once.
+    const su = d.tasks.find(x => String(x.id) === 'SU-brand');
+    if (su && !su.auto_done && su.state !== 'Done' && su.state !== 'Cancelled' && readJson(path.join(dataDir, 'brand.json'), {}).setupComplete) {
+      Object.assign(su, { state: 'Done', completed_at: now(), auto_done: true, updated_at: now() });
+      notes.push({ id: 'N-' + Date.now().toString(36), type: 'task_update', subject: 'task:SU-brand', body: '[Update] state: To Do → Done (first-run setup finished)', owner: 'system', created_at: now() });
+      writeJson(notesFile, notes);
+    }
     d.tasks = d.tasks.filter(x => {
       if (x.source !== 'startup' || want.has(String(x.id))) return true;
       const untouched = x.state === 'To Do' && !touched(x.id);

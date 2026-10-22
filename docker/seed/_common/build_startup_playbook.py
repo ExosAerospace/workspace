@@ -52,6 +52,15 @@ AUTO = {
 ROLE_OF = {f: r for r, fs in OWNER_ROLE.items() for f in fs}
 
 BASE = {
+  # First task on every new board (Jon 2026-10-22). Closes itself when setup.html is finished.
+  "brand": {**t("Name your company, upload your logo, name your bot",
+    "Mission Control shows your company name, logo and assistant name on every page. The first-run setup asks for these before anyone else uses the workspace.",
+    ["An administrator or manager signs in. Mission Control opens Setup automatically until it is finished (later: Settings → Company, logo & bot).",
+     "Step 1: type your company name. The short name and the two-letter badge fill in automatically; change them if you like. Add your legal name if it differs.",
+     "Step 2 (optional): upload your logo. PNG, JPG, SVG or WebP, up to 2 MB. Skip it and the two-letter badge is used instead.",
+     "Step 3: name your assistant bot. It starts as \"Exobot\"; type any name you want.",
+     "Click Finish setup. Everyone else can now use Mission Control."],
+    "Setup finished: your company name, logo (or badge) and bot name show across Mission Control. This task closes itself.", phase=0), "rank": -1},
   "kickoff": t("Kickoff with your Exos rollout rep",
     "Sets the go-live date, who your site owner(s) and MC administrator are, and which systems you bring up first.",
     ["Book a 45-minute kickoff with your Exos rollout rep.",
