@@ -519,10 +519,18 @@ def selftest():
     print(f"lizi-followup-digest selftest: {'PASS' if not fails else 'FAIL'} ({len(fails)} failure(s))")
     _sys.exit(0 if not fails else 1)
 import sys as _sys0
-if _sys0.argv[1:2]==["selftest"]:
+if _sys0.argv[1:2] in (["selftest"],["--selftest"]):
     selftest()
+if _sys0.argv[1:]:
+    # Only a bare run (launchd) sends. Any other argument (typo'd --selftest, --check, etc.)
+    # used to fall through and send a real duplicate digest to Lizi (10/22: 3 copies).
+    print("usage: lizi-followup-digest.py [selftest]  (bare run = send today's digest; launchd only)"); _sys0.exit(2)
 today=date.today().isoformat()
 items=DUE.get(today,[])
+SENT=os.path.expanduser("~/.openclaw/workspace/logs/lizi-followup-digest.sent")
+_sent=set(open(SENT).read().split()) if os.path.exists(SENT) else set()
+if items and today in _sent:
+    print(f"{today} digest already sent; not re-sending"); items=[]
 if items:
     lines=[f"■ {n}\n   To: {to}\n   Context: {why}\n   Draft nudge:\n\n{draft}\n" for n,to,why,draft in items]
     m=EmailMessage(); m["From"]="Exo <jquinnexo@pm.me>"; m["To"]="lquinn@exosaero.com"; m["X-Exo-No-Task"]="1"
@@ -530,6 +538,7 @@ if items:
     m.set_content("Hi Lizi,\n\nThese are due for a follow-up today if they haven't replied. Each has the contact and a ready-to-send nudge (reply on your original thread so they see the history):\n\n"+"\n".join(lines)+
       "\n\nSkip anyone who already replied, and tell me in #lizi-channel-2 so I log it.\n\n- Exo")
     subprocess.run(["/opt/homebrew/bin/msmtp","-a","protonmail","lquinn@exosaero.com"],input=m.as_bytes(),check=True,timeout=60)
+    open(SENT,"a").write(today+"\n")
 if today>="2027-02-03":
     p=os.path.expanduser(f"~/Library/LaunchAgents/{LABEL}.plist")
     try: os.remove(p)
