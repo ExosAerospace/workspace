@@ -191,13 +191,15 @@ function build(d){
   tasks.forEach(t=>{ t.section=listName[t.task_list_id]||'(no section)'; t.phase=t.phase||guessPhase(t.title); });
   const groups=[];
   if(GROUPBY==='fru'){
+    // Non-FRU tracks (Phil Eaton 10/22): shown as their own groups even when they feed an FRU.
+    const TRACKS=['Software Development & Verification','GNC & Simulation','Regulatory & Licensing'];
     const byId0={}; tasks.forEach(t=>byId0[t.id]=t);
     const fruTasks=tasks.filter(t=>/^mc-fru-\d+$/.test(t.id)).sort((a,b)=>Number(a.id.split('-').pop())-Number(b.id.split('-').pop()));
     const placed=new Set();
     fruTasks.forEach(f=>{
       const mem=new Set(), st=[f.id];
       while(st.length){const c=st.pop(); if(mem.has(c)||!byId0[c]) continue; mem.add(c); (byId0[c].predecessors||[]).forEach(p=>st.push(p));}
-      const rows=[...mem].map(id=>byId0[id]).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
+      const rows=[...mem].map(id=>byId0[id]).filter(r=>!TRACKS.includes(r.phase)).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
       rows.forEach(r=>placed.add(r.id));
       groups.push({name:f.id.split('-').pop()+') '+String(f.title).replace(/^FRU ready for integration:\s*/,''),rows,fru:true});
     });
@@ -205,12 +207,11 @@ function build(d){
     const gse=byId0['mc-gse'];
     if(gse){ const mem=new Set(), st=[gse.id];
       while(st.length){const c=st.pop(); if(mem.has(c)||!byId0[c]) continue; mem.add(c); (byId0[c].predecessors||[]).forEach(p=>st.push(p));}
-      const rows=[...mem].map(id=>byId0[id]).filter(r=>!placed.has(r.id)||r.id===gse.id).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
+      const rows=[...mem].map(id=>byId0[id]).filter(r=>(!placed.has(r.id)||r.id===gse.id)&&!TRACKS.includes(r.phase)).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
       rows.forEach(r=>placed.add(r.id)); groups.gse={name:'GSE — Ground Support Equipment (not an FRU · not required for flight)',rows}; }
     const integ=tasks.filter(t=>t.id==='mc-fru-integration'); integ.forEach(t=>placed.add(t.id));
     const rest=tasks.filter(t=>!placed.has(t.id)).sort((a,b)=>String(a.start_date||a.due_date).localeCompare(String(b.start_date||b.due_date)));
     // Non-FRU tracks (Phil Eaton 10/22): Regulatory & Licensing, GNC & Simulation; anything else = other.
-    const TRACKS=['Regulatory & Licensing','GNC & Simulation'];
     TRACKS.forEach(tr=>{ const rows=rest.filter(t=>t.phase===tr); groups.push({name:tr+' (not an FRU)'+(rows.length?'':'  (no tasks yet)'),rows}); });
     // A task with no links into an FRU still belongs to the FRU its vehicle section maps to, so editing
     // dependencies never makes it vanish from its FRU (Phil Eaton 10/22, Airframe Section Design).
