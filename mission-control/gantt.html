@@ -76,10 +76,10 @@
     <div class="legend">
       <span><i class="swatch" style="background:#3b82f6"></i>To Do</span>
       <span><i class="swatch" style="background:#eab308"></i>In Progress</span>
-      <span><i class="swatch" style="background:#ff8c00"></i>Due within 7 days</span>
-      <span><i class="swatch" style="background:#dc2626"></i>Past due</span>
+      <span><i class="swatch" style="background:#ff8c00"></i>Due within 7 days, not done</span>
+      <span><i class="swatch" style="background:#dc2626"></i>Past due, not done</span>
       <span><i class="swatch" style="background:#6b7280"></i>Waiting on another task</span>
-      <span><i class="swatch" style="background:#22c55e"></i>Done</span>
+      <span><i class="swatch" style="background:#22c55e"></i>Done (any due date)</span>
       <span><i class="swatch" style="background:#e879f9;border-radius:2px;height:3px;width:16px"></i>Critical path</span>
       <span style="color:#7f8aa3">→ dependency</span>
     </div>
@@ -103,7 +103,8 @@ function statusColor(st){const s=(st||'').toLowerCase();
 const DUE_SOON_DAYS=7;
 function isDone(st){const s=(st||'').toLowerCase();return s==='done'||s==='complete'||s==='completed'||s==='closed';}
 function barColor(t){
-  if(!isDone(t.state)&&t.due_date){const now=new Date();const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  if(isDone(t.state))return'#22c55e';          // complete = green, whether its due date is past or future
+  if(t.due_date){const now=new Date();const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
     const left=daysBetween(today,d2(t.due_date));
     if(left<0)return'#dc2626';
     if(left<=DUE_SOON_DAYS)return'#ff8c00';}
