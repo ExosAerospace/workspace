@@ -13,6 +13,11 @@
     "beta": "Working at Exos, needs generalization before an outside org uses it",
     "exos_only": "Built around Exos programs/data; template only"
   },
+  "pricing": {"label": "proposal pricing, not yet approved", "source": "drafts/mc-industry/MC_Industry_Options_and_Pricing_2026-10-22.docx section 3",
+    "packages": {
+      "core": {"platform_month": 500, "per_user_month": 45, "min_users": 5, "onboarding": 5000},
+      "business": {"platform_month": 1000, "per_user_month": 65, "min_users": 10, "onboarding": 15000},
+      "enterprise": {"platform_month": 3000, "per_user_month": 110, "min_users": 25, "onboarding": 40000}}},
   "native": [
     {"group": "Work management", "items": [
       {"id": "tasks", "name": "Jobs & Tasks", "tier": "core", "status": "live", "page": "jobs.html", "desc": "Prioritized task board with owners, due dates, subtasks, documents tab and version-controlled attachments. Notes and questions answered in-thread by the AI agent."},

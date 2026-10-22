@@ -174,59 +174,42 @@ tr:hover td { background: var(--surface); }
 
 <script>
 // ── LOGIN GATE ──
-// When served via Mission Control server, uses server auth.
-// When opened as local file (emergency), uses offline password.
+// Server sign-in only. Data comes from the admin-only /api/backup-read proxy, so a copy opened
+// as a local file has nothing to show; the old offline password (hard-coded in this page) is gone.
 (function() {
-  const OFFLINE_PW_HASH = '746d7fcbc148893485161e55a050e8d4a99ff647ad53aa27d456ea7ce6e02b6d'; // sha256 of exos2026 (first 64 hex chars via pbkdf2)
   if (sessionStorage.getItem('backup_auth') === 'ok') return;
+  if (window.location.protocol === 'file:') { showLoginGate(true); return; }
+  fetch('/api/me').then(r => {
+    if (r.ok) { sessionStorage.setItem('backup_auth', 'ok'); return; }
+    showLoginGate(false);
+  }).catch(() => showLoginGate(false));
 
-  // Check if already authenticated via server cookie
-  if (window.location.protocol !== 'file:') {
-    // Try server auth check
-    fetch('/api/me').then(r => {
-      if (r.ok) { sessionStorage.setItem('backup_auth', 'ok'); return; }
-      showLoginGate(false);
-    }).catch(() => showLoginGate(true));
-    return;
-  }
-  showLoginGate(true);
-
-  function showLoginGate(offline) {
+  function showLoginGate(local) {
     document.body.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a1628">
         <div style="background:#0f1e38;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:40px;width:90%;max-width:400px;text-align:center;color:#e8edf5;font-family:-apple-system,system-ui,sans-serif">
           <h1 style="font-size:24px;margin-bottom:4px"><span style="color:#0080ff">EXOS</span> Backup System</h1>
-          <p style="color:#a0aec0;font-size:13px;margin-bottom:28px">${offline ? 'Offline mode — enter password' : 'Sign in to continue'}</p>
-          ${offline ? '' : '<label style="display:block;text-align:left;font-size:12px;color:#a0aec0;margin-bottom:4px;text-transform:uppercase">Email</label><input type="email" id="bl_email" placeholder="you@exosaerospace.com" style="width:100%;padding:12px;background:#162a4a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#e8edf5;font-size:15px;outline:none;margin-bottom:16px">'}
+          ${local ? '<p style="color:#a0aec0;font-size:13px">Open this page through Mission Control (/backup.html) and sign in. A local copy cannot load data.</p>' : `
+          <p style="color:#a0aec0;font-size:13px;margin-bottom:28px">Sign in to continue</p>
+          <label style="display:block;text-align:left;font-size:12px;color:#a0aec0;margin-bottom:4px;text-transform:uppercase">Email</label><input type="email" id="bl_email" placeholder="you@exosaero.com" style="width:100%;padding:12px;background:#162a4a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#e8edf5;font-size:15px;outline:none;margin-bottom:16px">
           <label style="display:block;text-align:left;font-size:12px;color:#a0aec0;margin-bottom:4px;text-transform:uppercase">Password</label>
           <input type="password" id="bl_pw" placeholder="Password" style="width:100%;padding:12px;background:#162a4a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#e8edf5;font-size:15px;outline:none;margin-bottom:16px" autofocus>
-          <button onclick="window._backupLogin(${offline})" style="width:100%;padding:12px;background:#0080ff;border:none;border-radius:6px;color:#fff;font-size:15px;font-weight:600;cursor:pointer">Sign In</button>
-          <div id="bl_err" style="color:#ff4444;font-size:13px;margin-top:8px;display:none">Invalid credentials</div>
+          <button onclick="window._backupLogin()" style="width:100%;padding:12px;background:#0080ff;border:none;border-radius:6px;color:#fff;font-size:15px;font-weight:600;cursor:pointer">Sign In</button>
+          <div id="bl_err" style="color:#ff4444;font-size:13px;margin-top:8px;display:none">Invalid credentials</div>`}
         </div>
       </div>`;
-    document.getElementById('bl_pw').addEventListener('keydown', e => { if (e.key === 'Enter') window._backupLogin(offline); });
+    const pw = document.getElementById('bl_pw');
+    if (pw) pw.addEventListener('keydown', e => { if (e.key === 'Enter') window._backupLogin(); });
   }
 
-  window._backupLogin = async function(offline) {
+  window._backupLogin = async function() {
+    const email = document.getElementById('bl_email').value;
     const pw = document.getElementById('bl_pw').value;
-    if (offline) {
-      // Simple offline check — hash comparison
-      const enc = new TextEncoder().encode(pw);
-      // For offline, accept if password matches known value
-      if (pw === 'exos2026') {
-        sessionStorage.setItem('backup_auth', 'ok');
-        location.reload();
-      } else {
-        document.getElementById('bl_err').style.display = 'block';
-      }
-    } else {
-      const email = document.getElementById('bl_email').value;
-      try {
-        const r = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password: pw }) });
-        if (r.ok) { sessionStorage.setItem('backup_auth', 'ok'); location.reload(); }
-        else { document.getElementById('bl_err').style.display = 'block'; }
-      } catch { document.getElementById('bl_err').style.display = 'block'; }
-    }
+    try {
+      const r = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password: pw }) });
+      if (r.ok) { sessionStorage.setItem('backup_auth', 'ok'); location.reload(); }
+      else { document.getElementById('bl_err').style.display = 'block'; }
+    } catch { document.getElementById('bl_err').style.display = 'block'; }
   };
 })();
 

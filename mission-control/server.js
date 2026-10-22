@@ -2561,7 +2561,7 @@ const server = http.createServer((req, res) => {
   }
 
   // ── SETTINGS > FEATURES (MC-Industry feature matrix + requests; lib/feature-settings.js) ──
-  if (req.url.startsWith('/api/settings/feature') && require('./lib/feature-settings').handle(req, res, session)) return;
+  if ((req.url.startsWith('/api/settings/feature') || req.url.startsWith('/api/settings/site-owners')) && require('./lib/feature-settings').handle(req, res, session)) return;
   if (startupTasks && !SUPABASE_ENABLED && /^\/api\/(tasks|task-desc)/.test(req.url) && startupTasks.handle(req, res, session)) return;
 
   // ── HR DIRECTORY (read-only) — read-through mirror of BambooHR; directory-level only, no PII ──

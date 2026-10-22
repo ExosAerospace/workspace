@@ -1,28 +1,31 @@
 {
- "version": "2026-10-22",
+ "version": "2026-10-22.2",
  "rep_label": "your Exos rollout rep",
  "base": {
   "kickoff": {
    "title": "Kickoff with your Exos rollout rep",
-   "why": "Sets the go-live date, who your MC administrator is, and which systems you bring up first.",
+   "why": "Sets the go-live date, who your site owner(s) and MC administrator are, and which systems you bring up first.",
    "prereq": [],
    "steps": [
     "Book a 45-minute kickoff with your Exos rollout rep.",
-    "Name one MC administrator for your organization (adds users, changes Settings).",
+    "Name your site owner(s): the one or two people who decide which Mission Control features your organization uses. Site owners can change Settings > Features.",
+    "Name one MC administrator (adds users, assigns roles). Can be the same person as a site owner.",
     "Agree the go-live date and the order systems come up (this board is already in a sensible order: platform \u2192 people \u2192 work management \u2192 finance \u2192 operations).",
     "List the data you will bring over: customer/contact list, supplier list, open purchase orders, parts/BOM lists, asset list, open jobs.",
-    "Post the agreed date and admin name as a note on this task."
+    "Post the agreed date, site owner(s) and administrator as a note on this task."
    ],
-   "done": "Go-live date and administrator are recorded in a note on this task.",
+   "done": "Go-live date, site owner(s) and administrator are recorded in a note on this task.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 0
+   "phase": 0,
+   "rank": 0,
+   "owner_role": "Site owner"
   },
   "settings": {
    "title": "Confirm the features switched on in Settings",
    "why": "Every task on this board is generated from Settings > Features. Turning a feature on adds its setup task here; turning it off removes it (or cancels it if work already started).",
    "prereq": [],
    "steps": [
-    "Open Settings (left nav \u2192 Settings).",
+    "Site owner: open Settings (left nav \u2192 Settings \u2192 Features).",
     "Review each group: Work management, Relationships & revenue, Finance & operations, Manufacturing, People & compliance, AI, Platform, Integrations.",
     "Core items are always on. Tick the Business/Enterprise items you want; untick anything you will not use in the first 90 days.",
     "Click Save selection. The task board updates within a minute.",
@@ -30,7 +33,9 @@
    ],
    "done": "Selection saved and the board shows one setup task per feature you want.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 0
+   "phase": 0,
+   "rank": 1,
+   "owner_role": "Site owner"
   },
   "golive": {
    "title": "Go-live review and sign-off",
@@ -45,24 +50,30 @@
    ],
    "done": "Sign-off note posted and this task marked Done.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 9
+   "phase": 9,
+   "rank": 9,
+   "owner_role": "Site owner"
   }
  },
  "features": {
   "roles": {
-   "title": "Set up users and roles",
-   "why": "Controls who sees what. Every page checks the user's role.",
+   "title": "Add your people and assign roles",
+   "why": "Nothing else on this board moves until each setup task has a named owner. This task puts your people in, gives each the right access, and hands out the rest of the board.",
    "prereq": [],
    "steps": [
-    "Your administrator opens Admin (left nav \u2192 Admin).",
-    "Click + Add User for each person: name, work email, role. Roles: admin (everything + Settings), manager (approve, edit Settings), member (own and shared tasks), partner/board (read-only portals).",
-    "Each new user gets a temporary password and must set their own at first login.",
-    "Start small: administrators and the people who own the next tasks on this board. Add the rest at go-live.",
-    "Ask your Exos rollout rep to add each user's email to the secure-access policy (see the Cloudflare task) or they will not reach the login page."
+    "List your first-wave people: name, work email, job title. Start with the site owner(s), the MC administrator and one lead per area below; add everyone else at go-live.",
+    "Your administrator opens Admin (left nav \u2192 Admin) and clicks + Add User for each person. Roles: admin (everything, including Settings and users), manager (approves, edits Settings), member (own and shared tasks), partner/board (read-only portals).",
+    "Each new user gets a temporary password and sets their own at first login.",
+    "Send the same email list to your Exos rollout rep, who adds it to the secure-access policy. Without that step people cannot reach the login page.",
+    "Name a person for each area lead: MC administrator; Finance lead (accounting, suppliers, expenses, job cost); Operations lead (approvals, equipment, inventory, production); Sales / business development lead (customers, pipeline, bids); HR / people lead (staff directory, policies, ethics line). One person can hold several.",
+    "Open the Startup tasks on this board. Each one says \"Suggested owner\" \u2014 set the Owner field to that person.",
+    "Post the list of people and area leads as a note on this task."
    ],
-   "done": "Every first-wave user can log in and sees the pages their role allows.",
+   "done": "Every first-wave user can log in, and every open Startup task has a named owner.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 1
+   "phase": 0,
+   "rank": 2,
+   "owner_role": "MC administrator"
   },
   "cloudflare": {
    "title": "Secure access (Cloudflare Zero Trust)",
@@ -77,7 +88,9 @@
    ],
    "done": "Every user on the list has reached the MC login page once.",
    "rep": "Your Exos rollout rep does this step for you.",
-   "phase": 1
+   "phase": 1,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "guard": {
    "title": "Security monitoring (MC Guard) \u2014 confirm and review",
@@ -90,7 +103,9 @@
    ],
    "done": "First-week access summary reviewed and a security contact named.",
    "rep": "Your Exos rollout rep runs the report with you.",
-   "phase": 8
+   "phase": 8,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "supabase": {
    "title": "Database and backups \u2014 confirm",
@@ -104,7 +119,9 @@
    ],
    "done": "Backup confirmed and a test restore completed.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 8
+   "phase": 8,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "partnerview": {
    "title": "Partner / board portals",
@@ -117,7 +134,9 @@
    ],
    "done": "Each portal user can log in and sees only their scoped view.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 7
+   "phase": 7,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "tasks": {
    "title": "Jobs & Tasks \u2014 load your work",
@@ -133,7 +152,9 @@
    ],
    "done": "Your open work is on the board with owners and due dates.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 3
+   "phase": 3,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "decisions": {
    "title": "Decisions queue \u2014 set approvers",
@@ -147,7 +168,9 @@
    ],
    "done": "Approvers named and one test decision answered.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 3
+   "phase": 3,
+   "rank": 5,
+   "owner_role": "Operations lead"
   },
   "dashboard": {
    "title": "My Dashboard \u2014 set the company default view",
@@ -160,7 +183,9 @@
    ],
    "done": "Company default dashboard saved.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 3
+   "phase": 3,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "followups": {
    "title": "Follow-ups \u2014 turn on reminders",
@@ -173,7 +198,9 @@
    ],
    "done": "Each owner has seen the Follow-ups page and the weekly habit is agreed.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 3
+   "phase": 3,
+   "rank": 5,
+   "owner_role": "Operations lead"
   },
   "search": {
    "title": "Global search \u2014 check it finds your records",
@@ -185,7 +212,9 @@
    ],
    "done": "Three known records found by search.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 6
+   "phase": 6,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "crm": {
    "title": "CRM & Contacts \u2014 import customers and contacts",
@@ -199,7 +228,9 @@
    ],
    "done": "Your active customers and contacts are in the CRM.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 4
+   "phase": 4,
+   "rank": 5,
+   "owner_role": "Sales / business development lead"
   },
   "opportunities": {
    "title": "Opportunities pipeline \u2014 load open bids and deals",
@@ -215,7 +246,9 @@
    ],
    "done": "Open opportunities are loaded with values and due dates.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 4
+   "phase": 4,
+   "rank": 5,
+   "owner_role": "Sales / business development lead"
   },
   "reading": {
    "title": "Required reading \u2014 assign policies",
@@ -230,7 +263,9 @@
    ],
    "done": "Core policies assigned and acknowledgments tracked.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 7
+   "phase": 7,
+   "rank": 5,
+   "owner_role": "HR / people lead"
   },
   "quickbooks": {
    "title": "Connect QuickBooks Online",
@@ -245,7 +280,9 @@
    ],
    "done": "MC shows your QuickBooks vendors and accounts, and write permissions are agreed.",
    "rep": "Your QuickBooks admin signs in once; your Exos rollout rep does the rest.",
-   "phase": 2
+   "phase": 2,
+   "rank": 5,
+   "owner_role": "Finance lead"
   },
   "suppliers": {
    "title": "Suppliers & POs \u2014 load suppliers and open POs",
@@ -263,7 +300,9 @@
    ],
    "done": "Active suppliers loaded and one PO approved through to QuickBooks.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 5
+   "phase": 5,
+   "rank": 5,
+   "owner_role": "Finance lead"
   },
   "expenses": {
    "title": "Expense reports \u2014 set approvers and categories",
@@ -280,7 +319,9 @@
    ],
    "done": "One test expense report submitted, approved and exported.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 5
+   "phase": 5,
+   "rank": 5,
+   "owner_role": "Finance lead"
   },
   "jobcost": {
    "title": "Job costing \u2014 set up jobs and labor rates",
@@ -296,7 +337,9 @@
    ],
    "done": "Active jobs loaded and one job's cost checked against your records.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 5
+   "phase": 5,
+   "rank": 5,
+   "owner_role": "Finance lead"
   },
   "assets": {
    "title": "Asset register \u2014 load equipment",
@@ -309,7 +352,9 @@
    ],
    "done": "Asset list loaded and high-value items checked.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 5
+   "phase": 5,
+   "rank": 5,
+   "owner_role": "Operations lead"
   },
   "mrp": {
    "title": "MRP \u2014 load bills of materials and run the first plan",
@@ -327,7 +372,9 @@
    ],
    "done": "BOMs loaded, MRP run, and the shortage list checked against what you expect.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 6
+   "phase": 6,
+   "rank": 5,
+   "owner_role": "Operations lead"
   },
   "production": {
    "title": "Production control \u2014 set up work orders",
@@ -343,7 +390,9 @@
    ],
    "done": "One test work order completed end to end.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 6
+   "phase": 6,
+   "rank": 5,
+   "owner_role": "Operations lead"
   },
   "receiving": {
    "title": "Receiving & inventory \u2014 count and load stock",
@@ -359,7 +408,9 @@
    ],
    "done": "Starting stock loaded and one receipt checked in against a PO.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 6
+   "phase": 6,
+   "rank": 5,
+   "owner_role": "Operations lead"
   },
   "hr": {
    "title": "HR directory \u2014 connect your staff list",
@@ -372,7 +423,9 @@
    ],
    "done": "Directory and org chart correct.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 7
+   "phase": 7,
+   "rank": 5,
+   "owner_role": "HR / people lead"
   },
   "ethics": {
    "title": "Ethics & whistleblower reporting \u2014 confirm the channel",
@@ -386,7 +439,9 @@
    ],
    "done": "Recipients set and a test report received.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 7
+   "phase": 7,
+   "rank": 5,
+   "owner_role": "HR / people lead"
   },
   "agent": {
    "title": "AI assistant \u2014 learn how to use it",
@@ -402,7 +457,9 @@
    ],
    "done": "Each first-wave user has asked the assistant one question on a task.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 4
+   "phase": 4,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "claude": {
    "title": "AI model connection \u2014 confirm",
@@ -414,7 +471,9 @@
    ],
    "done": "Connection confirmed and data-handling note reviewed.",
    "rep": "Your Exos rollout rep does this step for you.",
-   "phase": 1
+   "phase": 1,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "localai": {
    "title": "Private / local AI models",
@@ -426,7 +485,9 @@
    ],
    "done": "Private workloads listed and routed.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 7
+   "phase": 7,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "altmodels": {
    "title": "Additional AI model providers",
@@ -438,7 +499,9 @@
    ],
    "done": "Approved providers enabled.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 7
+   "phase": 7,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "ollama": {
    "title": "Local model runtime",
@@ -449,7 +512,9 @@
    ],
    "done": "Runtime tested.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 7
+   "phase": 7,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "websearch": {
    "title": "Web research",
@@ -461,7 +526,9 @@
    ],
    "done": "One sourced research answer received.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 7
+   "phase": 7,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "bamboohr": {
    "title": "Connect BambooHR",
@@ -474,7 +541,9 @@
    ],
    "done": "Directory populated from BambooHR.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 2
+   "phase": 2,
+   "rank": 5,
+   "owner_role": "HR / people lead"
   },
   "proton": {
    "title": "Connect email (Proton Mail)",
@@ -487,7 +556,9 @@
    ],
    "done": "Test email captured.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 2
+   "phase": 2,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "m365": {
    "title": "Connect Microsoft 365",
@@ -499,7 +570,9 @@
    ],
    "done": "Mail and calendar test passed.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 2
+   "phase": 2,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "discord": {
    "title": "Connect team chat (Discord)",
@@ -511,7 +584,9 @@
    ],
    "done": "Test notification received.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 2
+   "phase": 2,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "teamwork": {
    "title": "Connect Teamwork.com",
@@ -523,7 +598,9 @@
    ],
    "done": "Test project synced.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 2
+   "phase": 2,
+   "rank": 5,
+   "owner_role": "MC administrator"
   },
   "docusign": {
    "title": "Connect DocuSign",
@@ -535,7 +612,9 @@
    ],
    "done": "Test envelope signed.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 2
+   "phase": 2,
+   "rank": 5,
+   "owner_role": "Finance lead"
   },
   "peony": {
    "title": "Connect Peony data room",
@@ -546,7 +625,9 @@
    ],
    "done": "Test document visible in Peony.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 2
+   "phase": 2,
+   "rank": 5,
+   "owner_role": "Finance lead"
   },
   "samgov": {
    "title": "SAM.gov opportunity search",
@@ -560,7 +641,9 @@
    ],
    "done": "First matches reviewed.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 7
+   "phase": 7,
+   "rank": 5,
+   "owner_role": "Sales / business development lead"
   },
   "csl": {
    "title": "Denied-party screening",
@@ -572,7 +655,9 @@
    ],
    "done": "Screening on and a reviewer named.",
    "rep": "Your Exos rollout rep walks you through this on a screen-share and can do the setup steps for you.",
-   "phase": 7
+   "phase": 7,
+   "rank": 5,
+   "owner_role": "Sales / business development lead"
   }
  },
  "phases": {

@@ -68,7 +68,8 @@ function saveSelection(tenant, enabled, who) {
   if (!v.ok) return v;
   const sel = loadSelections();
   sel.tenants = sel.tenants || {};
-  sel.tenants[tenant] = { enabled: v.enabled, updated_at: new Date().toISOString(), updated_by: who || 'unknown' };
+  const prev = sel.tenants[tenant] || {};
+  sel.tenants[tenant] = { ...prev, enabled: v.enabled, updated_at: new Date().toISOString(), updated_by: who || 'unknown' };
   const tmp = paths.selections + '.tmp';
   fs.writeFileSync(tmp, JSON.stringify(sel, null, 2));
   fs.renameSync(tmp, paths.selections);
@@ -100,11 +101,28 @@ function listRequests() {
 }
 
 const canAdmin = s => !!s && (s.role === 'admin' || s.role === 'manager');
+// Site owners (Jon 2026-10-22): the people a customer names to choose their features. Any role
+// (directors are often 'member'); listed per tenant in the selections file as owners: [emails].
+const ownersOf = tenant => (((loadSelections().tenants || {})[tenant] || {}).owners || []).map(e => String(e).toLowerCase());
+const isOwner = (s, tenant) => !!s && !!s.email && ownersOf(tenant).includes(String(s.email).toLowerCase());
+const canEdit = (s, tenant) => canAdmin(s) || isOwner(s, tenant);
+
+function saveOwners(tenant, owners, who) {
+  if (!TENANT_RE.test(tenant || '')) return { ok: false, error: 'bad tenant id' };
+  const list = [...new Set((Array.isArray(owners) ? owners : []).map(e => String(e).trim().toLowerCase()).filter(e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)))].slice(0, 10);
+  const sel = loadSelections(); sel.tenants = sel.tenants || {};
+  sel.tenants[tenant] = { ...(sel.tenants[tenant] || { enabled: defaultEnabled(loadCatalog()) }), owners: list };
+  const tmp = paths.selections + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(sel, null, 2));
+  fs.renameSync(tmp, paths.selections);
+  fleet('site_owners_saved', 'ok', { tenant, count: list.length, by: who });
+  return { ok: true, tenant, owners: list };
+}
 
 // Returns true if handled.
 function handle(req, res, session) {
   const p = req.url.split('?')[0];
-  if (!p.startsWith('/api/settings/feature')) return false;
+  if (!p.startsWith('/api/settings/feature') && p !== '/api/settings/site-owners') return false;
   const send = (code, obj) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(obj)); };
   if (!session) { send(401, { error: 'auth required' }); return true; }
   const who = session.email || session.name || 'unknown';
@@ -114,12 +132,19 @@ function handle(req, res, session) {
       const tenant = ENTITY_TENANT || new URL(req.url, 'http://x').searchParams.get('tenant') || 'exos';
       const cat = loadCatalog();
       const t = (loadSelections().tenants || {})[tenant];
-      send(200, { catalog: cat, tenant, enabled: t ? t.enabled : defaultEnabled(cat), updated_at: t ? t.updated_at : null, updated_by: t ? t.updated_by : null, can_edit: canAdmin(session) });
+      send(200, { catalog: cat, tenant, enabled: t ? t.enabled : defaultEnabled(cat), updated_at: t ? t.updated_at : null, updated_by: t ? t.updated_by : null,
+        owners: ownersOf(tenant), show_pricing: !!(t && t.show_pricing), is_owner: isOwner(session, tenant), can_edit: canEdit(session, tenant), can_set_owners: !!session && session.role === 'admin' });
       return true;
     }
     if (p === '/api/settings/features' && req.method === 'POST') {
-      if (!canAdmin(session)) { send(403, { error: 'admin or manager only' }); return true; }
-      readBody().then(b => { const r = saveSelection(ENTITY_TENANT || b.tenant || 'exos', b.enabled, who); send(r.ok ? 200 : 400, r); });
+      readBody().then(b => { const tenant = ENTITY_TENANT || b.tenant || 'exos';
+        if (!canEdit(session, tenant)) return send(403, { error: 'site owner, admin or manager only' });
+        const r = saveSelection(tenant, b.enabled, who); send(r.ok ? 200 : 400, r); });
+      return true;
+    }
+    if (p === '/api/settings/site-owners' && req.method === 'POST') {
+      if (!session || session.role !== 'admin') { send(403, { error: 'admin only' }); return true; }
+      readBody().then(b => { const r = saveOwners(ENTITY_TENANT || b.tenant || 'exos', b.owners, who); send(r.ok ? 200 : 400, r); });
       return true;
     }
     if (p === '/api/settings/feature-request' && req.method === 'POST') {
@@ -139,4 +164,4 @@ function handle(req, res, session) {
   return false;
 }
 
-module.exports = { handle, validateSelection, saveSelection, addRequest, listRequests, loadCatalog, defaultEnabled, catalogIds, _setPaths };
+module.exports = { handle, validateSelection, saveSelection, saveOwners, canEdit, addRequest, listRequests, loadCatalog, defaultEnabled, catalogIds, _setPaths };

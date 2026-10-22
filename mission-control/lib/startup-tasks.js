@@ -31,6 +31,7 @@ function create(entity, dataDir, playbookFile) {
 
   function describe(p, names, pb) {
     const L = [`Phase ${p.phase}: ${(pb.phases || {})[p.phase] || ''}`, '', p.why, ''];
+    if (p.owner_role) L.push('Suggested owner: ' + p.owner_role, '');
     if (p.prereq && p.prereq.length) L.push('Do first: ' + p.prereq.map(id => names[id] || id).join(', '), '');
     L.push('Steps:'); p.steps.forEach((s, i) => L.push(`${i + 1}. ${s}`));
     L.push('', 'Done when: ' + p.done, '', 'Help: ' + p.rep, '', 'Questions: add a note on this task and ' + pb.rep_label + ' answers here.');
@@ -49,19 +50,28 @@ function create(entity, dataDir, playbookFile) {
     const byId = new Map(d.tasks.map(x => [String(x.id), x]));
     const want = new Map();
     const label = p => `Startup ${p.phase} · ${p.title}`;
+    // Phase first, then rank inside the phase: plan → people & roles → platform → … → go-live.
+    const prio = p => 1000 - p.phase * 100 - (p.rank ?? 5);
     for (const [k, p] of Object.entries(pb.base)) want.set('SU-' + k, { p, title: label(p) });
     for (const id of enabled) { const p = pb.features[id]; if (p) want.set('SU-' + id, { p, title: label(p), feature: id }); }
-    let added = 0, removed = 0, cancelled = 0, revived = 0;
+    let added = 0, removed = 0, cancelled = 0, revived = 0, refreshed = 0;
     d.tasks = d.tasks.filter(x => { if (x.source === 'sample') { removed++; return false; } return true; });
     for (const [id, w] of want) {
       const cur = byId.get(id);
       if (!cur) {
-        d.tasks.push({ id, title: w.title, state: 'To Do', owner: 'Team', category: 'Startup', priority: 100 - w.p.phase * 10 + (id === 'SU-kickoff' ? 1 : 0),
+        d.tasks.push({ id, title: w.title, state: 'To Do', owner: 'Team', category: 'Startup', priority: prio(w.p), suggested_owner: w.p.owner_role || null,
           due_date: null, description: describe(w.p, names, pb), source: 'startup', tags: ['startup', 'group'].concat(w.feature ? ['feature:' + w.feature] : []),
           created_at: now(), updated_at: now() });
         added++;
       } else if (cur.source === 'startup' && cur.state === 'Cancelled' && cur.cancel_reason === 'feature-off') {
         cur.state = 'To Do'; delete cur.cancel_reason; cur.updated_at = now(); revived++;
+      }
+      // Playbook updates reach tasks nobody has started yet (wording, order, suggested owner).
+      if (cur && cur.source === 'startup' && cur.state === 'To Do' && !touched(id)) {
+        const desc = describe(w.p, names, pb);
+        if (cur.title !== w.title || cur.description !== desc || cur.priority !== prio(w.p)) {
+          Object.assign(cur, { title: w.title, description: desc, priority: prio(w.p), suggested_owner: w.p.owner_role || null, updated_at: now() }); refreshed++;
+        }
       }
     }
     d.tasks = d.tasks.filter(x => {
@@ -73,7 +83,7 @@ function create(entity, dataDir, playbookFile) {
     });
     d.tasks.sort((a, b) => (b.priority || 0) - (a.priority || 0) || String(a.title).localeCompare(String(b.title), undefined, { numeric: true }));
     saveTasks(d);
-    return { ok: true, added, removed, cancelled, revived, total: d.tasks.length, by: who || 'system' };
+    return { ok: true, added, removed, cancelled, revived, refreshed, total: d.tasks.length, by: who || 'system' };
   }
 
   // ── File-backed task API (only when the cell has no database) ──

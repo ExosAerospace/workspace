@@ -9,28 +9,41 @@ import json, os
 
 REP = "your Exos rollout rep"
 
-def t(title, why, steps, done, prereq=None, rep=None, phase=2):
+def t(title, why, steps, done, prereq=None, rep=None, phase=2, rank=5):
+    # rank orders tasks inside a phase (0 = first). Board priority = phase first, then rank.
     return {"title": title, "why": why, "prereq": prereq or [], "steps": steps, "done": done,
             "rep": rep or f"{REP[0].upper()}{REP[1:]} walks you through this on a screen-share and can do the setup steps for you.",
-            "phase": phase}
+            "phase": phase, "rank": rank}
+
+# Who should own each setup task. Assigned by the site owner in the "people and roles" task.
+OWNER_ROLE = {
+  "MC administrator": ["roles", "cloudflare", "guard", "supabase", "partnerview", "tasks", "dashboard", "search", "claude",
+                       "localai", "altmodels", "ollama", "websearch", "discord", "proton", "m365", "teamwork", "agent"],
+  "Operations lead": ["decisions", "followups", "assets", "mrp", "production", "receiving"],
+  "Finance lead": ["quickbooks", "suppliers", "expenses", "jobcost", "docusign", "peony"],
+  "Sales / business development lead": ["crm", "opportunities", "samgov", "csl"],
+  "HR / people lead": ["hr", "ethics", "reading", "bamboohr"],
+}
+ROLE_OF = {f: r for r, fs in OWNER_ROLE.items() for f in fs}
 
 BASE = {
   "kickoff": t("Kickoff with your Exos rollout rep",
-    "Sets the go-live date, who your MC administrator is, and which systems you bring up first.",
+    "Sets the go-live date, who your site owner(s) and MC administrator are, and which systems you bring up first.",
     ["Book a 45-minute kickoff with your Exos rollout rep.",
-     "Name one MC administrator for your organization (adds users, changes Settings).",
+     "Name your site owner(s): the one or two people who decide which Mission Control features your organization uses. Site owners can change Settings > Features.",
+     "Name one MC administrator (adds users, assigns roles). Can be the same person as a site owner.",
      "Agree the go-live date and the order systems come up (this board is already in a sensible order: platform → people → work management → finance → operations).",
      "List the data you will bring over: customer/contact list, supplier list, open purchase orders, parts/BOM lists, asset list, open jobs.",
-     "Post the agreed date and admin name as a note on this task."],
-    "Go-live date and administrator are recorded in a note on this task.", phase=0),
+     "Post the agreed date, site owner(s) and administrator as a note on this task."],
+    "Go-live date, site owner(s) and administrator are recorded in a note on this task.", phase=0, rank=0),
   "settings": t("Confirm the features switched on in Settings",
     "Every task on this board is generated from Settings > Features. Turning a feature on adds its setup task here; turning it off removes it (or cancels it if work already started).",
-    ["Open Settings (left nav → Settings).",
+    ["Site owner: open Settings (left nav → Settings → Features).",
      "Review each group: Work management, Relationships & revenue, Finance & operations, Manufacturing, People & compliance, AI, Platform, Integrations.",
      "Core items are always on. Tick the Business/Enterprise items you want; untick anything you will not use in the first 90 days.",
      "Click Save selection. The task board updates within a minute.",
      "Anything missing from the menu: use the request box on the same page."],
-    "Selection saved and the board shows one setup task per feature you want.", phase=0),
+    "Selection saved and the board shows one setup task per feature you want.", phase=0, rank=1),
   "golive": t("Go-live review and sign-off",
     "Confirms every selected system works with your own data before you rely on it.",
     ["Check that every other task in the Startup category on this board is Done or deliberately Cancelled.",
@@ -38,19 +51,21 @@ BASE = {
      "Your Exos rollout rep reviews access logs and the backup/recovery check with you.",
      "Agree the support path after go-live (who to call, response times).",
      "Mark this task Done."],
-    "Sign-off note posted and this task marked Done.", phase=9),
+    "Sign-off note posted and this task marked Done.", phase=9, rank=9),
 }
 
 F = {
   # ── Platform ──
-  "roles": t("Set up users and roles",
-    "Controls who sees what. Every page checks the user's role.",
-    ["Your administrator opens Admin (left nav → Admin).",
-     "Click + Add User for each person: name, work email, role. Roles: admin (everything + Settings), manager (approve, edit Settings), member (own and shared tasks), partner/board (read-only portals).",
-     "Each new user gets a temporary password and must set their own at first login.",
-     "Start small: administrators and the people who own the next tasks on this board. Add the rest at go-live.",
-     "Ask your Exos rollout rep to add each user's email to the secure-access policy (see the Cloudflare task) or they will not reach the login page."],
-    "Every first-wave user can log in and sees the pages their role allows.", phase=1),
+  "roles": t("Add your people and assign roles",
+    "Nothing else on this board moves until each setup task has a named owner. This task puts your people in, gives each the right access, and hands out the rest of the board.",
+    ["List your first-wave people: name, work email, job title. Start with the site owner(s), the MC administrator and one lead per area below; add everyone else at go-live.",
+     "Your administrator opens Admin (left nav → Admin) and clicks + Add User for each person. Roles: admin (everything, including Settings and users), manager (approves, edits Settings), member (own and shared tasks), partner/board (read-only portals).",
+     "Each new user gets a temporary password and sets their own at first login.",
+     "Send the same email list to your Exos rollout rep, who adds it to the secure-access policy. Without that step people cannot reach the login page.",
+     "Name a person for each area lead: MC administrator; Finance lead (accounting, suppliers, expenses, job cost); Operations lead (approvals, equipment, inventory, production); Sales / business development lead (customers, pipeline, bids); HR / people lead (staff directory, policies, ethics line). One person can hold several.",
+     "Open the Startup tasks on this board. Each one says \"Suggested owner\" — set the Owner field to that person.",
+     "Post the list of people and area leads as a note on this task."],
+    "Every first-wave user can log in, and every open Startup task has a named owner.", phase=0, rank=2),
   "cloudflare": t("Secure access (Cloudflare Zero Trust)",
     "Mission Control has no open ports. People reach it through an identity check (one-time PIN to their email) before the login page.",
     ["Send your Exos rollout rep the list of user email addresses (same list as Admin).",
@@ -259,7 +274,11 @@ F = {
     ["Your Exos rollout rep enables screening.", "Review the first screening results and name who clears possible matches."], "Screening on and a reviewer named.", phase=7),
 }
 
-out = {"version": "2026-10-22", "rep_label": REP, "base": BASE, "features": F,
+for k, v in F.items():
+    v["owner_role"] = ROLE_OF.get(k, "MC administrator")
+for k, v in BASE.items():
+    v["owner_role"] = "Site owner"
+out = {"version": "2026-10-22.2", "rep_label": REP, "base": BASE, "features": F,
        "phases": {"0": "Plan", "1": "Platform & access", "2": "Connections", "3": "Work management",
                   "4": "Customers & AI", "5": "Finance & purchasing", "6": "Operations", "7": "People & compliance",
                   "8": "Security & backup", "9": "Go-live"}}

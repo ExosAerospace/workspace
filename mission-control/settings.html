@@ -68,6 +68,8 @@
     </div>
     <div class="summary" id="summary"></div>
     <div class="msg" id="saveMsg"></div>
+    <div class="summary" id="owners"></div>
+    <div class="summary" id="price" style="display:none"></div>
   </div>
 
   <div class="tabs">
@@ -95,7 +97,7 @@
   </div>
 </div>
 <script>
-let CAT=null, ENABLED=new Set(), CAN_EDIT=false, TENANT='exos';
+let CAT=null, ENABLED=new Set(), CAN_EDIT=false, SHOW_PRICE=false, TENANT='exos';
 const TIERS={core:'Core',standard:'Business',advanced:'Enterprise',exos:'Exos only'};
 const ST={live:'Live',beta:'Beta',exos_only:'Exos only'};
 const $=id=>document.getElementById(id);
@@ -120,7 +122,26 @@ function summary(){
   const it=allItems(), on=it.filter(i=>ENABLED.has(i.id));
   const n=on.filter(i=>(CAT.native||[]).some(g=>g.items.includes(i))).length;
   const top=on.some(i=>i.tier==='advanced')?'Enterprise':on.some(i=>i.tier==='standard')?'Business':'Core';
-  $('summary').innerHTML=`<span><b>${on.length}</b> of ${it.length} selected</span><span><b>${n}</b> applications · <b>${on.length-n}</b> integrations</span><span>Package needed: <b>${top}</b></span>${on.some(i=>i.status==='beta')?'<span style="color:var(--gold)">Includes beta items (generalized during onboarding)</span>':''}${CAN_EDIT?'':'<span>View only — ask an admin to change</span>'}`;
+  $('summary').innerHTML=`<span><b>${on.length}</b> of ${it.length} selected</span><span><b>${n}</b> applications · <b>${on.length-n}</b> integrations</span><span>Package needed: <b>${top}</b></span>${on.some(i=>i.status==='beta')?'<span style="color:var(--gold)">Includes beta items (generalized during onboarding)</span>':''}${CAN_EDIT?'':'<span>View only — ask a site owner or admin to change</span>'}`;
+  price(top,on);
+}
+// Price estimate (shown only when Exos turns pricing on for this workspace; prices live in the catalog).
+function price(top,on){
+  const P=CAT.pricing, el=$('price');
+  if(!SHOW_PRICE||!P||!P.packages){el.style.display='none';return}
+  const k=top.toLowerCase(), pk=P.packages[k]; if(!pk){el.style.display='none';return}
+  const users=Math.max(+($('pUsers')&&$('pUsers').value)||pk.min_users,pk.min_users);
+  const mo=pk.platform_month+pk.per_user_month*users;
+  el.style.display='';
+  el.innerHTML=`<span>Estimate (${esc(P.label||'proposal pricing')}): <b>${top}</b></span><span>Users <input id="pUsers" type="number" min="${pk.min_users}" value="${users}" style="width:60px"> (min ${pk.min_users})</span><span><b>$${mo.toLocaleString()}</b>/month · $${(mo*12).toLocaleString()}/year billed annually</span><span>One-time onboarding $${pk.onboarding.toLocaleString()}${k==='enterprise'?'+':''}</span>`;
+  $('pUsers').onchange=()=>price(top,on);
+}
+function owners(d){
+  const o=d.owners||[];
+  $('owners').innerHTML=`<span>Site owner${o.length===1?'':'s'}: <b>${o.length?o.map(esc).join(', '):'not named yet'}</b>${d.is_owner?' (you)':''}</span>`+
+    (d.can_set_owners?`<span><input id="ownList" value="${esc(o.join(', '))}" placeholder="owner emails, comma-separated" style="width:320px"> <button class="btn" id="ownSave">Save owners</button></span>`:'');
+  if(d.can_set_owners)$('ownSave').onclick=async()=>{const r=await fetch('/api/settings/site-owners',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({tenant:TENANT,owners:$('ownList').value.split(/[,\s]+/).filter(Boolean)})});const j=await r.json();
+    $('saveMsg').textContent=r.ok?`Site owners saved (${j.owners.length})`:(j.error||'Save failed');$('saveMsg').className='msg '+(r.ok?'ok':'err');if(r.ok)load()};
 }
 function pkg(tiers){allItems().forEach(i=>{if(tiers.includes(i.tier))ENABLED.add(i.id);else if(i.tier!=='core')ENABLED.delete(i.id)});render()}
 $('pkgCore').onclick=()=>pkg(['core']); $('pkgBiz').onclick=()=>pkg(['core','standard']); $('pkgEnt').onclick=()=>pkg(['core','standard','advanced']);
@@ -128,7 +149,7 @@ async function load(t){
   TENANT=t||TENANT;
   const r=await fetch('/api/settings/features?tenant='+encodeURIComponent(TENANT),{credentials:'same-origin'});
   if(r.status===401){location.href='/login';return}
-  const d=await r.json(); CAT=d.catalog; ENABLED=new Set(d.enabled); CAN_EDIT=d.can_edit;
+  const d=await r.json(); CAT=d.catalog; ENABLED=new Set(d.enabled.filter(id=>allItems().some(i=>i.id===id))); CAN_EDIT=d.can_edit; SHOW_PRICE=!!d.show_pricing; owners(d);
   $('saveMsg').textContent=d.updated_at?`Last saved ${new Date(d.updated_at).toLocaleString()} by ${d.updated_by}`:'Not saved yet — showing Core defaults';
   $('saveMsg').className='msg'; render(); if(CAN_EDIT)loadReqs();
 }
