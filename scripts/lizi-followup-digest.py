@@ -456,6 +456,14 @@ DUE={'2026-10-14': [('VSFB Mission Development Zone whitepaper (task #3699/#3701
                  "One last check-in on BLK3 as a next step for your BOREALIS teams. If the timing isn't right this year, no problem at all. Just let me know when "
                  "your students start planning their next payloads and I'll circle back then.\n"
                  'Best Regards,\n'
+                 'Lizi'),
+                ('Beyond Reach Labs: Mitchell Fogelson (Flarewing), 3rd and last touch',
+                 'LinkedIn message to Mitchell Fogelson (NOT founders@beyondreachlabs.io: both emails went to the shared founders@ inbox)',
+                 'emails 10/8 + 10/22 to founders@, no reply. 3-message rule: try a different channel before pausing. If still quiet, Exo moves Beyond Reach to the 90-day re-touch (2/3). Skip if Mitchell or anyone at Beyond Reach replied',
+                 'Hi Mitchell,\n'
+                 "I sent a couple of notes to your founders@ inbox about a BLK3 flight test for a small Flarewing unit and wanted to make sure they reached you. "
+                 "If a recovered suborbital test ahead of your 2027 orbital demo could be useful, I'd be glad to set up a short call with our engineering team.\n"
+                 'Best Regards,\n'
                  'Lizi')],
  '2027-02-03': [('90-day re-touch: paused contacts (3 messages, no reply)',
                  'UCLA Prof. Chee Wei Wong, Axiom Dr. Chyree Batton, Magma Alessandro Stabile, plus any of 11/4\'s sends that went quiet. Also JHU/APL Josh Wolk: he replied 10/22 (interested in avionics risk-reduction/prototype testing, nothing funded yet, will reach out), so send him a news-only note, no ask',
