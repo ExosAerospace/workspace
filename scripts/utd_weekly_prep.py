@@ -66,7 +66,7 @@ GOV_RX = re.compile(r"\b(NASA|AFRL|SpaceWERX|NRL|DEVCOM|DIU|Air Force|Space Forc
                     r"UARC|National Lab|Kirtland|Department of)\b", re.I)
 DEFENSE_RX = re.compile(r"\b(Kratos|BAE|Lockheed|Northrop|Raytheon|RTX|L3Harris|General Dynamics|Leidos|Boeing|"
                         r"Anduril|Orbit Fab)\b", re.I)
-UNIV_RX = re.compile(r"Universit|College|Institute of Technology|\bUC[A-Z]?\b|\bMIT\b|Purdue|Embry", re.I)
+UNIV_RX = re.compile(r"Universit|College|Institute of Technology|Polytechnic|Virginia Tech|\bUC[A-Z]?\b|\bMIT\b|Purdue|Embry", re.I)
 BANNED_TXT = ('Use "early 2027" (never a month), "designed for about 2.5 minutes of microgravity", '
               'no only/first/fastest, no "FAA-licensed", no refly, no "2-3 day turnaround".')
 JOHN_NOTE = ("Government/defense contact, so John writes, signs and sends this one himself (not Lizi). Keep the "

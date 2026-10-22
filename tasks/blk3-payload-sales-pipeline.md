@@ -2628,3 +2628,189 @@ _Fly with Exos in 2027 → follow BLK3 to Montana once the (planned, not yet lic
 - **Funding:** NASA SBIR/STTR, NASA Flight Opportunities (TechFlights), DoD SBIR, customer IR&D
 - **Status:** PARKED (Exo 10/12, Lizi review: defense prime site, no named contact, weak fit; warm intro via John only)
 - **Next action:** Ask Edgar (via Jon) for the Montana intro, then Lizi scopes the payload and quotes the slot.
+
+---
+
+### New Lead Candidates — 2026-10-22 (UTD Team Atlas sourcing sheet drafts/UTD_New_Lead_Candidates_2026-10-22.xlsx; Auburn and NASA JSC held back)
+
+#### 1. Worcester Polytechnic Institute (WPI) — Jamal Yagoobi, EHD heat transfer lab
+- **Segment:** University (fluids / thermal)
+- **POC:** Jamal Yagoobi (principal investigator on the NASA-funded EHD liquid-film boiling project; academic title not yet confirmed, student confirms before outreach)
+- **POC source:** https://techport.nasa.gov/projects/106704
+- **Active programs:** WPI's electrically driven (EHD) liquid-film boiling payload flew on a reusable suborbital rocket (New Shepard, Sept 18, 2025). The NASA project title frames it as preparation for an ISS flight experiment.
+- **Why BLK3 fits:** Proven suborbital flyer with NASA backing and a fluids/thermal experiment that needs minutes of free fall; the lab already has flight hardware, so more microgravity data is the natural next step before ISS.
+- **Fit source:** https://www.nasa.gov/stmd-flight-opportunities/flight-summaries/suborbital-test-of-nasa-supported-payloads-student-experiments/
+- **Funding:** NASA (Flight Opportunities / TechPort 106704); follow-on NASA flight-test funding
+- **Fit score (sourcing sheet):** 84/100
+- **Suggested owner:** Laura (university, 1/wk) · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Worcester Polytechnic Institute" (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
+
+#### 2. Massachusetts Institute of Technology (MIT) — Matteo Bucci, Nuclear Science & Engineering (boiling and quenching)
+- **Segment:** University (cryogenic fluids)
+- **POC:** Matteo Bucci (Associate Professor of Nuclear Science and Engineering; email on official MIT page)
+- **POC source:** https://nse.mit.edu/people/matteo-bucci/
+- **Active programs:** Active NASA Flight Opportunities project on how surface properties affect cryogenic boiling and quenching in reduced gravity (2024-2027). MIT News (Jan 2025) says his students fly zero-g aircraft experiments about twice a year.
+- **Why BLK3 fits:** Funded cryogenic-fluids work that has outgrown parabolic arcs; lines up with BLK3's own cryogenic LOX environment. Main-campus MIT, separate from the MIT Lincoln Laboratory card #3756.
+- **Fit source:** https://techport.nasa.gov/projects/158521 ; https://news.mit.edu/2025/unlocking-hidden-power-boiling-matteo-bucci-0102
+- **Funding:** NASA Flight Opportunities project (TechPort 158521, 2024-2027)
+- **Fit score (sourcing sheet):** 82/100
+- **Suggested owner:** Roel · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Massachusetts Institute of Technology" (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
+
+#### 3. Louisville School of Medicine (University of Louisville) — George M. Pantalos, Dept. of Surgery
+- **Segment:** University / space biology
+- **POC:** George M. Pantalos (UofL researcher and principal investigator on NASA TechPort 155246; faculty title not yet confirmed, student confirms before outreach)
+- **POC source:** https://www.uoflnews.com/post/uofltoday/uofls-knowledge-enterprise-celebrated-at-2025-research-and-innovation-awards/
+- **Active programs:** Active NASA Flight Opportunities project 'Dehydrated Red Blood Cells for Transfusion Therapy in Spaceflight' (Apr 2023 to Jun 2027), described as a suborbital flight assessment of preserved red blood cells in reduced gravity.
+- **Why BLK3 fits:** Funded space-biology project built around a suborbital flight with recovered samples, active through 2027. (The 'Louisville' hits elsewhere in the pipeline are Louisville, CO companies.)
+- **Fit source:** https://techport.nasa.gov/projects/155246
+- **Funding:** NASA Flight Opportunities project (TechPort 155246, through Jun 2027)
+- **Fit score (sourcing sheet):** 78/100
+- **Suggested owner:** Roel · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Louisville School of Medicine" (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
+
+#### 4. Ecoatoms, Inc. (Reno, NV) — Dr. Solange Massa
+- **Segment:** Commercial: in-space manufacturing / bio payloads
+- **POC:** Dr. Solange Massa (Founder & CEO, per starsciences.org profile; PI on NASA TechPort 106609)
+- **POC source:** https://techport.nasa.gov/projects/106609
+- **Active programs:** Builds automated manufacturing and bio payloads. Flew on Blue Origin New Shepard NS-24 (2023) and NS-35 (Sept 2025, A.R.E.S. biosensor coating). Has a second NASA Space Act Agreement for the H.E.R.M.E.S. DNA-extraction payload, due to fly in 2026.
+- **Why BLK3 fits:** Repeat suborbital microgravity customer with a payload pipeline; could also become an integration partner.
+- **Fit source:** https://ecoatoms.com/about ; https://www.nasa.gov/stmd-flight-opportunities/flight-summaries/suborbital-test-of-nasa-supported-payloads-student-experiments/
+- **Funding:** NASA Space Act Agreements + Flight Opportunities; commercial
+- **Fit score (sourcing sheet):** 82/100
+- **Suggested owner:** Adrian (commercial) · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Ecoatoms, Inc." (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
+
+#### 5. Creare LLC (Hanover, NH) — Thomas Conboy, cryogenic liquid acquisition devices
+- **Segment:** Commercial: SBIR engineering / cryogenic fluid management
+- **POC:** Thomas Conboy (principal investigator on NASA TechPort 155234; company title not yet confirmed, student confirms before outreach)
+- **POC source:** https://techport.nasa.gov/projects/155234
+- **Active programs:** Flew a lightweight cryogenic screen-channel liquid acquisition device on 2024 NASA Flight Opportunities parabolic flights (TechPort project 2023-2024) for lunar and orbital cryogenic fuel storage and transfer. Creare also partners on NJIT's and MIT's NASA cryo projects.
+- **Why BLK3 fits:** Cryo propellant-management hardware that needs longer microgravity than parabolic arcs; overlaps with BLK3's cryogenic LOX environment.
+- **Fit source:** https://www.nasa.gov/stmd-flight-opportunities/flight-summaries/testing-30-technologies-on-parabolic-flights-in-2024/ ; https://techport.nasa.gov/projects/106626
+- **Funding:** NASA SBIR / Flight Opportunities
+- **Fit score (sourcing sheet):** 72/100
+- **Suggested owner:** Sunidhi · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Creare LLC" (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
+
+#### 6. Oklahoma State University — Eric Benton, radiation dosimetry
+- **Segment:** University
+- **POC:** Eric Benton (principal investigator on NASA TechPort 106721; academic title not yet confirmed, student confirms before outreach)
+- **POC source:** https://techport.nasa.gov/projects/106721
+- **Active programs:** Flew ionizing-radiation dosimeters for use in the upper atmosphere on the Sept 18, 2025 New Shepard suborbital flight (NASA Flight Opportunities). NASA project closed 6/2025, so new funding is unknown.
+- **Why BLK3 fits:** Proven suborbital instrument team; a climb to about 100 km is the profile their dosimeters measure.
+- **Fit source:** https://www.nasa.gov/stmd-flight-opportunities/flight-summaries/suborbital-test-of-nasa-supported-payloads-student-experiments/
+- **Funding:** NASA Flight Opportunities (prior project closed 6/2025; new funding unknown)
+- **Fit score (sourcing sheet):** 70/100
+- **Suggested owner:** Laura (next week) / buffer · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Oklahoma State University" (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
+
+#### 7. Arizona State University — Sergi Garcia-Segura lab (nanobubbles in variable gravity)
+- **Segment:** University
+- **POC:** Sergi Garcia-Segura (Assistant Professor, civil, environmental & sustainable engineering, per ASU June 2026)
+- **POC source:** https://engineering.asu.edu/news/using-electricity-to-remove-hard-to-treat-water-pollutants/
+- **Active programs:** NASA Flight Opportunities 'Nanobubbles in Variable Gravity' (2024-2025, with NASA JSC) showed on Nov 2024 parabolic flights that nanobubbles stay stable and can be generated in zero g, for life-support gas-liquid processes. Works with the Biodesign Institute.
+- **Why BLK3 fits:** Parabolic campaign is done, so a longer-duration follow-on is the next step. No new funding confirmed.
+- **Fit source:** https://techport.nasa.gov/projects/158516 ; https://www.nasa.gov/stmd-flight-opportunities/flight-summaries/testing-30-technologies-on-parabolic-flights-in-2024/
+- **Funding:** NASA Flight Opportunities (TechPort 158516, 2024-2025; follow-on funding unconfirmed)
+- **Fit score (sourcing sheet):** 70/100
+- **Suggested owner:** Buffer (university) · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Arizona State University" (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
+
+#### 8. Solstar Space (Santa Fe, NM) — Brian Barnett
+- **Segment:** Commercial: space communications hardware
+- **POC:** Brian Barnett (Founder & CEO)
+- **POC source:** https://solstarspace.com/2025/09/29/nasa-awards-solstar-sbir-lunar-wi-fi/
+- **Active programs:** Won a NASA Phase I SBIR (Sept 2025) for a Lunar Wi-Fi Access Point. Earlier units flew on a balloon, a sounding rocket and New Shepard with Flight Opportunities support (NASA FY25 report).
+- **Why BLK3 fits:** New hardware that needs a space-environment demo, from a company that already uses suborbital flights. Some ISR/RPOD (defense-adjacent) markets; Lizi sends.
+- **Fit source:** https://www.nasa.gov/wp-content/uploads/2026/08/fy25-flight-opportunities-accomplishments-report.pdf
+- **Funding:** NASA Phase I SBIR (Sept 2025); Flight Opportunities
+- **Fit score (sourcing sheet):** 68/100
+- **Suggested owner:** Buffer (Adrian) · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Solstar Space" (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
+
+#### 9. Space Environment Technologies (Pacific Palisades, CA) — Dr. W. Kent Tobiska, ARMAS
+- **Segment:** Commercial: space-weather instruments
+- **POC:** Dr. W. Kent Tobiska (President & Chief Scientist, team page undated); alt: Dr. Justin Bailey (Director of Space Systems)
+- **POC source:** https://spacewx.com/team/
+- **Active programs:** NASA FY25 report: the ARMAS radiation monitor was flight-tested through Flight Opportunities and flew on a 2025 CLPS lunar mission.
+- **Why BLK3 fits:** A climb through 100 km is a natural profile for measuring and qualifying a radiation instrument. Unclear whether a new instrument needs a flight; customers are mostly government agencies.
+- **Fit source:** https://www.nasa.gov/wp-content/uploads/2026/08/fy25-flight-opportunities-accomplishments-report.pdf
+- **Funding:** NASA Flight Opportunities; government agency customers
+- **Fit score (sourcing sheet):** 62/100
+- **Suggested owner:** Buffer (Sunidhi) · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Space Environment Technologies" (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
+
+#### 10. Eta Space (Florida) — William Notardonato, cryogenic fluid management
+- **Segment:** Commercial: propellant management
+- **POC:** William Notardonato (CEO)
+- **POC source:** https://etaspace.com/news
+- **Active programs:** NASA-contracted LOXSAT orbital liquid-oxygen storage/transfer demo; Rocket Lab finished the spacecraft (Oct 2025 news item) and the payload went to Kennedy for testing in 2025.
+- **Why BLK3 fits:** Core cryo propellant-management target; short microgravity flights could test slosh, gauging and sensors. Its flagship demo is orbital, so suborbital testing would be a secondary step. Site has a Defense section.
+- **Fit source:** https://etaspace.com/news
+- **Funding:** NASA contract (LOXSAT); commercial
+- **Fit score (sourcing sheet):** 58/100
+- **Suggested owner:** Buffer · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Eta Space" (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
+
+#### 11. Sierra Lobo, Inc. — Phil Putman, Microgravity Lab Assistant
+- **Segment:** Commercial: NASA engineering contractor
+- **POC:** Phil Putman (principal investigator on NASA TechPort 158680; company title not yet confirmed, student confirms before outreach)
+- **POC source:** https://techport.nasa.gov/projects/158680
+- **Active programs:** Active NASA Flight Opportunities project (2024 to Dec 2026, with Ohio State and U. Cincinnati) for a compact sample-prep robot for the ISS; flew on 2024 Flight Opportunities parabolic flights.
+- **Why BLK3 fits:** Funded microgravity robot that would benefit from longer free-fall time; ISS-focused, so suborbital is a checkout step.
+- **Fit source:** https://www.nasa.gov/stmd-flight-opportunities/flight-summaries/testing-30-technologies-on-parabolic-flights-in-2024/
+- **Funding:** NASA Flight Opportunities project (TechPort 158680, through Dec 2026)
+- **Fit score (sourcing sheet):** 56/100
+- **Suggested owner:** Buffer · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Sierra Lobo, Inc." (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
+
+#### 12. Teledyne Energy Systems, Inc. — Thomas Valdez, Hydrogen Electrical Power System (HEPS)
+- **Segment:** Commercial: space power
+- **POC:** Thomas Valdez (principal investigator on NASA TechPort 106653; company title not yet confirmed, student confirms before outreach)
+- **POC source:** https://techport.nasa.gov/projects/106653
+- **Active programs:** HEPS fuel cell flew on the Sept 18, 2025 New Shepard flight: it started mid-flight after engine cutoff, delivered 250 W and validated microgravity water separation. Results feed into lunar/Mars power plans (builds on NASA Tipping Point work).
+- **Why BLK3 fits:** Proven suborbital flyer with follow-on development, but a big-company program with a long decision cycle. Parent Teledyne is a defense contractor (CRM has only Teledyne Brown Engineering, a different unit); Lizi sends.
+- **Fit source:** https://www.nasa.gov/stmd-flight-opportunities/flight-summaries/suborbital-test-of-nasa-supported-payloads-student-experiments/
+- **Funding:** NASA Tipping Point / Flight Opportunities
+- **Fit score (sourcing sheet):** 55/100
+- **Suggested owner:** Buffer · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Teledyne Energy Systems, Inc." (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
+
+#### 13. Virginia Tech Mechanical Engineering — Zhenhua Tian, acoustofluidics lab
+- **Segment:** University
+- **POC:** Zhenhua Tian (Associate Professor, Mechanical Engineering; NSF CAREER 2024)
+- **POC source:** https://me.vt.edu/people/faculty/tian-zhenhua.html
+- **Active programs:** Led NASA Flight Opportunities acoustofluidic particle-manipulation work in reduced gravity (2024 parabolic flights; Mississippi State award 2022-2025) aimed at 3D-printing patterned composites in space.
+- **Why BLK3 fits:** Relevant experiment, but the NASA award was led by Mississippi State and has ended; new low-g funding at VT is unconfirmed.
+- **Fit source:** https://techport.nasa.gov/projects/155237 ; https://www.nasa.gov/stmd-flight-opportunities/flight-summaries/testing-30-technologies-on-parabolic-flights-in-2024/
+- **Funding:** Prior NASA Flight Opportunities award (Mississippi State lead, ended 2025); NSF CAREER
+- **Fit score (sourcing sheet):** 60/100
+- **Suggested owner:** Buffer (university) · Sender: Lizi Quinn
+- **Outreach draft:** drafts/payload-outreach-drafts.md, heading "Virginia Tech Mechanical Engineering" (Lizi's voice, never auto-sent)
+- **Status:** NEW (sourced 2026-10-22, dedupe clear of queue/cards/pipeline/send logs/CRM)
+- **Next action:** Student confirms the POC on an official page, checks the draft against the PUG, then Lizi reviews and sends.
