@@ -172,6 +172,10 @@ async function onDecision(d) {
 // ── printable PO ────────────────────────────────────────────────────────────
 function printHTML(po, cfg) {
   const co = cfg.company || {};
+  // Entity cells never fall back to Exos letterhead/identifiers (Jon 2026-10-22).
+  const isEx = !process.env.ENTITY || process.env.ENTITY === 'exos';
+  const FB = isEx ? { name: 'Exos Aerospace Systems & Technologies, Inc.', address: '299 FM 1903, Greenville, TX 75402', cage: '7EMY6', uei: 'CK24BPZGF854' }
+                  : { name: '(set company name in Suppliers > Settings)', address: '', cage: '—', uei: '—' };
   const lines = po.lines.map((l, i) => `<tr><td>${i + 1}</td><td>${esc(l.part_number || '')}</td><td>${esc(l.description)}</td><td class=r>${esc(l.qty)}</td><td class=r>${money(l.unit_price)}</td><td class=r>${money((l.qty || 0) * (l.unit_price || 0))}</td></tr>`).join('');
   const fd = (po.flowdowns || []).map(c => `<li><b>${esc(c.ref)}</b> — ${esc(c.title)}${c.note ? ` <i>(${esc(c.note)})</i>` : ''}</li>`).join('');
   const draft = po.status !== 'issued' && po.status !== 'partially_received' && po.status !== 'received' && po.status !== 'closed';
@@ -179,9 +183,9 @@ function printHTML(po, cfg) {
 body{font:12px/1.4 -apple-system,Helvetica,Arial;color:#111;margin:32px;max-width:850px}h1{font-size:22px;margin:0}table{border-collapse:collapse;width:100%;margin:12px 0}
 td,th{border:1px solid #bbb;padding:5px;text-align:left;vertical-align:top}th{background:#f1f3f6}.r{text-align:right}.hdr{display:flex;justify-content:space-between}
 .wm{color:#c00;font-weight:700;font-size:16px}ol,ul{margin:4px 0 4px 18px;padding:0}.small{font-size:10.5px;color:#444}@media print{.noprint{display:none}}</style></head><body>
-<div class=hdr><div><h1>${esc(co.name || 'Exos Aerospace Systems & Technologies, Inc.')}</h1><div>${esc(co.address || '299 FM 1903, Greenville, TX 75402')}</div><div>CAGE ${esc(co.cage || '7EMY6')} · UEI ${esc(co.uei || 'CK24BPZGF854')}</div></div>
+<div class=hdr><div><h1>${esc(co.name || FB.name)}</h1><div>${esc(co.address || FB.address)}</div><div>CAGE ${esc(co.cage || FB.cage)} · UEI ${esc(co.uei || FB.uei)}</div></div>
 <div style="text-align:right"><h1>PURCHASE ORDER</h1><div style="font-size:16px"><b>${esc(po.po_number || po.id)}</b></div><div>Date: ${esc(po.issued_at || today())}</div>${draft ? '<div class=wm>DRAFT — NOT AN ORDER UNTIL APPROVED</div>' : ''}</div></div>
-<table><tr><th style="width:50%">Supplier</th><th>Ship to</th></tr><tr><td>${esc(po.vendor_name)}${po.vendor_email ? '<br>' + esc(po.vendor_email) : ''}</td><td>${esc(po.ship_to || co.ship_to || co.address || '299 FM 1903, Greenville, TX 75402')}<br>Attn: ${esc(po.requested_by_name || po.requested_by || '')}</td></tr></table>
+<table><tr><th style="width:50%">Supplier</th><th>Ship to</th></tr><tr><td>${esc(po.vendor_name)}${po.vendor_email ? '<br>' + esc(po.vendor_email) : ''}</td><td>${esc(po.ship_to || co.ship_to || co.address || FB.address)}<br>Attn: ${esc(po.requested_by_name || po.requested_by || '')}</td></tr></table>
 <table><tr><th>Need-by date</th><th>Terms</th><th>Charge to</th><th>Flight-critical</th></tr><tr><td>${esc(po.need_by || '—')}</td><td>${esc(po.terms || cfg.default_terms || 'Net 30')}</td><td>${esc(po.charge_label || po.contract_id || po.project_id || 'Overhead')}</td><td>${po.flight_critical ? 'YES — quality clauses apply' : 'No'}</td></tr></table>
 <table><tr><th>#</th><th>Part no.</th><th>Description</th><th class=r>Qty</th><th class=r>Unit</th><th class=r>Extended</th></tr>${lines}
 <tr><td colspan=5 class=r><b>Total</b></td><td class=r><b>${money(po.total)}</b></td></tr></table>

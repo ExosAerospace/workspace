@@ -28,12 +28,22 @@ if [ ! -f "$DATA_DIR/uploads/_meta.json" ] || [ "$(cat "$DATA_DIR/uploads/_meta.
   echo '[]' > "$DATA_DIR/uploads/_meta.json"
 fi
 
-# Entity task board: sample tasks only (never the Exos snapshot)
-if [ -f "/app/docker-seed/$ENTITY/tasks.json" ]; then
-  cp "/app/docker-seed/$ENTITY/tasks.json" /app/mission-control/data/tasks.json
-else
-  echo '{"tasks":[]}' > /app/mission-control/data/tasks.json
+# Persist app-side state (feature selections, layouts, guard state, logs) on the volume so a
+# rebuilt image never loses settings. /app/mission-control/data -> $DATA_DIR/appdata.
+mkdir -p "$DATA_DIR/appdata" "$DATA_DIR/logs"
+if [ ! -L /app/mission-control/data ]; then
+  cp -n /app/mission-control/data/* "$DATA_DIR/appdata/" 2>/dev/null || true
+  rm -rf /app/mission-control/data && ln -s "$DATA_DIR/appdata" /app/mission-control/data
 fi
+if [ ! -L /app/logs ]; then rm -rf /app/logs && ln -s "$DATA_DIR/logs" /app/logs; fi
+
+# Entity seeds (first run only; later edits in Settings persist on the volume)
+SEED="/app/docker-seed/$ENTITY"
+[ -f "$SEED/tasks.json" ] && cp -n "$SEED/tasks.json" "$DATA_DIR/appdata/tasks.json"
+[ -f "$DATA_DIR/appdata/tasks.json" ] || echo '{"tasks":[]}' > "$DATA_DIR/appdata/tasks.json"
+[ -f "$SEED/mc-feature-selections.json" ] && cp -n "$SEED/mc-feature-selections.json" "$DATA_DIR/appdata/mc-feature-selections.json"
+# Feature catalog source; server.js writes an entity-safe copy into appdata at startup.
+export FEATURE_CATALOG_SRC=/app/docker-seed/_common/mc-feature-catalog.json
 
 # Initialise the ERP database from schema.sql if not present
 if [ ! -f "$ERP_DB_PATH" ]; then

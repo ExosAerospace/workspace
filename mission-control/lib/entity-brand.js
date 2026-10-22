@@ -57,9 +57,10 @@ function applyRules(s, b) {
   return s;
 }
 
-function install(entity) {
+function install(entity, extra) {
   if (!entity || entity === 'exos') return null;
   const b = brandFor(entity);
+  // extra(html): optional entity sanitizer (lib/entity-pages.js) applied after rebranding.
   return function wrap(req, res) {
     const base = (String(req.url || '').split('?')[0].split('/').pop()) || 'index.html';
     const chromeOnly = CHROME_ONLY.has(base);
@@ -77,7 +78,8 @@ function install(entity) {
       try {
         const ct = ctype || String(res.getHeader('Content-Type') || '');
         if (chunk != null && /text\/html|javascript/.test(ct)) {
-          const out = rebrand(Buffer.isBuffer(chunk) ? chunk.toString('utf-8') : chunk, b, chromeOnly);
+          let out = rebrand(Buffer.isBuffer(chunk) ? chunk.toString('utf-8') : chunk, b, chromeOnly);
+          if (extra) out = extra(out);
           if (!res.headersSent) res.removeHeader('Content-Length');
           return origEnd.call(this, out, ...rest);
         }

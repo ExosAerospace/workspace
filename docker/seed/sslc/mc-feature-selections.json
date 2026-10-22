@@ -1,0 +1,32 @@
+{
+  "tenants": {
+    "sslc": {
+      "enabled": [
+        "tasks",
+        "decisions",
+        "dashboard",
+        "followups",
+        "search",
+        "crm",
+        "agent",
+        "roles",
+        "backup",
+        "guard",
+        "claude",
+        "supabase",
+        "cloudflare",
+        "suppliers",
+        "mrp",
+        "production",
+        "receiving",
+        "jobcost",
+        "expenses",
+        "assets",
+        "opportunities",
+        "quickbooks"
+      ],
+      "updated_at": "2026-10-22T19:30:00Z",
+      "updated_by": "Exo (default: Motion 4 ERP/MRP/inventory scope)"
+    }
+  }
+}

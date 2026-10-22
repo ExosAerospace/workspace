@@ -38,17 +38,19 @@ const CF_POLICY = '3bf75a2c-33f7-4901-bfac-ae153fb47d9b';
 
 // ── Tripwire bait. None of these are real routes; nothing in MC links to them except the
 // hidden (display:none, aria-hidden, nofollow) anchors injected into pages for scrapers. ──
+// Entity cells use a neutral decoy filename (no Exos name in the page source).
+const DECOY_XLSX = (process.env.ENTITY && process.env.ENTITY !== 'exos') ? '/uploads/Investor_Master_List_FULL_EXPORT.xlsx' : '/uploads/Exos_Investor_Master_List_FULL_EXPORT.xlsx';
 const TRIPWIRE_EXACT = new Set([
   '/api/export/all', '/api/admin/export-all', '/api/crm/export', '/api/contacts/export-all',
   '/api/v1/dump', '/api/backup/full', '/api/internal/users-dump', '/api/deals/export-all',
   '/.env', '/.git/config', '/.git/HEAD', '/config.json.bak', '/server.js', '/users.json', '/sessions.json',
-  '/uploads/Exos_Investor_Master_List_FULL_EXPORT.xlsx', '/uploads/MC_CRM_Full_Export_ALL_CONTACTS.csv',
+  DECOY_XLSX, '/uploads/MC_CRM_Full_Export_ALL_CONTACTS.csv',
 ]);
 const HIDDEN_LINKS = '<div style="display:none" aria-hidden="true">'
   + '<a href="/api/export/all" rel="nofollow" tabindex="-1">Export all</a>'
-  + '<a href="/uploads/Exos_Investor_Master_List_FULL_EXPORT.xlsx" rel="nofollow" tabindex="-1">Investor master list</a>'
+  + '<a href="' + DECOY_XLSX + '" rel="nofollow" tabindex="-1">Investor master list</a>'
   + '<a href="/api/contacts/export-all" rel="nofollow" tabindex="-1">Contacts export</a></div>';
-const ROBOTS = 'User-agent: *\nDisallow: /api/export/all\nDisallow: /api/v1/dump\nDisallow: /uploads/Exos_Investor_Master_List_FULL_EXPORT.xlsx\nDisallow: /\n';
+const ROBOTS = 'User-agent: *\nDisallow: /api/export/all\nDisallow: /api/v1/dump\nDisallow: ' + DECOY_XLSX + '\nDisallow: /\n';
 
 const AUTOMATION_UA = /(curl|wget|python-requests|python-urllib|aiohttp|httpx|httpie|go-http-client|okhttp|java\/|libwww|scrapy|headless|puppeteer|playwright|selenium|phantomjs|node-fetch|axios|undici|postman|insomnia|powershell|httrack|sitesucker)/i;
 const DOWNLOAD_RE = /^\/(uploads|viewpdf|backup)\/|^\/api\/dataroom-doc/;

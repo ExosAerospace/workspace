@@ -7,7 +7,8 @@ secrets.json
 
 # Runtime state and large data
 mission-control/uploads/
-mission-control/data/
+mission-control/data/*
+!mission-control/data/mc-feature-catalog.json
 mission-control/dataroom/
 mission-control/sessions.json
 mission-control/users.json*

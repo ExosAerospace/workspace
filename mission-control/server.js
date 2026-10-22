@@ -1617,9 +1617,18 @@ h1{font-size:28px;margin-bottom:8px}h1 span{color:#0080ff}
 </body></html>`;
 }
 
-const brandWrap = require('./lib/entity-brand').install(ENTITY); // null for Exos
+// Entity cells: page gate driven by Settings > Features + Exos-content scrub (null for Exos).
+const entityPages = require('./lib/entity-pages').create(ENTITY, path.join(__dirname, 'data'));
+if (entityPages && process.env.FEATURE_CATALOG_SRC) {
+  try { entityPages.writeCatalog(process.env.FEATURE_CATALOG_SRC); } catch (e) { console.warn('[MC] entity catalog write failed:', e.message); }
+}
+const brandWrap = require('./lib/entity-brand').install(ENTITY, entityPages ? entityPages.sanitize : null); // null for Exos
 const server = http.createServer((req, res) => {
   if (brandWrap) brandWrap(req, res);
+  if (entityPages) {
+    const page = (String(req.url || '').split('?')[0].split('/').pop()) || 'index.html';
+    if (!entityPages.allowed(page)) { res.writeHead(404, { 'Content-Type': 'text/plain' }); res.end('Not available in this workspace'); return; }
+  }
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

@@ -24,6 +24,8 @@ let paths = {
 };
 const TENANT_RE = /^[a-z0-9][a-z0-9-]{0,39}$/;
 const KINDS = ['integration', 'feature', 'change'];
+// Entity cells (ENTITY != exos) can only read/write their own tenant's selection.
+const ENTITY_TENANT = (process.env.ENTITY && process.env.ENTITY !== 'exos') ? process.env.ENTITY : null;
 
 function _setPaths(p) { paths = Object.assign({}, paths, p); } // selftest hook
 
@@ -80,7 +82,7 @@ function addRequest(body, who) {
   const detail = String(body.detail || '').trim().slice(0, 4000);
   if (!KINDS.includes(kind)) return { ok: false, error: 'kind must be integration, feature or change' };
   if (title.length < 3) return { ok: false, error: 'title required' };
-  const tenant = TENANT_RE.test(body.tenant || '') ? body.tenant : 'exos';
+  const tenant = ENTITY_TENANT || (TENANT_RE.test(body.tenant || '') ? body.tenant : 'exos');
   const entry = {
     id: 'fr_' + new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14) + '_' + crypto.randomBytes(3).toString('hex'),
     ts: new Date().toISOString(), tenant, kind, title, detail,
@@ -109,7 +111,7 @@ function handle(req, res, session) {
   const readBody = () => new Promise(resolve => { let b = ''; req.on('data', c => { b += c; if (b.length > 1e5) req.destroy(); }); req.on('end', () => { try { resolve(JSON.parse(b || '{}')); } catch { resolve({}); } }); });
   try {
     if (p === '/api/settings/features' && req.method === 'GET') {
-      const tenant = new URL(req.url, 'http://x').searchParams.get('tenant') || 'exos';
+      const tenant = ENTITY_TENANT || new URL(req.url, 'http://x').searchParams.get('tenant') || 'exos';
       const cat = loadCatalog();
       const t = (loadSelections().tenants || {})[tenant];
       send(200, { catalog: cat, tenant, enabled: t ? t.enabled : defaultEnabled(cat), updated_at: t ? t.updated_at : null, updated_by: t ? t.updated_by : null, can_edit: canAdmin(session) });
@@ -117,7 +119,7 @@ function handle(req, res, session) {
     }
     if (p === '/api/settings/features' && req.method === 'POST') {
       if (!canAdmin(session)) { send(403, { error: 'admin or manager only' }); return true; }
-      readBody().then(b => { const r = saveSelection(b.tenant || 'exos', b.enabled, who); send(r.ok ? 200 : 400, r); });
+      readBody().then(b => { const r = saveSelection(ENTITY_TENANT || b.tenant || 'exos', b.enabled, who); send(r.ok ? 200 : 400, r); });
       return true;
     }
     if (p === '/api/settings/feature-request' && req.method === 'POST') {

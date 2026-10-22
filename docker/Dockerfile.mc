@@ -27,7 +27,8 @@ COPY governance/ ./governance/
 
 # Remove ALL Exos data/runtime state from the image (Jon 2026-10-22: no Exos data in a rollout site).
 # The image ships code only; each entity's data lives in its /data volume or docker/seed/<entity>/.
-RUN rm -rf mission-control/data mission-control/dataroom mission-control/uploads \
+RUN mkdir -p /app/docker-seed/_common && cp mission-control/data/mc-feature-catalog.json /app/docker-seed/_common/ \
+    && rm -rf mission-control/data mission-control/dataroom mission-control/uploads \
            mission-control/partner-docs mission-control/surveys logs \
     && rm -f mission-control/users.json* mission-control/crm-data.json* mission-control/sessions.json \
              mission-control/*.log mission-control/.ds-passcode mission-control/.public-url \
@@ -39,6 +40,7 @@ RUN rm -rf mission-control/data mission-control/dataroom mission-control/uploads
     && find scripts -type f ! \( -name 'fx_rate.py' -o -name 'job_cost.py' -o -name 'mc_guard.py' \
          -o -name 'mc_restore.py' -o -name 'fleet_log.py' -o -name 'itar_ear_screen.py' \) -delete \
     && find scripts -type d -empty -delete \
+    && node -e "const {NEVER}=require('./mission-control/lib/entity-pages');for(const p of NEVER){try{require('fs').unlinkSync('mission-control/'+p)}catch(e){}}" \
     && mkdir -p mission-control/data mission-control/uploads mission-control/brand-assets scripts
 COPY docker/seed/ /app/docker-seed/
 
