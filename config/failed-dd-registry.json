@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-13",
+  "updated": "2026-10-22",
   "note": "Shared FAILED-DD blocklist. Any inbound from these entities is recognized as a known do-not-engage bad actor across Exos. Checked by lead-auto-capture (flags instead of creating a lead) and by DD-on-inbound (short-circuits with the known verdict). Add new entries with: python3 scripts/failed_dd.py add.",
   "entities": [
     {
@@ -1180,6 +1180,522 @@
       "reason": "SAM.gov exclusion/debarment on record (24 match) \u2014 do not engage.",
       "date": "2026-09-13",
       "source": "manual"
+    },
+    {
+      "firm": "Crestmont Capital (crestmontcapital217.com lookalike)",
+      "domains": [
+        "crestmontcapital217.com"
+      ],
+      "emails": [
+        "chris.berman@crestmontcapital217.com"
+      ],
+      "people": [
+        "Chris Berman (VP of Business Funding)"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold funding blast from lookalike domain (crestmontcapital217.com, 1-mo-old, foreign registrar, hidden registrant) spoofing real lender crestmontcapital.com; even legit Crestmont is MCA/small-biz debt broker, not a Series A fit \u2014 do not engage",
+      "date": "2026-09-19",
+      "source": "manual"
+    },
+    {
+      "firm": "Undisclosed (unnamed UK/US 'banking group' subsidiary)",
+      "domains": [],
+      "emails": [
+        "henribrenneman@gmail.com"
+      ],
+      "people": [
+        "Henri Brenneman"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold capital-introducer, free Gmail, no named firm / no verifiable identity, crypto-event (ETHTokyo) framing irrelevant to Exos \u2014 broker/advance-fee pattern",
+      "date": "2026-09-19",
+      "source": "manual"
+    },
+    {
+      "firm": "Larch Terrace",
+      "domains": [
+        "larchterrace.co"
+      ],
+      "emails": [
+        "emmatanner@larchterrace.co"
+      ],
+      "people": [
+        "Emma Tanner"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold unsolicited small credit-line offer (200-400k @ 11.5%); domain created 2026-05-19, Cloudflare/WHOIS-privacy, no verifiable lender footprint \u2014 cold-broker / likely advance-fee scam.",
+      "date": "2026-09-20",
+      "source": "manual"
+    },
+    {
+      "firm": "Aria Townsend (unbranded)",
+      "domains": [
+        "corporatewellnessintranet.com"
+      ],
+      "emails": [
+        "aria.townsend@corporatewellnessintranet.com"
+      ],
+      "people": [
+        "Aria Townsend"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold anonymous 'soft pull only / both options / no catch' credit-broker pitch from a 6-mo-old throwaway domain (created 2026-03-14, Cloudflare privacy NS, no website, name unrelated to any financing offer); no company ID, no specifics \u2014 scam/phishing pattern",
+      "date": "2026-09-21",
+      "source": "manual"
+    },
+    {
+      "firm": "QualiFi LLC",
+      "domains": [
+        "nextqfiloc.com"
+      ],
+      "emails": [
+        "jenny@nextqfiloc.com"
+      ],
+      "people": [
+        "Jennifer DiDomenico"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker",
+      "reason": "Cold-broker drip (5+ unsolicited emails from lead-gen domain). Firm is LEGIT (BBB-A commercial finance broker, goqualifi.com) \u2014 NOT fraud \u2014 but off-strategy: small-biz debt/MCA/LOC broker soliciting a pre-revenue deep-tech aerospace co. Decline; block future drip from reaching Jon.",
+      "date": "2026-09-23",
+      "source": "manual"
+    },
+    {
+      "firm": "Keyes",
+      "domains": [
+        "keyes.org"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (6 match) \u2014 do not engage.",
+      "date": "2026-09-26",
+      "source": "manual"
+    },
+    {
+      "firm": "Privea Partners (via Direct Growth Advisory Partner Inc)",
+      "domains": [
+        "directgrowthadvisorypartnerinc.co"
+      ],
+      "emails": [
+        "samantha.martin@directgrowthadvisorypartnerinc.co"
+      ],
+      "people": [
+        "Samantha Martin"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold 'family offices on retainer, are you raising?' template; sender on 2-month-old burner .co domain (Dynadot, created 2026-07-29, no website) mismatched to signature brand; priveapartners.com itself created 2026-08-06 yet claims 29 landmark deals; inconsistent stats (140+/150+ FOs, 10/26 markets); no FCA/FINRA registration found; mislabels Exos as software/AI",
+      "date": "2026-09-28",
+      "source": "manual"
+    },
+    {
+      "firm": "Privea Partners",
+      "domains": [
+        "priveapartners.com"
+      ],
+      "emails": [],
+      "people": [
+        "Samantha Martin"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Same actor as directgrowthadvisorypartnerinc.co cold-broker spray; brand domain registered 2026-08-06, unverifiable track record, no regulator registration",
+      "date": "2026-09-28",
+      "source": "manual"
+    },
+    {
+      "firm": "Aaltrinidad (fake; lookalike of AA Laquis / aalaquis.com)",
+      "domains": [
+        "aaltrindad.com"
+      ],
+      "emails": [
+        "melissa.vasquez@aaltrindad.com"
+      ],
+      "people": [
+        "Melissa Vasquez"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Generic 'send your product catalogue' web-form lure; domain registered 2026-06-11 at Hostinger, parked, misspelled vs. own claimed name; impersonates AA Laquis (T&T); classic catalogue-phishing/fake-buyer scam",
+      "date": "2026-09-28",
+      "source": "manual"
+    },
+    {
+      "firm": "The Business Unmasked Podcast (via Goldcrest Ventures)",
+      "domains": [
+        "goldcrestventures.org"
+      ],
+      "emails": [
+        "hillllonny@goldcrestventures.org"
+      ],
+      "people": [
+        "Lonny Hilll"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold 3-touch templated podcast-guest booking funnel from off-brand domain; likely pay-to-play package; no aerospace/investor audience",
+      "date": "2026-09-30",
+      "source": "manual"
+    },
+    {
+      "firm": "Northeast Construction (lookalike sender domain)",
+      "domains": [
+        "getnortheastconstruction.com"
+      ],
+      "emails": [
+        "a.slobodrian@getnortheastconstruction.com"
+      ],
+      "people": [
+        "April Slobodrian"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold lead-gen pitch ('16 pharma procurement managers searching for reusable launch vehicles'); sender domain registered 2026-05-16 behind privacy, redirects to a Philadelphia construction contractor \u2014 throwaway outbound domain, implausible claim",
+      "date": "2026-09-30",
+      "source": "manual"
+    },
+    {
+      "firm": "My",
+      "domains": [
+        "my.erau.edu"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (7 match) \u2014 do not engage.",
+      "date": "2026-10-01",
+      "source": "manual"
+    },
+    {
+      "firm": "Aerospace and Defense Review (aerospacedefensereview.com; CIOReview-family publisher)",
+      "domains": [
+        "aerospacedefensereview.com"
+      ],
+      "emails": [
+        "jordan.best@aerospacedefensereview.com"
+      ],
+      "people": [
+        "Jordan Best"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Pay-for-recognition vanity award: unsolicited 'Company of the Year 2027' shortlist, $5,000 for reprint rights/logo; same script as CIOReview (Trustpilot 1.7/5)",
+      "date": "2026-10-07",
+      "source": "manual"
+    },
+    {
+      "firm": "Storeroom Board (fronts for Swann Ives small-business capital)",
+      "domains": [
+        "storeroomboard.co"
+      ],
+      "emails": [
+        "limor.fried@storeroomboard.co"
+      ],
+      "people": [
+        "Limor Fried (borrowed name)"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold 'investor group wants intro' lure; domain registered 2026-07-29 via Dynadot, redirects to swannives.co small-business lender \u2014 lead-gen/broker funnel, same pattern as Larch Terrace",
+      "date": "2026-10-08",
+      "source": "manual"
+    },
+    {
+      "firm": "Highmark Funding Group / KeystoneBridgeLoans",
+      "domains": [
+        "highmarkfundinggroup.com"
+      ],
+      "emails": [
+        "mgonzales@highmarkfundinggroup.com"
+      ],
+      "people": [
+        "Matthew Gonzales"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker",
+      "reason": "Cold MCA-style broker: two templated shell sites (highmarkfundinggroup.com + keystonebridgeloans.com) registered 12 min apart on 2026-01-03 via Namecheap privacy, name mismatch sender vs signature, unsolicited 'pre-qualified up to $835K' with no financials, tracked links, fake deadline",
+      "date": "2026-10-08",
+      "source": "manual"
+    },
+    {
+      "firm": "KeystoneBridgeLoans (alias of Highmark Funding Group)",
+      "domains": [
+        "keystonebridgeloans.com"
+      ],
+      "emails": [],
+      "people": [
+        "Matthew Gonzales"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker",
+      "reason": "Alias shell of Highmark Funding Group, same template site, registered same day 2026-01-03",
+      "date": "2026-10-08",
+      "source": "manual"
+    },
+    {
+      "firm": "Redwood Loan Group (alias of Highmark Funding Group / KeystoneBridgeLoans)",
+      "domains": [
+        "redwoodloangroup.com"
+      ],
+      "emails": [
+        "sking@redwoodloangroup.com"
+      ],
+      "people": [
+        "Samantha King"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / MCA solicitation",
+      "reason": "Same cold MCA-broker campaign as Highmark/KeystoneBridgeLoans: domain registered 2026-01-03 via Namecheap privacy (same day as the other shells), templated Lovable site, sender domain \u2260 signature firm (KeystoneBridgeLoans), identical unsolicited 'up to $835K' pre-qual with no financials, sender.net tracked links, fake Oct 16 deadline",
+      "date": "2026-10-08",
+      "source": "manual"
+    },
+    {
+      "firm": "Business Capital (businesscapitalnowloan.com)",
+      "domains": [
+        "businesscapitalnowloan.com"
+      ],
+      "emails": [
+        "j_clark@businesscapitalnowloan.com"
+      ],
+      "people": [
+        "Josh Clark"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker",
+      "reason": "Cold working-capital/MCA loan-broker drip; domain registered 2026-09-21 via Dynadot privacy proxy, no identifiable legal entity, site behind bot wall",
+      "date": "2026-10-08",
+      "source": "manual"
+    },
+    {
+      "firm": "Resonance",
+      "domains": [
+        "resonance.holdings"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "sanctions/debarment",
+      "reason": "SAM.gov exclusion/debarment on record (1 match) \u2014 do not engage.",
+      "date": "2026-10-10",
+      "source": "manual"
+    },
+    {
+      "firm": "Apex Ascension",
+      "domains": [
+        "speakwithardentbiopharma.com",
+        "apexascension.com"
+      ],
+      "emails": [
+        "nam@speakwithardentbiopharma.com"
+      ],
+      "people": [
+        "Nam Tran"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold broker: paid healthcare-focused 'investor acquisition' service; 'family office interested' hook from burner domain speakwithardentbiopharma.com (reg. 2026-03-10 \u2192 apexascension.com). Not an investor.",
+      "date": "2026-10-13",
+      "source": "log_dd"
+    },
+    {
+      "firm": "Pec",
+      "domains": [
+        "pec.polito.it"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "SAM.gov exclusion/debarment on record (1 match) \u2014 do not engage.",
+      "date": "2026-10-15",
+      "source": "log_dd"
+    },
+    {
+      "firm": "Gru",
+      "domains": [
+        "gru.space"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "SAM.gov exclusion/debarment on record (1 match) \u2014 do not engage.",
+      "date": "2026-10-18",
+      "source": "log_dd"
+    },
+    {
+      "firm": "Aspen Close Co",
+      "domains": [
+        "aspencloseco.co"
+      ],
+      "emails": [
+        "danielle.thorne@aspencloseco.co"
+      ],
+      "people": [
+        "Danielle Thorne"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold broker lure with unnamed backer; 10-week-old .co domain, no website; same template as prior blocked .co solicitors",
+      "date": "2026-10-20",
+      "source": "log_dd"
+    },
+    {
+      "firm": "Factur (fctrpluses.com / facturmfg.com)",
+      "domains": [
+        "fctrpluses.com"
+      ],
+      "emails": [
+        "ashley@fctrpluses.com"
+      ],
+      "people": [
+        "Ash Sanders"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-sales vendor",
+      "reason": "Unsolicited 3-touch cold outbound sequence (9/15, 9/25, 10/19) from a 7-month-old privacy-registered burner domain that redirects to facturmfg.com; outsourced lead-gen agency for job-shop suppliers, no fit for Exos. Real firm, not a scam: do not engage.",
+      "date": "2026-10-20",
+      "source": "manual"
+    },
+    {
+      "firm": "Factur",
+      "domains": [
+        "facturmfg.com",
+        "fctrpluses.com"
+      ],
+      "emails": [
+        "ashley@fctrpluses.com"
+      ],
+      "people": [
+        "Ash Sanders"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Real Indianapolis-area lead-gen agency for manufacturing suppliers (facturmfg.com, est. 2017), not a scam. Emails come from fctrpluses.com, a burner sending domain registered 2026-03-09 behind privacy proxy that redirects to facturmfg.com. 3-touch automated cold sequence; service targets job shops seeking quote volume, so it doesn't fit Exos. Do not engage.",
+      "date": "2026-10-20",
+      "source": "log_dd"
+    },
+    {
+      "firm": "Kadenwood (KW / KWG / KW Partners / KW Advisory) \u2014 Harlan Ryker",
+      "domains": [
+        "kadenwood-growth-equity.com"
+      ],
+      "emails": [
+        "rykerharlan@kadenwood-growth-equity.com"
+      ],
+      "people": [
+        "Harlan Ryker"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker",
+      "reason": "Cold sell-side M&A/buyout drip (5 templated emails 9/25-10/20 to Phil, not CEO) from throwaway domain registered 2026-08-01; rotating firm names/titles/addresses, unverifiable deal 'credentials'; Exos not seeking control sale",
+      "date": "2026-10-20",
+      "source": "manual"
+    },
+    {
+      "firm": "Kadenwood (KW Partners)",
+      "domains": [
+        "kadenwood-growth-equity.com"
+      ],
+      "emails": [
+        "rykerharlan@kadenwood-growth-equity.com"
+      ],
+      "people": [
+        "Harlan Ryker"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold-broker sell-side M&A/control-buyout drip from a throwaway 'BD domain' (reg. 2026-08-01); inconsistent identity details; no fit \u2014 Exos is raising Series A, not selling control",
+      "date": "2026-10-20",
+      "source": "log_dd"
+    },
+    {
+      "firm": "White Swan Advisors",
+      "domains": [
+        "whiteswanservices.com",
+        "whiteswanadvisors.com"
+      ],
+      "emails": [
+        "philip_well@whiteswanservices.com"
+      ],
+      "people": [
+        "Philip Wells"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Cold capital-raise broker (lower-middle-market merchant bank, securities via Finalis); mass outbound from throwaway sending domain; no verifiable space-sector raises \u2014 do not engage",
+      "date": "2026-10-20",
+      "source": "log_dd"
+    },
+    {
+      "firm": "US Transportation Business Services LLC (USTBS)",
+      "domains": [
+        "ustbs.com"
+      ],
+      "emails": [
+        "compliance@ustbs.com"
+      ],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Unsolicited UCR 'invoice' via Square (messenger@messaging.squareup.com): $189 vs $55 official ucr.gov fee; third-party markup service, not a bill",
+      "date": "2026-10-20",
+      "source": "manual"
+    },
+    {
+      "firm": "Gulf Venture Point",
+      "domains": [
+        "gulfventurepoint.co"
+      ],
+      "emails": [
+        "sloan.dawn@gulfventurepoint.co"
+      ],
+      "people": [
+        "Dawn Sloan"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "FAIL / do-not-engage: 7-week-old lookalike .co domain, no site or footprint, unnamed Middle Eastern family offices, year-end urgency = cold capital-intro/advance-fee pattern",
+      "date": "2026-10-20",
+      "source": "log_dd"
+    },
+    {
+      "firm": "Fake Amazon order / callback phish (mazy izzabelle)",
+      "domains": [],
+      "emails": [
+        "mazyizzabelle421@outlook.com"
+      ],
+      "people": [
+        "mazy izzabelle"
+      ],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "FAIL \u2014 callback phishing: fake Amazon invoice to peaton@, scam phone 817-554-1779, freemail sender, Cyrillic-homoglyph subject",
+      "date": "2026-10-20",
+      "source": "log_dd"
+    },
+    {
+      "firm": "Kadenwood Growth Equity",
+      "domains": [
+        "kadenwood-growth-equity.com"
+      ],
+      "emails": [],
+      "people": [],
+      "verdict": "do-not-engage",
+      "category": "cold-broker / advance-fee flag",
+      "reason": "Quick scan flagged CAUTION; deep-dive escalated to FAIL \u2014 Explicit disclosures warning of fraudulent impersonations tied to this domain and name, combined with reported advance-fee losses, present a clear scam risk.",
+      "date": "2026-10-21",
+      "source": "log_dd",
+      "confirmed_by": "John Quinn",
+      "confirmed_at": "2026-10-22T09:11:03Z",
+      "decision_id": "dec-dd-fail-kadenwood-growth-equity.com"
     }
   ]
 }
