@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Exos Process & Procedures — Master Register",
-    "updated": "2026-10-21",
+    "updated": "2026-10-23",
     "source": "Lizi turnover → Exo (MC management); schema per Exos Procedures Master List",
     "template": "Exos-US Procedure Template",
     "doc_control": "STATUS on each doc; records in the Exos Work Management System (Mission Control / ERP)",
@@ -1480,6 +1480,22 @@
       "remarks": "Applies to the Exos 1998 Freightliner FL112 crane truck (QuickBooks asset 'Freightliner FL 112' / 'Crane Truck'; shop inventory SHOP-01685) that is stored OUTSIDE at Greenville, TX. Truck is run under Freightliner Schedule I (severe service): it travels well under 6,000 miles a year and sits exposed to weather. Because it accrues so few hours and miles, this procedure adds calendar intervals (whichever comes first). Where the crane or engine OEM manual is stricter than this procedure, the OEM manual governs. Asset fields left as ______ must be filled in from the vehicle data plates on first use.",
       "files": [
         "02-ground-operations/EXOS-GRN-008-0_Crane_Truck_Preventive_Maintenance_(1998_Freightliner_FL112,_Outdoor_Storage).docx"
+      ],
+      "file_count": 1
+    },
+    {
+      "area": "Payload",
+      "area_id": "03-payload",
+      "procedure": "Payload Lead Qualification & Outreach Review",
+      "doc_no": "EXOS-SALES-002-0",
+      "rev": "0",
+      "status": "Pending Approval",
+      "intl_release": "No",
+      "ack_required": false,
+      "owner": "Payload Sales (Lizi Quinn) / Exo",
+      "remarks": "Created 2026-10-23 at Lizi Quinn's request from the UTD Team Atlas lead research template. Pending John Quinn approval.",
+      "files": [
+        "03-payload/EXOS-SALES-002-0_Payload_Lead_Qualification_&_Outreach_Review.docx"
       ],
       "file_count": 1
     }

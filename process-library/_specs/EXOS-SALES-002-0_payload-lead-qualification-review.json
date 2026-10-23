@@ -1,0 +1,48 @@
+{
+  "title": "Payload Lead Qualification & Outreach Review",
+  "doc_no": "EXOS-SALES-002-0",
+  "area": "Payload",
+  "area_id": "03-payload",
+  "owner": "Payload Sales (Lizi Quinn) / Exo",
+  "rev": "0",
+  "status": "Pending Approval",
+  "intl_release": "No",
+  "reference_docs": "Form EXOS-SALES-002-F1 Internal Lead Review; BLK3 Payload User's Guide; Exos Past Customer List; EXOS-SALES-001 Sales Agent Commission Procedure; Team Atlas Lead Research Template (S. Mathew, UTD) — student grading tool, not controlled",
+  "remarks": "Created 2026-10-23 at Lizi Quinn's request from the UTD Team Atlas lead research template. Pending John Quinn approval.",
+  "objective": "make sure every new payload sales lead is checked for routing, verified against credible current sources, scored for BLK3 fit, and has an accurate, approved outreach draft before anyone at Exos sends it.",
+  "overview": "Payload leads come from Exo research, the UTD capstone team, and inbound contacts. Before outreach, each lead is reviewed on Form EXOS-SALES-002-F1 (Internal Lead Review). The review starts with a routing gate (past customer, government, warm thread, duplicate, hold), then verifies the contact, active programs and funding, scores BLK3 fit on a 1-5 scale, logs any AI research errors, and checks the outreach draft against approved Exos claims. Only a lead marked PASS is send-ready. Commercial and university leads are sent by Payload Sales; government leads are sent by the CEO.",
+  "tasks": [
+    {"name": "Task 1 - Routing Gate", "steps": [
+      "Open a new Form EXOS-SALES-002-F1 for the lead before doing any research.",
+      "Check the Exos Past Customer List and QuickBooks. If the org is a past customer, mark it an existing relationship and route it to Payload Sales; it is not a new lead.",
+      "If the lead is a federal agency, national lab, FFRDC, or military organization, route it to the CEO. Payload Sales does not send government outreach.",
+      "Search email and the CRM for any existing thread with the org, including a different lab or department. If one exists, continue that thread; do not cold-open.",
+      "Check the CRM and Mission Control for a duplicate lead card. If found, link it and close the duplicate.",
+      "Check for partner, competitor, or CEO holds. If on hold, stop and record the reason.",
+      "Record the routing decision (Payload Sales / CEO / Hold) on the form."
+    ]},
+    {"name": "Task 2 - Contact Verification", "steps": [
+      "Confirm the contact's name and current title with up to three sources: organization website, LinkedIn, and a public source for the exact email address.",
+      "Record the publish or access date next to every source. Sources older than 2023 count as unverified.",
+      "Mark the inbox type as Named Person or Generic Org Inbox. Keep looking for a named contact before accepting a generic inbox; generic inboxes are low priority.",
+      "If the original contact has left the role, identify the replacement and source it."
+    ]},
+    {"name": "Task 3 - Programs, Funding, and BLK3 Fit", "steps": [
+      "List active programs (2025-2026) with at least one source per factual claim.",
+      "List verified funding sources and a possible BLK3 funding path, without assuming funds are available for a flight.",
+      "Score BLK3 fit 1-5 using the anchors on the form and write a 2-3 sentence, evidence-based justification.",
+      "Record every AI research or draft error found, with the original claim, the correction, and a source."
+    ]},
+    {"name": "Task 4 - Outreach Draft Check and Verdict", "steps": [
+      "Confirm the draft's contact name, title, program, and funding claims match the verified research.",
+      "Confirm BLK3 specifications match the Payload User's Guide; microgravity is described as designed for about 2.5 minutes.",
+      "Confirm flight timing reads \"early 2027\" with no specific month.",
+      "Confirm license wording reads \"FAA Part 431 launch license, transitioning to Part 450\"; never a bare \"licensed\".",
+      "Confirm pricing, if any, uses only the published rate ($7,500/kg; $1M per full flight). Never include internal costs.",
+      "Confirm no unsupported timelines, turnaround promises, guarantees, or non-public information.",
+      "Confirm the draft is in the sender's voice and signature (Payload Sales with booking link, or CEO for government leads), with subject line and To/Cc addresses.",
+      "Mark the VERDICT: PASS only if every item is correct and complete; otherwise FAIL and return the lead for rework.",
+      "Hand PASS leads to the sender identified in Task 1. Reviewers and students never send outreach."
+    ]}
+  ]
+}
