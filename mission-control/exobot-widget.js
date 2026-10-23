@@ -262,4 +262,23 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
+
+  // "← Back to Mission Control" on the LEFT of every page header, where a browser Back button sits
+  // (Phil Eaton 2026-10-22). The existing right-side links stay. Skipped on the board itself.
+  function addLeftBack() {
+    var pth = location.pathname;
+    if (pth === '/' || pth === '/index.html' || document.getElementById('mcLeftBack')) return;
+    var a = document.createElement('a');
+    a.id = 'mcLeftBack'; a.href = '/'; a.textContent = '← Back to Mission Control';
+    a.style.cssText = 'display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:#7fb3ff;text-decoration:none;'
+      + 'background:rgba(0,128,255,.10);border:1px solid rgba(0,128,255,.35);border-radius:8px;padding:6px 11px;margin-right:14px;white-space:nowrap;flex:none';
+    var hdr = document.querySelector('header, .header, .topbar, .top-bar, nav');
+    if (hdr) { hdr.insertBefore(a, hdr.firstChild); return; }
+    var bar = document.createElement('div');
+    bar.style.cssText = 'padding:10px 18px 0';
+    bar.appendChild(a);
+    document.body.insertBefore(bar, document.body.firstChild);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addLeftBack);
+  else addLeftBack();
 })();
