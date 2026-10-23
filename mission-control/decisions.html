@@ -337,6 +337,10 @@ function noteChange(id,v){picks[id]=picks[id]||{};picks[id].note=v;}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2600);}
 async function loadSubmittals(){
   const el=document.getElementById('submittals'); if(!el) return;
+  // Submittal Deadlines = the company BD bid calendar (opportunities carry no owner). Show it only to
+  // the BD owners (admin logins); everyone else sees just the decisions waiting on them (Phil Eaton 10/22).
+  let role=''; try{ const m=await fetch('/api/me',{credentials:'same-origin'}); if(m.ok) role=(await m.json()).role||''; }catch(e){}
+  if(role!=='admin'){ el.innerHTML=''; return; }
   let rows=[];
   try{ const r=await fetch('/api/submittals',{credentials:'same-origin'}); if(r.ok) rows=await r.json(); }catch(e){}
   if(!rows.length){el.innerHTML='';return;}
