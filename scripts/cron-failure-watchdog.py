@@ -70,10 +70,15 @@ def save_state(state):
 
 
 def get_jobs():
-    out = subprocess.run(
-        [OPENCLAW, "cron", "list", "--json"],
-        capture_output=True, text=True, timeout=60,
-    )
+    try:
+        out = subprocess.run(
+            [OPENCLAW, "cron", "list", "--json"],
+            capture_output=True, text=True, timeout=90,
+        )
+    except subprocess.TimeoutExpired:
+        # gateway stalled/restarting; same as rc!=0 — retry next 30-min tick
+        logline("ERROR: cron list timed out after 90s (gateway stalled?)")
+        sys.exit(0)  # fail quiet; never crash-loop
     if out.returncode != 0:
         logline(f"ERROR: cron list failed rc={out.returncode}: {out.stderr[:300]}")
         sys.exit(0)  # fail quiet; never crash-loop
