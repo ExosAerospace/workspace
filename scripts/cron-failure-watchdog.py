@@ -70,19 +70,27 @@ def save_state(state):
 
 
 def get_jobs():
-    try:
-        out = subprocess.run(
-            [OPENCLAW, "cron", "list", "--json"],
-            capture_output=True, text=True, timeout=90,
-        )
-    except subprocess.TimeoutExpired:
-        # gateway stalled/restarting; same as rc!=0 — retry next 30-min tick
-        logline("ERROR: cron list timed out after 90s (gateway stalled?)")
-        sys.exit(0)  # fail quiet; never crash-loop
-    if out.returncode != 0:
-        logline(f"ERROR: cron list failed rc={out.returncode}: {out.stderr[:300]}")
-        sys.exit(0)  # fail quiet; never crash-loop
-    return json.loads(out.stdout).get("jobs", [])
+    # A slow/hung gateway must not crash this job (launchd exit 1 → fleet alert);
+    # retry once, then fail quiet and catch it on the next 30-min run.
+    for attempt in (1, 2):
+        try:
+            out = subprocess.run(
+                [OPENCLAW, "cron", "list", "--json"],
+                capture_output=True, text=True, timeout=90,
+            )
+        except subprocess.TimeoutExpired:
+            logline(f"WARN: cron list timed out (attempt {attempt}/2)")
+            continue
+        if out.returncode != 0:
+            logline(f"ERROR: cron list failed rc={out.returncode}: {out.stderr[:300]}")
+            sys.exit(0)  # fail quiet; never crash-loop
+        try:
+            return json.loads(out.stdout).get("jobs", [])
+        except ValueError as e:
+            logline(f"ERROR: cron list returned non-JSON: {e}")
+            sys.exit(0)
+    logline("ERROR: cron list timed out twice; skipping this run")
+    sys.exit(0)
 
 
 def post_discord(text):
