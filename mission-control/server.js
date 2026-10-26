@@ -202,6 +202,15 @@ function decisionScore(d, refIdx) {
   // Weighting: value + deadline dominate; label is a tiebreak-level baseline.
   return Math.round(valueScore * 1.0 + urgency * 0.8 + labelBase * 0.5);
 }
+// Signature-gate (Jon 2026-10-26, D-7282188 / task #4023): a Decision asking someone to SIGN must say
+// WHERE the document is — the physical location for wet ink (e.g. "Greenville front office, blue
+// 'To Sign' folder") or the e-sign link — so the signer can sign it when they are in the office.
+// Ingest rejects a signature ask without documentLocation; the location is pinned onto the card.
+// Matches real signing asks; skips figurative "sign-off" (supplier DD) and past-tense "wet-signed" (waiver on-file checks).
+const SIGN_ASK_RE = /\b(sign|signing|countersign|wet[- ]?sign)\b(?![- ]?off)|\b(wet|ink|e-?)[- ]?signature\b|\bsignature (on|for|page|block)\b|\bwet ink\b/i;
+function isSignatureAsk(p) {
+  return SIGN_ASK_RE.test([p.title, p.question, p.proposedAction].filter(Boolean).join(' '));
+}
 function decisionsToken() {
   try { return fs.readFileSync(DTOKEN_FILE, 'utf-8').trim(); }
   catch {
@@ -6132,7 +6141,20 @@ const server = http.createServer((req, res) => {
         }
         // Open decision with the same dedupeKey exists → update it in place instead of adding.
         let existing = p.dedupeKey ? arr.find(d => isOpenStatus(d.status) && d.dedupeKey === p.dedupeKey) : null;
+        const docLoc = String(p.documentLocation || (existing && existing.documentLocation) || '').trim();
+        if (isSignatureAsk({ ...(existing || {}), ...p }) && !docLoc) {
+          res.writeHead(422, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'signature decision requires documentLocation: where the signer gets the document (physical location of the copy filed at Exos for wet ink, or the e-sign link)' }));
+          return;
+        }
+        if (docLoc) {
+          p.documentLocation = docLoc.slice(0, 300);
+          const tag = `📍 Document to sign: ${p.documentLocation}`;
+          const ctx = p.context ?? (existing && existing.context) ?? '';
+          if (!String(ctx).includes(tag)) p.context = `${tag}\n${ctx}`.trim();
+        }
         if (existing) {
+          if (p.documentLocation) existing.documentLocation = p.documentLocation;
           Object.assign(existing, {
             title: p.title || existing.title, question: p.question || existing.question,
             context: p.context ?? existing.context, proposedAction: p.proposedAction ?? existing.proposedAction,
@@ -6164,6 +6186,7 @@ const server = http.createServer((req, res) => {
         if (normDocKeys(p.docKeys)) d.docKeys = normDocKeys(p.docKeys);
         if (p.docTask != null && String(p.docTask).trim() !== '') d.docTask = String(p.docTask).trim();
         if (p.docLegend) d.docLegend = String(p.docLegend).slice(0, 300);
+        if (p.documentLocation) d.documentLocation = p.documentLocation;
         arr.push(d); saveDecisions(arr);
         // Event-driven delivery: a "deliver-to-Jon draft" decision is delivered NOW, not on the
         // polling watcher's timer — a draft Jon requested shouldn't wait for another job to sweep it.
