@@ -30,6 +30,9 @@ def post(path):
                "context": f"MC task #{c.get('task')} · {c.get('audience')} · draft {path}",
                "proposedAction": "Send now = goes out from your mailbox immediately (in Sent Items). Outlook Drafts = formatted draft in your Drafts folder. Hold = nothing sent; add a note and Exo revises.",
                "type": "choice", "options": OPTS, "priority": "high", "dedupeKey": key}
+    if c.get("attachments"):  # attached file is the document (ingest requires a location for signature-flavored text)
+        payload["documentLocation"] = c.get("document_url") or c["attachments"][0]
+        payload["question"] += "\n\nAttached: " + ", ".join(os.path.basename(a) for a in c["attachments"])
     tok = open(os.path.join(WS, "mission-control", "data", ".decisions-token")).read().strip()
     r = urllib.request.Request("http://127.0.0.1:8080/api/decisions/ingest", data=json.dumps(payload).encode(),
                                headers={"Content-Type": "application/json", "x-exo-token": tok}, method="POST")

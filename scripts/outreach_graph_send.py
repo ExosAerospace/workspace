@@ -8,11 +8,11 @@ Refresh token in ~/.openclaw/secrets.json (ms_outreach_refresh_token, rotated on
   outreach_graph_send.py whoami
   outreach_graph_send.py send   <msg.json>   # sends now; copy lands in Jon's Sent Items
   outreach_graph_send.py draft  <msg.json>   # puts a fully formatted draft in Jon's Outlook Drafts
-msg.json: {"to":[..], "cc":[..], "subject":"..", "html":"..body without signature.."}
+msg.json: {"to":[..], "cc":[..], "subject":"..", "html":"..body without signature..", "attachments":[paths]}
 Every message gets Jon's signature appended (Outlook does not add it to API-sent mail).
 Callers must only run send/draft after Jon's per-email approval.
 """
-import json, os, sys, urllib.request, urllib.parse, html
+import json, os, sys, urllib.request, urllib.parse, html, base64, mimetypes
 
 SECRETS = os.path.expanduser("~/.openclaw/secrets.json")
 LOGIN, G = "https://login.microsoftonline.us", "https://graph.microsoft.us"
@@ -47,7 +47,11 @@ def call(method, path, body=None):
 def message(m):
     rcpt = lambda xs: [{"emailAddress": {"address": a}} for a in (xs or [])]
     return {"subject": m["subject"], "body": {"contentType": "HTML", "content": m["html"] + SIGNATURE + m.get("footer_html", "")},
-            "toRecipients": rcpt(m.get("to")), "ccRecipients": rcpt(m.get("cc"))}
+            "toRecipients": rcpt(m.get("to")), "ccRecipients": rcpt(m.get("cc")),
+            "attachments": [{"@odata.type": "#microsoft.graph.fileAttachment", "name": os.path.basename(a),
+                             "contentType": mimetypes.guess_type(a)[0] or "application/octet-stream",
+                             "contentBytes": base64.b64encode(open(a, "rb").read()).decode()}
+                            for a in (m.get("attachments") or [])]}
 
 
 def main():
