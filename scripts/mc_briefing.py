@@ -11,6 +11,7 @@ LIVE, non-Done state.
 """
 
 # --- supabase retry/backoff shim (auto-added) ---
+from collections import Counter
 import os as _sbu_os, sys as _sbu_sys; _sbu_sys.path.insert(0, _sbu_os.path.dirname(_sbu_os.path.abspath(__file__)))
 import supabase_util as _sbu; _sbu.install()
 # --- end shim ---
@@ -20,6 +21,12 @@ from exos_capability_gate import is_aligned, filter_new_aligned, escalate
 SB = "https://pcrgpuoljylqcumijvnw.supabase.co/rest/v1"
 import os  # supabase secret key loader (exo3 audit fix #1)
 KEY = json.load(open(os.path.expanduser("~/.openclaw/secrets.json")))["supabase_service_role_key"]
+JON_OWNERS = {"Jon", "John", "John Quinn", "jquinn@exosaero.com", "Exo", ""}
+
+
+def is_jons(owner):
+    o = (owner or "").strip()
+    return o in JON_OWNERS or o.startswith("John Quinn")
 DONE = {"Done", "Completed", "Closed", "Archived", "Cancelled"}  # Cancelled was leaking into OVERDUE (fix 2026-10-07)
 HORIZON_DAYS = 14
 
@@ -129,15 +136,24 @@ def main():
     L.append(f"Open: {len(open_tasks)} | Due ≤{HORIZON_DAYS}d: {len(dated)}")
     L.append("")
 
-    L.append("🔴 DEADLINES (next 14 days)")
-    if dated:
-        for d, t in dated[:15]:
+    # This email goes to Jon only: list HIS deadlines (+ Exo/unowned) line by line; teammates'
+    # dated tasks are their owners' to drive, so they collapse to a per-owner count instead of
+    # reading as Jon's to-dos (#3164 Roel's standing task was showing up here, 2026-10-26).
+    mine = [(d, t) for d, t in dated if is_jons(t.get("owner"))]
+    others = Counter((t.get("owner") or "").strip() for d, t in dated
+                     if not is_jons(t.get("owner")))
+    L.append("🔴 YOUR DEADLINES (next 14 days)")
+    if mine:
+        for d, t in mine[:15]:
             days = (d - today).days
             when = "TODAY" if days == 0 else ("TOMORROW" if days == 1 else f"{days}d ({d:%b %-d})")
             flag = "⚠️OVERDUE " if days < 0 else ""
             L.append(f"  • {flag}{when} — {(t.get('title') or '')[:88]} [{t.get('state')}]")
     else:
         L.append("  (none dated in window)")
+    if others:
+        L.append("  Team-owned deadlines in window (owners drive these): "
+                 + ", ".join(f"{o} {n}" for o, n in others.most_common()))
     if stale:
         L.append(f"  … plus {len(stale)} aged tasks overdue >30d (stale — need close/re-date, not real deadlines)")
     L.append("")

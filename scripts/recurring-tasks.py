@@ -42,6 +42,14 @@ def create(rec):
                  "Prefer": "return=representation"}, method="POST"), timeout=30).read())[0]["id"]
 
 
+def patch(tid, rec):
+    k = _k()
+    urllib.request.urlopen(urllib.request.Request(
+        B + f"tasks?id=eq.{tid}", data=json.dumps(rec).encode(),
+        headers={"apikey": k, "Authorization": "Bearer " + k, "Content-Type": "application/json"},
+        method="PATCH"), timeout=30).read()
+
+
 def norm(t):
     return re.sub(r'[^a-z0-9]', '', (t or '').lower())[:50]
 
@@ -145,7 +153,23 @@ def main():
         created += 1
         print(f"  + #{tid} '{meta['title'][:40]}' next due {nd} ({rr})")
         time.sleep(0.05)
-    print(f"recurring regenerator: {len(fam_rr)} recurring families | created {created} next-instance(s)")
+    # Standing tasks tagged `roll:<RRULE>` stay OPEN all term; instead of spawning a new instance,
+    # roll the due date forward to the next checkpoint once it passes, so a standing task never
+    # reads as "OVERDUE -25d" (#3164 UTD Program Lead READY number, 2026-10-26).
+    rolled = 0
+    for t in tasks:
+        rr = next((str(x)[5:] for x in (t.get("tags") or []) if str(x).startswith("roll:")), None)
+        d = parse_date(t.get("due_date"))
+        if not rr or not d or d >= date.today() or str(t.get("state", "")).lower() in (
+                "done", "complete", "completed", "closed", "archived", "cancelled"):
+            continue
+        nd = next_due(d, rr)
+        due = str(t.get("due_date"))
+        patch(t["id"], {"due_date": nd.isoformat() + (due[10:] if len(due) > 10 else "")})
+        rolled += 1
+        print(f"  > #{t['id']} '{(t.get('title') or '')[:40]}' rolled {d} -> {nd} ({rr})")
+    print(f"recurring regenerator: {len(fam_rr)} recurring families | created {created} next-instance(s)"
+          f" | rolled {rolled} standing task(s)")
 
 
 if __name__ == "__main__":
