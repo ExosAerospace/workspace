@@ -24,9 +24,17 @@ def main():
     work = os.path.join(DEST, f".work-{stamp}")
     os.makedirs(work, exist_ok=True)
     try:
-        # 1) consistent online SQLite backup (safe while Vaultwarden is running)
-        subprocess.run(["/usr/bin/sqlite3", DB, f".backup '{os.path.join(work, 'db.sqlite3')}'"],
-                       check=True, timeout=120)
+        # 1) consistent online SQLite backup, taken INSIDE the container. Never open the DB from the
+        #    host: macOS sqlite and the container share the WAL/shm over colima virtiofs, and the
+        #    host-side .backup broke the container's locks -> "disk I/O error" on every login write
+        #    (2026-10-26). `vaultwarden backup` writes data/db_<UTC stamp>.sqlite3 in the data dir.
+        before = set(glob.glob(os.path.join(DATA, "db_*.sqlite3")))
+        subprocess.run(["/opt/homebrew/bin/docker", "exec", "vaultwarden", "/vaultwarden", "backup"],
+                       check=True, timeout=120, capture_output=True)
+        new = sorted(set(glob.glob(os.path.join(DATA, "db_*.sqlite3"))) - before)
+        if not new:
+            raise RuntimeError("vaultwarden backup produced no db_*.sqlite3")
+        shutil.move(new[-1], os.path.join(work, "db.sqlite3"))
         # 2) key material + config + attachments/sends
         for name in ["rsa_key.pem", "rsa_key.pub.pem", "config.json", ".admin_token"]:
             src = os.path.join(DATA, name)
