@@ -12,6 +12,12 @@ Budget: Project plan $30 (4,000 credits) + pay-go at $0.008/credit, capped at
 3,000 pay-go credits = $54 (https://www.tavily.com/pricing). Credits reset on
 the 1st, so the switch back to Tavily happens on its own when usage resets.
 
+Agents that call tavily_search/tavily_extract directly (research-web, the
+Research Team and capture crons) get the same failover: while on Gemini, both
+tools are added to the global tools.deny, so those agents use web_search,
+which now routes to Gemini. They come back off the denylist when Tavily recovers.
+Every job that allows tavily_* in toolsAllow also allows web_search.
+
 Runs from launchd com.exos.search-failover every 10 min. Checking /usage costs
 no credits.
 """
@@ -70,6 +76,35 @@ def set_provider(p):
                    check=True, capture_output=True, text=True, timeout=60)
 
 
+TAVILY_TOOLS = ["tavily_search", "tavily_extract"]
+
+
+def get_deny():
+    out = subprocess.run(["openclaw", "config", "get", "tools.deny", "--json"],
+                         capture_output=True, text=True, timeout=60)
+    try:
+        v = json.loads(out.stdout)
+        return v if isinstance(v, list) else []
+    except Exception:
+        return []
+
+
+def sync_deny(failover):
+    cur = get_deny()
+    new = ([x for x in cur if x not in TAVILY_TOOLS] + TAVILY_TOOLS) if failover \
+        else [x for x in cur if x not in TAVILY_TOOLS]
+    if sorted(new) == sorted(cur):
+        return False
+    if new:
+        subprocess.run(["openclaw", "config", "set", "tools.deny", json.dumps(new), "--strict-json"],
+                       check=True, capture_output=True, text=True, timeout=60)
+    else:
+        subprocess.run(["openclaw", "config", "unset", "tools.deny"],
+                       check=True, capture_output=True, text=True, timeout=60)
+    log(f"tools.deny -> {new}")
+    return True
+
+
 def main():
     s = load_state()
     want, reason = "tavily", "healthy"
@@ -95,6 +130,7 @@ def main():
     if cur != want:
         set_provider(want)
         log(f"switched web_search {cur or '(unset)'} -> {want} ({reason})")
+    sync_deny(want == "gemini")
     s["provider"] = want
     s["reason"] = reason
     save_state(s)
