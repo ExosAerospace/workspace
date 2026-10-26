@@ -46,7 +46,7 @@ def call(method, path, body=None):
 
 def message(m):
     rcpt = lambda xs: [{"emailAddress": {"address": a}} for a in (xs or [])]
-    return {"subject": m["subject"], "body": {"contentType": "HTML", "content": m["html"] + SIGNATURE},
+    return {"subject": m["subject"], "body": {"contentType": "HTML", "content": m["html"] + SIGNATURE + m.get("footer_html", "")},
             "toRecipients": rcpt(m.get("to")), "ccRecipients": rcpt(m.get("cc"))}
 
 
