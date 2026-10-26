@@ -5,10 +5,10 @@
   "area_id": "03-payload",
   "owner": "Payload Sales (Lizi Quinn) / Exo",
   "rev": "0",
-  "status": "Pending Approval",
+  "status": "Approved (John Quinn, 2026-10-26)",
   "intl_release": "No",
   "reference_docs": "Form EXOS-SALES-002-F1 Internal Lead Review; BLK3 Payload User's Guide; Exos Past Customer List; EXOS-SALES-001 Sales Agent Commission Procedure; Team Atlas Lead Research Template (S. Mathew, UTD) — student grading tool, not controlled",
-  "remarks": "Created 2026-10-23 at Lizi Quinn's request from the UTD Team Atlas lead research template. Pending John Quinn approval.",
+  "remarks": "Created 2026-10-23 at Lizi Quinn's request from the UTD Team Atlas lead research template. Approved by John Quinn on 2026-10-26 (D-7282175).",
   "objective": "make sure every new payload sales lead is checked for routing, verified against credible current sources, scored for BLK3 fit, and has an accurate, approved outreach draft before anyone at Exos sends it.",
   "overview": "Payload leads come from Exo research, the UTD capstone team, and inbound contacts. Before outreach, each lead is reviewed on Form EXOS-SALES-002-F1 (Internal Lead Review). The review starts with a routing gate (past customer, government, warm thread, duplicate, hold), then verifies the contact, active programs and funding, scores BLK3 fit on a 1-5 scale, logs any AI research errors, and checks the outreach draft against approved Exos claims. Only a lead marked PASS is send-ready. Commercial and university leads are sent by Payload Sales; government leads are sent by the CEO.",
   "tasks": [
