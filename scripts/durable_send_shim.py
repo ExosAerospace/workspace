@@ -53,7 +53,10 @@ def _parse(argv):
 
 def _patched_run(argv, *a, **kw):
     global _IN_DELIVER
-    if not _IN_DELIVER and _looks_like_send(argv):
+    # deliver.try_send's own send must go straight out: re-wrapping it when a host calls
+    # deliver() directly spooled a 2nd copy of every message (dupsend 2026-10-26).
+    _caller = os.path.basename(sys._getframe(1).f_code.co_filename)
+    if not _IN_DELIVER and _caller != "deliver.py" and _looks_like_send(argv):
         try:
             _IN_DELIVER = True
             from deliver import deliver, DEFAULT_TARGET
