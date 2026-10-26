@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-19T04:04:24",
- "total": 289,
+ "total": 290,
  "standing": 115,
  "ephemeral": 18,
  "service": 6,
@@ -6300,6 +6300,45 @@
    "registered": "2026-10-22",
    "agent": "mc-cell-onboard-exo3",
    "eval_type": "output"
+  },
+  {
+   "label": "cron:hvrr-supplier-sam-re-screen-2h",
+   "cron_id": "20e90291-a5e7-4a2c-b78f-fa2c1cdb3e37",
+   "kind": "openclaw-cron",
+   "script": "openclaw cron 20e90291-a5e7-4a2c-b78f-fa2c1cdb3e37 (agentTurn)",
+   "schedule": "once at 2026-10-23T01:40:00.000Z",
+   "purpose": "HVRR supplier SAM re-screen +2h — HVRR SAM re-screen retry (was 429 at 7:40 PM CDT): run python3 scripts/supplier_dd_exo3.py --names-file drafts/hvrr-supplier-dd/screen_names.txt --defense --program HVRR --no-cards, then python3 scripts/hvrr_supplier_cov",
+   "stack_layer": "ORCHESTRATE",
+   "autonomy_tier": "Execute-within-bounds",
+   "human_owner": "John Quinn",
+   "permission_envelope": "toolsAllow 1 tools; delivery announce → last:none; read/announce only",
+   "memory_boundary": "session target isolated; agent main",
+   "escalation": "agent_eval cron hygiene → Jon on FAIL; Decisions board for any Jon call",
+   "eval_suite": "agent_eval cron hygiene (lastRunStatus ok + not stale vs its own cadence; consecutiveErrors → FAIL); OUTPUT: agent_eval check_duplicate_sends on its deliveries",
+   "eval_type": "output",
+   "telemetry": "openclaw cron runs --id 20e90291-a5e7-4a2c-b78f-fa2c1cdb3e37",
+   "reusability_scope": "single-purpose",
+   "risk_tier": "LOW",
+   "lifecycle": "self-removing (prompt has an end condition)",
+   "registered": "2026-10-22",
+   "envelope_source": "register_cron.py derivation from the live cron"
+  },
+  {
+   "label": "mc.signature-location-gate",
+   "script": "mission-control/server.js (signLocationProblem / isSignatureAsk)",
+   "kind": "gate (MC Decisions ingest rule)",
+   "schedule": "on every /api/decisions ingest",
+   "purpose": "Signature-gate: any Decision asking someone to SIGN is rejected (422) unless documentLocation gives the e-sign link or the wet-ink location as '<Site> office, File Cabinet <N>, Drawer <N>, Folder <D-number/title>'. Site procedure EXOS-ADM-006-0; cabinet register data/signing-locations.json. Jon D-7282188/#4023, D-7282192/#4026.",
+   "stack_layer": "GOVERN",
+   "autonomy_tier": "Guardrail (blocks on violation)",
+   "human_owner": "John Quinn",
+   "permission_envelope": "rejects malformed Decision ingest only; no external actions",
+   "memory_boundary": "request payload + decisions.json (read/write of the one Decision)",
+   "escalation": "422 error names the missing cabinet/drawer/folder; caller must resubmit",
+   "eval_suite": "signature-location selftest: POST sign Decision with 'Greenville office, To-Sign folder' -> 422; with 'File Cabinet 1, Drawer 1, Folder D-…' -> 200",
+   "telemetry": "MC server log",
+   "reusability_scope": "all MC cells (Decisions)",
+   "eval_type": "liveness"
   }
  ],
  "eval_wave_1": {

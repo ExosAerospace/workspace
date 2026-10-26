@@ -1,0 +1,14 @@
+{
+  "_doc": "Wet-ink signing locations register (EXOS-ADM-006-0; Jon D-7282192 / MC #4026). Every signature Decision's documentLocation must cite one of these cabinets plus drawer and folder. Server enforces format in /api/decisions ingest.",
+  "format": "<Site> office, File Cabinet <N>, Drawer <N>, Folder <Decision ID or document title>",
+  "sites": [
+    {
+      "site": "Greenville",
+      "address": "299 FM 1903, Greenville, TX 75402",
+      "cabinet": "PENDING: physical cabinet to be designated and labeled 'File Cabinet 1 - TO SIGN'",
+      "drawers": {"1": "Awaiting signature (one folder per Decision, labeled with the D-number)", "2": "Signed; awaiting scan and filing"},
+      "status": "pending-physical-designation",
+      "owner": "John Quinn (approver) / Exo (register keeper)"
+    }
+  ]
+}

@@ -208,6 +208,21 @@ function decisionScore(d, refIdx) {
 // Ingest rejects a signature ask without documentLocation; the location is pinned onto the card.
 // Matches real signing asks; skips figurative "sign-off" (supplier DD) and past-tense "wet-signed" (waiver on-file checks).
 const SIGN_ASK_RE = /\b(sign|signing|countersign|wet[- ]?sign)\b(?![- ]?off)|\b(wet|ink|e-?)[- ]?signature\b|\bsignature (on|for|page|block)\b|\bwet ink\b/i;
+// Jon 2026-10-26 (D-7282192 / #4026): a wet-ink location must name the File Cabinet, Drawer AND Folder
+// (EXOS-ADM-006-0; register: data/signing-locations.json). An e-sign link (http/https) satisfies it on its own.
+const SIGN_LOC_CAB_RE = /\b(file\s*)?cabinet\s*[#:]?\s*[A-Z0-9-]+/i;
+const SIGN_LOC_DRAWER_RE = /\bdrawer\s*[#:]?\s*[A-Z0-9-]+/i;
+const SIGN_LOC_FOLDER_RE = /\bfolder\s*[#:]?\s*["'\u201c]?[A-Z0-9][\w .\/-]*/i;
+function signLocationProblem(loc) {
+  const s = String(loc || '').trim();
+  if (!s) return 'documentLocation missing';
+  if (/https?:\/\//i.test(s)) return '';
+  const miss = [];
+  if (!SIGN_LOC_CAB_RE.test(s)) miss.push('File Cabinet number');
+  if (!SIGN_LOC_DRAWER_RE.test(s)) miss.push('Drawer');
+  if (!SIGN_LOC_FOLDER_RE.test(s)) miss.push('Folder reference');
+  return miss.length ? `wet-ink documentLocation must include ${miss.join(', ')} (format: "<Site> office, File Cabinet <N>, Drawer <N>, Folder <D-number/title>" per EXOS-ADM-006-0) or an e-sign link` : '';
+}
 function isSignatureAsk(p) {
   return SIGN_ASK_RE.test([p.title, p.question, p.proposedAction].filter(Boolean).join(' '));
 }
@@ -6142,9 +6157,10 @@ const server = http.createServer((req, res) => {
         // Open decision with the same dedupeKey exists → update it in place instead of adding.
         let existing = p.dedupeKey ? arr.find(d => isOpenStatus(d.status) && d.dedupeKey === p.dedupeKey) : null;
         const docLoc = String(p.documentLocation || (existing && existing.documentLocation) || '').trim();
-        if (isSignatureAsk({ ...(existing || {}), ...p }) && !docLoc) {
+        const signProblem = isSignatureAsk({ ...(existing || {}), ...p }) ? signLocationProblem(docLoc) : '';
+        if (signProblem) {
           res.writeHead(422, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'signature decision requires documentLocation: where the signer gets the document (physical location of the copy filed at Exos for wet ink, or the e-sign link)' }));
+          res.end(JSON.stringify({ error: `signature decision requires documentLocation: ${signProblem}` }));
           return;
         }
         if (docLoc) {

@@ -1,0 +1,36 @@
+{
+  "title": "Wet-Ink Signature Document Staging and Location",
+  "doc_no": "EXOS-ADM-006-0",
+  "area": "Administrative",
+  "area_id": "11-administrative",
+  "owner": "John Quinn (CEO) / Exo",
+  "rev": "0",
+  "status": "Approved",
+  "intl_release": "Yes",
+  "reference_docs": "Mission Control Decisions (signature gate); mission-control/data/signing-locations.json; Exos DocuSign User Instructions",
+  "remarks": "Directed by John Quinn 2026-10-26 (D-7282192 / MC #4026). Approved by John Quinn.",
+  "objective": "The purpose of this procedure is to ensure every document that needs a wet-ink signature is filed in a known, labeled location (File Cabinet number, Drawer, and Folder) and that the location is stated in the signing instruction so the signer can find and sign it without asking.",
+  "overview": "Any Mission Control Decision or instruction asking a person to sign must state where the document is. For e-signature this is the e-sign link. For wet ink it is the exact physical location in the form: <Site> office, File Cabinet <N>, Drawer <N>, Folder <Decision ID or document title>. Mission Control rejects signature Decisions whose location lacks the cabinet, drawer, or folder. Signing cabinets are listed in the Signing Locations Register (mission-control/data/signing-locations.json). At Greenville, Drawer 1 holds documents awaiting signature and Drawer 2 holds signed documents awaiting scan and filing.",
+  "tasks": [
+    {"name": "Task 1 - Designate and register the signing cabinet", "steps": [
+      "Designate one file cabinet at each site for documents awaiting signature and label it File Cabinet <N> - TO SIGN.",
+      "Label Drawer 1 'Awaiting Signature' and Drawer 2 'Signed - To Scan/File'.",
+      "Record the site, cabinet number, and drawer uses in the Signing Locations Register in Mission Control."
+    ]},
+    {"name": "Task 2 - Stage the document for signature", "steps": [
+      "Print the final, current version of the document. Confirm it is the latest version on the Mission Control task.",
+      "Place it in a folder labeled with the Decision ID (D-number) and document title, and flag every signature and initial line.",
+      "File the folder in Drawer 1 of the registered signing cabinet."
+    ]},
+    {"name": "Task 3 - Issue the signing instruction", "steps": [
+      "Create the signature Decision or instruction with documentLocation in the form: <Site> office, File Cabinet <N>, Drawer <N>, Folder <D-number / title>.",
+      "For e-signature, give the e-sign link instead of a physical location.",
+      "Confirm the location appears on the Decision card as 'Document to sign: ...'."
+    ]},
+    {"name": "Task 4 - Sign, return, and close out", "steps": [
+      "Signer retrieves the folder from the stated cabinet, drawer, and folder, signs, and places the folder in Drawer 2.",
+      "Scan the signed document, attach it to the Mission Control task, and file or route the original per the records owner.",
+      "Mark the Decision answered and the folder slot empty. Remove the folder from Drawer 2 once filed."
+    ]}
+  ]
+}
